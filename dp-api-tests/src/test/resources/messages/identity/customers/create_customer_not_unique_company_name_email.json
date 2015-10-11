@@ -1,0 +1,18 @@
+{
+  "company_name": "Creation test company",
+  "code": "ecn1",
+  "commercial_subscription_id": "aa",
+
+  "email": "s1@tenants.biz",
+
+  "is_demo_customer": true,
+
+  "address": {
+    "address_line1": "string",
+
+    "city": "string",
+    "zip_code": "string",
+    "country": "string"
+  },
+  "notes": "string"
+}

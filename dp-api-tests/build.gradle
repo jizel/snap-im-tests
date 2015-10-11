@@ -1,0 +1,52 @@
+def cucumberVersion = "1.2.3"
+def serenityVersion = "1.1.12"
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:1.1.12")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: 'groovy'
+
+version = '1.0-SNAPSHOT'
+
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
+dependencies {
+    // Groovy library for groovy building!
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
+    compile group: 'io.swagger', name: 'swagger-core', version: '1.5.3'
+    compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.6.2'
+    testCompile 'junit:junit:4.11'
+    testCompile "net.serenity-bdd:serenity-core:$serenityVersion"
+    testCompile "net.serenity-bdd:serenity-rest-assured:$serenityVersion"
+    testCompile "net.serenity-bdd:serenity-cucumber:1.1.1"
+
+    /*testCompile "info.cukes:cucumber-spring:$cucumberVersion"
+    testCompile "com.jayway.restassured:rest-assured:2.5.0"
+    testCompile "info.cukes:cucumber-java:$cucumberVersion"
+    testCompile "info.cukes:cucumber-junit:$cucumberVersion"
+    testCompile "info.cukes:cucumber-groovy:$cucumberVersion"*/
+
+    testCompile('org.assertj:assertj-core:1.7.0')
+    testCompile('org.slf4j:slf4j-log4j12:1.7.12')
+}
+gradle.startParameter.continueOnFailure = true

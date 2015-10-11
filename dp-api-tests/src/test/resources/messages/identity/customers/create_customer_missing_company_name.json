@@ -1,0 +1,18 @@
+{
+
+  "code": "ecn1",
+  "commercial_subscription_id": "aa",
+
+  "email": "testing@test.biz",
+
+  "is_demo_customer": true,
+
+  "address": {
+    "address_line1": "address line 1",
+
+    "city": "Brno",
+    "zip_code": "63500",
+    "country": "CZ"
+  },
+  "notes": "notes notes"
+}
