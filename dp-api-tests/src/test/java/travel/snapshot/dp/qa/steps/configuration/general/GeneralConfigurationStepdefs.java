@@ -67,9 +67,15 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.listOfConfigurationTypesisGot(limit, cursor);
     }
 
-    @Then("^There are (\\d+) configuration types returned$")
-    public void There_are_configuration_types_returned(int count) throws Throwable {
-        configurationSteps.numberOfConfigurationTypesIsInResponse(count);
+    @Then("^There are \"([^\"]*)\" configuration types returned$")
+    public void There_are_configuration_types_returned(String count) throws Throwable {
+        int intCount = 0;
+        if ("".equals(count)) {
+            intCount = 20;
+        } else {
+            intCount = Integer.parseInt(count);
+        }
+        configurationSteps.numberOfConfigurationTypesIsInResponse(intCount);
     }
 
     @Then("^Body contains configuration type with identifier \"([^\"]*)\" and description \"([^\"]*)\"$")
@@ -85,16 +91,6 @@ public class GeneralConfigurationStepdefs {
     @Given("^The following configuration types exist with (\\d+) random text items$")
     public void The_following_configuration_types_exist_with_random_text_items(int count, List<ConfigurationType> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypesExist(configurationTypes, count);
-    }
-
-    @When("^Configuration is created for configuration type \"([^\"]*)\"$")
-    public void Configuration_is_created_for_configuration_type(String identifier, List<Configuration> configurations) throws Throwable {
-        configurationSteps.followingConfigurationIsCreated(configurations.get(0), identifier);
-    }
-
-    @Then("^Body contains configuration with key \"([^\"]*)\" and value \"([^\"]*)\"$")
-    public void Body_contains_configuration_with_key_and_value(String key, String value) throws Throwable {
-        configurationSteps.bodyContainsConfiguration(key, value);
     }
 
 
@@ -128,9 +124,15 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.valueInResponseIs(value);
     }
 
-    @Then("^There are (\\d+) configurations returned$")
-    public void There_are_configurations_returned(int count) throws Throwable {
-        configurationSteps.numberOfConfigurationsIsInResponse(count);
+    @Then("^There are \"([^\"]*)\" configurations returned$")
+    public void There_are_configurations_returned(String count) throws Throwable {
+        int intCount = 0;
+        if ("".equals(count)) {
+            intCount = 20;
+        } else {
+            intCount = Integer.parseInt(count);
+        }
+        configurationSteps.numberOfConfigurationsIsInResponse(intCount);
     }
 
 
@@ -138,4 +140,36 @@ public class GeneralConfigurationStepdefs {
     public void Configuration_with_identifier_is_deleted_from_identifier(String key, String identifier) throws Throwable {
         configurationSteps.tryDeleteConfiguration(key, identifier);
     }
+
+    @When("^Configuration type description is updated for identifier \"([^\"]*)\" with description \"([^\"]*)\"$")
+    public void Configuration_type_description_is_updated_for_identifier_with_description(String identifier, String newDescription) throws Throwable {
+        configurationSteps.updateConfigurationTypeDescription(identifier, newDescription);
+    }
+
+    @Then("^Configuration type with identifier \"([^\"]*)\" has description \"([^\"]*)\"$")
+    public void Configuration_type_with_identifier_has_description(String identifier, String description) throws Throwable {
+        configurationSteps.configurationTypeHasDescription(identifier, description);
+    }
+
+    @When("^Configuration is created for configuration type \"([^\"]*)\"$")
+    public void Configuration_is_created_for_configuration_type(String identifier, List<Configuration> configurations) throws Throwable {
+        configurationSteps.followingConfigurationIsCreated(configurations.get(0), identifier);
+    }
+
+    @Then("^Body contains configuration$")
+    public void Body_contains_configuration(List<Configuration> configurations) throws Throwable {
+        Configuration c  = configurations.get(0);
+        configurationSteps.bodyContainsConfiguration(c.getKey(), c.getValue());
+    }
+
+    @When("^Configuration with from identifier \"([^\"]*)\" is updated$")
+    public void Configuration_with_from_identifier_is_updated(String identifier, List<Configuration> configurations) throws Throwable {
+        Configuration c  = configurations.get(0);
+        configurationSteps.updateConfigurationValue(identifier, c.getKey(), c.getValue());
+    }
+
+    @Then("^Configuration from identifier \"([^\"]*)\" has following$")
+    public void Configuration_from_identifier_has_following(String identifier, List<Configuration> configurations) throws Throwable {
+        Configuration c  = configurations.get(0);
+        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    }
 }

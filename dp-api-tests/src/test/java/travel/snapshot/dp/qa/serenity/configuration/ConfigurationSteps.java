@@ -23,6 +23,7 @@ import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -75,29 +76,47 @@ public class ConfigurationSteps extends BasicSteps {
     private Response createConfiguration(String key, JsonNode value, String identifier) {
         Map<String, Object> map = new HashMap<>();
         map.put("key", key);
-        map.put("value",value);
+        map.put("value", value);
         return given().spec(spec).basePath("/configuration")
                 .body(map)
                 .when().post("/{id}", identifier);
     }
+
+    private Response updateConfiguration(String key, JsonNode value, String identifier) {
+        return given().spec(spec).basePath("/configuration")
+                .body(value)
+                .when().post("/{id}/{key}", identifier, key);
+    }
+
     private Response createValueForKey(String identifier, String key, String value) {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
-
             actualObj = mapper.readTree(value);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return createConfiguration(key, actualObj,  identifier);
+        return createConfiguration(key, actualObj, identifier);
     }
 
-    //TODO
-    private Response updateConfigurationType(ConfigurationType t) {
-        return given().spec(spec).basePath("/configuration/configurations")
-                .body(t)
-                .when().post("/{id}");
+    private Response updateValueForKey(String identifier, String key, String value) {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj = null;
+        try {
+            actualObj = mapper.readTree(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return updateConfiguration(key, actualObj, identifier);
+    }
+
+
+    private Response updateConfigurationType(String identifier, String description) {
+        return given().spec(spec).basePath("/configuration")
+                .body(description)
+                .when().post("/{id}/description_update", identifier);
 
     }
 
@@ -239,7 +258,7 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void compareHeaderWithIdentifier(String header, String identifier) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().header(header, endsWith(identifier));
+        response.then().header(header, endsWith("/configuration/" + identifier));
     }
 
     @Step
@@ -249,8 +268,8 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void followingConfigurationIsCreated(Configuration configuration, String identifier) {
-        Response response  = createValueForKey(identifier, configuration.getKey(), configuration.getValue());
+    public void followingConfigurationIsCreated(Configuration c, String identifier) {
+        Response response = createValueForKey(identifier, c.getKey(), c.getValue());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -314,5 +333,29 @@ public class ConfigurationSteps extends BasicSteps {
     public void tryDeleteConfiguration(String key, String identifier) {
         Response resp = deleteConfiguration(key, identifier);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+    }
+
+    @Step
+    public void updateConfigurationTypeDescription(String identifier, String newDescription) {
+        Response resp = updateConfigurationType(identifier, newDescription);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+    }
+
+    @Step
+    public void configurationTypeHasDescription(String identifier, String description) {
+        Response response = getConfigurationType(identifier);
+        fail("How to assert configurationType has description?");
+    }
+
+    @Step
+    public void updateConfigurationValue(String identifier, String key, String value) {
+        Response resp = updateValueForKey(identifier, key, value);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+    }
+
+    @Step
+    public void configurationHasValue(String identifier, String key, String value) {
+        Response response = getConfiguration(key, identifier);
+        response.then().body(is(value));
     }
 }

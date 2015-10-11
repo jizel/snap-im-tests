@@ -6,7 +6,6 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 
-
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features = "src/test/resources/features/social_media", tags = {"~@skipped"})
 public class RunSocialMediaTests {
