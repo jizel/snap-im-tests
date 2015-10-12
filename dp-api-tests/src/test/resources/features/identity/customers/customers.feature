@@ -8,14 +8,15 @@ Feature: Customers
 #      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | subscription_id_given_003 | CZ10000003 |
 
 
-  #TODO - rework - newly created object is in response
   Scenario: Creating Customer without parent with random address
 
     When Customer is created with random address
       | companyName           | email          | code | salesforceId           | commercialSubscriptionId    | vatId      |
       | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | subscription_id_created_001 | CZ00000001 |
     Then Response code is "201"
-    And Body is empty
+    And Body contains customer type with "company_name" value "Creation test company"
+    And Body contains customer type with "email" value "s1@tenant.biz"
+    And Body contains customer type with "code" value "s1t"
     And "Location" header is set and contains the same customer
 
 
@@ -104,8 +105,10 @@ Feature: Customers
     When Customer with code "c1t" is got
     Then Response code is "200"
     And Content type is "application/json"
-    And Returned customer has company "Given company 1"
-    And Returned customer has email "c1@tenants.biz"
+    And Body contains customer type with "code" value "c1t"
+    And Body contains customer type with "company_name" value "Given company 1"
+    And Body contains customer type with "email" value "c1@tenants.biz"
+    And Body contains customer type with "vat_id" value "CZ10000001"
 
   Scenario: Checking error code for getting customer
     When Nonexistent customer id is got
@@ -113,7 +116,7 @@ Feature: Customers
     And Custom code is "152"
 
 
-    @skipped
+
   Scenario Outline: Getting list of customers
     Given The following customers exist with random address
       | companyName                | email                | code      | salesforceId               | commercialSubscriptionId       | vatId      |

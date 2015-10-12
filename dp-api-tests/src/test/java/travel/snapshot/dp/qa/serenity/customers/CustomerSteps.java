@@ -166,18 +166,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void customerInResponseHasCompany(String companyName) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("company_name", is(companyName));
-    }
-
-    @Step
-    public void customerInResponseHasEmail(String email) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("email", is(email));
-    }
-
-    @Step
     public void deleteCustomerWithId(String customerId) {
         Response resp = deleteCustomer(customerId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
@@ -255,5 +243,11 @@ public class CustomerSteps extends BasicSteps {
         Customer customer = getCustomerByCode(code);
         Response response = inactivateCustomer(customer.getCustomerId());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    @Step
+    public void bodyContainsCustomerWith(String atributeName, String value) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(atributeName, is(value));
     }
 }

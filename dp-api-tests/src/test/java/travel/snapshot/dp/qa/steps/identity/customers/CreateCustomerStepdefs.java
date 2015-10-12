@@ -79,16 +79,6 @@ public class CreateCustomerStepdefs {
         customerSteps.getCustomerWithId("nonexistent_id");
     }
 
-    @Then("^Returned customer has company \"([^\"]*)\"$")
-    public void Returned_customer_has_company(String companyName) throws Throwable {
-        customerSteps.customerInResponseHasCompany(companyName);
-    }
-
-    @Then("^Returned customer has email \"([^\"]*)\"$")
-    public void Returned_customer_has_email(String email) throws Throwable {
-        customerSteps.customerInResponseHasEmail(email);
-    }
-
     @When("^Nonexistent customer id is deleted$")
     public void Nonexistent_customer_id_is_deleted() throws Throwable {
         customerSteps.deleteCustomerWithId("nonexistent_id");
@@ -148,5 +138,10 @@ public class CreateCustomerStepdefs {
     @Then("^Customer with code \"([^\"]*)\" is not active$")
     public void Customer_with_code_is_not_active(String code) throws Throwable {
         customerSteps.isActiveSetTo(false, code);
+    }
+
+    @Then("^Body contains customer type with \"([^\"]*)\" value \"([^\"]*)\"$")
+    public void Body_contains_customer_type_with_value(String atributeName, String value) throws Throwable {
+        customerSteps.bodyContainsCustomerWith(atributeName, value);
     }
 }

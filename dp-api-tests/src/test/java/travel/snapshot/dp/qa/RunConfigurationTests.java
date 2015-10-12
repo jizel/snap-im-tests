@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features/configuration/general", tags = {"~@skipped"})
+@CucumberOptions(features = "src/test/resources/features/configuration", tags = {"~@skipped"})
 public class RunConfigurationTests {
 
 }
