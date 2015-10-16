@@ -182,5 +182,10 @@ public class GeneralConfigurationStepdefs {
     @Then("^Configuration from identifier \"([^\"]*)\" has following$")
     public void Configuration_from_identifier_has_following(String identifier, List<Configuration> configurations) throws Throwable {
         Configuration c  = configurations.get(0);
-        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    }
+        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    
+        }
+    @When("^Configuration type description is updated for identifier \"([^\"]*)\" with missing description$")
+    public void Configuration_type_description_is_updated_for_identifier_with_missing_description(String identifier) throws Throwable {
+        configurationSteps.updateConfigurationTypeDescription(identifier, "");
+    }
 }

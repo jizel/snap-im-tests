@@ -42,6 +42,11 @@ Feature: General configuration
     Then Response code is "404"
     And Custom code is "152"
 
+  Scenario: Delete configuration type with missing id parameter
+    When Configuration type with identifier "" is deleted
+    Then Response code is "400"
+    And Custom code is "52"
+
   #error states
   #id is missing
   #x-application is missing
@@ -62,6 +67,11 @@ Feature: General configuration
     Then Response code is "400"
     And Custom Code is "53"
 
+  Scenario: Updating description with missing id parameter
+    When Configuration type description is updated for identifier "" with description "New description"
+    Then Response code is "400"
+    And Custom code is "52"
+
   #error states
   #empty body, wrong id, wrong application id
   Scenario: Getting configuration type
@@ -71,7 +81,6 @@ Feature: General configuration
     And There are "2" configurations returned
 
   Scenario: Getting configuration type with nonexisting id
-    Given Configuration type with identifier "nonexisting_id" doesn't exist
     When Configuration type with with identifier "nonexisting_id"  is got
     Then Response code is "404"
     And Custom code is "152"
@@ -149,6 +158,22 @@ Feature: General configuration
       | test_key_2 | 11                                           |
       | test_key_3 | {"property_1": "value_1", "property_2": 45 } |
 
+  Scenario Outline: Checking error codes for adding configuration key:value
+    Given The following configurations exist for configuration type identifier "conf_id_1"
+      | key              | value        |
+      | given_test_key_1 | "text value" |
+    When Configuration is created for configuration type "conf_id_1"
+      | key   | value   |
+      | <key> | <value> |
+    Then Response code is "<response_code>"
+    And Custom code is "<custom_code>"
+
+    Examples: 
+      | key         | value         | response_code | custom_code |
+      |             | 11            | 400           | 61          |
+      | given_key_1 | "text value2" | 400           | 62          |
+      | test_key_1  |               | 400           | 61          |
+
   #errors
   #missing application
   #no key, empty key, wrong value
@@ -193,6 +218,16 @@ Feature: General configuration
     Then Response code is "200"
     And Content type is "application/json"
     And Returned configuration value is "text value"
+
+  Scenario Outline: Checking errors for getting configuration value for key
+    When Configuration with key "<key>" is got from configuration type "<identifier>"
+    Then Response code is "<response_code>"
+    And Custom code is "<custom_code>"
+
+    Examples: 
+      | identifier  | key          | response_code | custom_code |
+      | "conf_id_1" | "wrong_key"  | 404           | 151         |
+      | "wrong_id"  | "test_key_1" | 404           | 152         |
 
   # errors
   #wrong key
