@@ -23,7 +23,10 @@ public class GeneralConfigurationStepdefs {
     @Steps
     private ConfigurationSteps configurationSteps;
 
-
+    @When("^Nonexistent configuration type id is deleted$")
+    public void Nonexistent_configuration_type_id_is_deleted() throws Throwable {
+        configurationSteps.tryDeleteConfigurationType("nonexistent_id");
+    }
     @Given("^The following configuration types exist$")
     public void The_following_configuration_types_exist(List<ConfigurationType> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypesExist(configurationTypes, 0);
@@ -171,11 +174,10 @@ public class GeneralConfigurationStepdefs {
     @Then("^Configuration from identifier \"([^\"]*)\" has following$")
     public void Configuration_from_identifier_has_following(String identifier, List<Configuration> configurations) throws Throwable {
         Configuration c  = configurations.get(0);
-        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    }
-
-    @Given("^The following users exist$")
-    public void The_following_users_exist() throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    
+        }
+    @When("^Configuration type description is updated for identifier \"([^\"]*)\" with missing description$")
+    public void Configuration_type_description_is_updated_for_identifier_with_missing_description(String identifier) throws Throwable {
+        configurationSteps.updateConfigurationTypeDescription(identifier, "");
     }
 }

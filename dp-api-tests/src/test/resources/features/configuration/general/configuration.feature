@@ -7,15 +7,13 @@ Feature: General configuration
       | identifier | description                               |
       | conf_id_1  | Description of configuration identifier 1 |
       | conf_id_2  | Description of configuration identifier 2 |
-
     Given The following configuration types exist with 2 random text items
       | identifier           | description                                          |
       | with_items_conf_id_1 | Description of configuration identifier 1 with items |
       | with_items_conf_id_2 | Description of configuration identifier 2 with items |
 
-
   Scenario: Creating Configuration Type
-  POST /configuration/configurations
+    POST /configuration/configurations
 
     When Configuration type is created
       | identifier        | description                                       |
@@ -24,18 +22,16 @@ Feature: General configuration
     And Body contains configuration type with identifier "created_conf_id_1" and description "Description of created configuration identifier 1"
     And "Location" header is set and contains configuration type with identifier "created_conf_id_1"
 
-
   Scenario Outline: Checking error codes for creating configuration type
     When Data '<json_data>' is used for "<method>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples:
+    Examples: 
       | json_data                                                           | method | error_code | custom_code |
       | { "identifier":"", "description":"identifier is empty"}             | POST   | 400        | 53          |
       | { "description":"identifier is missing"}                            | POST   | 400        | 53          |
       | { "identifier": "conf_id_1", "description":"identifier is missing"} | POST   | 400        | 62          |
-
 
   Scenario: Deleting Configuration Type
     When Configuration type with identifier "conf_id_1" is deleted
@@ -43,34 +39,56 @@ Feature: General configuration
     And Body is empty
     And Configuration type with identifier "conf_id_1" doesn't exist
 
+  Scenario: Deleting nonexistent configuration type
+    When Nonexistent configuration type id is deleted
+    Then Response code is "404"
+    And Custom code is "152"
 
-    #error states
+  Scenario: Delete configuration type with missing id parameter
+    When Configuration type with identifier "" is deleted
+    Then Response code is "400"
+    And Custom code is "52"
+
+  #error states
   #id is missing
   #x-application is missing
-
-
-
   Scenario: Updating configuration type description
     When Configuration type description is updated for identifier "conf_id_1" with description "New description"
     Then Response code is "204"
     And Body is empty
     And Configuration type with identifier "conf_id_1" has description "New description"
 
+  Scenario: Updating description of nonexisting configuration type
+    Given Configuration type with identifier "nonexisting_id" doesn't exist
+    When Configuration type description is updated for identifier "nonexisting_id" with description "New description"
+    Then Response code is "404"
+    And Custom code is "152"
 
-    #error states
-    #empty body, wrong id, wrong application id
+  Scenario: Updating description with missing body parameter
+    When Configuration type description is updated for identifier "conf_id_2" with missing description
+    Then Response code is "400"
+    And Custom Code is "53"
 
+  Scenario: Updating description with missing id parameter
+    When Configuration type description is updated for identifier "" with description "New description"
+    Then Response code is "400"
+    And Custom code is "52"
+
+  #error states
+  #empty body, wrong id, wrong application id
   Scenario: Getting configuration type
     When Configuration type with with identifier "with_items_conf_id_1"  is got
     Then Response code is "200"
     And Content type is "application/json"
     And There are "2" configurations returned
 
+  Scenario: Getting configuration type with nonexisting id
+    When Configuration type with with identifier "nonexisting_id"  is got
+    Then Response code is "404"
+    And Custom code is "152"
 
- # error states
+  # error states
   #wrong id, wrong/missing x-application
-
-
   Scenario Outline: Getting list of configuration types
     Given The following configuration types exist
       | identifier      | description                                                                    |
@@ -95,13 +113,12 @@ Feature: General configuration
       | list_conf_id_19 | Description of configuration identifier 19 for listing all configuration types |
       | list_conf_id_20 | Description of configuration identifier 20 for listing all configuration types |
       | list_conf_id_21 | Description of configuration identifier 21 for listing all configuration types |
-
     When List of configuration types is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
     And There are "<limit>" configuration types returned
 
-    Examples:
+    Examples: 
       | limit | cursor |
       |       |        |
       | 15    |        |
@@ -111,16 +128,13 @@ Feature: General configuration
       | 5     | 5      |
 
   #given hodne hodnot, aby se dalo testovat
-    #test limit, cursor, filter, sort with different values
-
-
+  #test limit, cursor, filter, sort with different values
   Scenario Outline: Checking error codes for getting list of configuration types
-
     When List of configuration types is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples:
+    Examples: 
       | limit | cursor | response_code | custom_code |
       |       | -1     | 400           | 63          |
       |       | text   | 400           | 63          |
@@ -129,7 +143,6 @@ Feature: General configuration
       | 10    | -1     | 400           | 63          |
       | text  | 0      | 400           | 63          |
       | 10    | text   | 400           | 63          |
-
 
   Scenario Outline: add configuration key:value
     When Configuration is created for configuration type "conf_id_1"
@@ -141,17 +154,32 @@ Feature: General configuration
       | <key> | <value> |
     And "Location" header is set and contains configuration with key "<key>"
 
-    Examples:
+    Examples: 
       | key        | value                                        |
       | test_key_1 | "text value"                                 |
       | test_key_2 | 11                                           |
       | test_key_3 | {"property_1": "value_1", "property_2": 45 } |
 
-    #errors
-    #missing application
-    #no key, empty key, wrong value
-  #create already created
+  Scenario Outline: Checking error codes for adding configuration key:value
+    Given The following configurations exist for configuration type identifier "conf_id_1"
+      | key              | value        |
+      | given_test_key_1 | "text value" |
+    When Configuration is created for configuration type "conf_id_1"
+      | key   | value   |
+      | <key> | <value> |
+    Then Response code is "<response_code>"
+    And Custom code is "<custom_code>"
 
+    Examples: 
+      | key         | value         | response_code | custom_code |
+      |             | 11            | 400           | 61          |
+      | given_key_1 | "text value2" | 400           | 62          |
+      | test_key_1  |               | 400           | 61          |
+
+  #errors
+  #missing application
+  #no key, empty key, wrong value
+  #create already created
   Scenario: delete configuration key:value
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key              | value        |
@@ -161,9 +189,8 @@ Feature: General configuration
     And Body is empty
     And Configuration with key "given_test_key_1" doesn't exist for configuration type "conf_id_1"
 
-    #errors
+  #errors
   #wrong key
-
   Scenario Outline: update configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key   | value       |
@@ -177,15 +204,14 @@ Feature: General configuration
       | key   | value       |
       | <key> | <new_value> |
 
-    Examples:
+    Examples: 
       | key              | old_value    | new_value   |
       | given_test_key_1 | "text value" | "new value" |
-      #| test_key_2 | 11                                           |             |
-      #| test_key_3 | {"property_1": "value_1", "property_2": 45 } |             |
 
-    #wrong key
+  #| test_key_2 | 11                                           |             |
+  #| test_key_3 | {"property_1": "value_1", "property_2": 45 } |             |
+  #wrong key
   #empty body - missing value
-
   Scenario: get configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key              | value        |
@@ -195,9 +221,18 @@ Feature: General configuration
     And Content type is "application/json"
     And Returned configuration value is "text value"
 
-  # errors
-#wrong key
+  Scenario Outline: Checking errors for getting configuration value for key
+    When Configuration with key "<key>" is got from configuration type "<identifier>"
+    Then Response code is "<response_code>"
+    And Custom code is "<custom_code>"
 
+    Examples: 
+      | identifier  | key          | response_code | custom_code |
+      | "conf_id_1" | "wrong_key"  | 404           | 151         |
+      | "wrong_id"  | "test_key_1" | 404           | 152         |
+
+  # errors
+  #wrong key
   Scenario Outline: get all configuration key:values from configuration type
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key                    | value           |
@@ -223,13 +258,12 @@ Feature: General configuration
       | list_given_test_key_20 | "text value 20" |
       | list_given_test_key_21 | "text value 21" |
       | list_given_test_key_22 | "text value 22" |
-
     When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty for configuration type "conf_id_1"
     Then Response code is "200"
     And Content type is "application/json"
     And There are "<limit>" configurations returned
 
-    Examples:
+    Examples: 
       | limit | cursor |
       |       |        |
       | 15    |        |
@@ -238,14 +272,12 @@ Feature: General configuration
       | 10    | 0      |
       | 5     | 5      |
 
-
   Scenario Outline: Checking error codes for getting list of configurations for configuration type "conf_id_1"
-
     When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty for configuration type "conf_id_1"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples:
+    Examples: 
       | limit | cursor | response_code | custom_code |
       |       | -1     | 400           | 63          |
       |       | text   | 400           | 63          |
