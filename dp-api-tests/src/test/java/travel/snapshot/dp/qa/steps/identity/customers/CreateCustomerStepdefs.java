@@ -22,36 +22,41 @@ public class CreateCustomerStepdefs {
     @Steps
     private CustomerSteps customerSteps;
 
-    @Then("^Response code is \"(\\d+)\"$")
+    /*@Then("^Response code is \"(\\d+)\"$")
     public void response_code_is(int responseCode) throws Throwable {
         customerSteps.responseCodeIs(responseCode);
-    }
+    }*/
+    //Moved to BasicStepsDefs
 
     @Given("^The following customers exist with random address$")
     public void The_following_tenants_exist(List<Customer> customers) throws Throwable {
         customerSteps.followingCustomersExist(customers);
     }
 
-    @When("^\"([^\"]*)\" is called without token using \"([^\"]*)\"$")
+    /*@When("^\"([^\"]*)\" is called without token using \"([^\"]*)\"$")
     public void is_called_without_token_using(String service, String method) throws Throwable {
         customerSteps.isCalledWithoutTokenUsingMethod(service, method);
-    }
+    }*/
+    //Moved to BasicStepsDefs
 
-    @Then("^Custom code is \"(\\d+)\"$")
+    /*@Then("^Custom code is \"(\\d+)\"$")
     public void Custom_code_is(Integer customCode) throws Throwable {
         customerSteps.customCodeIs(customCode);
-    }
-
-    @Then("^Content type is \"([^\"]*)\"$")
+    }*/
+    //Moved to BasicStepsDefs
+    
+    /*@Then("^Content type is \"([^\"]*)\"$")
     public void content_type_is(String contentType) throws Throwable {
         customerSteps.contentTypeIs(contentType);
-    }
-
-    @Then("^Body is empty$")
+    }*/
+    //Moved to BasicStepsDefs
+    
+    /*@Then("^Body is empty$")
     public void body_is_empty() throws Throwable {
         customerSteps.bodyIsEmpty();
-    }
-
+    }*/
+    //Moved to BasicStepsDefs
+    
     @When("^Customer is created with random address$")
     public void customer_is_created(List<Customer> customers) throws Throwable {
         customerSteps.followingCustomerIsCreated(customers.get(0));
