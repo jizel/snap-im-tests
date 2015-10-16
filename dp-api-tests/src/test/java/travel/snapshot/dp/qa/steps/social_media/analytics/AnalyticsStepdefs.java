@@ -42,4 +42,14 @@ public class AnalyticsStepdefs {
     public void Response_contains_values_for_all_metrics(int count) throws Throwable {
         analyticsSteps.responseContainsValuesForAllMetrics(count);
     }
+    
+    @When("^List of tweets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
+    public void List_of_tweets_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
+        analyticsSteps.listOfTweetsIsGotWith(limit, cursor);
+    }
+        
+    @Then("^There are (\\d+) tweets returned$")
+    public void There_are_tweets_returned(int count) throws Throwable {
+        analyticsSteps.numberOfTweetsIsInResponse(count);
+    }
 }

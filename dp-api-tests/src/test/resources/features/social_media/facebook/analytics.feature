@@ -120,7 +120,7 @@ Feature: Overall analytics feature
     And Content type is "application/json"
     And Response code is "200"
 
-  Scenario: Get all Instagram analytics data (number of pictures, engagement, followers and tags) from API for a day
+  Scenario: Get all Instagram analytics data (number of pictures, engagement, followers, mentions and tags) from API for a day
     When Getting "/social_media/analytics/instagram" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Response contains 5 values for all metrics
     And Content type is "application/json"
@@ -156,6 +156,12 @@ Feature: Overall analytics feature
     And Content type is "application/json"
     And Response code is "200"
 
+  Scenario: 
+    When Getting "/social_media/analytics/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    Then Body is empty
+    And Content type is "application/json"
+    And Response code is "404"
+
   Scenario Outline: Checking error codes for analytics data
     When Property is missing for "<url>"
     Then Response code is "<error_code>"
@@ -174,4 +180,32 @@ Feature: Overall analytics feature
       | /social_media/analytics/facebook/likes           | 400        | 52          |
       | /social_media/analytics/facebook/unlikes         | 400        | 52          |
       | /social_media/analytics/twitter                  | 400        | 52          |
+      | /social_media/analytics/twitter/tweets           | 400        | 52          |
+      | /social_media/analytics/twitter/engagement       | 400        | 52          |
+      | /social_media/analytics/twitter/followers        | 400        | 52          |
+      | /social_media/analytics/twitter/impressions      | 400        | 52          |
+      | /social_media/analytics/twitter/retweets         | 400        | 52          |
+      | /social_media/analytics/twitter/retweets_reach   | 400        | 52          |
+      | /social_media/analytics/twitter/mentions         | 400        | 52          |
+      | /social_media/analytics/twitter/mentions_reach   | 400        | 52          |
       | /social_media/analytics/instagram                | 400        | 52          |
+      | /social_media/analytics/instagram/pictures       | 400        | 52          |
+      | /social_media/analytics/instagram/engagement     | 400        | 52          |
+      | /social_media/analytics/instagram/followers      | 400        | 52          |
+      | /social_media/analytics/instagram/mentions       | 400        | 52          |
+      | /social_media/analytics/instagram/tags           | 400        | 52          |
+
+  Scenario Outline: 
+    When List of tweets is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <limit> tweets returned
+
+    Examples: 
+      | limit | cursor |
+      |       |        |
+      | 15    |        |
+      |       | 1      |
+      | 20    | 0      |
+      | 10    | 0      |
+      | 5     | 5      |
