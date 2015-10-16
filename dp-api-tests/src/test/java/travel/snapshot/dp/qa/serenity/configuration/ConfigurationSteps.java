@@ -50,7 +50,7 @@ public class ConfigurationSteps extends BasicSteps {
                 .body(t)
                 .when().post();
     }
-
+    
     private Response deleteConfiguration(String key, String identifier) {
         return given().spec(spec).basePath("/configuration")
                 .when().delete("/{identifier}/{key}", identifier, key);

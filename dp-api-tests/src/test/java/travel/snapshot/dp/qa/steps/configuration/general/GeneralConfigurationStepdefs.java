@@ -23,7 +23,18 @@ public class GeneralConfigurationStepdefs {
     @Steps
     private ConfigurationSteps configurationSteps;
 
-
+    @When("^Nonexistent configuration type id is deleted$")
+    public void Nonexistent_configuration_type_id_is_deleted() throws Throwable {
+        configurationSteps.tryDeleteConfigurationType("nonexistent_id");
+    }
+    @Then("^Response code is \"(\\d+)\"$")
+    public void response_code_is(int responseCode) throws Throwable {
+        configurationSteps.responseCodeIs(responseCode);
+    }
+    @Then("^Custom code is \"(\\d+)\"$")
+    public void Custom_code_is(Integer customCode) throws Throwable {
+        configurationSteps.customCodeIs(customCode);
+    }
     @Given("^The following configuration types exist$")
     public void The_following_configuration_types_exist(List<ConfigurationType> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypesExist(configurationTypes, 0);
