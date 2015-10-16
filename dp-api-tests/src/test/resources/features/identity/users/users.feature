@@ -2,9 +2,46 @@ Feature: Users
   #TODO update for users
 
   Background:
-    Given Basepath is "/identity/users"
     Given The following users exist
-      | roleId | applicationId | roleName    | description          |
+      | roleId | applicationId | roleName   | description       |
+      | role_1 | application_1 | first_role | sample descpriotn |
+
+
+
+Scenario: delete user
+  Given precondition "parameter"
+  When what happens
+  Then  validation
+
+
+Scenario: create user
+
+  When user is created
+  Then Response code is "201"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -37,5 +74,5 @@ Feature: Users
     And Custom code is "<custom_code>"
 
     Examples:
-      | json_input_file                            | method | error_code | custom_code |
+      | json_input_file                           | method | error_code | custom_code |
       | identity/users/user_missing_username.json | POST   | 405        | 51          |

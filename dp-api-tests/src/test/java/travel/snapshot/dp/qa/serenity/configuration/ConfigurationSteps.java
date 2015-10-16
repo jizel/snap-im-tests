@@ -46,7 +46,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private Response createConfigurationType(ConfigurationType t) {
-        return given().spec(spec).basePath("/configuration/configurations")
+        return given().spec(spec).basePath("/configuration")
                 .body(t)
                 .when().post();
     }
@@ -64,7 +64,7 @@ public class ConfigurationSteps extends BasicSteps {
         } else if (statusCode == 404) {
             return false;
         } else {
-            throw new RuntimeException("invalid server status code: " + statusCode);
+            throw new RuntimeException("invalid server status code during getting configuration[identifier="+identifier + ", key=" + key + "]: " + statusCode);
         }
     }
 
@@ -131,6 +131,9 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private Boolean isConfigurationTypeExist(String identifier) {
+        if (identifier == null || "".equals(identifier)) {
+            return false;
+        }
         Response response = getConfigurationType(identifier);
         int statusCode = response.statusCode();
         if (statusCode == 200) {
@@ -138,7 +141,7 @@ public class ConfigurationSteps extends BasicSteps {
         } else if (statusCode == 404) {
             return false;
         } else {
-            throw new RuntimeException("invalid server status code: " + statusCode);
+            throw new RuntimeException("invalid server status code for getting configuration type [identifier=" + identifier + "]: " + statusCode);
         }
     }
 
@@ -201,9 +204,16 @@ public class ConfigurationSteps extends BasicSteps {
             if (isConfigurationTypeExist(t.getIdentifier())) {
                 deleteConfigurationType(t.getIdentifier());
             }
-            createConfigurationType(t);
+
+            Response createResponse = createConfigurationType(t);
+            if (createResponse.getStatusCode() != 201) {
+                fail("Configuration type cannot be created");
+            }
             IntStream.rangeClosed(1, count).forEach(i -> {
-                createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), "\"" + RandomStringUtils.randomAlphanumeric(20) + "\"");
+                Response createKeyResponse = createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), "\"" + RandomStringUtils.randomAlphanumeric(20) + "\"");
+                if (createKeyResponse.getStatusCode() != 201) {
+                    fail("Configuration key cannot be created");
+                }
             });
 
         });

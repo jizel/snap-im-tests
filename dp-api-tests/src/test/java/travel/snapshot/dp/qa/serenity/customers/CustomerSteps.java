@@ -44,7 +44,10 @@ public class CustomerSteps extends BasicSteps {
             if (existingCustomer != null) {
                 deleteCustomer(existingCustomer.getCustomerId());
             }
-            createCustomer(t);
+            Response createResponse = createCustomer(t);
+            if (createResponse.getStatusCode() != 201) {
+                fail("Customer cannot be created");
+            }
         });
         Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
     }
@@ -75,7 +78,7 @@ public class CustomerSteps extends BasicSteps {
         Customer originalCustomer = Serenity.sessionVariableCalled(SESSION_CREATED_CUSTOMER);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String customerLocation = response.header(headerName);
-        spec.get(customerLocation).then()
+        given().spec(spec).get(customerLocation).then()
                 .body("salesforce_id", is(originalCustomer.getSalesforceId()))
                 .body("company_name", is(originalCustomer.getCompanyName()))
                 .body("commercial_subscription_id", is(originalCustomer.getCommercialSubscriptionId()))

@@ -172,4 +172,10 @@ public class GeneralConfigurationStepdefs {
     public void Configuration_from_identifier_has_following(String identifier, List<Configuration> configurations) throws Throwable {
         Configuration c  = configurations.get(0);
         configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    }
+
+    @Given("^The following users exist$")
+    public void The_following_users_exist() throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        throw new PendingException();
+    }
 }

@@ -1,5 +1,7 @@
 Feature: General configuration
 
+  #TODO add etag things to get/update/create
+
   Background:
     Given The following configuration types exist
       | identifier | description                               |

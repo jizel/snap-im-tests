@@ -19,7 +19,7 @@ public class Customer {
     private String email = null;
     private String website = null;
     private String vatId = null;
-    private Boolean isDemoCustomer = null;
+    private Boolean isDemoCustomer = false;
     private String sourceCustomer = null;
     private Address address = null;
     private String notes = null;

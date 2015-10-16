@@ -1,9 +1,11 @@
 Feature: Customers
 
+  #TODO add etag things to get/update/create
+
   Background:
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | commercialSubscriptionId  | vatId      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | subscription_id_given_001 | CZ10000001 |
+      | companyName     | email          | code | salesforceId         | commercialSubscriptionId  | vatId      | isDemoCustomer |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | subscription_id_given_001 | CZ10000001 | true           |
 #      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | subscription_id_given_002 | CZ10000002 |
 #      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | subscription_id_given_003 | CZ10000003 |
 
@@ -11,11 +13,11 @@ Feature: Customers
   Scenario: Creating Customer without parent with random address
 
     When Customer is created with random address
-      | companyName           | email          | code | salesforceId           | commercialSubscriptionId    | vatId      |
-      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | subscription_id_created_001 | CZ00000001 |
+      | companyName           | email          | code | salesforceId           | commercialSubscriptionId    | vatId      |isDemoCustomer |
+      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | subscription_id_created_001 | CZ00000001 |true           |
     Then Response code is "201"
     And Body contains customer type with "company_name" value "Creation test company"
-    And Body contains customer type with "email" value "s1@tenant.biz"
+    And Body contains customer type with "email" value "s1@tenants.biz"
     And Body contains customer type with "code" value "s1t"
     And "Location" header is set and contains the same customer
 
@@ -53,6 +55,7 @@ Feature: Customers
       | <companyName> | <email> | <code> | <salesforceId> | <commercialSubscriptionId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
     Then Response code is "204"
     And Body is empty
+    And Etag header is present
     And Updated customer with code "c1t" has data
       | companyName   | email   | code   | salesforceId   | commercialSubscriptionId   | vatId   | phone   | website   | sourceCustomer   | notes   |
       | <companyName> | <email> | <code> | <salesforceId> | <commercialSubscriptionId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
@@ -105,10 +108,19 @@ Feature: Customers
     When Customer with code "c1t" is got
     Then Response code is "200"
     And Content type is "application/json"
+    And Etag header is present
     And Body contains customer type with "code" value "c1t"
     And Body contains customer type with "company_name" value "Given company 1"
     And Body contains customer type with "email" value "c1@tenants.biz"
     And Body contains customer type with "vat_id" value "CZ10000001"
+
+  Scenario: Getting customer with etag
+    When Customer with code "c1t" is got with etag
+    Then Response code is "304"
+    And Content type is "application/json"
+    And Body is empty
+
+
 
   Scenario: Checking error code for getting customer
     When Nonexistent customer id is got
@@ -119,28 +131,28 @@ Feature: Customers
 
   Scenario Outline: Getting list of customers
     Given The following customers exist with random address
-      | companyName                | email                | code      | salesforceId               | commercialSubscriptionId       | vatId      |
-      | List test Given company 1  | list_c1@tenants.biz  | list_c1t  | list_salesforceid_given_1  | list_subscription_id_given_001 | CZ22000001 |
-      | List test Given company 2  | list_c2@tenants.biz  | list_c2t  | list_salesforceid_given_2  | list_subscription_id_given_002 | CZ22000002 |
-      | List test Given company 3  | list_c3@tenants.biz  | list_c3t  | list_salesforceid_given_3  | list_subscription_id_given_003 | CZ22000003 |
-      | List test Given company 4  | list_c4@tenants.biz  | list_c4t  | list_salesforceid_given_4  | list_subscription_id_given_004 | CZ22000004 |
-      | List test Given company 5  | list_c5@tenants.biz  | list_c5t  | list_salesforceid_given_5  | list_subscription_id_given_005 | CZ22000005 |
-      | List test Given company 6  | list_c6@tenants.biz  | list_c6t  | list_salesforceid_given_6  | list_subscription_id_given_006 | CZ22000006 |
-      | List test Given company 7  | list_c7@tenants.biz  | list_c7t  | list_salesforceid_given_7  | list_subscription_id_given_007 | CZ22000007 |
-      | List test Given company 8  | list_c8@tenants.biz  | list_c8t  | list_salesforceid_given_8  | list_subscription_id_given_008 | CZ22000008 |
-      | List test Given company 9  | list_c9@tenants.biz  | list_c9t  | list_salesforceid_given_9  | list_subscription_id_given_009 | CZ22000009 |
-      | List test Given company 10 | list_c10@tenants.biz | list_c10t | list_salesforceid_given_10 | list_subscription_id_given_010 | CZ22000010 |
-      | List test Given company 11 | list_c11@tenants.biz | list_c11t | list_salesforceid_given_11 | list_subscription_id_given_011 | CZ22000011 |
-      | List test Given company 12 | list_c12@tenants.biz | list_c12t | list_salesforceid_given_12 | list_subscription_id_given_012 | CZ22000012 |
-      | List test Given company 13 | list_c13@tenants.biz | list_c13t | list_salesforceid_given_13 | list_subscription_id_given_013 | CZ22000013 |
-      | List test Given company 14 | list_c14@tenants.biz | list_c14t | list_salesforceid_given_14 | list_subscription_id_given_014 | CZ22000014 |
-      | List test Given company 15 | list_c15@tenants.biz | list_c15t | list_salesforceid_given_15 | list_subscription_id_given_015 | CZ22000015 |
-      | List test Given company 16 | list_c16@tenants.biz | list_c16t | list_salesforceid_given_16 | list_subscription_id_given_016 | CZ22000016 |
-      | List test Given company 17 | list_c17@tenants.biz | list_c17t | list_salesforceid_given_17 | list_subscription_id_given_017 | CZ22000017 |
-      | List test Given company 18 | list_c18@tenants.biz | list_c18t | list_salesforceid_given_18 | list_subscription_id_given_018 | CZ22000018 |
-      | List test Given company 19 | list_c19@tenants.biz | list_c19t | list_salesforceid_given_19 | list_subscription_id_given_019 | CZ22000019 |
-      | List test Given company 20 | list_c20@tenants.biz | list_c20t | list_salesforceid_given_20 | list_subscription_id_given_020 | CZ22000020 |
-      | List test Given company 21 | list_c21@tenants.biz | list_c21t | list_salesforceid_given_21 | list_subscription_id_given_021 | CZ22000021 |
+      | companyName                | email                | code      | salesforceId               | commercialSubscriptionId       | vatId      |isDemoCustomer |
+      | List test Given company 1  | list_c1@tenants.biz  | list_c1t  | list_salesforceid_given_1  | list_subscription_id_given_001 | CZ22000001 | true          |
+      | List test Given company 2  | list_c2@tenants.biz  | list_c2t  | list_salesforceid_given_2  | list_subscription_id_given_002 | CZ22000002 | true          |
+      | List test Given company 3  | list_c3@tenants.biz  | list_c3t  | list_salesforceid_given_3  | list_subscription_id_given_003 | CZ22000003 | true          |
+      | List test Given company 4  | list_c4@tenants.biz  | list_c4t  | list_salesforceid_given_4  | list_subscription_id_given_004 | CZ22000004 | true          |
+      | List test Given company 5  | list_c5@tenants.biz  | list_c5t  | list_salesforceid_given_5  | list_subscription_id_given_005 | CZ22000005 | true          |
+      | List test Given company 6  | list_c6@tenants.biz  | list_c6t  | list_salesforceid_given_6  | list_subscription_id_given_006 | CZ22000006 | true          |
+      | List test Given company 7  | list_c7@tenants.biz  | list_c7t  | list_salesforceid_given_7  | list_subscription_id_given_007 | CZ22000007 | true          |
+      | List test Given company 8  | list_c8@tenants.biz  | list_c8t  | list_salesforceid_given_8  | list_subscription_id_given_008 | CZ22000008 | true          |
+      | List test Given company 9  | list_c9@tenants.biz  | list_c9t  | list_salesforceid_given_9  | list_subscription_id_given_009 | CZ22000009 | true          |
+      | List test Given company 10 | list_c10@tenants.biz | list_c10t | list_salesforceid_given_10 | list_subscription_id_given_010 | CZ22000010 | true          |
+      | List test Given company 11 | list_c11@tenants.biz | list_c11t | list_salesforceid_given_11 | list_subscription_id_given_011 | CZ22000011 | true          |
+      | List test Given company 12 | list_c12@tenants.biz | list_c12t | list_salesforceid_given_12 | list_subscription_id_given_012 | CZ22000012 | true          |
+      | List test Given company 13 | list_c13@tenants.biz | list_c13t | list_salesforceid_given_13 | list_subscription_id_given_013 | CZ22000013 | true          |
+      | List test Given company 14 | list_c14@tenants.biz | list_c14t | list_salesforceid_given_14 | list_subscription_id_given_014 | CZ22000014 | true          |
+      | List test Given company 15 | list_c15@tenants.biz | list_c15t | list_salesforceid_given_15 | list_subscription_id_given_015 | CZ22000015 | true          |
+      | List test Given company 16 | list_c16@tenants.biz | list_c16t | list_salesforceid_given_16 | list_subscription_id_given_016 | CZ22000016 | true          |
+      | List test Given company 17 | list_c17@tenants.biz | list_c17t | list_salesforceid_given_17 | list_subscription_id_given_017 | CZ22000017 | true          |
+      | List test Given company 18 | list_c18@tenants.biz | list_c18t | list_salesforceid_given_18 | list_subscription_id_given_018 | CZ22000018 | true          |
+      | List test Given company 19 | list_c19@tenants.biz | list_c19t | list_salesforceid_given_19 | list_subscription_id_given_019 | CZ22000019 | true          |
+      | List test Given company 20 | list_c20@tenants.biz | list_c20t | list_salesforceid_given_20 | list_subscription_id_given_020 | CZ22000020 | true          |
+      | List test Given company 21 | list_c21@tenants.biz | list_c21t | list_salesforceid_given_21 | list_subscription_id_given_021 | CZ22000021 | true          |
 
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
