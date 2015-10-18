@@ -13,7 +13,7 @@ Feature: General configuration
       | with_items_conf_id_2 | Description of configuration identifier 2 with items |
 
   Scenario: Creating Configuration Type
-    POST /configuration/configurations
+  POST /configuration/configurations
 
     When Configuration type is created
       | identifier        | description                                       |
@@ -27,7 +27,7 @@ Feature: General configuration
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | json_data                                                           | method | error_code | custom_code |
       | { "identifier":"", "description":"identifier is empty"}             | POST   | 400        | 53          |
       | { "description":"identifier is missing"}                            | POST   | 400        | 53          |
@@ -67,7 +67,7 @@ Feature: General configuration
   Scenario: Updating description with missing body parameter
     When Configuration type description is updated for identifier "conf_id_2" with missing description
     Then Response code is "400"
-    And Custom Code is "53"
+    And Custom code is "53"
 
   Scenario: Updating description with missing id parameter
     When Configuration type description is updated for identifier "" with description "New description"
@@ -118,7 +118,7 @@ Feature: General configuration
     And Content type is "application/json"
     And There are "<limit>" configuration types returned
 
-    Examples: 
+    Examples:
       | limit | cursor |
       |       |        |
       | 15    |        |
@@ -134,7 +134,7 @@ Feature: General configuration
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | limit | cursor | response_code | custom_code |
       |       | -1     | 400           | 63          |
       |       | text   | 400           | 63          |
@@ -154,7 +154,7 @@ Feature: General configuration
       | <key> | <value> |
     And "Location" header is set and contains configuration with key "<key>"
 
-    Examples: 
+    Examples:
       | key        | value                                        |
       | test_key_1 | "text value"                                 |
       | test_key_2 | 11                                           |
@@ -170,11 +170,11 @@ Feature: General configuration
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
-      | key         | value         | response_code | custom_code |
-      |             | 11            | 400           | 61          |
-      | given_key_1 | "text value2" | 400           | 62          |
-      | test_key_1  |               | 400           | 61          |
+    Examples:
+      | key              | value         | response_code | custom_code |
+      |                  | 11            | 400           | 61          |
+      | given_test_key_1 | "text value2" | 400           | 62          |
+      | test_key_1       |               | 400           | 61          |
 
   #errors
   #missing application
@@ -204,7 +204,7 @@ Feature: General configuration
       | key   | value       |
       | <key> | <new_value> |
 
-    Examples: 
+    Examples:
       | key              | old_value    | new_value   |
       | given_test_key_1 | "text value" | "new value" |
 
@@ -226,7 +226,7 @@ Feature: General configuration
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | identifier  | key          | response_code | custom_code |
       | "conf_id_1" | "wrong_key"  | 404           | 151         |
       | "wrong_id"  | "test_key_1" | 404           | 152         |
@@ -263,7 +263,7 @@ Feature: General configuration
     And Content type is "application/json"
     And There are "<limit>" configurations returned
 
-    Examples: 
+    Examples:
       | limit | cursor |
       |       |        |
       | 15    |        |
@@ -277,7 +277,7 @@ Feature: General configuration
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | limit | cursor | response_code | custom_code |
       |       | -1     | 400           | 63          |
       |       | text   | 400           | 63          |
