@@ -28,10 +28,10 @@ Feature: General configuration
     And Custom code is "<custom_code>"
 
     Examples:
-      | json_data                                                           | method | error_code | custom_code |
-      | { "identifier":"", "description":"identifier is empty"}             | POST   | 400        | 53          |
-      | { "description":"identifier is missing"}                            | POST   | 400        | 53          |
-      | { "identifier": "conf_id_1", "description":"identifier is missing"} | POST   | 400        | 62          |
+      | json_data                                                          | method | error_code | custom_code |
+      | { "identifier":"", "description":"identifier is empty"}            | POST   | 400        | 53          |
+      | { "description":"identifier is missing"}                           | POST   | 400        | 53          |
+      | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 400        | 62          |
 
   Scenario: Deleting Configuration Type
     When Configuration type with identifier "conf_id_1" is deleted
@@ -146,35 +146,40 @@ Feature: General configuration
 
   Scenario Outline: add configuration key:value
     When Configuration is created for configuration type "conf_id_1"
-      | key   | value   |
-      | <key> | <value> |
+      | key   | value   | type   |
+      | <key> | <value> | <type> |
     Then Response code is "201"
     And Body contains configuration
-      | key   | value   |
-      | <key> | <value> |
+      | key   | value   | type   |
+      | <key> | <value> | <type> |
     And "Location" header is set and contains configuration with key "<key>"
 
     Examples:
-      | key        | value                                        |
-      | test_key_1 | "text value"                                 |
-      | test_key_2 | 11                                           |
-      | test_key_3 | {"property_1": "value_1", "property_2": 45 } |
+      | key                 | value                                        | type     |
+      | string_test_key1    | text value                                   | string   |
+      | integer_test_key_2  | 11                                           | integer  |
+      | long_test_key_2     | 114444                                       | long     |
+      | double_test_key_2   | 12.34                                        | double   |
+      | boolean_test_key_2  | true                                         | boolean  |
+      | date_test_key_2     | 2015-01-01                                   | date     |
+      | datetime_test_key_2 | 2015-01-01/10:10                             | datetime |
+      | object_test_key_3   | {"property_1": "value_1", "property_2": 45 } | object   |
 
   Scenario Outline: Checking error codes for adding configuration key:value
     Given The following configurations exist for configuration type identifier "conf_id_1"
-      | key              | value        |
-      | given_test_key_1 | "text value" |
+      | key              | value      | type   |
+      | given_test_key_1 | text value | string |
     When Configuration is created for configuration type "conf_id_1"
-      | key   | value   |
-      | <key> | <value> |
+      | key   | value   | type   |
+      | <key> | <value> | <type> |
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
     Examples:
-      | key              | value         | response_code | custom_code |
-      |                  | 11            | 400           | 61          |
-      | given_test_key_1 | "text value2" | 400           | 62          |
-      | test_key_1       |               | 400           | 61          |
+      | key              | value       | type    | response_code | custom_code |
+      |                  | 11          | integer | 400           | 61          |
+      | given_test_key_1 | text value2 | string  | 400           | 62          |
+      | test_key_1       |             | string  | 400           | 61          |
 
   #errors
   #missing application
@@ -182,8 +187,8 @@ Feature: General configuration
   #create already created
   Scenario: delete configuration key:value
     Given The following configurations exist for configuration type identifier "conf_id_1"
-      | key              | value        |
-      | given_test_key_1 | "text value" |
+      | key              | value      | type   |
+      | given_test_key_1 | text value | string |
     When Configuration with identifier "given_test_key_1" is deleted from identifier "conf_id_1"
     Then Response code is "204"
     And Body is empty
@@ -193,33 +198,46 @@ Feature: General configuration
   #wrong key
   Scenario Outline: update configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
-      | key   | value       |
-      | <key> | <old_value> |
+      | key   | value       | type       |
+      | <key> | <old_value> | <old_type> |
     When Configuration with from identifier "conf_id_1" is updated
-      | key   | value       |
-      | <key> | <new_value> |
+      | key   | value       | type       |
+      | <key> | <new_value> | <new_type> |
     Then Response code is "204"
     And Body is empty
     And Configuration from identifier "conf_id_1" has following
-      | key   | value       |
-      | <key> | <new_value> |
+      | key   | value       | type       |
+      | <key> | <new_value> | <new_type> |
 
     Examples:
-      | key              | old_value    | new_value   |
-      | given_test_key_1 | "text value" | "new value" |
+      | key              | old_value  | old_type | new_value | new_type |
+      | given_test_key_1 | text value | string   | new value | string   |
 
   #| test_key_2 | 11                                           |             |
   #| test_key_3 | {"property_1": "value_1", "property_2": 45 } |             |
   #wrong key
   #empty body - missing value
-  Scenario: get configuration value for key
+  Scenario Outline: get configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
-      | key              | value        |
-      | given_test_key_1 | "text value" |
-    When Configuration with key "given_test_key_1"  is got from configuration type "conf_id_1"
+      | key   | value   | type   |
+      | <key> | <value> | <type> |
+    When Configuration with key "<key>"  is got from configuration type "conf_id_1"
     Then Response code is "200"
     And Content type is "application/json"
-    And Returned configuration value is "text value"
+    And Body contains configurationValue
+      | key   | value   | type   |
+      | <key> | <value> | <type> |
+
+    Examples:
+      | key                 | value                                        | type     |
+      | string_test_key1    | text value                                   | string   |
+      | integer_test_key_2  | 11                                           | integer  |
+      | long_test_key_2     | 114444                                       | long     |
+      | double_test_key_2   | 12.34                                        | double   |
+      | boolean_test_key_2  | true                                         | boolean  |
+      | date_test_key_2     | 2015-01-01                                   | date     |
+      | datetime_test_key_2 | 2015-01-01/10:10                             | datetime |
+      | object_test_key_3   | {"property_1": "value_1", "property_2": 45 } | object   |
 
   Scenario Outline: Checking errors for getting configuration value for key
     When Configuration with key "<key>" is got from configuration type "<identifier>"
@@ -227,37 +245,37 @@ Feature: General configuration
     And Custom code is "<custom_code>"
 
     Examples:
-      | identifier  | key          | response_code | custom_code |
-      | "conf_id_1" | "wrong_key"  | 404           | 151         |
-      | "wrong_id"  | "test_key_1" | 404           | 152         |
+      | identifier | key        | response_code | custom_code |
+      | conf_id_1  | wrong_key  | 404           | 151         |
+      | wrong_id   | test_key_1 | 404           | 152         |
 
   # errors
   #wrong key
   Scenario Outline: get all configuration key:values from configuration type
     Given The following configurations exist for configuration type identifier "conf_id_1"
-      | key                    | value           |
-      | list_given_test_key_1  | "text value 1"  |
-      | list_given_test_key_2  | "text value 2"  |
-      | list_given_test_key_3  | "text value 3"  |
-      | list_given_test_key_4  | "text value 4"  |
-      | list_given_test_key_5  | "text value 5"  |
-      | list_given_test_key_6  | "text value 6"  |
-      | list_given_test_key_7  | "text value 7"  |
-      | list_given_test_key_8  | "text value 8"  |
-      | list_given_test_key_9  | "text value 9"  |
-      | list_given_test_key_10 | "text value 10" |
-      | list_given_test_key_11 | "text value 11" |
-      | list_given_test_key_12 | "text value 12" |
-      | list_given_test_key_13 | "text value 13" |
-      | list_given_test_key_14 | "text value 14" |
-      | list_given_test_key_15 | "text value 15" |
-      | list_given_test_key_16 | "text value 16" |
-      | list_given_test_key_17 | "text value 17" |
-      | list_given_test_key_18 | "text value 18" |
-      | list_given_test_key_19 | "text value 19" |
-      | list_given_test_key_20 | "text value 20" |
-      | list_given_test_key_21 | "text value 21" |
-      | list_given_test_key_22 | "text value 22" |
+      | key                    | value         | type   |
+      | list_given_test_key_1  | text value 1  | string |
+      | list_given_test_key_2  | text value 2  | string |
+      | list_given_test_key_3  | text value 3  | string |
+      | list_given_test_key_4  | text value 4  | string |
+      | list_given_test_key_5  | text value 5  | string |
+      | list_given_test_key_6  | text value 6  | string |
+      | list_given_test_key_7  | text value 7  | string |
+      | list_given_test_key_8  | text value 8  | string |
+      | list_given_test_key_9  | text value 9  | string |
+      | list_given_test_key_10 | text value 10 | string |
+      | list_given_test_key_11 | text value 11 | string |
+      | list_given_test_key_12 | text value 12 | string |
+      | list_given_test_key_13 | text value 13 | string |
+      | list_given_test_key_14 | text value 14 | string |
+      | list_given_test_key_15 | text value 15 | string |
+      | list_given_test_key_16 | text value 16 | string |
+      | list_given_test_key_17 | text value 17 | string |
+      | list_given_test_key_18 | text value 18 | string |
+      | list_given_test_key_19 | text value 19 | string |
+      | list_given_test_key_20 | text value 20 | string |
+      | list_given_test_key_21 | text value 21 | string |
+      | list_given_test_key_22 | text value 22 | string |
     When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty for configuration type "conf_id_1"
     Then Response code is "200"
     And Content type is "application/json"

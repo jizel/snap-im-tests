@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.serenity.configuration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.response.Response;
+import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -64,7 +65,7 @@ public class ConfigurationSteps extends BasicSteps {
         } else if (statusCode == 404) {
             return false;
         } else {
-            throw new RuntimeException("invalid server status code during getting configuration[identifier="+identifier + ", key=" + key + "]: " + statusCode);
+            throw new RuntimeException("invalid server status code during getting configuration[identifier=" + identifier + ", key=" + key + "]: " + statusCode);
         }
     }
 
@@ -73,10 +74,11 @@ public class ConfigurationSteps extends BasicSteps {
                 .when().get("/{identifier}/{key}", identifier, key);
     }
 
-    private Response createConfiguration(String key, JsonNode value, String identifier) {
+    private Response createConfiguration(String key, JsonNode value, String type, String identifier) {
         Map<String, Object> map = new HashMap<>();
         map.put("key", key);
         map.put("value", value);
+        map.put("type", type);
         return given().spec(spec).basePath("/configuration")
                 .body(map)
                 .when().post("/{id}", identifier);
@@ -88,23 +90,93 @@ public class ConfigurationSteps extends BasicSteps {
                 .when().post("/{id}/{key}", identifier, key);
     }
 
-    private Response createValueForKey(String identifier, String key, String value) {
+    private Response createValueForKey(String identifier, String key, String value, String type) {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
-            actualObj = mapper.readTree(value);
+            switch (type) {
+                case "string": {
+                    actualObj = mapper.readTree("\"" + value + "\"");
+                    break;
+                }
+                case "integer": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "long": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "double": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "boolean": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "date": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "datetime": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "object": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                default:
+                    break;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return createConfiguration(key, actualObj, identifier);
+        return createConfiguration(key, actualObj, type, identifier);
     }
 
-    private Response updateValueForKey(String identifier, String key, String value) {
+    private Response updateValueForKey(String identifier, String key, String value, String type) {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
-            actualObj = mapper.readTree(value);
+            switch (type) {
+                case "string": {
+                    actualObj = mapper.readTree("\"" + value + "\"");
+                    break;
+                }
+                case "integer": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "long": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "double": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "boolean": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "date": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "datetime": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                case "object": {
+                    actualObj = mapper.readTree(value);
+                    break;
+                }
+                default:
+                    break;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,8 +186,10 @@ public class ConfigurationSteps extends BasicSteps {
 
 
     private Response updateConfigurationType(String identifier, String description) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("description", description);
         return given().spec(spec).basePath("/configuration")
-                .body(description)
+                .body(map)
                 .when().post("/{id}/description_update", identifier);
 
     }
@@ -154,7 +228,7 @@ public class ConfigurationSteps extends BasicSteps {
      */
     private Response getConfigurationTypes(String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/configuration/configurations");
+                .basePath("/configuration");
 
         if (cursor != null && !"".equals(cursor)) {
             requestSpecification.parameter("cursor", cursor);
@@ -210,7 +284,7 @@ public class ConfigurationSteps extends BasicSteps {
                 fail("Configuration type cannot be created");
             }
             IntStream.rangeClosed(1, count).forEach(i -> {
-                Response createKeyResponse = createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), "\"" + RandomStringUtils.randomAlphanumeric(20) + "\"");
+                Response createKeyResponse = createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
                 if (createKeyResponse.getStatusCode() != 201) {
                     fail("Configuration key cannot be created");
                 }
@@ -222,10 +296,10 @@ public class ConfigurationSteps extends BasicSteps {
 
 
     @Step
-    public void dataIsUsedForCreation(String jsonData) {
+    public void dataIsUsedForCreation(String jsonData, boolean deleteBeforeCreate) {
         ConfigurationType ct = getConfigurationTypeFromString(jsonData);
 
-        if (isConfigurationTypeExist(ct.getIdentifier())) {
+        if (deleteBeforeCreate && isConfigurationTypeExist(ct.getIdentifier())) {
             deleteConfigurationType(ct.getIdentifier());
         }
 
@@ -279,14 +353,60 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void followingConfigurationIsCreated(Configuration c, String identifier) {
-        Response response = createValueForKey(identifier, c.getKey(), c.getValue());
+        Response response = createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
+    /**
+     * validates confoguration key, value, type in body
+     * if key is null, then key is not validated
+     * @param key
+     * @param value
+     * @param type
+     */
     @Step
-    public void bodyContainsConfiguration(String key, String value) {
+    public void bodyContainsConfiguration(String key, String value, String type) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("key", is(key)).body("value", is(value));
+        ValidatableResponse validatable = response.then();
+        if (key != null) {
+            validatable.body("key", is(key));
+        }
+        switch (type) {
+            case "string": {
+                validatable.body("value", is(value)).body("type", is(type));
+                break;
+            }
+            case "integer": {
+                validatable.body("value", is(Integer.valueOf(value))).body("type", is(type));
+                break;
+            }
+            case "long": {
+                validatable.body("value", is(Long.valueOf(value))).body("type", is(type));
+                break;
+            }
+            case "double": {
+                validatable.body("value", is(Double.valueOf(value))).body("type", is(type));
+                break;
+            }
+            case "boolean": {
+                validatable.body("value", is(Boolean.valueOf(value))).body("type", is(type));
+                break;
+            }
+            case "date": {
+                validatable.body("value", is(Boolean.valueOf(value))).body("type", is(type));
+                break;
+            }
+            case "datetime": {
+                validatable.body("value", is(value)).body("type", is(type));
+                break;
+            }
+            case "object": {
+                validatable.body("value", is(value)).body("type", is(type));
+                break;
+            }
+            default:
+                break;
+        }
     }
 
     @Step
@@ -308,7 +428,7 @@ public class ConfigurationSteps extends BasicSteps {
             if (isConfigurationExist(c.getKey(), identifier)) {
                 deleteConfiguration(c.getKey(), identifier);
             }
-            createValueForKey(identifier, c.getKey(), c.getValue());
+            createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
         });
         Serenity.setSessionVariable(SESSION_CONFIGURATIONS).to(configurations);
     }
@@ -327,7 +447,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void valueInResponseIs(String value) {
+    public void valueInResponseIs(String value, String type) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(is(value));
     }
@@ -358,8 +478,8 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void updateConfigurationValue(String identifier, String key, String value) {
-        Response resp = updateValueForKey(identifier, key, value);
+    public void updateConfigurationValue(String identifier, String key, String value, String type) {
+        Response resp = updateValueForKey(identifier, key, value, type);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 

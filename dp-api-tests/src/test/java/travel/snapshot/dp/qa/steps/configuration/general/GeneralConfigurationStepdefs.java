@@ -41,7 +41,7 @@ public class GeneralConfigurationStepdefs {
     public void Data_is_used_for(String jsonData, String method) throws Throwable {
         switch (method) {
             case "POST": {
-                configurationSteps.dataIsUsedForCreation(jsonData);
+                configurationSteps.dataIsUsedForCreation(jsonData, false);
                 break;
             }
             default:
@@ -122,9 +122,9 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.listOfConfigurationsIsGot(limit, cursor, identifier);
     }
 
-    @Then("^Returned configuration value is \"([^\"]*)\"$")
-    public void Returned_configuration_value_is(String value) throws Throwable {
-        configurationSteps.valueInResponseIs(value);
+    @Then("^Returned configuration value is \"([^\"]*)\" with type \"([^\"]*)\"$")
+    public void Returned_configuration_value_is_with_type(String value, String type) throws Throwable {
+        configurationSteps.valueInResponseIs(value, type);
     }
 
     @Then("^There are \"([^\"]*)\" configurations returned$")
@@ -162,13 +162,19 @@ public class GeneralConfigurationStepdefs {
     @Then("^Body contains configuration$")
     public void Body_contains_configuration(List<Configuration> configurations) throws Throwable {
         Configuration c  = configurations.get(0);
-        configurationSteps.bodyContainsConfiguration(c.getKey(), c.getValue());
+        configurationSteps.bodyContainsConfiguration(c.getKey(), c.getValue(), c.getType());
+    }
+
+    @Then("^Body contains configurationValue$")
+    public void Body_contains_configurationValue(List<Configuration> configurations) throws Throwable {
+        Configuration c  = configurations.get(0);
+        configurationSteps.bodyContainsConfiguration(null, c.getValue(), c.getType());
     }
 
     @When("^Configuration with from identifier \"([^\"]*)\" is updated$")
     public void Configuration_with_from_identifier_is_updated(String identifier, List<Configuration> configurations) throws Throwable {
         Configuration c  = configurations.get(0);
-        configurationSteps.updateConfigurationValue(identifier, c.getKey(), c.getValue());
+        configurationSteps.updateConfigurationValue(identifier, c.getKey(), c.getValue(), c.getType());
     }
 
     @Then("^Configuration from identifier \"([^\"]*)\" has following$")
@@ -180,4 +186,5 @@ public class GeneralConfigurationStepdefs {
     public void Configuration_type_description_is_updated_for_identifier_with_missing_description(String identifier) throws Throwable {
         configurationSteps.updateConfigurationTypeDescription(identifier, "");
     }
+
 }

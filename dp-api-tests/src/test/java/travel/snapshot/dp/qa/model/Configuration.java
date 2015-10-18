@@ -11,6 +11,7 @@ public class Configuration {
 
     private String key = null;
     private String value = null;
+    private String type = null;
 
 
     /**
@@ -37,6 +38,19 @@ public class Configuration {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * Type of the value stored.
+     **/
+    @ApiModelProperty(required = true, value = "Type of the value stored.")
+    @JsonProperty("type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 
