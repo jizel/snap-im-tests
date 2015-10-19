@@ -92,4 +92,37 @@ public class AnalyticsSteps extends BasicSteps {
         JsonNode[] tweets = response.body().as(JsonNode[].class);
         assertEquals("There should be " + count + " tweets got", count, tweets.length);
     }
+    
+    /**
+     * getting Facebook posts over rest api, if limit and cursor is null or empty, it's not added to query string
+     *
+     * @param limit
+     * @param cursor
+     * @return
+     */
+    private Response getFacebookPosts(String limit, String cursor) {
+        RequestSpecification requestSpecification = given().spec(spec)
+                .basePath("/social_media/analytics/facebook/posts");
+
+        if (cursor != null && !"".equals(cursor)) {
+            requestSpecification.parameter("cursor", cursor);
+        }
+        if (limit != null && !"".equals(limit)) {
+            requestSpecification.parameter("limit", limit);
+        }
+        return requestSpecification.when().get();
+    }
+    
+    @Step
+    public void listOfFacebookPostsIsGotWith(String limit, String cursor) {
+        Response response = getFacebookPosts(limit, cursor);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    @Step
+    public void numberOfFacebookPostsIsInResponse(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        JsonNode[] facebookPosts = response.body().as(JsonNode[].class);
+        assertEquals("There should be " + count + " Facebook posts got", count, facebookPosts.length);
+    }
 }
