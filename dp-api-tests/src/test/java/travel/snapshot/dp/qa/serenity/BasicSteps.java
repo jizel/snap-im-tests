@@ -1,7 +1,9 @@
 package travel.snapshot.dp.qa.serenity;
 
+import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.filter.log.LogDetail;
+import com.jayway.restassured.filter.log.ResponseLoggingFilter;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -10,8 +12,7 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
 
 import static net.serenitybdd.rest.SerenityRest.rest;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -29,47 +30,11 @@ public class BasicSteps {
 
     public BasicSteps() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
+        RestAssured.filters(ResponseLoggingFilter.logResponseIfStatusCodeMatches(not(isOneOf(200, 201, 202, 203, 204))));
         builder.setContentType(ContentType.JSON);
-        String logLevel = PropertiesHelper.getProperty(CONFIGURATION_HTTP_LOG_LEVEL);
 
-        LogDetail logDetail = null;
+        builder.log(LogDetail.valueOf(PropertiesHelper.getProperty(CONFIGURATION_HTTP_LOG_LEVEL)));
 
-        switch (logLevel) {
-            case "ALL": {
-                logDetail = LogDetail.ALL;
-                break;
-            }
-            case "HEADERS": {
-                logDetail = LogDetail.HEADERS;
-                break;
-            }
-            case "BODY": {
-                logDetail = LogDetail.BODY;
-                break;
-            }
-            case "METHOD": {
-                logDetail = LogDetail.METHOD;
-                break;
-            }
-            case "PARAMS": {
-                logDetail = LogDetail.PARAMS;
-                break;
-            }
-            case "PATH": {
-                logDetail = LogDetail.PATH;
-                break;
-            }
-            case "STATUS": {
-                logDetail = LogDetail.STATUS;
-                break;
-            }
-            default:
-
-        }
-
-        if (logDetail != null) {
-            builder.log(logDetail);
-        }
         spec = builder.build();
     }
 

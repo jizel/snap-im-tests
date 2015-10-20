@@ -44,6 +44,7 @@ Feature: General configuration
     Then Response code is "404"
     And Custom code is "152"
 
+  @skipped
   Scenario: Delete configuration type with missing id parameter
     When Configuration type with identifier "" is deleted
     Then Response code is "400"
@@ -69,6 +70,7 @@ Feature: General configuration
     Then Response code is "400"
     And Custom code is "53"
 
+  @skipped
   Scenario: Updating description with missing id parameter
     When Configuration type description is updated for identifier "" with description "New description"
     Then Response code is "400"
@@ -81,6 +83,7 @@ Feature: General configuration
     Then Response code is "200"
     And Content type is "application/json"
     And There are "2" configurations returned
+
 
   Scenario: Getting configuration type with nonexisting id
     When Configuration type with with identifier "nonexisting_id"  is got
@@ -162,7 +165,7 @@ Feature: General configuration
       | double_test_key_2   | 12.34                                        | double   |
       | boolean_test_key_2  | true                                         | boolean  |
       | date_test_key_2     | 2015-01-01                                   | date     |
-      | datetime_test_key_2 | 2015-01-01/10:10                             | datetime |
+      | datetime_test_key_2 | 2015-01-01T10:10                             | datetime |
       | object_test_key_3   | {"property_1": "value_1", "property_2": 45 } | object   |
 
   Scenario Outline: Checking error codes for adding configuration key:value
@@ -176,10 +179,12 @@ Feature: General configuration
     And Custom code is "<custom_code>"
 
     Examples:
-      | key              | value       | type    | response_code | custom_code |
-      |                  | 11          | integer | 400           | 61          |
-      | given_test_key_1 | text value2 | string  | 400           | 62          |
-      | test_key_1       |             | string  | 400           | 61          |
+      | key              | value           | type     | response_code | custom_code |
+      |                  | 11              | integer  | 400           | 61          |
+      | given_test_key_1 | text value2     | string   | 400           | 62          |
+      | test_key_1       |                 | string   | 400           | 61          |
+      | test_date_key_1  | 2015-xxx-11     | date     | 400           | 61          |
+      | test_date_key_1  | 2015-01-01Taaaa | datetime | 400           | 61          |
 
   #errors
   #missing application
@@ -194,8 +199,7 @@ Feature: General configuration
     And Body is empty
     And Configuration with key "given_test_key_1" doesn't exist for configuration type "conf_id_1"
 
-  #errors
-  #wrong key
+  #TODO Etag
   Scenario Outline: update configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key   | value       | type       |
@@ -213,15 +217,12 @@ Feature: General configuration
       | key              | old_value  | old_type | new_value | new_type |
       | given_test_key_1 | text value | string   | new value | string   |
 
-  #| test_key_2 | 11                                           |             |
-  #| test_key_3 | {"property_1": "value_1", "property_2": 45 } |             |
-  #wrong key
-  #empty body - missing value
+
   Scenario Outline: get configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key   | value   | type   |
       | <key> | <value> | <type> |
-    When Configuration with key "<key>"  is got from configuration type "conf_id_1"
+    When Configuration with key "<key>" is got from configuration type "conf_id_1"
     Then Response code is "200"
     And Content type is "application/json"
     And Body contains configurationValue
@@ -235,9 +236,10 @@ Feature: General configuration
       | long_test_key_2     | 114444                                       | long     |
       | double_test_key_2   | 12.34                                        | double   |
       | boolean_test_key_2  | true                                         | boolean  |
-      | date_test_key_2     | 2015-01-01                                   | date     |
-      | datetime_test_key_2 | 2015-01-01/10:10                             | datetime |
       | object_test_key_3   | {"property_1": "value_1", "property_2": 45 } | object   |
+      | date_test_key_2     | 2015-01-01                                   | date     |
+      | datetime_test_key_2 | 2015-01-01T10:10                             | datetime |
+
 
   Scenario Outline: Checking errors for getting configuration value for key
     When Configuration with key "<key>" is got from configuration type "<identifier>"
@@ -246,8 +248,8 @@ Feature: General configuration
 
     Examples:
       | identifier | key        | response_code | custom_code |
-      | conf_id_1  | wrong_key  | 404           | 151         |
-      | wrong_id   | test_key_1 | 404           | 152         |
+      | conf_id_1  | wrong_key  | 404           | 152         |
+      | wrong_id   | test_key_1 | 404           | 151         |
 
   # errors
   #wrong key

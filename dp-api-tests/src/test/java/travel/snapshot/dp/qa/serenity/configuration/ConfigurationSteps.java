@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.serenity.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.restassured.response.ExtractableResponse;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -14,6 +15,9 @@ import travel.snapshot.dp.qa.model.ConfigurationType;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +39,9 @@ public class ConfigurationSteps extends BasicSteps {
     private static final String SESSION_CONFIGURATION_TYPES = "configuration_types";
     private static final String SESSION_CREATED_CONFIGURATION_TYPE = "created_configuration_type";
     private static final String SESSION_CONFIGURATIONS = "configurations";
+
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public ConfigurationSteps() {
         super();
@@ -84,9 +91,12 @@ public class ConfigurationSteps extends BasicSteps {
                 .when().post("/{id}", identifier);
     }
 
-    private Response updateConfiguration(String key, JsonNode value, String identifier) {
+    private Response updateConfiguration(String key, JsonNode value, String type, String identifier) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("value", value);
+        map.put("type", type);
         return given().spec(spec).basePath("/configuration")
-                .body(value)
+                .body(map)
                 .when().post("/{id}/{key}", identifier, key);
     }
 
@@ -95,34 +105,16 @@ public class ConfigurationSteps extends BasicSteps {
         JsonNode actualObj = null;
         try {
             switch (type) {
-                case "string": {
+                case "string":
+                case "date":
+                case "datetime":{
                     actualObj = mapper.readTree("\"" + value + "\"");
                     break;
                 }
-                case "integer": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "long": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "double": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "boolean": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "date": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "datetime": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
+                case "integer":
+                case "long":
+                case "boolean":
+                case "double":
                 case "object": {
                     actualObj = mapper.readTree(value);
                     break;
@@ -181,7 +173,7 @@ public class ConfigurationSteps extends BasicSteps {
             e.printStackTrace();
         }
 
-        return updateConfiguration(key, actualObj, identifier);
+        return updateConfiguration(key, actualObj, type, identifier);
     }
 
 
@@ -365,43 +357,51 @@ public class ConfigurationSteps extends BasicSteps {
      * @param type
      */
     @Step
-    public void bodyContainsConfiguration(String key, String value, String type) {
+    public void bodyContainsConfiguration(String key, String value, String type) throws IOException {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         ValidatableResponse validatable = response.then();
         if (key != null) {
             validatable.body("key", is(key));
         }
+        validatable.body("type", is(type));
+        JsonNode valueJson = response.as(JsonNode.class).get("value");
         switch (type) {
             case "string": {
-                validatable.body("value", is(value)).body("type", is(type));
+                assertEquals(value, valueJson.asText());
                 break;
             }
             case "integer": {
-                validatable.body("value", is(Integer.valueOf(value))).body("type", is(type));
+                assertEquals(Integer.valueOf(value), Integer.valueOf(valueJson.asInt()));
                 break;
             }
             case "long": {
-                validatable.body("value", is(Long.valueOf(value))).body("type", is(type));
+                assertEquals(Long.valueOf(value), Long.valueOf(valueJson.longValue()));
                 break;
             }
             case "double": {
-                validatable.body("value", is(Double.valueOf(value))).body("type", is(type));
+                assertEquals(Double.valueOf(value), Double.valueOf(valueJson.doubleValue()));
                 break;
             }
             case "boolean": {
-                validatable.body("value", is(Boolean.valueOf(value))).body("type", is(type));
+                assertEquals(Boolean.valueOf(value), Boolean.valueOf(valueJson.booleanValue()));
                 break;
             }
             case "date": {
-                validatable.body("value", is(Boolean.valueOf(value))).body("type", is(type));
+                LocalDate expectedDate = LocalDate.parse(value);
+                LocalDate actualDate = LocalDate.parse(valueJson.asText());
+                assertEquals(expectedDate, actualDate);
                 break;
             }
             case "datetime": {
-                validatable.body("value", is(value)).body("type", is(type));
+                LocalDateTime expectedDateTime = LocalDateTime.parse(value);
+                LocalDateTime actualDateTime = LocalDateTime.parse(valueJson.asText());
+                assertEquals(expectedDateTime, actualDateTime);
                 break;
             }
             case "object": {
-                validatable.body("value", is(value)).body("type", is(type));
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode actualObj =  mapper.readTree(value);
+                assertEquals(actualObj, valueJson);
                 break;
             }
             default:
@@ -428,7 +428,10 @@ public class ConfigurationSteps extends BasicSteps {
             if (isConfigurationExist(c.getKey(), identifier)) {
                 deleteConfiguration(c.getKey(), identifier);
             }
-            createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
+            Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
+            if (createResponse.getStatusCode() != 201) {
+                fail("Configuration cannot be created");
+            }
         });
         Serenity.setSessionVariable(SESSION_CONFIGURATIONS).to(configurations);
     }

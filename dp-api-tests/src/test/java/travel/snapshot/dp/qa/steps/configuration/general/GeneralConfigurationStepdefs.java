@@ -112,7 +112,7 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.configurationDoesntExistForIdentifier(key, identifier);
     }
 
-    @When("^Configuration with key \"([^\"]*)\"  is got from configuration type \"([^\"]*)\"$")
+    @When("^Configuration with key \"([^\"]*)\" is got from configuration type \"([^\"]*)\"$")
     public void Configuration_with_key_is_got_from_configuration_type(String key, String identifier) throws Throwable {
         configurationSteps.getConfigurationWithKeyForIdentifier(key, identifier);
     }
