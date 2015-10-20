@@ -170,22 +170,22 @@ Feature: Overall analytics feature
 
   Scenario: Getting non-existent analytics data
     When Getting "/social_media/analytics/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
-    Then Body is empty
-    And Content type is "application/json"
+    Then Content type is "application/json"
     And Response code is "404"
+    And Custom code is "151"
 
   Scenario: Getting mismatched metrics analytics data
     When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
-    Then Body is empty
-    And Content type is "application/json"
+    Then Content type is "application/json"
     And Response code is "404"
+    And Custom code is "151"
 
   Scenario Outline: Checking error codes for analytics data
     When Property is missing for "<url>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | url                                              | error_code | custom_code |
       | /social_media/analytics                          | 400        | 52          |
       | /social_media/analytics/reach                    | 400        | 52          |
@@ -213,13 +213,13 @@ Feature: Overall analytics feature
       | /social_media/analytics/instagram/mentions       | 400        | 52          |
       | /social_media/analytics/instagram/tags           | 400        | 52          |
 
-  Scenario Outline: 
+  Scenario Outline:
     When List of tweets is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
     And There are <limit> tweets returned
 
-    Examples: 
+    Examples:
       | limit | cursor |
       |       |        |
       | 15    |        |
@@ -228,13 +228,13 @@ Feature: Overall analytics feature
       | 10    | 0      |
       | 5     | 5      |
 
-  Scenario Outline: 
+  Scenario Outline:
     When List of Facebook posts is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
     And There are <limit> Facebook posts returned
 
-    Examples: 
+    Examples:
       | limit | cursor |
       |       |        |
       | 15    |        |
@@ -245,9 +245,9 @@ Feature: Overall analytics feature
 
   Scenario: Get Instagram tags analytics data from API for an invalid granularity
     When Getting "/social_media/analytics/instagram/tags" data with "invalid" granularity for "property" since "2015-09-01" until "2015-09-01"
-    Then Body is empty
-    And Content type is "application/json"
+    Then Content type is "application/json"
     And Response code is "400"
+    And Custom code is "63"
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
@@ -255,29 +255,29 @@ Feature: Overall analytics feature
     And Content type is "application/json"
     And Response code is "200"
 
-    Examples: 
+    Examples:
       | url                                              | granularity |
-      | /social_media/analytics/reach                    | "day"       |
-      | /social_media/analytics/engagement               | "day"       |
-      | /social_media/analytics/followers                | "day"       |
-      | /social_media/analytics/facebook/posts           | "day"       |
-      | /social_media/analytics/facebook/number_of_posts | "day"       |
-      | /social_media/analytics/facebook/engagement      | "day"       |
-      | /social_media/analytics/facebook/likes           | "day"       |
-      | /social_media/analytics/facebook/unlikes         | "day"       |
-      | /social_media/analytics/twitter/tweets           | "week"      |
-      | /social_media/analytics/twitter/engagement       | "week"      |
-      | /social_media/analytics/twitter/followers        | "week"      |
-      | /social_media/analytics/twitter/impressions      | "week"      |
-      | /social_media/analytics/twitter/retweets         | "week"      |
-      | /social_media/analytics/twitter/retweets_reach   | "week"      |
-      | /social_media/analytics/twitter/mentions         | "month"     |
-      | /social_media/analytics/twitter/mentions_reach   | "month"     |
-      | /social_media/analytics/instagram/pictures       | "month"     |
-      | /social_media/analytics/instagram/engagement     | "month"     |
-      | /social_media/analytics/instagram/followers      | "month"     |
-      | /social_media/analytics/instagram/mentions       | "month"     |
-      | /social_media/analytics/instagram/tags           | "month"     |
+      | /social_media/analytics/reach                    | day         |
+      | /social_media/analytics/engagement               | day         |
+      | /social_media/analytics/followers                | day         |
+      | /social_media/analytics/facebook/posts           | day         |
+      | /social_media/analytics/facebook/number_of_posts | day         |
+      | /social_media/analytics/facebook/engagement      | day         |
+      | /social_media/analytics/facebook/likes           | day         |
+      | /social_media/analytics/facebook/unlikes         | day         |
+      | /social_media/analytics/twitter/tweets           | week        |
+      | /social_media/analytics/twitter/engagement       | week        |
+      | /social_media/analytics/twitter/followers        | week        |
+      | /social_media/analytics/twitter/impressions      | week        |
+      | /social_media/analytics/twitter/retweets         | week        |
+      | /social_media/analytics/twitter/retweets_reach   | week        |
+      | /social_media/analytics/twitter/mentions         | month       |
+      | /social_media/analytics/twitter/mentions_reach   | month       |
+      | /social_media/analytics/instagram/pictures       | month       |
+      | /social_media/analytics/instagram/engagement     | month       |
+      | /social_media/analytics/instagram/followers      | month       |
+      | /social_media/analytics/instagram/mentions       | month       |
+      | /social_media/analytics/instagram/tags           | month       |
 
   Scenario Outline: Get collective analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
@@ -285,19 +285,19 @@ Feature: Overall analytics feature
     And Content type is "application/json"
     And Response code is "200"
 
-    Examples: 
+    Examples:
       | url                                | granularity |
-      | /social_media/analytics/           | "day"       |
-      | /social_media/analytics/facebook/  | "day"       |
-      | /social_media/analytics/twitter/   | "week"      |
-      | /social_media/analytics/instagram/ | "month"     |
+      | /social_media/analytics/           | day         |
+      | /social_media/analytics/facebook/  | day         |
+      | /social_media/analytics/twitter/   | week        |
+      | /social_media/analytics/instagram/ | month       |
 
   Scenario Outline: Checking error codes for getting list of tweets
     When List of tweets is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | limit | cursor | response_code | custom_code |
       |       | -1     | 400           | 63          |
       |       | text   | 400           | 63          |
