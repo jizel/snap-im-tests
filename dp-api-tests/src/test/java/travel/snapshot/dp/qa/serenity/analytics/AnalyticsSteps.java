@@ -69,7 +69,9 @@ public class AnalyticsSteps extends BasicSteps {
      */
     private Response getTweets(String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/social_media/analytics/twitter/tweets");
+                .basePath("/social_media/analytics/twitter/tweets")
+                .header("x-property", "sample_property")
+                .parameter("access_token", "aaa");
 
         if (cursor != null && !"".equals(cursor)) {
             requestSpecification.parameter("cursor", cursor);
@@ -102,7 +104,9 @@ public class AnalyticsSteps extends BasicSteps {
      */
     private Response getFacebookPosts(String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/social_media/analytics/facebook/posts");
+                .basePath("/social_media/analytics/facebook/posts")
+                .header("x-property", "sample_property")
+                .parameter("access_token", "aaa");;
 
         if (cursor != null && !"".equals(cursor)) {
             requestSpecification.parameter("cursor", cursor);
