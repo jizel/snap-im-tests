@@ -217,7 +217,7 @@ Feature: Overall analytics feature
     When List of tweets is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
-    And There are "<limit>" tweets returned
+    And There are <limit> tweets returned
 
     Examples: 
       | limit | cursor |
@@ -232,7 +232,7 @@ Feature: Overall analytics feature
     When List of Facebook posts is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
-    And There are "<limit>" Facebook posts returned
+    And There are <limit> Facebook posts returned
 
     Examples: 
       | limit | cursor |
