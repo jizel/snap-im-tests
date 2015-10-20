@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity;
 
 import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.filter.log.LogDetail;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -22,12 +23,53 @@ public class BasicSteps {
     public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     public static final String IDENTITY_BASE_URI = "identity.baseURI";
     public static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
+    private static final String CONFIGURATION_HTTP_LOG_LEVEL = "http_log_level";
 
     protected RequestSpecification spec = null;
 
     public BasicSteps() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
         builder.setContentType(ContentType.JSON);
+        String logLevel = PropertiesHelper.getProperty(CONFIGURATION_HTTP_LOG_LEVEL);
+
+        LogDetail logDetail = null;
+
+        switch (logLevel) {
+            case "ALL": {
+                logDetail = LogDetail.ALL;
+                break;
+            }
+            case "HEADERS": {
+                logDetail = LogDetail.HEADERS;
+                break;
+            }
+            case "BODY": {
+                logDetail = LogDetail.BODY;
+                break;
+            }
+            case "METHOD": {
+                logDetail = LogDetail.METHOD;
+                break;
+            }
+            case "PARAMS": {
+                logDetail = LogDetail.PARAMS;
+                break;
+            }
+            case "PATH": {
+                logDetail = LogDetail.PATH;
+                break;
+            }
+            case "STATUS": {
+                logDetail = LogDetail.STATUS;
+                break;
+            }
+            default:
+
+        }
+
+        if (logDetail != null) {
+            builder.log(logDetail);
+        }
         spec = builder.build();
     }
 
