@@ -119,4 +119,14 @@ public class CreateCustomerStepdefs {
     public void Body_contains_customer_type_with_value(String atributeName, String value) throws Throwable {
         customerSteps.bodyContainsCustomerWith(atributeName, value);
     }
+
+    @When("^Customer with code \"([^\"]*)\" is got with etag$")
+    public void Customer_with_code_is_got_with_etag(String code) throws Throwable {
+        customerSteps.getCustomerWithCodeUsingEtag(code);
+    }
+
+    @When("^Customer with code \"([^\"]*)\" is got for etag, updated and got with previous etag$")
+    public void Customer_with_code_is_got_for_etag_updated_and_got_with_previous_etag(String code) throws Throwable {
+        customerSteps.getCustomerWithCodeUsingEtagAfterUpdate(code);
+    }
 }

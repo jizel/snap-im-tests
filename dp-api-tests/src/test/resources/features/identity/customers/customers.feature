@@ -30,9 +30,9 @@ Feature: Customers
     Examples:
       | json_input_file                                    | method | error_code | custom_code |
       | create_customer_missing_company_name.json          | POST   | 400        | 53          |
-      | create_customer_not_unique_company_name_email.json | POST   | 405        | 51          |
-      | create_customer_wrong_email_value.json             | POST   | 405        | 51          |
-      | create_customer_wrong_field_email.json             | POST   | 405        | 51          |
+      | create_customer_not_unique_company_name_email.json | POST   | 400        | 62          |
+      | create_customer_wrong_email_value.json             | POST   | 400        | 59          |
+      | create_customer_wrong_field_email.json             | POST   | 400        | 56          |
 
 
   Scenario: Deleting Customer
@@ -43,7 +43,7 @@ Feature: Customers
     And Customer with same id doesn't exist
 
 
-  Scenario: Checking error code for deletting customer
+  Scenario: Checking error code for deleting customer
     When Nonexistent customer id is deleted
     Then Response code is "404"
     And Custom code is "152"
@@ -117,9 +117,19 @@ Feature: Customers
   Scenario: Getting customer with etag
     When Customer with code "c1t" is got with etag
     Then Response code is "304"
-    And Content type is "application/json"
     And Body is empty
 
+  Scenario: Getting customer with not current etag
+    Customer is got, etag is saved to tmp, then customer vat_id is updated so etag should change and is got again with previous etag
+
+    When Customer with code "c1t" is got for etag, updated and got with previous etag
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Etag header is present
+    And Body contains customer type with "code" value "c1t"
+    And Body contains customer type with "company_name" value "Given company 1"
+    And Body contains customer type with "email" value "c1@tenants.biz"
+    And Body contains customer type with "vat_id" value "CZ10000001"
 
   Scenario: Checking error code for getting customer
     When Nonexistent customer id is got

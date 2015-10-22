@@ -18,7 +18,6 @@ import java.util.Map;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -99,10 +98,12 @@ public class CustomerSteps extends BasicSteps {
 
     }
 
-    private Response updateCustomer(String id, Map<String, Object> customer) {
-        return given().spec(spec).basePath("/identity/customers")
-                .body(customer)
-                .when().post("/{id}", id);
+    private Response updateCustomer(String id, Map<String, Object> customer, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec).basePath("/identity/customers");
+        if (etag != null && !"".equals(etag)) {
+            requestSpecification = requestSpecification.header("If-Match", etag);
+        }
+        return requestSpecification.body(customer).when().post("/{id}", id);
 
     }
 
@@ -111,9 +112,12 @@ public class CustomerSteps extends BasicSteps {
                 .when().delete("/{id}", id);
     }
 
-    private Response getCustomer(String id) {
-        return given().spec(spec).basePath("/identity/customers")
-                .when().get("/{id}", id);
+    private Response getCustomer(String id, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec).basePath("/identity/customers");
+        if (etag != null && !"".equals(etag)) {
+            requestSpecification = requestSpecification.header("If-None-Match", etag);
+        }
+        return requestSpecification.when().get("/{id}", id);
     }
 
     private Response activateCustomer(String id) {
@@ -154,7 +158,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void getCustomerWithId(String customerId) {
-        Response resp = getCustomer(customerId);
+        Response resp = getCustomer(customerId, null);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 
@@ -163,7 +167,7 @@ public class CustomerSteps extends BasicSteps {
         //TODO implement actual customer search
         Customer customerFromList = getCustomerByCode(code);
 
-        Response resp = getCustomer(customerFromList.getCustomerId());
+        Response resp = getCustomer(customerFromList.getCustomerId(), null);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 
@@ -185,7 +189,7 @@ public class CustomerSteps extends BasicSteps {
     public void customerIdInSessionDoesntExist() {
         String customerId = Serenity.sessionVariableCalled(SESSION_CUSTOMER_ID);
 
-        Response response = getCustomer(customerId);
+        Response response = getCustomer(customerId, null);
         response.then().statusCode(404);
     }
 
@@ -205,6 +209,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void updateCustomerWithCode(String code, Customer updatedCustomer) {
         Customer original = getCustomerByCode(code);
+        Response tempResponse = getCustomer(original.getCustomerId(), null);
 
         Map<String, Object> customer = new HashMap<>();
         if (updatedCustomer.getEmail() != null && !"".equals(updatedCustomer.getEmail())) {
@@ -216,11 +221,11 @@ public class CustomerSteps extends BasicSteps {
         if (updatedCustomer.getVatId() != null && !"".equals(updatedCustomer.getVatId())) {
             customer.put("vat_id", updatedCustomer.getVatId());
         }
-        if (updatedCustomer.getPhone()!=null && !"".equals(updatedCustomer.getPhone())) {
+        if (updatedCustomer.getPhone() != null && !"".equals(updatedCustomer.getPhone())) {
             customer.put("phone", updatedCustomer.getPhone());
         }
 
-        Response response = updateCustomer(original.getCustomerId(), customer);
+        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader("ETag"));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -248,5 +253,35 @@ public class CustomerSteps extends BasicSteps {
     public void bodyContainsCustomerWith(String atributeName, String value) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(atributeName, is(value));
+    }
+
+    @Step
+    public void getCustomerWithCodeUsingEtag(String code) {
+        //TODO implement actual customer search
+        Customer customerFromList = getCustomerByCode(code);
+
+        Response tempResponse = getCustomer(customerFromList.getCustomerId(), null);
+
+        Response resp = getCustomer(customerFromList.getCustomerId(), tempResponse.getHeader("ETag"));
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+    }
+
+    @Step
+    public void getCustomerWithCodeUsingEtagAfterUpdate(String code) {
+        Customer customerFromList = getCustomerByCode(code);
+
+        Response tempResponse = getCustomer(customerFromList.getCustomerId(), null);
+
+        Map<String, Object> mapForUpdate = new HashMap<>();
+        mapForUpdate.put("vat_id", "CZnotvalidvatid");
+
+        Response updateResponse = updateCustomer(customerFromList.getCustomerId(), mapForUpdate, tempResponse.getHeader("ETag"));
+
+        if (updateResponse.getStatusCode() != 204) {
+            fail("Customer cannot be updated: " + updateResponse.asString());
+        }
+
+        Response resp = getCustomer(customerFromList.getCustomerId(), tempResponse.getHeader("ETag"));
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 }

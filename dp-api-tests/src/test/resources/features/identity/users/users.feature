@@ -8,16 +8,6 @@ Feature: Users
 
 
 
-Scenario: delete user
-  Given precondition "parameter"
-  When what happens
-  Then  validation
-
-
-Scenario: create user
-
-  When user is created
-  Then Response code is "201"
 
 
 

@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.steps;
 
+import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
@@ -33,5 +35,10 @@ public class BasicStepDefs {
     @Then("^Body is empty$")
     public void body_is_empty() throws Throwable {
         basicSteps.bodyIsEmpty();
+    }
+
+    @Then("^Etag header is present$")
+    public void Etag_header_is_present() throws Throwable {
+        basicSteps.etagIsPresent();
     }
 }

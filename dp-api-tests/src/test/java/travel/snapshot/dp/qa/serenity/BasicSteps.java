@@ -70,4 +70,9 @@ public class BasicSteps {
                 .get(service);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
+
+    public void etagIsPresent() {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().header("ETag", not(isEmptyOrNullString()));
+    }
 }
