@@ -9,9 +9,7 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
 
-import static net.serenitybdd.rest.SerenityRest.rest;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -24,16 +22,24 @@ public class BasicSteps {
     public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     public static final String IDENTITY_BASE_URI = "identity.baseURI";
     public static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
-    private static final String CONFIGURATION_HTTP_LOG_LEVEL = "http_log_level";
+    private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
+    private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
+    private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
 
     protected RequestSpecification spec = null;
 
     public BasicSteps() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        RestAssured.filters(ResponseLoggingFilter.logResponseIfStatusCodeMatches(not(isOneOf(200, 201, 202, 203, 204))));
+        RestAssured.filters(
+                new ResponseLoggingFilter(
+                        LogDetail.valueOf(PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL)),
+                        true,
+                        System.out,
+                        not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
+
         builder.setContentType(ContentType.JSON);
 
-        builder.log(LogDetail.valueOf(PropertiesHelper.getProperty(CONFIGURATION_HTTP_LOG_LEVEL)));
+        builder.log(LogDetail.valueOf(PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL)));
 
         spec = builder.build();
     }

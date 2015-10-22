@@ -81,7 +81,6 @@ public class CustomerSteps extends BasicSteps {
         given().spec(spec).get(customerLocation).then()
                 .body("salesforce_id", is(originalCustomer.getSalesforceId()))
                 .body("company_name", is(originalCustomer.getCompanyName()))
-                .body("commercial_subscription_id", is(originalCustomer.getCommercialSubscriptionId()))
                 .body("code", is(originalCustomer.getCode()))
                 .body("email", is(originalCustomer.getEmail()))
                 .body("vat_id", is(originalCustomer.getVatId()));
@@ -210,9 +209,6 @@ public class CustomerSteps extends BasicSteps {
         Map<String, Object> customer = new HashMap<>();
         if (updatedCustomer.getEmail() != null && !"".equals(updatedCustomer.getEmail())) {
             customer.put("email", updatedCustomer.getEmail());
-        }
-        if (updatedCustomer.getCommercialSubscriptionId() != null && !"".equals(updatedCustomer.getCommercialSubscriptionId())) {
-            customer.put("commercial_subscription_id", updatedCustomer.getCommercialSubscriptionId());
         }
         if (updatedCustomer.getCompanyName() != null && !"".equals(updatedCustomer.getCompanyName())) {
             customer.put("company_name", updatedCustomer.getCompanyName());

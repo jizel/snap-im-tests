@@ -12,14 +12,13 @@ public class Customer {
     private String customerId = null;
     private String parentId = null;
     private String salesforceId = null;
-    private String commercialSubscriptionId = null;
     private String companyName = null;
     private String code = null;
     private String phone = null;
     private String email = null;
     private String website = null;
     private String vatId = null;
-    private Boolean isDemoCustomer = false;
+    private Boolean isDemoCustomer = null;
     private String sourceCustomer = null;
     private Address address = null;
     private String notes = null;
@@ -64,20 +63,6 @@ public class Customer {
 
     public void setSalesforceId(String salesforceId) {
         this.salesforceId = salesforceId;
-    }
-
-
-    /**
-     * Unique identifier of the commercial subscription.
-     **/
-    @ApiModelProperty(required = true, value = "Unique identifier of the commercial subscription.")
-    @JsonProperty("commercial_subscription_id")
-    public String getCommercialSubscriptionId() {
-        return commercialSubscriptionId;
-    }
-
-    public void setCommercialSubscriptionId(String commercialSubscriptionId) {
-        this.commercialSubscriptionId = commercialSubscriptionId;
     }
 
 
@@ -229,7 +214,6 @@ public class Customer {
         sb.append("  customerId: ").append(customerId).append("\n");
         sb.append("  parentId: ").append(parentId).append("\n");
         sb.append("  salesforceId: ").append(salesforceId).append("\n");
-        sb.append("  commercialSubscriptionId: ").append(commercialSubscriptionId).append("\n");
         sb.append("  companyName: ").append(companyName).append("\n");
         sb.append("  code: ").append(code).append("\n");
         sb.append("  phone: ").append(phone).append("\n");
