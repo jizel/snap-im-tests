@@ -64,7 +64,9 @@ Feature: Customers
       | companyName | email | code | salesforceId         | vatId      | code | phone | website | sourceCustomer | notes |
       |             |       |      | salesforceid_updated | CZ10000001 |      |       |         |                |       |
 
-  #TODO update customer, activate, inactivate
+
+
+  #TODO update cutomer with not matched etag/empty etag/missing etag
 
   Scenario: Customer is activated
     When Customer with code "c1t" is activated
@@ -120,7 +122,7 @@ Feature: Customers
     And Body is empty
 
   Scenario: Getting customer with not current etag
-    Customer is got, etag is saved to tmp, then customer vat_id is updated so etag should change and is got again with previous etag
+  Customer is got, etag is saved to tmp, then customer vat_id is updated so etag should change and is got again with previous etag
 
     When Customer with code "c1t" is got for etag, updated and got with previous etag
     Then Response code is "200"
@@ -165,16 +167,16 @@ Feature: Customers
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <limit> customers returned
+    And There are <returned> customers returned
 
     Examples:
-      | limit | cursor |
-      |       |        |
-      | 15    |        |
-      |       | 1      |
-      | 20    | 0      |
-      | 10    | 0      |
-      | 5     | 5      |
+      | limit | cursor | returned |
+      |       |        | 20       |
+      | 15    |        | 15       |
+      |       | 1      | 20       |
+      | 20    | 0      | 20       |
+      | 10    | 0      | 10       |
+      | 5     | 5      | 5        |
 
   #given hodne hodnot, aby se dalo testovat
     #test limit, cursor, filter, sort with different values
