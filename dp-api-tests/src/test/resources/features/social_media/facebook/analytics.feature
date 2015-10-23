@@ -140,19 +140,57 @@ Feature: Overall analytics feature
       | 10    | text   | 400           | 63          |
 
   Scenario: Get analytics data from API with missing granularity
-    When Getting "/social_media/analytics/facebook/engagement" data with "" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "/social_media/analytics/facebook/engagement" data with "default" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
 
   Scenario: Get analytics data from API for a day with missing start date
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "" until "2015-09-01"
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "default" until "2015-09-01"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
 
   Scenario: Get analytics data from API for a day with missing end date
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until ""
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "default"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
+
+  Scenario: Get analytics data from API with all parameters missing
+    When Getting "/social_media/analytics/facebook/engagement" data with "default" granularity for "property" since "default" until "default"
+    Then Response contains 5 values
+    And Content type is "application/json"
+    And Response code is "200"
+
+  Scenario: Checking default granularity value
+    When Getting "/social_media/analytics/facebook/engagement" data with "default" granularity for "property" since "2015-09-01" until "2015-09-01"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+
+  Scenario: Checking default start date value
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "default" until "2015-09-01"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 31 days" until "2015-09-01"
+
+  Scenario: Checking default end date value
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "2015-09-01" since "default" until "default"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "current date"
+
+  Scenario: Checking default start and end date values
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "default" until "default"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 31 days" until "current date"
+
+  Scenario: Checking data range limit for day granularity
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 100 days" until "current date"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 90 days" until "current date"
+
+  Scenario: Checking data range limit for week granularity
+    When Getting "/social_media/analytics/facebook/engagement" data with "week" granularity for "property" since "current date - 30 weeks" until "current date"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "week" granularity for "property" since "current date - 26 weeks" until "current date"
+
+  Scenario: Checking data range limit for month granularity
+    When Getting "/social_media/analytics/facebook/engagement" data with "month" granularity for "property" since "current date - 40 months" until "current date"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "month" granularity for "property" since "current date - 36 months" until "current date"
+
+  Scenario: Checking data range for future dates
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date + 2 days" until "current date + 3 days"
+    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date" until "current date + 3 days"
