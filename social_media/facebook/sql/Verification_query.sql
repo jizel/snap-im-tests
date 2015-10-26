@@ -28,4 +28,4 @@ LEFT OUTER JOIN
 -- For total values:
 -- the values from both tables are equal
 --
--- Note that currently only the statiscits for "followers" and "likes" list total values. The rest values are incremental.
+-- Note that currently only the statiscits for "followers" and "likes" list total values. The rest of the values are incremental.
