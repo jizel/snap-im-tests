@@ -88,7 +88,7 @@ Feature: Overall analytics feature
       | /social_media/analytics/instagram/mentions       | 400        | 52          |
       | /social_media/analytics/instagram/tags           | 400        | 52          |
 
-  Scenario Outline: 
+  Scenario Outline: Getting a list of tweets
     When List of tweets is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
@@ -103,7 +103,7 @@ Feature: Overall analytics feature
       | 10    | 0      |
       | 5     | 5      |
 
-  Scenario Outline: 
+  Scenario Outline: Getting a list of Facebook posts
     When List of Facebook posts is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
@@ -139,58 +139,40 @@ Feature: Overall analytics feature
       | text  | 0      | 400           | 63          |
       | 10    | text   | 400           | 63          |
 
-  Scenario: Get analytics data from API with missing granularity
-    When Getting "/social_media/analytics/facebook/engagement" data with "default" granularity for "property" since "2015-09-01" until "2015-09-01"
+  Scenario Outline: Get analytics data from API with missing parameters
+    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
 
-  Scenario: Get analytics data from API for a day with missing start date
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "default" until "2015-09-01"
+    Examples: 
+      | url                           | granularity | start_date | end_date   |
+      | /social_media/analytics       | default     | 2015-09-01 | 2015-09-01 |
+      | /social_media/analytics/reach | day         | default    | 2015-09-01 |
+      | /social_media/analytics/reach | day         | 2015-09-01 | default    |
+      | /social_media/analytics/reach | day         | default    | default    |
+      | /social_media/analytics/reach | default     | default    | default    |
+
+  Scenario Outline: Checking default parameter values
+    When Getting "<url>" data with "<granularity>" granularity for "property" since "start_date" until "end_date"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
+    And "parameter" is "value"
 
-  Scenario: Get analytics data from API for a day with missing end date
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "default"
-    Then Response contains 5 values
-    And Content type is "application/json"
-    And Response code is "200"
-
-  Scenario: Get analytics data from API with all parameters missing
-    When Getting "/social_media/analytics/facebook/engagement" data with "default" granularity for "property" since "default" until "default"
-    Then Response contains 5 values
-    And Content type is "application/json"
-    And Response code is "200"
-
-  Scenario: Checking default granularity value
-    When Getting "/social_media/analytics/facebook/engagement" data with "default" granularity for "property" since "2015-09-01" until "2015-09-01"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
-
-  Scenario: Checking default start date value
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "default" until "2015-09-01"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 31 days" until "2015-09-01"
-
-  Scenario: Checking default end date value
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "2015-09-01" since "default" until "default"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "current date"
-
-  Scenario: Checking default start and end date values
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "default" until "default"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 31 days" until "current date"
-
-  Scenario: Checking data range limit for day granularity
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 100 days" until "current date"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date - 90 days" until "current date"
-
-  Scenario: Checking data range limit for week granularity
-    When Getting "/social_media/analytics/facebook/engagement" data with "week" granularity for "property" since "current date - 30 weeks" until "current date"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "week" granularity for "property" since "current date - 26 weeks" until "current date"
-
-  Scenario: Checking data range limit for month granularity
-    When Getting "/social_media/analytics/facebook/engagement" data with "month" granularity for "property" since "current date - 40 months" until "current date"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "month" granularity for "property" since "current date - 36 months" until "current date"
-
-  Scenario: Checking data range for future dates
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date + 2 days" until "current date + 3 days"
-    Then Response matches response of getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "current date" until "current date + 3 days"
+    Examples: 
+      | url                           | granularity | start_date               | end_date              | parameter   | value                    |
+      | /social_media/analytics/reach | default     | default                  | default               | granularity | day                      | # default values for all parameters
+      | /social_media/analytics/reach | default     | default                  | default               | since       | current date - 31 days   | # checking each one invididually
+      | /social_media/analytics/reach | default     | default                  | default               | until       | current date             |
+      | /social_media/analytics/reach | default     | 2015-09-01               | 2015-09-01            | granularity | day                      | 
+      | /social_media/analytics/reach | day         | default                  | current date          | since       | current date - 31 days   | # one parameter missing
+      | /social_media/analytics/reach | day         | current date             | default               | until       | current date             | # checking according to specification
+      | /social_media/analytics/reach | week        | default                  | current date          | since       | current date - 13 weeks  |
+      | /social_media/analytics/reach | week        | current date             | default               | until       | current date             |
+      | /social_media/analytics/reach | month       | default                  | current date          | since       | current date - 6 months  |
+      | /social_media/analytics/reach | month       | current date             | default               | until       | current date             |
+      | /social_media/analytics/reach | day         | current date - 100 days  | current date          | since       | current date - 90 days   | # date range over the limit
+      | /social_media/analytics/reach | week        | current date - 30 weeks  | current date          | since       | current date - 26 weeks  |
+      | /social_media/analytics/reach | month       | current date - 40 months | current date          | since       | current date - 36 months |
+      | /social_media/analytics/reach | day         | current date + 2 days    | current date + 3 days | since       | current date             | # date range in the future

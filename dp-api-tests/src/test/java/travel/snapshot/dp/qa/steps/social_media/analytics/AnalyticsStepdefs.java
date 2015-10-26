@@ -62,4 +62,9 @@ public class AnalyticsStepdefs {
     public void There_are_facebook_posts_returned(int count) throws Throwable {
         analyticsSteps.numberOfFacebookPostsIsInResponse(count);
     }
+    
+    @Then("^\"([^\"]*)\" is \"([^\"]*)\"$")
+    public void parameter_is(String parameter, String value) throws Throwable {
+        analyticsSteps.parameterIs(parameter, value);
+    }
 }

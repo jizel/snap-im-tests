@@ -129,4 +129,9 @@ public class AnalyticsSteps extends BasicSteps {
         JsonNode[] facebookPosts = response.body().as(JsonNode[].class);
         assertEquals("There should be " + count + " Facebook posts got", count, facebookPosts.length);
     }
+
+    public void parameterIs(String parameter, String value){
+    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+    	assertEquals(response.getBody().path(parameter), value);
+    }
 }
