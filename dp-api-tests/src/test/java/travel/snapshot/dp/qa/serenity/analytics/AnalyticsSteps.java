@@ -132,6 +132,6 @@ public class AnalyticsSteps extends BasicSteps {
 
     public void parameterIs(String parameter, String value){
     	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-    	assertEquals(response.getBody().path(parameter), value);
+    	assertEquals(value, response.getBody().path(parameter));
     }
 }

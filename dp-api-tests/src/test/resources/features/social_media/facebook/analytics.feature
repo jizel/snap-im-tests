@@ -154,25 +154,25 @@ Feature: Overall analytics feature
       | /social_media/analytics/reach | default     | default    | default    |
 
   Scenario Outline: Checking default parameter values
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "start_date" until "end_date"
+    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
-    And "parameter" is "value"
+    And "<parameter>" is "<value>"
 
     Examples: 
       | url                           | granularity | start_date               | end_date              | parameter   | value                    |
-      | /social_media/analytics/reach | default     | default                  | default               | granularity | day                      | # default values for all parameters
-      | /social_media/analytics/reach | default     | default                  | default               | since       | current date - 31 days   | # checking each one invididually
+      | /social_media/analytics/reach | default     | default                  | default               | granularity | day                      |
+      | /social_media/analytics/reach | default     | default                  | default               | since       | current date - 31 days   |
       | /social_media/analytics/reach | default     | default                  | default               | until       | current date             |
-      | /social_media/analytics/reach | default     | 2015-09-01               | 2015-09-01            | granularity | day                      | 
-      | /social_media/analytics/reach | day         | default                  | current date          | since       | current date - 31 days   | # one parameter missing
-      | /social_media/analytics/reach | day         | current date             | default               | until       | current date             | # checking according to specification
+      | /social_media/analytics/reach | default     | 2015-09-01               | 2015-09-01            | granularity | day                      |
+      | /social_media/analytics/reach | day         | default                  | current date          | since       | current date - 31 days   |
+      | /social_media/analytics/reach | day         | current date             | default               | until       | current date             |
       | /social_media/analytics/reach | week        | default                  | current date          | since       | current date - 13 weeks  |
       | /social_media/analytics/reach | week        | current date             | default               | until       | current date             |
       | /social_media/analytics/reach | month       | default                  | current date          | since       | current date - 6 months  |
       | /social_media/analytics/reach | month       | current date             | default               | until       | current date             |
-      | /social_media/analytics/reach | day         | current date - 100 days  | current date          | since       | current date - 90 days   | # date range over the limit
+      | /social_media/analytics/reach | day         | current date - 100 days  | current date          | since       | current date - 90 days   |
       | /social_media/analytics/reach | week        | current date - 30 weeks  | current date          | since       | current date - 26 weeks  |
       | /social_media/analytics/reach | month       | current date - 40 months | current date          | since       | current date - 36 months |
-      | /social_media/analytics/reach | day         | current date + 2 days    | current date + 3 days | since       | current date             | # date range in the future
+      | /social_media/analytics/reach | day         | current date + 2 days    | current date + 3 days | since       | current date             |
