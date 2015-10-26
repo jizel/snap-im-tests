@@ -129,4 +129,9 @@ public class CreateCustomerStepdefs {
     public void Customer_with_code_is_got_for_etag_updated_and_got_with_previous_etag(String code) throws Throwable {
         customerSteps.getCustomerWithCodeUsingEtagAfterUpdate(code);
     }
+
+    @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")
+    public void Customer_with_code_is_updated_with_data_if_updated_before(String code, List<Customer> customers) throws Throwable {
+        customerSteps.updateCustomerWithCodeIfUpdatedBefore(code, customers.get(0));
+    }
 }

@@ -34,6 +34,8 @@ Feature: Customers
       | create_customer_wrong_email_value.json             | POST   | 400        | 59          |
       | create_customer_wrong_field_email.json             | POST   | 400        | 56          |
 
+    #add wrong web, null customer code,
+
 
   Scenario: Deleting Customer
 
@@ -56,17 +58,26 @@ Feature: Customers
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated customer with code "c1t" has data
+    And Updated customer with code "<code>" has data
       | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | sourceCustomer   | notes   |
       | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
 
     Examples:
-      | companyName | email | code | salesforceId         | vatId      | code | phone | website | sourceCustomer | notes |
-      |             |       |      | salesforceid_updated | CZ10000001 |      |       |         |                |       |
-
+      | companyName | email | code             | salesforceId         | vatId      | phone         | website        | sourceCustomer | notes |
+      |             |       | c1t              | salesforceid_updated | CZ10000001 |               |                |                |       |
+      |             |       | c1t              |                      |            | +420123456789 | http://test.cz |                |       |
+      |             |       | UPDATED_CODE_c1t |                      |            |               |                |                |       |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
+  # update with error fields, bad values, missing fields
+
+  Scenario: Updating customer with outdated etag
+    When Customer with code "c1t" is updated with data if updated before
+      | companyName | email | code | salesforceId | vatId | phone | website        | sourceCustomer | notes |
+      |             |       |      |              |       |       | http://test.cz |                |       |
+    Then Response code is "412"
+    And Custom code is "57"
 
   Scenario: Customer is activated
     When Customer with code "c1t" is activated
@@ -122,7 +133,7 @@ Feature: Customers
     And Body is empty
 
   Scenario: Getting customer with not current etag
-  Customer is got, etag is saved to tmp, then customer vat_id is updated so etag should change and is got again with previous etag
+  Customer is got, etag is saved to tmp, then customer vat_id is updated to "CZnotvalidvatid" so etag should change and is got again with previous etag
 
     When Customer with code "c1t" is got for etag, updated and got with previous etag
     Then Response code is "200"
@@ -131,7 +142,7 @@ Feature: Customers
     And Body contains customer type with "code" value "c1t"
     And Body contains customer type with "company_name" value "Given company 1"
     And Body contains customer type with "email" value "c1@tenants.biz"
-    And Body contains customer type with "vat_id" value "CZ10000001"
+    And Body contains customer type with "vat_id" value "CZnotvalidvatid"
 
   Scenario: Checking error code for getting customer
     When Nonexistent customer id is got

@@ -284,4 +284,37 @@ public class CustomerSteps extends BasicSteps {
         Response resp = getCustomer(customerFromList.getCustomerId(), tempResponse.getHeader("ETag"));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
+
+    public void updateCustomerWithCodeIfUpdatedBefore(String code, Customer updatedCustomer) {
+        Customer original = getCustomerByCode(code);
+        Response tempResponse = getCustomer(original.getCustomerId(), null);
+
+
+        Map<String, Object> mapForUpdate = new HashMap<>();
+        mapForUpdate.put("vat_id", "CZnotvalidvatid");
+
+        Response updateResponse = updateCustomer(original.getCustomerId(), mapForUpdate, tempResponse.getHeader("ETag"));
+
+        if (updateResponse.getStatusCode() != 204) {
+            fail("Customer cannot be updated: " + updateResponse.asString());
+        }
+
+
+        Map<String, Object> customer = new HashMap<>();
+        if (updatedCustomer.getEmail() != null && !"".equals(updatedCustomer.getEmail())) {
+            customer.put("email", updatedCustomer.getEmail());
+        }
+        if (updatedCustomer.getCompanyName() != null && !"".equals(updatedCustomer.getCompanyName())) {
+            customer.put("company_name", updatedCustomer.getCompanyName());
+        }
+        if (updatedCustomer.getVatId() != null && !"".equals(updatedCustomer.getVatId())) {
+            customer.put("vat_id", updatedCustomer.getVatId());
+        }
+        if (updatedCustomer.getPhone() != null && !"".equals(updatedCustomer.getPhone())) {
+            customer.put("phone", updatedCustomer.getPhone());
+        }
+
+        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader("ETag"));
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
 }
