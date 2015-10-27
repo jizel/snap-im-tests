@@ -18,7 +18,7 @@ SELECT ifps.property_id,
        ifps.incremental_engagements + coalesce(ffps.engagements,0), 
        ifps.total_followers, 
        ifps.incremental_reached + coalesce(ffps.reach,0), 
-       ifps.total_likes,
+       ifps.incremental_likes + coalesce(ffps.likes,0),
        ifps.incremental_unlikes + coalesce(ffps.unlikes,0), 
        ifps.time_stamp
 FROM DP_FB_PAGE_STATS_InnoDB.ImportedFacebookPageStatistics ifps 
