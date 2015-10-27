@@ -8,7 +8,7 @@ SELECT ifps.property_id,
        ffps.followers,
        ifps.incremental_reached,
        ffps.reach,
-       ifps.total_likes,
+       ifps.incremental_likes,
        ffps.likes,
        ifps.incremental_unlikes,
        ffps.unlikes,
@@ -28,4 +28,4 @@ LEFT OUTER JOIN
 -- For total values:
 -- the values from both tables are equal
 --
--- Note that currently only the statiscits for "followers" and "likes" list total values. The rest of the values are incremental.
+-- Note that currently only the statiscits for "followers" list total values. The rest of the values are incremental.
