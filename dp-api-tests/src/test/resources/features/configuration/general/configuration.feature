@@ -1,4 +1,4 @@
-Feature: General configuration
+Feature: configuration
 
   #TODO add etag things to get/update/create
 

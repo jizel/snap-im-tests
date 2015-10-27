@@ -1,9 +1,9 @@
 {
 
   "code": "ecn1",
-
+  "phone": "+42012345679",
   "email": "testing@test.biz",
-
+  "website" : "http://www.snapshot.travel",
   "is_demo_customer": true,
 
   "address": {

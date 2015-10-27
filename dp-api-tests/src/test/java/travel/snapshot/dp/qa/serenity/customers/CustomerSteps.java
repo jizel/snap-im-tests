@@ -224,6 +224,12 @@ public class CustomerSteps extends BasicSteps {
         if (updatedCustomer.getPhone() != null && !"".equals(updatedCustomer.getPhone())) {
             customer.put("phone", updatedCustomer.getPhone());
         }
+        if (updatedCustomer.getSalesforceId() != null && !"".equals(updatedCustomer.getSalesforceId())) {
+            customer.put("salesforce_id", updatedCustomer.getSalesforceId());
+        }
+        if (updatedCustomer.getWebsite() != null && !"".equals(updatedCustomer.getWebsite())) {
+            customer.put("website", updatedCustomer.getWebsite());
+        }
 
         Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader("ETag"));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
@@ -273,7 +279,7 @@ public class CustomerSteps extends BasicSteps {
         Response tempResponse = getCustomer(customerFromList.getCustomerId(), null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("vat_id", "CZnotvalidvatid");
+        mapForUpdate.put("vat_id", "CZ99999999");
 
         Response updateResponse = updateCustomer(customerFromList.getCustomerId(), mapForUpdate, tempResponse.getHeader("ETag"));
 
@@ -291,7 +297,7 @@ public class CustomerSteps extends BasicSteps {
 
 
         Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("vat_id", "CZnotvalidvatid");
+        mapForUpdate.put("vat_id", "CZ99999999");
 
         Response updateResponse = updateCustomer(original.getCustomerId(), mapForUpdate, tempResponse.getHeader("ETag"));
 
@@ -316,5 +322,28 @@ public class CustomerSteps extends BasicSteps {
 
         Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader("ETag"));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    public void customerWithCodeHasData(String code, Customer data) {
+        Customer customerByCode = getCustomerByCode(code);
+
+        if (data.getEmail() != null && !"".equals(data.getEmail())) {
+            assertEquals(data.getEmail(), customerByCode.getEmail());
+        }
+        if (data.getCompanyName() != null && !"".equals(data.getCompanyName())) {
+            assertEquals(data.getCompanyName(), customerByCode.getCode());
+        }
+        if (data.getVatId() != null && !"".equals(data.getVatId())) {
+            assertEquals(data.getVatId(), customerByCode.getVatId());
+        }
+        if (data.getPhone() != null && !"".equals(data.getPhone())) {
+            assertEquals(data.getPhone(), customerByCode.getPhone());
+        }
+        if (data.getSalesforceId() != null && !"".equals(data.getSalesforceId())) {
+            assertEquals(data.getSalesforceId(), customerByCode.getSalesforceId());
+        }
+        if (data.getWebsite() != null && !"".equals(data.getWebsite())) {
+            assertEquals(data.getWebsite(), customerByCode.getWebsite());
+        }
     }
 }

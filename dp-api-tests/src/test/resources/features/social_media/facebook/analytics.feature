@@ -1,4 +1,4 @@
-Feature: Overall analytics feature
+Feature: analytics
 
   Scenario: Get all analytics data (reach, engagement, followers) from API for a day
     When Getting "/social_media/analytics" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"

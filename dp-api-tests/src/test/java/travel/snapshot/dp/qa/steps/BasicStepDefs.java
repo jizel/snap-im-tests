@@ -41,4 +41,9 @@ public class BasicStepDefs {
     public void Etag_header_is_present() throws Throwable {
         basicSteps.etagIsPresent();
     }
+
+    @When("^File \"([^\"]*)\" is used for \"([^\"]*)\" to \"([^\"]*)\" on \"([^\"]*)\"$")
+    public void File_is_used_for_to_on(String filename, String method, String url, String module) throws Throwable {
+        basicSteps.useFileForSendDataTo(filename, method, url, module);
+    }
 }

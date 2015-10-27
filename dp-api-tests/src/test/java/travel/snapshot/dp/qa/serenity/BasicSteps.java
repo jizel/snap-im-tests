@@ -8,8 +8,17 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.io.IOUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Customer;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -44,6 +53,10 @@ public class BasicSteps {
         spec = builder.build();
     }
 
+    private String getRequestDataFromFile(InputStream inputStream) throws IOException {
+        return IOUtils.toString(inputStream, Charset.forName("utf-8"));
+    }
+
     public void responseCodeIs(int responseCode) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().statusCode(responseCode);
@@ -74,5 +87,32 @@ public class BasicSteps {
     public void etagIsPresent() {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().header("ETag", not(isEmptyOrNullString()));
+    }
+
+    public void useFileForSendDataTo(String filename, String method, String url, String module) throws Exception {
+        if (!"POST".equals(method)) {
+            throw new Exception("Cannot use this method for other methods than POST");
+        }
+        switch (module)  {
+            case "identity": {
+                spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+                break;
+            }
+            case "configuration": {
+                spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));
+                break;
+            }
+            case "social_media": {
+                spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+                break;
+            }
+            default:
+        }
+        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
+        Response response = given().spec(spec).basePath(url)
+                .body(data)
+                .when().post();
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+
     }
 }

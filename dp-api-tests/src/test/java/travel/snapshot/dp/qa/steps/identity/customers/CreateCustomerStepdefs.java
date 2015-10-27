@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -86,8 +85,7 @@ public class CreateCustomerStepdefs {
 
     @Then("^Updated customer with code \"([^\"]*)\" has data$")
     public void Updated_customer_with_code_has_data(String code, List<Customer> customers) throws Throwable {
-        // Express the Regexp above with the code you wish you had
-        throw new PendingException();
+        customerSteps.customerWithCodeHasData(code, customers.get(0));
     }
 
     @When("^Customer with code \"([^\"]*)\" is got$")

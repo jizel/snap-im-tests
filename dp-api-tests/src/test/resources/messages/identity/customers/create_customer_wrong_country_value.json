@@ -1,13 +1,10 @@
 {
 
-
   "company_name": "company with wrong email",
   "code": "ecn1",
   "phone": "+42012345679",
+  "email": "testing@test.biz",
   "website" : "http://www.snapshot.travel",
-  "eemail": "testing@test.biz",
-
-
   "is_demo_customer": true,
 
   "address": {
@@ -15,7 +12,7 @@
 
     "city": "string",
     "zip_code": "string",
-    "country": "string"
+    "country": "Czech"
   },
   "notes": "string"
 }
