@@ -183,8 +183,8 @@ Feature: configuration
       |                  | 11              | integer  | 400           | 61          |
       | given_test_key_1 | text value2     | string   | 400           | 62          |
       | test_key_1       |                 | string   | 400           | 61          |
-      | test_date_key_1  | 2015-xxx-11     | date     | 400           | 61          |
-      | test_date_key_1  | 2015-01-01Taaaa | datetime | 400           | 61          |
+      | test_date_key_1  | 2015-xxx-11     | date     | 400           | 59          |
+      | test_date_key_1  | 2015-01-01Taaaa | datetime | 400           | 59          |
 
   #errors
   #missing application
@@ -249,7 +249,7 @@ Feature: configuration
     Examples:
       | identifier | key        | response_code | custom_code |
       | conf_id_1  | wrong_key  | 404           | 152         |
-      | wrong_id   | test_key_1 | 404           | 151         |
+      | wrong_id   | test_key_1 | 404           | 152         |
 
   # errors
   #wrong key
