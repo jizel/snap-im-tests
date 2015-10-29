@@ -14,7 +14,7 @@ select incremental_metric
 from ImportedFacebookPageStatistics
 where property_id = ID_of_property and date = CURDATE();
 
-select max(metric) as metric_from_current_day
+select metric as metric_from_current_day
 from FactFacebookPageStats
 where dim_property_id = ID_of_property and date = CURDATE()
 and time_stamp = (select MAX(time_stamp) 
