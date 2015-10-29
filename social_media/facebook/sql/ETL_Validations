@@ -2,9 +2,13 @@ The following validation checks should be made every day for each property and f
 
 For incremental values:
 
-select max(metric) as metric_from_previous_day
+select metric as metric_from_previous_day
 from FactFacebookPageStats
-where dim_property_id = ID_of_property and date = CURDATE()-1;
+where dim_property_id = ID_of_property and date = CURDATE()-1
+and time_stamp = (select MAX(time_stamp) 
+          			from FactFacebookPageStats 
+          			 where dim_property_id	= dim_property_id 
+                     and dim_date_id = dim_date_id); 
 
 select incremental_metric
 from ImportedFacebookPageStatistics
@@ -12,7 +16,11 @@ where property_id = ID_of_property and date = CURDATE();
 
 select max(metric) as metric_from_current_day
 from FactFacebookPageStats
-where dim_property_id = ID_of_property and date = CURDATE();
+where dim_property_id = ID_of_property and date = CURDATE()
+and time_stamp = (select MAX(time_stamp) 
+          			from FactFacebookPageStats 
+          			where dim_property_id	= dim_property_id 
+                    and dim_date_id = dim_date_id); 
 
 Validate that: metric_from_previous_day + incremental_metric = metric_from_current_day 
 
