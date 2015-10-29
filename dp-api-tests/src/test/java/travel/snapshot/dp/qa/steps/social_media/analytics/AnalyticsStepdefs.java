@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.steps.social_media.analytics;
 
 import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -62,9 +63,19 @@ public class AnalyticsStepdefs {
     public void There_are_facebook_posts_returned(int count) throws Throwable {
         analyticsSteps.numberOfFacebookPostsIsInResponse(count);
     }
-    
-    @Then("^\"([^\"]*)\" is \"([^\"]*)\"$")
-    public void parameter_is(String parameter, String value) throws Throwable {
-        analyticsSteps.parameterIs(parameter, value);
+
+    @Then("^Response granularity is \"([^\"]*)\"$")
+    public void Response_granularity_is(String granularity) throws Throwable {
+        analyticsSteps.textFieldIs("granularity", granularity);
+    }
+
+    @Then("^Response since is \"([^\"]*)\"$")
+    public void Response_since_is(String since) throws Throwable {
+        analyticsSteps.dateFieldIs("since", since);
+    }
+
+    @Then("^Response until is \"([^\"]*)\"$")
+    public void Response_until_is(String until) throws Throwable {
+        analyticsSteps.dateFieldIs("until", until);
     }
 }

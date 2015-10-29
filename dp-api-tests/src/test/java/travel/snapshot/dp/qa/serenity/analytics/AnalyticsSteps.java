@@ -6,10 +6,13 @@ import com.jayway.restassured.specification.RequestSpecification;
 
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-import org.hamcrest.collection.IsArrayWithSize;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.model.Stats;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.arrayWithSize;
@@ -42,13 +45,23 @@ public class AnalyticsSteps extends BasicSteps {
 
     @Step
     public void getData(String url, String granularity, String property, String since, String until) {
-        Response response = given().spec(spec)
-                .header("x-property", property)
-                .parameter("granularity", granularity)
-                .parameter("since", since)
-                .parameter("until", until)
-                .parameter("access_token", "aaa")
-                .get(url);
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(since);
+
+        RequestSpecification requestSpecification = given().spec(spec)
+                .header("x-property", property).parameter("access_token", "aaa");
+
+        if (granularity != null && !"".equals(granularity)) {
+            requestSpecification.parameter("granularity", granularity);
+        }
+        if (since!= null && !"".equals(since)) {
+            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (until!= null && !"".equals(until)) {
+            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+        }
+
+        Response response = requestSpecification.when().get(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
@@ -130,8 +143,16 @@ public class AnalyticsSteps extends BasicSteps {
         assertEquals("There should be " + count + " Facebook posts got", count, facebookPosts.length);
     }
 
-    public void parameterIs(String parameter, String value){
-    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-    	assertEquals(value, response.getBody().path(parameter));
+    public void dateFieldIs(String fieldName, String value){
+        LocalDate expectedDate = StringUtil.parseDate(value);
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+
+        LocalDate actualDate = LocalDate.parse(response.getBody().path(fieldName));
+    	assertEquals(expectedDate, actualDate);
+    }
+
+    public void textFieldIs(String fieldName, String value){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        assertEquals(value, response.getBody().path(fieldName));
     }
 }

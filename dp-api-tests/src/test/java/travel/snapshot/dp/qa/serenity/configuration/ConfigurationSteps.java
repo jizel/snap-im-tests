@@ -40,9 +40,6 @@ public class ConfigurationSteps extends BasicSteps {
     private static final String SESSION_CREATED_CONFIGURATION_TYPE = "created_configuration_type";
     private static final String SESSION_CONFIGURATIONS = "configurations";
 
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
     public ConfigurationSteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));

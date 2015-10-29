@@ -1,5 +1,12 @@
 package travel.snapshot.dp.qa.helpers;
 
+import net.sf.cglib.core.Local;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
+
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-10-02T11:35:15.166+02:00")
 public class StringUtil {
   /**
@@ -47,5 +54,73 @@ public class StringUtil {
   public static String toIndentedString(Object o) {
     if (o == null) return "null";
     return o.toString().replace("\n", "\n    ");
+  }
+
+  /**
+   * if text is empty, returns null
+   *
+   * if text is date in ISO format (2015-01-01), it returns this date
+   *
+   * text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
+   * particular number of days/weeks/months from first part of expression
+   *
+   * @param text
+   * @return date parsed from text
+   *
+   */
+  public static LocalDate parseDate(String text) {
+    if (text == null || "".equals(text)) {
+      return null;
+    }
+
+    String[] parts = text.split(" ");
+    String dateText = parts[0];
+
+
+    LocalDate date = null;
+
+    if ("today".equals(dateText.trim())) {
+      date = LocalDate.now();
+    } else {
+      date = LocalDate.parse(dateText);
+    }
+
+
+    if (parts.length == 1) {
+      return date;
+    } else  {
+      String sing = parts[1];
+      String incrementNumber = parts[2];
+      String incrementUnit = parts[3];
+
+      TemporalUnit unitValue = null;
+      Integer incrementNumberValue = incrementNumberValue = Integer.valueOf(incrementNumber);
+      switch (incrementUnit) {
+        case ("days"):
+        case ("day"):{
+          unitValue = ChronoUnit.DAYS;
+          break;
+        }
+        case ("months"):
+        case ("month"):{
+          unitValue = ChronoUnit.MONTHS;
+          break;
+        }
+        case ("weeks"):
+        case ("week"):{
+          unitValue = ChronoUnit.WEEKS;
+          break;
+        }
+      }
+
+      if ("+".equals(sing.trim())) {
+        date = date.plus(incrementNumberValue, unitValue);
+      } else if ("-".equals(sing.trim())) {
+        date = date.minus(incrementNumberValue, unitValue);
+      } else throw new DateTimeException("unknows sing for manipulating with dates");
+    }
+
+
+    return date;
   }
 }

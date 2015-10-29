@@ -2,11 +2,11 @@ Feature: analytics
 
   Scenario Outline: Get collective analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
-    Then Response contains 5 values for all metrics
-    And Content type is "application/json"
+    Then Content type is "application/json"
     And Response code is "200"
+    And Response contains 5 values for all metrics
 
-    Examples: 
+    Examples:
       | url                                | granularity |
       | /social_media/analytics/           | day         |
       | /social_media/analytics/facebook/  | day         |
@@ -19,7 +19,7 @@ Feature: analytics
     And Content type is "application/json"
     And Response code is "200"
 
-    Examples: 
+    Examples:
       | url                                              | granularity |
       | /social_media/analytics/reach                    | day         |
       | /social_media/analytics/engagement               | day         |
@@ -60,7 +60,7 @@ Feature: analytics
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | url                                              | error_code | custom_code |
       | /social_media/analytics                          | 400        | 52          |
       | /social_media/analytics/reach                    | 400        | 52          |
@@ -92,31 +92,31 @@ Feature: analytics
     When List of tweets is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <limit> tweets returned
+    And There are <count> tweets returned
 
-    Examples: 
-      | limit | cursor |
-      |       |        |
-      | 15    |        |
-      |       | 1      |
-      | 20    | 0      |
-      | 10    | 0      |
-      | 5     | 5      |
+    Examples:
+      | limit | cursor | count |
+      |       |        | 50    |
+      | 15    |        | 15    |
+      |       | 1      | 50    |
+      | 20    | 0      | 20    |
+      | 10    | 0      | 10    |
+      | 5     | 5      | 5     |
 
   Scenario Outline: Getting a list of Facebook posts
     When List of Facebook posts is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <limit> Facebook posts returned
+    And There are <count> Facebook posts returned
 
-    Examples: 
-      | limit | cursor |
-      |       |        |
-      | 15    |        |
-      |       | 1      |
-      | 20    | 0      |
-      | 10    | 0      |
-      | 5     | 5      |
+    Examples:
+      | limit | cursor | count |
+      |       |        | 50    |
+      | 15    |        | 15    |
+      |       | 1      | 50    |
+      | 20    | 0      | 20    |
+      | 10    | 0      | 10    |
+      | 5     | 5      | 5     |
 
   Scenario: Get Instagram tags analytics data from API for an invalid granularity
     When Getting "/social_media/analytics/instagram/tags" data with "invalid" granularity for "property" since "2015-09-01" until "2015-09-01"
@@ -129,7 +129,7 @@ Feature: analytics
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | limit | cursor | response_code | custom_code |
       |       | -1     | 400           | 63          |
       |       | text   | 400           | 63          |
@@ -145,7 +145,7 @@ Feature: analytics
     And Content type is "application/json"
     And Response code is "200"
 
-    Examples: 
+    Examples:
       | url                           | granularity | start_date | end_date   |
       | /social_media/analytics       | default     | 2015-09-01 | 2015-09-01 |
       | /social_media/analytics/reach | day         | default    | 2015-09-01 |
@@ -154,25 +154,33 @@ Feature: analytics
       | /social_media/analytics/reach | default     | default    | default    |
 
   Scenario Outline: Checking default parameter values
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
-    Then Response contains 5 values
-    And Content type is "application/json"
-    And Response code is "200"
-    And "<parameter>" is "<value>"
+  Empty column in examples section means default value will be used for this parameter.
+  if text is empty, returns null
+  if text is date in ISO format (2015-01-01), it returns this date
+  text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
+  particular number of days/weeks/months from first part of expression
 
-    Examples: 
-      | url                           | granularity | start_date               | end_date              | parameter   | value                    |
-      | /social_media/analytics/reach | default     | default                  | default               | granularity | day                      |
-      | /social_media/analytics/reach | default     | default                  | default               | since       | current date - 31 days   |
-      | /social_media/analytics/reach | default     | default                  | default               | until       | current date             |
-      | /social_media/analytics/reach | default     | 2015-09-01               | 2015-09-01            | granularity | day                      |
-      | /social_media/analytics/reach | day         | default                  | current date          | since       | current date - 31 days   |
-      | /social_media/analytics/reach | day         | current date             | default               | until       | current date             |
-      | /social_media/analytics/reach | week        | default                  | current date          | since       | current date - 13 weeks  |
-      | /social_media/analytics/reach | week        | current date             | default               | until       | current date             |
-      | /social_media/analytics/reach | month       | default                  | current date          | since       | current date - 6 months  |
-      | /social_media/analytics/reach | month       | current date             | default               | until       | current date             |
-      | /social_media/analytics/reach | day         | current date - 100 days  | current date          | since       | current date - 90 days   |
-      | /social_media/analytics/reach | week        | current date - 30 weeks  | current date          | since       | current date - 26 weeks  |
-      | /social_media/analytics/reach | month       | current date - 40 months | current date          | since       | current date - 36 months |
-      | /social_media/analytics/reach | day         | current date + 2 days    | current date + 3 days | since       | current date             |
+    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And Response granularity is "<expected_granularity>"
+    And Response since is "<expected_since>"
+    And Response until is "<expected_until>"
+    #And Response contains 5 values #will be added to validate correct number of results according to dates and granularity
+
+    Examples:
+      | url                           | granularity | start_date        | end_date       | expected_granularity | expected_since    | expected_until |
+      | /social_media/analytics/reach |             |                   |                | day                  | today             | today          |
+      | /social_media/analytics/reach |             |                   |                | day                  | today - 31 days   | today          |
+      | /social_media/analytics/reach |             |                   |                | day                  | today             | today          |
+      | /social_media/analytics/reach |             | 2015-09-01        | 2015-09-01     | day                  | 2015-09-01        | 2015-09-01     |
+      | /social_media/analytics/reach | day         |                   | today          | day                  | today - 31 days   | today          |
+      | /social_media/analytics/reach | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/reach | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/reach | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/reach | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/reach | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/reach | day         | today - 100 days  | today          | day                  | today - 90 days   | today          |
+      | /social_media/analytics/reach | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/reach | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/reach | day         | today + 2 days    | today + 3 days | day                  | today             | today          |
