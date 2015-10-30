@@ -114,7 +114,7 @@ public class CustomerSteps extends BasicSteps {
 
     private Response getCustomer(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec).basePath("/identity/customers");
-        if (etag != null && !"".equals(etag)) {
+        if (etag != null && !etag.isEmpty()) {
             requestSpecification = requestSpecification.header("If-None-Match", etag);
         }
         return requestSpecification.when().get("/{id}", id);

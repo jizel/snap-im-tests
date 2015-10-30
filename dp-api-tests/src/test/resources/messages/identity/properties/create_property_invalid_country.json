@@ -1,0 +1,24 @@
+{
+  "salesforce_id": "s_id",
+  "property_name": "p_name",
+  "property_code": "p_code",
+  "website": "www.snapshot.travel",
+  "email": "address@snapshot.travel",
+  "vat_id": "CZ10000001",
+  "is_demo_property": true,
+  "address": {
+    "address_line1": "a_line1",
+    "address_line2": "a_line2",
+    "city": "brno",
+    "zip_code": "60200",
+    "country": "XX"
+  },
+  "billing_address": {
+    "address_line1": "a_line3",
+    "address_line2": "a_line4",
+    "city": "brno",
+    "zip_code": "60200",
+    "country": "CZ"
+  },
+  "timezone": "UTC+01:00"
+}
