@@ -1,7 +1,5 @@
 Feature: customers_get
 
-  #TODO add etag things to get/update/create
-
   Background:
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
@@ -120,8 +118,7 @@ Feature: customers_get
       | 10    | 0      | 10       |
       | 5     | 5      | 5        |
 
-  #given hodne hodnot, aby se dalo testovat
-    #test limit, cursor, filter, sort with different values
+    #TODO test filter, sort with different values
 
   Scenario Outline: Checking error codes for getting list of customers
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
@@ -138,5 +135,4 @@ Feature: customers_get
       | text  | 0      | 400           | 63          |
       | 10    | text   | 400           | 63          |
 
-  #negative values, strings, empty
-  #wrong parameters (variables: parameter name, parameter value),
+    #TODO add test for wrong parameters in url

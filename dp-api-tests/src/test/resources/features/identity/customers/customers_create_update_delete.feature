@@ -74,6 +74,7 @@ Feature: customers_create_update_delete
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
   # update with error fields, bad values, missing fields
+  # update nonexistent field
 
   Scenario: Updating customer with outdated etag
     When Customer with code "c1t" is updated with data if updated before
