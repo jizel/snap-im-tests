@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -80,9 +81,9 @@ public class AnalyticsSteps extends BasicSteps {
      * @param cursor
      * @return
      */
-    private Response getTweets(String limit, String cursor) {
+    private Response getItems(String url, String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/social_media/analytics/twitter/tweets")
+                .basePath(url)
                 .header("x-property", "sample_property")
                 .parameter("access_token", "aaa");
 
@@ -96,16 +97,16 @@ public class AnalyticsSteps extends BasicSteps {
     }
     
     @Step
-    public void listOfTweetsIsGotWith(String limit, String cursor) {
-        Response response = getTweets(limit, cursor);
+    public void listOfItemsIsGotWith(String url, String limit, String cursor) {
+        Response response = getItems(url, limit, cursor);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
     @Step
-    public void numberOfTweetsIsInResponse(int count) {
+    public void maximumNumberOfItemsInResponse(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        JsonNode[] tweets = response.body().as(JsonNode[].class);
-        assertEquals("There should be " + count + " tweets got", count, tweets.length);
+        JsonNode[] items = response.body().as(JsonNode[].class);
+        assertTrue(String.format("Number of items (%d) should be less than or equal to (%d)", items.length, count), items.length <= count);
     }
     
     /**
