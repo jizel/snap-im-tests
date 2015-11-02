@@ -1,7 +1,7 @@
 {
   "salesforce_id": "s_id",
   "property_name": "p_name",
-  "property_code": "p_code",
+  "property_code": "p_invalid_website",
   "website": "...............................................",
   "email": "address@snapshot.travel",
   "vat_id": "CZ10000001",

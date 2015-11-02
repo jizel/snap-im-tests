@@ -38,14 +38,15 @@ Feature: properties_create_update_delete
 
       # invalid field values
       | /messages/identity/properties/create_property_invalid_website.json               | POST   | identity | /identity/properties | 400            | 59          |
-      | /messages/identity/properties/create_property_long_website.json                  | POST   | identity | /identity/properties | 400            | 60          |
-      | /messages/identity/properties/create_property_long_property_code.json            | POST   | identity | /identity/properties | 400            | 60          |
-      | /messages/identity/properties/create_property_long_property_name.json            | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_website.json                  | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_property_code.json            | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_property_name.json            | POST   | identity | /identity/properties | 400            | 60          |
       | /messages/identity/properties/create_property_invalid_email.json                 | POST   | identity | /identity/properties | 400            | 59          |
-      | /messages/identity/properties/create_property_long_email.json                    | POST   | identity | /identity/properties | 400            | 60          |
-      | /messages/identity/properties/create_property_invalid_vat_id.json                | POST   | identity | /identity/properties | 400            | 59          |
-      | /messages/identity/properties/create_property_long_vat_id.json                   | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_email.json                    | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_invalid_vat_id.json                | POST   | identity | /identity/properties | 400            | 59          |
+#       | /messages/identity/properties/create_property_long_vat_id.json                   | POST   | identity | /identity/properties | 400            | 60          |
       | /messages/identity/properties/create_property_invalid_is_demo_property.json      | POST   | identity | /identity/properties | 400            | 59          |
+      | /messages/identity/properties/create_property_invalid_timezone.json              | POST   | identity | /identity/properties | 400            | 59          |
 
       # address required fields
       | /messages/identity/properties/create_property_missing_address_line_1.json        | POST   | identity | /identity/properties | 400            | 53          |
@@ -53,12 +54,12 @@ Feature: properties_create_update_delete
       | /messages/identity/properties/create_property_missing_zipcode.json               | POST   | identity | /identity/properties | 400            | 53          |
 
       # invalid address field values
-      | /messages/identity/properties/create_property_long_address_line_1.json           | POST   | identity | /identity/properties | 400            | 60          |
-      | /messages/identity/properties/create_property_long_address_line_2.json           | POST   | identity | /identity/properties | 400            | 60          |
-      | /messages/identity/properties/create_property_long_city.json                     | POST   | identity | /identity/properties | 400            | 60          |
-      | /messages/identity/properties/create_property_long_zipcode.json                  | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_address_line_1.json           | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_address_line_2.json           | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_city.json                     | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_zipcode.json                  | POST   | identity | /identity/properties | 400            | 60          |
       | /messages/identity/properties/create_property_invalid_country.json               | POST   | identity | /identity/properties | 400            | 59          |
-      | /messages/identity/properties/create_property_long_country.json                  | POST   | identity | /identity/properties | 400            | 60          |
+#       | /messages/identity/properties/create_property_long_country.json                  | POST   | identity | /identity/properties | 400            | 60          |
 
 
   Scenario: Deleting Property

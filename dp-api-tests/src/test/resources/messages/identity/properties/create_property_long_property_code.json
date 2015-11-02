@@ -2,7 +2,7 @@
   "salesforce_id": "s_id",
   "property_name": "p_name",
   "property_code": "p_codexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  "website": "www.snapshot.travel",
+  "website": "http://www.snapshot.travel",
   "email": "address@snapshot.travel",
   "vat_id": "CZ10000001",
   "is_demo_property": true,
