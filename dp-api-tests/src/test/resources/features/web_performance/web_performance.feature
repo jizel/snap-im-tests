@@ -64,30 +64,18 @@ Feature: web_performance
 
     Examples: 
       | url                                                   | limit | count |
-      | /web_performance/analytics/visits/countries           |       | 50    |
+      | /web_performance/analytics/visits/countries           | 5     | 5     |
       | /web_performance/analytics/visits/countries           | 15    | 15    |
       | /web_performance/analytics/visits/countries           |       | 50    |
-      | /web_performance/analytics/visits/countries           | 20    | 20    |
-      | /web_performance/analytics/visits/countries           | 10    | 10    |
-      | /web_performance/analytics/visits/countries           | 5     | 5     |
-      | /web_performance/analytics/visits_unique/countries    |       | 50    |
+      | /web_performance/analytics/visits_unique/countries    | 5     | 5     |
       | /web_performance/analytics/visits_unique/countries    | 15    | 15    |
       | /web_performance/analytics/visits_unique/countries    |       | 50    |
-      | /web_performance/analytics/visits_unique/countries    | 20    | 20    |
-      | /web_performance/analytics/visits_unique/countries    | 10    | 10    |
-      | /web_performance/analytics/visits_unique/countries    | 5     | 5     |
-      | /web_performance/analytics/convertion_rates/countries |       | 50    |
+      | /web_performance/analytics/conversion_rates/countries | 5     | 5     |
       | /web_performance/analytics/convertion_rates/countries | 15    | 15    |
       | /web_performance/analytics/convertion_rates/countries |       | 50    |
-      | /web_performance/analytics/convertion_rates/countries | 20    | 20    |
-      | /web_performance/analytics/convertion_rates/countries | 10    | 10    |
-      | /web_performance/analytics/convertion_rates/countries | 5     | 5     |
-      | /web_performance/analytics/referals                   |       | 50    |
+      | /web_performance/analytics/referals                   | 5     | 5     |
       | /web_performance/analytics/referals                   | 15    | 15    |
       | /web_performance/analytics/referals                   |       | 50    |
-      | /web_performance/analytics/referals                   | 20    | 20    |
-      | /web_performance/analytics/referals                   | 10    | 10    |
-      | /web_performance/analytics/referals                   | 5     | 5     |
 
   Scenario: Get analytics data from API for an invalid granularity
     When Getting "/web_performance/analytics/visits/countries" data with "invalid" granularity for "property" since "2015-09-01" until "2015-09-01"

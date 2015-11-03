@@ -17,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,7 +43,16 @@ public class AnalyticsSteps extends BasicSteps {
     @Step
     public void responseContainsValues(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("values.size()", is(5));
+        response.then().body("values.size()", is(count));
+    }
+    
+    public void responseContainsValuesForAllMetrics(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body("data.values.size()", is(count));
+        /*Stats stats = response.as(Stats.class);
+        stats.getData().forEach(m -> {
+        	assertEquals(String.format("Size of %s should be %d, but is %d", m.getName(), count, m.getValues().size()), count, m.getValues().size());
+        });*/
     }
 
     @Step
@@ -65,17 +76,9 @@ public class AnalyticsSteps extends BasicSteps {
         Response response = requestSpecification.when().get(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
-
-    public void responseContainsValuesForAllMetrics(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        Stats stats = response.as(Stats.class);
-        stats.getData().forEach(m -> {
-            assertEquals(String.format("Size of %s should be %d, but is %d", m.getName(), count, m.getValues().size()), count, m.getValues().size());
-        });
-    }
     
     /**
-     * getting tweets over rest api, if limit and cursor is null or empty, it's not added to query string
+     * getting items over rest api, if limit and cursor is null or empty, it's not added to query string
      *
      * @param limit
      * @param cursor
@@ -105,43 +108,9 @@ public class AnalyticsSteps extends BasicSteps {
     @Step
     public void maximumNumberOfItemsInResponse(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        JsonNode[] items = response.body().as(JsonNode[].class);
-        assertTrue(String.format("Number of items (%d) should be less than or equal to (%d)", items.length, count), items.length <= count);
-    }
-    
-    /**
-     * getting Facebook posts over rest api, if limit and cursor is null or empty, it's not added to query string
-     *
-     * @param limit
-     * @param cursor
-     * @return
-     */
-    private Response getFacebookPosts(String limit, String cursor) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/social_media/analytics/facebook/posts")
-                .header("x-property", "sample_property")
-                .parameter("access_token", "aaa");;
-
-        if (cursor != null && !"".equals(cursor)) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null && !"".equals(limit)) {
-            requestSpecification.parameter("limit", limit);
-        }
-        return requestSpecification.when().get();
-    }
-    
-    @Step
-    public void listOfFacebookPostsIsGotWith(String limit, String cursor) {
-        Response response = getFacebookPosts(limit, cursor);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-    }
-
-    @Step
-    public void numberOfFacebookPostsIsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        JsonNode[] facebookPosts = response.body().as(JsonNode[].class);
-        assertEquals("There should be " + count + " Facebook posts got", count, facebookPosts.length);
+        response.then().body("size()",lessThanOrEqualTo(count));
+        //JsonNode[] items = response.body().as(JsonNode[].class);
+        //assertTrue(String.format("Number of items (%d) should be less than or equal to (%d)", items.length, count), items.length <= count);
     }
 
     public void dateFieldIs(String fieldName, String value){
@@ -154,6 +123,12 @@ public class AnalyticsSteps extends BasicSteps {
 
     public void textFieldIs(String fieldName, String value){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        assertEquals(value, response.getBody().path(fieldName));
+        response.then().body(fieldName, is(value));
+        //assertEquals(value, response.getBody().path(fieldName));
+    }
+    
+    public void fieldContains(String fieldName, String value){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(fieldName, hasItem(value));
     }
 }

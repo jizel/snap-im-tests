@@ -4,7 +4,7 @@ Feature: analytics
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "200"
-    And Response contains 5 values for all metrics
+    And Response contains 3 values for all metrics
 
     Examples: 
       | url                                | granularity |
@@ -100,13 +100,13 @@ Feature: analytics
       | /social_media/analytics/twitter/tweets | 15    |        | 15    |
       | /social_media/analytics/twitter/tweets |       | 1      | 50    |
       | /social_media/analytics/twitter/tweets | 20    | 0      | 20    |
-      | /social_media/analytics/twitter/tweets | 10    | 0      | 10    |
+      | /social_media/analytics/twitter/tweets | 49    | 0      | 49    |
       | /social_media/analytics/twitter/tweets | 5     | 5      | 5     |
       | /social_media/analytics/facebook/posts |       |        | 50    |
-      | /social_media/analytics/facebook/posts | 15    |        | 15    |
+      | /social_media/analytics/facebook/posts | 51    |        | 50    |
       | /social_media/analytics/facebook/posts |       | 1      | 50    |
       | /social_media/analytics/facebook/posts | 20    | 0      | 20    |
-      | /social_media/analytics/facebook/posts | 10    | 0      | 10    |
+      | /social_media/analytics/facebook/posts | 60    | 0      | 50    |
       | /social_media/analytics/facebook/posts | 5     | 5      | 5     |
 
   Scenario: Get Instagram tags analytics data from API for an invalid granularity
@@ -138,7 +138,7 @@ Feature: analytics
 
     Examples: 
       | url                           | granularity | start_date | end_date   |
-      | /social_media/analytics       |             | 2015-09-01 | 2015-09-01 |
+      | /social_media/analytics/reach |             | 2015-09-01 | 2015-09-01 |
       | /social_media/analytics/reach | day         |            | 2015-09-01 |
       | /social_media/analytics/reach | day         | 2015-09-01 |            |
       | /social_media/analytics/reach | day         |            |            |
@@ -175,3 +175,15 @@ Feature: analytics
       | /social_media/analytics/reach | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
       | /social_media/analytics/reach | month       | today - 40 months | today          | month                | today - 36 months | today          |
       | /social_media/analytics/reach | day         | today + 2 days    | today + 3 days | day                  | today             | today          |
+
+  Scenario: Get data owners data for twitter
+    When Getting "/social_media/analytics/twitter/engagement" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And Data is owned by "twitter"
+
+  Scenario: Get data owners data for facebook
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And Data is owned by "facebook"
