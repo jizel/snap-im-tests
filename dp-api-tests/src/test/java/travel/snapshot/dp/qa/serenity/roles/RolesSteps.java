@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.serenity.customers;
+package travel.snapshot.dp.qa.serenity.roles;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
