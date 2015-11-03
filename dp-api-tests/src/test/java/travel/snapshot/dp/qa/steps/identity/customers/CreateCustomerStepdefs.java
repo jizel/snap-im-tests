@@ -1,11 +1,14 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
+import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 
@@ -38,7 +41,8 @@ public class CreateCustomerStepdefs {
                 customerSteps.fileIsUsedForCreation("/messages/identity/customers/" + fileName);
                 break;
             }
-            default: break;
+            default:
+                break;
         }
 
     }
@@ -63,9 +67,13 @@ public class CreateCustomerStepdefs {
         customerSteps.customerIdInSessionDoesntExist();
     }
 
-    @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_customers_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
-        customerSteps.listOfCustomersIsGotWith(limit, cursor);
+    @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_customers_is_got_with_limit_and_cursor_and_filter_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                        @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                        @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                        @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                        @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+        customerSteps.listOfCustomersIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are (\\d+) customers returned$")
@@ -131,5 +139,11 @@ public class CreateCustomerStepdefs {
     @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")
     public void Customer_with_code_is_updated_with_data_if_updated_before(String code, List<Customer> customers) throws Throwable {
         customerSteps.updateCustomerWithCodeIfUpdatedBefore(code, customers.get(0));
+    }
+
+
+    @Then("^There are customers with following codes returned in order: (.*)")
+    public void There_are_customers_with_following_codes_returned_in_order(List<String> codes) throws Throwable {
+        customerSteps.codesAreInResponseInOrder(codes);
     }
 }

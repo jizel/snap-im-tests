@@ -1,12 +1,15 @@
 package travel.snapshot.dp.qa.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 import io.swagger.annotations.*;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
 
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-10-02T11:35:15.166+02:00")
+//@XStreamConverter(NullEmptyStringConverter.class)
 public class Customer {
 
     private String customerId = null;

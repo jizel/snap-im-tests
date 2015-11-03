@@ -44,12 +44,12 @@ Feature: customers_get
   Scenario Outline: Getting list of customers
     Given The following customers exist with random address
       | companyName                | email                | code      | salesforceId               | vatId      | isDemoCustomer | phone         | website                    |
-      | List test Given company 1  | list_c1@tenants.biz  | list_c1t  | list_salesforceid_given_1  | CZ22000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | List test Given company 2  | list_c2@tenants.biz  | list_c2t  | list_salesforceid_given_2  | CZ22000002 | true           | +420123456789 | http://www.snapshot.travel |
-      | List test Given company 3  | list_c3@tenants.biz  | list_c3t  | list_salesforceid_given_3  | CZ22000003 | true           | +420123456789 | http://www.snapshot.travel |
-      | List test Given company 4  | list_c4@tenants.biz  | list_c4t  | list_salesforceid_given_4  | CZ22000004 | true           | +420123456789 | http://www.snapshot.travel |
-      | List test Given company 5  | list_c5@tenants.biz  | list_c5t  | list_salesforceid_given_5  | CZ22000005 | true           | +420123456789 | http://www.snapshot.travel |
-      | List test Given company 6  | list_c6@tenants.biz  | list_c6t  | list_salesforceid_given_6  | CZ22000006 | true           | +420123456789 | http://www.snapshot.travel |
+      | List test Given company 1  | list_c1@tenants.biz  | list_c1t  | list_salesforceid_given_1  | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel |
+      | List test Given company 2  | list_c2@tenants.biz  | list_c2t  | list_salesforceid_given_2  | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel |
+      | List test Given company 3  | list_c3@tenants.biz  | list_c3t  | list_salesforceid_given_3  | CZ22000003 | true           | +111111111111 | http://www.snapshot.travel |
+      | List test Given company 4  | list_c4@tenants.biz  | list_c4t  | list_salesforceid_given_4  | CZ22000004 | true           | +111111111111 | http://www.snapshot.travel |
+      | List test Given company 5  | list_c5@tenants.biz  | list_c5t  | list_salesforceid_given_5  | CZ22000005 | true           | +111111111111 | http://www.snapshot.travel |
+      | List test Given company 6  | list_c6@tenants.biz  | list_c6t  | list_salesforceid_given_6  | CZ22000006 | true           | +111111111111 | http://www.snapshot.travel |
       | List test Given company 7  | list_c7@tenants.biz  | list_c7t  | list_salesforceid_given_7  | CZ22000007 | true           | +420123456789 | http://www.snapshot.travel |
       | List test Given company 8  | list_c8@tenants.biz  | list_c8t  | list_salesforceid_given_8  | CZ22000008 | true           | +420123456789 | http://www.snapshot.travel |
       | List test Given company 9  | list_c9@tenants.biz  | list_c9t  | list_salesforceid_given_9  | CZ22000009 | true           | +420123456789 | http://www.snapshot.travel |
@@ -104,7 +104,7 @@ Feature: customers_get
       | List test Given company 58 | list_c58@tenants.biz | list_c58t | list_salesforceid_given_58 | CZ22000059 | true           | +420123456789 | http://www.snapshot.travel |
 
 
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customers returned
@@ -121,18 +121,60 @@ Feature: customers_get
     #TODO test filter, sort with different values
 
   Scenario Outline: Checking error codes for getting list of customers
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
     Examples:
-      | limit | cursor | response_code | custom_code |
-      |       | -1     | 400           | 63          |
-      |       | text   | 400           | 63          |
-      | -1    |        | 400           | 63          |
-      | text  |        | 400           | 63          |
-      | 10    | -1     | 400           | 63          |
-      | text  | 0      | 400           | 63          |
-      | 10    | text   | 400           | 63          |
+      | limit | cursor | filter   | sort         | sort_desc    | response_code | custom_code |
+      #limit and cursor
+      | /null | -1     | /null    | /null        | /null        | 400           | 63          |
+      |       | -1     | /null    | /null        | /null        | 400           | 63          |
+      | /null | text   | /null    | /null        | /null        | 400           | 63          |
+      |       | text   | /null    | /null        | /null        | 400           | 63          |
+      | -1    |        | /null    | /null        | /null        | 400           | 63          |
+      | -1    | /null  | /null    | /null        | /null        | 400           | 63          |
+      | text  |        | /null    | /null        | /null        | 400           | 63          |
+      | text  | /null  | /null    | /null        | /null        | 400           | 63          |
+      | 10    | -1     | /null    | /null        | /null        | 400           | 63          |
+      | text  | 0      | /null    | /null        | /null        | 400           | 63          |
+      | 10    | text   | /null    | /null        | /null        | 400           | 63          |
+      #filtering and sorting
+      | 10    | 0      | /null    | company_name | company_name | 400           | 63          |
+      | 10    | 0      | /null    | company_name |              | 400           | 63          |
+      | 10    | 0      | /null    |              | company_name | 400           | 63          |
+      | 10    | 0      | /null    | /null        |              | 400           | 63          |
+      | 10    | 0      | /null    |              | /null        | 400           | 63          |
+      | 10    | 0      | /null    |              |              | 400           | 63          |
+      | 10    | 0      | code==   | /null        | /null        | 400           | 63          |
+      | 10    | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+
+  Scenario Outline: Filtering list of customers
+    Given The following customers exist with random address
+      | companyName                           | email                 | code       | salesforceId                | vatId      | isDemoCustomer | phone         | website                    |
+      | Filter test Given company 1           | Filter_c1@tenants.biz | Filter_c1t | Filter_salesforceid_given_1 | ATU2200001 | true           | +111111111111 | http://www.snapshot.travel |
+      | Filter test Given company 2           | Filter_c2@tenants.biz | Filter_c2t | Filter_salesforceid_given_2 | ATU2200002 | true           | +111111111111 | http://www.snapshot.travel |
+      | Filter test Given company 3           | Filter_c3@tenants.biz | Filter_c3t | Filter_salesforceid_given_3 | ATU2200003 | true           | +111111111111 | http://www.snapshot.travel |
+      | Filter test Given company 4           | Filter_c4@tenants.biz | Filter_c4t | Filter_salesforceid_given_4 | ATU2200004 | true           | +111111111111 | http://www.snapshot.travel |
+      | Filter test Given company 5           | Filter_c5@tenants.biz | Filter_c5t | Filter_salesforceid_given_5 | ATU2200005 | true           | +111111111111 | http://www.snapshot.travel |
+      | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_c6t | Filter_salesforceid_given_6 | ATU2200006 | true           | +22222222     | http://www.snapshot.travel |
+      | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_c7t | Filter_salesforceid_given_7 | ATU2200007 | true           | +22222222     | http://www.snapshot.travel |
+
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <returned> customers returned
+    And There are customers with following codes returned in order: <expected_codes>
+
+    Examples:
+      | limit | cursor | returned | filter                               | sort  | sort_desc | expected_codes                                             |
+      | 5     | 0      | 5        | company_name=='Filter test*'         | code  |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 0      | 5        | company_name=='Filter test*'         |       | code      | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
+      | 5     | 2      | 3        | company_name=='Filter test*'         | code  |           | Filter_c3t, Filter_c4t, Filter_c5t                         |
+      | 5     | 2      | 3        | company_name=='Filter test*'         |       | code      | Filter_c3t, Filter_c2t, Filter_c1t                         |
+      | 5     | 3      | 3        | company_name=='Filter test*'         | code  |           | Filter_c4t, Filter_c5t                                     |
+      | /null | /null  | 1        | code==Filter_c7t                     | /null | /null     | Filter_c7t                                                 |
+      | /null | /null  | 2        | code==Filter_c* and phone==+22222222 | code  | /null     | Filter_c6t, Filter_c7t                                     |
 
     #TODO add test for wrong parameters in url
+

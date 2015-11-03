@@ -135,23 +135,35 @@ public class CustomerSteps extends BasicSteps {
      *
      * @param limit
      * @param cursor
-     * @return
+     * @param filter
+     *@param sort
+     * @param sortDesc @return
      */
-    private Response getCustomers(String limit, String cursor) {
+    private Response getCustomers(String limit, String cursor, String filter, String sort, String sortDesc) {
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath("/identity/customers");
 
-        if (cursor != null && !"".equals(cursor)) {
+        if (cursor != null) {
             requestSpecification.parameter("cursor", cursor);
         }
-        if (limit != null && !"".equals(limit)) {
+        if (limit != null) {
             requestSpecification.parameter("limit", limit);
         }
+        if (filter != null) {
+            requestSpecification.parameter("filter", filter);
+        }
+        if (sort != null) {
+            requestSpecification.parameter("sort", sort);
+        }
+        if (sortDesc != null) {
+            requestSpecification.parameter("sort_desc", sortDesc);
+        }
+
         return requestSpecification.when().get();
     }
 
     private Customer getCustomerByCode(String code) {
-        Customer[] customers = getCustomers("100", "0").as(Customer[].class);
+        Customer[] customers = getCustomers("100", "0", null, null, null).as(Customer[].class);
         return Arrays.asList(customers).stream().filter(p -> code.equals(p.getCode())).findFirst().orElse(null);
     }
 
@@ -194,8 +206,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfCustomersIsGotWith(String limit, String cursor) {
-        Response response = getCustomers(limit, cursor);
+    public void listOfCustomersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getCustomers(limit, cursor, filter, sort, sortDesc);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -344,6 +356,17 @@ public class CustomerSteps extends BasicSteps {
         }
         if (data.getWebsite() != null && !"".equals(data.getWebsite())) {
             assertEquals(data.getWebsite(), customerByCode.getWebsite());
+        }
+    }
+
+    @Step
+    public void codesAreInResponseInOrder(List<String> codes) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Customer[] customers = response.as(Customer[].class);
+        int i = 0;
+        for(Customer c: customers) {
+            assertEquals("Customer on index=" + i + " is not expected", codes.get(i), c.getCode());
+            i++;
         }
     }
 }

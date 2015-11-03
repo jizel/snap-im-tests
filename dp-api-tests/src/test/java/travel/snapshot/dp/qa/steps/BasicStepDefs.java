@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.steps;
 
 import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -11,7 +12,7 @@ public class BasicStepDefs {
 	
 	@Steps
 	private BasicSteps basicSteps;
-	
+
     @Then("^Response code is \"(\\d+)\"$")
     public void response_code_is(int responseCode) throws Throwable {
         basicSteps.responseCodeIs(responseCode);
