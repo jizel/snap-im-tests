@@ -173,6 +173,11 @@ public class RolesSteps extends BasicSteps {
         if (updatedRole.getRoleDescription() != null && !"".equals(updatedRole.getRoleDescription())) {
             role.put("role_description", updatedRole.getRoleDescription());
         }
+        if (updatedRole.getRoleName() != null && !"".equals(updatedRole.getRoleName())) {
+            if (!name.equals(updatedRole)) { //update only if changed
+                role.put("role_name", updatedRole.getRoleName());
+            }
+        }
 
 
         Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader("ETag"));
@@ -243,7 +248,7 @@ public class RolesSteps extends BasicSteps {
 
         Map<String, Object> role = new HashMap<>();
         if (updatedRole.getRoleDescription() != null && !"".equals(updatedRole.getRoleDescription())) {
-            role.put("email", updatedRole.getRoleDescription());
+            role.put("role_description", updatedRole.getRoleDescription());
         }
 
         Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader("ETag"));
@@ -255,6 +260,9 @@ public class RolesSteps extends BasicSteps {
 
         if (data.getRoleDescription() != null && !"".equals(data.getRoleDescription())) {
             assertEquals(data.getRoleDescription(), roleByName.getRoleDescription());
+        }
+        if (data.getRoleName() != null && !"".equals(data.getRoleName())) {
+            assertEquals(data.getRoleName(), roleByName.getRoleName());
         }
     }
 }

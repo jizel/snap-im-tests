@@ -46,21 +46,21 @@ Feature: Roles_create_update_delete
 
 
   Scenario Outline: Updating role
-    When Role with name "Role name 1" for application id "1" is updated with data
-      | applicationId   | roleName   | roleDescription   |
-      | <applicationId> | <roleName> | <roleDescription> |
+    When Role with name "<roleName>" for application id "1" is updated with data
+      | applicationId   | roleName           | roleDescription   |
+      | <applicationId> | <updated_roleName> | <roleDescription> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated role with name "<roleName>" for application id "1" has data
-      | applicationId   | roleName   | roleDescription   |
-      | <applicationId> | <roleName> | <roleDescription> |
+    And Updated role with name "<updated_roleName>" for application id "1" has data
+      | applicationId   | roleName           | roleDescription   |
+      | <applicationId> | <updated_roleName> | <roleDescription> |
 
     Examples:
-      | applicationId | roleName          | roleDescription                |
-      |               | Updated role name |                                |
-      |               | Updated role name | Updated optional description   |
-      |               |                   | Updated optional description 1 |
+      | applicationId | roleName    | updated_roleName  | roleDescription                |
+      |               | Role name 1 | Updated role name |                                |
+      |               | Role name 1 | Updated role name | Updated optional description   |
+      |               | Role name 1 | Role name 1       | Updated optional description 1 |
 
 
   #TODO update with error fields, bad values, missing fields
