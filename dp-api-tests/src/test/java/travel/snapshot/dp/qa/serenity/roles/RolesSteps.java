@@ -94,22 +94,33 @@ public class RolesSteps extends BasicSteps {
      *
      * @param limit
      * @param cursor
-     * @return
+     * @param filter
+     *@param sort
+     * @param sortDesc @return
      */
-    private Response getRoles(String limit, String cursor) {
+    private Response getRoles(String limit, String cursor, String filter, String sort, String sortDesc) {
         RequestSpecification requestSpecification = given().spec(spec);
 
-        if (cursor != null && !"".equals(cursor)) {
+        if (cursor != null) {
             requestSpecification.parameter("cursor", cursor);
         }
-        if (limit != null && !"".equals(limit)) {
+        if (limit != null) {
             requestSpecification.parameter("limit", limit);
+        }
+        if (filter != null) {
+            requestSpecification.parameter("filter", filter);
+        }
+        if (sort != null) {
+            requestSpecification.parameter("sort", sort);
+        }
+        if (sortDesc != null) {
+            requestSpecification.parameter("sort_desc", sortDesc);
         }
         return requestSpecification.when().get();
     }
 
     private Role getRoleByNameForApplication(String name, String applicationId) {
-        Role[] roles = getRoles("100", "0").as(Role[].class);
+        Role[] roles = getRoles("100", "0", null, null, null).as(Role[].class);
         return Arrays.asList(roles).stream().filter(p -> name.equals(p.getRoleName()) && applicationId.equals(p.getApplicationId())).findFirst().orElse(null);
     }
 
@@ -152,8 +163,8 @@ public class RolesSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfRolesIsGotWith(String limit, String cursor) {
-        Response response = getRoles(limit, cursor);
+    public void listOfRolesIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getRoles(limit, cursor, filter, sort, sortDesc);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -274,5 +285,15 @@ public class RolesSteps extends BasicSteps {
                 deleteRole(existingRole.getRoleId());
             }
         });
+    }
+
+    public void roleNamesAreInResponseInOrder(List<String> names) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Role[] roles = response.as(Role[].class);
+        int i = 0;
+        for(Role r: roles) {
+            assertEquals("Role on index=" + i + " is not expected", names.get(i), r.getRoleName());
+            i++;
+        }
     }
 }

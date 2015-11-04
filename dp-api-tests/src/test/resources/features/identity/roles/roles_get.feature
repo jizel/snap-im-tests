@@ -115,7 +115,7 @@ Feature: roles_get
       | 1             | List role name 53 | optional description 53 |
       | 1             | List role name 54 | optional description 54 |
 
-    When List of roles exists with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    When List of roles is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> roles returned
@@ -131,20 +131,62 @@ Feature: roles_get
 
 
   Scenario Outline: Checking error codes for lists of roles
-    When List of roles exists with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    When List of roles is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
     Examples:
-      | description           | limit | cursor | response_code | custom_code |
-      | negative cursor       |       | -1     | 400           | 63          |
-      | cursor NaN            |       | text   | 400           | 63          |
-      | negative limit        | -1    |        | 400           | 63          |
-      | limit NaN             | text  |        | 400           | 63          |
-      | limit ok, neg. cursor | 10    | -1     | 400           | 63          |
-      | limit neg., cursor ok | -1    | 10     | 400           | 63          |
-      | limit NaN, curson ok  | text  | 0      | 400           | 63          |
-      | limit ok, cursor NaN  | 10    | text   | 400           | 63          |
+      | description                 | limit | cursor | filter      | sort         | sort_desc    | response_code | custom_code |
+      #limit and cursor
+      | negative cursor, null limit | /null | -1     | /null       | /null        | /null        | 400           | 63          |
+      | --empty string limit        |       | -1     | /null       | /null        | /null        | 400           | 63          |
+      | cursor NaN, null limit      | /null | text   | /null       | /null        | /null        | 400           | 63          |
+      | --empty string limit        |       | text   | /null       | /null        | /null        | 400           | 63          |
+      | negative limit, cursor null | -1    |        | /null       | /null        | /null        | 400           | 63          |
+      | --cursor empty string       | -1    | /null  | /null       | /null        | /null        | 400           | 63          |
+      | NaN limit                   | text  |        | /null       | /null        | /null        | 400           | 63          |
+      | --"--                       | text  | /null  | /null       | /null        | /null        | 400           | 63          |
+      |                             | 10    | -1     | /null       | /null        | /null        | 400           | 63          |
+      |                             | text  | 0      | /null       | /null        | /null        | 400           | 63          |
+      |                             | 10    | text   | /null       | /null        | /null        | 400           | 63          |
+      #filtering and sorting
+      | both sort and sort_desc     | 10    | 0      | /null       | company_name | company_name | 400           | 63          |
+      #|| 10    | 0      | /null    | company_name |              | 400           | 63          |
+      #|| 10    | 0      | /null    |              | company_name | 400           | 63          |
+      #|| 10    | 0      | /null    | /null        |              | 400           | 63          |
+      #|| 10    | 0      | /null    |              | /null        | 400           | 63          |
+      #|| 10    | 0      | /null    |              |              | 400           | 63          |
+      | invalid expression          | 10    | 0      | code==      | /null        | /null        | 400           | 63          |
+      | invalid field  in filter    | 10    | 0      | role_n==aa* | /null        | /null        | 400           | 63          |
+      | invalid field  in sort      | 10    | 0      | /null       | role_n       | /null        | 400           | 63          |
+      | invalid field  in sort_desc | 10    | 0      | /null       | /null        | aaa          | 400           | 63          |
 
-  # negative values, strings, empty
-  # wrong parameters (variables: parameter name, parameter value),
+  Scenario Outline: Filtering list of roles
+    Given The following roles exist
+      | applicationId | roleName           | roleDescription         |
+      | 1             | Filter role name 1 | optional description 1  |
+      | 1             | Filter role name 2 | optional description 2  |
+      | 2             | Filter role name 3 | different description 3 |
+      | 2             | Filter role name 4 | different description 4 |
+      | 2             | Filter role name 5 | optional description 5  |
+      | 2             | Filter role name 6 | optional description 3  |
+
+    When List of roles is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <returned> roles returned
+    And There are roles with following names returned in order: <expected_names>
+
+    Examples:
+      | limit | cursor | returned | filter                                               | sort      | sort_desc | expected_names                                                                                     |
+      | 5     | 0      | 5        | role_name=='Filter role name*'                       | role_name |           | Filter role name 1, Filter role name 2, Filter role name 3, Filter role name 4, Filter role name 5 |
+      | 5     | 0      | 5        | role_name=='Filter role name*'                       |           | role_name | Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1 |
+      | 5     | 2      | 4        | role_name=='Filter role name*'                       | role_name |           | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | 5     | 2      | 4        | role_name=='Filter role name*'                       |           | role_name | Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1                     |
+      | 5     | 4      | 2        | role_name=='Filter role name*'                       | role_name |           | Filter role name 5, Filter role name 6                                                             |
+      | /null | /null  | 1        | role_name=='Filter role name 6'                      | /null     | /null     | Filter role name 6                                                                                 |
+      | /null | /null  | 2        | role_name=='Filter role name*' and application_id==1 | role_name | /null     | Filter role name 1, Filter role name 2                                                             |
+      | /null | /null  | 4        | application_id==2                                    | role_name | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | /null | /null  | 2        | role_description==different*                         | role_name | /null     | Filter role name 3, Filter role name 4                                                             |
+  #add all fields
+

@@ -1,11 +1,13 @@
 package travel.snapshot.dp.qa.steps.identity.roles;
 
 import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
 
@@ -73,11 +75,6 @@ public class RolesStepdefs {
         rolesSteps.roleWithNameForApplicationIdHasData(roleName, applicationId, roles.get(0));
     }
 
-    @When("^List of roles exists with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_roles_exists_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
-        rolesSteps.listOfRolesIsGotWith(limit, cursor);
-    }
-
     @Then("^There are (\\d+) roles returned$")
     public void There_are_roles_returned(int count) throws Throwable {
         rolesSteps.numberOfRolesIsInResponse(count);
@@ -121,5 +118,19 @@ public class RolesStepdefs {
     @Given("^The following roles don't exist$")
     public void The_following_roles_don_t_exist(List<Role> roles) throws Throwable {
         rolesSteps.deleteRoles(roles);
+    }
+
+    @When("^List of roles is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_roles_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
+                                                                                             @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                             @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                             @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+        rolesSteps.listOfRolesIsGotWith(limit, cursor, filter, sort, sortDesc);
+    }
+
+    @Then("^There are roles with following names returned in order: (.*)")
+    public void There_are_customers_with_following_codes_returned_in_order(List<String> names) throws Throwable {
+        rolesSteps.roleNamesAreInResponseInOrder(names);
     }
 }
