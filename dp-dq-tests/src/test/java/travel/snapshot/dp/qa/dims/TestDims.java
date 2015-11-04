@@ -1,10 +1,15 @@
 package travel.snapshot.dp.qa.dims;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static travel.snapshot.dp.qa.base.TestUtils.*;
 
 public class TestDims {
+    
+    public static final Logger logger = LoggerFactory.getLogger(TestDims.class);
+
 
     @Test
     public void testDimChannelLoad() throws Exception {
@@ -14,7 +19,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_channel";
 
-        System.out.println("\nStart control checks on table 'dim_channel'");
+        logger.info("\nStart control checks on table 'dim_channel'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -25,7 +30,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_channel_category";
 
-        System.out.println("\nStart control checks on table 'dim_channel_category'");
+        logger.info("\nStart control checks on table 'dim_channel_category'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -36,7 +41,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_channel_segment";
 
-        System.out.println("\nStart control checks on table 'dim_channel_segment'");
+        logger.info("\nStart control checks on table 'dim_channel_segment'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -47,7 +52,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_market_category";
 
-        System.out.println("\nStart control checks on table 'dim_market_category'");
+        logger.info("\nStart control checks on table 'dim_market_category'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -58,7 +63,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_market_segment";
 
-        System.out.println("\nStart control checks on table 'dim_market_segment'");
+        logger.info("\nStart control checks on table 'dim_market_segment'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -67,7 +72,7 @@ public class TestDims {
         String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.Properties WHERE ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "SELECT count(*) FROM dim_property";
 
-        System.out.println("\nStart control checks on table 'dim_property'");
+        logger.info("\nStart control checks on table 'dim_property'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -76,7 +81,7 @@ public class TestDims {
         String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.RatePlans WHERE ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "SELECT count(*) FROM dim_rate_plan";
 
-        System.out.println("\nStart control checks on table 'dim_rate_plan'");
+        logger.info("\nStart control checks on table 'dim_rate_plan'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -85,7 +90,7 @@ public class TestDims {
         String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.RoomTypes WHERE ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "SELECT count(*) FROM dim_room_type";
 
-        System.out.println("\nStart control checks on table 'dim_room_type'");
+        logger.info("\nStart control checks on table 'dim_room_type'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -96,7 +101,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_snapshot";
 
-        System.out.println("\nStart control checks on table 'dim_snapshot'");
+        logger.info("\nStart control checks on table 'dim_snapshot'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 }
