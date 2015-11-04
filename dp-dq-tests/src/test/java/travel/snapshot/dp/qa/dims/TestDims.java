@@ -1,14 +1,15 @@
-package dims;
+package travel.snapshot.dp.qa.dims;
 
 import org.junit.Test;
 
-import base.TestBase;
+import travel.snapshot.dp.qa.base.TestBase;
 
 public class TestDims extends TestBase {
 
 	@Test
 	public void testDimChannelLoad() throws Exception {
 		String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.Channels WHERE ModificationTimestamp > '2015-09-01'";
+
 		// Need to subtract 1 because currently there are initial data added in
 		// the table
 		String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_channel";

@@ -1,8 +1,8 @@
-package facts;
+package travel.snapshot.dp.qa.facts;
 
 import org.junit.Test;
 
-import base.TestBase;
+import travel.snapshot.dp.qa.base.TestBase;
 
 public class TestFacts extends TestBase {
 

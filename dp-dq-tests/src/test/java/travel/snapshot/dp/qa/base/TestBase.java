@@ -1,4 +1,4 @@
-package base;
+package travel.snapshot.dp.qa.base;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import properties.ConfigProps;
+import travel.snapshot.dp.qa.ConfigProps;
 
 public class TestBase {
 
