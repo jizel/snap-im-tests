@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.base;
 
 import static org.junit.Assert.assertTrue;
+import static travel.snapshot.dp.qa.ConfigProps.getPropValue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +18,8 @@ public class TestUtils {
 	}
 
 	public static String getQueryResultSource(String sqlQueryForSource) throws Exception {
-		Connection connToSource = setUpDbConnection(ConfigProps.getPropValue("dma.connectionString"),
-				ConfigProps.getPropValue("dma.username"), ConfigProps.getPropValue("dma.password"));
+		Connection connToSource = setUpDbConnection(getPropValue("dma.connectionString"),
+				getPropValue("dma.username"), getPropValue("dma.password"));
 		String resultSource = null;
 		PreparedStatement stmtToSource = null;
 		ResultSet resultSetSource = null;
@@ -37,8 +38,8 @@ public class TestUtils {
 	}
 
 	public static String getQueryResultTarget(String sqlQueryForTarget) throws Exception {
-		Connection connToTarget = setUpDbConnection(ConfigProps.getPropValue("dwh.connectionString"),
-				ConfigProps.getPropValue("dwh.username"), ConfigProps.getPropValue("dwh.password"));
+		Connection connToTarget = setUpDbConnection(getPropValue("dwh.connectionString"),
+				getPropValue("dwh.username"), getPropValue("dwh.password"));
 		String resultTarget = null;
 		PreparedStatement stmtToTarget = null;
 		ResultSet resultSetTarget = null;

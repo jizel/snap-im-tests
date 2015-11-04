@@ -1,25 +1,26 @@
 package travel.snapshot.dp.qa;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class ConfigProps {
 
-	public static String getPropValue(String arg) throws FileNotFoundException {
-		String result = "";
-		InputStream iStr;
-		Properties prop = new Properties();
-		String fileName = "config.properties";
+    private static final String CONFIG_FILE = "config.properties";
 
-		iStr = new FileInputStream(fileName);
-		try {
-			prop.load(iStr);
-			result = prop.getProperty(arg);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+    /**
+     * Reads property value from java system properties or configuration file (config.properties).
+     * Java system properties have a precedence before configuration files.
+     *
+     * @param propName name of the property - key
+     * @return property value or
+     */
+    public static String getPropValue(String propName) {
+        try {
+            final Properties props = new Properties();
+            props.load(ConfigProps.class.getClassLoader().getResourceAsStream(CONFIG_FILE));
+            return props.getProperty(propName);
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot read configuration from " + CONFIG_FILE);
+        }
+    }
 }
