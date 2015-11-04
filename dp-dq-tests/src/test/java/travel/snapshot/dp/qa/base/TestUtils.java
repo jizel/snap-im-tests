@@ -9,7 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import travel.snapshot.dp.qa.ConfigProps;
 
-public class TestBase {
+@SuppressWarnings("UnusedAssignment")
+public class TestUtils {
+
+	private TestUtils() {
+		throw new AssertionError("Utility class - DO NOT INSTANTIATE!");
+	}
 
 	public static String getQueryResultSource(String sqlQueryForSource) throws Exception {
 		Connection connToSource = setUpDbConnection(ConfigProps.getPropValue("dma.connectionString"),

@@ -2,9 +2,9 @@ package travel.snapshot.dp.qa.facts;
 
 import org.junit.Test;
 
-import travel.snapshot.dp.qa.base.TestBase;
+import static travel.snapshot.dp.qa.base.TestUtils.*;
 
-public class TestFacts extends TestBase {
+public class TestFacts {
 
 	@Test
 	public void testFactOtbStayDatesLoad() throws Exception {

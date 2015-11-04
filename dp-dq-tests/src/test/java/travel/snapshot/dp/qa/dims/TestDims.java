@@ -2,9 +2,9 @@ package travel.snapshot.dp.qa.dims;
 
 import org.junit.Test;
 
-import travel.snapshot.dp.qa.base.TestBase;
+import static travel.snapshot.dp.qa.base.TestUtils.*;
 
-public class TestDims extends TestBase {
+public class TestDims {
 
 	@Test
 	public void testDimChannelLoad() throws Exception {
