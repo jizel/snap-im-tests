@@ -44,24 +44,14 @@ public class AnalyticsStepdefs {
         analyticsSteps.responseContainsValuesForAllMetrics(count);
     }
     
-    @When("^List of tweets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_tweets_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
-        analyticsSteps.listOfTweetsIsGotWith(limit, cursor);
+    @When("^List of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
+    public void List_of_items_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String url, String limit, String cursor) throws Throwable {
+        analyticsSteps.listOfItemsIsGotWith(url, limit, cursor);
     }
         
-    @Then("^There are (\\d+) tweets returned$")
-    public void There_are_tweets_returned(int count) throws Throwable {
-        analyticsSteps.numberOfTweetsIsInResponse(count);
-    }
-    
-    @When("^List of Facebook posts is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_facebook_posts_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
-        analyticsSteps.listOfFacebookPostsIsGotWith(limit, cursor);
-    }
-        
-    @Then("^There are (\\d+) Facebook posts returned$")
-    public void There_are_facebook_posts_returned(int count) throws Throwable {
-        analyticsSteps.numberOfFacebookPostsIsInResponse(count);
+    @Then("^There are at most (\\d+) items returned$")
+    public void There_are_at_most_items_returned(int count) throws Throwable {
+        analyticsSteps.maximumNumberOfItemsInResponse(count);
     }
 
     @Then("^Response granularity is \"([^\"]*)\"$")
@@ -77,5 +67,10 @@ public class AnalyticsStepdefs {
     @Then("^Response until is \"([^\"]*)\"$")
     public void Response_until_is(String until) throws Throwable {
         analyticsSteps.dateFieldIs("until", until);
+    }
+    
+    @Then("^Data is owned by \"([^\"]*)\"$")
+    public void Data_is_owned_by(String data_owner) throws Throwable {
+        analyticsSteps.fieldContains("data_owners", data_owner);
     }
 }
