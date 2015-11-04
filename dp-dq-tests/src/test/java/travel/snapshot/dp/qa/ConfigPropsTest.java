@@ -1,11 +1,12 @@
 package travel.snapshot.dp.qa;
 
+import org.junit.Test;
+
+import static java.lang.System.setProperty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static travel.snapshot.dp.qa.ConfigProps.getPropValue;
-
-import org.junit.Test;
 
 public class ConfigPropsTest {
 
@@ -17,7 +18,35 @@ public class ConfigPropsTest {
 
     @Test
     public void existingPropertyValueOverridenInTestConfig() {
-        assertThat(getPropValue("dwh.username"), is("DUMMY"));
+        assertThat(getPropValue("dwh.driverClass"), is("com.mysql.jdbc.DummyDriver"));
+    }
+
+    @Test
+    public void existingPropertyValueOverridenInSystemProperties() {
+        final String propertyKey = "dwh.username";
+        final String propertyValue = "super-trooper";
+        System.setProperty(propertyKey, propertyValue);
+        try {
+            assertThat(getPropValue(propertyKey), is(propertyValue));
+        } finally {
+            System.clearProperty(propertyValue);
+        }
+    }
+
+    @Test
+    public void newPropertySetInSystemProperties() {
+        final String propertyKey = "my.super.custom.property";
+        final String propertyValue = "secretValue";
+        setProperty(propertyKey, propertyValue);
+        assertThat(getPropValue(propertyKey), is(propertyValue));
+    }
+
+    @Test
+    public void emptyPropertySetInSystemProperties() {
+        final String propertyKey = "my.empty.property";
+        final String propertyValue = "";
+        setProperty(propertyKey, propertyValue);
+        assertThat(getPropValue(propertyKey), is(propertyValue));
     }
 
     @Test
