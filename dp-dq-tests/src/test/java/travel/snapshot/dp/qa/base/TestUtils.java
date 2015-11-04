@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.base;
 
+import static org.apache.commons.dbutils.DbUtils.closeQuietly;
 import static org.junit.Assert.assertTrue;
 import static travel.snapshot.dp.qa.ConfigProps.getPropValue;
 
@@ -7,9 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import travel.snapshot.dp.qa.ConfigProps;
 
 @SuppressWarnings("UnusedAssignment")
 public class TestUtils {
@@ -93,28 +91,8 @@ public class TestUtils {
     }
 
     public static void closeDbConnection(Connection conn, PreparedStatement ps, ResultSet rs) throws Exception {
-
-        if (ps != null) {
-            try {
-                ps.close();
-            } catch (SQLException e) {
-                // Log
-            }
-        }
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                // Log
-            }
-        }
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // log
-            }
-        }
-
+        closeQuietly(ps);
+        closeQuietly(rs);
+        closeQuietly(conn);
     }
 }
