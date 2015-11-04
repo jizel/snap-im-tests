@@ -1,17 +1,21 @@
 package travel.snapshot.dp.qa.facts;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static travel.snapshot.dp.qa.base.TestUtils.*;
 
 public class TestFacts {
+
+    public static final Logger logger = LoggerFactory.getLogger(TestFacts.class);
 
     @Test
     public void testFactOtbStayDatesLoad() throws Exception {
         String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElements where ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates";
 
-        System.out.println("\nStart control checks on table 'fact_otb_stay_dates'");
+        logger.info("\nStart control checks on table 'fact_otb_stay_dates'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -20,7 +24,7 @@ public class TestFacts {
         String sqlQueryForSource = "SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsChannels a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) where ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates_channel";
 
-        System.out.println("\nStart control checks on table 'fact_otb_stay_dates_channel'");
+        logger.info("\nStart control checks on table 'fact_otb_stay_dates_channel'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -29,7 +33,7 @@ public class TestFacts {
         String sqlQueryForSource = "SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsChannelSegments a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates_channel_segment";
 
-        System.out.println("\nStart control checks on table 'fact_otb_stay_dates_channel_segment'");
+        logger.info("\nStart control checks on table 'fact_otb_stay_dates_channel_segment'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -38,7 +42,7 @@ public class TestFacts {
         String sqlQueryForSource = "SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsMarketSegments a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates_market_segment";
 
-        System.out.println("\nStart control checks on table 'fact_otb_stay_dates_market_segment'");
+        logger.info("\nStart control checks on table 'fact_otb_stay_dates_market_segment'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -47,7 +51,7 @@ public class TestFacts {
         String sqlQueryForSource = "SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsRateRankShoppingChannels a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "select count(*) from fact_rrs_channel";
 
-        System.out.println("\nStart control checks on table 'fact_rrs_channel'");
+        logger.info("\nStart control checks on table 'fact_rrs_channel'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
@@ -56,7 +60,7 @@ public class TestFacts {
         String sqlQueryForSource = "SELECT Count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsRateRankShoppingCompetitors a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > '2015-09-01'";
         String sqlQueryForTarget = "select count(*) from fact_rrs_competitor";
 
-        System.out.println("\nStart control checks on table 'fact_rrs_competitor'");
+        logger.info("\nStart control checks on table 'fact_rrs_competitor'");
         testFactLoad(sqlQueryForSource, sqlQueryForTarget);
     }
 
