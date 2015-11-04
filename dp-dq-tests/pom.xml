@@ -6,6 +6,13 @@
     <artifactId>dp-dq-tests</artifactId>
     <groupId>src</groupId>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
