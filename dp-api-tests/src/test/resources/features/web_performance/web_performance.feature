@@ -4,7 +4,7 @@ Feature: web_performance
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "200"
-    And Response contains 5 values for all metrics
+    And Response contains 3 values for all metrics
 
     Examples: 
       | url                         | granularity |
@@ -12,7 +12,7 @@ Feature: web_performance
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
-    Then Response contains 5 values
+    Then Response contains 3 values
     And Content type is "application/json"
     And Response code is "200"
 
@@ -24,7 +24,7 @@ Feature: web_performance
       | /web_performance/analytics/visits_unique/countries    | week        |
       | /web_performance/analytics/revenue                    | week        |
       | /web_performance/analytics/conversion_rates           | month       |
-      | /web_performance/analytics/convertion_rates/countries | month       |
+      | /web_performance/analytics/conversion_rates/countries | month       |
       | /web_performance/analytics/referals                   | month       |
 
   Scenario: Getting non-existent analytics data
@@ -53,7 +53,7 @@ Feature: web_performance
       | /web_performance/analytics/visits_unique/countries    | 400        | 52          |
       | /web_performance/analytics/revenue                    | 400        | 52          |
       | /web_performance/analytics/conversion_rates           | 400        | 52          |
-      | /web_performance/analytics/convertion_rates/countries | 400        | 52          |
+      | /web_performance/analytics/conversion_rates/countries | 400        | 52          |
       | /web_performance/analytics/referals                   | 400        | 52          |
 
   Scenario Outline: Getting a list of items
@@ -71,8 +71,8 @@ Feature: web_performance
       | /web_performance/analytics/visits_unique/countries    | 15    | 15    |
       | /web_performance/analytics/visits_unique/countries    |       | 50    |
       | /web_performance/analytics/conversion_rates/countries | 5     | 5     |
-      | /web_performance/analytics/convertion_rates/countries | 15    | 15    |
-      | /web_performance/analytics/convertion_rates/countries |       | 50    |
+      | /web_performance/analytics/conversion_rates/countries | 15    | 15    |
+      | /web_performance/analytics/conversion_rates/countries |       | 50    |
       | /web_performance/analytics/referals                   | 5     | 5     |
       | /web_performance/analytics/referals                   | 15    | 15    |
       | /web_performance/analytics/referals                   |       | 50    |
@@ -140,3 +140,8 @@ Feature: web_performance
       | /web_performance/analytics/visits | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
       | /web_performance/analytics/visits | month       | today - 40 months | today          | month                | today - 36 months | today          |
       | /web_performance/analytics/visits | day         | today + 2 days    | today + 3 days | day                  | today             | today          |
+
+  Scenario: Check error code for missing access token
+    When Access token is missing for "url"
+    Then Response code is "400"
+    And Custom code is "1"
