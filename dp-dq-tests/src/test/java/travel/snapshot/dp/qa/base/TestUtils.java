@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.apache.commons.dbutils.DbUtils.closeQuietly;
 import static org.junit.Assert.assertTrue;
 import static travel.snapshot.dp.qa.ConfigProps.getPropValue;
@@ -11,6 +14,8 @@ import java.sql.ResultSet;
 
 @SuppressWarnings("UnusedAssignment")
 public class TestUtils {
+
+    public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
     private TestUtils() {
         throw new AssertionError("Utility class - DO NOT INSTANTIATE!");
@@ -27,12 +32,10 @@ public class TestUtils {
         resultSetSource = stmtToSource.executeQuery();
 
         while (resultSetSource.next()) {
-            System.out.println(resultSetSource.getInt(1));
             resultSource = String.valueOf(resultSetSource.getInt(1)).trim();
         }
 
         closeDbConnection(connToSource, stmtToSource, resultSetSource);
-        System.out.println("Connection to source closed");
         return resultSource;
     }
 
@@ -47,23 +50,27 @@ public class TestUtils {
         resultSetTarget = stmtToTarget.executeQuery();
 
         while (resultSetTarget.next()) {
-            System.out.println(resultSetTarget.getInt(1));
+            logger.info("resultSetTarget column: {}", resultSetTarget.getInt(1));
             resultTarget = String.valueOf(resultSetTarget.getInt(1)).trim();
         }
 
         closeDbConnection(connToTarget, stmtToTarget, resultSetTarget);
-        System.out.println("Connection to target closed");
+        logger.info("Connection to target closed");
         return resultTarget;
     }
 
     public static void verifyOutcome(String resultSource, String resultTarget) {
         Boolean sameOutcome = false;
 
+        logger.info("Result from the source is: " + resultSource);
+        logger.info("Result from the target is: " + resultTarget);
+
+        // TODO: any reason to use equals ignore case?
         if (resultSource.equalsIgnoreCase(resultTarget)) {
             sameOutcome = true;
-            System.out.println("The results are EQUAL!");
+            logger.info("The results are EQUAL!");
         } else {
-            System.out.println("The results are NOT EQUAL!");
+            logger.info("The results are NOT EQUAL!");
         }
 
         assertTrue("The outcome from the source and the target is not equal.", sameOutcome);
@@ -72,25 +79,18 @@ public class TestUtils {
     public static Connection setUpDbConnection(String url, String user, String pass) throws Exception {
         Connection conn = null;
         conn = DriverManager.getConnection(url, user, pass);
-        System.out.println("Connected to database");
+        logger.info("Connected to database");
         return conn;
     }
 
     public static void testFactLoad(String sqlQueryForSource, String sqlQueryForTarget) throws Exception {
-        String outcomeSource = null;
-        String outcomeTarget = null;
-
-        outcomeSource = getQueryResultSource(sqlQueryForSource);
-        outcomeTarget = getQueryResultTarget(sqlQueryForTarget);
-
-        System.out.println("Result from the source is: " + outcomeSource);
-        System.out.println("Result from the target is: " + outcomeTarget);
+        final String outcomeSource = getQueryResultSource(sqlQueryForSource);
+        final String outcomeTarget = getQueryResultTarget(sqlQueryForTarget);
 
         verifyOutcome(outcomeSource, outcomeTarget);
-
     }
 
-    public static void closeDbConnection(Connection conn, PreparedStatement ps, ResultSet rs) throws Exception {
+    public static void closeDbConnection(Connection conn, PreparedStatement ps, ResultSet rs) {
         closeQuietly(ps);
         closeQuietly(rs);
         closeQuietly(conn);
