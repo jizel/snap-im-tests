@@ -265,4 +265,14 @@ public class RolesSteps extends BasicSteps {
             assertEquals(data.getRoleName(), roleByName.getRoleName());
         }
     }
+
+    @Step
+    public void deleteRoles(List<Role> roles) {
+        roles.forEach(r -> {
+            Role existingRole = getRoleByNameForApplication(r.getRoleName(), r.getApplicationId());
+            if (existingRole != null) {
+                deleteRole(existingRole.getRoleId());
+            }
+        });
+    }
 }

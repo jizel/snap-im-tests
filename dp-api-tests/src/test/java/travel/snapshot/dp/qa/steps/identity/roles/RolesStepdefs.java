@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.roles;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -115,5 +116,10 @@ public class RolesStepdefs {
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got for etag, forced new etag through update$")
     public void Role_with_name_for_application_id_is_got_for_etag_forced_new_etag_through_update(String roleName, String applicationId) throws Throwable {
         rolesSteps.getRoleWithNameForApplicationIdUsingEtagAfterUpdate(roleName, applicationId);
+    }
+
+    @Given("^The following roles don't exist$")
+    public void The_following_roles_don_t_exist(List<Role> roles) throws Throwable {
+        rolesSteps.deleteRoles(roles);
     }
 }

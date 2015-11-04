@@ -6,6 +6,10 @@ Feature: Roles_create_update_delete
       | 1             | Role name 1 | optional description 1 |
       | 1             | Role name 2 | optional description 2 |
       | 1             | Role name 3 | optional description 3 |
+    Given The following roles don't exist
+      | applicationId | roleName          |
+      | 1             | Updated role name |
+
 
   Scenario: Creating role
 
