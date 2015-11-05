@@ -163,8 +163,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     private Customer getCustomerByCode(String code) {
-        Customer[] customers = getCustomers("100", "0", null, null, null).as(Customer[].class);
-        return Arrays.asList(customers).stream().filter(p -> code.equals(p.getCode())).findFirst().orElse(null);
+        Customer[] customers = getCustomers("1", "0", "code==" + code, null, null).as(Customer[].class);
+        return Arrays.asList(customers).stream().findFirst().orElse(null);
     }
 
 

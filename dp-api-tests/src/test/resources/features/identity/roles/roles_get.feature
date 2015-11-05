@@ -122,6 +122,9 @@ Feature: roles_get
 
     Examples:
       | description   | limit | cursor | returned |
+      | default limit | /null |        | 50       |
+      | default limit |       | /null  | 50       |
+      | default limit | /null | /null  | 50       |
       | default limit |       |        | 50       |
       | limit at 15   | 15    |        | 15       |
       | offset by 1   |       | 1      | 50       |
@@ -136,30 +139,30 @@ Feature: roles_get
     And Custom code is "<custom_code>"
 
     Examples:
-      | description                 | limit | cursor | filter      | sort         | sort_desc    | response_code | custom_code |
+      | description                 | limit | cursor | filter      | sort      | sort_desc | response_code | custom_code |
       #limit and cursor
-      | negative cursor, null limit | /null | -1     | /null       | /null        | /null        | 400           | 63          |
-      | --empty string limit        |       | -1     | /null       | /null        | /null        | 400           | 63          |
-      | cursor NaN, null limit      | /null | text   | /null       | /null        | /null        | 400           | 63          |
-      | --empty string limit        |       | text   | /null       | /null        | /null        | 400           | 63          |
-      | negative limit, cursor null | -1    |        | /null       | /null        | /null        | 400           | 63          |
-      | --cursor empty string       | -1    | /null  | /null       | /null        | /null        | 400           | 63          |
-      | NaN limit                   | text  |        | /null       | /null        | /null        | 400           | 63          |
-      | --"--                       | text  | /null  | /null       | /null        | /null        | 400           | 63          |
-      |                             | 10    | -1     | /null       | /null        | /null        | 400           | 63          |
-      |                             | text  | 0      | /null       | /null        | /null        | 400           | 63          |
-      |                             | 10    | text   | /null       | /null        | /null        | 400           | 63          |
+      | negative cursor, null limit | /null | -1     | /null       | /null     | /null     | 400           | 63          |
+      | --empty string limit        |       | -1     | /null       | /null     | /null     | 400           | 63          |
+      | cursor NaN, null limit      | /null | text   | /null       | /null     | /null     | 400           | 63          |
+      | --empty string limit        |       | text   | /null       | /null     | /null     | 400           | 63          |
+      | negative limit, cursor null | -1    |        | /null       | /null     | /null     | 400           | 63          |
+      | --cursor empty string       | -1    | /null  | /null       | /null     | /null     | 400           | 63          |
+      | NaN limit                   | text  |        | /null       | /null     | /null     | 400           | 63          |
+      | --"--                       | text  | /null  | /null       | /null     | /null     | 400           | 63          |
+      |                             | 10    | -1     | /null       | /null     | /null     | 400           | 63          |
+      |                             | text  | 0      | /null       | /null     | /null     | 400           | 63          |
+      |                             | 10    | text   | /null       | /null     | /null     | 400           | 63          |
       #filtering and sorting
-      | both sort and sort_desc     | 10    | 0      | /null       | company_name | company_name | 400           | 63          |
+      | both sort and sort_desc     | 10    | 0      | /null       | role_name | role_name | 400           | 64          |
       #|| 10    | 0      | /null    | company_name |              | 400           | 63          |
       #|| 10    | 0      | /null    |              | company_name | 400           | 63          |
       #|| 10    | 0      | /null    | /null        |              | 400           | 63          |
       #|| 10    | 0      | /null    |              | /null        | 400           | 63          |
       #|| 10    | 0      | /null    |              |              | 400           | 63          |
-      | invalid expression          | 10    | 0      | code==      | /null        | /null        | 400           | 63          |
-      | invalid field  in filter    | 10    | 0      | role_n==aa* | /null        | /null        | 400           | 63          |
-      | invalid field  in sort      | 10    | 0      | /null       | role_n       | /null        | 400           | 63          |
-      | invalid field  in sort_desc | 10    | 0      | /null       | /null        | aaa          | 400           | 63          |
+      | invalid expression          | 10    | 0      | code==      | /null     | /null     | 400           | 63          |
+      | invalid field  in filter    | 10    | 0      | role_n==aa* | /null     | /null     | 400           | 63          |
+      | invalid field  in sort      | 10    | 0      | /null       | role_n    | /null     | 400           | 63          |
+      | invalid field  in sort_desc | 10    | 0      | /null       | /null     | aaa       | 400           | 63          |
 
   Scenario Outline: Filtering list of roles
     Given The following roles exist

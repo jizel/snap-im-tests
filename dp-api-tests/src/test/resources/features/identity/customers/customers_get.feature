@@ -111,7 +111,10 @@ Feature: customers_get
 
     Examples:
       | limit | cursor | returned |
+      | /null |        | 50       |
+      | /null | /null  | 50       |
       |       |        | 50       |
+      |       | /null  | 50       |
       | 15    |        | 15       |
       |       | 1      | 50       |
       | 20    | 0      | 20       |
@@ -140,7 +143,7 @@ Feature: customers_get
       | text  | 0      | /null    | /null        | /null        | 400           | 63          |
       | 10    | text   | /null    | /null        | /null        | 400           | 63          |
       #filtering and sorting
-      | 10    | 0      | /null    | company_name | company_name | 400           | 63          |
+      | 10    | 0      | /null    | company_name | company_name | 400           | 64          |
       #| 10    | 0      | /null    | company_name |              | 400           | 63          |
       #| 10    | 0      | /null    |              | company_name | 400           | 63          |
       #| 10    | 0      | /null    | /null        |              | 400           | 63          |
@@ -167,19 +170,19 @@ Feature: customers_get
     And There are customers with following codes returned in order: <expected_codes>
 
     Examples:
-      | limit | cursor | returned | filter                                    | sort  | sort_desc | expected_codes                                             |
-      | 5     | 0      | 5        | company_name=='Filter test*'              | code  |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 5     | 0      | 5        | company_name=='Filter test*'              |       | code      | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
-      | 5     | 2      | 3        | company_name=='Filter test*'              | code  |           | Filter_c3t, Filter_c4t, Filter_c5t                         |
-      | 5     | 2      | 3        | company_name=='Filter test*'              |       | code      | Filter_c3t, Filter_c2t, Filter_c1t                         |
-      | 5     | 3      | 2        | company_name=='Filter test*'              | code  |           | Filter_c4t, Filter_c5t                                     |
-      | /null | /null  | 1        | code==Filter_c7t                          | /null | /null     | Filter_c7t                                                 |
-      | /null | /null  | 2        | code==Filter_c* and phone==+22222222      | code  | /null     | Filter_c6t, Filter_c7t                                     |
-      | /null | /null  | 1        | email==Filter_c1@tenants.biz              | /null | /null     | Filter_c1t                                                 |
-      | /null | /null  | 1        | salesforce_id=Filter_salesforceid_given_2 | /null | /null     | Filter_c2t                                                 |
-      | /null | /null  | 1        | vat_id==ATU22*003                         | /null | /null     | Filter_c3t                                                 |
-      | /null | /null  | 1        | isDemoCustomer==false                     | /null | /null     | Filter_c7t                                                 |
-      | /null | /null  | 1        | website==http://www.snapshot.cz           | /null | /null     | Filter_c6t                                                 |
+      | limit | cursor | returned | filter                                     | sort  | sort_desc | expected_codes                                             |
+      | 5     | 0      | 5        | company_name=='Filter test*'               | code  |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 0      | 5        | company_name=='Filter test*'               |       | code      | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
+      | 5     | 2      | 3        | company_name=='Filter test*'               | code  |           | Filter_c3t, Filter_c4t, Filter_c5t                         |
+      | 5     | 2      | 3        | company_name=='Filter test*'               |       | code      | Filter_c3t, Filter_c2t, Filter_c1t                         |
+      | 5     | 3      | 2        | company_name=='Filter test*'               | code  |           | Filter_c4t, Filter_c5t                                     |
+      | /null | /null  | 1        | code==Filter_c7t                           | /null | /null     | Filter_c7t                                                 |
+      | /null | /null  | 2        | code==Filter_c* and phone==+22222222       | code  | /null     | Filter_c6t, Filter_c7t                                     |
+      | /null | /null  | 1        | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1t                                                 |
+      | /null | /null  | 1        | salesforce_id==Filter_salesforceid_given_2 | /null | /null     | Filter_c2t                                                 |
+      | /null | /null  | 1        | vat_id==ATU22*003                          | /null | /null     | Filter_c3t                                                 |
+      | /null | /null  | 1        | is_demo_customer==0                        | /null | /null     | Filter_c7t                                                 |
+      | /null | /null  | 1        | website==http://www.snapshot.cz            | /null | /null     | Filter_c6t                                                 |
   #add all fields
 
     #TODO add test for wrong parameters in url
