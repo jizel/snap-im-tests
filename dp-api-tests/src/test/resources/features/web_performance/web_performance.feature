@@ -25,7 +25,7 @@ Feature: web_performance
       | /web_performance/analytics/revenue                    | week        |
       | /web_performance/analytics/conversion_rates           | month       |
       | /web_performance/analytics/conversion_rates/countries | month       |
-      | /web_performance/analytics/referals                   | month       |
+      | /web_performance/analytics/referrals                   | month       |
 
   Scenario: Getting non-existent analytics data
     When Getting "/web_performance/analytics/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
@@ -34,7 +34,7 @@ Feature: web_performance
     And Custom code is "151"
 
   Scenario: Getting mismatched metrics analytics data
-    When Getting "/web_performance/analytics/referals/countries" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "/web_performance/analytics/referrals/countries" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "404"
     And Custom code is "151"
@@ -54,7 +54,7 @@ Feature: web_performance
       | /web_performance/analytics/revenue                    | 400        | 52          |
       | /web_performance/analytics/conversion_rates           | 400        | 52          |
       | /web_performance/analytics/conversion_rates/countries | 400        | 52          |
-      | /web_performance/analytics/referals                   | 400        | 52          |
+      | /web_performance/analytics/referrals                   | 400        | 52          |
 
   Scenario Outline: Getting a list of items
     When List of "<url>" is got with limit "<limit>" and cursor "" and filter empty and sort empty
@@ -73,9 +73,9 @@ Feature: web_performance
       | /web_performance/analytics/conversion_rates/countries | 5     | 5     |
       | /web_performance/analytics/conversion_rates/countries | 15    | 15    |
       | /web_performance/analytics/conversion_rates/countries |       | 50    |
-      | /web_performance/analytics/referals                   | 5     | 5     |
-      | /web_performance/analytics/referals                   | 15    | 15    |
-      | /web_performance/analytics/referals                   |       | 50    |
+      | /web_performance/analytics/referrals                   | 5     | 5     |
+      | /web_performance/analytics/referrals                   | 15    | 15    |
+      | /web_performance/analytics/referrals                   |       | 50    |
 
   Scenario: Get analytics data from API for an invalid granularity
     When Getting "/web_performance/analytics/visits/countries" data with "invalid" granularity for "property" since "2015-09-01" until "2015-09-01"
@@ -83,17 +83,17 @@ Feature: web_performance
     And Response code is "400"
     And Custom code is "63"
 
-  Scenario Outline: Checking error codes for getting list of referals broken down by referring site
+  Scenario Outline: Checking error codes for getting list of referrals broken down by referring site
     When List of "<url>" is got with limit "<limit>" and cursor "" and filter empty and sort empty
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
     Examples: 
       | url                                 | limit | response_code | custom_code |
-      | /web_performance/analytics/referals |       | 400           | 63          |
-      | /web_performance/analytics/referals | -1    | 400           | 63          |
-      | /web_performance/analytics/referals | text  | 400           | 63          |
-      | /web_performance/analytics/referals | 10    | 400           | 63          |
+      | /web_performance/analytics/referrals |       | 400           | 63          |
+      | /web_performance/analytics/referrals | -1    | 400           | 63          |
+      | /web_performance/analytics/referrals | text  | 400           | 63          |
+      | /web_performance/analytics/referrals | 10    | 400           | 63          |
 
   Scenario Outline: Get analytics data from API with missing parameters
     When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
