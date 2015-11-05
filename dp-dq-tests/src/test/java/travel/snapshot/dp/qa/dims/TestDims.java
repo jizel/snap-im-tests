@@ -13,7 +13,7 @@ public class TestDims {
 
     @Test
     public void testDimChannelLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.Channels WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.Channels WHERE ModificationTimestamp > %s");
 
         // Need to subtract 1 because currently there are initial data added in
         // the table
@@ -25,7 +25,7 @@ public class TestDims {
 
     @Test
     public void testDimChannelCategoryLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.ChannelCategories WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.ChannelCategories WHERE ModificationTimestamp > %s");
         // Need to subtract 1 because currently there are initial data added in
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_channel_category";
@@ -36,7 +36,7 @@ public class TestDims {
 
     @Test
     public void testDimChannelSegmentLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.ChannelSegments WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.ChannelSegments WHERE ModificationTimestamp > %s");
         // Need to subtract 1 because currently there are initial data added in
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_channel_segment";
@@ -47,7 +47,7 @@ public class TestDims {
 
     @Test
     public void testDimMarketCategoryLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.MarketCategories WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.MarketCategories WHERE ModificationTimestamp > %s");
         // Need to subtract 1 because currently there are initial data added in
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_market_category";
@@ -58,7 +58,7 @@ public class TestDims {
 
     @Test
     public void testDimMarketSegmentLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.MarketSegments WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.MarketSegments WHERE ModificationTimestamp > %s");
         // Need to subtract 1 because currently there are initial data added in
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_market_segment";
@@ -69,7 +69,7 @@ public class TestDims {
 
     @Test
     public void testDimPropertyLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.Properties WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.Properties WHERE ModificationTimestamp > %s");
         String sqlQueryForTarget = "SELECT count(*) FROM dim_property";
 
         logger.info("\nStart control checks on table 'dim_property'");
@@ -78,7 +78,7 @@ public class TestDims {
 
     @Test
     public void testDimRatePlanLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.RatePlans WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.RatePlans WHERE ModificationTimestamp > %s");
         String sqlQueryForTarget = "SELECT count(*) FROM dim_rate_plan";
 
         logger.info("\nStart control checks on table 'dim_rate_plan'");
@@ -87,7 +87,7 @@ public class TestDims {
 
     @Test
     public void testDimRoomTypeLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.RoomTypes WHERE ModificationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.RoomTypes WHERE ModificationTimestamp > %s");
         String sqlQueryForTarget = "SELECT count(*) FROM dim_room_type";
 
         logger.info("\nStart control checks on table 'dim_room_type'");
@@ -96,7 +96,7 @@ public class TestDims {
 
     @Test
     public void testDimSnapshotLoad() throws Exception {
-        String sqlQueryForSource = "SELECT count(ID) FROM SnapshotForDevelopers2.dbo.FCSGridSnapshotsMetadata WHERE SnapshotCreationTimestamp > '2015-09-01'";
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.FCSGridSnapshotsMetadata WHERE SnapshotCreationTimestamp > %s");
         // Need to subtract 1 because currently there are initial data added in
         // the table
         String sqlQueryForTarget = "SELECT count(*)-1 FROM dim_snapshot";
