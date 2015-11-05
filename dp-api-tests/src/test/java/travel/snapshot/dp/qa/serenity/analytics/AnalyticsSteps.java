@@ -33,26 +33,19 @@ public class AnalyticsSteps extends BasicSteps {
         super();
         spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
     }
-
+    
+    //GET Requests
+    
     @Step
     public void getDataWithoutProperty(String url) {
         Response response = given().spec(spec).get(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
-
-    @Step
-    public void responseContainsValues(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("values.size()", is(count));
-    }
     
-    public void responseContainsValuesForAllMetrics(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("data.values.size()", is(count));
-        /*Stats stats = response.as(Stats.class);
-        stats.getData().forEach(m -> {
-        	assertEquals(String.format("Size of %s should be %d, but is %d", m.getName(), count, m.getValues().size()), count, m.getValues().size());
-        });*/
+    @Step
+    public void getDataWithoutAccessToken(String url) {
+        Response response = given().spec(spec).header("x-property","property").get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
     @Step
@@ -77,17 +70,11 @@ public class AnalyticsSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
-    /**
-     * getting items over rest api, if limit and cursor is null or empty, it's not added to query string
-     *
-     * @param limit
-     * @param cursor
-     * @return
-     */
-    private Response getItems(String url, String limit, String cursor) {
+    @Step
+    public void getItems(String url, String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath(url)
-                .header("x-property", "sample_property")
+                .header("x-property", "property")
                 .parameter("access_token", "aaa");
 
         if (cursor != null && !"".equals(cursor)) {
@@ -96,23 +83,31 @@ public class AnalyticsSteps extends BasicSteps {
         if (limit != null && !"".equals(limit)) {
             requestSpecification.parameter("limit", limit);
         }
-        return requestSpecification.when().get();
+        Response response = requestSpecification.when().get();
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    //Response Validation
+    
+    @Step
+    public void responseContainsValues(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body("values.size()", is(count));
     }
     
     @Step
-    public void listOfItemsIsGotWith(String url, String limit, String cursor) {
-        Response response = getItems(url, limit, cursor);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    public void responseContainsValuesForAllMetrics(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body("data.values.size()", is(count));
     }
-
+    
     @Step
     public void maximumNumberOfItemsInResponse(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body("size()",lessThanOrEqualTo(count));
-        //JsonNode[] items = response.body().as(JsonNode[].class);
-        //assertTrue(String.format("Number of items (%d) should be less than or equal to (%d)", items.length, count), items.length <= count);
     }
-
+    
+    @Step
     public void dateFieldIs(String fieldName, String value){
         LocalDate expectedDate = StringUtil.parseDate(value);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
@@ -120,13 +115,14 @@ public class AnalyticsSteps extends BasicSteps {
         LocalDate actualDate = LocalDate.parse(response.getBody().path(fieldName));
     	assertEquals(expectedDate, actualDate);
     }
-
+    
+    @Step
     public void textFieldIs(String fieldName, String value){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, is(value));
-        //assertEquals(value, response.getBody().path(fieldName));
     }
     
+    @Step
     public void fieldContains(String fieldName, String value){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, hasItem(value));

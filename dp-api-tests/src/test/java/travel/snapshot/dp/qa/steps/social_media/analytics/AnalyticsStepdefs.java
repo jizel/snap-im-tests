@@ -28,6 +28,11 @@ public class AnalyticsStepdefs {
     public void property_is_missing_for(String url) throws Throwable {
         analyticsSteps.getDataWithoutProperty(url);
     }
+    
+    @When("^Access token is missing for \"([^\"]*)\"$")
+    public void access_token_is_missing_for(String url) throws Throwable {
+        analyticsSteps.getDataWithoutAccessToken(url);
+    }
 
     @When("^Getting \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void getting_data_with_granularity_for_since_until(String url, String granularity, String property, String since, String until) throws Throwable {
@@ -46,7 +51,7 @@ public class AnalyticsStepdefs {
     
     @When("^List of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
     public void List_of_items_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String url, String limit, String cursor) throws Throwable {
-        analyticsSteps.listOfItemsIsGotWith(url, limit, cursor);
+        analyticsSteps.getItems(url, limit, cursor);
     }
         
     @Then("^There are at most (\\d+) items returned$")
