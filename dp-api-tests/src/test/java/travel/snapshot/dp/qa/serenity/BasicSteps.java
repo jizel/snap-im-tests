@@ -8,17 +8,15 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.IOUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
+import java.util.Map;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -28,6 +26,7 @@ public class BasicSteps {
 
     public static final String BASE_URI = "baseURI";
     public static final String SESSION_RESPONSE = "response";
+    public static final String SESSION_RESPONSE_MAP = "response_map";
     public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     public static final String IDENTITY_BASE_URI = "identity.baseURI";
     public static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
@@ -56,7 +55,7 @@ public class BasicSteps {
     private String getRequestDataFromFile(InputStream inputStream) throws IOException {
         return IOUtils.toString(inputStream, Charset.forName("utf-8"));
     }
-
+    
     public void responseCodeIs(int responseCode) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().statusCode(responseCode);
@@ -114,5 +113,19 @@ public class BasicSteps {
                 .when().post();
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
 
+    }
+    
+    // --- session access ---
+    
+    public void setSessionResponse(Response response) {
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    public void setSessionResponseMap(Map<String, Response> responses) {
+        Serenity.setSessionVariable(SESSION_RESPONSE_MAP).to(responses);
+    }
+    
+    public Map<String, Response> getSessionResponseMap() {
+        return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
     }
 }

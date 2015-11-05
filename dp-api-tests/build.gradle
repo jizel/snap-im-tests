@@ -48,6 +48,7 @@ dependencies {
 
     testCompile('org.assertj:assertj-core:1.7.0')
     testCompile('org.slf4j:slf4j-log4j12:1.7.12')
+    testCompile('com.github.mifmif:generex:0.0.4')
 }
 
 configurations {

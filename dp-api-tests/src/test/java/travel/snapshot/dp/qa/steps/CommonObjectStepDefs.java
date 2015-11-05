@@ -1,0 +1,58 @@
+
+package travel.snapshot.dp.qa.steps;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import java.util.List;
+import net.thucydides.core.annotations.Steps;
+import travel.snapshot.dp.qa.helpers.ObjectField;
+import travel.snapshot.dp.qa.helpers.ResponseEntry;
+import travel.snapshot.dp.qa.serenity.CommonObjectSteps;
+
+/**
+ *
+ * @author konkol
+ */
+public class CommonObjectStepDefs {
+    
+    @Steps
+	private CommonObjectSteps steps;
+    
+    // --- given ---
+    
+    @Given("^the following \"([^\"]*)\" object definition$")
+    public void the_following_object_definition(String objectName, List<ObjectField> fields) throws Throwable {
+        steps.setObjectDefinition(objectName, fields);
+    }
+    
+    @Given("^the location \"([^\"]*)\" for object \"([^\"]*)\"$")
+    public void the_location_for_object(String location, String objectName) throws Throwable {
+        steps.setObjectLocation(objectName, location);
+    }
+    
+    // --- when ---
+    
+    @When("^create \"([^\"]*)\" object with correct field values$")
+    public void create_object_with_correct_field_values(String objectName) throws JsonProcessingException {
+        steps.createCorrectObject(objectName);
+    }
+    
+    @When("^create \"([^\"]*)\" objects each with one invalid field value$")
+    public void create_objects_each_with_one_invalid_field_value(String objectName) throws JsonProcessingException {
+        steps.createInvalidObjects(objectName);
+    }
+    
+    @When("^create \"([^\"]*)\" objects each with one missing field$")
+    public void create_objects_each_with_one_missing_field(String objectName) throws JsonProcessingException {
+        steps.createObjectsWithMissingFields(objectName);
+    }
+    
+    // --- then ---
+    @Then("^there are following responses$")
+    public void there_are_following_responses(List<ResponseEntry> entries) throws JsonProcessingException {
+        steps.responsesMatch(entries);
+    }
+    
+}

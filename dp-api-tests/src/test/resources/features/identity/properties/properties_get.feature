@@ -5,7 +5,7 @@ Feature: properties_get
     | salesforceId          | propertyName  | propertyCode  | website                       | email             | vatId         | isDemoProperty    | timezone  |
     | salesforceid_1        | p1_name       | p1_code       | http://www.snapshot.travel    | p1@tenants.biz    | CZ10000001    | true              | UTC+01:00 |
 
-  @skipped
+  
   Scenario: Getting property
     When Property with code "p1_code" exists
     Then Response code is "200"
@@ -30,13 +30,13 @@ Feature: properties_get
     # non-existence
     And Body does not contain property with attribute "source_property"
 
-  @skipped
+  
   Scenario: Getting property with etag
     When Property with code "p1_code" exists with etag
     Then Response code is "304"
     And Body is empty
 
-  @skipped
+  
   Scenario: Getting property with expired etag
     #   1. property exists
     #   2. etag value is stored
@@ -52,13 +52,13 @@ Feature: properties_get
     And Body contains property with attribute "property_code" value "p1_code"
     And Body contains property with attribute "vat_id" value "CZ99999999"
 
-  @skipped
+  
   Scenario: Checking error code for nonexistent property
     When Nonexistent property id sent
     Then Response code is "404"
     And Custom code is "152"
 
-  @skipped
+  
   Scenario Outline: Getting list of properties
     Given The following properties exist with random address and billing address
     | salesforceId          | propertyName  | propertyCode  | website                       | email             | vatId         | isDemoProperty    | timezone  |
@@ -136,7 +136,7 @@ Feature: properties_get
     | limit by 10   | 10    | 0      | 10       |
     | l:5 o:5       | 5     | 5      | 5        |
 
-  @skipped
+  
   Scenario Outline: Checking error codes for lists of properties
     When List of properties exists with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
     Then Response code is "<response_code>"
