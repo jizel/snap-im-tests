@@ -17,11 +17,6 @@ public class ConfigPropsTest {
     }
 
     @Test
-    public void existingPropertyValueOverridenInTestConfig() {
-        assertThat(getPropValue("dwh.driverClass"), is("com.mysql.jdbc.DummyDriver"));
-    }
-
-    @Test
     public void existingPropertyValueOverridenInSystemProperties() {
         final String propertyKey = "dwh.username";
         final String propertyValue = "super-trooper";
