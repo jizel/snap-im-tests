@@ -93,11 +93,6 @@ public class CreatePropertyStepdefs {
         propertySteps.numberOfPropertiesIsInResponse(count);
     }
     
-    @Then("^\"([^\"]*)\" header is set and contains the same property$")
-    public void header_is_set_and_contains_the_same_property(String headerName) throws Throwable {
-        propertySteps.comparePropertyOnHeaderWithStored(headerName);
-    }
-    
     // --- and ---
     
     @And("^Property with same id doesn't exist$")

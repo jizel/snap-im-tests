@@ -49,10 +49,21 @@ public class CommonObjectStepDefs {
         steps.createObjectsWithMissingFields(objectName);
     }
     
+    @When("^create \"([^\"]*)\" objects each with one long field$")
+    public void create_objects_each_with_one_long_field(String objectName) throws JsonProcessingException {
+        steps.createObjectsWithLongFields(objectName);
+    }
+    
     // --- then ---
+    
     @Then("^there are following responses$")
     public void there_are_following_responses(List<ResponseEntry> entries) throws JsonProcessingException {
         steps.responsesMatch(entries);
+    }
+    
+    @Then("^location header is set and points to the same object$")
+    public void location_header_is_set_and_points_to_the_same_object() throws Throwable {
+        steps.verifyLocationObject();
     }
     
 }

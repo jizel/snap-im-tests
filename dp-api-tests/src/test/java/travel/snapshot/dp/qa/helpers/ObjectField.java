@@ -1,9 +1,6 @@
 
 package travel.snapshot.dp.qa.helpers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import java.util.function.Function;
-
 /**
  *
  * @author konkol
@@ -64,17 +61,7 @@ public class ObjectField {
     public void setLonger(String longer) {
         this.longer = longer;
     }
-
-    public JsonNode asJsonNode(Function<ObjectField, String> provider) {
-        String value = new NullEmptyStringConverter().transform(provider.apply(this));
-        if (value != null) {
-            return FieldType.getType(type).getJsonNode(value);
-        } else {
-            // null node
-            return null;
-        }
-    }
-
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

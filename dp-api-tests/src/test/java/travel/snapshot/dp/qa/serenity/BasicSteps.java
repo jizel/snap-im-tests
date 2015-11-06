@@ -121,6 +121,10 @@ public class BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
+    public Response getSessionResponse() {
+        return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
+    }
+    
     public void setSessionResponseMap(Map<String, Response> responses) {
         Serenity.setSessionVariable(SESSION_RESPONSE_MAP).to(responses);
     }

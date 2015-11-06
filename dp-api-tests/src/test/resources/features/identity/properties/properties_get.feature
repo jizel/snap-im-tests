@@ -1,3 +1,4 @@
+@skipped
 Feature: properties_get
 
   Background:

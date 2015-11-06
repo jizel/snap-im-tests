@@ -13,18 +13,11 @@ import java.util.Optional;
  */
 public enum FieldType {
     
-    ID,
     STRING,
     BOOL {
         @Override
         public JsonNode getJsonNode(String value) {
             return factory.booleanNode(Boolean.parseBoolean(value));
-        }
-    },
-    REF {
-        @Override
-        public JsonNode getJsonNode(String value) {
-            return factory.objectNode();
         }
     };
     
