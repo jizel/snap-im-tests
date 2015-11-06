@@ -38,6 +38,11 @@ public class AnalyticsStepdefs {
     public void getting_data_with_granularity_for_since_until(String url, String granularity, String property, String since, String until) throws Throwable {
     analyticsSteps.getData(url, granularity, property, since, until);
     }
+    
+    @When("^Getting rate data with for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
+    public void getting_rate_data_with_for_since_until(String property_id, String since, String until) throws Throwable {
+    	analyticsSteps.getPropertyRateData(property_id, since, until);
+    }
 
     @Then("^Response contains (\\d+) values$")
     public void Response_contains_values(int count) throws Throwable {
@@ -57,6 +62,11 @@ public class AnalyticsStepdefs {
     @Then("^There are at most (\\d+) items returned$")
     public void There_are_at_most_items_returned(int count) throws Throwable {
         analyticsSteps.maximumNumberOfItemsInResponse(count);
+    }
+    
+    @Then("^\"([^\"]*)\" value is not more than \"([^\"]*)\" value$")
+    public void value_is_no_more_than(String value1, String value2) throws Throwable {
+        analyticsSteps.valueIsLessThanOrEqualTo(value1, value2);
     }
 
     @Then("^Response granularity is \"([^\"]*)\"$")

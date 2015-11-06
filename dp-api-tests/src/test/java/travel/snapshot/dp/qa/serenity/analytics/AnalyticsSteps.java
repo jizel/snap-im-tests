@@ -37,8 +37,14 @@ public class AnalyticsSteps extends BasicSteps {
     //GET Requests
     
     @Step
-    public void getDataWithoutProperty(String url) {
+    public void emptyRequest(String url) {
         Response response = given().spec(spec).get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    @Step
+    public void getDataWithoutProperty(String url) {
+        Response response = given().spec(spec).parameter("access_token","aaa").get(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
@@ -67,6 +73,26 @@ public class AnalyticsSteps extends BasicSteps {
         }
 
         Response response = requestSpecification.when().get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    @Step
+    public void getPropertyRateData(String property_id, String since, String until) {
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(since);
+
+        RequestSpecification requestSpecification = given().spec(spec)
+                .parameter("access_token", "aaa");
+        
+        if (since!= null && !"".equals(since)) {
+            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        
+        if (until!= null && !"".equals(until)) {
+            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+        }
+
+        Response response = requestSpecification.when().get("rate_shopper/analytics/property/" + property_id);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
@@ -105,6 +131,12 @@ public class AnalyticsSteps extends BasicSteps {
     public void maximumNumberOfItemsInResponse(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body("size()",lessThanOrEqualTo(count));
+    }
+    
+    @Step
+    public void valueIsLessThanOrEqualTo(String pathToValue1, String pathToValue2) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(pathToValue1, lessThanOrEqualTo(pathToValue2));
     }
     
     @Step
