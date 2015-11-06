@@ -8,13 +8,49 @@ system properties - see 'Running tests' section.
 
 ## Build
 
+The project is built by gradle.
+
 ### Dependencies
 The ETL tool is provided via dependency management.
 The temporary solution (until enterprise maven repository is available) is to install
-these artifact into the local maven repo. You can publish it via `sbt publish` command.
+this artifact into the local maven repo. You can publish it via `sbt publish` command.
+
+### Running ETL tool
+You can run ETL process explicitly via gradle `etlRun` task.
+Don't forget to specify required configuration properties, especially the database credentials!
+
+```
+gradle -i runEtl -Ddwh.username=root -Ddwh.password= -Dmetadata.username=root -Dmetadata.password=
+```
+
+You can also specify custom startdate:
+
+```
+gradle -i runEtl -Ddwh.username=root -Ddwh.password= -Dmetadata.username=root -Dmetadata.password= -Detl.startdate=2015-10-01
+```
+
+You can even specify arbitrary arguments for etl tool:
+
+```
+gradle -i runEtl -Ddwh.username=root -Ddwh.password= -Dmetadata.username=root -Dmetadata.password= -Detl.args="--startdate 2015-10-01 --dimonly"
+```
+
+Check EtlRunner class for more details.
+
+You can also run both `runEtl` and `test` tasks:
+
+```
+gradle -i runEtl test -Ddwh.username=root -Ddwh.password= -Dmetadata.username=root -Dmetadata.password=
+```
+
+Basic documentation for etlRun task is provided:
+```
+gradle help --task runEtl
+```
+
+
 
 ### Running tests
-The project is built by gradle - version 2.8+ is required.
 
 ```gradle test``` or with `-i` to get more logging ```gradle test -i``` 
 
