@@ -183,7 +183,7 @@ Feature: roles_get
     Examples:
       | limit | cursor | returned | filter                                               | sort      | sort_desc | expected_names                                                                                     |
       | 5     | 0      | 5        | role_name=='Filter role name*'                       | role_name |           | Filter role name 1, Filter role name 2, Filter role name 3, Filter role name 4, Filter role name 5 |
-      | 5     | 0      | 5        | role_name=='Filter role name*'                       |           | role_name | Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1 |
+      | 5     | 0      | 5        | role_name=='Filter role name*'                       |           | role_name | Filter role name 6, Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2 |
       | 5     | 2      | 4        | role_name=='Filter role name*'                       | role_name |           | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
       | 5     | 2      | 4        | role_name=='Filter role name*'                       |           | role_name | Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1                     |
       | 5     | 4      | 2        | role_name=='Filter role name*'                       | role_name |           | Filter role name 5, Filter role name 6                                                             |
