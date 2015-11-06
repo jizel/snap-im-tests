@@ -3,12 +3,14 @@ package travel.snapshot.dp.qa.base;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
+    public static final String START_DATE = "'2015-09-01'";
 
     private static final DbHelper dbHelper = new DbHelper();
 
@@ -22,6 +24,10 @@ public class TestUtils {
         final String outcomeTarget = getQueryResultTarget(sqlQueryForTarget);
 
         verifyOutcome(outcomeSource, outcomeTarget);
+    }
+
+    public static String withStartDate(String queryWithPlaceholder) {
+        return format(queryWithPlaceholder, START_DATE);
     }
 
     private static String getQueryResultSource(String sqlQueryForSource) throws Exception {
