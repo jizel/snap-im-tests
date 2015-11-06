@@ -3,14 +3,16 @@ package travel.snapshot.dp.qa.base;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import travel.snapshot.dp.qa.ConfigProps;
+
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
-    public static final String START_DATE = "'2015-09-01'";
 
     private static final DbHelper dbHelper = new DbHelper();
 
@@ -27,7 +29,13 @@ public class TestUtils {
     }
 
     public static String withStartDate(String queryWithPlaceholder) {
-        return format(queryWithPlaceholder, START_DATE);
+        final String startDate = ConfigProps.getPropValue("etl.startDate");
+        if (isEmpty(startDate)) {
+            throw new IllegalStateException("etl.startDate property must be defined " +
+                    "- check your configuration!");
+        }
+        // MSSQL requires the date to be quoted, otherwise we get empty result set
+        return format(queryWithPlaceholder, "'" + startDate + "'");
     }
 
     private static String getQueryResultSource(String sqlQueryForSource) throws Exception {

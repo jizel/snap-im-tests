@@ -17,19 +17,16 @@ public class ConfigPropsTest {
     }
 
     @Test
-    public void existingPropertyValueOverridenInTestConfig() {
-        assertThat(getPropValue("dwh.driverClass"), is("com.mysql.jdbc.DummyDriver"));
-    }
-
-    @Test
     public void existingPropertyValueOverridenInSystemProperties() {
         final String propertyKey = "dwh.username";
-        final String propertyValue = "super-trooper";
+        final String propertyValue = "user.from.system.property";
+        final String previousPropertyValue = System.getProperty(propertyKey);
+
         System.setProperty(propertyKey, propertyValue);
         try {
             assertThat(getPropValue(propertyKey), is(propertyValue));
         } finally {
-            System.clearProperty(propertyValue);
+            resetSystemProperty(propertyKey, previousPropertyValue);
         }
     }
 
@@ -53,5 +50,16 @@ public class ConfigPropsTest {
     public void unknownPropertyValueShouldBeNull() {
         assertNull(getPropValue("dma.driverClass.notexist"));
         assertNull(getPropValue("XXX"));
+    }
+
+
+    private void resetSystemProperty(String propertyKey, String previousPropertyValue) {
+        if (previousPropertyValue == null) {
+            // just remove property completely - Note, that System#clearProperty doesn't work
+            // as expected -> the old value is still accessible via System#getProperty
+            System.getProperties().remove(propertyKey);
+        } else {
+            System.setProperty(propertyKey, previousPropertyValue);
+        }
     }
 }
