@@ -14,7 +14,7 @@ public class TestUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
-    private static final DbHelper dbHelper = new DbHelper();
+    public static final DbHelper dbHelper = new DbHelper();
 
     private TestUtils() {
         throw new AssertionError("Utility class - DO NOT INSTANTIATE!");
