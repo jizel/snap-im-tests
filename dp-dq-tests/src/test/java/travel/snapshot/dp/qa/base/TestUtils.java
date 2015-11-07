@@ -51,7 +51,7 @@ public class TestUtils {
         logger.info("Result from the target is: " + resultTarget);
 
         assertThat("The outcome from the source and the target is not equal.",
-                resultSource, is(resultTarget));
+                resultTarget, is(resultSource));
     }
 
 }
