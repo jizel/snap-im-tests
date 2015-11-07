@@ -12,7 +12,7 @@ public class TestFacts {
 
     @Test
     public void testFactOtbStayDatesLoad() throws Exception {
-        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElements where ModificationTimestamp > %s");
+        String sqlQueryForSource = withStartDate("SELECT count(ID) FROM FCSGridCurrentElements where ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates";
 
         logger.info("\nStart control checks on table 'fact_otb_stay_dates'");
@@ -21,7 +21,7 @@ public class TestFacts {
 
     @Test
     public void testFactOtbStayDatesChannelLoad() throws Exception {
-        String sqlQueryForSource = withStartDate("SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsChannels a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) where ModificationTimestamp > %s");
+        String sqlQueryForSource = withStartDate("SELECT count(*) FROM FCSGridCurrentElementsChannels a JOIN FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) where ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates_channel";
 
         logger.info("\nStart control checks on table 'fact_otb_stay_dates_channel'");
@@ -30,7 +30,7 @@ public class TestFacts {
 
     @Test
     public void testFactOtbStayDatesChannelLoadSegmentLoad() throws Exception {
-        String sqlQueryForSource = withStartDate("SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsChannelSegments a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
+        String sqlQueryForSource = withStartDate("SELECT count(*) FROM FCSGridCurrentElementsChannelSegments a JOIN FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates_channel_segment";
 
         logger.info("\nStart control checks on table 'fact_otb_stay_dates_channel_segment'");
@@ -39,7 +39,7 @@ public class TestFacts {
 
     @Test
     public void testFactOtbStayDatesMarketSegmentLoad() throws Exception {
-        String sqlQueryForSource = withStartDate("SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsMarketSegments a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
+        String sqlQueryForSource = withStartDate("SELECT count(*) FROM FCSGridCurrentElementsMarketSegments a JOIN FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from fact_otb_stay_dates_market_segment";
 
         logger.info("\nStart control checks on table 'fact_otb_stay_dates_market_segment'");
@@ -48,7 +48,7 @@ public class TestFacts {
 
     @Test
     public void testFactRrsChannelLoad() throws Exception {
-        String sqlQueryForSource = withStartDate("SELECT count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsRateRankShoppingChannels a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
+        String sqlQueryForSource = withStartDate("SELECT count(*) FROM FCSGridCurrentElementsRateRankShoppingChannels a JOIN FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from fact_rrs_channel";
 
         logger.info("\nStart control checks on table 'fact_rrs_channel'");
@@ -57,7 +57,7 @@ public class TestFacts {
 
     @Test
     public void testFactRrsCompetitorLoad() throws Exception {
-        String sqlQueryForSource = withStartDate("SELECT Count(*) FROM SnapshotForDevelopers2.dbo.FCSGridCurrentElementsRateRankShoppingCompetitors a JOIN SnapshotForDevelopers2.dbo.FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
+        String sqlQueryForSource = withStartDate("SELECT Count(*) FROM FCSGridCurrentElementsRateRankShoppingCompetitors a JOIN FCSGridCurrentElements b ON (b.ID = a.FCSGridCurrentElementID) WHERE b.ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from fact_rrs_competitor";
 
         logger.info("\nStart control checks on table 'fact_rrs_competitor'");
