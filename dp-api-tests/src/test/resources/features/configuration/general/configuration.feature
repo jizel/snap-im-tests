@@ -41,14 +41,8 @@ Feature: configuration
 
   Scenario: Deleting nonexistent configuration type
     When Nonexistent configuration type id is deleted
-    Then Response code is "404"
-    And Custom code is "152"
+    Then Response code is "204"
 
-  @skipped
-  Scenario: Delete configuration type with missing id parameter
-    When Configuration type with identifier "" is deleted
-    Then Response code is "400"
-    And Custom code is "52"
 
   #error states
   #id is missing

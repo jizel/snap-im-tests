@@ -10,7 +10,9 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class CreateCustomerStepdefs {
 
     @Steps
     private CustomerSteps customerSteps;
+
+    @Steps
+    private PropertySteps propertySteps;
 
     @Given("^The following customers exist with random address$")
     public void The_following_tenants_exist(List<Customer> customers) throws Throwable {
@@ -145,5 +150,23 @@ public class CreateCustomerStepdefs {
     @Then("^There are customers with following codes returned in order: (.*)")
     public void There_are_customers_with_following_codes_returned_in_order(List<String> codes) throws Throwable {
         customerSteps.codesAreInResponseInOrder(codes);
+    }
+
+    @Given("^Property with code \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
+    public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode, String customerCode, String type, String dateFrom, String dateTo) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.propertyIsAddedToCustomerWithTypeFromTo(p, customerCode, type, dateFrom, dateTo);
+    }
+
+    @Given("^Relation between property with code \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
+    public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode, String customerCode, String type, String validFrom, String validTo) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(p, customerCode, type, validFrom, validTo);
+
+    }
+
+    @Then("^Body contains customerProperty type with \"([^\"]*)\" value \"([^\"]*)\"$")
+    public void Body_contains_customerProperty_type_with_value(String parameterName, String value) throws Throwable {
+        customerSteps.bodyContainsCustomerWith(parameterName, value);
     }
 }

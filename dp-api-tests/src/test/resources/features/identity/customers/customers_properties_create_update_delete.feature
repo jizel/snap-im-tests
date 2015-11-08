@@ -1,25 +1,34 @@
-Feature: customers_create_update_delete
-
-  #TODO add etag things to get/update/create
+Feature: customers_properties_create_update_delete
 
   Background:
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
-  Scenario: Creating Customer without parent with random address
 
-    When Customer is created with random address
-      | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    |
-      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel |
+    Given The following properties exist with random address and billing address
+      | salesforceId          | propertyName  | propertyCode  | website                       | email             | vatId         | isDemoProperty    | timezone  |
+      | salesforceid_1        | p1_name       | p1_code       | http://www.snapshot.travel    | p1@tenants.biz    | CZ20000001    | true              | UTC+01:00 |
+      | salesforceid_2        | p2_name       | p2_code       | http://www.snapshot.travel    | p2@tenants.biz    | CZ20000002    | true              | UTC+01:00 |
+
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+
+  Scenario: Adding property to customer with some type valid from date to date
+
+    When Property with code "p2_code" is added to customer with code "c1t" with type "anchor" from "2015-01-01" to "2015-10-31"
     Then Response code is "201"
-    And Body contains customer type with "company_name" value "Creation test company"
-    And Body contains customer type with "email" value "s1@tenants.biz"
-    And Body contains customer type with "code" value "s1t"
-    And "Location" header is set and contains the same customer
+    And Body contains customerProperty type with "property_name" value "p2_name"
+    And Body contains customerProperty type with "validFrom" value "2015-01-01"
+    And Body contains customerProperty type with "validTo" value "2015-10-31"
+    And Body contains customerProperty type with "type" value "anchor"
+    And "Location" header is set and contains the same customerProperty
 
 
-  Scenario Outline: Checking error codes for creating customer
+    @skipped
+  Scenario Outline: Checking error codes for creating customerProperty
 
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
@@ -37,23 +46,25 @@ Feature: customers_create_update_delete
       | /messages/identity/customers/create_customer_wrong_phone_value.json             | POST   | identity | /identity/customers | 400        | 59          |
       | /messages/identity/customers/create_customer_wrong_website_value.json           | POST   | identity | /identity/customers | 400        | 59          |
 
-    #add wrong web, null customer code,
+    #add wrong dates, wrong type, not unique type, more anchor for one property, ...
 
 
-  Scenario: Deleting Customer
+  Scenario: Deleting property from customer with some type
 
-    When Customer with code "c1t" is deleted
+    When Property with code "p1_code" is deleted from customer with code "c1t" with type "anchor"
     Then Response code is "204"
     And Body is empty
-    And Customer with same id doesn't exist
+    And customerProperty with same id doesn't exist
 
 
+    @skipped
   Scenario: Checking error code for deleting customer
-    When Nonexistent customer id is deleted
+    When Nonexistent customerProperty id is deleted
     Then Response code is "204"
 
 
-  Scenario Outline: Updating customer
+      @skipped
+  Scenario Outline: Updating customerProperty
     When Customer with code "c1t" is updated with data
       | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | sourceCustomer   | notes   |
       | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
@@ -75,7 +86,8 @@ Feature: customers_create_update_delete
   # update with error fields, bad values, missing fields
   # update nonexistent field
 
-  Scenario: Updating customer with outdated etag
+  @skipped
+  Scenario: Updating customerProperty with outdated etag
     When Customer with code "c1t" is updated with data if updated before
       | companyName | email | code | salesforceId | vatId | phone | website        | sourceCustomer | notes |
       |             |       |      |              |       |       | http://test.cz |                |       |
@@ -102,18 +114,3 @@ Feature: customers_create_update_delete
   #id doesn't exist
   #too long string in attribute
   #invalid value in attribute
-
-  Scenario: Customer is activated
-    When Customer with code "c1t" is activated
-    Then Response code is "204"
-    And Body is empty
-    And Customer with code "c1t" is active
-
-    #error codes
-
-  Scenario: Customer is inactivated
-    Given Customer with code "c1t" is activated
-    When Customer with code "c1t" is inactivated
-    Then Response code is "204"
-    And Body is empty
-    And Customer with code "c1t" is not active

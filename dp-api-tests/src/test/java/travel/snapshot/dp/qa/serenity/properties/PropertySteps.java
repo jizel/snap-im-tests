@@ -299,7 +299,7 @@ public class PropertySteps extends BasicSteps {
      * @param code property code
      * @return Requested property or {@code null} if no such property exists in the list
      */
-    private Property getPropertyByCodeInternal(String code) {
+    public Property getPropertyByCodeInternal(String code) {
         Property[] properties = getProperties("100", "0").as(Property[].class);
         return Arrays.asList(properties).stream().filter(p -> code.equals(p.getPropertyCode())).findFirst().orElse(null);
     }

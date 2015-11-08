@@ -30,8 +30,7 @@ Feature: properties_create_update_delete
 
   Scenario: Checking error code for deleting property
     When Nonexistent property id is deleted
-    Then Response code is "404"
-    And Custom code is "152"
+    Then Response code is "204"
 
 
 #   Scenario Outline: Updating customer
