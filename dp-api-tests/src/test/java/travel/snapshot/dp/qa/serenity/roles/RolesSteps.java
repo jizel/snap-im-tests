@@ -4,6 +4,9 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
+import org.apache.commons.lang3.StringUtils;
+
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Role;
@@ -69,7 +72,7 @@ public class RolesSteps extends BasicSteps {
 
     private Response updateRole(String id, Map<String, Object> role, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (etag != null && !"".equals(etag)) {
+        if (!StringUtils.isBlank(etag)) {
             requestSpecification = requestSpecification.header("If-Match", etag);
         }
         return requestSpecification.body(role).when().post("/{id}", id);
@@ -83,7 +86,7 @@ public class RolesSteps extends BasicSteps {
 
     private Response getRole(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (etag != null && !"".equals(etag)) {
+        if (etag != null && !etag.isEmpty()) {
             requestSpecification = requestSpecification.header("If-None-Match", etag);
         }
         return requestSpecification.when().get("/{id}", id);
