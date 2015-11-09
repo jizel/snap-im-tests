@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.serenity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.filter.log.LogDetail;
@@ -9,13 +10,22 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import org.apache.commons.io.IOUtils;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import org.apache.commons.lang3.StringUtils;
 
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.User;
+
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 
 import static com.jayway.restassured.RestAssured.given;
+
+import java.util.HashMap;
 import java.util.Map;
 import static org.hamcrest.Matchers.*;
 
@@ -114,7 +124,50 @@ public class BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
 
     }
-    
+
+    protected Response getEntity(String id) {
+        return getEntity(id, null);
+    }
+
+    protected Response createEntity(Object entity) {
+        return given().spec(spec).body(entity).when().post();
+    }
+
+    protected Response updateEntity(String id, Map<String, Object> role, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header("If-Match", etag);
+        }
+        return requestSpecification.body(role).when().post("/{id}", id);
+    }
+
+    protected Response deleteEntity(String id) {
+        return given().spec(spec).when().delete("/{id}", id);
+    }
+
+    protected Response getEntity(String id, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header("If-None-Match", etag);
+        }
+        return requestSpecification.when().get("/{id}", id);
+    }
+
+    protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
+        Map<String, Object> data = new HashMap<>();
+        for (PropertyDescriptor descriptor : Introspector.getBeanInfo(c).getPropertyDescriptors()) {
+            Method getter = descriptor.getReadMethod();
+            Object value = getter.invoke(entity);
+            if (value != null) {
+                JsonProperty jsonProperty = getter.getAnnotation(JsonProperty.class);
+                if (jsonProperty != null) {
+                    data.put(getter.getAnnotation(JsonProperty.class).value(), value.toString().equals("/null") ? null : value);
+                }
+            }
+        }
+        return data;
+    }
+
     // --- session access ---
     
     public void setSessionResponse(Response response) {
@@ -131,5 +184,13 @@ public class BasicSteps {
     
     public Map<String, Response> getSessionResponseMap() {
         return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
+    }
+
+    public void setSessionVariable(String key, Object value) {
+        Serenity.setSessionVariable(key).to(value);
+    }
+
+    public <T> T getSessionVariable(String key) {
+        return Serenity.<T>sessionVariableCalled(key);
     }
 }
