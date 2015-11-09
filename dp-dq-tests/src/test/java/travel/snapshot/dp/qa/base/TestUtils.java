@@ -14,7 +14,7 @@ public class TestUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
-    private static final DbHelper dbHelper = new DbHelper();
+    public static final DbHelper dbHelper = new DbHelper();
 
     private TestUtils() {
         throw new AssertionError("Utility class - DO NOT INSTANTIATE!");
@@ -51,7 +51,7 @@ public class TestUtils {
         logger.info("Result from the target is: " + resultTarget);
 
         assertThat("The outcome from the source and the target is not equal.",
-                resultSource, is(resultTarget));
+                resultTarget, is(resultSource));
     }
 
 }
