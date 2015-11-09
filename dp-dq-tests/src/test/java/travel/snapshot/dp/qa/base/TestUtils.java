@@ -29,7 +29,7 @@ public class TestUtils {
     }
 
     public static String withStartDate(String queryWithPlaceholder) {
-        final String startDate = ConfigProps.getPropValue("etl.startDate");
+        final String startDate = ConfigProps.getPropValue("etl.startdate");
         if (isEmpty(startDate)) {
             throw new IllegalStateException("etl.startDate property must be defined " +
                     "- check your configuration!");
