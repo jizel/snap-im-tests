@@ -7,7 +7,7 @@ import org.junit.Test;
 import travel.snapshot.dp.qa.EtlRunner;
 import travel.snapshot.dp.qa.base.InsertingDataRule;
 
-import static travel.snapshot.dp.qa.base.TestUtils.testFactLoad;
+import static travel.snapshot.dp.qa.base.TestUtils.testLoad;
 import static travel.snapshot.dp.qa.base.TestUtils.withStartDate;
 
 /**
@@ -30,7 +30,7 @@ public class TestDimsUpdate {
 
     @Test
     public void testDimChannelCategoryUpdate() throws Exception {
-        testFactLoad(
+        testLoad(
                 withStartDate("SELECT count(ID) FROM ChannelCategories WHERE ModificationTimestamp > %s"),
                 // Need to subtract 1 because currently there are initial data added in the table
                 "SELECT count(*)-1 FROM dim_channel_category");

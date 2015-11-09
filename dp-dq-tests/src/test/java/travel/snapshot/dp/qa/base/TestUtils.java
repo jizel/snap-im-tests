@@ -10,6 +10,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class TestUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
@@ -20,8 +23,7 @@ public class TestUtils {
         throw new AssertionError("Utility class - DO NOT INSTANTIATE!");
     }
 
-    // TODO: consider renaming since it's used in TestDims as well.
-    public static void testFactLoad(String sqlQueryForSource, String sqlQueryForTarget) throws Exception {
+    public static void testLoad(String sqlQueryForSource, String sqlQueryForTarget) throws Exception {
         final String outcomeSource = getQueryResultSource(sqlQueryForSource);
         final String outcomeTarget = getQueryResultTarget(sqlQueryForTarget);
 
@@ -54,4 +56,15 @@ public class TestUtils {
                 resultTarget, is(resultSource));
     }
 
+    public static void followUpLoadTest(List<String> followUpListToSource, List<String> followUpListToTarget) throws Exception {
+      
+      Iterator<String> it1 = followUpListToSource.iterator();
+      Iterator<String> it2 = followUpListToTarget.iterator();
+      
+      while (it1.hasNext() && it2.hasNext()) {
+        String followUpQuerySource = it1.next();
+        String followUpQueryTarget = it2.next();
+        testLoad(followUpQuerySource, followUpQueryTarget);
+      }
+    }
 }
