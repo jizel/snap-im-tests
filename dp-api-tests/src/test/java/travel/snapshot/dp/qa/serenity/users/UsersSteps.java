@@ -133,29 +133,8 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    private Response getUsers(String limit, String cursor, String filter, String sort, String sortDesc) {
-        RequestSpecification requestSpecification = given().spec(spec);
-
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
-        if (filter != null) {
-            requestSpecification.parameter("filter", filter);
-        }
-        if (sort != null) {
-            requestSpecification.parameter("sort", sort);
-        }
-        if (sortDesc != null) {
-            requestSpecification.parameter("sort_desc", sortDesc);
-        }
-        return requestSpecification.when().get();
-    }
-
     private User getUserByUsername(String username) {
-        User[] users = getUsers("100", "0", null, null, null).as(User[].class);
-        return Arrays.asList(users).stream().filter(u -> username.equals(u.getUserName())).findFirst().orElse(null);
+        User[] users = getEntities("1", "0", "user_name==" + username, null, null).as(User[].class);
+        return Arrays.asList(users).stream().findFirst().orElse(null);
     }
 }

@@ -9,6 +9,8 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
+import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -86,6 +88,12 @@ public class BasicSteps {
         response.then().body(isEmptyOrNullString());
     }
 
+    @Step
+    public void bodyContainsEntityWithAtribute(String attributeName, String attributeValue) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, is(attributeValue));
+    }
+
     public void isCalledWithoutTokenUsingMethod(String service, String method) {
         Response response = spec
                 .when()
@@ -153,6 +161,73 @@ public class BasicSteps {
         return requestSpecification.when().get("/{id}", id);
     }
 
+    protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header("If-None-Match", etag);
+        }
+        return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+        return given().spec(spec)
+                .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    /**
+     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query string
+     *
+     * @param limit
+     * @param cursor
+     * @param filter
+     *@param sort
+     * @param sortDesc @return
+     */
+    protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc) {
+        RequestSpecification requestSpecification = given().spec(spec);
+
+        if (cursor != null) {
+            requestSpecification.parameter("cursor", cursor);
+        }
+        if (limit != null) {
+            requestSpecification.parameter("limit", limit);
+        }
+        if (filter != null) {
+            requestSpecification.parameter("filter", filter);
+        }
+        if (sort != null) {
+            requestSpecification.parameter("sort", sort);
+        }
+        if (sortDesc != null) {
+            requestSpecification.parameter("sort_desc", sortDesc);
+        }
+
+        return requestSpecification.when().get();
+    }
+
+    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
+        RequestSpecification requestSpecification = given().spec(spec);
+
+        if (cursor != null) {
+            requestSpecification.parameter("cursor", cursor);
+        }
+        if (limit != null) {
+            requestSpecification.parameter("limit", limit);
+        }
+        if (filter != null) {
+            requestSpecification.parameter("filter", filter);
+        }
+        if (sort != null) {
+            requestSpecification.parameter("sort", sort);
+        }
+        if (sortDesc != null) {
+            requestSpecification.parameter("sort_desc", sortDesc);
+        }
+
+        return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+    }
+
+
     protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
         Map<String, Object> data = new HashMap<>();
         for (PropertyDescriptor descriptor : Introspector.getBeanInfo(c).getPropertyDescriptors()) {
@@ -160,8 +235,8 @@ public class BasicSteps {
             Object value = getter.invoke(entity);
             if (value != null) {
                 JsonProperty jsonProperty = getter.getAnnotation(JsonProperty.class);
-                if (jsonProperty != null) {
-                    data.put(getter.getAnnotation(JsonProperty.class).value(), value.toString().equals("/null") ? null : value);
+                if (jsonProperty != null && !value.toString().equals("/null")) {
+                    data.put(getter.getAnnotation(JsonProperty.class).value(), value);
                 }
             }
         }

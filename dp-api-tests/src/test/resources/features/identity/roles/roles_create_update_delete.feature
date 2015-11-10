@@ -66,7 +66,7 @@ Feature: Roles_create_update_delete
       |               | Role name 1 | Role name 1       | Updated optional description 1 |
 
 
-  #TODO update with error fields, bad values, missing fields
+  #TODO update with error fields, bad values, missing fields, not unique fields
 
   Scenario: Updating role with outdated etag
     When Role with name "Role name 1" for application id "1" is updated with data if updated before

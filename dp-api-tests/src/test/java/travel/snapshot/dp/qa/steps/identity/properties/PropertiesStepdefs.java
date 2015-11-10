@@ -14,7 +14,7 @@ import travel.snapshot.dp.qa.model.Property;
 /**
  * Created by sedlacek on 9/18/2015.
  */
-public class CreatePropertyStepdefs {
+public class PropertiesStepdefs {
 
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 

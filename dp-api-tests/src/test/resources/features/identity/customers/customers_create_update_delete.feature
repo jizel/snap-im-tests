@@ -54,6 +54,8 @@ Feature: customers_create_update_delete
 
 
   Scenario Outline: Updating customer
+    Given The following customers with codes don't exist
+      | UPDATED_CODE_c1t |
     When Customer with code "c1t" is updated with data
       | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | sourceCustomer   | notes   |
       | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
@@ -66,9 +68,9 @@ Feature: customers_create_update_delete
 
     Examples:
       | companyName | email | code             | salesforceId         | vatId      | phone         | website        | sourceCustomer | notes |
-      |             |       | c1t              | salesforceid_updated | CZ10000001 |               |                |                |       |
-      |             |       | c1t              |                      |            | +420123456789 | http://test.cz |                |       |
-      |             |       | UPDATED_CODE_c1t |                      |            |               |                |                |       |
+      | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null          | /null |
+      | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null          | /null |
+      | /null       | /null | UPDATED_CODE_c1t | /null                | /null      | /null         | /null          | /null          | /null |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag

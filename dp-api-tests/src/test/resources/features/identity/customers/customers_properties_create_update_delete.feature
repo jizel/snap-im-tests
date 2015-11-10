@@ -1,3 +1,4 @@
+@skipped
 Feature: customers_properties_create_update_delete
 
   Background:

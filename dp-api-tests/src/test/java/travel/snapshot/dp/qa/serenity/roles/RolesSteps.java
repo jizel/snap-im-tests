@@ -2,20 +2,20 @@ package travel.snapshot.dp.qa.serenity.roles;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.StringUtils;
 
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.Role;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Role;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
@@ -31,11 +31,12 @@ public class RolesSteps extends BasicSteps {
 
 
     private static final String SESSION_ROLE_ID = "role_id";
+    public static final String ROLES_PATH = "/identity/roles";
 
     public RolesSteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
-        spec.basePath("/identity/roles");
+        spec.basePath(ROLES_PATH);
     }
 
     @Step
@@ -86,7 +87,7 @@ public class RolesSteps extends BasicSteps {
 
     private Response getRole(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (etag != null && !etag.isEmpty()) {
+        if (!StringUtils.isBlank(etag)) {
             requestSpecification = requestSpecification.header("If-None-Match", etag);
         }
         return requestSpecification.when().get("/{id}", id);

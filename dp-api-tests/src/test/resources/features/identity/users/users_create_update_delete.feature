@@ -1,4 +1,4 @@
-Feature: Roles_create_update_delete
+Feature: users_create_update_delete
 
   Background:
     Given The following users exist
