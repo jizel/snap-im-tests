@@ -134,6 +134,12 @@ public class AnalyticsSteps extends BasicSteps {
     }
     
     @Step
+    public void maximumNumberOfValuesInResponse(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body("values.size()",lessThanOrEqualTo(count));
+    }
+    
+    @Step
     public void valueIsLessThanOrEqualTo(String pathToValue1, String pathToValue2) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(pathToValue1, lessThanOrEqualTo(pathToValue2));

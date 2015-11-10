@@ -157,24 +157,22 @@ Feature: analytics
     And Response granularity is "<expected_granularity>"
     And Response since is "<expected_since>"
     And Response until is "<expected_until>"
+    And Response contains no more than <count> values
 
-    #And Response contains 5 values #will be added to validate correct number of results according to dates and granularity
     Examples: 
-      | url                           | granularity | start_date        | end_date       | expected_granularity | expected_since    | expected_until |
-      | /social_media/analytics/reach |             |                   |                | day                  | today             | today          |
-      | /social_media/analytics/reach |             |                   |                | day                  | today - 31 days   | today          |
-      | /social_media/analytics/reach |             |                   |                | day                  | today             | today          |
-      | /social_media/analytics/reach |             | 2015-09-01        | 2015-09-01     | day                  | 2015-09-01        | 2015-09-01     |
-      | /social_media/analytics/reach | day         |                   | today          | day                  | today - 31 days   | today          |
-      | /social_media/analytics/reach | day         | today             |                | day                  | today             | today          |
-      | /social_media/analytics/reach | week        |                   | today          | week                 | today - 13 weeks  | today          |
-      | /social_media/analytics/reach | week        | today             |                | week                 | today             | today          |
-      | /social_media/analytics/reach | month       |                   | today          | month                | today - 6 months  | today          |
-      | /social_media/analytics/reach | month       | today             |                | month                | today             | today          |
-      | /social_media/analytics/reach | day         | today - 100 days  | today          | day                  | today - 90 days   | today          |
-      | /social_media/analytics/reach | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
-      | /social_media/analytics/reach | month       | today - 40 months | today          | month                | today - 36 months | today          |
-      | /social_media/analytics/reach | day         | today + 2 days    | today + 3 days | day                  | today             | today          |
+      | url                           | granularity | start_date        | end_date       | expected_granularity | expected_since    | expected_until | count |
+      | /social_media/analytics/reach |             |                   |                | day                  | today - 31 days   | today          | 32    |
+      | /social_media/analytics/reach |             | 2015-09-01        | 2015-09-01     | day                  | 2015-09-01        | 2015-09-01     | 1     |
+      | /social_media/analytics/reach | day         |                   | today          | day                  | today - 31 days   | today          | 32    |
+      | /social_media/analytics/reach | day         | today             |                | day                  | today             | today          | 1     |
+      | /social_media/analytics/reach | week        |                   | today          | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/reach | week        | today             |                | week                 | today             | today          | 0     |
+      | /social_media/analytics/reach | month       |                   | today          | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/reach | month       | today             |                | month                | today             | today          | 0     |
+      | /social_media/analytics/reach | day         | today - 100 days  | today          | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/reach | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/reach | month       | today - 40 months | today          | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/reach | day         | today + 2 days    | today + 3 days | day                  | today             | today          | 1     |
 
   Scenario: Get data owners data for twitter
     When Getting "/social_media/analytics/twitter/engagement" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
@@ -187,3 +185,31 @@ Feature: analytics
     Then Content type is "application/json"
     And Response code is "200"
     And Data is owned by "facebook"
+
+  Scenario Outline: Checking number of values in response for various granularities
+    When Getting "<url>" data with "<granularity>" granularity for "property" since "<since>" until "today"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And Response contains no more than <count> values
+
+    Examples: 
+      | url                                              | granularity | since           | count |
+      | /social_media/analytics/facebook                 | day         | today           | 1     |
+      | /social_media/analytics/facebook/number_of_posts | day         | today - 1 day   | 2     |
+      | /social_media/analytics/facebook/engagement      | day         | today - 6 day   | 7     |
+      | /social_media/analytics/facebook/likes           | day         | today - 7 day   | 8     |
+      | /social_media/analytics/facebook/unlikes         | day         | today - 8 day   | 9     |
+      | /social_media/analytics/facebook/reach           | day         | today - 29 day  | 30    |
+      | /social_media/analytics/facebook/followers       | day         | today - 30 day  | 31    |
+      | /social_media/analytics/facebook/posts           | week        | today           | 0     |
+      | /social_media/analytics/twitter                  | week        | today - 5 days  | 0     |
+      | /social_media/analytics/twitter/tweets           | week        | today - 6 days  | 1     |
+      | /social_media/analytics/twitter/number_of_tweets | week        | today - 7 days  | 1     |
+      | /social_media/analytics/twitter/engagement       | week        | today - 8 days  | 1     |
+      | /social_media/analytics/twitter/followers        | week        | today - 8 days  | 1     |
+      | /social_media/analytics/twitter/impressions      | month       | today - 27 days | 0     |
+      | /social_media/analytics/twitter/reach            | month       | today - 28 days | 0     |
+      | /social_media/analytics/twitter/retweets         | month       | today - 29 days | 1     |
+      | /social_media/analytics/twitter/retweets_reach   | month       | today - 30 days | 1     |
+      | /social_media/analytics/twitter/mentions         | month       | today - 31 days | 1     |
+      | /social_media/analytics/twitter/mentions_reach   | month       | today - 32 days | 1     |

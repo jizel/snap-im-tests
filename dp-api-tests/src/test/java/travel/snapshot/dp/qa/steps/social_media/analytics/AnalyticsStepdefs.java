@@ -54,6 +54,11 @@ public class AnalyticsStepdefs {
         analyticsSteps.responseContainsValuesForAllMetrics(count);
     }
     
+    @Then("^Response contains no more than (\\d+) values$")
+    public void Response_contains_no_more_than_values(int count) throws Throwable {
+        analyticsSteps.maximumNumberOfValuesInResponse(count);
+    }
+    
     @When("^List of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
     public void List_of_items_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String url, String limit, String cursor) throws Throwable {
         analyticsSteps.getItems(url, limit, cursor);
