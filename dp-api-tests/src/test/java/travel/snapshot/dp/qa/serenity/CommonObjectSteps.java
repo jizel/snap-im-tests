@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.Matchers.is;
 import org.junit.Assert;
 import travel.snapshot.dp.qa.helpers.FieldType;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 
 /**
  *
@@ -36,6 +37,7 @@ public class CommonObjectSteps extends BasicSteps {
     
     private static final String SERENITY__PREFIX_OBJECT_DEFINITION = "object_def:";
     private static final String SERENITY__PREFIX_OBJECT_LOCATION = "object_loc:";
+    private static final String SERENITY__PREFIX_OBJECT_ID_FIELD = "object_id_field:";
     
     private final Logger logger = LoggerFactory.getLogger(CommonObjectSteps.class);
     private final ObjectMapper mapper;
@@ -55,30 +57,46 @@ public class CommonObjectSteps extends BasicSteps {
     @Step
     public void createCorrectObject(String objectName) throws JsonProcessingException {
         String json = mapper.writeValueAsString(getCorrectObject(objectName));
-        setSessionResponse(createObject(getObjectLocation(objectName), json));
+        setSessionResponse(restCreateObject(getObjectLocation(objectName), json));
+    }
+    
+    @Step
+    public void updateCorrectObject(String objectName) throws IOException {
+        ObjectNode correctObject = getCorrectObject(objectName);
+        String json = mapper.writeValueAsString(correctObject);
+        Response correctObjectResponse = restCreateObject(getObjectLocation(objectName), json);
+        
+        String objectID = getJsonTree(correctObjectResponse).get(getObjectIDField(objectName)).asText();
+        String etag = correctObjectResponse.getHeader("ETag");
+        
+        ObjectNode updateObject = getCorrectObject(objectName);
+        updateObject.set("property_code", correctObject.get("property_code"));
+        
+        // generate completely new object and update the old by id and etag
+        setSessionResponse(restUpdateObject(getObjectLocation(objectName),
+            objectID, etag, mapper.writeValueAsString(updateObject)));
     }
     
     @Step
     public void createInvalidObjects(String objectName) throws JsonProcessingException {
-        BiConsumer<ObjectNode, ObjectField> op = (n, f) -> n.set(
-            JsonPointer.compile(f.getName()).last().getMatchingProperty(),
-            FieldType.getType(f.getType()).getJsonNode(generateFieldValue(f.getInvalid())));
-        send(objectName, generateObjects(objectName, op));
+        BiConsumer<ObjectNode, ObjectField> op = (node, field) -> node.set(
+            getJsonProperty(field),
+            getJsonNode(field, generateFieldValue(field.getInvalid())));
+        sendObjects(objectName, generateObjects(objectName, op));
     }
     
     @Step
     public void createObjectsWithLongFields(String objectName) throws JsonProcessingException {
-        BiConsumer<ObjectNode, ObjectField> op = (n, f) -> n.set(
-            JsonPointer.compile(f.getName()).last().getMatchingProperty(),
-            FieldType.getType(f.getType()).getJsonNode(generateFieldValue(f.getLonger())));
-        send(objectName, generateObjects(objectName, op));
+        BiConsumer<ObjectNode, ObjectField> op = (node, field) -> node.set(
+            getJsonProperty(field),
+            getJsonNode(field, generateFieldValue(field.getLonger())));
+        sendObjects(objectName, generateObjects(objectName, op));
     }
 
     @Step
     public void createObjectsWithMissingFields(String objectName) throws JsonProcessingException {
-        BiConsumer<ObjectNode, ObjectField> op = (n, f) -> n.remove(
-            JsonPointer.compile(f.getName()).last().getMatchingProperty());
-        send(objectName, generateObjects(objectName, op));
+        BiConsumer<ObjectNode, ObjectField> op = (node, field) -> node.remove(getJsonProperty(field));
+        sendObjects(objectName, generateObjects(objectName, op));
     }
     
     @Step
@@ -97,13 +115,36 @@ public class CommonObjectSteps extends BasicSteps {
         Response current = given().spec(spec)
             .get(stored.header("location"));
         
-        Assert.assertThat(getJson(current), is(getJson(stored)));
+        Assert.assertThat(getJsonTree(current), is(getJsonTree(stored)));
+    }
+    
+    @Step
+    public void updateObjectsWithInvalidValues(String objectName) throws IOException {
+        BiConsumer<ObjectNode, ObjectField> op = (node, f) -> node.set(
+            getJsonProperty(f),
+            getJsonNode(f, generateFieldValue(f.getInvalid())));
+        updateObjects(objectName, op);
+    }
+    
+    @Step
+    public void updateObjectsWithCorrectValues(String objectName) throws IOException {
+        BiConsumer<ObjectNode, ObjectField> op = (node, f) -> node.set(
+            getJsonProperty(f),
+            getJsonNode(f, generateFieldValue(f.getCorrect())));
+        updateObjects(objectName, op);
     }
     
     // --- rest ---
     
-    private Response createObject(String objectLocation, String json) {
+    private Response restCreateObject(String objectLocation, String json) {
         return given().spec(spec).basePath(objectLocation)
+            .body(json)
+            .when().post();
+    }
+    
+    private Response restUpdateObject(String objectLocation, String id, String etag, String json) {
+        return given().spec(spec).basePath(objectLocation + "/" + id)
+            .header("If-Match", etag)
             .body(json)
             .when().post();
     }
@@ -126,16 +167,37 @@ public class CommonObjectSteps extends BasicSteps {
         return Serenity.<String>sessionVariableCalled(SERENITY__PREFIX_OBJECT_LOCATION + objectName);
     }
     
+    public void setObjectIDField(String objectName, String fieldName) {
+        Serenity.setSessionVariable(SERENITY__PREFIX_OBJECT_ID_FIELD + objectName).to(fieldName);
+    }
+    
+    public String getObjectIDField(String objectName) {
+        return Serenity.<String>sessionVariableCalled(SERENITY__PREFIX_OBJECT_ID_FIELD + objectName);
+    }
+    
+    // --- json ---
+    
+    private String getJsonProperty(ObjectField field) {
+        return JsonPointer.compile(field.getName()).last().getMatchingProperty();
+    }
+    
+    private JsonNode getJsonNode(ObjectField field, String value) {
+        return FieldType.getType(field.getType()).getJsonNode(value);
+    }
+    
+    private JsonNode getJsonTree(Response response) throws IOException {
+        return mapper.readTree(response.body().asString());
+    }
+    
     // --- other ---
     
     private ObjectNode getCorrectObject(String objectName) {
         ObjectNode root = factory.objectNode();
-        for (ObjectField field : getObjectDefinition(objectName)) {
-            applyNodeOperation(root, field, (n, f) -> n.set(
-                JsonPointer.compile(f.getName()).last().getMatchingProperty(),
-                FieldType.getType(f.getType()).getJsonNode(generateFieldValue(f.getCorrect()))));
-        }
-        
+        getObjectDefinition(objectName).stream()
+            .filter((field) -> filterField(field.getCorrect()))
+            .forEach((field) -> applyNodeOperation(root, field, (n, f) -> n.set(
+                    getJsonProperty(f),
+                    FieldType.getType(f.getType()).getJsonNode(generateFieldValue(f.getCorrect())))));
         return root;
     }
     
@@ -160,24 +222,52 @@ public class CommonObjectSteps extends BasicSteps {
             (f) -> applyNodeOperation(getCorrectObject(objectName), f, op)));
     }
     
-    private void send(String objectName, Map<String, ObjectNode> invalidObjects) throws JsonProcessingException {
+    private void updateObjects(String objectName, BiConsumer<ObjectNode, ObjectField> op) throws IOException {
+        HashMap<String, Response> responses = new HashMap<>();
+        for(ObjectField field : getObjectDefinition(objectName)) {
+            if (filterField(field.getInvalid())) {
+                // #1 create correct object server-side
+                ObjectNode correctObject = getCorrectObject(objectName);
+                Response correctObjectResponse = restCreateObject(getObjectLocation(objectName),
+                    mapper.writeValueAsString(correctObject));
+                
+                // #2 extract object ID and ETag from response
+                String objectID = getJsonTree(correctObjectResponse).get(getObjectIDField(objectName)).asText();
+                String etag = correctObjectResponse.getHeader("ETag");
+                
+                // #3 update object value for current field test
+                applyNodeOperation(correctObject, field, op);
+                
+                // #4 update object server-side
+                Response updatedObjectResponse = restUpdateObject(getObjectLocation(objectName),
+                    objectID, etag, mapper.writeValueAsString(correctObject));
+                
+                // #5 store responses for evaluation in next steps
+                responses.put(field.getName(), updatedObjectResponse);
+            }
+        }
+        
+        setSessionResponseMap(responses);
+    }
+    
+    private void sendObjects(String objectName, Map<String, ObjectNode> invalidObjects) throws JsonProcessingException {
         HashMap<String, Response> responses = new HashMap<>();
         for(Map.Entry<String, ObjectNode> entry : invalidObjects.entrySet()) {
             logger.info("sending json for " + entry.getKey());
             String json = mapper.writeValueAsString(entry.getValue());
-            Response response = createObject(getObjectLocation(objectName), json);
+            Response response = restCreateObject(getObjectLocation(objectName), json);
             responses.put(entry.getKey(), response);
         }
         
         setSessionResponseMap(responses);
     }
     
-    private String generateFieldValue(String regex) {
-        return new Generex(regex).random();
+    private boolean filterField(String value) {
+        return new NullEmptyStringConverter().transform(value) != null;
     }
     
-    private JsonNode getJson(Response response) throws IOException {
-        return mapper.readTree(response.body().print());
+    private String generateFieldValue(String regex) {
+        return new Generex(regex).random();
     }
     
 }

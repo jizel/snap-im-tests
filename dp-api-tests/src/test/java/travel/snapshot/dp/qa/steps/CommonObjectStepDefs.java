@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import java.io.IOException;
 import java.util.List;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.qa.helpers.ObjectField;
@@ -32,11 +33,21 @@ public class CommonObjectStepDefs {
         steps.setObjectLocation(objectName, location);
     }
     
+    @Given("^unique identifier \"([^\"]*)\" for object \"([^\"]*)\"$")
+    public void unique_identifier_for_object(String id, String objectName) throws Throwable {
+        steps.setObjectIDField(objectName, id);
+    }
+    
     // --- when ---
     
     @When("^create \"([^\"]*)\" object with correct field values$")
     public void create_object_with_correct_field_values(String objectName) throws JsonProcessingException {
         steps.createCorrectObject(objectName);
+    }
+    
+    @When("^update \"([^\"]*)\" object with correct field values$")
+    public void update_object_with_correct_field_values(String objectName) throws IOException {
+        steps.updateCorrectObject(objectName);
     }
     
     @When("^create \"([^\"]*)\" objects each with one invalid field value$")
@@ -52,6 +63,16 @@ public class CommonObjectStepDefs {
     @When("^create \"([^\"]*)\" objects each with one long field$")
     public void create_objects_each_with_one_long_field(String objectName) throws JsonProcessingException {
         steps.createObjectsWithLongFields(objectName);
+    }
+    
+    @When("^update \"([^\"]*)\" objects each with one correct field value$")
+    public void update_objects_each_with_one_correct_field_value(String objectName) throws IOException {
+        steps.updateObjectsWithCorrectValues(objectName);
+    }
+    
+    @When("^update \"([^\"]*)\" objects each with one invalid field value$")
+    public void update_objects_each_with_one_invalid_field_value(String objectName) throws IOException {
+        steps.updateObjectsWithInvalidValues(objectName);
     }
     
     // --- then ---
