@@ -42,6 +42,11 @@ Feature: properties_validation
     | /timezone           | 400          | 59         |
     | /address/country    | 400          | 59         |
 
+  @skipped
+  Scenario: Object filtering
+    When created 50 "property" objects
+    Then filtering by top-level fields returns matching "property" objects
+
   # --- error handling ---
 
   Scenario: Object creation - invalid values
@@ -78,6 +83,6 @@ Feature: properties_validation
     | /timezone           | 400          | 59         |
     | /address/country    | 400          | 59         |
 
-#   TODO when field length is stabilized
+#   TODO when field lengths are stabilized
 #   
 #   Scenario: Object creation - long values
