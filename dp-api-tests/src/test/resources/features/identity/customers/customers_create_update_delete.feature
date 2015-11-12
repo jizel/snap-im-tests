@@ -13,9 +13,9 @@ Feature: customers_create_update_delete
       | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    |
       | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel |
     Then Response code is "201"
-    And Body contains customer type with "company_name" value "Creation test company"
-    And Body contains customer type with "email" value "s1@tenants.biz"
-    And Body contains customer type with "code" value "s1t"
+    And Body contains entity with attribute "company_name" value "Creation test company"
+    And Body contains entity with attribute "email" value "s1@tenants.biz"
+    And Body contains entity with attribute "code" value "s1t"
     And "Location" header is set and contains the same customer
 
 

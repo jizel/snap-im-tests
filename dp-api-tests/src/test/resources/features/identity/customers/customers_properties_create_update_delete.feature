@@ -21,10 +21,10 @@ Feature: customers_properties_create_update_delete
 
     When Property with code "p2_code" is added to customer with code "c1t" with type "anchor" from "2015-01-01" to "2015-10-31"
     Then Response code is "201"
-    And Body contains customerProperty type with "property_name" value "p2_name"
-    And Body contains customerProperty type with "validFrom" value "2015-01-01"
-    And Body contains customerProperty type with "validTo" value "2015-10-31"
-    And Body contains customerProperty type with "type" value "anchor"
+    And Body contains entity with attribute "property_name" value "p2_name"
+    And Body contains entity with attribute "validFrom" value "2015-01-01"
+    And Body contains entity with attribute "validTo" value "2015-10-31"
+    And Body contains entity with attribute "type" value "anchor"
     And "Location" header is set and contains the same customerProperty
     And Etag header is present
 

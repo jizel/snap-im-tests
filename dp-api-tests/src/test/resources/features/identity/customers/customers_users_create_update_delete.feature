@@ -23,8 +23,6 @@ Feature: customers_users_create_update_delete
     Then Response code is "201"
     And Etag header is present
 
-
-
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 

@@ -13,10 +13,10 @@ Feature: customers_get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-    And Body contains customer type with "code" value "c1t"
-    And Body contains customer type with "company_name" value "Given company 1"
-    And Body contains customer type with "email" value "c1@tenants.biz"
-    And Body contains customer type with "vat_id" value "CZ10000001"
+    And Body contains entity with attribute "code" value "c1t"
+    And Body contains entity with attribute "company_name" value "Given company 1"
+    And Body contains entity with attribute "email" value "c1@tenants.biz"
+    And Body contains entity with attribute "vat_id" value "CZ10000001"
 
   Scenario: Getting customer with etag
     When Customer with code "c1t" is got with etag
@@ -30,10 +30,10 @@ Feature: customers_get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-    And Body contains customer type with "code" value "c1t"
-    And Body contains customer type with "company_name" value "Given company 1"
-    And Body contains customer type with "email" value "c1@tenants.biz"
-    And Body contains customer type with "vat_id" value "CZ99999999"
+    And Body contains entity with attribute "code" value "c1t"
+    And Body contains entity with attribute "company_name" value "Given company 1"
+    And Body contains entity with attribute "email" value "c1@tenants.biz"
+    And Body contains entity with attribute "vat_id" value "CZ99999999"
 
   Scenario: Checking error code for getting customer
     When Nonexistent customer id is got
