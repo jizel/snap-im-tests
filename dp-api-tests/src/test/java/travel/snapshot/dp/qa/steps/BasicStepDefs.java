@@ -47,4 +47,9 @@ public class BasicStepDefs {
     public void File_is_used_for_to_on(String filename, String method, String url, String module) throws Throwable {
         basicSteps.useFileForSendDataTo(filename, method, url, module);
     }
+
+    @Then("^Body contains entity with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
+    public void Body_contains_customer_type_with_value(String atributeName, String value) throws Throwable {
+        basicSteps.bodyContainsEntityWithAtribute(atributeName, value);
+    }
 }

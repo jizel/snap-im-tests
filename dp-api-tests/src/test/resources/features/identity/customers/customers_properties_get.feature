@@ -23,10 +23,10 @@ Feature: customers_properties_get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-    And Body contains customerProperty type with "property_name" value "p1_name"
-    And Body contains customerProperty type with "validFrom" value "2015-01-01"
-    And Body contains customerProperty type with "validTo" value "2015-10-31"
-    And Body contains customerProperty type with "type" value "anchor"
+    And Body contains entity with attribute "property_name" value "p1_name"
+    And Body contains entity with attribute "validFrom" value "2015-01-01"
+    And Body contains entity with attribute "validTo" value "2015-10-31"
+    And Body contains entity with attribute "type" value "anchor"
 
   Scenario: Getting customerProperty with etag
     When Property with code "p1_code" from customer with code "c1t" is got with type "anchor" with etag
@@ -40,10 +40,10 @@ Feature: customers_properties_get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-    And Body contains customerProperty type with "property_name" value "p1_name"
-    And Body contains customerProperty type with "validFrom" value "2015-01-01"
-    And Body contains customerProperty type with "validTo" value "2016-12-31"
-    And Body contains customerProperty type with "type" value "anchor"
+    And Body contains entity with attribute "property_name" value "p1_name"
+    And Body contains entity with attribute "validFrom" value "2015-01-01"
+    And Body contains entity with attribute "validTo" value "2016-12-31"
+    And Body contains entity with attribute "type" value "anchor"
 
   Scenario: Checking error code for getting customerProperty
     When Nonexistent customerPropety id is got for customer with code "c1t"

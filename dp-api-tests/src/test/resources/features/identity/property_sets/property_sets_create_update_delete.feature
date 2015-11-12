@@ -1,0 +1,69 @@
+@skipped
+Feature: property_sets_create_update_delete
+
+  #TODO add etag things to get/update/create
+  #TODO check adding propery set for customer id not existent
+
+  Background:
+    Given The following customers exist with random address
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
+
+    Given The following property set exist for customer with code "c1t"
+      | propertySetName | propertySetDescription | propertySetType |
+      | ps1_name        | ps1_description        | branch          |
+
+    Given The following properties exist with random address and billing address
+      | salesforceId   | propertyName | propertyCode | website                    | email          | vatId      | isDemoProperty | timezone  |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | CZ10000001 | true           | UTC+01:00 |
+
+  Scenario: Creating property set for customer with code "c1t"
+
+    When Property set is created for customer with code "c1t"
+      | propertySetName  | propertySetDescription | propertySetType |
+      | ps1_created_name | ps1_description        | branch          |
+
+    Then Response code is "201"
+    And Body contains entity with attribute "property_set_name" value "ps1_name"
+    And Body contains entity with attribute "property_set_type" value "branch"
+    And "Location" header is set and contains the same property
+
+    #error codes
+
+  Scenario: Deleting Property set
+    When Property set with name "ps1_code" for custumer with code "c1t" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Property set with same id doesn't exist
+
+
+  Scenario: Checking error code for deleting property
+    When Nonexistent property set id is deleted
+    Then Response code is "204"
+
+
+  Scenario Outline: Updating property set
+    Given The following property sets with codes don't exist
+      | UPDATED_CODE_c1t |
+    When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data
+      | propertySetName           | propertySetDescription   | propertySetType   |
+      | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
+    Then Response code is "204"
+    And Body is empty
+    And Etag header is present
+    And Updated property set with name "<updated_propertySetName>" for customer with code "c1t" has data
+      | propertySetName           | propertySetDescription   | propertySetType   |
+      | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
+
+    Examples:
+      | updated_propertySetName   | propertySetName | propertySetDescription | propertySetType |
+      | <updated_propertySetName> | ps1_name        | ps1_description        | branch          |
+
+  Scenario: Updating property set with outdated etag
+    When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data if updated before
+      | propertySetName | propertySetDescription | propertySetType |
+      | ps3_name        | ps_desc                | branch          |
+    Then Response code is "412"
+    And Custom code is "57"
+
+    #TODO error codes

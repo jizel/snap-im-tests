@@ -59,7 +59,6 @@ public class PropertySteps extends BasicSteps {
             
             // introduce new records
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
-            t.setBillingAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
             Response createResponse = createProperty(t);
             if (createResponse.getStatusCode() != 201) {
                 fail("Property cannot be created: " + createResponse.asString());
@@ -182,8 +181,7 @@ public class PropertySteps extends BasicSteps {
                 .body("salesforce_id", is(originalProperty.getSalesforceId()))
                 .body("property_name", is(originalProperty.getPropertyName()))
                 .body("property_code", is(originalProperty.getPropertyCode()))
-                .body("email", is(originalProperty.getEmail()))
-                .body("vat_id", is(originalProperty.getVatId()));
+                .body("email", is(originalProperty.getEmail()));
 
     }
     

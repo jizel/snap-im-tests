@@ -133,7 +133,7 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    private User getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         User[] users = getEntities("1", "0", "user_name==" + username, null, null).as(User[].class);
         return Arrays.asList(users).stream().findFirst().orElse(null);
     }

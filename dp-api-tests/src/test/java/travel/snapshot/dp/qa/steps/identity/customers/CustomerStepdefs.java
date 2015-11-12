@@ -6,15 +6,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -28,6 +32,9 @@ public class CustomerStepdefs {
 
     @Steps
     private PropertySteps propertySteps;
+
+    @Steps
+    private UsersSteps usersSteps;
 
     @Given("^The following customers exist with random address$")
     public void The_following_tenants_exist(List<Customer> customers) throws Throwable {
@@ -44,6 +51,12 @@ public class CustomerStepdefs {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(p, customerCode, type, validFrom, validTo);
 
+    }
+
+    @Given("^Relation between user with username \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
+    public void Relation_between_user_with_username_and_customer_with_code_exists_with_isPrimary(String username, String customerCode, String isPrimary) throws Throwable {
+        User user = usersSteps.getUserByUsername(username);
+        customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerCode, isPrimary);
     }
 
     @When("^Customer is created with random address$")
@@ -151,6 +164,18 @@ public class CustomerStepdefs {
                 limit, cursor, filter, sort, sortDesc);
     }
 
+    @When("^User with username \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
+    public void User_with_username_is_added_to_customer_with_code_with_isPrimary(String username, String customerCode, String isPrimary) throws Throwable {
+        User u = usersSteps.getUserByUsername(username);
+        customerSteps.userIsAddedToCustomerWithIsPrimary(u, customerCode, isPrimary);
+    }
+
+    @When("^User with username \"([^\"]*)\" is removed from customer with code \"([^\"]*)\"$")
+    public void User_with_username_is_removed_from_customer_with_code(String username, String customerCode) throws Throwable {
+        User u = usersSteps.getUserByUsername(username);
+        customerSteps.userIsDeletedFromCustomer(u, customerCode);
+    }
+
     @Then("^Customer with same id doesn't exist$")
     public void Customer_with_same_id_doesn_t_exist() throws Throwable {
         customerSteps.customerIdInSessionDoesntExist();
@@ -181,23 +206,26 @@ public class CustomerStepdefs {
         customerSteps.isActiveSetTo(false, code);
     }
 
-    @Then("^Body contains customer type with \"([^\"]*)\" value \"([^\"]*)\"$")
-    public void Body_contains_customer_type_with_value(String atributeName, String value) throws Throwable {
-        customerSteps.bodyContainsEntityWithAtribute(atributeName, value);
-    }
-
     @Then("^There are customers with following codes returned in order: (.*)")
     public void There_are_customers_with_following_codes_returned_in_order(List<String> codes) throws Throwable {
         customerSteps.codesAreInResponseInOrder(codes);
     }
 
-    @Then("^Body contains customerProperty type with \"([^\"]*)\" value \"([^\"]*)\"$")
-    public void Body_contains_customerProperty_type_with_value(String parameterName, String value) throws Throwable {
-        customerSteps.bodyContainsEntityWithAtribute(parameterName, value);
-    }
-
     @Then("^There are (\\d+) customerProperties returned$")
     public void There_are_returned_customerProperties_returned(int count) throws Throwable {
         customerSteps.numberOfCustomerPropertiesIsInResponse(count);
+    }
+
+    @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")
+    public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerCode) throws Throwable {
+        User u = usersSteps.getUserByUsername(username);
+        customerSteps.userDoesntExistForCustomer(u, customerCode);
+    }
+
+    @When("^Nonexistent user is removed from customer with code \"([^\"]*)\"$")
+    public void Nonexistent_user_is_removed_from_customer_with_code(String customerId) throws Throwable {
+        User user = new User();
+        user.setUserId("nonexistent");
+        customerSteps.userIsDeletedFromCustomer(user, customerId);
     }
 }

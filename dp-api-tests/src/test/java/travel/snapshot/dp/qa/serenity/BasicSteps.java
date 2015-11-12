@@ -141,12 +141,12 @@ public class BasicSteps {
         return given().spec(spec).body(entity).when().post();
     }
 
-    protected Response updateEntity(String id, Map<String, Object> role, String etag) {
+    protected Response updateEntity(String id, Map<String, Object> object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
             requestSpecification = requestSpecification.header("If-Match", etag);
         }
-        return requestSpecification.body(role).when().post("/{id}", id);
+        return requestSpecification.body(object).when().post("/{id}", id);
     }
 
     protected Response deleteEntity(String id) {
@@ -172,6 +172,14 @@ public class BasicSteps {
     protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
         return given().spec(spec)
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header("If-Match", etag);
+        }
+        return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     /**

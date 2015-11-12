@@ -5,6 +5,8 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +20,9 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
+import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -40,6 +44,7 @@ public class CustomerSteps extends BasicSteps {
     private static final String SESSION_CREATED_CUSTOMER = "created_customer";
     private static final String SESSION_CUSTOMER_ID = "customer_id";
     public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
+    private static final String SECOND_LEVEL_OBJECT_USERS = "users";
 
     public CustomerSteps() {
         super();
@@ -114,6 +119,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     private CustomerProperty getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
+        //TODO add type to query
         CustomerProperty[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, "1", "0", "property_id==" + propertyId, null, null).as(CustomerProperty[].class);
         return Arrays.asList(customerProperties).stream().findFirst().orElse(null);
     }
@@ -130,7 +136,18 @@ public class CustomerSteps extends BasicSteps {
                 .when().post("/{customerId}/properties", customerId);
     }
 
-    private Customer getCustomerByCodeInternal(String code) {
+    private Response addUserToCustomerWithIsPrimary(String userId, String customerId, String isPrimary) {
+        Map<String, Object> customerUser = new HashMap<>();
+        customerUser.put("user_id", userId);
+        customerUser.put("is_primary", isPrimary);
+
+
+        return given().spec(spec)
+                .body(customerUser)
+                .when().post("/{customerId}/users", customerId);
+    }
+
+    public Customer getCustomerByCodeInternal(String code) {
         Customer[] customers = getEntities("1", "0", "code==" + code, null, null).as(Customer[].class);
         return Arrays.asList(customers).stream().findFirst().orElse(null);
     }
@@ -234,7 +251,7 @@ public class CustomerSteps extends BasicSteps {
         Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
 
         Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader("ETag"));
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+        setSessionResponse(resp);
     }
 
     @Step
@@ -304,12 +321,46 @@ public class CustomerSteps extends BasicSteps {
 
         CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         if (existingCustomerProperty != null) {
-            deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId());
+            Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
+            String etag = customerPropertyResponseWithEtag.header("ETag");
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("valid_from", validFrom);
+            data.put("valid_to", validTo);
+
+            Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, etag);
+            if (updateResponse.getStatusCode() != 204) {
+                fail("CustomerProperty cannot be modified");
+            }
+        } else  {
+            Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, StringUtil.parseDate(validFrom), StringUtil.parseDate(validTo));
+            if (createResponse.getStatusCode() != 201) {
+                fail("CustomerProperty cannot be created");
+            }
         }
-        Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, StringUtil.parseDate(validTo), StringUtil.parseDate(validTo));
+    }
+
+    @Step
+    public void relationExistsBetweenUserAndCustomerWithPrimary(User user, String customerCode, String isPrimary) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+
+        CustomerUser existingCustomerUser = getUserForCustomer(c.getCustomerId(), user.getUserName());
+        if (existingCustomerUser != null) {
+
+            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
+            if (deleteResponse.getStatusCode() != 204) {
+                fail("CustomerUser cannot be deleted");
+            }
+        }
+        Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), c.getCustomerId(), isPrimary);
         if (createResponse.getStatusCode() != 201) {
-            fail("CustomerProperty cannot be created");
+            fail("CustomerUser cannot be created");
         }
+    }
+
+    private CustomerUser getUserForCustomer(String customerId, String userName) {
+        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, "1", "0", "user_name==" + userName, null, null);
+        return Arrays.asList(customerUserResponse.as(CustomerUser[].class)).stream().findFirst().orElse(null);
     }
 
     @Step
@@ -344,8 +395,37 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void followingCustomersDontExist(List<String> customerCodes) {
-        customerCodes.forEach(c ->  {
+        customerCodes.forEach(c -> {
             deleteCustomerWithCode(c);
         });
+    }
+
+    @Step
+    public void userIsAddedToCustomerWithIsPrimary(User u, String customerCode, String isPrimary) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+
+        Response response = addUserToCustomerWithIsPrimary(u.getUserId(), c.getCustomerId(), isPrimary);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void userIsDeletedFromCustomer(User u, String customerCode) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+
+        Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
+        setSessionResponse(deleteResponse);
+    }
+
+    @Step
+    public void userDoesntExistForCustomer(User u, String customerCode) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerUser userForCustomer = getUserForCustomer(c.getCustomerId(), u.getUserName());
+        assertNull("User should not be present in customer", userForCustomer);
+    }
+
+    public List<Customer> getCustomersForCodes(List<String> customerCodes) {
+        String filter = "code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
+        Customer[] customers = getEntities("10000", "0", filter, null, null).as(Customer[].class);
+        return Arrays.asList(customers);
     }
 }

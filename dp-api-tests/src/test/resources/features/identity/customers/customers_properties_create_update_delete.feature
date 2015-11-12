@@ -9,9 +9,9 @@ Feature: customers_properties_create_update_delete
 
 
     Given The following properties exist with random address and billing address
-      | salesforceId          | propertyName  | propertyCode  | website                       | email             | vatId         | isDemoProperty    | timezone  |
-      | salesforceid_1        | p1_name       | p1_code       | http://www.snapshot.travel    | p1@tenants.biz    | CZ20000001    | true              | UTC+01:00 |
-      | salesforceid_2        | p2_name       | p2_code       | http://www.snapshot.travel    | p2@tenants.biz    | CZ20000002    | true              | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
@@ -26,9 +26,10 @@ Feature: customers_properties_create_update_delete
     And Body contains customerProperty type with "validTo" value "2015-10-31"
     And Body contains customerProperty type with "type" value "anchor"
     And "Location" header is set and contains the same customerProperty
+    And Etag header is present
 
 
-    @skipped
+  @skipped
   Scenario Outline: Checking error codes for creating customerProperty
 
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
@@ -58,13 +59,13 @@ Feature: customers_properties_create_update_delete
     And customerProperty with same id doesn't exist
 
 
-    @skipped
+  @skipped
   Scenario: Checking error code for deleting customer
     When Nonexistent customerProperty id is deleted
     Then Response code is "204"
 
 
-      @skipped
+  @skipped
   Scenario Outline: Updating customerProperty
     When Customer with code "c1t" is updated with data
       | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | sourceCustomer   | notes   |
