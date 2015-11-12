@@ -39,7 +39,7 @@ public class CommonObjectStepDefs {
 
   // --- when ---
   @When("^create \"([^\"]*)\" object with correct field values$")
-  public void create_object_with_correct_field_values(String objectName) throws JsonProcessingException {
+  public void create_object_with_correct_field_values(String objectName) throws IOException {
     steps.createCorrectObject(objectName);
   }
 
@@ -53,9 +53,9 @@ public class CommonObjectStepDefs {
     steps.createInvalidObjects(objectName);
   }
 
-  @When("^created (\\d+) \"([^\"]*)\" objects$")
-  public void created_objects(int count, String objectName) throws JsonProcessingException {
-    steps.createInvalidObjects(objectName);
+  @When("^create (\\d+) \"([^\"]*)\" objects$")
+  public void create_objects(int count, String objectName) throws IOException {
+    steps.createObjectsForSession(count, objectName);
   }
 
   @When("^create \"([^\"]*)\" objects each with one missing field$")
@@ -92,6 +92,11 @@ public class CommonObjectStepDefs {
   @Then("^filtering by top-level fields returns matching \"([^\"]*)\" objects$")
   public void filtering_by_toplevel_fields_returns_matching_objects(String objectName) throws Throwable {
     steps.filterObjectsByFields(objectName);
+  }
+  
+  @Then("^returned \"([^\"]*)\" object matches$")
+  public void returned_object_matches(String objectName) throws Throwable {
+    steps.originalAndReturnedObjectsMatch(objectName);
   }
 
 }
