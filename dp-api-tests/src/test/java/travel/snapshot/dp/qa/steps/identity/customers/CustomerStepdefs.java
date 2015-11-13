@@ -8,7 +8,6 @@ import java.util.List;
 
 import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -25,6 +24,7 @@ import travel.snapshot.dp.qa.serenity.users.UsersSteps;
  */
 public class CustomerStepdefs {
 
+    public static final String NONEXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Steps
@@ -137,9 +137,14 @@ public class CustomerStepdefs {
     }
 
     @When("^Property with code \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
-    public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode, String customerCode, String type, String dateFrom, String dateTo) throws Throwable {
+    public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode, String customerCode, @Transform(NullEmptyStringConverter.class) String type, @Transform(NullEmptyStringConverter.class) String dateFrom, @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsAddedToCustomerWithTypeFromTo(p, customerCode, type, dateFrom, dateTo);
+        if (p == null) {
+            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(NONEXISTENT_ID, customerCode, type, dateFrom, dateTo);
+        } else {
+            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(p.getPropertyId(), customerCode, type, dateFrom, dateTo);
+        }
+
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\"$")
@@ -227,5 +232,22 @@ public class CustomerStepdefs {
         User user = new User();
         user.setUserId("nonexistent");
         customerSteps.userIsDeletedFromCustomer(user, customerId);
+    }
+
+    @Then("^\"([^\"]*)\" header is set and contains the same customerProperty$")
+    public void header_is_set_and_contains_the_same_customerProperty(String header) throws Throwable {
+        customerSteps.compareCustomerPropertyOnHeaderWithStored(header);
+    }
+
+    @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
+    public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.propertyIsUpdateForCustomerWithType(p, customerCode, type, fieldName, value);
+    }
+
+    @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
+    public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(p, customerCode, type, fieldName, value);
     }
 }

@@ -43,7 +43,7 @@ public class PropertySteps extends BasicSteps {
 
     public PropertySteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
     
     // --- steps ---
@@ -220,7 +220,7 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     private Response createProperty(Property t) {
-        return given().spec(spec).basePath(BASE_PATH__PROPERTIES)
+        return given().spec(spec)
                 .body(t)
                 .when().post();
 
@@ -234,7 +234,7 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     private Response getProperty(String id, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec).basePath(BASE_PATH__PROPERTIES);
+        RequestSpecification requestSpecification = given().spec(spec);
         if (etag != null && !etag.isEmpty()) {
             requestSpecification = requestSpecification.header("If-None-Match", etag);
         }
@@ -250,7 +250,7 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     private Response updateProperty(String id, Map<String, Object> fields, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec).basePath(BASE_PATH__PROPERTIES);
+        RequestSpecification requestSpecification = given().spec(spec);
         if (etag != null && !etag.isEmpty()) {
             requestSpecification = requestSpecification.header("If-Match", etag);
         }
@@ -265,7 +265,7 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     private Response deleteProperty(String id) {
-        return given().spec(spec).basePath(BASE_PATH__PROPERTIES)
+        return given().spec(spec)
                 .when().delete("/{id}", id);
     }
     
@@ -298,8 +298,8 @@ public class PropertySteps extends BasicSteps {
      * @return Requested property or {@code null} if no such property exists in the list
      */
     public Property getPropertyByCodeInternal(String code) {
-        Property[] properties = getProperties("100", "0").as(Property[].class);
-        return Arrays.asList(properties).stream().filter(p -> code.equals(p.getPropertyCode())).findFirst().orElse(null);
+        Property[] properties = getEntities("1", "0", "property_code==" + code, null, null).as(Property[].class);
+        return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
     
     /**

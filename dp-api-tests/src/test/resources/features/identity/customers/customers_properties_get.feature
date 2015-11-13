@@ -1,4 +1,3 @@
-@skipped
 Feature: customers_properties_get
 
   Background:
@@ -9,9 +8,9 @@ Feature: customers_properties_get
 
 
     Given The following properties exist with random address and billing address
-      | salesforceId          | propertyName  | propertyCode  | website                       | email             | vatId         | isDemoProperty    | timezone  |
-      | salesforceid_1        | p1_name       | p1_code       | http://www.snapshot.travel    | p1@tenants.biz    | CZ20000001    | true              | UTC+01:00 |
-      | salesforceid_2        | p2_name       | p2_code       | http://www.snapshot.travel    | p2@tenants.biz    | CZ20000002    | true              | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
@@ -52,17 +51,91 @@ Feature: customers_properties_get
 
 
   Scenario Outline: Getting list of customerProperties
+  not working now
+
     Given The following customers exist with random address
-      | companyName                | email                | code      | salesforceId               | vatId      | isDemoCustomer | phone         | website                    |
-      | List test Given company 1  | list_c1@tenants.biz  | list_c1t  | list_salesforceid_given_1  | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel |
-      | List test Given company 2  | list_c2@tenants.biz  | list_c2t  | list_salesforceid_given_2  | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel |
-      | List test Given company 3  | list_c3@tenants.biz  | list_c3t  | list_salesforceid_given_3  | CZ22000003 | true           | +111111111111 | http://www.snapshot.travel |
-      | List test Given company 4  | list_c4@tenants.biz  | list_c4t  | list_salesforceid_given_4  | CZ22000004 | true           | +111111111111 | http://www.snapshot.travel |
-      | List test Given company 5  | list_c5@tenants.biz  | list_c5t  | list_salesforceid_given_5  | CZ22000005 | true           | +111111111111 | http://www.snapshot.travel |
-      | List test Given company 6  | list_c6@tenants.biz  | list_c6t  | list_salesforceid_given_6  | CZ22000006 | true           | +111111111111 | http://www.snapshot.travel |
+      | companyName               | email               | code     | salesforceId              | vatId      | isDemoCustomer | phone         | website                    |
+      | List test Given company 1 | list_c1@tenants.biz | list_c1t | list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel |
+      | List test Given company 2 | list_c2@tenants.biz | list_c2t | list_salesforceid_given_2 | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel |
 
+    Given The following properties exist with random address and billing address
+      | salesforceId   | propertyName           | propertyCode           | website                    | email          | isDemoProperty | timezone  |
+      | salesforceid_1 | list_prop_cust_p1_name | list_prop_cust_p1_code | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_2 | list_prop_cust_p2_name | list_prop_cust_p2_code | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_3 | list_prop_cust_p3_name | list_prop_cust_p3_code | http://www.snapshot.travel | p3@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_4 | list_prop_cust_p4_name | list_prop_cust_p4_code | http://www.snapshot.travel | p4@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_5 | list_prop_cust_p5_name | list_prop_cust_p5_code | http://www.snapshot.travel | p5@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_6 | list_prop_cust_p6_name | list_prop_cust_p6_code | http://www.snapshot.travel | p6@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_7 | list_prop_cust_p7_name | list_prop_cust_p7_code | http://www.snapshot.travel | p7@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_8 | list_prop_cust_p8_name | list_prop_cust_p8_code | http://www.snapshot.travel | p8@tenants.biz | true           | UTC+01:00 |
 
-    When List of customerProperties is got for customer with code "c1t" with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p1_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p2_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p3_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p4_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p5_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p6_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p7_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p8_code"
+
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "chains" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "membership" from "2015-01-01" to "2015-12-31"
+
+    When List of customerProperties is got for customer with code "list_c1t" with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customerProperties returned
@@ -86,60 +159,72 @@ Feature: customers_properties_get
     And Custom code is "<custom_code>"
 
     Examples:
-      | limit | cursor | filter   | sort         | sort_desc    | response_code | custom_code |
+      | limit | cursor | filter   | sort  | sort_desc | response_code | custom_code |
       #limit and cursor
-      | /null | -1     | /null    | /null        | /null        | 400           | 63          |
-      |       | -1     | /null    | /null        | /null        | 400           | 63          |
-      | /null | text   | /null    | /null        | /null        | 400           | 63          |
-      |       | text   | /null    | /null        | /null        | 400           | 63          |
-      | -1    |        | /null    | /null        | /null        | 400           | 63          |
-      | -1    | /null  | /null    | /null        | /null        | 400           | 63          |
-      | text  |        | /null    | /null        | /null        | 400           | 63          |
-      | text  | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 10    | -1     | /null    | /null        | /null        | 400           | 63          |
-      | text  | 0      | /null    | /null        | /null        | 400           | 63          |
-      | 10    | text   | /null    | /null        | /null        | 400           | 63          |
+      | /null | -1     | /null    | /null | /null     | 400           | 63          |
+      |       | -1     | /null    | /null | /null     | 400           | 63          |
+      | /null | text   | /null    | /null | /null     | 400           | 63          |
+      |       | text   | /null    | /null | /null     | 400           | 63          |
+      | -1    |        | /null    | /null | /null     | 400           | 63          |
+      | -1    | /null  | /null    | /null | /null     | 400           | 63          |
+      | text  |        | /null    | /null | /null     | 400           | 63          |
+      | text  | /null  | /null    | /null | /null     | 400           | 63          |
+      | 10    | -1     | /null    | /null | /null     | 400           | 63          |
+      | text  | 0      | /null    | /null | /null     | 400           | 63          |
+      | 10    | text   | /null    | /null | /null     | 400           | 63          |
       #filtering and sorting
-      | 10    | 0      | /null    | company_name | company_name | 400           | 64          |
-      #| 10    | 0      | /null    | company_name |              | 400           | 63          |
-      #| 10    | 0      | /null    |              | company_name | 400           | 63          |
-      #| 10    | 0      | /null    | /null        |              | 400           | 63          |
-      #| 10    | 0      | /null    |              | /null        | 400           | 63          |
-      #| 10    | 0      | /null    |              |              | 400           | 63          |
-      | 10    | 0      | code==   | /null        | /null        | 400           | 63          |
-      | 10    | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+      | 10    | 0      | /null    | type  | type      | 400           | 64          |
+      | 10    | 0      | type==   | /null | /null     | 400           | 63          |
+      | 10    | 0      | vat==CZ* | /null | /null     | 400           | 63          |
 
   Scenario Outline: Filtering list of customer properties
     Given The following customers exist with random address
-      | companyName                           | email                 | code       | salesforceId                | vatId      | isDemoCustomer | phone         | website                    |
-      | Filter test Given company 1           | Filter_c1@tenants.biz | Filter_c1t | Filter_salesforceid_given_1 | ATU2200001 | true           | +111111111111 | http://www.snapshot.travel |
-      | Filter test Given company 2           | Filter_c2@tenants.biz | Filter_c2t | Filter_salesforceid_given_2 | ATU2200002 | true           | +111111111111 | http://www.snapshot.travel |
-      | Filter test Given company 3           | Filter_c3@tenants.biz | Filter_c3t | Filter_salesforceid_given_3 | ATU2200003 | true           | +111111111111 | http://www.snapshot.travel |
-      | Filter test Given company 4           | Filter_c4@tenants.biz | Filter_c4t | Filter_salesforceid_given_4 | ATU2200004 | true           | +111111111111 | http://www.snapshot.travel |
-      | Filter test Given company 5           | Filter_c5@tenants.biz | Filter_c5t | Filter_salesforceid_given_5 | ATU2200005 | true           | +111111111111 | http://www.snapshot.travel |
-      | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_c6t | Filter_salesforceid_given_6 | ATU2200006 | true           | +22222222     | http://www.snapshot.cz     |
-      | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_c7t | Filter_salesforceid_given_7 | ATU2200007 | false          | +22222222     | http://www.snapshot.travel |
+      | companyName                      | email               | code            | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    |
+      | Filter list test Given company 1 | list_c1@tenants.biz | filter_list_c1t | filter_list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel |
+
+
+    Given The following properties exist with random address and billing address
+      | salesforceId   | propertyName                  | propertyCode                  | website                    | email           | isDemoProperty | timezone  |
+      | salesforceid_1 | filter_list_prop_cust_p1_name | filter_list_prop_cust_p1_code | http://www.snapshot.travel | fp1@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_2 | filter_list_prop_cust_p2_name | filter_list_prop_cust_p2_code | http://www.snapshot.travel | fp2@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_3 | filter_list_prop_cust_p3_name | filter_list_prop_cust_p3_code | http://www.snapshot.travel | fp3@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_4 | filter_list_prop_cust_p4_name | filter_list_prop_cust_p4_code | http://www.snapshot.travel | fp4@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_5 | filter_list_prop_cust_p5_name | filter_list_prop_cust_p5_code | http://www.snapshot.travel | fp5@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_6 | filter_list_prop_cust_p6_name | filter_list_prop_cust_p6_code | http://www.snapshot.travel | fp6@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_7 | filter_list_prop_cust_p7_name | filter_list_prop_cust_p7_code | http://www.snapshot.travel | fp7@tenants.biz | true           | UTC+01:00 |
+      | salesforceid_8 | filter_list_prop_cust_p8_name | filter_list_prop_cust_p8_code | http://www.snapshot.travel | fp8@tenants.biz | true           | UTC+01:00 |
+
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p1_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p2_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p3_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p4_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p5_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p6_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p7_code"
+    Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p8_code"
+
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "anchor" from "2015-02-01" to "2030-03-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "anchor" from "2015-03-01" to "2030-04-31"
+    Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "anchor" from "2015-04-01" to "2030-05-31"
+    Given Relation between property with code "list_prop_cust_p5_code" and customer with code "list_c1t" exists with type "anchor" from "2015-05-01" to "2030-06-31"
+    Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "anchor" from "2015-06-01" to "2030-07-31"
+    Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "anchor" from "2015-07-01" to "2030-08-31"
+    Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "anchor" from "2015-08-01" to "2030-09-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "anchor" from "2015-09-01" to "2030-10-31"
+    Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-10-01" to "2030-11-31"
+    Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-11-01" to "2030-12-31"
 
     When List of customerProperties is got for customer with code "c1t" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customerProperties returned
-    And There are customerProperties with following property names returned in order: <expected_codes>
+    #And There are customers with following codes returned in order: <string>
 
     Examples:
-      | limit | cursor | returned | filter                                     | sort  | sort_desc | expected_codes                                             |
-      | 5     | 0      | 5        | company_name=='Filter test*'               | code  |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 5     | 0      | 5        | company_name=='Filter test*'               |       | code      | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
-      | 5     | 2      | 3        | company_name=='Filter test*'               | code  |           | Filter_c3t, Filter_c4t, Filter_c5t                         |
-      | 5     | 2      | 3        | company_name=='Filter test*'               |       | code      | Filter_c3t, Filter_c2t, Filter_c1t                         |
-      | 5     | 3      | 2        | company_name=='Filter test*'               | code  |           | Filter_c4t, Filter_c5t                                     |
-      | /null | /null  | 1        | code==Filter_c7t                           | /null | /null     | Filter_c7t                                                 |
-      | /null | /null  | 2        | code==Filter_c* and phone==+22222222       | code  | /null     | Filter_c6t, Filter_c7t                                     |
-      | /null | /null  | 1        | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1t                                                 |
-      | /null | /null  | 1        | salesforce_id==Filter_salesforceid_given_2 | /null | /null     | Filter_c2t                                                 |
-      | /null | /null  | 1        | vat_id==ATU22*003                          | /null | /null     | Filter_c3t                                                 |
-      | /null | /null  | 1        | is_demo_customer==0                        | /null | /null     | Filter_c7t                                                 |
-      | /null | /null  | 1        | website==http://www.snapshot.cz            | /null | /null     | Filter_c6t                                                 |
+      | limit | cursor | returned | filter                | sort | sort_desc | expected_codes                                             |
+      | 10    | 0      | 9        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 2      | 4        | valid_from<2015-06-15 |      | valid_to  | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
   #add all fields
 
     #TODO add test for wrong parameters in url

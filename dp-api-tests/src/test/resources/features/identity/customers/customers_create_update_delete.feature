@@ -57,20 +57,20 @@ Feature: customers_create_update_delete
     Given The following customers with codes don't exist
       | UPDATED_CODE_c1t |
     When Customer with code "c1t" is updated with data
-      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | sourceCustomer   | notes   |
-      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
+      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   |
+      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Updated customer with code "<code>" has data
-      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | sourceCustomer   | notes   |
-      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <sourceCustomer> | <notes> |
+      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   |
+      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> |
 
     Examples:
-      | companyName | email | code             | salesforceId         | vatId      | phone         | website        | sourceCustomer | notes |
-      | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null          | /null |
-      | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null          | /null |
-      | /null       | /null | UPDATED_CODE_c1t | /null                | /null      | /null         | /null          | /null          | /null |
+      | companyName | email | code             | salesforceId         | vatId      | phone         | website        | notes |
+      | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null |
+      | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null |
+      | /null       | /null | UPDATED_CODE_c1t | /null                | /null      | /null         | /null          | /null |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
@@ -79,8 +79,8 @@ Feature: customers_create_update_delete
 
   Scenario: Updating customer with outdated etag
     When Customer with code "c1t" is updated with data if updated before
-      | companyName | email | code | salesforceId | vatId | phone | website        | sourceCustomer | notes |
-      |             |       |      |              |       |       | http://test.cz |                |       |
+      | companyName | email | code | salesforceId | vatId | phone | website        | notes |
+      |             |       |      |              |       |       | http://test.cz |       |
     Then Response code is "412"
     And Custom code is "57"
 

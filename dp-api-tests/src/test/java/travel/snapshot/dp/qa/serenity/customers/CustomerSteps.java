@@ -45,6 +45,7 @@ public class CustomerSteps extends BasicSteps {
     private static final String SESSION_CUSTOMER_ID = "customer_id";
     public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
     private static final String SECOND_LEVEL_OBJECT_USERS = "users";
+    private static final String SESSION_CREATED_CUSTOMER_PROPERTY = "created_customer_property";
 
     public CustomerSteps() {
         super();
@@ -103,6 +104,20 @@ public class CustomerSteps extends BasicSteps {
 
     }
 
+    @Step
+    public void compareCustomerPropertyOnHeaderWithStored(String headerName) {
+        CustomerProperty originalCustomerProperty = getSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY);
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        String customerLocation = response.header(headerName).replaceFirst("/identity/customers", "");
+        given().spec(spec).get(customerLocation).then()
+                .body("property_id", is(originalCustomerProperty.getPropertyId()))
+                .body("property_name", is(originalCustomerProperty.getPropertyName()))
+                .body("type", is(originalCustomerProperty.getType()))
+                .body("valid_from", is(originalCustomerProperty.getValidFrom()))
+                .body("valid_to", is(originalCustomerProperty.getValidTo()));
+
+    }
+
     private Customer getCustomerFromFile(InputStream inputStream) {
         Customer customer = from(inputStream).getObject("", Customer.class);
         return customer;
@@ -120,16 +135,25 @@ public class CustomerSteps extends BasicSteps {
 
     private CustomerProperty getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         //TODO add type to query
-        CustomerProperty[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, "1", "0", "property_id==" + propertyId, null, null).as(CustomerProperty[].class);
+        String filter = String.format("property_id==%s;type==%s",propertyId, type);
+        CustomerProperty[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, "1", "0", filter, null, null).as(CustomerProperty[].class);
         return Arrays.asList(customerProperties).stream().findFirst().orElse(null);
     }
 
-    private Response addPropertyToCustomerWithTypeFromTo(String propertyId, String customerId, String type, LocalDate validFrom, LocalDate validTo) {
+    private Response addPropertyToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo) {
         Map<String, Object> customerProperty = new HashMap<>();
-        customerProperty.put("property_id", propertyId);
-        customerProperty.put("type", type);
-        customerProperty.put("valid_from", validFrom.format(DateTimeFormatter.ISO_DATE));
-        customerProperty.put("valid_to", validTo.format(DateTimeFormatter.ISO_DATE));
+        if (propertyId != null) {
+            customerProperty.put("property_id", propertyId);
+        }
+        if (type != null) {
+            customerProperty.put("type", type);
+        }
+        if (validFrom != null) {
+            customerProperty.put("valid_from", validFrom);
+        }
+        if (validTo != null) {
+            customerProperty.put("valid_to", validTo);
+        }
 
         return given().spec(spec)
                 .body(customerProperty)
@@ -308,10 +332,14 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void propertyIsAddedToCustomerWithTypeFromTo(Property p, String customerCode, String type, String dateFrom, String dateTo) {
+    public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerCode, String type, String dateFrom, String dateTo) {
         Customer c = getCustomerByCodeInternal(customerCode);
 
-        Response response = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, StringUtil.parseDate(dateFrom), StringUtil.parseDate(dateTo));
+        Response response = addPropertyToCustomerWithTypeFromTo(propertyId, c.getCustomerId(), type, dateFrom, dateTo);
+
+        if (response.statusCode() == 201) {
+            setSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY, response.as(CustomerProperty.class));
+        }
         setSessionResponse(response);
     }
 
@@ -333,11 +361,36 @@ public class CustomerSteps extends BasicSteps {
                 fail("CustomerProperty cannot be modified");
             }
         } else  {
-            Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, StringUtil.parseDate(validFrom), StringUtil.parseDate(validTo));
+            Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
             if (createResponse.getStatusCode() != 201) {
                 fail("CustomerProperty cannot be created");
             }
         }
+    }
+
+    public void propertyIsUpdateForCustomerWithType(Property p, String customerCode, String type, String fieldName, String value) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+
+        CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
+        Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
+        String etag = customerPropertyResponseWithEtag.header("ETag");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put(fieldName, value);
+
+        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, etag);
+        setSessionResponse(updateResponse);
+    }
+
+    public void propertyIsUpdateForCustomerWithTypeWithInvalidEtag(Property p, String customerCode, String type, String fieldName, String value) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+
+        CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
+        Map<String, Object> data = new HashMap<>();
+        data.put(fieldName, value);
+
+        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, "invalid");
+        setSessionResponse(updateResponse);
     }
 
     @Step
