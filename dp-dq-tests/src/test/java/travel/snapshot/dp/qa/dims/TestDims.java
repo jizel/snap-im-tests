@@ -21,7 +21,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "select count(*)-1 from dim_channel";
 
-        logger.info("\nStart control checks on table 'dim_channel'");
+        logger.info("Start control checks on table 'dim_channel'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -40,7 +40,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "select count(*)-1 from dim_channel_category";
 
-        logger.info("\nStart control checks on table 'dim_channel_category'");
+        logger.info("Start control checks on table 'dim_channel_category'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -59,7 +59,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "select count(*)-1 from dim_channel_segment";
 
-        logger.info("\nStart control checks on table 'dim_channel_segment'");
+        logger.info("Start control checks on table 'dim_channel_segment'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -78,7 +78,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "select count(*)-1 from dim_market_category";
 
-        logger.info("\nStart control checks on table 'dim_market_category'");
+        logger.info("Start control checks on table 'dim_market_category'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -97,7 +97,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "select count(*)-1 from dim_market_segment";
 
-        logger.info("\nStart control checks on table 'dim_market_segment'");
+        logger.info("Start control checks on table 'dim_market_segment'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -114,7 +114,7 @@ public class TestDims {
         String sqlQueryForSource = withStartDate("select count(ID) from Properties where ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from dim_property";
 
-        logger.info("\nStart control checks on table 'dim_property'");
+        logger.info("Start control checks on table 'dim_property'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -131,7 +131,7 @@ public class TestDims {
         String sqlQueryForSource = withStartDate("select count(ID) from RatePlans where ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from dim_rate_plan";
 
-        logger.info("\nStart control checks on table 'dim_rate_plan'");
+        logger.info("Start control checks on table 'dim_rate_plan'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -148,7 +148,7 @@ public class TestDims {
         String sqlQueryForSource = withStartDate("select count(ID) from RoomTypes where ModificationTimestamp > %s");
         String sqlQueryForTarget = "select count(*) from dim_room_type";
 
-        logger.info("\nStart control checks on table 'dim_room_type'");
+        logger.info("Start control checks on table 'dim_room_type'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -167,7 +167,7 @@ public class TestDims {
         String sqlQueryForSource = "select count(*) from RateRankShoppingChannels";
         String sqlQueryForTarget = "select count(*) from dim_rate_shopping_channel";
 
-        logger.info("\nStart control checks on table 'dim_rate_shopping_channel'");
+        logger.info("Start control checks on table 'dim_rate_shopping_channel'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -184,7 +184,7 @@ public class TestDims {
         String sqlQueryForSource = "select count(distinct rrs.id) from RateRankShoppingProperties rrs left join Properties p on  rrs.ID = p.RateRankShoppingPropertyID";
         String sqlQueryForTarget = "select count(*) from dim_rate_shopping_property";
 
-        logger.info("\nStart control checks on table 'dim_rate_shopping_property'");
+        logger.info("Start control checks on table 'dim_rate_shopping_property'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
@@ -203,7 +203,7 @@ public class TestDims {
         // the table
         String sqlQueryForTarget = "select count(*)-1 from dim_snapshot";
 
-        logger.info("\nStart control checks on table 'dim_snapshot'");
+        logger.info("Start control checks on table 'dim_snapshot'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();

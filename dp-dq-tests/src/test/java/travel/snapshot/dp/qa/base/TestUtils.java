@@ -27,7 +27,11 @@ public class TestUtils {
         final String outcomeSource = getQueryResultSource(sqlQueryForSource);
         final String outcomeTarget = getQueryResultTarget(sqlQueryForTarget);
 
-        verifyOutcome(outcomeSource, outcomeTarget);
+        logger.info("Result from the source is: " + outcomeSource);
+        logger.info("Result from the target is: " + outcomeTarget);
+
+        assertThat("The outcome from the source and the target is not equal.",
+        		outcomeTarget, is(outcomeSource));
     }
 
     public static String withStartDate(String queryWithPlaceholder) {
@@ -46,14 +50,6 @@ public class TestUtils {
 
     private static String getQueryResultTarget(String sqlQueryForTarget) throws Exception {
         return dbHelper.targetTemplate().queryForObject(sqlQueryForTarget, String.class);
-    }
-
-    private static void verifyOutcome(String resultSource, String resultTarget) {
-        logger.info("Result from the source is: " + resultSource);
-        logger.info("Result from the target is: " + resultTarget);
-
-        assertThat("The outcome from the source and the target is not equal.",
-                resultTarget, is(resultSource));
     }
 
     public static void followUpLoadTest(List<String> followUpListToSource, List<String> followUpListToTarget) throws Exception {
