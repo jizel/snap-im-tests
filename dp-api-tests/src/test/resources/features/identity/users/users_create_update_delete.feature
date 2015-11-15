@@ -19,7 +19,7 @@ Feature: users_create_update_delete
     And Body contains entity with attribute "email" value "snp@snapshot.travel"
     And Body contains entity with attribute "timezone" value "UTC+01:00"
     And Body contains entity with attribute "culture" value "cz"
-    And Location header is set and contains the same user
+    And "Location" header is set and contains the same user
 
   Scenario: Deleting user
 

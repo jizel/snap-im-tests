@@ -9,7 +9,9 @@ Feature: property_sets_create_update_delete
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
 
-    Given The following property set exist for customer with code "c1t"
+    Given All property sets are deleted for customers with codes: c1t
+
+    Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
 
@@ -26,12 +28,12 @@ Feature: property_sets_create_update_delete
     Then Response code is "201"
     And Body contains entity with attribute "property_set_name" value "ps1_name"
     And Body contains entity with attribute "property_set_type" value "branch"
-    And "Location" header is set and contains the same property
+    And "Location" header is set and contains the same property set
 
     #error codes
 
   Scenario: Deleting Property set
-    When Property set with name "ps1_code" for custumer with code "c1t" is deleted
+    When Property set with name "ps1_code" for customer with code "c1t" is deleted
     Then Response code is "204"
     And Body is empty
     And Property set with same id doesn't exist
@@ -43,8 +45,8 @@ Feature: property_sets_create_update_delete
 
 
   Scenario Outline: Updating property set
-    Given The following property sets with codes don't exist
-      | UPDATED_CODE_c1t |
+    Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
+
     When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data
       | propertySetName           | propertySetDescription   | propertySetType   |
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |

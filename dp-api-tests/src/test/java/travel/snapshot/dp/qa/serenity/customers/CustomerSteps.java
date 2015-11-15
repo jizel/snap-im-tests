@@ -8,8 +8,6 @@ import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.CustomerUser;
@@ -178,14 +175,13 @@ public class CustomerSteps extends BasicSteps {
 
 
     @Step
-    public void getCustomerWithId(String customerId) {
+    public void customerWithIdIsGot(String customerId) {
         Response response = getEntity(customerId, null);
         setSessionResponse(response);
     }
 
     @Step
-    public void getCustomerWithCode(String code) {
-        //TODO implement actual customer search
+    public void customerWithCodeIsGot(String code) {
         Customer customerFromList = getCustomerByCodeInternal(code);
 
         Response response = getEntity(customerFromList.getCustomerId(), null);
@@ -199,7 +195,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void deleteCustomerWithCode(String code) {
+    public void customerWithCodeIsDeleted(String code) {
         Customer c = getCustomerByCodeInternal(code);
         if (c == null) {
             return;
@@ -268,7 +264,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void getCustomerWithCodeUsingEtag(String code) {
+    public void customerWithCodeIsGotWithEtag(String code) {
         //TODO implement actual customer search
         Customer customerFromList = getCustomerByCodeInternal(code);
 
@@ -279,7 +275,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void getCustomerWithCodeUsingEtagAfterUpdate(String code) {
+    public void customerWithCodeIsGotWithEtagAfterUpdate(String code) {
         Customer customerFromList = getCustomerByCodeInternal(code);
 
         Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
@@ -322,7 +318,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void codesAreInResponseInOrder(List<String> codes) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         Customer[] customers = response.as(Customer[].class);
         int i = 0;
         for (Customer c : customers) {
@@ -449,7 +445,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void followingCustomersDontExist(List<String> customerCodes) {
         customerCodes.forEach(c -> {
-            deleteCustomerWithCode(c);
+            customerWithCodeIsDeleted(c);
         });
     }
 

@@ -162,4 +162,38 @@ public class PropertySetSteps extends BasicSteps {
             i++;
         }
     }
+
+    public void followingPropertySetIsCreatedForCustomer(Customer c, PropertySet propertySet) {
+        PropertySet existingPropertySet = getPropertySetByNameForCustomer(propertySet.getPropertySetName(), c.getCustomerId());
+        if (existingPropertySet != null) {
+            deleteEntity(existingPropertySet.getPropertySetId());
+        }
+
+        propertySet.setCustomerId(c.getCustomerId());
+        Response createResponse = createEntity(propertySet);
+        setSessionResponse(createResponse);
+    }
+
+    public void propertySetWithNameForCustomerIsDeleted(Customer c, String propertySetName) {
+        PropertySet existingPropertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+        if (existingPropertySet == null) {
+            return;
+        }
+        String propertySetId = existingPropertySet.getPropertySetId();
+        Response response = deleteEntity(propertySetId);
+        setSessionResponse(response);
+        setSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID, propertySetId);
+    }
+
+    public void propertySetIdInSessionDoesntExist() {
+        String propertySetId = getSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID);
+
+        Response response = getEntity(propertySetId, null);
+        response.then().statusCode(404);
+    }
+
+    public void deletePropertySetWithId(String propertySetId) {
+        Response response = deleteEntity(propertySetId);
+        setSessionResponse(response);
+    }
 }

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -79,7 +78,7 @@ public class CustomerStepdefs {
 
     @When("^Nonexistent customer id is got$")
     public void Nonexistent_customer_id_is_got() throws Throwable {
-        customerSteps.getCustomerWithId("nonexistent_id");
+        customerSteps.customerWithIdIsGot("nonexistent_id");
     }
 
     @When("^Nonexistent customer id is deleted$")
@@ -103,12 +102,12 @@ public class CustomerStepdefs {
 
     @When("^Customer with code \"([^\"]*)\" is deleted$")
     public void Customer_with_code_is_deleted(String code) throws Throwable {
-        customerSteps.deleteCustomerWithCode(code);
+        customerSteps.customerWithCodeIsDeleted(code);
     }
 
     @When("^Customer with code \"([^\"]*)\" is got$")
     public void Customer_with_code_is_got(String code) throws Throwable {
-        customerSteps.getCustomerWithCode(code);
+        customerSteps.customerWithCodeIsGot(code);
     }
 
     @When("^Customer with code \"([^\"]*)\" is activated$")
@@ -123,12 +122,12 @@ public class CustomerStepdefs {
 
     @When("^Customer with code \"([^\"]*)\" is got with etag$")
     public void Customer_with_code_is_got_with_etag(String code) throws Throwable {
-        customerSteps.getCustomerWithCodeUsingEtag(code);
+        customerSteps.customerWithCodeIsGotWithEtag(code);
     }
 
     @When("^Customer with code \"([^\"]*)\" is got for etag, updated and got with previous etag$")
     public void Customer_with_code_is_got_for_etag_updated_and_got_with_previous_etag(String code) throws Throwable {
-        customerSteps.getCustomerWithCodeUsingEtagAfterUpdate(code);
+        customerSteps.customerWithCodeIsGotWithEtagAfterUpdate(code);
     }
 
     @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")

@@ -356,7 +356,7 @@ public class PropertySteps extends BasicSteps {
 //    }
 //
 //    @Step
-//    public void getCustomerWithId(String customerId) {
+//    public void customerWithIdIsGot(String customerId) {
 //        Response resp = getCustomer(customerId, null);
 //        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
 //    }

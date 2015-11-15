@@ -144,11 +144,8 @@ Feature: customers_get
       | 10    | text   | /null    | /null        | /null        | 400           | 63          |
       #filtering and sorting
       | 10    | 0      | /null    | company_name | company_name | 400           | 64          |
-      #| 10    | 0      | /null    | company_name |              | 400           | 63          |
-      #| 10    | 0      | /null    |              | company_name | 400           | 63          |
-      #| 10    | 0      | /null    | /null        |              | 400           | 63          |
-      #| 10    | 0      | /null    |              | /null        | 400           | 63          |
-      #| 10    | 0      | /null    |              |              | 400           | 63          |
+      | 10    | 0      | /null    | /null        | nonexistent  | 400           | 63          |
+      | 10    | 0      | /null    | nonexistent  | /null        | 400           | 63          |
       | 10    | 0      | code==   | /null        | /null        | 400           | 63          |
       | 10    | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
 

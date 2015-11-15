@@ -89,9 +89,18 @@ public class BasicSteps {
     }
 
     @Step
-    public void bodyContainsEntityWithAtribute(String attributeName, String attributeValue) {
+    public void bodyContainsEntityWith(String attributeName, String attributeValue) {
         Response response = getSessionResponse();
         response.then().body(attributeName, is(attributeValue));
+    }
+
+    public void bodyContainsEntityWith(String attributeName) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, notNullValue());
+    }
+    public void bodyDoesntContainEntityWith(String attributeName) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, nullValue());
     }
 
     public void isCalledWithoutTokenUsingMethod(String service, String method) {

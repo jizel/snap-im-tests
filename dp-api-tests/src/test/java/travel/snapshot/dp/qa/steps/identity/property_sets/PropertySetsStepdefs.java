@@ -57,4 +57,26 @@ public class PropertySetsStepdefs {
     public void There_are_property_sets_with_following_names_returned_in_order(List<String> names) throws Throwable {
         steps.propertySetNamesAreInResponseInOrder(names);
     }
+
+    @When("^Property set is created for customer with code \"([^\"]*)\"$")
+    public void Property_set_is_created_for_customer_with_code(String customerCode, List<PropertySet> propertySets) throws Throwable {
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.followingPropertySetIsCreatedForCustomer(c, propertySets.get(0));
+    }
+
+    @When("^Property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is deleted$")
+    public void Property_set_with_name_for_customer_with_code_is_deleted(String propertySetName, String customerCode) throws Throwable {
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.propertySetWithNameForCustomerIsDeleted(c, propertySetName);
+    }
+
+    @Then("^Property set with same id doesn't exist$")
+    public void Property_set_with_same_id_doesn_t_exist() throws Throwable {
+        steps.propertySetIdInSessionDoesntExist();
+    }
+
+    @When("^Nonexistent property set id is deleted$")
+    public void Nonexistent_property_set_id_is_deleted() throws Throwable {
+        steps.deletePropertySetWithId("nonexistent");
+    }
 }
