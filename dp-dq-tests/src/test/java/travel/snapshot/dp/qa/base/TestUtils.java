@@ -33,6 +33,19 @@ public class TestUtils {
         assertThat("The outcome from the source and the target is not equal.",
         		outcomeTarget, is(outcomeSource));
     }
+    
+    public static void testLoadFacebook(String sqlFacebookFactsYesterday, String sqlFacebookIncrementalsToday, String sqlFacebookTotalsToday) throws Exception {
+        final int outcomeFactsYesterday = getQueryResultInt(sqlFacebookFactsYesterday);
+        final int outcomeIncrementalsToday = getQueryResultInt(sqlFacebookIncrementalsToday);
+        final int outcomeFactsToday = getQueryResultInt(sqlFacebookTotalsToday);
+
+        logger.info("Facts yesterday: " + outcomeFactsYesterday);
+        logger.info("Incrementals today: " + outcomeIncrementalsToday);
+        logger.info("Facts today: " + outcomeFactsToday);
+
+        assertThat("Sum of totals from yesterday and sum of incrementals from today is not equal to the sum of totals from today",
+        		outcomeFactsYesterday + outcomeIncrementalsToday, is(outcomeFactsToday));
+    }
 
     public static String withStartDate(String queryWithPlaceholder) {
         final String startDate = ConfigProps.getPropValue("etl.startdate");
@@ -51,6 +64,10 @@ public class TestUtils {
     private static String getQueryResultTarget(String sqlQueryForTarget) throws Exception {
         return dbHelper.targetTemplate().queryForObject(sqlQueryForTarget, String.class);
     }
+    
+    private static int getQueryResultInt(String sql) throws Exception {
+        return dbHelper.targetTemplate().queryForObject(sql, int.class);
+    }
 
     public static void followUpLoadTest(List<String> followUpListToSource, List<String> followUpListToTarget) throws Exception {
       
@@ -63,4 +80,18 @@ public class TestUtils {
         testLoad(followUpQuerySource, followUpQueryTarget);
       }
     }
+    
+    public static void followUpLoadTestFacebook(List<String> factsYesterdayList, List<String> incrementalsTodayList, List<String> FactstodayList) throws Exception {
+        
+        Iterator<String> it1 = factsYesterdayList.iterator();
+        Iterator<String> it2 = incrementalsTodayList.iterator();
+        Iterator<String> it3 = FactstodayList.iterator();
+        
+        while (it1.hasNext() && it2.hasNext()) {
+          String followUpFactsYesterday = it1.next();
+          String followUpIncrementalsToday = it2.next();
+          String followUpFactsToday = it3.next();
+          testLoadFacebook(followUpFactsYesterday, followUpIncrementalsToday, followUpFactsToday);
+        }
+      }
 }
