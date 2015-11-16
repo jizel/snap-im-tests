@@ -191,12 +191,6 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void numberOfUsersInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        User[] users = response.as(User[].class);
-        assertEquals("There should be " + count + " users got", count, users.length);
-    }
-
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
         User[] users = response.as(User[].class);

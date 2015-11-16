@@ -50,7 +50,7 @@ Feature: customers_properties_create_update_delete
       | wrong date format    | p2_code       | c2t           | anchor      | 2015-01-01 | asdfasdf   | 400        | 59          |
       | wrong type           | p2_code       | c2t           | nonexistent | 2015-01-01 | 2100-01-01 | 400        | 59          |
       | duplicate entry      | p1_code       | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 62          |
-      | notexistent property | nonexistent   | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 62          |
+      | notexistent property | nonexistent   | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 63          |
 
 
     #add wrong dates, wrong type, not unique type, more anchor for one property, ...

@@ -12,7 +12,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertySetArray;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -192,7 +194,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customers returned$")
     public void There_are_customers_returned(int count) throws Throwable {
-        customerSteps.numberOfCustomersIsInResponse(count);
+        customerSteps.numberOfEntitiesInResponse(Customer.class, count);
     }
 
     @Then("^Updated customer with code \"([^\"]*)\" has data$")
@@ -217,7 +219,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customerProperties returned$")
     public void There_are_returned_customerProperties_returned(int count) throws Throwable {
-        customerSteps.numberOfCustomerPropertiesIsInResponse(count);
+        customerSteps.numberOfEntitiesInResponse(CustomerProperty.class, count);
     }
 
     @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")
@@ -248,5 +250,26 @@ public class CustomerStepdefs {
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(p, customerCode, type, fieldName, value);
+    }
+
+    @Then("^There are (\\d+) customer property sets returned$")
+    public void There_are_returned_customer_property_sets_returned(int count) throws Throwable {
+        customerSteps.numberOfEntitiesInResponse(PropertySetArray.class, count);
+
+    }
+
+    @When("^List of property sets for customer \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String customerCode,
+                                                                                                                  @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                  @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                  @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+        customerSteps.listOfCustomerPropertySetsIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @Given("^All users are removed for customers with codes: (.*)$")
+    public void All_users_are_removed_for_customers_with_codes_default(List<String> codes) throws Throwable {
+        customerSteps.removeAllUsersFromCustomers(codes);
     }
 }

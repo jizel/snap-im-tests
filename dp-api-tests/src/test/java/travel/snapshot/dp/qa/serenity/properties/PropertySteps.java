@@ -152,14 +152,7 @@ public class PropertySteps extends BasicSteps {
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
-    
-    @Step
-    public void numberOfPropertiesIsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        Property[] properties = response.as(Property[].class);
-        assertEquals("There should be " + count + " properties existing", count, properties.length);
-    }
-    
+
     @Step
     public void followingPropertyIsCreated(Property property) {
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));

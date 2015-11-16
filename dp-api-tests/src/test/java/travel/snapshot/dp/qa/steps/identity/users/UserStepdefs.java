@@ -105,7 +105,7 @@ public class UserStepdefs {
 
     @Then("^There are (\\d+) users returned$")
     public void There_are_returned_users_returned(int count) throws Throwable {
-        usersSteps.numberOfUsersInResponse(count);
+        usersSteps.numberOfEntitiesInResponse(User.class, count);
     }
 
     @Then("^There are users with following usernames returned in order: (.*)$")

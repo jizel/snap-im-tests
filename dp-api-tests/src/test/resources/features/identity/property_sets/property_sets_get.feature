@@ -82,7 +82,7 @@ Feature: property_sets_get
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> customers returned
+    And There are <returned> property sets returned
 
     Examples:
       | limit | cursor | returned |
@@ -139,7 +139,7 @@ Feature: property_sets_get
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> customers returned
+    And There are <returned> property sets returned
     And There are property sets with following names returned in order: <expected_codes>
 
     Examples:

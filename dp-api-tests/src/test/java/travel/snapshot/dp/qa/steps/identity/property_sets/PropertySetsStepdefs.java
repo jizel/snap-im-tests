@@ -79,4 +79,9 @@ public class PropertySetsStepdefs {
     public void Nonexistent_property_set_id_is_deleted() throws Throwable {
         steps.deletePropertySetWithId("nonexistent");
     }
+
+    @Then("^There are (\\d+) property sets returned$")
+    public void There_are_returned_property_sets_returned(int count) throws Throwable {
+        steps.numberOfEntitiesInResponse(PropertySet.class, count);
+    }
 }

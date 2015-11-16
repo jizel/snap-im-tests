@@ -19,6 +19,7 @@ import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -43,6 +44,7 @@ public class CustomerSteps extends BasicSteps {
     public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
     private static final String SECOND_LEVEL_OBJECT_USERS = "users";
     private static final String SESSION_CREATED_CUSTOMER_PROPERTY = "created_customer_property";
+    private static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
 
     public CustomerSteps() {
         super();
@@ -109,7 +111,7 @@ public class CustomerSteps extends BasicSteps {
         given().spec(spec).get(customerLocation).then()
                 .body("property_id", is(originalCustomerProperty.getPropertyId()))
                 .body("property_name", is(originalCustomerProperty.getPropertyName()))
-                .body("type", is(originalCustomerProperty.getType()))
+                //.body("type", is(originalCustomerProperty.getType()))
                 .body("valid_from", is(originalCustomerProperty.getValidFrom()))
                 .body("valid_to", is(originalCustomerProperty.getValidTo()));
 
@@ -218,13 +220,6 @@ public class CustomerSteps extends BasicSteps {
     public void listOfCustomersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
-    }
-
-    @Step
-    public void numberOfCustomersIsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        Customer[] customers = response.as(Customer[].class);
-        assertEquals("There should be " + count + " customers got", count, customers.length);
     }
 
     @Step
@@ -436,10 +431,10 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void numberOfCustomerPropertiesIsInResponse(int count) {
-        Response response = getSessionResponse();
-        CustomerProperty[] customerProperties = response.as(CustomerProperty[].class);
-        assertEquals("There should be " + count + " customer properties got", count, customerProperties.length);
+    public void listOfCustomerPropertySetsIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+        Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
     }
 
     @Step
@@ -476,5 +471,19 @@ public class CustomerSteps extends BasicSteps {
         String filter = "code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
         Customer[] customers = getEntities("10000", "0", filter, null, null).as(Customer[].class);
         return Arrays.asList(customers);
+    }
+
+    public void removeAllUsersFromCustomers(List<String> codes) {
+        codes.forEach(c -> {
+            Customer customer = getCustomerByCodeInternal(c);
+            Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, "1000000", "0", null, null, null);
+            CustomerUser[] customerUsers = customerUsersResponse.as(CustomerUser[].class);
+            for (CustomerUser cu : customerUsers) {
+                Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
+                if (deleteResponse.statusCode() != 204) {
+                    fail("Property set cannot be deleted: " + deleteResponse.asString());
+                }
+            }
+        });
     }
 }

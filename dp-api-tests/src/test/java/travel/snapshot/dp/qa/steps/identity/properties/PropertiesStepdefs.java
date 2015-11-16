@@ -91,7 +91,7 @@ public class PropertiesStepdefs {
     
     @Then("^There are (\\d+) properties returned$")
     public void There_are_properties_returned(int count) throws Throwable {
-        propertySteps.numberOfPropertiesIsInResponse(count);
+        propertySteps.numberOfEntitiesInResponse(Property.class, count);
     }
     
     // --- and ---

@@ -173,13 +173,6 @@ public class RolesSteps extends BasicSteps {
     }
 
     @Step
-    public void numberOfRolesIsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        Role[] roles = response.as(Role[].class);
-        assertEquals("There should be " + count + " roles got", count, roles.length);
-    }
-
-    @Step
     public void updateRoleWithNameForApplicationId(String name, String applicationId, Role updatedRole) {
         Role original = getRoleByNameForApplication(name, applicationId);
         Response tempResponse = getRole(original.getRoleId(), null);

@@ -78,7 +78,7 @@ public class GeneralConfigurationStepdefs {
         } else {
             intCount = Integer.parseInt(count);
         }
-        configurationSteps.numberOfConfigurationTypesIsInResponse(intCount);
+        configurationSteps.numberOfEntitiesInResponse(ConfigurationType.class, intCount);
     }
 
     @Then("^Body contains configuration type with identifier \"([^\"]*)\" and description \"([^\"]*)\"$")
@@ -135,7 +135,7 @@ public class GeneralConfigurationStepdefs {
         } else {
             intCount = Integer.parseInt(count);
         }
-        configurationSteps.numberOfConfigurationsIsInResponse(intCount);
+        configurationSteps.numberOfEntitiesInResponse(Configuration.class, intCount);
     }
 
 
