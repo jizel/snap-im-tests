@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsSteps;
 
 /**
@@ -87,5 +89,25 @@ public class AnalyticsStepdefs {
     @Then("^Data is owned by \"([^\"]*)\"$")
     public void Data_is_owned_by(String data_owner) throws Throwable {
         analyticsSteps.fieldContains("data_owners", data_owner);
+    }
+    
+    @Given("^User \"([^\"]*)\" with password \"([^\"]*)\" exists$")
+    public void user_with_password_exists(String username, String password) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+    }
+
+    @When("^Posting to \"([^\"]*)\" username \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void Posting_to_url_username_and_password(String url, String username, String password) throws Throwable {
+        analyticsSteps.postData(url, username, password);
+    }
+
+    @Then("^\"([^\"]*)\" is not null$")
+    public void parameter_is_not_null(String parameter) throws Throwable {
+    	analyticsSteps.parameterIsNotNull(parameter);
+    }
+
+    @Then("^\"([^\"]*)\" is \"([^\"]*)\"$")
+    public void parameter_is_value(String parameter, String value) throws Throwable {
+        analyticsSteps.parameterIsValue(parameter, value);
     }
 }
