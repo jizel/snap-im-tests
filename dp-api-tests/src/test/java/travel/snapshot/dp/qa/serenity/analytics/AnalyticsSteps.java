@@ -16,7 +16,12 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+<<<<<<< Upstream, based on origin/master
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+=======
+import static org.hamcrest.Matchers.not;
+
+>>>>>>> f377379 Added a feature file for authorization, defined some basic tests
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -29,9 +34,9 @@ public class AnalyticsSteps extends BasicSteps {
         super();
         spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
     }
-
-    //GET Requests
-
+    
+    //GET and POST Requests
+    
     @Step
     public void emptyRequest(String url) {
         Response response = given().spec(spec).get(url);
@@ -69,6 +74,16 @@ public class AnalyticsSteps extends BasicSteps {
         }
 
         Response response = requestSpecification.when().get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    public void postData(String url, String username, String password) {
+        RequestSpecification requestSpecification = given().spec(spec)
+                .parameter("grant_type", "password")
+                .parameter("username", username)
+                .parameter("password", password);
+
+        Response response = requestSpecification.when().post(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
@@ -160,5 +175,17 @@ public class AnalyticsSteps extends BasicSteps {
     public void fieldContains(String fieldName, String value) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, hasItem(value));
+    }
+    
+    @Step
+    public void parameterIsValue(String parameter, String value){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(parameter, is(value));
+    }
+    
+    @Step
+    public void parameterIsNotNull(String parameter){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(parameter, not(null));
     }
 }
