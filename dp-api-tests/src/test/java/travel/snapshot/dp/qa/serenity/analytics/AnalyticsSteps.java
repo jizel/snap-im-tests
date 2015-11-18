@@ -16,12 +16,8 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
-<<<<<<< Upstream, based on origin/master
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
-=======
 import static org.hamcrest.Matchers.not;
-
->>>>>>> f377379 Added a feature file for authorization, defined some basic tests
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -86,7 +82,7 @@ public class AnalyticsSteps extends BasicSteps {
         Response response = requestSpecification.when().post(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
-
+    
     @Step
     public void getPropertyRateData(String property_id, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
@@ -166,26 +162,8 @@ public class AnalyticsSteps extends BasicSteps {
     }
 
     @Step
-    public void textFieldIs(String fieldName, String value) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(fieldName, is(value));
-    }
-
-    @Step
-    public void fieldContains(String fieldName, String value) {
+    public void fieldContains(String fieldName, String value){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, hasItem(value));
-    }
-    
-    @Step
-    public void parameterIsValue(String parameter, String value){
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(parameter, is(value));
-    }
-    
-    @Step
-    public void parameterIsNotNull(String parameter){
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(parameter, not(null));
     }
 }

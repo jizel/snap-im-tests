@@ -73,7 +73,7 @@ public class AnalyticsStepdefs {
 
     @Then("^Response granularity is \"([^\"]*)\"$")
     public void Response_granularity_is(String granularity) throws Throwable {
-        analyticsSteps.textFieldIs("granularity", granularity);
+        analyticsSteps.bodyContainsEntityWith("granularity", granularity);
     }
 
     @Then("^Response since is \"([^\"]*)\"$")
@@ -90,24 +90,5 @@ public class AnalyticsStepdefs {
     public void Data_is_owned_by(String data_owner) throws Throwable {
         analyticsSteps.fieldContains("data_owners", data_owner);
     }
-    
-    @Given("^User \"([^\"]*)\" with password \"([^\"]*)\" exists$")
-    public void user_with_password_exists(String username, String password) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-    }
 
-    @When("^Posting to \"([^\"]*)\" username \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void Posting_to_url_username_and_password(String url, String username, String password) throws Throwable {
-        analyticsSteps.postData(url, username, password);
-    }
-
-    @Then("^\"([^\"]*)\" is not null$")
-    public void parameter_is_not_null(String parameter) throws Throwable {
-    	analyticsSteps.parameterIsNotNull(parameter);
-    }
-
-    @Then("^\"([^\"]*)\" is \"([^\"]*)\"$")
-    public void parameter_is_value(String parameter, String value) throws Throwable {
-        analyticsSteps.parameterIsValue(parameter, value);
-    }
 }
