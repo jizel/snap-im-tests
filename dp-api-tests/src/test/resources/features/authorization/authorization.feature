@@ -13,5 +13,5 @@ Feature: authorization
     Given User "user2" with password "password2" does not exist
     When Posting to "add_url_here" username "user2" and password "password2"
     Then Content type is "application/json"
-    And Response code is "" #need to add response code
-    And Custom code is ""   #need to add custom code
+    And Response code is "403"
+    And Custom code is "3"

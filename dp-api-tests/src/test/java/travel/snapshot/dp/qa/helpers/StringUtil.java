@@ -92,7 +92,7 @@ public class StringUtil {
       String incrementUnit = parts[3];
 
       TemporalUnit unitValue = null;
-      Integer incrementNumberValue = incrementNumberValue = Integer.valueOf(incrementNumber);
+      Integer incrementNumberValue = Integer.valueOf(incrementNumber);
       switch (incrementUnit) {
         case ("days"):
         case ("day"):{
