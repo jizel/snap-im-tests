@@ -2,50 +2,46 @@ package travel.snapshot.dp.qa.serenity.properties;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-import travel.snapshot.dp.qa.helpers.AddressUtils;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import travel.snapshot.dp.qa.helpers.AddressUtils;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertyUser;
+import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import java.util.Collections;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
- * @author martin.konkol(at)snapshot.travel
- * Created by Martin Konkol on 9/23/2015.
+ * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
  */
 public class PropertySteps extends BasicSteps {
 
     private static final String SERENITY_SESSION__PROPERTIES = "properties";
     private static final String SERENITY_SESSION__CREATED_PROPERTY = "created_property";
     private static final String SERENITY_SESSION__PROPERTY_ID = "property_id";
-    
+
     private static final String BASE_PATH__PROPERTIES = "/identity/properties";
 
     public PropertySteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
-    
+
     // --- steps ---
 
     @Step
@@ -56,7 +52,7 @@ public class PropertySteps extends BasicSteps {
             if (existingProperty != null) {
                 deleteProperty(existingProperty.getPropertyId());
             }
-            
+
             // introduce new records
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
             Response createResponse = createProperty(t);
@@ -66,42 +62,42 @@ public class PropertySteps extends BasicSteps {
         });
         Serenity.setSessionVariable(SERENITY_SESSION__PROPERTIES).to(properties);
     }
-    
+
     @Step
     public void getPropertyByID(String id) {
         Response resp = getProperty(id, null);
-        
+
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
-    
+
     @Step
     public void getPropertyByCode(String code) {
         Property customerFromList = getPropertyByCodeInternal(code);
         Response resp = getProperty(customerFromList.getPropertyId(), null);
-        
+
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
-    
+
     @Step
     public void bodyContainsPropertyWith(String atributeName) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(atributeName, notNullValue());
     }
-    
+
     @Step
     public void bodyContainsPropertyWith(String atributeName, String value) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(atributeName, is(parseRawType(value)));
     }
-    
+
     @Step
     public void bodyDoesNotContainPropertyWith(String atributeName) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(atributeName, nullValue());
     }
-    
+
     @Step
     public void getPropertyByCodeUsingEtag(String code) {
         Property propertyFromList = getPropertyByCodeInternal(code);
@@ -114,11 +110,11 @@ public class PropertySteps extends BasicSteps {
 
         // try to get the property with current ETag
         Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
-        
+
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
-    
+
     @Step
     public void getPropertyWithCodeUsingEtagAfterUpdate(String code) {
         Property propertyFromList = getPropertyByCodeInternal(code);
@@ -131,24 +127,24 @@ public class PropertySteps extends BasicSteps {
 
         // force new ETag on server side
         Response updateResponse = updateProperty(
-            propertyFromList.getPropertyId(),
-            Collections.singletonMap("vat_id", "CZ99999999"),
-            responseWithETag.getHeader("ETag"));
+                propertyFromList.getPropertyId(),
+                Collections.singletonMap("vat_id", "CZ99999999"),
+                responseWithETag.getHeader("ETag"));
         if (updateResponse.getStatusCode() != 204) {
             fail("Property cannot be updated: " + updateResponse.asString());
         }
 
         // get with old ETag
         Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
-        
+
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
-    
+
     @Step
     public void listOfPropertiesExistsWith(String limit, String cursor) {
         Response response = getProperties(limit, cursor);
-        
+
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
@@ -164,7 +160,7 @@ public class PropertySteps extends BasicSteps {
         Response response = createProperty(property);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
-    
+
     @Step
     public void comparePropertyOnHeaderWithStored(String headerName) {
         Property originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY);
@@ -177,17 +173,17 @@ public class PropertySteps extends BasicSteps {
                 .body("email", is(originalProperty.getEmail()));
 
     }
-    
+
     @Step
     public void deletePropertyWithCode(String code) {
         String propertyId = getPropertyByCodeInternal(code).getPropertyId();
         Response resp = deleteProperty(propertyId);
-        
+
         //store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
         Serenity.setSessionVariable(SERENITY_SESSION__PROPERTY_ID).to(propertyId);
     }
-    
+
     @Step
     public void propertyIdInSessionDoesntExist() {
         String propertyId = Serenity.sessionVariableCalled(SERENITY_SESSION__PROPERTY_ID);
@@ -195,20 +191,20 @@ public class PropertySteps extends BasicSteps {
         Response response = getProperty(propertyId, null);
         response.then().statusCode(404);
     }
-    
+
     @Step
     public void deletePropertyById(String propertyId) {
         Response resp = deleteProperty(propertyId);
-        
+
         //store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
-    
+
     // --- internal impl. ---
-    
+
     /**
      * POST - new property object
-     * 
+     *
      * @param t property
      * @return server response
      */
@@ -218,11 +214,11 @@ public class PropertySteps extends BasicSteps {
                 .when().post();
 
     }
-    
+
     /**
      * GET - property object by ID
-     * 
-     * @param id ID of the property object
+     *
+     * @param id   ID of the property object
      * @param etag ETag version stamp
      * @return server response
      */
@@ -233,13 +229,13 @@ public class PropertySteps extends BasicSteps {
         }
         return requestSpecification.when().get("/{id}", id);
     }
-    
+
     /**
      * POST - update property object
-     * 
-     * @param id ID of the property
+     *
+     * @param id     ID of the property
      * @param fields updated property field values
-     * @param etag ETag version stamp
+     * @param etag   ETag version stamp
      * @return server response
      */
     private Response updateProperty(String id, Map<String, Object> fields, String etag) {
@@ -250,10 +246,10 @@ public class PropertySteps extends BasicSteps {
         return requestSpecification.body(fields).when().post("/{id}", id);
 
     }
-    
+
     /**
      * DELETE - remove property object
-     * 
+     *
      * @param id ID of the property
      * @return server response
      */
@@ -261,11 +257,11 @@ public class PropertySteps extends BasicSteps {
         return given().spec(spec)
                 .when().delete("/{id}", id);
     }
-    
+
     /**
      * GET - list of property objects
      *
-     * @param limit maximum amount of properties
+     * @param limit  maximum amount of properties
      * @param cursor offset in the available list of properties
      * @return server response
      */
@@ -281,12 +277,11 @@ public class PropertySteps extends BasicSteps {
         }
         return requestSpecification.when().get();
     }
-    
-    
-    
+
+
     /**
      * GET - single property filtered by code from a list of properties
-     * 
+     *
      * @param code property code
      * @return Requested property or {@code null} if no such property exists in the list
      */
@@ -294,10 +289,10 @@ public class PropertySteps extends BasicSteps {
         Property[] properties = getEntities("1", "0", "property_code==" + code, null, null).as(Property[].class);
         return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
-    
+
     /**
      * Parses provided string for predefined prefixes, returning a Java type where applicable.
-     * 
+     *
      * @param value original string value
      * @return Java type, if a matching prefix is found
      */
@@ -306,25 +301,87 @@ public class PropertySteps extends BasicSteps {
         if (position > -1) {
             String prefix = value.substring(0, position);
             String postfix = value.substring(position + 1);
-            
+
             switch (prefix) {
                 case "java.lang.Boolean": {
                     return Boolean.valueOf(postfix);
                 }
-                
+
                 default: {
                     return value;
                 }
             }
         }
-        
+
         return value;
     }
-    
-    
-    
+
+    public void removeAllUsersFromPropertiesWithCodes(List<String> propertyCodes) {
+        propertyCodes.forEach(c -> {
+            Property property = getPropertyByCodeInternal(c);
+            Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+            PropertyUser[] propertyUsers = customerUsersResponse.as(PropertyUser[].class);
+            for (PropertyUser pu : propertyUsers) {
+                Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
+                if (deleteResponse.statusCode() != 204) {
+                    fail("User cannot be deleted: " + deleteResponse.asString());
+                }
+            }
+        });
+    }
+
+    public void relationExistsBetweenUserAndProperty(User user, String propertyCode) {
+        Property p = getPropertyByCodeInternal(propertyCode);
+
+        PropertyUser existingPropertyUser = getUserForProperty(p.getPropertyId(), user.getUserName());
+        if (existingPropertyUser != null) {
+
+            Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
+            if (deleteResponse.getStatusCode() != 204) {
+                fail("PropertyUser cannot be deleted");
+            }
+        }
+        Response createResponse = addUserToProperty(user.getUserId(), p.getPropertyId());
+        if (createResponse.getStatusCode() != 201) {
+            fail("PropertyUser cannot be created");
+        }
+    }
+
+    private Response addUserToProperty(String userId, String propertyId) {
+        Map<String, Object> propertyUser = new HashMap<>();
+        propertyUser.put("user_id", userId);
+
+        return given().spec(spec)
+                .body(propertyUser)
+                .when().post("/{propertyId}/users", propertyId);
+    }
+
+    private PropertyUser getUserForProperty(String propertyId, String userName) {
+        Response customerUserResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
+        return Arrays.asList(customerUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
+    }
+
+    public void userIsAddedToProperty(User u, String propertyCode) {
+        Property p = getPropertyByCodeInternal(propertyCode);
+        Response response = addUserToProperty(u.getUserId(), p.getPropertyId());
+        setSessionResponse(response);
+    }
+
+    public void userIsDeletedFromProperty(User u, String propertyCode) {
+        Property p = getPropertyByCodeInternal(propertyCode);
+        Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
+        setSessionResponse(deleteResponse);
+    }
+
+    public void userDoesntExistForProperty(User u, String propertyCode) {
+        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyUser userForProperty = getUserForProperty(p.getPropertyId(), u.getUserName());
+        assertNull("User should not be present in property", userForProperty);
+    }
+
+
     // TODO reuse existing code
-    
+
 //    @Step
 //    public void fileIsUsedForCreation(String filename) {
 //        Customer customer = getCustomerFromFile(this.getClass().getResourceAsStream(filename));
@@ -458,5 +515,5 @@ public class PropertySteps extends BasicSteps {
 //            assertEquals(data.getWebsite(), customerByCode.getWebsite());
 //        }
 //    }
-    
+
 }

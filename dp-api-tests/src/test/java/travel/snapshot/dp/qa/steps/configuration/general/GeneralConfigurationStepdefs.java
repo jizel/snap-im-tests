@@ -1,17 +1,17 @@
 package travel.snapshot.dp.qa.steps.configuration.general;
 
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
+import net.thucydides.core.annotations.Steps;
+
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import net.thucydides.core.annotations.Steps;
-import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.model.Configuration;
 import travel.snapshot.dp.qa.model.ConfigurationType;
 import travel.snapshot.dp.qa.serenity.configuration.ConfigurationSteps;
-
-import java.util.List;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -27,6 +27,7 @@ public class GeneralConfigurationStepdefs {
     public void Nonexistent_configuration_type_id_is_deleted() throws Throwable {
         configurationSteps.tryDeleteConfigurationType("nonexistent_id");
     }
+
     @Given("^The following configuration types exist$")
     public void The_following_configuration_types_exist(List<ConfigurationType> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypesExist(configurationTypes, 0);
@@ -161,27 +162,28 @@ public class GeneralConfigurationStepdefs {
 
     @Then("^Body contains configuration$")
     public void Body_contains_configuration(List<Configuration> configurations) throws Throwable {
-        Configuration c  = configurations.get(0);
+        Configuration c = configurations.get(0);
         configurationSteps.bodyContainsConfiguration(c.getKey(), c.getValue(), c.getType());
     }
 
     @Then("^Body contains configurationValue$")
     public void Body_contains_configurationValue(List<Configuration> configurations) throws Throwable {
-        Configuration c  = configurations.get(0);
+        Configuration c = configurations.get(0);
         configurationSteps.bodyContainsConfiguration(null, c.getValue(), c.getType());
     }
 
     @When("^Configuration with from identifier \"([^\"]*)\" is updated$")
     public void Configuration_with_from_identifier_is_updated(String identifier, List<Configuration> configurations) throws Throwable {
-        Configuration c  = configurations.get(0);
+        Configuration c = configurations.get(0);
         configurationSteps.updateConfigurationValue(identifier, c.getKey(), c.getValue(), c.getType());
     }
 
     @Then("^Configuration from identifier \"([^\"]*)\" has following$")
     public void Configuration_from_identifier_has_following(String identifier, List<Configuration> configurations) throws Throwable {
-        Configuration c  = configurations.get(0);
-        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());    
-        }
+        Configuration c = configurations.get(0);
+        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());
+    }
+
     @When("^Configuration type description is updated for identifier \"([^\"]*)\" with missing description$")
     public void Configuration_type_description_is_updated_for_identifier_with_missing_description(String identifier) throws Throwable {
         configurationSteps.updateConfigurationTypeDescription(identifier, "");

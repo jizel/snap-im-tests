@@ -35,11 +35,6 @@ public class RolesStepdefs {
         rolesSteps.followingRoleIsCreated(roles.get(0));
     }
 
-    @Then("^Body contains role type with \"([^\"]*)\" value \"([^\"]*)\"$")
-    public void Body_contains_role_type_with_value(String name, String value) throws Throwable {
-        rolesSteps.bodyContainsRoleWith(name, value);
-    }
-
     @Then("^\"([^\"]*)\" header is set and contains the same role$")
     public void header_is_set_and_contains_the_same_role(String header) throws Throwable {
 
@@ -86,21 +81,6 @@ public class RolesStepdefs {
         rolesSteps.getRoleWithId("nonexistent");
     }
 
-    @Then("^Body contains role with attribute \"([^\"]*)\"$")
-    public void Body_contains_role_with_attribute(String attributeName) throws Throwable {
-        rolesSteps.bodyContainsRoleWith(attributeName);
-    }
-
-    @Then("^Body contains role with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
-    public void Body_contains_role_with_attribute_value(String attributeName, String value) throws Throwable {
-        rolesSteps.bodyContainsRoleWith(attributeName, value);
-    }
-
-    @Then("^Body does not contain role with attribute \"([^\"]*)\"$")
-    public void Body_does_not_contain_role_with_attribute(String attributeName) throws Throwable {
-        rolesSteps.bodyDoesNotContainRoleWith(attributeName);
-    }
-
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got$")
     public void Role_with_name_for_application_id_is_got(String roleName, String applicationId) throws Throwable {
         rolesSteps.getRoleWithNameForApplicationId(roleName, applicationId);
@@ -126,7 +106,7 @@ public class RolesStepdefs {
                                                                                              @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                              @Transform(NullEmptyStringConverter.class) String filter,
                                                                                              @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         rolesSteps.listOfRolesIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 

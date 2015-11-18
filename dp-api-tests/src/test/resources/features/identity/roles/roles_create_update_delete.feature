@@ -17,8 +17,8 @@ Feature: Roles_create_update_delete
       | applicationId | roleName            | roleDescription        |
       | 1             | Created role name 1 | optional description 1 |
     Then Response code is "201"
-    And Body contains role type with "role_name" value "Created role name 1"
-    And Body contains role type with "role_description" value "optional description 1"
+    And Body contains entity with attribute "role_name" value "Created role name 1"
+    And Body contains entity with attribute "role_description" value "optional description 1"
     And "Location" header is set and contains the same role
 
   Scenario Outline: Checking error codes for creating role

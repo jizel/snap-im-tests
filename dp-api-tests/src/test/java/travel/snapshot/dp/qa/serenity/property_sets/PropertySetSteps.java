@@ -1,33 +1,23 @@
 package travel.snapshot.dp.qa.serenity.property_sets;
 
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
 
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * @author martin.konkol(at)snapshot.travel
- * Created by Martin Konkol on 9/23/2015.
+ * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
  */
 public class PropertySetSteps extends BasicSteps {
 
@@ -42,7 +32,7 @@ public class PropertySetSteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
         spec.basePath(BASE_PATH__PROPERTY_SETS);
     }
-    
+
     // --- steps ---
 
     @Step
@@ -65,7 +55,7 @@ public class PropertySetSteps extends BasicSteps {
 
     private PropertySet getPropertySetByNameForCustomer(String propertySetName, String customerId) {
         String filter = String.format("property_set_name==%s and customer_id==%s", propertySetName, customerId);
-        PropertySet[] properties = getEntities("100", "0", filter, null, null).as(PropertySet[].class);
+        PropertySet[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySet[].class);
         return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
 
@@ -137,7 +127,7 @@ public class PropertySetSteps extends BasicSteps {
     public void deleteAllPropertySetsForCustomer(List<Customer> customers) {
         customers.forEach(c -> {
             String filter = "customer_id==" + c.getCustomerId();
-            Response entities = getEntities("100000", "0", filter, null, null);
+            Response entities = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null);
             PropertySet[] propertySets = entities.as(PropertySet[].class);
             for (PropertySet ps : propertySets) {
                 Response deleteResponse = deleteEntity(ps.getPropertySetId());

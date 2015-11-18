@@ -15,17 +15,14 @@ Feature: roles_get
     And Etag header is present
 
     # existence
-    And Body contains role with attribute "role_id"
-    And Body contains role with attribute "role_name"
-    And Body contains role with attribute "application_id"
-
+    And Body contains entity with attribute "role_id"
     # exact value
-    And Body contains role with attribute "application_id" value "1"
-    And Body contains role with attribute "role_description" value "optional description 1"
-    And Body contains role with attribute "role_name" value "Role name 1"
+    And Body contains entity with attribute "application_id" value "1"
+    And Body contains entity with attribute "role_description" value "optional description 1"
+    And Body contains entity with attribute "role_name" value "Role name 1"
 
     # non-existence
-    And Body does not contain role with attribute "non_existent"
+    And Body doesn't contain entity with attribute "non_existent"
 
 
   Scenario: Getting role with etag
@@ -46,9 +43,9 @@ Feature: roles_get
     And Etag header is present
 
     # exact value
-    And Body contains role with attribute "application_id" value "1"
-    And Body contains role with attribute "role_description" value "updated because of etag"
-    And Body contains role with attribute "role_name" value "Role name 1"
+    And Body contains entity with attribute "application_id" value "1"
+    And Body contains entity with attribute "role_description" value "updated because of etag"
+    And Body contains entity with attribute "role_name" value "Role name 1"
 
 
   Scenario: Checking error code for nonexistent role

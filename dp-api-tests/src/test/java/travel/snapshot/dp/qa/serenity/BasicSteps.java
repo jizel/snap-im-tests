@@ -10,33 +10,33 @@ import com.jayway.restassured.filter.log.ResponseLoggingFilter;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.PropertySet;
-import travel.snapshot.dp.qa.model.User;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
-
-import static com.jayway.restassured.RestAssured.given;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.*;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -50,6 +50,12 @@ public class BasicSteps {
     public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     public static final String IDENTITY_BASE_URI = "identity.baseURI";
     public static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
+    public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
+    public static final String LIMIT_TO_ALL = "1000000";
+    public static final String LIMIT_TO_ONE = "1";
+    public static final String CURSOR_FROM_FIRST = "0";
+    protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
+    protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
@@ -75,7 +81,7 @@ public class BasicSteps {
     private String getRequestDataFromFile(InputStream inputStream) throws IOException {
         return IOUtils.toString(inputStream, Charset.forName("utf-8"));
     }
-    
+
     public void responseCodeIs(int responseCode) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().statusCode(responseCode);
@@ -106,6 +112,7 @@ public class BasicSteps {
         Response response = getSessionResponse();
         response.then().body(attributeName, notNullValue());
     }
+
     public void bodyDoesntContainEntityWith(String attributeName) {
         Response response = getSessionResponse();
         response.then().body(attributeName, nullValue());
@@ -127,7 +134,7 @@ public class BasicSteps {
         if (!"POST".equals(method)) {
             throw new Exception("Cannot use this method for other methods than POST");
         }
-        switch (module)  {
+        switch (module) {
             case "identity": {
                 spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
                 break;
@@ -200,12 +207,9 @@ public class BasicSteps {
     }
 
     /**
-     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query string
+     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query
+     * string
      *
-     * @param limit
-     * @param cursor
-     * @param filter
-     *@param sort
      * @param sortDesc @return
      */
     protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc) {
@@ -269,19 +273,19 @@ public class BasicSteps {
     }
 
     // --- session access ---
-    
+
     public void setSessionResponse(Response response) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
-    
+
     public Response getSessionResponse() {
         return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
     }
-    
+
     public void setSessionResponseMap(Map<String, Response> responses) {
         Serenity.setSessionVariable(SESSION_RESPONSE_MAP).to(responses);
     }
-    
+
     public Map<String, Response> getSessionResponseMap() {
         return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
     }

@@ -7,11 +7,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-10-27T15:59:47.479+02:00")
-public class User  {
+public class User {
 
     public enum UserTypeEnum {
-        snapshot,  customer,  partner,  guest,
-    };
+        snapshot, customer, partner, guest,
+    }
+
+    ;
 
     private String userId = null;
     private String partnerId = null;
@@ -197,7 +199,7 @@ public class User  {
     }
 
     @Override
-    public String toString()  {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class User {\n");
 

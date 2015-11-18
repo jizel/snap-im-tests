@@ -93,7 +93,7 @@ public class CustomerStepdefs {
                                                                                                         @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                         @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                         @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                        @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+                                                                                                        @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         customerSteps.listOfCustomersIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
@@ -165,7 +165,7 @@ public class CustomerStepdefs {
                                                                                                                                  @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                                                  @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                                                 @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+                                                                                                                                 @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         customerSteps.listOfCustomerPropertiesIsGotWith(customerCode,
                 limit, cursor, filter, sort, sortDesc);
     }
@@ -264,7 +264,7 @@ public class CustomerStepdefs {
                                                                                                                   @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                                   @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                   @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+                                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         customerSteps.listOfCustomerPropertySetsIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
     }
 

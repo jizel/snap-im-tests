@@ -19,7 +19,6 @@ import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
-import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -41,15 +40,13 @@ public class CustomerSteps extends BasicSteps {
     public static final String SESSION_CUSTOMERS = "customers";
     private static final String SESSION_CREATED_CUSTOMER = "created_customer";
     private static final String SESSION_CUSTOMER_ID = "customer_id";
-    public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
-    private static final String SECOND_LEVEL_OBJECT_USERS = "users";
     private static final String SESSION_CREATED_CUSTOMER_PROPERTY = "created_customer_property";
-    private static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
+    public static final String BASE_PATH_CUSTOMERS = "/identity/customers";
 
     public CustomerSteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
-        spec.basePath("/identity/customers");
+        spec.basePath(BASE_PATH_CUSTOMERS);
     }
 
     @Step
@@ -93,7 +90,7 @@ public class CustomerSteps extends BasicSteps {
     public void compareCustomerOnHeaderWithStored(String headerName) {
         Customer originalCustomer = Serenity.sessionVariableCalled(SESSION_CREATED_CUSTOMER);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String customerLocation = response.header(headerName).replaceFirst("/identity/customers", "");
+        String customerLocation = response.header(headerName).replaceFirst(BASE_PATH_CUSTOMERS, "");
         given().spec(spec).get(customerLocation).then()
                 .body("salesforce_id", is(originalCustomer.getSalesforceId()))
                 .body("company_name", is(originalCustomer.getCompanyName()))
@@ -107,11 +104,11 @@ public class CustomerSteps extends BasicSteps {
     public void compareCustomerPropertyOnHeaderWithStored(String headerName) {
         CustomerProperty originalCustomerProperty = getSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String customerLocation = response.header(headerName).replaceFirst("/identity/customers", "");
+        String customerLocation = response.header(headerName).replaceFirst(BASE_PATH_CUSTOMERS, "");
         given().spec(spec).get(customerLocation).then()
                 .body("property_id", is(originalCustomerProperty.getPropertyId()))
                 .body("property_name", is(originalCustomerProperty.getPropertyName()))
-                //.body("type", is(originalCustomerProperty.getType()))
+                        //.body("type", is(originalCustomerProperty.getType()))
                 .body("valid_from", is(originalCustomerProperty.getValidFrom()))
                 .body("valid_to", is(originalCustomerProperty.getValidTo()));
 
@@ -134,8 +131,8 @@ public class CustomerSteps extends BasicSteps {
 
     private CustomerProperty getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         //TODO add type to query
-        String filter = String.format("property_id==%s;type==%s",propertyId, type);
-        CustomerProperty[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, "1", "0", filter, null, null).as(CustomerProperty[].class);
+        String filter = String.format("property_id==%s;type==%s", propertyId, type);
+        CustomerProperty[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(CustomerProperty[].class);
         return Arrays.asList(customerProperties).stream().findFirst().orElse(null);
     }
 
@@ -171,7 +168,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public Customer getCustomerByCodeInternal(String code) {
-        Customer[] customers = getEntities("1", "0", "code==" + code, null, null).as(Customer[].class);
+        Customer[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "code==" + code, null, null).as(Customer[].class);
         return Arrays.asList(customers).stream().findFirst().orElse(null);
     }
 
@@ -351,7 +348,7 @@ public class CustomerSteps extends BasicSteps {
             if (updateResponse.getStatusCode() != 204) {
                 fail("CustomerProperty cannot be modified");
             }
-        } else  {
+        } else {
             Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
             if (createResponse.getStatusCode() != 201) {
                 fail("CustomerProperty cannot be created");
@@ -403,7 +400,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     private CustomerUser getUserForCustomer(String customerId, String userName) {
-        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, "1", "0", "user_name==" + userName, null, null);
+        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
         return Arrays.asList(customerUserResponse.as(CustomerUser[].class)).stream().findFirst().orElse(null);
     }
 
@@ -469,14 +466,14 @@ public class CustomerSteps extends BasicSteps {
 
     public List<Customer> getCustomersForCodes(List<String> customerCodes) {
         String filter = "code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
-        Customer[] customers = getEntities("10000", "0", filter, null, null).as(Customer[].class);
+        Customer[] customers = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(Customer[].class);
         return Arrays.asList(customers);
     }
 
     public void removeAllUsersFromCustomers(List<String> codes) {
         codes.forEach(c -> {
             Customer customer = getCustomerByCodeInternal(c);
-            Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, "1000000", "0", null, null, null);
+            Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
             CustomerUser[] customerUsers = customerUsersResponse.as(CustomerUser[].class);
             for (CustomerUser cu : customerUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());

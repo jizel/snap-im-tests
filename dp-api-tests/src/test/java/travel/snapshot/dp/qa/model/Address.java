@@ -1,8 +1,10 @@
 package travel.snapshot.dp.qa.model;
 
 
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
 
@@ -15,7 +17,6 @@ public class Address {
     private String city = null;
     private String zipCode = null;
     private String country = null;
-
 
 
     /**

@@ -2,26 +2,27 @@ package travel.snapshot.dp.qa.serenity.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.restassured.response.ExtractableResponse;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.lang3.RandomStringUtils;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Configuration;
-import travel.snapshot.dp.qa.model.ConfigurationType;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
+
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Configuration;
+import travel.snapshot.dp.qa.model.ConfigurationType;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
@@ -104,7 +105,7 @@ public class ConfigurationSteps extends BasicSteps {
             switch (type) {
                 case "string":
                 case "date":
-                case "datetime":{
+                case "datetime": {
                     actualObj = mapper.readTree("\"" + value + "\"");
                     break;
                 }
@@ -209,11 +210,8 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     /**
-     * getting configuration types over rest api, if limit and cursor is null or empty, it's not added to query string
-     *
-     * @param limit
-     * @param cursor
-     * @return
+     * getting configuration types over rest api, if limit and cursor is null or empty, it's not
+     * added to query string
      */
     private Response getConfigurationTypes(String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
@@ -229,11 +227,8 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     /**
-     * getting configurations over rest api, if limit and cursor is null or empty, it's not added to query string
-     *
-     * @param limit
-     * @param cursor
-     * @return
+     * getting configurations over rest api, if limit and cursor is null or empty, it's not added to
+     * query string
      */
     private Response getConfigurations(String limit, String cursor, String identifier) {
         RequestSpecification requestSpecification = given().spec(spec)
@@ -340,11 +335,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     /**
-     * validates confoguration key, value, type in body
-     * if key is null, then key is not validated
-     * @param key
-     * @param value
-     * @param type
+     * validates confoguration key, value, type in body if key is null, then key is not validated
      */
     @Step
     public void bodyContainsConfiguration(String key, String value, String type) throws IOException {
@@ -390,7 +381,7 @@ public class ConfigurationSteps extends BasicSteps {
             }
             case "object": {
                 ObjectMapper mapper = new ObjectMapper();
-                JsonNode actualObj =  mapper.readTree(value);
+                JsonNode actualObj = mapper.readTree(value);
                 assertEquals(actualObj, valueJson);
                 break;
             }

@@ -1,10 +1,9 @@
 package travel.snapshot.dp.qa.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
-import io.swagger.annotations.*;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.helpers.StringUtil;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
@@ -69,7 +68,8 @@ public class Customer {
 
 
     /**
-     * Name of the legal entity. Combination of company name and e-mail must be unique within the system.
+     * Name of the legal entity. Combination of company name and e-mail must be unique within the
+     * system.
      **/
     @ApiModelProperty(required = true, value = "Name of the legal entity. Combination of company name and e-mail must be unique within the system.")
     @JsonProperty("company_name")
@@ -111,7 +111,8 @@ public class Customer {
 
 
     /**
-     * Official e-mail number of the customer. Combination of company name and e-mail must be unique within the system.
+     * Official e-mail number of the customer. Combination of company name and e-mail must be unique
+     * within the system.
      **/
     @ApiModelProperty(required = true, value = "Official e-mail number of the customer. Combination of company name and e-mail must be unique within the system.")
     @JsonProperty("email")

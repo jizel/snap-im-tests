@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -145,7 +144,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     public User getUserByUsername(String username) {
-        User[] users = getEntities("1", "0", "user_name==" + username, null, null).as(User[].class);
+        User[] users = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null).as(User[].class);
         return Arrays.asList(users).stream().findFirst().orElse(null);
     }
 
