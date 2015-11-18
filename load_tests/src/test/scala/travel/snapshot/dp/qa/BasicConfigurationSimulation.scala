@@ -24,11 +24,11 @@ class BasicConfigurationSimulation extends Simulation {
    "identifier": "config_""" +  ThreadLocalRandom.current.nextInt(10000000) + """",
    "description": "description"
  }        """)).asJSON
-    .check(status.is(201)))
+    .check(status.is(201)).check(header("ETag").exists))
 
     .pause(1) // Note that Gatling has recorder real time pauses
     .exec(http("get 50 configuration_types")
-      .get("/configuration")
+      .get(StringBody(session => "/configuration?limit="+(ThreadLocalRandom.current.nextInt(50)+20) + "&cursor=" + (ThreadLocalRandom.current.nextInt(10)+ThreadLocalRandom.current.nextInt(20))))
       .check(status.is(200)))
 
 
