@@ -12,6 +12,12 @@ import java.time.format.DateTimeFormatter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItem;
@@ -31,7 +37,7 @@ public class AnalyticsSteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
     }
     
-    //GET and POST Requests
+    //GET Requests
     
     @Step
     public void emptyRequest(String url) {
