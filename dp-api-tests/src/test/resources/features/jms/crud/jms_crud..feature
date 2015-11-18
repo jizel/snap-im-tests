@@ -1,12 +1,26 @@
 Feature: send messages
 
+  Scenario: Customer object is created and event is sent
+    Given Messaging server is accessible on url "localhost:61616"
+    When Customer is created with random address
+      | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    |
+      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel |
+    Then message was recieved from queue "customer_created_queue"
+    And message contains text "aksajdkfjaskfj"
+    And message has size 100
+
+
   Scenario: Asynchronous message Confirmation
+
+
     Given the test is connected to the JMS <server>
     And I create a simple Application to Receive the input of the topic <topic>
     And the receiver is configured to process the output.
     And a collection of Trades is loaded from the <trader> sheet
+
     When The Trades are sent
     And we wait until all trades have been processed
+
     Then the trade sent and the trade received should be equal
     And the trade received should be executed
 
