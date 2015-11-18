@@ -1,4 +1,3 @@
-@skipped
 Feature: property_sets_create_update_delete
 
   #TODO add etag things to get/update/create

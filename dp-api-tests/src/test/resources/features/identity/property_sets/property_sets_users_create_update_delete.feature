@@ -63,11 +63,11 @@ Feature: property_sets_users_create_update_delete
     Given Relation between user with username "filter_psu_default_5" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_6" and property set with name "ps1_name" for customer with code "c1t" exists
 
-    When List of users for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of users for property set with name "ps1_name" for customer with code "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned
-    And There are property users with following usernames returned in order: <expected_usernames>
+    And There are property set users with following usernames returned in order: <expected_usernames>
 
     Examples:
       | limit | cursor | returned | filter                           | sort      | sort_desc | expected_usernames                                                                                           |
