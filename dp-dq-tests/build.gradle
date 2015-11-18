@@ -1,0 +1,57 @@
+apply plugin: 'java'
+
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+buildscript {
+    ext {
+        slf4jVersion = "1.7.12"
+        etlToolVersion = "1.0-SNAPSHOT"
+    }
+
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        // dependency for runEtl task
+        classpath files(relativeProjectPath("build/classes/main"),
+                        relativeProjectPath("build/resources/main"))
+        classpath "travel.snapshot:etl_2.10:${etlToolVersion}"
+    }
+}
+
+dependencies {
+    compile("org.apache.commons:commons-lang3:3.4")
+
+    // ETL Tool - currently it must be installed in local maven repo - use 'sbt publish'
+    compile("travel.snapshot:etl_2.10:$etlToolVersion")
+
+
+    testCompile "junit:junit-dep:4.11"
+    testCompile "org.hamcrest:hamcrest-all:1.3"
+    // logging
+    testCompile("org.slf4j:slf4j-api:$slf4jVersion")
+    testCompile("org.slf4j:slf4j-log4j12:$slf4jVersion")
+    // database access
+    testCompile("org.springframework:spring-jdbc:4.2.2.RELEASE")
+    testRuntime("com.hynnet:sqljdbc4-chs:4.0.2206.100")
+    testRuntime("mysql:mysql-connector-java:5.1.37")
+
+}
+
+test {
+    // copy system properties to the testing environment running in forked JVM
+    systemProperties = System.properties
+}
+
+task runEtl(dependsOn: 'classes',
+            description: '''Runs ETL process.
+You should pass all required configuration parameters via system properties.
+Check EtlRunner documentation.''') << {
+    travel.snapshot.dp.qa.EtlRunner.runEtl()
+}
