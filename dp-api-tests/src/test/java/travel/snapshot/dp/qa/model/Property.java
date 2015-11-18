@@ -16,11 +16,8 @@ public class Property  {
   private String propertyCode = null;
   private String website = null;
   private String email = null;
-  private String vatId = null;
   private Boolean isDemoProperty = null;
-  private String sourceProperty = null;
   private Address address = null;
-  private Address billingAddress = null;
   private String timezone = null;
 
   
@@ -102,19 +99,7 @@ public class Property  {
   }
 
   
-  /**
-   * VAT number (European hotels only)
-   **/
-  @ApiModelProperty(value = "VAT number (European hotels only)")
-  @JsonProperty("vat_id")
-  public String getVatId() {
-    return vatId;
-  }
-  public void setVatId(String vatId) {
-    this.vatId = vatId;
-  }
 
-  
   /**
    * Indicates whether the property is just for demo purposes.
    **/
@@ -127,20 +112,7 @@ public class Property  {
     this.isDemoProperty = isDemoProperty;
   }
 
-  
-  /**
-   * ID of the source property if the property is for demo purposes only.
-   **/
-  @ApiModelProperty(value = "ID of the source property if the property is for demo purposes only.")
-  @JsonProperty("source_property")
-  public String getSourceProperty() {
-    return sourceProperty;
-  }
-  public void setSourceProperty(String sourceProperty) {
-    this.sourceProperty = sourceProperty;
-  }
 
-  
   /**
    * Hotel address
    **/
@@ -153,20 +125,7 @@ public class Property  {
     this.address = address;
   }
 
-  
-  /**
-   * The billing address of the hotel (in case if it's different than the hotel address)
-   **/
-  @ApiModelProperty(value = "The billing address of the hotel (in case if it's different than the hotel address)")
-  @JsonProperty("billing_address")
-  public Address getBillingAddress() {
-    return billingAddress;
-  }
-  public void setBillingAddress(Address billingAddress) {
-    this.billingAddress = billingAddress;
-  }
 
-  
   /**
    * Timezone in the structure containing the name of the city and additional data for the zone itself
    **/
@@ -192,11 +151,8 @@ public class Property  {
     sb.append("  propertyCode: ").append(propertyCode).append("\n");
     sb.append("  website: ").append(website).append("\n");
     sb.append("  email: ").append(email).append("\n");
-    sb.append("  vatId: ").append(vatId).append("\n");
     sb.append("  isDemoProperty: ").append(isDemoProperty).append("\n");
-    sb.append("  sourceProperty: ").append(sourceProperty).append("\n");
     sb.append("  address: ").append(address).append("\n");
-    sb.append("  billingAddress: ").append(billingAddress).append("\n");
     sb.append("  timezone: ").append(timezone).append("\n");
     sb.append("}\n");
     return sb.toString();

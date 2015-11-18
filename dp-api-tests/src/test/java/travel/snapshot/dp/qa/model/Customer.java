@@ -22,7 +22,6 @@ public class Customer {
     private String website = null;
     private String vatId = null;
     private Boolean isDemoCustomer = null;
-    private String sourceCustomer = null;
     private Address address = null;
     private String notes = null;
 
@@ -166,21 +165,6 @@ public class Customer {
         this.isDemoCustomer = isDemoCustomer;
     }
 
-
-    /**
-     * Source customer object in case that the customer is for the demo purposes only.
-     **/
-    @ApiModelProperty(value = "Source customer object in case that the customer is for the demo purposes only.")
-    @JsonProperty("source_customer")
-    public String getSourceCustomer() {
-        return sourceCustomer;
-    }
-
-    public void setSourceCustomer(String sourceCustomer) {
-        this.sourceCustomer = sourceCustomer;
-    }
-
-
     /**
      * Billing address
      **/
@@ -224,7 +208,6 @@ public class Customer {
         sb.append("  website: ").append(website).append("\n");
         sb.append("  vatId: ").append(vatId).append("\n");
         sb.append("  isDemoCustomer: ").append(isDemoCustomer).append("\n");
-        sb.append("  sourceCustomer: ").append(sourceCustomer).append("\n");
         sb.append("  address: ").append(address).append("\n");
         sb.append("  notes: ").append(notes).append("\n");
         sb.append("}\n");

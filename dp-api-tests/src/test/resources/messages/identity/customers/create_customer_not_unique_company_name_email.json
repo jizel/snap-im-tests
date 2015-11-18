@@ -1,8 +1,8 @@
 {
-  "company_name": "Given company",
+  "company_name": "Given company 1",
   "code": "ecn1",
   "phone": "+42012345679",
-  "email": "s1@tenants.biz",
+  "email": "c1@tenants.biz",
   "website" : "http://www.snapshot.travel",
   "is_demo_customer": true,
 

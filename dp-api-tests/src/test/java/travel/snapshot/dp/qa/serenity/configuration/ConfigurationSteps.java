@@ -315,13 +315,6 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void numberOfConfigurationTypesIsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        ConfigurationType[] configurationTypes = response.as(ConfigurationType[].class);
-        assertEquals("There should be " + count + " configurationTypes got", count, configurationTypes.length);
-    }
-
-    @Step
     public void configurationTypeDoesntExist(String identifier) {
         Response response = getConfigurationType(identifier);
         response.then().statusCode(404);
@@ -450,13 +443,6 @@ public class ConfigurationSteps extends BasicSteps {
     public void valueInResponseIs(String value, String type) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(is(value));
-    }
-
-    @Step
-    public void numberOfConfigurationsIsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        Configuration[] configurations = response.as(Configuration[].class);
-        assertEquals("There should be " + count + " configurations got", count, configurations.length);
     }
 
     @Step

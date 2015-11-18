@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -90,7 +91,7 @@ public class PropertiesStepdefs {
     
     @Then("^There are (\\d+) properties returned$")
     public void There_are_properties_returned(int count) throws Throwable {
-        propertySteps.numberOfPropertiesIsInResponse(count);
+        propertySteps.numberOfEntitiesInResponse(Property.class, count);
     }
     
     // --- and ---
@@ -99,12 +100,8 @@ public class PropertiesStepdefs {
     public void Property_with_same_id_doesn_t_exist() throws Throwable {
         propertySteps.propertyIdInSessionDoesntExist();
     }
-    
-    
-    
-    
-    
-    
+
+
     // TODO reuse existing code
 
 //

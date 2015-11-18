@@ -12,14 +12,14 @@ Feature: users_create_update_delete
       | userType | userName | firstName | lastName | email               | timezone  | culture |
       | customer | snp      | Snap      | Shot     | snp@snapshot.travel | UTC+01:00 | cz      |
     Then Response code is "201"
-    And Body contains user type with "user_type" value "customer"
-    And Body contains user type with "user_name" value "snp"
-    And Body contains user type with "first_name" value "Snap"
-    And Body contains user type with "last_name" value "Shot"
-    And Body contains user type with "email" value "snp@snapshot.travel"
-    And Body contains user type with "timezone" value "UTC+01:00"
-    And Body contains user type with "culture" value "cz"
-    And Location header is set and contains the same user
+    And Body contains entity with attribute "user_type" value "customer"
+    And Body contains entity with attribute "user_name" value "snp"
+    And Body contains entity with attribute "first_name" value "Snap"
+    And Body contains entity with attribute "last_name" value "Shot"
+    And Body contains entity with attribute "email" value "snp@snapshot.travel"
+    And Body contains entity with attribute "timezone" value "UTC+01:00"
+    And Body contains entity with attribute "culture" value "cz"
+    And "Location" header is set and contains the same user
 
   Scenario: Deleting user
 

@@ -47,4 +47,19 @@ public class BasicStepDefs {
     public void File_is_used_for_to_on(String filename, String method, String url, String module) throws Throwable {
         basicSteps.useFileForSendDataTo(filename, method, url, module);
     }
+
+    @Then("^Body contains entity with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
+    public void Body_contains_entity_with_attribute_value(String atributeName, String value) throws Throwable {
+        basicSteps.bodyContainsEntityWith(atributeName, value);
+    }
+
+    @Then("^Body contains entity with attribute \"([^\"]*)\"$")
+    public void Body_contains_entity_with_attribute(String atributeName) throws Throwable {
+        basicSteps.bodyContainsEntityWith(atributeName);
+    }
+
+    @Then("^Body doesn't contain entity with attribute \"([^\"]*)\"$")
+    public void Body_doesnt_contains_entity_with_attribute(String atributeName) throws Throwable {
+        basicSteps.bodyDoesntContainEntityWith(atributeName);
+    }
 }

@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.serenity.users;
 
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
 
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Role;
+import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -26,8 +25,9 @@ import static org.junit.Assert.fail;
 public class UsersSteps extends BasicSteps {
 
     private static final String SESSION_USER_ID = "user_id";
+    private static final String SESSION_CREATED_USER = "created_user";
 
-    private static final String USERS_PATH= "/identity/users";
+    private static final String USERS_PATH = "/identity/users";
 
     public UsersSteps() {
         super();
@@ -52,6 +52,7 @@ public class UsersSteps extends BasicSteps {
     @Step
     public void followingUserIsCreated(User user) {
         User existingUser = getUserByUsername(user.getUserName());
+        Serenity.setSessionVariable(SESSION_CREATED_USER).to(user);
         if (existingUser != null) {
             deleteEntity(existingUser.getUserId());
         }
@@ -69,9 +70,19 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void responseContainsLocationHeader() {
+    public void compareUserOnHeaderWithStored(String headerName) {
+        User originalUser = getSessionVariable(SESSION_CREATED_USER);
         Response response = getSessionResponse();
-        response.then().header("Location", USERS_PATH + "/" + Serenity.sessionVariableCalled(SESSION_USER_ID));
+        String customerLocation = response.header(headerName).replaceFirst(USERS_PATH, "");
+        given().spec(spec).get(customerLocation).then()
+                .body("user_name", is(originalUser.getUserName()))
+                .body("first_name", is(originalUser.getFirstName()))
+                .body("last_name", is(originalUser.getLastName()))
+                .body("email", is(originalUser.getEmail()))
+                .body("phone", is(originalUser.getPhone()))
+                .body("culture", is(originalUser.getCulture()))
+                .body("timezone", is(originalUser.getTimezone()));
+
     }
 
     @Step
@@ -133,8 +144,61 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    private User getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         User[] users = getEntities("1", "0", "user_name==" + username, null, null).as(User[].class);
         return Arrays.asList(users).stream().findFirst().orElse(null);
+    }
+
+
+    @Step
+    public void userWithUsernameIsGot(String username) {
+        User user = getUserByUsername(username);
+        Response response = getEntity(user.getUserId(), null);
+        setSessionResponse(response);
+    }
+
+    public void userWithUsernameIsGotWithEtag(String username) {
+        User user = getUserByUsername(username);
+        Response tempResponse = getEntity(user.getUserId(), null);
+        Response response = getEntity(user.getUserId(), tempResponse.getHeader("ETag"));
+        setSessionResponse(response);
+    }
+
+    public void userWithUsernameIsGotWithEtagAfterUpdate(String username) {
+        User user = getUserByUsername(username);
+        Response tempResponse = getEntity(user.getUserId(), null);
+
+        Map<String, Object> mapForUpdate = new HashMap<>();
+        mapForUpdate.put("culture", "sk");
+
+        Response updateResponse = updateEntity(user.getUserId(), mapForUpdate, tempResponse.getHeader("ETag"));
+
+        if (updateResponse.getStatusCode() != 204) {
+            fail("User cannot be updated: " + updateResponse.asString());
+        }
+
+        Response response = getEntity(user.getUserId(), tempResponse.getHeader("ETag"));
+        setSessionResponse(response);
+    }
+
+    public void userWithIdIsGot(String userId) {
+        Response response = getEntity(userId, null);
+        setSessionResponse(response);
+    }
+
+    public void listOfUsersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    public void usernamesAreInResponseInOrder(List<String> usernames) {
+        Response response = getSessionResponse();
+        User[] users = response.as(User[].class);
+        int i = 0;
+        for (User u : users) {
+            assertEquals("User on index=" + i + " is not expected", usernames.get(i), u.getUserName());
+            i++;
+        }
+
     }
 }

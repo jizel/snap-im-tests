@@ -1,6 +1,8 @@
 package travel.snapshot.dp.qa.serenity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.filter.log.LogDetail;
@@ -15,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 
 import java.beans.IntrospectionException;
@@ -22,14 +25,19 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 
 import static com.jayway.restassured.RestAssured.given;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -89,9 +97,18 @@ public class BasicSteps {
     }
 
     @Step
-    public void bodyContainsEntityWithAtribute(String attributeName, String attributeValue) {
+    public void bodyContainsEntityWith(String attributeName, String attributeValue) {
         Response response = getSessionResponse();
         response.then().body(attributeName, is(attributeValue));
+    }
+
+    public void bodyContainsEntityWith(String attributeName) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, notNullValue());
+    }
+    public void bodyDoesntContainEntityWith(String attributeName) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, nullValue());
     }
 
     public void isCalledWithoutTokenUsingMethod(String service, String method) {
@@ -141,12 +158,12 @@ public class BasicSteps {
         return given().spec(spec).body(entity).when().post();
     }
 
-    protected Response updateEntity(String id, Map<String, Object> role, String etag) {
+    protected Response updateEntity(String id, Map<String, Object> object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
             requestSpecification = requestSpecification.header("If-Match", etag);
         }
-        return requestSpecification.body(role).when().post("/{id}", id);
+        return requestSpecification.body(object).when().post("/{id}", id);
     }
 
     protected Response deleteEntity(String id) {
@@ -172,6 +189,14 @@ public class BasicSteps {
     protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
         return given().spec(spec)
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header("If-Match", etag);
+        }
+        return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     /**
@@ -267,5 +292,12 @@ public class BasicSteps {
 
     public <T> T getSessionVariable(String key) {
         return Serenity.<T>sessionVariableCalled(key);
+    }
+
+    public <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Throwable {
+        Response response = getSessionResponse();
+        ObjectMapper mapper = new ObjectMapper();
+        List<T> objects = mapper.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        assertEquals("There should be " + count + " entities got", count, objects.size());
     }
 }
