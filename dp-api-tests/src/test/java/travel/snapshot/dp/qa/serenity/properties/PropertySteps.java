@@ -14,6 +14,8 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
@@ -23,6 +25,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -377,6 +380,22 @@ public class PropertySteps extends BasicSteps {
         Property p = getPropertyByCodeInternal(propertyCode);
         PropertyUser userForProperty = getUserForProperty(p.getPropertyId(), u.getUserName());
         assertNull("User should not be present in property", userForProperty);
+    }
+
+    public void usernamesAreInResponseInOrder(List<String> usernames) {
+        Response response = getSessionResponse();
+        PropertyUser[] propertiesUsers = response.as(PropertyUser[].class);
+        int i = 0;
+        for (PropertyUser pu : propertiesUsers) {
+            assertEquals("Propertyuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
+            i++;
+        }
+    }
+
+    public void listOfUsersIsGotWith(String propertyCode, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Property p = getPropertyByCodeInternal(propertyCode);
+        Response response = getSecondLevelEntities(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
     }
 
 

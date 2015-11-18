@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -271,5 +273,20 @@ public class CustomerStepdefs {
     @Given("^All users are removed for customers with codes: (.*)$")
     public void All_users_are_removed_for_customers_with_codes_default(List<String> codes) throws Throwable {
         customerSteps.removeAllUsersFromCustomers(codes);
+    }
+
+    @When("^List of users for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_users_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String customerCode,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        customerSteps.listOfUsersIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @Then("^There are customer users with following usernames returned in order: (.*)$")
+    public void There_are_customer_users_with_following_usernames_returned_in_order_expected_usernames(List<String> usernames) throws Throwable {
+        customerSteps.usernamesAreInResponseInOrder(usernames);
     }
 }

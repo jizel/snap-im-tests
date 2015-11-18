@@ -483,4 +483,20 @@ public class CustomerSteps extends BasicSteps {
             }
         });
     }
+
+    public void listOfUsersIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+        Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    public void usernamesAreInResponseInOrder(List<String> usernames) {
+        Response response = getSessionResponse();
+        CustomerUser[] customerUsers = response.as(CustomerUser[].class);
+        int i = 0;
+        for (CustomerUser cu : customerUsers) {
+            assertEquals("Customeruser on index=" + i + " is not expected", usernames.get(i), cu.getUserName());
+            i++;
+        }
+    }
 }

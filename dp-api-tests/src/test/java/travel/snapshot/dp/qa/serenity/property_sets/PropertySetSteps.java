@@ -6,14 +6,21 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.PropertySet;
+import travel.snapshot.dp.qa.model.PropertyUser;
+import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
+import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -185,5 +192,69 @@ public class PropertySetSteps extends BasicSteps {
     public void deletePropertySetWithId(String propertySetId) {
         Response response = deleteEntity(propertySetId);
         setSessionResponse(response);
+    }
+
+    public void removeAllUsersForPropertySetsForCustomer(List<String> names, String customerCode) {
+        names.forEach(n -> {
+            PropertySet propertySet = getPropertySetByNameForCustomer(n, customerCode);
+            Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+            PropertyUser[] propertyUsers = propertyUsersResponse.as(PropertyUser[].class);
+            for (PropertyUser pu : propertyUsers) {
+                Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
+                if (deleteResponse.statusCode() != 204) {
+                    fail("Property set user cannot be deleted: " + deleteResponse.asString());
+                }
+            }
+        });
+    }
+
+    public void relationExistsBetweenUserAndPropertySetForCustomer(User u, String propertySetName, Customer c) {
+        PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+
+        PropertyUser existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
+        if (existingPropertySetUser != null) {
+
+            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
+            if (deleteResponse.getStatusCode() != 204) {
+                fail("PropertySetUser cannot be deleted");
+            }
+        }
+        Response createResponse = addUserToPropertySet(u.getUserId(), propertySet.getPropertySetId());
+        if (createResponse.getStatusCode() != 201) {
+            fail("PropertySetUser cannot be created");
+        }
+    }
+
+    private Response addUserToPropertySet(String userId, String propertySetId) {
+        Map<String, Object> propertySetUser = new HashMap<>();
+        propertySetUser.put("user_id", userId);
+        return given().spec(spec)
+                .body(propertySetUser)
+                .when().post("/{propertySetId}/users", propertySetId);
+    }
+
+    private PropertyUser getUserForPropertySet(String propertySetId, String userName) {
+        Response propertySetUserResponse = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
+        return Arrays.asList(propertySetUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
+    }
+
+    public void userIsAddedToPropertySetForCustomer(User u, String propertySetName, Customer c) {
+        PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+
+        Response response = addUserToPropertySet(u.getUserId(), propertySet.getPropertySetId());
+        setSessionResponse(response);
+    }
+
+    public void userIsRemovedFromPropertySetForCustomer(User u, String propertySetName, Customer c) {
+        PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+
+        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
+        setSessionResponse(deleteResponse);
+    }
+
+    public void userDoesntExistForPropertySetForCustomer(User u, String propertySetName, Customer c) {
+        PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+        PropertyUser existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
+        assertNull("User should not be present in propertyset", existingPropertySetUser);
     }
 }

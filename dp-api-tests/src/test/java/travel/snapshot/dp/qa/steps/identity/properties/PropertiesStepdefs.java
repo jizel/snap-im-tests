@@ -6,10 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -106,6 +109,16 @@ public class PropertiesStepdefs {
         propertySteps.userIsDeletedFromProperty(user, propertyCode);
     }
 
+    @When("^List of users for property with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_users_for_property_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyCode,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        propertySteps.listOfUsersIsGotWith(propertyCode, limit, cursor, filter, sort, sortDesc);
+    }
+
     // --- then ---
 
     @Then("^Body contains property with attribute \"([^\"]*)\"$")
@@ -139,6 +152,11 @@ public class PropertiesStepdefs {
     public void User_with_username_isn_t_there_for_property_with_code(String username, String propertyCode) throws Throwable {
         User u = usersSteps.getUserByUsername(username);
         propertySteps.userDoesntExistForProperty(u, propertyCode);
+    }
+
+    @Then("^There are property users with following usernames returned in order: (.*)$")
+    public void There_are_property_users_with_following_usernames_returned_in_order_expected_usernames(List<String> usernames) throws Throwable {
+        propertySteps.usernamesAreInResponseInOrder(usernames);
     }
 
     // TODO reuse existing code
