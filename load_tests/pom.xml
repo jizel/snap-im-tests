@@ -11,6 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gatling.version>2.1.7</gatling.version>
         <gatling-plugin.version>2.1.7</gatling-plugin.version>
+        <!--override via "-Dgatling.debugPort" on command line if you need to use different port -->
+        <gatling.debugPort>8000</gatling.debugPort>
         <scala-maven-plugin.version>3.2.2</scala-maven-plugin.version>
     </properties>
 
@@ -38,6 +40,9 @@
                         <jvmArg>-DstartUsers=${startUsers}</jvmArg>
                         <jvmArg>-DendUsers=${endUsers}</jvmArg>
                         <jvmArg>-Dramp=${ramp}</jvmArg>
+                        <!--this argument enables us to debug gatling - you can use "suspend=y" if you want some time
+                            for attaching the remote debugger -->
+                        <jvmArg>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${gatling.debugPort}</jvmArg>
                     </jvmArgs>
                 </configuration>
                 <version>${gatling-plugin.version}</version>
