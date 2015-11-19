@@ -254,6 +254,18 @@ public class CustomerStepdefs {
         customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(p, customerCode, type, fieldName, value);
     }
 
+    @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\" with etag$")
+    public void Property_with_code_from_customer_with_code_is_got_with_type_with_etag(String propertyCode, String customerCode, String type) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.propertyIsgotForCustomerWithTypeWithEtag(p, customerCode, type);
+    }
+
+    @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\" for etag, updated and got with previous etag$")
+    public void Property_with_code_from_customer_with_code_is_got_with_type_for_etag_updated_and_got_with_previous_etag(String propertyCode, String customerCode, String type) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(p, customerCode, type);
+    }
+
     @Then("^There are (\\d+) customer property sets returned$")
     public void There_are_returned_customer_property_sets_returned(int count) throws Throwable {
         customerSteps.numberOfEntitiesInResponse(PropertySetArray.class, count);

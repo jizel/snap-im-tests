@@ -44,7 +44,7 @@ Feature: property_sets_create_update_delete
 
 
   Scenario Outline: Updating property set
-    Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
+  Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
 
     When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data
       | propertySetName           | propertySetDescription   | propertySetType   |
@@ -57,8 +57,8 @@ Feature: property_sets_create_update_delete
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
 
     Examples:
-      | updated_propertySetName   | propertySetName | propertySetDescription | propertySetType |
-      | <updated_propertySetName> | ps1_name        | ps1_description        | branch          |
+      | propertySetName | updated_propertySetName | propertySetDescription | propertySetType |
+      | ps1_name        | ps1_updated             | ps1_description        | branch          |
 
   Scenario: Updating property set with outdated etag
     When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data if updated before

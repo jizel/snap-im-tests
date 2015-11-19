@@ -4,7 +4,9 @@ import net.thucydides.core.annotations.Steps;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -199,5 +201,10 @@ public class PropertySetsStepdefs {
     @Then("^There are property set users with following usernames returned in order: (.*)$")
     public void There_are_property_set_users_with_following_usernames_returned_in_order_expected_usernames(List<String> usernames) throws Throwable {
         steps.usernamesAreInResponseInOrder(usernames);
+    }
+
+    @Then("^\"([^\"]*)\" header is set and contains the same property set$")
+    public void header_is_set_and_contains_the_same_property_set(String header) throws Throwable {
+        steps.comparePropertySetOnHeaderWithStored(header);
     }
 }

@@ -131,7 +131,7 @@ public class PropertySteps extends BasicSteps {
         // force new ETag on server side
         Response updateResponse = updateProperty(
                 propertyFromList.getPropertyId(),
-                Collections.singletonMap("vat_id", "CZ99999999"),
+                Collections.singletonMap("website", "http://changed.it"),
                 responseWithETag.getHeader("ETag"));
         if (updateResponse.getStatusCode() != 204) {
             fail("Property cannot be updated: " + updateResponse.asString());

@@ -413,6 +413,31 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
+    public void propertyIsgotForCustomerWithTypeWithEtag(Property p, String customerCode, String type) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerProperty tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
+
+        Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
+
+        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), tempResponse.getHeader("ETag"));
+        setSessionResponse(response);
+    }
+
+    public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(Property p, String customerCode, String type) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerProperty tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
+
+        Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
+
+        Map<String, Object> mapForUpdate = new HashMap<>();
+        mapForUpdate.put("valid_to", "2200-01-01");
+
+        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), mapForUpdate, tempResponse.getHeader("ETag"));
+
+        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
+        setSessionResponse(response);
+    }
+
     @Step
     public void getCustomerPropertyWithId(String customerCode, String relationshipId) {
         Customer c = getCustomerByCodeInternal(customerCode);

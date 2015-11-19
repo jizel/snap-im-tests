@@ -21,6 +21,7 @@ import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -169,6 +170,7 @@ public class PropertySetSteps extends BasicSteps {
         }
 
         propertySet.setCustomerId(c.getCustomerId());
+        Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET).to(propertySet);
         Response createResponse = createEntity(propertySet);
         setSessionResponse(createResponse);
     }
@@ -354,5 +356,18 @@ public class PropertySetSteps extends BasicSteps {
 
         Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
         setSessionResponse(deleteResponse);
+    }
+
+    @Step
+    public void comparePropertySetOnHeaderWithStored(String headerName) {
+        PropertySet originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY_SET);
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        String propertyLocation = response.header(headerName);
+        given().spec(spec).get(propertyLocation).then()
+                .body("property_set_type", is(originalProperty.getPropertySetType()))
+                .body("property_set_description", is(originalProperty.getPropertySetDescription()))
+                .body("property_set_name", is(originalProperty.getPropertySetName()))
+                .body("customer_id", is(originalProperty.getCustomerId()));
+
     }
 }

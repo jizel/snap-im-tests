@@ -40,7 +40,7 @@ Feature: customers_properties_get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "property_name" value "p1_name"
-    And Body contains entity with attribute "valid_From" value "2015-01-01"
+    And Body contains entity with attribute "valid_from" value "2015-01-01"
     And Body contains entity with attribute "valid_to" value "2016-12-31"
     And Body contains entity with attribute "type" value "anchor"
 
