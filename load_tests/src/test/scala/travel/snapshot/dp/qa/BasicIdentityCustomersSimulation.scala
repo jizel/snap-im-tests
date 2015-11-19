@@ -11,8 +11,8 @@ class BasicIdentityCustomersSimulation extends AbstractSimulation("IdentityModul
   // upper bound for generating random numbers in data
   private val randomBound = 10000000
 
-  val scn = scenario("Create and get customers") // A scenario is a chain of requests and pauses
-      .exec(http("add customer") // Here's an example of a POST request
+  val scn = scenario("Create and get customers")
+      .exec(http("add customer")
       .post("/customers").body(StringBody(session =>
         s"""
           {

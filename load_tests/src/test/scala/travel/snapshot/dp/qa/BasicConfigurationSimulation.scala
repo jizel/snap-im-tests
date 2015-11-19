@@ -9,8 +9,8 @@ import io.gatling.http.request.StringBody
   */
 class BasicConfigurationSimulation extends AbstractSimulation("ConfigurationModule-1.0") {
 
-  val scn = scenario("Create and get configuration types") // A scenario is a chain of requests and pauses
-      .exec(http("add configuration_type") // Here's an example of a POST request
+  val scn = scenario("Create and get configuration types")
+      .exec(http("add configuration_type")
       .post("/configuration").body(newConfigurationTypeJson).asJSON
     .check(status.is(201)).check(header("ETag").exists))
 
