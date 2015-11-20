@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Check http://logback.qos.ch/manual/configuration.html -->
 <configuration>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
@@ -12,13 +13,14 @@
         </encoder>
     </appender>
 
-    <!-- Uncomment for logging ALL HTTP request and responses -->
-    <!-- 	<logger name="io.gatling.http" level="TRACE" /> -->
-    <!-- Uncomment for logging ONLY FAILED HTTP request and responses -->
-    <!--<logger name="io.gatling.http" level="DEBUG"/>-->
-
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
     </root>
+
+    <!--You can override this property on command line e.g. "-Dgatling_log_level=DEBUG" -->
+    <property name="gatling_log_level" value="WARN" />
+    <logger name="io.gatling">
+        <level>${gatling_log_level}</level>
+    </logger>
 
 </configuration>

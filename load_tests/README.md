@@ -8,7 +8,7 @@ Load tests exercising Data Platform REST API.
  Common configuration is encapsulated in 
  [AbstractSimulation](src/test/scala/travel/snapshot/dp/qa/AbstractSimulation.scala) class.
   
-  ### Configuration properties
+### Configuration properties
   Each configuration property can be overriden via System property.
   
   * -Dprotocol=<protocol to be used for communication with testing server> , default is "http" 
@@ -17,6 +17,7 @@ Load tests exercising Data Platform REST API.
   * -DstartUsers=<initial number of users used> , default is 10
   * -DendUsers=<final number of users used for load> , default is 30
   * -Dramp=<time in second how long to run test and increase number of  user from start to end number> , default is 60
+  * -Dgatling_log_level=<ERROR|WARN|INFO|DEBUG>
   
 
 ## Endpoints

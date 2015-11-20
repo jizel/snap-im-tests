@@ -43,6 +43,7 @@
                         <!--this argument enables us to debug gatling - you can use "suspend=y" if you want some time
                             for attaching the remote debugger -->
                         <jvmArg>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${gatling.debugPort}</jvmArg>
+                        <jvmArg>-Dgatling_log_level=${gatling_log_level}</jvmArg>
                     </jvmArgs>
                 </configuration>
                 <version>${gatling-plugin.version}</version>
