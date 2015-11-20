@@ -198,15 +198,15 @@ public class PropertySetSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void removeAllUsersForPropertySetsForCustomer(List<String> names, String customerCode) {
+    public void removeAllUsersForPropertySetsForCustomer(List<String> names, Customer c) {
         names.forEach(n -> {
-            PropertySet propertySet = getPropertySetByNameForCustomer(n, customerCode);
+            PropertySet propertySet = getPropertySetByNameForCustomer(n, c.getCustomerId());
             Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
             PropertyUser[] propertyUsers = propertyUsersResponse.as(PropertyUser[].class);
             for (PropertyUser pu : propertyUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
                 if (deleteResponse.statusCode() != 204) {
-                    fail("Property set user cannot be deleted: " + deleteResponse.asString());
+                    fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
                 }
             }
         });
@@ -224,7 +224,7 @@ public class PropertySetSteps extends BasicSteps {
             }
         }
         Response createResponse = addUserToPropertySet(u.getUserId(), propertySet.getPropertySetId());
-        if (createResponse.getStatusCode() != 201) {
+        if (createResponse.getStatusCode() != 204) {
             fail("PropertySetUser cannot be created");
         }
     }
@@ -297,12 +297,14 @@ public class PropertySetSteps extends BasicSteps {
     public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, String customerCode) {
         propertySetNames.forEach(psn -> {
             PropertySet propertySet = getPropertySetByNameForCustomer(psn, customerCode);
-            Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
-            PropertyPropertySet[] propertyPropertySets = propertyPropertySetResponse.as(PropertyPropertySet[].class);
-            for (PropertyPropertySet pps : propertyPropertySets) {
-                Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
-                if (deleteResponse.statusCode() != 204) {
-                    fail("Property set property cannot be deleted: " + deleteResponse.asString());
+            if (propertySet != null) {
+                Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                PropertyPropertySet[] propertyPropertySets = propertyPropertySetResponse.as(PropertyPropertySet[].class);
+                for (PropertyPropertySet pps : propertyPropertySets) {
+                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
+                    if (deleteResponse.statusCode() != 204) {
+                        fail("Property set property cannot be deleted: " + deleteResponse.asString());
+                    }
                 }
             }
         });
@@ -362,7 +364,7 @@ public class PropertySetSteps extends BasicSteps {
     public void comparePropertySetOnHeaderWithStored(String headerName) {
         PropertySet originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY_SET);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String propertyLocation = response.header(headerName);
+        String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");;
         given().spec(spec).get(propertyLocation).then()
                 .body("property_set_type", is(originalProperty.getPropertySetType()))
                 .body("property_set_description", is(originalProperty.getPropertySetDescription()))

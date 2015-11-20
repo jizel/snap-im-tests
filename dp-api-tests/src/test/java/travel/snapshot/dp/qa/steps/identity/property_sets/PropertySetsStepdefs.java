@@ -51,7 +51,8 @@ public class PropertySetsStepdefs {
 
     @Given("^All users are removed for property_sets for customer with code \"([^\"]*)\" with names: (.*)$")
     public void All_users_are_removed_for_property_sets(String customerCode, List<String> names) throws Throwable {
-        steps.removeAllUsersForPropertySetsForCustomer(names, customerCode);
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.removeAllUsersForPropertySetsForCustomer(names, c);
     }
 
     @Given("^Relation between user with username \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" exists$")

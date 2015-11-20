@@ -167,11 +167,11 @@ Feature: Users_get
       | userType | userName         | firstName      | lastName    | email                        | phone        | timezone  | culture |
       | customer | filter_default_1 | FilterDefault1 | FilterUser1 | filter_user1@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
       | customer | filter_default_2 | FilterDefault2 | FilterUser2 | filter_user2@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | guest    | filter_default_3 | FilterDefault3 | FilterUser3 | filter_user3@snapshot.travel | +42010111213 | UTC+02:00 | cz      |
+      | guest    | filter_default_3 | FilterDefault3 | FilterUser3 | filter_user3@snapshot.travel | +42010111213 | UTC+04:00 | cz      |
       | customer | filter_default_4 | FilterDefault4 | FilterUser4 | filter_user4@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
       | partner  | filter_default_5 | FilterDefault5 | FilterUser5 | filter_user5@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
       | customer | filter_default_6 | FilterDefault6 | FilterUser6 | filter_user6@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | customer | other_default_7  | FilterDefault7 | FilterUser7 | filter_user7@snapshot.travel | +42010111217 | UTC+01:00 | cz      |
+      | customer | other_default_7  | FilterDefault7 | FilterUser7 | filter_user7@snapshot.travel | +42010111218 | UTC+01:00 | cz      |
       | customer | other_default_8  | FilterDefault8 | FilterUser8 | filter_user8@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
       | snapshot | other_default_9  | FilterDefault9 | FilterUser9 | filter_user9@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
 
@@ -191,6 +191,6 @@ Feature: Users_get
       | /null | /null  | 2        | user_name==other_default_* and culture==sk | user_name | /null     | other_default_8, other_default_9                                                         |
       | /null | /null  | 1        | user_type==snapshot                        | /null     | /null     | other_default_9                                                                          |
       | /null | /null  | 1        | email==filter_user4@snapshot.travel        | /null     | /null     | filter_default_4                                                                         |
-      | /null | /null  | 1        | timezone==UTC+02:00                        | /null     | /null     | filter_default_3                                                                         |
-      | /null | /null  | 1        | phone==+42010111217                        | /null     | /null     | other_default_7                                                                          |
+      | /null | /null  | 1        | timezone==UTC+04:00                        | /null     | /null     | filter_default_3                                                                         |
+      | /null | /null  | 1        | phone==+42010111218                        | /null     | /null     | other_default_7                                                                          |
   #add all fields

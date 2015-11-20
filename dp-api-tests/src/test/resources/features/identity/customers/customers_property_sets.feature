@@ -112,8 +112,8 @@ Feature: customers_property_sets
       | 10    | text   | /null          | /null           | /null           | 400           | 63          |
       #filtering and sorting
       | 10    | 0      | /null          | property_set_id | property_set_id | 400           | 64          |
-      | 10    | 0      | /null          | wrong           | /null           | 400           | 64          |
-      | 10    | 0      | /null          | /null           | wrong           | 400           | 64          |
+      | 10    | 0      | /null          | wrong           | /null           | 400           | 63          |
+      | 10    | 0      | /null          | /null           | wrong           | 400           | 63          |
       | 10    | 0      | customer_id==  | /null           | /null           | 400           | 63          |
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 63          |
 

@@ -22,8 +22,7 @@ Feature: customers_users_create_update_delete
   Scenario: Adding user to customer with isPrimary set
 
     When User with username "default3" is added to customer with code "c2t" with isPrimary "true"
-    Then Response code is "201"
-    And Etag header is present
+    Then Response code is "204"
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
@@ -53,7 +52,7 @@ Feature: customers_users_create_update_delete
       | customer | filter_cu_default_6 | FilterCUDefault6 | FilterCUUser6 | filter_cu_user6@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
       | customer | other_cu_default_7  | FilterCUDefault7 | FilterCUUser7 | filter_cu_user7@snapshot.travel | +42010111217 | UTC+01:00 | cz      |
       | customer | other_cu_default_8  | FilterCUDefault8 | FilterCUUser8 | filter_cu_user8@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
-      | snapshot | other_cu_default_9  | FilterCUDefault9 | FilterCUUser9 | filter_cu_user9@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
+      | partner  | other_cu_default_9  | FilterCUDefault9 | FilterCUUser9 | filter_cu_user9@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
 
     Given Relation between user with username "filter_cu_default_1" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "filter_cu_default_2" and customer with code "c1t" exists with isPrimary "false"
@@ -68,7 +67,7 @@ Feature: customers_users_create_update_delete
     When List of users for customer with code "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> users returned
+    And There are <returned> customerUsers returned
     And There are customer users with following usernames returned in order: <expected_usernames>
 
     Examples:

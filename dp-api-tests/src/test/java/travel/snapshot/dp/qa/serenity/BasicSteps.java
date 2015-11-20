@@ -64,17 +64,23 @@ public class BasicSteps {
 
     public BasicSteps() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        RestAssured.filters(
-                new ResponseLoggingFilter(
-                        LogDetail.valueOf(PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL)),
-                        true,
-                        System.out,
-                        not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
+        String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
+        String requestLogLevel = PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
+
+        if (StringUtils.isNotBlank(responseLogLevel)) {
+            builder.log(LogDetail.valueOf(requestLogLevel));
+        }
+
+        if (StringUtils.isNotBlank(responseLogLevel)) {
+            RestAssured.filters(
+                    new ResponseLoggingFilter(
+                            LogDetail.valueOf(responseLogLevel),
+                            true,
+                            System.out,
+                            not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
+        }
 
         builder.setContentType(ContentType.JSON);
-
-        builder.log(LogDetail.valueOf(PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL)));
-
         spec = builder.build();
     }
 

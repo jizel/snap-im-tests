@@ -6,6 +6,7 @@ Feature: property_sets_users_create_update_delete
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
+    Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All property sets are deleted for customers with codes: c1t, c2t
 
     Given The following property sets exist for customer with code "c1t"
@@ -19,16 +20,13 @@ Feature: property_sets_users_create_update_delete
       | customer | default2 | Default2  | User2    | def2@snapshot.travel | UTC+01:00 | cz      |
       | customer | default3 | Default3  | User3    | def2@snapshot.travel | UTC+01:00 | cz      |
 
-    Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name, ps2_name
-
     Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
 
 
   Scenario: Adding user to property set
 
-    When User with username "default3" is added to property set with name "ps1_name" for customer with code "c2t"
-    Then Response code is "201"
-    And Etag header is present
+    When User with username "default3" is added to property set with name "ps1_name" for customer with code "c1t"
+    Then Response code is "204"
 
   #TODO validate just one primary user, notexistent user, already present user
   #validate different type of users

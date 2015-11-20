@@ -394,7 +394,7 @@ public class CustomerSteps extends BasicSteps {
             }
         }
         Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), c.getCustomerId(), isPrimary);
-        if (createResponse.getStatusCode() != 201) {
+        if (createResponse.getStatusCode() != 204) {
             fail("CustomerUser cannot be created");
         }
     }
