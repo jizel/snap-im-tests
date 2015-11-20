@@ -168,7 +168,7 @@ public class PropertySteps extends BasicSteps {
     public void comparePropertyOnHeaderWithStored(String headerName) {
         Property originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String propertyLocation = response.header(headerName);
+        String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTIES, "");
         given().spec(spec).get(propertyLocation).then()
                 .body("salesforce_id", is(originalProperty.getSalesforceId()))
                 .body("property_name", is(originalProperty.getPropertyName()))

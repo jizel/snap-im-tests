@@ -159,6 +159,11 @@ public class PropertiesStepdefs {
         propertySteps.usernamesAreInResponseInOrder(usernames);
     }
 
+    @Then("^\"([^\"]*)\" header is set and contains the same property$")
+    public void header_is_set_and_contains_the_same_property(String header) throws Throwable {
+        propertySteps.comparePropertyOnHeaderWithStored(header);
+    }
+
     // TODO reuse existing code
 
 //
