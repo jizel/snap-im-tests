@@ -15,12 +15,17 @@ import io.gatling.http.Predef._
   * @param basePath common path to be used by all requests, default is empty path
   */
 abstract class AbstractSimulation(val moduleName: String, val basePath: String = "") extends Simulation {
+
+  val protocol = System.getProperty("protocol", "http")
+  val host = System.getProperty("host", "localhost")
+  val port = Integer.getInteger("port", 8080)
+
   val startUsers = Integer.getInteger("startUsers", 10)
   val endUsers = Integer.getInteger("endUsers", 30)
   val rampTime = Integer.getInteger("ramp", 60)
 
   val httpConf = http
-    .baseURL(s"http://localhost:8080/$moduleName/api/$basePath") // Here is the root for all relative URLs
+    .baseURL(s"$protocol://$host:$port/$moduleName/api/$basePath") // Here is the root for all relative URLs
     .acceptHeader("application/json") // Here are the common headers
     .userAgentHeader("Gatling / API Load Test")
     .doNotTrackHeader("1")
