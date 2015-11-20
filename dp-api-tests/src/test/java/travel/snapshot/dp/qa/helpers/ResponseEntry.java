@@ -1,12 +1,10 @@
-
 package travel.snapshot.dp.qa.helpers;
 
 /**
- *
  * @author konkol
  */
 public class ResponseEntry {
-    
+
     private String testedField;
     private Integer responseCode;
     private Integer customCode;
@@ -34,5 +32,5 @@ public class ResponseEntry {
     public void setCustomCode(Integer customCode) {
         this.customCode = customCode;
     }
-    
+
 }

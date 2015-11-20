@@ -40,8 +40,8 @@ Feature: customers_properties_get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "property_name" value "p1_name"
-    And Body contains entity with attribute "valid_From" value "2015-01-01"
-    And Body contains entity with attribute "valid_to" value "2016-12-31"
+    And Body contains entity with attribute "valid_from" value "2015-01-01"
+    And Body contains entity with attribute "valid_to" value "2200-01-01"
     And Body contains entity with attribute "type" value "anchor"
 
   Scenario: Checking error code for getting customerProperty
@@ -211,11 +211,11 @@ Feature: customers_properties_get
     Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "anchor" from "2015-06-01" to "2030-07-31"
     Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "anchor" from "2015-07-01" to "2030-08-31"
     Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "anchor" from "2015-08-01" to "2030-09-31"
-    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "anchor" from "2015-09-01" to "2030-10-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-09-01" to "2030-10-31"
     Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-10-01" to "2030-11-31"
     Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-11-01" to "2030-12-31"
 
-    When List of customerProperties is got for customer with code "c1t" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of customerProperties is got for customer with code "list_c1t" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customerProperties returned
@@ -223,7 +223,11 @@ Feature: customers_properties_get
 
     Examples:
       | limit | cursor | returned | filter                | sort | sort_desc | expected_codes                                             |
+      | 5     | 0      | 5        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 2      | 5        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 4      | 4        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 10    | 0      | 9        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 10    | 0      | 3        | type==data_owner      | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 5     | 2      | 4        | valid_from<2015-06-15 |      | valid_to  | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
   #add all fields
 

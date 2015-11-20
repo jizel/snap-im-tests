@@ -8,7 +8,7 @@ import cucumber.api.CucumberOptions;
 
 
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features/identity/users", glue = "travel.snapshot.dp.qa", tags = {"~@skipped"})
-public class RunIdentityUsersTests {
+@CucumberOptions(features = "src/test/resources/features/identity/property_sets", glue = "travel.snapshot.dp.qa", tags = {"~@skipped"})
+public class RunIdentityPropertySetsTests {
 
 }

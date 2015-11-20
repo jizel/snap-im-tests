@@ -1,14 +1,17 @@
 package travel.snapshot.dp.qa.model;
 
-import java.util.*;
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-10-08T17:25:39.192+03:00")
-public class Metric  {
+public class Metric {
 
     private String name = null;
     private List<Integer> values = new ArrayList<Integer>();
@@ -22,6 +25,7 @@ public class Metric  {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -35,14 +39,14 @@ public class Metric  {
     public List<Integer> getValues() {
         return values;
     }
+
     public void setValues(List<Integer> values) {
         this.values = values;
     }
 
 
-
     @Override
-    public String toString()  {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Metric {\n");
 

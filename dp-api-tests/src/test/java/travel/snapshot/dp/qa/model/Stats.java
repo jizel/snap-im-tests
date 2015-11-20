@@ -1,15 +1,18 @@
 package travel.snapshot.dp.qa.model;
 
-import java.util.*;
-import java.util.Date;
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-10-08T17:25:39.192+03:00")
-public class Stats  {
+public class Stats {
 
     private List<Metric> data = new ArrayList<Metric>();
     private Date since = null;
@@ -18,13 +21,15 @@ public class Stats  {
 
 
     /**
-     * Collection with the results. Each record in array contains data of one metric - reach, engagement and followers.
+     * Collection with the results. Each record in array contains data of one metric - reach,
+     * engagement and followers.
      **/
     @ApiModelProperty(required = true, value = "Collection with the results. Each record in array contains data of one metric - reach, engagement and followers.")
     @JsonProperty("data")
     public List<Metric> getData() {
         return data;
     }
+
     public void setData(List<Metric> data) {
         this.data = data;
     }
@@ -38,6 +43,7 @@ public class Stats  {
     public Date getSince() {
         return since;
     }
+
     public void setSince(Date since) {
         this.since = since;
     }
@@ -51,6 +57,7 @@ public class Stats  {
     public Date getUntil() {
         return until;
     }
+
     public void setUntil(Date until) {
         this.until = until;
     }
@@ -64,14 +71,14 @@ public class Stats  {
     public String getGranularity() {
         return granularity;
     }
+
     public void setGranularity(String granularity) {
         this.granularity = granularity;
     }
 
 
-
     @Override
-    public String toString()  {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Stats {\n");
 

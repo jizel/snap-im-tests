@@ -1,12 +1,11 @@
-@skipped
 Feature: properties_create_update_delete
 
   #TODO add etag things to get/update/create
 
   Background:
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | vatId      | isDemoProperty | timezone  |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | CZ10000001 | true           | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
 
   Scenario: Creating property without parent with random address
 

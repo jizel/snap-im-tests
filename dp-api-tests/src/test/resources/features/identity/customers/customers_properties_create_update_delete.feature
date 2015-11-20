@@ -65,7 +65,7 @@ Feature: customers_properties_create_update_delete
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "c1t" with type "anchor" is updating field "valid_from" to value "2015-01-01" with invalid etag
+    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "valid_from" to value "2015-01-01" with invalid etag
     Then Response code is "412"
     And Custom code is "57"
 
@@ -73,7 +73,7 @@ Feature: customers_properties_create_update_delete
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "c1t" with type "anchor" is updating field "<field>" to value "<value>"
+    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "<field>" to value "<value>"
     Then Response code is "<status_code>"
     And Custom code is "<custom_code>"
 

@@ -18,9 +18,6 @@ import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -93,39 +90,10 @@ public class RolesSteps extends BasicSteps {
         return requestSpecification.when().get("/{id}", id);
     }
 
-    /**
-     * getting roles over rest api, if limit and cursor is null or empty, it's not added to query string
-     *
-     * @param limit
-     * @param cursor
-     * @param filter
-     *@param sort
-     * @param sortDesc @return
-     */
-    private Response getRoles(String limit, String cursor, String filter, String sort, String sortDesc) {
-        RequestSpecification requestSpecification = given().spec(spec);
-
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
-        if (filter != null) {
-            requestSpecification.parameter("filter", filter);
-        }
-        if (sort != null) {
-            requestSpecification.parameter("sort", sort);
-        }
-        if (sortDesc != null) {
-            requestSpecification.parameter("sort_desc", sortDesc);
-        }
-        return requestSpecification.when().get();
-    }
-
     private Role getRoleByNameForApplication(String name, String applicationId) {
-        Role[] roles = getRoles("100", "0", null, null, null).as(Role[].class);
-        return Arrays.asList(roles).stream().filter(p -> name.equals(p.getRoleName()) && applicationId.equals(p.getApplicationId())).findFirst().orElse(null);
+        String filter = String.format("role_name=='%s' and application_id=='%s'", name, applicationId);
+        Role[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(Role[].class);
+        return Arrays.asList(roles).stream().findFirst().orElse(null);
     }
 
 
@@ -168,7 +136,7 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void listOfRolesIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getRoles(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -190,24 +158,6 @@ public class RolesSteps extends BasicSteps {
 
         Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader("ETag"));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-    }
-
-    @Step
-    public void bodyDoesNotContainRoleWith(String atributeName) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(atributeName, nullValue());
-    }
-
-    @Step
-    public void bodyContainsRoleWith(String atributeName) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(atributeName, notNullValue());
-    }
-
-    @Step
-    public void bodyContainsRoleWith(String atributeName, String value) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(atributeName, is(value));
     }
 
     @Step
@@ -288,7 +238,7 @@ public class RolesSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         Role[] roles = response.as(Role[].class);
         int i = 0;
-        for(Role r: roles) {
+        for (Role r : roles) {
             assertEquals("Role on index=" + i + " is not expected", names.get(i), r.getRoleName());
             i++;
         }

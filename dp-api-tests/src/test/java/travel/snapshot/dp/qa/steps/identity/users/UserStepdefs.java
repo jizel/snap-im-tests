@@ -1,21 +1,15 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
-import com.jayway.restassured.response.Response;
-
-import net.serenitybdd.core.Serenity;
-import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.Role;
+import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
@@ -99,13 +93,18 @@ public class UserStepdefs {
                                                                                              @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                              @Transform(NullEmptyStringConverter.class) String filter,
                                                                                              @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc ) throws Throwable {
+                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         usersSteps.listOfUsersIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are (\\d+) users returned$")
     public void There_are_returned_users_returned(int count) throws Throwable {
         usersSteps.numberOfEntitiesInResponse(User.class, count);
+    }
+
+    @Then("^There are (\\d+) customerUsers returned$")
+    public void There_are_returned_customerUsers_returned(int count) throws Throwable {
+        usersSteps.numberOfEntitiesInResponse(CustomerUser.class, count);
     }
 
     @Then("^There are users with following usernames returned in order: (.*)$")

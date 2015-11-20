@@ -118,8 +118,8 @@ Feature: property_sets_get
       | 10    | text   | /null          | /null           | /null           | 400           | 63          |
       #filtering and sorting
       | 10    | 0      | /null          | property_set_id | property_set_id | 400           | 64          |
-      | 10    | 0      | /null          | wrong           | /null           | 400           | 64          |
-      | 10    | 0      | /null          | /null           | wrong           | 400           | 64          |
+      | 10    | 0      | /null          | wrong           | /null           | 400           | 63          |
+      | 10    | 0      | /null          | /null           | wrong           | 400           | 63          |
       | 10    | 0      | customer_id==  | /null           | /null           | 400           | 63          |
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 63          |
 
@@ -150,7 +150,7 @@ Feature: property_sets_get
       | 5     | 2      | 3        | property_set_name=='list_*'                            |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
       | /null | /null  | 1        | property_set_name==list_ps4_name                       | /null             | /null             | list_ps4_name                                                             |
       | /null | /null  | 2        | property_set_name==list_* and property_set_type==chain | property_set_name | /null             | list_ps4_name, list_ps5_name                                              |
-      | /null | /null  | 1        | property_set_description==list_ps8_des*                | /null             | /null             | list_ps8_name                                                             |
+      | /null | /null  | 1        | property_set_description==list_ps8_des*                | /null             | /null             | second_list_ps8_name                                                             |
 
 
   @skipped

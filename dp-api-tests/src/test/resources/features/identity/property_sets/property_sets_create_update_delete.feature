@@ -1,4 +1,3 @@
-@skipped
 Feature: property_sets_create_update_delete
 
   #TODO add etag things to get/update/create
@@ -10,14 +9,14 @@ Feature: property_sets_create_update_delete
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
 
     Given All property sets are deleted for customers with codes: c1t
-
+      #FIX ClassCastException - 500
     Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | vatId      | isDemoProperty | timezone  |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | CZ10000001 | true           | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
 
   Scenario: Creating property set for customer with code "c1t"
 
@@ -26,14 +25,14 @@ Feature: property_sets_create_update_delete
       | ps1_created_name | ps1_description        | branch          |
 
     Then Response code is "201"
-    And Body contains entity with attribute "property_set_name" value "ps1_name"
+    And Body contains entity with attribute "property_set_name" value "ps1_created_name"
     And Body contains entity with attribute "property_set_type" value "branch"
     And "Location" header is set and contains the same property set
 
     #error codes
 
   Scenario: Deleting Property set
-    When Property set with name "ps1_code" for customer with code "c1t" is deleted
+    When Property set with name "ps1_name" for customer with code "c1t" is deleted
     Then Response code is "204"
     And Body is empty
     And Property set with same id doesn't exist
@@ -45,7 +44,7 @@ Feature: property_sets_create_update_delete
 
 
   Scenario Outline: Updating property set
-    Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
+  Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
 
     When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data
       | propertySetName           | propertySetDescription   | propertySetType   |
@@ -58,8 +57,8 @@ Feature: property_sets_create_update_delete
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
 
     Examples:
-      | updated_propertySetName   | propertySetName | propertySetDescription | propertySetType |
-      | <updated_propertySetName> | ps1_name        | ps1_description        | branch          |
+      | propertySetName | updated_propertySetName | propertySetDescription | propertySetType |
+      | ps1_name        | ps1_updated             | ps1_description        | branch          |
 
   Scenario: Updating property set with outdated etag
     When Property set with name "<propertySetName>" for customer with code "c1t" is updated with data if updated before
