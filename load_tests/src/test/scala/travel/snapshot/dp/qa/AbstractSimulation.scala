@@ -25,8 +25,9 @@ abstract class AbstractSimulation(val moduleName: String, val basePath: String =
   val rampTime = Integer.getInteger("ramp", 60)
 
   val httpConf = http
-    .baseURL(s"$protocol://$host:$port/$moduleName/api/$basePath") // Here is the root for all relative URLs
-    .acceptHeader("application/json") // Here are the common headers
+    .baseURL(s"$protocol://$host:$port/$moduleName/api/$basePath/")
+    .contentTypeHeader("application/json")
+    .acceptHeader("application/json")
     .userAgentHeader("Gatling / API Load Test")
     .doNotTrackHeader("1")
 

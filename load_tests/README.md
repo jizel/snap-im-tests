@@ -22,9 +22,9 @@ Load tests exercising Data Platform REST API.
 ## Endpoints
 
 To test identity/customers endpoint 
-     
 
-    mvn clean gatling:execute -Dgatling.simulationClass=travel.snapshot.dp.qa.BasicIdentityCustomersSimulation -DstartUsers=10 -DendUsers=60 -Dramp=120
+
+    mvn clean gatling:execute -Dgatling.simulationClass=travel.snapshot.dp.qa.BasicIdentitySimulation -DstartUsers=10 -DendUsers=60 -Dramp=120
 
 
 To test configuration endpoint:
