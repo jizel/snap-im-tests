@@ -14,7 +14,9 @@ import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.Session;
 
-public class JmsTestUtilities {
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+
+public class JmsTestUtilities extends BasicSteps {
 	private Session session;
 	private Connection connection;
 	private ConnectionFactory connectionFactory;

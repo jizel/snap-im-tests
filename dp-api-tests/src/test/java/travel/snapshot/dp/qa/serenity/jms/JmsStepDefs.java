@@ -3,24 +3,21 @@ package travel.snapshot.dp.qa.serenity.jms;
 import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
-import travel.snapshot.dp.qa.serenity.jms.Trade;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-//import cucumber.examples.java.jms.utilities.JmsTestUtilities;
-//import cucumber.examples.java.jms.utilities.TradeReader;
-//import travel.snapshot.dp.qa.serenity.jms.BasicSteps;
-//import travel.snapshot.dp.qa.serenity.jms.CommonObjectSteps;
-import travel.snapshot.dp.qa.serenity.jms.Consumer;
-import travel.snapshot.dp.qa.serenity.jms.MySender;
-import travel.snapshot.dp.qa.serenity.jms.Publisher;
+import cucumber.examples.java.jms.utilities.JmsTestUtilities;
+import travel.snapshot.dp.qa.serenity.jms.TradeReader;
 
 public class JmsStepDefs {
 	private static JmsTestUtilities jmsTestUtilities;
