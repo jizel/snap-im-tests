@@ -4,9 +4,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import travel.snapshot.dp.qa.model.Address;
 
-/**
- * Created by sedlacek on 10/7/2015.
- */
 public class AddressUtils {
 
     public static Address createRandomAddress(int streetLength, int cityLength, int zipLength, String country) {
