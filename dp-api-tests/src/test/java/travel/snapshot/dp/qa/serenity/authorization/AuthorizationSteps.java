@@ -27,19 +27,42 @@ import static org.junit.Assert.assertTrue;
 
 public class AuthorizationSteps extends BasicSteps {
 
-
     public AuthorizationSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
     }
     
-    public void postData(String url, String username, String password) {
+    public void getConfigurationData(String url, String access_token){
+        RequestSpecification requestSpecification = given().spec(spec)
+        		.baseUri(PropertiesHelper.getProperty(CONFIGURATION_DEV_BASE_URI))
+                .parameter("access_token", access_token);
+
+        Response response = requestSpecification.when().get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    public void getIdentityData(String url, String access_token){
+        RequestSpecification requestSpecification = given().spec(spec)
+        		.baseUri(PropertiesHelper.getProperty(IDENTITY_DEV_BASE_URI))
+                .parameter("access_token", access_token);
+
+        Response response = requestSpecification.when().get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
+    public void GetToken(String username, String password) {
         RequestSpecification requestSpecification = given().spec(spec)
                 .parameter("grant_type", "password")
                 .parameter("username", username)
                 .parameter("password", password);
 
-        Response response = requestSpecification.when().post(url);
+        Response response = requestSpecification.when().post();
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }   
+    }
+    
+    public void testToken(String url, String access_token){
+    	RequestSpecification requestSpecification = given().spec(spec).parameter("access_token", access_token);
+    	
+    	Response response = requestSpecification.when().get(url);
+    	Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
 }

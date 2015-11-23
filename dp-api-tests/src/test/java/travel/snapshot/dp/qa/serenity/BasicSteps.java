@@ -48,7 +48,9 @@ public class BasicSteps {
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     protected static final String IDENTITY_BASE_URI = "identity.baseURI";
+    protected static final String IDENTITY_DEV_BASE_URI = "identity_DEV.baseURI";
     protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
+    protected static final String CONFIGURATION_DEV_BASE_URI = "configuration_DEV.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
     protected static final String LIMIT_TO_ALL = "1000000";
     protected static final String LIMIT_TO_ONE = "1";
@@ -154,6 +156,10 @@ public class BasicSteps {
             }
             case "social_media": {
                 spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+                break;
+            }
+            case "authorization": {
+                spec.baseUri(PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
             }
             default:
