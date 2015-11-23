@@ -20,6 +20,7 @@ Feature: users_create_update_delete
     And Body contains entity with attribute "timezone" value "UTC+01:00"
     And Body contains entity with attribute "culture" value "cz"
     And "Location" header is set and contains the same user
+    And Etag header is present
 
   Scenario: Deleting user
 

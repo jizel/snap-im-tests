@@ -116,18 +116,19 @@ Feature: roles_get
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> roles returned
+    And Link header is '<link_header>'
 
     Examples:
-      | description   | limit | cursor | returned |
-      | default limit | /null |        | 50       |
-      | default limit |       | /null  | 50       |
-      | default limit | /null | /null  | 50       |
-      | default limit |       |        | 50       |
-      | limit at 15   | 15    |        | 15       |
-      | offset by 1   |       | 1      | 50       |
-      | limit by 20   | 20    | 0      | 20       |
-      | limit by 10   | 10    | 0      | 10       |
-      | l:5 o:5       | 5     | 5      | 5        |
+      | description   | limit | cursor | returned | link_header                                                                                       |
+      | default limit | /null |        | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit |       | /null  | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit | /null | /null  | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit |       |        | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | limit at 15   | 15    |        | 15       | </identity/roles?limit=15&cursor=15>; rel="next"                                                  |
+      | offset by 1   |       | 1      | 50       | </identity/roles?limit=50&cursor=51>; rel="next", </identity/roles?limit=50&cursor=0>; rel="prev" |
+      | limit by 20   | 20    | 0      | 20       | </identity/roles?limit=20&cursor=20>; rel="next"                                                  |
+      | limit by 10   | 10    | 0      | 10       | </identity/roles?limit=10&cursor=10>; rel="next"                                                  |
+      | l:5 o:5       | 5     | 10     | 5        | </identity/roles?limit=5&cursor=15>; rel="next", </identity/roles?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for lists of roles

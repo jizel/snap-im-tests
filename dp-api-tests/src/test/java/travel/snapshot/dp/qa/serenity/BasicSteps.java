@@ -310,4 +310,9 @@ public class BasicSteps {
         List<T> objects = mapper.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
+
+    public void headerIs(String headerName, String value) {
+        Response response = getSessionResponse();
+        response.then().header(headerName, is(value));
+    }
 }

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -70,9 +69,13 @@ public class PropertiesStepdefs {
         propertySteps.getPropertyByID("nonexistent_id");
     }
 
-    @When("^List of properties exists with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_properties_exists_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
-        propertySteps.listOfPropertiesExistsWith(limit, cursor);
+    @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_properties_exists_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                  @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                  @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        propertySteps.listOfPropertiesExistsWith(limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Property is created with random address and billing address$")
@@ -123,7 +126,7 @@ public class PropertiesStepdefs {
 
     @Then("^Body contains property with attribute \"([^\"]*)\"$")
     public void Body_contains_property_with_attribute(String atributeName) throws Throwable {
-        propertySteps.bodyContainsPropertyWith(atributeName);
+        propertySteps.bodyContainsEntityWith(atributeName);
     }
 
     @Then("^Body contains property with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
@@ -133,7 +136,7 @@ public class PropertiesStepdefs {
 
     @Then("^Body does not contain property with attribute \"([^\"]*)\"$")
     public void Body_does_not_contain_property_with_attribute(String atributeName) throws Throwable {
-        propertySteps.bodyDoesNotContainPropertyWith(atributeName);
+        propertySteps.bodyDoesntContainEntityWith(atributeName);
     }
 
     @Then("^There are (\\d+) properties returned$")

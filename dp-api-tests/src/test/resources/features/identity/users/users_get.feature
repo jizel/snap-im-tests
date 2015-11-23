@@ -116,20 +116,19 @@ Feature: Users_get
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned
+    And Link header is '<link_header>'
 
     Examples:
-      | limit | cursor | returned |
-      | /null |        | 50       |
-      | /null | /null  | 50       |
-      |       |        | 50       |
-      |       | /null  | 50       |
-      | 15    |        | 15       |
-      |       | 1      | 50       |
-      | 20    | 0      | 20       |
-      | 10    | 0      | 10       |
-      | 5     | 5      | 5        |
-
-    #TODO test filter, sort with different values
+      | limit | cursor | returned | link_header                                                                                       |
+      | /null |        | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      | /null | /null  | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      |       |        | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      |       | /null  | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      | 15    |        | 15       | </identity/users?limit=15&cursor=15>; rel="next"                                                  |
+      |       | 1      | 50       | </identity/users?limit=50&cursor=51>; rel="next", </identity/users?limit=50&cursor=0>; rel="prev" |
+      | 20    | 0      | 20       | </identity/users?limit=20&cursor=20>; rel="next"                                                  |
+      | 10    | 0      | 10       | </identity/users?limit=10&cursor=10>; rel="next"                                                  |
+      | 5     | 10      | 5        | </identity/users?limit=5&cursor=15>; rel="next", </identity/users?limit=5&cursor=5>; rel="prev"   |
 
   Scenario Outline: Checking error codes for getting list of users
     When List of users is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"

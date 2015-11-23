@@ -119,36 +119,49 @@ Feature: properties_get
       | salesforceid_58 | p58_name     | p58_code     | http://www.snapshot.travel | p58@tenants.biz | true           | UTC+01:00 |
       | salesforceid_59 | p59_name     | p59_code     | http://www.snapshot.travel | p59@tenants.biz | true           | UTC+01:00 |
 
-    When List of properties exists with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> properties returned
+    And Link header is '<link_header>'
 
     Examples:
-      | description   | limit | cursor | returned |
-      | default limit |       |        | 50       |
-      | limit at 15   | 15    |        | 15       |
-      | offset by 1   |       | 1      | 50       |
-      | limit by 20   | 20    | 0      | 20       |
-      | limit by 10   | 10    | 0      | 10       |
-      | l:5 o:5       | 5     | 5      | 5        |
+      | description   | limit | cursor | returned | link_header                                                                                                 |
+      | default limit |       | /null  | 50       | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
+      | default limit | /null |        | 50       | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
+      | limit at 15   | 15    |        | 15       | </identity/properties?limit=15&cursor=15>; rel="next"                                                       |
+      | offset by 1   |       | 1      | 50       | </identity/properties?limit=50&cursor=51>; rel="next", </identity/properties?limit=50&cursor=0>; rel="prev" |
+      | limit by 20   | 20    | 0      | 20       | </identity/properties?limit=20&cursor=20>; rel="next"                                                       |
+      | limit by 10   | 10    | 0      | 10       | </identity/properties?limit=10&cursor=10>; rel="next"                                                       |
+      | l:5 o:5       | 5     | 10     | 5        | </identity/properties?limit=5&cursor=15>; rel="next", </identity/properties?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for lists of properties
-    When List of properties exists with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
+    When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
     Examples:
-      | description           | limit | cursor | response_code | custom_code |
-      | negative cursor       |       | -1     | 400           | 63          |
-      | cursor NaN            |       | text   | 400           | 63          |
-      | negative limit        | -1    |        | 400           | 63          |
-      | limit NaN             | text  |        | 400           | 63          |
-      | limit ok, neg. cursor | 10    | -1     | 400           | 63          |
-      | limit neg., cursor ok | -1    | 10     | 400           | 63          |
-      | limit NaN, curson ok  | text  | 0      | 400           | 63          |
-      | limit ok, cursor NaN  | 10    | text   | 400           | 63          |
+    Examples:
+      | limit | cursor | filter           | sort        | sort_desc   | response_code | custom_code |
+      #limit and cursor
+      | /null | -1     | /null            | /null       | /null       | 400           | 63          |
+      |       | -1     | /null            | /null       | /null       | 400           | 63          |
+      | /null | text   | /null            | /null       | /null       | 400           | 63          |
+      |       | text   | /null            | /null       | /null       | 400           | 63          |
+      | -1    |        | /null            | /null       | /null       | 400           | 63          |
+      | -1    | /null  | /null            | /null       | /null       | 400           | 63          |
+      | text  |        | /null            | /null       | /null       | 400           | 63          |
+      | text  | /null  | /null            | /null       | /null       | 400           | 63          |
+      | 10    | -1     | /null            | /null       | /null       | 400           | 63          |
+      | text  | 0      | /null            | /null       | /null       | 400           | 63          |
+      | 10    | text   | /null            | /null       | /null       | 400           | 63          |
+      #filtering and sorting
+      | 10    | 0      | /null            | code        | code        | 400           | 64          |
+      | 10    | 0      | /null            | /null       | nonexistent | 400           | 63          |
+      | 10    | 0      | /null            | nonexistent | /null       | 400           | 63          |
+      | 10    | 0      | code==           | /null       | /null       | 400           | 63          |
+      | 10    | 0      | nonexistent==CZ* | /null       | /null       | 400           | 63          |
 
   # negative values, strings, empty
   # wrong parameters (variables: parameter name, parameter value),

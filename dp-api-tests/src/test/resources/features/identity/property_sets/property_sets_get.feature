@@ -84,18 +84,19 @@ Feature: property_sets_get
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> property sets returned
+    And Link header is '<link_header>'
 
     Examples:
-      | limit | cursor | returned |
-      | /null |        | 50       |
-      | /null | /null  | 50       |
-      |       |        | 50       |
-      |       | /null  | 50       |
-      | 15    |        | 15       |
-      |       | 1      | 50       |
-      | 20    | 0      | 20       |
-      | 10    | 0      | 10       |
-      | 5     | 5      | 5        |
+      | limit | cursor | returned | link_header                                                                                                       |
+      | /null |        | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      | /null | /null  | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      |       |        | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      |       | /null  | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      | 15    |        | 15       | </identity/property_sets?limit=15&cursor=15>; rel="next"                                                          |
+      |       | 1      | 50       | </identity/property_sets?limit=50&cursor=51>; rel="next", </identity/property_sets?limit=50&cursor=0>; rel="prev" |
+      | 20    | 0      | 20       | </identity/property_sets?limit=20&cursor=20>; rel="next"                                                          |
+      | 10    | 0      | 10       | </identity/property_sets?limit=10&cursor=10>; rel="next"                                                          |
+      | 5     | 10     | 5        | </identity/property_sets?limit=5&cursor=15>; rel="next", </identity/property_sets?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for getting list of property sets
@@ -151,7 +152,7 @@ Feature: property_sets_get
       | 5     | 2      | 3        | property_set_name=='list_*'                            |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
       | /null | /null  | 1        | property_set_name==list_ps4_name                       | /null             | /null             | list_ps4_name                                                             |
       | /null | /null  | 2        | property_set_name==list_* and property_set_type==chain | property_set_name | /null             | list_ps4_name, list_ps5_name                                              |
-      | /null | /null  | 1        | property_set_description==list_ps8_des*                | /null             | /null             | second_list_ps8_name                                                             |
+      | /null | /null  | 1        | property_set_description==list_ps8_des*                | /null             | /null             | second_list_ps8_name                                                      |
 
 
   @skipped

@@ -20,6 +20,7 @@ Feature: Roles_create_update_delete
     And Body contains entity with attribute "role_name" value "Created role name 1"
     And Body contains entity with attribute "role_description" value "optional description 1"
     And "Location" header is set and contains the same role
+    And Etag header is present
 
   Scenario Outline: Checking error codes for creating role
 

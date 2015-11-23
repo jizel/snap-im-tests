@@ -7,6 +7,7 @@ Feature: customers_property_sets
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
+    Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All property sets are deleted for customers with codes: c1t, c2t
 
 

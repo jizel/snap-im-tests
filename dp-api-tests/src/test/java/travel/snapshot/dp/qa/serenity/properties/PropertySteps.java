@@ -14,8 +14,6 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
@@ -23,8 +21,6 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -71,7 +67,7 @@ public class PropertySteps extends BasicSteps {
         Response resp = getProperty(id, null);
 
         // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
     }
 
     @Step
@@ -80,25 +76,13 @@ public class PropertySteps extends BasicSteps {
         Response resp = getProperty(customerFromList.getPropertyId(), null);
 
         // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-    }
-
-    @Step
-    public void bodyContainsPropertyWith(String atributeName) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(atributeName, notNullValue());
+        setSessionResponse(resp);
     }
 
     @Step
     public void bodyContainsPropertyWith(String atributeName, String value) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(atributeName, is(parseRawType(value)));
-    }
-
-    @Step
-    public void bodyDoesNotContainPropertyWith(String atributeName) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(atributeName, nullValue());
     }
 
     @Step
@@ -115,7 +99,7 @@ public class PropertySteps extends BasicSteps {
         Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
 
         // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
     }
 
     @Step
@@ -141,15 +125,15 @@ public class PropertySteps extends BasicSteps {
         Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
 
         // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
     }
 
     @Step
-    public void listOfPropertiesExistsWith(String limit, String cursor) {
-        Response response = getProperties(limit, cursor);
+    public void listOfPropertiesExistsWith(String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
 
         // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        setSessionResponse(response);
     }
 
     @Step
@@ -161,13 +145,13 @@ public class PropertySteps extends BasicSteps {
             deleteProperty(existingProperty.getPropertyId());
         }
         Response response = createProperty(property);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        setSessionResponse(response);
     }
 
     @Step
     public void comparePropertyOnHeaderWithStored(String headerName) {
         Property originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY);
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTIES, "");
         given().spec(spec).get(propertyLocation).then()
                 .body("salesforce_id", is(originalProperty.getSalesforceId()))
@@ -183,7 +167,7 @@ public class PropertySteps extends BasicSteps {
         Response resp = deleteProperty(propertyId);
 
         //store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
         Serenity.setSessionVariable(SERENITY_SESSION__PROPERTY_ID).to(propertyId);
     }
 
@@ -200,7 +184,7 @@ public class PropertySteps extends BasicSteps {
         Response resp = deleteProperty(propertyId);
 
         //store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
     }
 
     // --- internal impl. ---
@@ -341,12 +325,12 @@ public class PropertySteps extends BasicSteps {
 
             Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
             if (deleteResponse.getStatusCode() != 204) {
-                fail("PropertyUser cannot be deleted - status: " +deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
+                fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
             }
         }
         Response createResponse = addUserToProperty(user.getUserId(), p.getPropertyId());
         if (createResponse.getStatusCode() != 204) {
-            fail("PropertyUser cannot be created - status: " +createResponse.getStatusCode() + ", " + createResponse.asString());
+            fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
         }
     }
 

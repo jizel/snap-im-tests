@@ -60,4 +60,9 @@ public class BasicStepDefs {
     public void Body_doesnt_contains_entity_with_attribute(String atributeName) throws Throwable {
         basicSteps.bodyDoesntContainEntityWith(atributeName);
     }
+
+    @Then("^Link header is '(.*)'$")
+    public void Link_header_is(String linkHeader) throws Throwable {
+        basicSteps.headerIs("Link", linkHeader);
+    }
 }
