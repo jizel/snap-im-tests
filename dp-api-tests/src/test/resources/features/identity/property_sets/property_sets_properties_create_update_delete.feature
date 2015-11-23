@@ -6,7 +6,9 @@ Feature: property_sets_properties_create_update_delete
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
+    Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
+    Given All property sets are deleted for customers with codes: c1t
 
     Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
@@ -19,13 +21,12 @@ Feature: property_sets_properties_create_update_delete
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
 
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
-
+    #need to be fixed - classcastexception
 
   Scenario: Adding property to property set
 
-    When Property with code "p2_name" is added to property set with name "ps1_name" for customer with code "c2t"
-    Then Response code is "201"
-    And Etag header is present
+    When Property with code "p2_code" is added to property set with name "ps1_name" for customer with code "c1t"
+    Then Response code is "204"
 
   #TODO validate just one primary property, notexistent property, already present property
   #validate different type of propertys
@@ -33,10 +34,10 @@ Feature: property_sets_properties_create_update_delete
 
   Scenario: Removing property from property set
 #failing because of not working filtering for property propertys
-    When Property with code "p2_name" is removed from property set with name "ps1_name" for customer with code "c1t"
+    When Property with code "p2_code" is removed from property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"
     And Body is empty
-    And Property with code "p2_name" isn't there for property set with name "ps1_name" for customer with code "c1t"
+    And Property with code "p2_code" isn't there for property set with name "ps1_name" for customer with code "c1t"
 
 
   Scenario: Checking error code for removing property from property set
@@ -64,7 +65,7 @@ Feature: property_sets_properties_create_update_delete
     When List of properties for property set with name "ps1_name" for customer with code "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> users returned
+    And There are <returned> property set properties  returned
     And There are properties with following names returned in order: <expected_names>
 
     Examples:

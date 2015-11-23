@@ -12,7 +12,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertyPropertySet;
 import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
@@ -64,7 +66,8 @@ public class PropertySetsStepdefs {
 
     @Given("^All properties are removed from property_sets for customer with code \"([^\"]*)\" with names: (.*)$")
     public void All_properties_are_removed_from_property_sets_for_customer_with_code_with_names_ps__name_ps__name(String customerCode, List<String> propertySetNames) throws Throwable {
-        steps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, customerCode);
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, c);
     }
 
     @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" exists$")
@@ -130,7 +133,8 @@ public class PropertySetsStepdefs {
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        steps.listOfPropertiesIsGotWith(propertySetName, customerCode, limit, cursor, filter, sort, sortDesc);
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.listOfPropertiesIsGotWith(propertySetName, c, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^List of users for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -140,7 +144,8 @@ public class PropertySetsStepdefs {
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        steps.listOfUsersIsGotWith(propertySetName, customerCode, limit, cursor, filter, sort, sortDesc);
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.listOfUsersIsGotWith(propertySetName, c, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Nonexistent property is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
@@ -207,5 +212,10 @@ public class PropertySetsStepdefs {
     @Then("^\"([^\"]*)\" header is set and contains the same property set$")
     public void header_is_set_and_contains_the_same_property_set(String header) throws Throwable {
         steps.comparePropertySetOnHeaderWithStored(header);
+    }
+
+    @Then("^There are (\\d+) property set properties  returned$")
+    public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
+        steps.numberOfEntitiesInResponse(PropertyPropertySet.class, count);
     }
 }

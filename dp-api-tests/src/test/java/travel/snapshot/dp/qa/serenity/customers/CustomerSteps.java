@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.AddressUtils;
+import travel.snapshot.dp.qa.helpers.DateUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
@@ -109,8 +110,8 @@ public class CustomerSteps extends BasicSteps {
                 .body("property_id", is(originalCustomerProperty.getPropertyId()))
                 .body("property_name", is(originalCustomerProperty.getPropertyName()))
                         //.body("type", is(originalCustomerProperty.getType()))
-                .body("valid_from", is(originalCustomerProperty.getValidFrom()))
-                .body("valid_to", is(originalCustomerProperty.getValidTo()));
+                .body("valid_from", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidFrom())))
+                .body("valid_to", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidTo())));
 
     }
 

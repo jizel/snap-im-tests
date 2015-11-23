@@ -198,17 +198,21 @@ public class PropertySetSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void removeAllUsersForPropertySetsForCustomer(List<String> names, Customer c) {
-        names.forEach(n -> {
-            PropertySet propertySet = getPropertySetByNameForCustomer(n, c.getCustomerId());
-            Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
-            PropertyUser[] propertyUsers = propertyUsersResponse.as(PropertyUser[].class);
-            for (PropertyUser pu : propertyUsers) {
-                Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
-                if (deleteResponse.statusCode() != 204) {
-                    fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
+    public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, Customer c) {
+        propertySetNames.forEach(n -> {
+            String filter = String.format("property_set_name==%s and customer_id==%s", n, c.getCustomerId());
+            PropertySet[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySet[].class);
+            for (PropertySet ps : propertySets) {
+                Response propertyUsersResponse = getSecondLevelEntities(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                PropertyUser[] propertyUsers = propertyUsersResponse.as(PropertyUser[].class);
+                for (PropertyUser pu : propertyUsers) {
+                    Response deleteResponse = deleteSecondLevelEntity(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
+                    if (deleteResponse.statusCode() != 204) {
+                        fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
+                    }
                 }
             }
+
         });
     }
 
@@ -262,14 +266,14 @@ public class PropertySetSteps extends BasicSteps {
         assertNull("User should not be present in propertyset", existingPropertySetUser);
     }
 
-    public void listOfPropertiesIsGotWith(String propertySetName, String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        PropertySet p = getPropertySetByNameForCustomer(propertySetName, customerCode);
+    public void listOfPropertiesIsGotWith(String propertySetName, Customer customer, String limit, String cursor, String filter, String sort, String sortDesc) {
+        PropertySet p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
         Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
 
-    public void listOfUsersIsGotWith(String propertySetName, String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        PropertySet p = getPropertySetByNameForCustomer(propertySetName, customerCode);
+    public void listOfUsersIsGotWith(String propertySetName, Customer customer, String limit, String cursor, String filter, String sort, String sortDesc) {
+        PropertySet p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
         Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
@@ -294,14 +298,15 @@ public class PropertySetSteps extends BasicSteps {
         }
     }
 
-    public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, String customerCode) {
+    public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, Customer customer) {
         propertySetNames.forEach(psn -> {
-            PropertySet propertySet = getPropertySetByNameForCustomer(psn, customerCode);
-            if (propertySet != null) {
-                Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+            String filter = String.format("property_set_name==%s and customer_id==%s", psn, customer.getCustomerId());
+            PropertySet[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySet[].class);
+            for (PropertySet ps : propertySets) {
+                Response propertyPropertySetResponse = getSecondLevelEntities(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
                 PropertyPropertySet[] propertyPropertySets = propertyPropertySetResponse.as(PropertyPropertySet[].class);
                 for (PropertyPropertySet pps : propertyPropertySets) {
-                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
+                    Response deleteResponse = deleteSecondLevelEntity(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
                     if (deleteResponse.statusCode() != 204) {
                         fail("Property set property cannot be deleted: " + deleteResponse.asString());
                     }
@@ -316,14 +321,14 @@ public class PropertySetSteps extends BasicSteps {
         PropertyPropertySet existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
         if (existingPropertySetUser != null) {
 
-            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
+            Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
             if (deleteResponse.getStatusCode() != 204) {
                 fail("PropertySetProperty cannot be deleted");
             }
         }
         Response createResponse = addPropertyToPropertySet(p.getPropertyId(), propertySet.getPropertySetId());
-        if (createResponse.getStatusCode() != 201) {
-            fail("PropertySetProperty cannot be created");
+        if (createResponse.getStatusCode() != 204) {
+            fail(String.format("PropertySetProperty cannot be created. Status: %d, %s", createResponse.getStatusCode(), createResponse.asString()));
         }
     }
 

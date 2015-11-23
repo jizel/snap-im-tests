@@ -341,12 +341,12 @@ public class PropertySteps extends BasicSteps {
 
             Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
             if (deleteResponse.getStatusCode() != 204) {
-                fail("PropertyUser cannot be deleted");
+                fail("PropertyUser cannot be deleted - status: " +deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
             }
         }
         Response createResponse = addUserToProperty(user.getUserId(), p.getPropertyId());
-        if (createResponse.getStatusCode() != 201) {
-            fail("PropertyUser cannot be created");
+        if (createResponse.getStatusCode() != 204) {
+            fail("PropertyUser cannot be created - status: " +createResponse.getStatusCode() + ", " + createResponse.asString());
         }
     }
 

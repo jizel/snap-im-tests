@@ -12,7 +12,7 @@ Feature: properties_users_create_update_delete
       | customer | default2 | Default2  | User2    | def2@snapshot.travel | UTC+01:00 | cz      |
       | customer | default3 | Default3  | User3    | def2@snapshot.travel | UTC+01:00 | cz      |
 
-    Given All users are removed for properties with codes: p1_code
+    Given All users are removed for properties with codes: p1_code, p2_code
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
     Given Relation between user with username "default2" and property with code "p1_code" exists
@@ -21,8 +21,7 @@ Feature: properties_users_create_update_delete
   Scenario: Adding user to property
 
     When User with username "default3" is added to property with code "p2_code"
-    Then Response code is "201"
-    And Etag header is present
+    Then Response code is "204"
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users

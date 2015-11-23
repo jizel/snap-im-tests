@@ -7,6 +7,7 @@ Feature: property_sets_users_create_update_delete
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
     Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name, ps2_name
+    Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All property sets are deleted for customers with codes: c1t, c2t
 
     Given The following property sets exist for customer with code "c1t"
@@ -33,7 +34,8 @@ Feature: property_sets_users_create_update_delete
 
 
   Scenario: Removing user from property set
-#failing because of not working filtering for customer users
+#failing because of not working filtering for property_set users
+    Given Relation between user with username "default2" and property set with name "ps1_name" for customer with code "c1t" exists
     When User with username "default2" is removed from property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"
     And Body is empty
