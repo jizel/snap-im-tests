@@ -58,7 +58,41 @@ public class JmsSteps extends BasicSteps {
         jms.createQueue(topicName);
     }
 
-    public void etlMessageIsSent() throws JMSException, InterruptedException {
+	public void initializeComponents(String topicName)  throws JMSException, InterruptedException {
+		connectionFactory = new ActiveMQConnectionFactory(JMS_SERVER_URL);
+		connection = connectionFactory.createConnection();
+		connection.setClientID("John");
+		connection.start();
+		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		destination = session.createTopic(topicName);
+		messageProducer = session.createProducer(destination);
+		consumer = session.createConsumer(destination);
+		topic = session.createTopic(topicName);
+		subscriber = session.createDurableSubscriber(topic, "John");
+		message = session.createTextMessage();
+	}
+	    
+	public static void messageSent(String topicName) throws JMSException, InterruptedException {
+		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(JMS_SERVER_URL);
+		Connection connection = connectionFactory.createConnection();
+		connection.start();
+		// Creating session
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		// Getting the queue
+		Destination destination = session.createTopic(topicName);
+		MessageProducer messageProducer = session.createProducer(destination);
+		for(int i=0; i<4; i++){
+		TextMessage message = session.createTextMessage();
+		message.setText(msgContent[i]);
+		messageProducer.send(message);
+		System.out.println("Sent message '" + i + " " + msgContent[i]);
+		Thread.sleep(4000); 
+		}
+		messageProducer.close();
+		connection.close();
+    }
+	
+	public void etlMessageIsSent() throws JMSException, InterruptedException {
     	
 			HashMap<Object, Object> testMessage = new HashMap<Object,Object>();
 			testMessage.put("id", entityId);
@@ -115,42 +149,6 @@ public class JmsSteps extends BasicSteps {
 	}
     }
 
-	public static void messageSent(String topicName) throws JMSException, InterruptedException {
-		BasicConfigurator.configure();
-
-		ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(JMS_SERVER_URL);
-		Connection connection = connectionFactory.createConnection();
-		connection.start();
-		// Creating session
-		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		// Getting the queue
-		Destination destination = session.createTopic(topicName);
-		MessageProducer messageProducer = session.createProducer(destination);
-		for(int i=0; i<4; i++){
-		TextMessage message = session.createTextMessage();
-		message.setText(msgContent[i]);
-		messageProducer.send(message);
-		System.out.println("Sent message '" + i + " " + msgContent[i]);
-		Thread.sleep(4000); 
-		}
-		messageProducer.close();
-		connection.close();
-    }
-	
-	public void initializeComponents(String topicName)  throws JMSException, InterruptedException {
-		connectionFactory = new ActiveMQConnectionFactory(JMS_SERVER_URL);
-		connection = connectionFactory.createConnection();
-		connection.setClientID("John");
-		connection.start();
-		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		destination = session.createTopic(topicName);
-		messageProducer = session.createProducer(destination);
-		consumer = session.createConsumer(destination);
-		topic = session.createTopic(topicName);
-		subscriber = session.createDurableSubscriber(topic, "John");
-		message = session.createTextMessage();
-	}
-	
 	public void crudMessageIsSend() throws JMSException, InterruptedException {
 			
 			HashMap<Object,Object> testMessage = new HashMap<Object,Object>();
@@ -177,9 +175,7 @@ public class JmsSteps extends BasicSteps {
 			message.setText(jsonMessage);
 			messageProducer.send(message);
 		}
-		//MessageConsumer consumer = session.createConsumer(destination);
-		//while(true) {
-	
+
 	public void crudMessageIsReceived() throws JMSException, InterruptedException {
 			if (message instanceof TextMessage) {
 				TextMessage textMessage = (TextMessage) message;
@@ -209,6 +205,7 @@ public class JmsSteps extends BasicSteps {
 		session.close();
 		connection.close();
 	}
+	
 	class Pair {
 		private String start_date;
 		private String end_date;
@@ -227,19 +224,3 @@ public class JmsSteps extends BasicSteps {
 		
 	}
 }
-    
-   
-//    public void messageContains(String text) {
-//        //get from session to validate it
-//        TextMessage message = getSessionVariable("message");
-//
-//        //assert something
-//        AssertTrue(message.contains(text));
-//    }
-//
-//    public void messagehasSize(int size) {
-//        //get from session again to validate in a different way
-//        TextMessage message = getSessionVariable("message");
-//
-//        //assert something
-//        assertEquals(size, message.size());

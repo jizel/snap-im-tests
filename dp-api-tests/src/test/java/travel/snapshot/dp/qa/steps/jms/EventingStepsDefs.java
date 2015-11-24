@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.steps.jms;
 
 import net.thucydides.core.annotations.Steps;
-
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -18,6 +17,7 @@ import travel.snapshot.dp.qa.steps.serenity.jms.JmsSteps;
  * Created by sedlacek on 11/18/2015.
  */
 public class EventingStepsDefs {
+	private static String topicName = "MyT";
 
     @Steps
     private JmsSteps steps;
@@ -25,14 +25,31 @@ public class EventingStepsDefs {
     @Steps
     private UsersSteps usersSteps;
     
-    @When("^subscriber is connected and ready to listen$")
-    public void message_should_be_received() throws Throwable {
-        steps.initializeComponents("MyT");
+    @When("^Send an ETL message and receiving verify it$")
+    public void send_an_ETL_message_and_receiving_verify_it() throws Throwable {
+        steps.initializeComponents(topicName);
         steps.etlMessageIsSent();
         steps.etlMessageIsReceived();
         steps.closeResources();
           }
     
+    
+
+    @When("^ETL message is sent$")
+    public void etl_message_is_sent() throws Throwable {
+    	  steps.initializeComponents(topicName);
+    	  steps.etlMessageIsSent();
+    	  steps.closeResources();
+    	}
+
+    @Then("^ETL DurableSubscriber should receive the message and validate it$")
+    public void etl_DurableSubscriber_should_receive_the_message_and_validate_it() throws Throwable {
+    	steps.initializeComponents(topicName);
+    	steps.etlMessageIsReceived();
+        steps.closeResources();
+    	}
+
+
     //@And("^publisher sends a message and the subscriber consumes it$")
     //public void when_message_is_sent() throws Throwable {
     //	steps.messageSent("MyT");
