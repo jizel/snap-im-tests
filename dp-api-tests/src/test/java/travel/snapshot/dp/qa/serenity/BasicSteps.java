@@ -74,7 +74,7 @@ public class BasicSteps {
         }
 
         if (StringUtils.isNotBlank(responseLogLevel)) {
-            RestAssured.filters(
+            RestAssured.replaceFiltersWith(
                     new ResponseLoggingFilter(
                             LogDetail.valueOf(responseLogLevel),
                             true,
