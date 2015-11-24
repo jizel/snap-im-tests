@@ -1,5 +1,10 @@
 Feature: authorization
 
+  Background: 
+    Given The following users exist
+      | userType | userName | firstName | lastName | email                | timezone  | culture |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | UTC+01:00 | cz      |
+
   Scenario: Getting configuration data with a valid access token
     When Getting configuration data for "/configuration" with token "b5be28b34e903d74d37ff108e83d51f8"
     Then Content type is "application/json"
@@ -32,20 +37,16 @@ Feature: authorization
       | identity/users         |
       | identity/roles         |
 
-# Not applicable for now
+  Scenario: Get access token for a specific existing user
+    When Getting token for user with id "2af224ab-2295-4f27-bcbe-12315dc0c14c" username "default1" and password "valid_passwod"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And Body contains entity with attribute "access_token"
+    And Body contains entity with attribute "token_type" value "bearer"
+    And Body contains entity with attribute "expires_in" value "1800"
 
-#  Scenario: Get access token for a specific user
-#    Given User "user1" with password "password1" exists
-#    When Getting token with username "user1" and password "password1"
-#    Then Content type is "application/json"
-#    And Response code is "200"
-#    And "access_token" is got
-#    And "token_type" is "bearer"
-#    And "expires_in" is "1800"
-
-#  Scenario: Get access token for a non-existent username, password combination
-#    Given User "user2" with password "password2" does not exist
-#    When Getting token with username "user2" and password "password2"
-#    Then Content type is "application/json"
-#    And Response code is "403"
-#    And Custom code is "3"
+  Scenario: Get access token for a non-existent username, password combination
+    When Getting token for user with id "2af224ab-2295-4f27-bcbe-12315dc0c14c" username "default1" and password "invalid_passwod"
+    Then Content type is "application/json"
+    And Response code is "403"
+    And Custom code is "3"

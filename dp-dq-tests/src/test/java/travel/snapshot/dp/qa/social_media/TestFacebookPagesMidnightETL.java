@@ -9,9 +9,9 @@ import static travel.snapshot.dp.qa.base.TestUtils.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestFacebookMidnightETL {
+public class TestFacebookPagesMidnightETL {
 
-    public static final Logger logger = LoggerFactory.getLogger(TestFacebookMidnightETL.class);
+    public static final Logger logger = LoggerFactory.getLogger(TestFacebookPagesMidnightETL.class);
 
     @Test
     public void testStagingLoad() throws Exception {
@@ -86,7 +86,8 @@ public class TestFacebookMidnightETL {
         String sqlQueryForTarget = "select count(*) from FactFacebookPageStats where dim_date_id = (curdate() - interval 1 day) + 0";
         
         String sqlQueryForSourceFollowers = "select sum(total_followers) from IncrementalFacebookPageStatistics where date = date_sub(curdate(), interval 1 day)";
-        String sqlQueryForTargetFollowers = "select sum(followers) from FactFacebookPageStats where date = (curdate() - interval 1 day) + 0";
+        String sqlQueryForTargetFollowers = "select sum(followers) from FactFacebookPageStats where dim_date_id = (curdate() - interval 1 day) + 0";
+        
         logger.info("\nStart control checks on table 'FactFacebookPageStats'");
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers);

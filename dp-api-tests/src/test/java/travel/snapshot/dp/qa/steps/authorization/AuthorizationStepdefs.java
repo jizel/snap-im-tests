@@ -27,15 +27,9 @@ public class AuthorizationStepdefs {
     public void getting_identity_data_for_with_token(String url, String access_token){
         authorizationSteps.getIdentityData(url, access_token);
     }
-    
-    @Given("^User \"([^\"]*)\" with password \"([^\"]*)\" exists$")
-    public void user_with_password_exists(String username, String password){
-        // Write code here that turns the phrase above into concrete actions
-    }
 
-    @When("^Getting token with username \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void getting_token_with_username_and_password(String username, String password){
-        authorizationSteps.GetToken(username, password);
+    @When("^Getting token for user with id \"([^\"]*)\" username \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void getting_token_for_user_with_id_username_and_password(String id, String username, String password){
+        authorizationSteps.getToken(id,username, password);
     }
-
 }

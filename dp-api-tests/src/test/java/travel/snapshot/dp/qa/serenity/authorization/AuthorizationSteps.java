@@ -10,6 +10,7 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.model.Stats;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.model.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,20 +50,18 @@ public class AuthorizationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
-    public void GetToken(String username, String password) {
+    public void getToken(String id, String username, String password) {
         RequestSpecification requestSpecification = given().spec(spec)
+        		.baseUri("https://IdentityModuleDev-2445581336980.apicast.io:443")
+        		.parameter("client_id", id)
+        		.parameter("client_secret", "aaaaa")
                 .parameter("grant_type", "password")
                 .parameter("username", username)
-                .parameter("password", password);
+                .parameter("password", password)
+                .parameter("code", "abcde");
 
-        Response response = requestSpecification.when().post();
+        Response response = requestSpecification.when().post("/oauth/token");
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
-    public void testToken(String url, String access_token){
-    	RequestSpecification requestSpecification = given().spec(spec).parameter("access_token", access_token);
-    	
-    	Response response = requestSpecification.when().get(url);
-    	Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
 }
