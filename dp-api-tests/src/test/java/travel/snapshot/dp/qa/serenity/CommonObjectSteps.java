@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jayway.restassured.response.Response;
@@ -86,7 +85,7 @@ public class CommonObjectSteps extends BasicSteps {
         Response correctObjectResponse = restCreateObject(getObjectLocation(objectName), jsonString);
 
         String objectID = getJsonNode(correctObjectResponse).get(getObjectIDField(objectName)).asText();
-        String etag = correctObjectResponse.getHeader("ETag");
+        String etag = correctObjectResponse.getHeader(HEADER_ETAG);
 
         // create a completely new object for update
         ObjectNode updateObject = getCorrectObject(objectName);
@@ -201,7 +200,7 @@ public class CommonObjectSteps extends BasicSteps {
 
                     // search results should always be packed in arrays
                     if (result.isArray()) {
-                        List<JsonNode> returnedObjects = Lists.newArrayList(((ArrayNode) result).iterator());
+                        List<JsonNode> returnedObjects = Lists.newArrayList(result.iterator());
 
                         // check that our object was found
                         Assert.assertThat(returnedObjects, hasItem(object));
@@ -283,7 +282,7 @@ public class CommonObjectSteps extends BasicSteps {
      */
     private Response restUpdateObject(String objectLocation, String id, String etag, String json) {
         return given().spec(spec).basePath(objectLocation + "/" + id)
-                .header("If-Match", etag)
+                .header(HEADER_IF_MATCH, etag)
                 .body(json)
                 .when().post();
     }
@@ -459,7 +458,7 @@ public class CommonObjectSteps extends BasicSteps {
 
                 // #2 extract object ID and ETag from response
                 String objectID = getJsonNode(correctObjectResponse).get(getObjectIDField(objectName)).asText();
-                String etag = correctObjectResponse.getHeader("ETag");
+                String etag = correctObjectResponse.getHeader(HEADER_ETAG);
 
                 // #3 update object value for current field test
                 applyNodeOperation(correctObject, field, op);

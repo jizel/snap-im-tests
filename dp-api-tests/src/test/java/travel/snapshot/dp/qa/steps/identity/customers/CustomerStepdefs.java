@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;

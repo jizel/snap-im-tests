@@ -10,6 +10,7 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -47,8 +48,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private ConfigurationType getConfigurationTypeFromString(String jsonData) {
-        ConfigurationType configurationType = from(jsonData).getObject("", ConfigurationType.class);
-        return configurationType;
+        return from(jsonData).getObject("", ConfigurationType.class);
     }
 
     private Response createConfigurationType(ConfigurationType t) {
@@ -65,9 +65,9 @@ public class ConfigurationSteps extends BasicSteps {
     private boolean isConfigurationExist(String key, String identifier) {
         Response response = getConfiguration(key, identifier);
         int statusCode = response.statusCode();
-        if (statusCode == 200) {
+        if (statusCode == HttpStatus.SC_OK) {
             return true;
-        } else if (statusCode == 404) {
+        } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
             return false;
         } else {
             throw new RuntimeException("invalid server status code during getting configuration[identifier=" + identifier + ", key=" + key + "]: " + statusCode);
@@ -200,9 +200,9 @@ public class ConfigurationSteps extends BasicSteps {
         }
         Response response = getConfigurationType(identifier);
         int statusCode = response.statusCode();
-        if (statusCode == 200) {
+        if (statusCode == HttpStatus.SC_OK) {
             return true;
-        } else if (statusCode == 404) {
+        } else if (statusCode == HttpStatus.SC_NOT_FOUND) {
             return false;
         } else {
             throw new RuntimeException("invalid server status code for getting configuration type [identifier=" + identifier + "]: " + statusCode);
@@ -264,12 +264,12 @@ public class ConfigurationSteps extends BasicSteps {
             }
 
             Response createResponse = createConfigurationType(t);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Configuration type cannot be created");
             }
             IntStream.rangeClosed(1, count).forEach(i -> {
                 Response createKeyResponse = createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
-                if (createKeyResponse.getStatusCode() != 201) {
+                if (createKeyResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                     fail("Configuration key cannot be created");
                 }
             });
@@ -312,7 +312,7 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void configurationTypeDoesntExist(String identifier) {
         Response response = getConfigurationType(identifier);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
 
@@ -364,7 +364,7 @@ public class ConfigurationSteps extends BasicSteps {
                 break;
             }
             case "boolean": {
-                assertEquals(Boolean.valueOf(value), Boolean.valueOf(valueJson.booleanValue()));
+                assertEquals(Boolean.valueOf(value), valueJson.booleanValue());
                 break;
             }
             case "date": {
@@ -399,7 +399,7 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void configurationDoesntExistForIdentifier(String key, String identifier) {
         Response response = getConfiguration(key, identifier);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
 
@@ -410,7 +410,7 @@ public class ConfigurationSteps extends BasicSteps {
                 deleteConfiguration(c.getKey(), identifier);
             }
             Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Configuration cannot be created");
             }
         });

@@ -7,6 +7,7 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,10 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -28,7 +31,8 @@ public class RolesSteps extends BasicSteps {
 
 
     private static final String SESSION_ROLE_ID = "role_id";
-    public static final String ROLES_PATH = "/identity/roles";
+    private static final String ROLES_PATH = "/identity/roles";
+    private static final String SESSION_CREATED_ROLE = "created_role";
 
     public RolesSteps() {
         super();
@@ -44,7 +48,7 @@ public class RolesSteps extends BasicSteps {
                 deleteRole(existingRole.getRoleId());
             }
             Response createResponse = createRole(r);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Role cannot be created");
             }
         });
@@ -54,6 +58,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void followingRoleIsCreated(Role role) {
         Role existingRole = getRoleByNameForApplication(role.getRoleName(), role.getApplicationId());
+        setSessionVariable(SESSION_CREATED_ROLE, role);
         if (existingRole != null) {
             deleteRole(existingRole.getRoleId());
         }
@@ -71,7 +76,7 @@ public class RolesSteps extends BasicSteps {
     private Response updateRole(String id, Map<String, Object> role, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header("If-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(role).when().post("/{id}", id);
 
@@ -85,7 +90,7 @@ public class RolesSteps extends BasicSteps {
     private Response getRole(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header("If-None-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{id}", id);
     }
@@ -131,7 +136,7 @@ public class RolesSteps extends BasicSteps {
         String roleId = Serenity.sessionVariableCalled(SESSION_ROLE_ID);
 
         Response response = getRole(roleId, null);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
@@ -146,17 +151,16 @@ public class RolesSteps extends BasicSteps {
         Response tempResponse = getRole(original.getRoleId(), null);
 
         Map<String, Object> role = new HashMap<>();
-        if (updatedRole.getRoleDescription() != null && !"".equals(updatedRole.getRoleDescription())) {
+        if (StringUtils.isNotBlank(updatedRole.getRoleDescription())) {
             role.put("role_description", updatedRole.getRoleDescription());
         }
-        if (updatedRole.getRoleName() != null && !"".equals(updatedRole.getRoleName())) {
-            if (!name.equals(updatedRole)) { //update only if changed
+        if (StringUtils.isNotBlank(updatedRole.getRoleName())) {
+            if (!name.equals(updatedRole.getRoleName())) { //update only if changed
                 role.put("role_name", updatedRole.getRoleName());
             }
         }
 
-
-        Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader("ETag"));
+        Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader(HEADER_ETAG));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -167,7 +171,7 @@ public class RolesSteps extends BasicSteps {
 
         Response tempResponse = getRole(roleFromList.getRoleId(), null);
 
-        Response resp = getRole(roleFromList.getRoleId(), tempResponse.getHeader("ETag"));
+        Response resp = getRole(roleFromList.getRoleId(), tempResponse.getHeader(HEADER_ETAG));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 
@@ -180,13 +184,13 @@ public class RolesSteps extends BasicSteps {
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("role_description", "updated because of etag");
 
-        Response updateResponse = updateRole(roleFromList.getRoleId(), mapForUpdate, tempResponse.getHeader("ETag"));
+        Response updateResponse = updateRole(roleFromList.getRoleId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
-        if (updateResponse.getStatusCode() != 204) {
+        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Role cannot be updated: " + updateResponse.asString());
         }
 
-        Response resp = getRole(roleFromList.getRoleId(), tempResponse.getHeader("ETag"));
+        Response resp = getRole(roleFromList.getRoleId(), tempResponse.getHeader(HEADER_ETAG));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 
@@ -198,9 +202,9 @@ public class RolesSteps extends BasicSteps {
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("role_description", "changed description");
 
-        Response updateResponse = updateRole(original.getRoleId(), mapForUpdate, tempResponse.getHeader("ETag"));
+        Response updateResponse = updateRole(original.getRoleId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
-        if (updateResponse.getStatusCode() != 204) {
+        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Role cannot be updated: " + updateResponse.asString());
         }
 
@@ -209,17 +213,17 @@ public class RolesSteps extends BasicSteps {
             role.put("role_description", updatedRole.getRoleDescription());
         }
 
-        Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader("ETag"));
+        Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader(HEADER_ETAG));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
     public void roleWithNameForApplicationIdHasData(String name, String applicationId, Role data) {
         Role roleByName = getRoleByNameForApplication(name, applicationId);
 
-        if (data.getRoleDescription() != null && !"".equals(data.getRoleDescription())) {
+        if (StringUtils.isNotBlank(data.getRoleDescription())) {
             assertEquals(data.getRoleDescription(), roleByName.getRoleDescription());
         }
-        if (data.getRoleName() != null && !"".equals(data.getRoleName())) {
+        if (StringUtils.isNotBlank(data.getRoleName())) {
             assertEquals(data.getRoleName(), roleByName.getRoleName());
         }
     }
@@ -242,5 +246,15 @@ public class RolesSteps extends BasicSteps {
             assertEquals("Role on index=" + i + " is not expected", names.get(i), r.getRoleName());
             i++;
         }
+    }
+
+    public void compareRoleOnHeaderWithStored(String headerName) {
+        Role originalRole = Serenity.sessionVariableCalled(SESSION_CREATED_ROLE);
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        String roleLocation = response.header(headerName).replaceFirst(ROLES_PATH, "");
+        given().spec(spec).get(roleLocation).then()
+                .body("application_id", is(originalRole.getApplicationId()))
+                .body("role_description", is(originalRole.getRoleDescription()))
+                .body("role_name", is(originalRole.getRoleName()));
     }
 }

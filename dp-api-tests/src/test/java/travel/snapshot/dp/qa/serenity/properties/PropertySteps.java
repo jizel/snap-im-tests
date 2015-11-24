@@ -6,6 +6,8 @@ import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
+import org.apache.http.HttpStatus;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +57,7 @@ public class PropertySteps extends BasicSteps {
             // introduce new records
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
             Response createResponse = createProperty(t);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property cannot be created: " + createResponse.asString());
             }
         });
@@ -96,7 +98,7 @@ public class PropertySteps extends BasicSteps {
         Response responseWithETag = getProperty(propertyFromList.getPropertyId(), null);
 
         // try to get the property with current ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
+        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
 
         // store to session
         setSessionResponse(resp);
@@ -116,13 +118,13 @@ public class PropertySteps extends BasicSteps {
         Response updateResponse = updateProperty(
                 propertyFromList.getPropertyId(),
                 Collections.singletonMap("website", "http://changed.it"),
-                responseWithETag.getHeader("ETag"));
-        if (updateResponse.getStatusCode() != 204) {
+                responseWithETag.getHeader(HEADER_ETAG));
+        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Property cannot be updated: " + updateResponse.asString());
         }
 
         // get with old ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
+        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
 
         // store to session
         setSessionResponse(resp);
@@ -176,7 +178,7 @@ public class PropertySteps extends BasicSteps {
         String propertyId = Serenity.sessionVariableCalled(SERENITY_SESSION__PROPERTY_ID);
 
         Response response = getProperty(propertyId, null);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
@@ -212,7 +214,7 @@ public class PropertySteps extends BasicSteps {
     private Response getProperty(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (etag != null && !etag.isEmpty()) {
-            requestSpecification = requestSpecification.header("If-None-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{id}", id);
     }
@@ -228,7 +230,7 @@ public class PropertySteps extends BasicSteps {
     private Response updateProperty(String id, Map<String, Object> fields, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (etag != null && !etag.isEmpty()) {
-            requestSpecification = requestSpecification.header("If-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(fields).when().post("/{id}", id);
 
@@ -310,7 +312,7 @@ public class PropertySteps extends BasicSteps {
             PropertyUser[] propertyUsers = customerUsersResponse.as(PropertyUser[].class);
             for (PropertyUser pu : propertyUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
-                if (deleteResponse.statusCode() != 204) {
+                if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
                 }
             }
@@ -324,12 +326,12 @@ public class PropertySteps extends BasicSteps {
         if (existingPropertyUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
-            if (deleteResponse.getStatusCode() != 204) {
+            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
             }
         }
         Response createResponse = addUserToProperty(user.getUserId(), p.getPropertyId());
-        if (createResponse.getStatusCode() != 204) {
+        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
         }
     }
@@ -439,7 +441,7 @@ public class PropertySteps extends BasicSteps {
 //            customer.put("website", updatedCustomer.getWebsite());
 //        }
 //
-//        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader("ETag"));
+//        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader(HEADER_ETAG));
 //        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
 //    }
 //
@@ -471,7 +473,7 @@ public class PropertySteps extends BasicSteps {
 //        Map<String, Object> mapForUpdate = new HashMap<>();
 //        mapForUpdate.put("vat_id", "CZ99999999");
 //
-//        Response updateResponse = updateCustomer(original.getCustomerId(), mapForUpdate, tempResponse.getHeader("ETag"));
+//        Response updateResponse = updateCustomer(original.getCustomerId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 //
 //        if (updateResponse.getStatusCode() != 204) {
 //            fail("Customer cannot be updated: " + updateResponse.asString());
@@ -492,7 +494,7 @@ public class PropertySteps extends BasicSteps {
 //            customer.put("phone", updatedCustomer.getPhone());
 //        }
 //
-//        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader("ETag"));
+//        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader(HEADER_ETAG));
 //        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
 //    }
 //

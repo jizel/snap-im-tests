@@ -44,21 +44,23 @@ import static org.junit.Assert.assertEquals;
  */
 public class BasicSteps {
 
-    public static final String BASE_URI = "baseURI";
-    public static final String SESSION_RESPONSE = "response";
-    public static final String SESSION_RESPONSE_MAP = "response_map";
-    public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
-    public static final String IDENTITY_BASE_URI = "identity.baseURI";
-    public static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
-    public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
-    public static final String LIMIT_TO_ALL = "1000000";
-    public static final String LIMIT_TO_ONE = "1";
-    public static final String CURSOR_FROM_FIRST = "0";
+    protected static final String SESSION_RESPONSE = "response";
+    protected static final String SESSION_RESPONSE_MAP = "response_map";
+    protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
+    protected static final String IDENTITY_BASE_URI = "identity.baseURI";
+    protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
+    protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
+    protected static final String LIMIT_TO_ALL = "1000000";
+    protected static final String LIMIT_TO_ONE = "1";
+    protected static final String CURSOR_FROM_FIRST = "0";
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
+    protected static final String HEADER_ETAG = "ETag";
+    public static final String HEADER_IF_MATCH = "If-Match";
+    public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
 
     protected RequestSpecification spec = null;
 
@@ -133,7 +135,7 @@ public class BasicSteps {
 
     public void etagIsPresent() {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().header("ETag", not(isEmptyOrNullString()));
+        response.then().header(HEADER_ETAG, not(isEmptyOrNullString()));
     }
 
     public void useFileForSendDataTo(String filename, String method, String url, String module) throws Exception {
@@ -174,7 +176,7 @@ public class BasicSteps {
     protected Response updateEntity(String id, Map<String, Object> object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header("If-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object).when().post("/{id}", id);
     }
@@ -186,7 +188,7 @@ public class BasicSteps {
     protected Response getEntity(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header("If-None-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{id}", id);
     }
@@ -194,7 +196,7 @@ public class BasicSteps {
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header("If-None-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
@@ -207,7 +209,7 @@ public class BasicSteps {
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header("If-Match", etag);
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
@@ -280,11 +282,11 @@ public class BasicSteps {
 
     // --- session access ---
 
-    public void setSessionResponse(Response response) {
+    protected void setSessionResponse(Response response) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
-    public Response getSessionResponse() {
+    protected Response getSessionResponse() {
         return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
     }
 
@@ -296,11 +298,11 @@ public class BasicSteps {
         return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
     }
 
-    public void setSessionVariable(String key, Object value) {
+    protected void setSessionVariable(String key, Object value) {
         Serenity.setSessionVariable(key).to(value);
     }
 
-    public <T> T getSessionVariable(String key) {
+    protected <T> T getSessionVariable(String key) {
         return Serenity.<T>sessionVariableCalled(key);
     }
 

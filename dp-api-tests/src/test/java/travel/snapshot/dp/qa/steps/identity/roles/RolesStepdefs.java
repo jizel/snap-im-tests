@@ -37,7 +37,7 @@ public class RolesStepdefs {
 
     @Then("^\"([^\"]*)\" header is set and contains the same role$")
     public void header_is_set_and_contains_the_same_role(String header) throws Throwable {
-
+        rolesSteps.compareRoleOnHeaderWithStored(header);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is deleted$")

@@ -29,6 +29,6 @@ public class PropertiesHelper {
     public static Integer[] getListOfInt(String key) {
         String arrayString = getProperty(key);
 
-        return Arrays.stream(arrayString.split(",")).filter(s -> s != null && !"".equals(s)).mapToInt(s -> Integer.parseInt(s)).boxed().toArray(size -> new Integer[size]);
+        return Arrays.stream(arrayString.split(",")).filter(s -> s != null && !"".equals(s)).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
     }
 }

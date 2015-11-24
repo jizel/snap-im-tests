@@ -6,6 +6,7 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -38,11 +39,11 @@ import static org.junit.Assert.fail;
  */
 public class CustomerSteps extends BasicSteps {
 
-    public static final String SESSION_CUSTOMERS = "customers";
+    private static final String SESSION_CUSTOMERS = "customers";
     private static final String SESSION_CREATED_CUSTOMER = "created_customer";
     private static final String SESSION_CUSTOMER_ID = "customer_id";
     private static final String SESSION_CREATED_CUSTOMER_PROPERTY = "created_customer_property";
-    public static final String BASE_PATH_CUSTOMERS = "/identity/customers";
+    private static final String BASE_PATH_CUSTOMERS = "/identity/customers";
 
     public CustomerSteps() {
         super();
@@ -59,7 +60,7 @@ public class CustomerSteps extends BasicSteps {
                 deleteEntity(existingCustomer.getCustomerId());
             }
             Response createResponse = createEntity(t);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Customer cannot be created");
             }
         });
@@ -98,7 +99,6 @@ public class CustomerSteps extends BasicSteps {
                 .body("code", is(originalCustomer.getCode()))
                 .body("email", is(originalCustomer.getEmail()))
                 .body("vat_id", is(originalCustomer.getVatId()));
-
     }
 
     @Step
@@ -116,8 +116,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     private Customer getCustomerFromFile(InputStream inputStream) {
-        Customer customer = from(inputStream).getObject("", Customer.class);
-        return customer;
+        return from(inputStream).getObject("", Customer.class);
     }
 
     private Response activateCustomer(String id) {
@@ -211,7 +210,7 @@ public class CustomerSteps extends BasicSteps {
         String customerId = Serenity.sessionVariableCalled(SESSION_CUSTOMER_ID);
 
         Response response = getEntity(customerId, null);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
@@ -227,7 +226,7 @@ public class CustomerSteps extends BasicSteps {
 
         Map<String, Object> customerData = retrieveData(Customer.class, updatedCustomer);
 
-        Response response = updateEntity(original.getCustomerId(), customerData, tempResponse.getHeader("ETag"));
+        Response response = updateEntity(original.getCustomerId(), customerData, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -263,7 +262,7 @@ public class CustomerSteps extends BasicSteps {
 
         Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
 
-        Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader("ETag"));
+        Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
@@ -276,13 +275,13 @@ public class CustomerSteps extends BasicSteps {
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("vat_id", "CZ99999999");
 
-        Response updateResponse = updateEntity(customerFromList.getCustomerId(), mapForUpdate, tempResponse.getHeader("ETag"));
+        Response updateResponse = updateEntity(customerFromList.getCustomerId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
-        if (updateResponse.getStatusCode() != 204) {
+        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Customer cannot be updated: " + updateResponse.asString());
         }
 
-        Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader("ETag"));
+        Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
@@ -326,7 +325,7 @@ public class CustomerSteps extends BasicSteps {
 
         Response response = addPropertyToCustomerWithTypeFromTo(propertyId, c.getCustomerId(), type, dateFrom, dateTo);
 
-        if (response.statusCode() == 201) {
+        if (response.statusCode() == HttpStatus.SC_CREATED) {
             setSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY, response.as(CustomerProperty.class));
         }
         setSessionResponse(response);
@@ -339,19 +338,19 @@ public class CustomerSteps extends BasicSteps {
         CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         if (existingCustomerProperty != null) {
             Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
-            String etag = customerPropertyResponseWithEtag.header("ETag");
+            String etag = customerPropertyResponseWithEtag.header(HEADER_ETAG);
 
             Map<String, Object> data = new HashMap<>();
             data.put("valid_from", validFrom);
             data.put("valid_to", validTo);
 
             Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, etag);
-            if (updateResponse.getStatusCode() != 204) {
+            if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("CustomerProperty cannot be modified");
             }
         } else {
             Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("CustomerProperty cannot be created");
             }
         }
@@ -362,7 +361,7 @@ public class CustomerSteps extends BasicSteps {
 
         CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
-        String etag = customerPropertyResponseWithEtag.header("ETag");
+        String etag = customerPropertyResponseWithEtag.header(HEADER_ETAG);
 
         Map<String, Object> data = new HashMap<>();
         data.put(fieldName, value);
@@ -390,12 +389,12 @@ public class CustomerSteps extends BasicSteps {
         if (existingCustomerUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
-            if (deleteResponse.getStatusCode() != 204) {
+            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("CustomerUser cannot be deleted");
             }
         }
         Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), c.getCustomerId(), isPrimary);
-        if (createResponse.getStatusCode() != 204) {
+        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("CustomerUser cannot be created");
         }
     }
@@ -420,7 +419,7 @@ public class CustomerSteps extends BasicSteps {
 
         Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
 
-        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), tempResponse.getHeader("ETag"));
+        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -433,7 +432,7 @@ public class CustomerSteps extends BasicSteps {
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("valid_to", "2200-01-01");
 
-        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), mapForUpdate, tempResponse.getHeader("ETag"));
+        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
         Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
         setSessionResponse(response);
@@ -462,9 +461,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void followingCustomersDontExist(List<String> customerCodes) {
-        customerCodes.forEach(c -> {
-            customerWithCodeIsDeleted(c);
-        });
+        customerCodes.forEach(this::customerWithCodeIsDeleted);
     }
 
     @Step
@@ -503,7 +500,7 @@ public class CustomerSteps extends BasicSteps {
             CustomerUser[] customerUsers = customerUsersResponse.as(CustomerUser[].class);
             for (CustomerUser cu : customerUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
-                if (deleteResponse.statusCode() != 204) {
+                if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("Property set cannot be deleted: " + deleteResponse.asString());
                 }
             }

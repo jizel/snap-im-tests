@@ -5,6 +5,8 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
+import org.apache.http.HttpStatus;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,6 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyPropertySet;
 import travel.snapshot.dp.qa.model.PropertySet;
@@ -56,7 +57,7 @@ public class PropertySetSteps extends BasicSteps {
 
             t.setCustomerId(customer.getCustomerId());
             Response createResponse = createEntity(t);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + createResponse.asString());
             }
         });
@@ -81,7 +82,7 @@ public class PropertySetSteps extends BasicSteps {
         Response responseWithETag = getProperty(propertyFromList.getPropertyId(), null);
 
         // try to get the property with current ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
+        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
         
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
@@ -101,13 +102,13 @@ public class PropertySetSteps extends BasicSteps {
         Response updateResponse = updateProperty(
                 propertyFromList.getPropertyId(),
                 Collections.singletonMap("vat_id", "CZ99999999"),
-                responseWithETag.getHeader("ETag"));
+                responseWithETag.getHeader(HEADER_ETAG));
         if (updateResponse.getStatusCode() != 204) {
             fail("Property cannot be updated: " + updateResponse.asString());
         }
 
         // get with old ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader("ETag"));
+        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
         
         // store to session
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
@@ -129,7 +130,7 @@ public class PropertySetSteps extends BasicSteps {
         String propertyId = Serenity.sessionVariableCalled(SERENITY_SESSION__PROPERTY_ID);
 
         Response response = getProperty(propertyId, null);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
     
     */
@@ -141,7 +142,7 @@ public class PropertySetSteps extends BasicSteps {
             PropertySet[] propertySets = entities.as(PropertySet[].class);
             for (PropertySet ps : propertySets) {
                 Response deleteResponse = deleteEntity(ps.getPropertySetId());
-                if (deleteResponse.statusCode() != 204) {
+                if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("Property set cannot be deleted: " + deleteResponse.asString());
                 }
             }
@@ -190,7 +191,7 @@ public class PropertySetSteps extends BasicSteps {
         String propertySetId = getSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID);
 
         Response response = getEntity(propertySetId, null);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     public void deletePropertySetWithId(String propertySetId) {
@@ -207,7 +208,7 @@ public class PropertySetSteps extends BasicSteps {
                 PropertyUser[] propertyUsers = propertyUsersResponse.as(PropertyUser[].class);
                 for (PropertyUser pu : propertyUsers) {
                     Response deleteResponse = deleteSecondLevelEntity(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
-                    if (deleteResponse.statusCode() != 204) {
+                    if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
                     }
                 }
@@ -223,12 +224,12 @@ public class PropertySetSteps extends BasicSteps {
         if (existingPropertySetUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
-            if (deleteResponse.getStatusCode() != 204) {
+            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertySetUser cannot be deleted");
             }
         }
         Response createResponse = addUserToPropertySet(u.getUserId(), propertySet.getPropertySetId());
-        if (createResponse.getStatusCode() != 204) {
+        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("PropertySetUser cannot be created");
         }
     }
@@ -307,7 +308,7 @@ public class PropertySetSteps extends BasicSteps {
                 PropertyPropertySet[] propertyPropertySets = propertyPropertySetResponse.as(PropertyPropertySet[].class);
                 for (PropertyPropertySet pps : propertyPropertySets) {
                     Response deleteResponse = deleteSecondLevelEntity(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
-                    if (deleteResponse.statusCode() != 204) {
+                    if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set property cannot be deleted: " + deleteResponse.asString());
                     }
                 }
@@ -322,12 +323,12 @@ public class PropertySetSteps extends BasicSteps {
         if (existingPropertySetUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
-            if (deleteResponse.getStatusCode() != 204) {
+            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertySetProperty cannot be deleted");
             }
         }
         Response createResponse = addPropertyToPropertySet(p.getPropertyId(), propertySet.getPropertySetId());
-        if (createResponse.getStatusCode() != 204) {
+        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail(String.format("PropertySetProperty cannot be created. Status: %d, %s", createResponse.getStatusCode(), createResponse.asString()));
         }
     }
@@ -369,7 +370,7 @@ public class PropertySetSteps extends BasicSteps {
     public void comparePropertySetOnHeaderWithStored(String headerName) {
         PropertySet originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY_SET);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");;
+        String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
         given().spec(spec).get(propertyLocation).then()
                 .body("property_set_type", is(originalProperty.getPropertySetType()))
                 .body("property_set_description", is(originalProperty.getPropertySetDescription()))

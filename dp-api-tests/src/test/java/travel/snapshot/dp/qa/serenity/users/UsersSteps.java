@@ -5,6 +5,8 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
+import org.apache.http.HttpStatus;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +44,7 @@ public class UsersSteps extends BasicSteps {
                 deleteEntity(existingUser.getUserId());
             }
             Response createResponse = createEntity(u);
-            if (createResponse.getStatusCode() != 201) {
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("User cannot be created");
             }
         });
@@ -104,7 +106,7 @@ public class UsersSteps extends BasicSteps {
         String roleId = getSessionVariable(SESSION_USER_ID);
 
         Response response = getEntity(roleId, null);
-        response.then().statusCode(404);
+        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
@@ -114,7 +116,7 @@ public class UsersSteps extends BasicSteps {
 
         Map<String, Object> userData = retrieveData(User.class, updatedUser);
 
-        Response response = updateEntity(original.getUserId(), userData, originalResponse.getHeader("ETag"));
+        Response response = updateEntity(original.getUserId(), userData, originalResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -159,7 +161,7 @@ public class UsersSteps extends BasicSteps {
     public void userWithUsernameIsGotWithEtag(String username) {
         User user = getUserByUsername(username);
         Response tempResponse = getEntity(user.getUserId(), null);
-        Response response = getEntity(user.getUserId(), tempResponse.getHeader("ETag"));
+        Response response = getEntity(user.getUserId(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -170,13 +172,13 @@ public class UsersSteps extends BasicSteps {
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("culture", "sk");
 
-        Response updateResponse = updateEntity(user.getUserId(), mapForUpdate, tempResponse.getHeader("ETag"));
+        Response updateResponse = updateEntity(user.getUserId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
-        if (updateResponse.getStatusCode() != 204) {
+        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("User cannot be updated: " + updateResponse.asString());
         }
 
-        Response response = getEntity(user.getUserId(), tempResponse.getHeader("ETag"));
+        Response response = getEntity(user.getUserId(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
