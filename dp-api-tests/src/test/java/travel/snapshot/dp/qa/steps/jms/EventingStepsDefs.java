@@ -27,7 +27,10 @@ public class EventingStepsDefs {
     
     @When("^subscriber is connected and ready to listen$")
     public void message_should_be_received() throws Throwable {
-        steps.messageIsRecieved("MyT");
+        steps.initializeComponents("MyT");
+        steps.etlMessageIsSent();
+        steps.etlMessageIsReceived();
+        steps.closeResources();
           }
     
     //@And("^publisher sends a message and the subscriber consumes it$")
