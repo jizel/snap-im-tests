@@ -7,7 +7,7 @@ import travel.snapshot.dp.qa.helpers.DbHelper;
  */
 public class DbUtilsSteps {
 
-    private static final String DELETE_CUSTOMER_PROPERTY = "delete from customer_property where customer_id = ? and property_id = ?";
+    private static final String DELETE_CUSTOMER_PROPERTY = "delete from Customer_Property where customer_id = ? and property_id = ?";
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
