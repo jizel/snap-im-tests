@@ -48,13 +48,16 @@ public class BasicSteps {
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     protected static final String IDENTITY_BASE_URI = "identity.baseURI";
+    protected static final String IDENTITY_DEV_BASE_URI = "identity_DEV.baseURI";
     protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
+    protected static final String CONFIGURATION_DEV_BASE_URI = "configuration_DEV.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
     protected static final String LIMIT_TO_ALL = "1000000";
     protected static final String LIMIT_TO_ONE = "1";
     protected static final String CURSOR_FROM_FIRST = "0";
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
+	protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
@@ -153,6 +156,10 @@ public class BasicSteps {
             }
             case "social_media": {
                 spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+                break;
+            }
+            case "authorization": {
+                spec.baseUri(PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
             }
             default:

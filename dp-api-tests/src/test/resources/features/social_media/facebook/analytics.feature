@@ -161,9 +161,9 @@ Feature: analytics
 
     Examples: 
       | url                           | granularity | start_date        | end_date       | expected_granularity | expected_since    | expected_until | count |
-      | /social_media/analytics/reach |             |                   |                | day                  | today - 31 days   | today          | 32    |
+      | /social_media/analytics/reach |             |                   |                | day                  | today - 1 month   | today          | 32    |
       | /social_media/analytics/reach |             | 2015-09-01        | 2015-09-01     | day                  | 2015-09-01        | 2015-09-01     | 1     |
-      | /social_media/analytics/reach | day         |                   | today          | day                  | today - 31 days   | today          | 32    |
+      | /social_media/analytics/reach | day         |                   | today          | day                  | today - 1 month   | today          | 32    |
       | /social_media/analytics/reach | day         | today             |                | day                  | today             | today          | 1     |
       | /social_media/analytics/reach | week        |                   | today          | week                 | today - 13 weeks  | today          | 13    |
       | /social_media/analytics/reach | week        | today             |                | week                 | today             | today          | 0     |
@@ -187,29 +187,41 @@ Feature: analytics
     And Data is owned by "facebook"
 
   Scenario Outline: Checking number of values in response for various granularities
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "<since>" until "today"
+    When Getting "<url>" data with "<granularity>" granularity for "property" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is "200"
     And Response contains no more than <count> values
 
     Examples: 
-      | url                                              | granularity | since           | count |
-      | /social_media/analytics/facebook                 | day         | today           | 1     |
-      | /social_media/analytics/facebook/number_of_posts | day         | today - 1 day   | 2     |
-      | /social_media/analytics/facebook/engagement      | day         | today - 6 day   | 7     |
-      | /social_media/analytics/facebook/likes           | day         | today - 7 day   | 8     |
-      | /social_media/analytics/facebook/unlikes         | day         | today - 8 day   | 9     |
-      | /social_media/analytics/facebook/reach           | day         | today - 29 day  | 30    |
-      | /social_media/analytics/facebook/followers       | day         | today - 30 day  | 31    |
-      | /social_media/analytics/facebook/posts           | week        | today           | 0     |
-      | /social_media/analytics/twitter                  | week        | today - 5 days  | 0     |
-      | /social_media/analytics/twitter/tweets           | week        | today - 6 days  | 1     |
-      | /social_media/analytics/twitter/number_of_tweets | week        | today - 7 days  | 1     |
-      | /social_media/analytics/twitter/engagement       | week        | today - 8 days  | 1     |
-      | /social_media/analytics/twitter/followers        | week        | today - 8 days  | 1     |
-      | /social_media/analytics/twitter/impressions      | month       | today - 27 days | 0     |
-      | /social_media/analytics/twitter/reach            | month       | today - 28 days | 0     |
-      | /social_media/analytics/twitter/retweets         | month       | today - 29 days | 1     |
-      | /social_media/analytics/twitter/retweets_reach   | month       | today - 30 days | 1     |
-      | /social_media/analytics/twitter/mentions         | month       | today - 31 days | 1     |
-      | /social_media/analytics/twitter/mentions_reach   | month       | today - 32 days | 1     |
+      | url                                              | granularity | since             | <until>         | count |
+      | /social_media/analytics/facebook                 | day         | today             | today           | 1     |
+      | /social_media/analytics/facebook/number_of_posts | day         | today - 1 day     | today           | 2     |
+      | /social_media/analytics/facebook/engagement      | day         | today - 6 days    | today           | 7     |
+      | /social_media/analytics/facebook/likes           | day         | today - 7 days    | today           | 8     |
+      | /social_media/analytics/facebook/unlikes         | day         | today - 8 days    | today           | 9     |
+      | /social_media/analytics/facebook/reach           | day         | today - 29 days   | today           | 30    |
+      | /social_media/analytics/facebook/followers       | day         | today - 30 days   | today           | 31    |
+      | /social_media/analytics/facebook/posts           | week        | today             | today           | 0     |
+      | /social_media/analytics/twitter                  | week        | today - 5 days    | today           | 0     |
+      | /social_media/analytics/twitter/tweets           | week        | today - 6 days    | today           | 0     |
+      | /social_media/analytics/twitter/number_of_tweets | week        | today - 13 days   | today           | 1     |
+      | /social_media/analytics/twitter/engagement       | week        | 2015-11-27        | 2015-12-25      | 3     |
+      | /social_media/analytics/twitter/engagement       | week        | 2015-11-27        | 2015-12-26      | 3     |
+      | /social_media/analytics/twitter/engagement       | week        | 2015-11-27        | 2015-12-28      | 4     |
+      | /social_media/analytics/twitter/followers        | week        | 2015-11-27        | 2015-12-27      | 4     |
+      | /social_media/analytics/twitter/impressions      | month       | today - 27 days   | today           | 0     |
+      | /social_media/analytics/twitter/mentions_reach   | month       | today - 31 days   | today           | 1     |
+      | /social_media/analytics/twitter/mentions_reach   | month       | today - 32 days   | today           | 1     |
+      | /social_media/analytics/twitter/followers        | month       | 2015-11-30        | 2015-12-31      | 1     |
+      | /social_media/analytics/twitter/followers        | month       | 2015-12-1         | 2015-12-31      | 1     |
+      | /social_media/analytics/twitter/followers        | month       | 2015-11-27        | 2016-1-1        | 1     |
+      | /social_media/analytics/twitter/followers        | month       | 2015-11-27        | 2016-2-1        | 2     |
+      | /social_media/analytics/facebook/followers       | month       | today - 36 months |                 | 36    |
+      | /social_media/analytics/twitter                  | week        | today - 13 weeks  | today + 1 day   | 13    |
+      | /social_media/analytics/twitter/tweets           | week        | today - 26 weeks  | today + 44 days | 26    |
+      | /social_media/analytics/twitter/number_of_tweets | week        | today - 7 days    | today - 1 days  | 0     |
+      | /social_media/analytics/twitter/engagement       | week        | today - 13 days   | today - 6 days  | 1     |
+      | /social_media/analytics/twitter/followers        | week        | today - 45 days   | today - 32 days | 1     |
+      | /social_media/analytics/twitter/retweets_reach   | day         | 2015-09-01        | 2015-09-01      | 1     |
+      | /social_media/analytics/twitter/mentions         | week        | 2015-09-01        | 2015-09-01      | 0     |
+      | /social_media/analytics/twitter/mentions_reach   | month       | 2015-09-01        | 2015-09-01      | 0     |

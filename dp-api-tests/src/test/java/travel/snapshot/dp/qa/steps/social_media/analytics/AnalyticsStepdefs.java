@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsSteps;
 
 /**
@@ -71,7 +73,7 @@ public class AnalyticsStepdefs {
 
     @Then("^Response granularity is \"([^\"]*)\"$")
     public void Response_granularity_is(String granularity) throws Throwable {
-        analyticsSteps.textFieldIs("granularity", granularity);
+        analyticsSteps.bodyContainsEntityWith("granularity", granularity);
     }
 
     @Then("^Response since is \"([^\"]*)\"$")
@@ -88,4 +90,5 @@ public class AnalyticsStepdefs {
     public void Data_is_owned_by(String data_owner) throws Throwable {
         analyticsSteps.fieldContains("data_owners", data_owner);
     }
+
 }

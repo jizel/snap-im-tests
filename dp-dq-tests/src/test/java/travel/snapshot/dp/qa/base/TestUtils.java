@@ -81,13 +81,13 @@ public class TestUtils {
       }
     }
     
-    public static void followUpLoadTestFacebook(List<String> factsYesterdayList, List<String> incrementalsTodayList, List<String> FactstodayList) throws Exception {
+    public static void followUpLoadTestFacebook(List<String> factsYesterdayList, List<String> incrementalsTodayList, List<String> factstodayList) throws Exception {
         
         Iterator<String> it1 = factsYesterdayList.iterator();
         Iterator<String> it2 = incrementalsTodayList.iterator();
-        Iterator<String> it3 = FactstodayList.iterator();
+        Iterator<String> it3 = factstodayList.iterator();
         
-        while (it1.hasNext() && it2.hasNext()) {
+        while (it1.hasNext() && it2.hasNext() && it3.hasNext()) {
           String followUpFactsYesterday = it1.next();
           String followUpIncrementalsToday = it2.next();
           String followUpFactsToday = it3.next();

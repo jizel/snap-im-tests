@@ -83,12 +83,12 @@ public class StringUtil {
         if (parts.length == 1) {
             return date;
         } else {
-            String sing = parts[1];
+            String sign = parts[1];
             String incrementNumber = parts[2];
             String incrementUnit = parts[3];
 
             TemporalUnit unitValue = null;
-            Integer incrementNumberValue = incrementNumberValue = Integer.valueOf(incrementNumber);
+            Integer incrementNumberValue = Integer.valueOf(incrementNumber);
             switch (incrementUnit) {
                 case ("days"):
                 case ("day"): {
@@ -107,11 +107,11 @@ public class StringUtil {
                 }
             }
 
-            if ("+".equals(sing.trim())) {
+            if ("+".equals(sign.trim())) {
                 date = date.plus(incrementNumberValue, unitValue);
-            } else if ("-".equals(sing.trim())) {
+            } else if ("-".equals(sign.trim())) {
                 date = date.minus(incrementNumberValue, unitValue);
-            } else throw new DateTimeException("unknows sing for manipulating with dates");
+            } else throw new DateTimeException("Unknown sign for manipulating dates");
         }
 
 

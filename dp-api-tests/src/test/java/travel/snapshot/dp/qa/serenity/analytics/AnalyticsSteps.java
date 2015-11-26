@@ -12,11 +12,18 @@ import java.time.format.DateTimeFormatter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -29,9 +36,9 @@ public class AnalyticsSteps extends BasicSteps {
         super();
         spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
     }
-
+    
     //GET Requests
-
+    
     @Step
     public void emptyRequest(String url) {
         Response response = given().spec(spec).get(url);
@@ -71,7 +78,17 @@ public class AnalyticsSteps extends BasicSteps {
         Response response = requestSpecification.when().get(url);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
+    
+    public void postData(String url, String username, String password) {
+        RequestSpecification requestSpecification = given().spec(spec)
+                .parameter("grant_type", "password")
+                .parameter("username", username)
+                .parameter("password", password);
 
+        Response response = requestSpecification.when().post(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+    
     @Step
     public void getPropertyRateData(String property_id, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
@@ -151,13 +168,7 @@ public class AnalyticsSteps extends BasicSteps {
     }
 
     @Step
-    public void textFieldIs(String fieldName, String value) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body(fieldName, is(value));
-    }
-
-    @Step
-    public void fieldContains(String fieldName, String value) {
+    public void fieldContains(String fieldName, String value){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, hasItem(value));
     }
