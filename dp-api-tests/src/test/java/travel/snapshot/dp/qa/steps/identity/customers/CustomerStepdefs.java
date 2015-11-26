@@ -299,4 +299,9 @@ public class CustomerStepdefs {
     public void There_are_customer_users_with_following_usernames_returned_in_order_expected_usernames(List<String> usernames) throws Throwable {
         customerSteps.usernamesAreInResponseInOrder(usernames);
     }
+
+    @Given("^Customer with code \"([^\"]*)\" does not exist$")
+    public void Customer_with_code_does_not_exist(String customerCode) throws Throwable {
+        customerSteps.customerWithCodeIsDeleted(customerCode);
+    }
 }

@@ -305,11 +305,11 @@ public class BasicSteps {
         return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
     }
 
-    protected void setSessionVariable(String key, Object value) {
+    public void setSessionVariable(String key, Object value) {
         Serenity.setSessionVariable(key).to(value);
     }
 
-    protected <T> T getSessionVariable(String key) {
+    public  <T> T getSessionVariable(String key) {
         return Serenity.<T>sessionVariableCalled(key);
     }
 
