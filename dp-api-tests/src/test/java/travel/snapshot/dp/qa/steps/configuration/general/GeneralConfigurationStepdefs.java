@@ -6,9 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Configuration;
 import travel.snapshot.dp.qa.model.ConfigurationType;
 import travel.snapshot.dp.qa.serenity.configuration.ConfigurationSteps;
@@ -65,21 +68,9 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.getConfigurationTypeWithId(identifier);
     }
 
-
-    @When("^List of configuration types is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_configuration_types_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String limit, String cursor) throws Throwable {
-        configurationSteps.listOfConfigurationTypesisGot(limit, cursor);
-    }
-
-    @Then("^There are \"([^\"]*)\" configuration types returned$")
-    public void There_are_configuration_types_returned(String count) throws Throwable {
-        int intCount = 0;
-        if ("".equals(count)) {
-            intCount = 20;
-        } else {
-            intCount = Integer.parseInt(count);
-        }
-        configurationSteps.numberOfEntitiesInResponse(ConfigurationType.class, intCount);
+    @Then("^There are (\\d+) configuration types returned$")
+    public void There_are_configuration_types_returned(int count) throws Throwable {
+        configurationSteps.numberOfEntitiesInResponse(ConfigurationType.class, count);
     }
 
     @Then("^Body contains configuration type with identifier \"([^\"]*)\" and description \"([^\"]*)\"$")
@@ -118,25 +109,14 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.getConfigurationWithKeyForIdentifier(key, identifier);
     }
 
-    @When("^List of configurations is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty for configuration type \"([^\"]*)\"$")
-    public void List_of_configurations_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty_for_configuration_type(String limit, String cursor, String identifier) throws Throwable {
-        configurationSteps.listOfConfigurationsIsGot(limit, cursor, identifier);
-    }
-
     @Then("^Returned configuration value is \"([^\"]*)\" with type \"([^\"]*)\"$")
     public void Returned_configuration_value_is_with_type(String value, String type) throws Throwable {
         configurationSteps.valueInResponseIs(value, type);
     }
 
-    @Then("^There are \"([^\"]*)\" configurations returned$")
-    public void There_are_configurations_returned(String count) throws Throwable {
-        int intCount = 0;
-        if ("".equals(count)) {
-            intCount = 20;
-        } else {
-            intCount = Integer.parseInt(count);
-        }
-        configurationSteps.numberOfEntitiesInResponse(Configuration.class, intCount);
+    @Then("^There are (\\d+) configurations returned$")
+    public void There_are_configurations_returned(int count) throws Throwable {
+        configurationSteps.numberOfEntitiesInResponse(Configuration.class, count);
     }
 
 
@@ -189,4 +169,22 @@ public class GeneralConfigurationStepdefs {
         configurationSteps.updateConfigurationTypeDescription(identifier, "");
     }
 
+    @When("^List of configuration types is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_configuration_types_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                           @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                           @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                           @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                           @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        configurationSteps.listOfConfigurationTypesisGot(limit, cursor, filter, sort, sortDesc);
+    }
+
+    @When("^List of configurations is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\" for configuration type \"([^\"]*)\"$")
+    public void List_of_configurations_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc_for_configuration_type(@Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                             @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                             @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                             @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc,
+                                                                                                                             String configurationType) throws Throwable {
+        configurationSteps.listOfConfigurationsIsGot(limit, cursor, filter, sort, sortDesc, configurationType);
+    }
 }

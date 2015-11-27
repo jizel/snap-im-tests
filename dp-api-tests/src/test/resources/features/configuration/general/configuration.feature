@@ -7,139 +7,6 @@ Feature: configuration
       | identifier | description                               |
       | conf_id_1  | Description of configuration identifier 1 |
       | conf_id_2  | Description of configuration identifier 2 |
-    Given The following configuration types exist with 2 random text items
-      | identifier           | description                                          |
-      | with_items_conf_id_1 | Description of configuration identifier 1 with items |
-      | with_items_conf_id_2 | Description of configuration identifier 2 with items |
-
-  Scenario: Creating Configuration Type
-  POST /configuration/configurations
-
-    When Configuration type is created
-      | identifier        | description                                       |
-      | created_conf_id_1 | Description of created configuration identifier 1 |
-    Then Response code is "201"
-    And Body contains configuration type with identifier "created_conf_id_1" and description "Description of created configuration identifier 1"
-    And "Location" header is set and contains configuration type with identifier "created_conf_id_1"
-
-  Scenario Outline: Checking error codes for creating configuration type
-    When Data '<json_data>' is used for "<method>"
-    Then Response code is "<error_code>"
-    And Custom code is "<custom_code>"
-
-    Examples:
-      | json_data                                                          | method | error_code | custom_code |
-      | { "identifier":"", "description":"identifier is empty"}            | POST   | 400        | 53          |
-      | { "description":"identifier is missing"}                           | POST   | 400        | 53          |
-      | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 400        | 62          |
-
-  Scenario: Deleting Configuration Type
-    When Configuration type with identifier "conf_id_1" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Configuration type with identifier "conf_id_1" doesn't exist
-
-  Scenario: Deleting nonexistent configuration type
-    When Nonexistent configuration type id is deleted
-    Then Response code is "204"
-
-
-  #error states
-  #id is missing
-  #x-application is missing
-  Scenario: Updating configuration type description
-    When Configuration type description is updated for identifier "conf_id_1" with description "New description"
-    Then Response code is "204"
-    And Body is empty
-    And Configuration type with identifier "conf_id_1" has description "New description"
-
-  Scenario: Updating description of nonexisting configuration type
-    Given Configuration type with identifier "nonexisting_id" doesn't exist
-    When Configuration type description is updated for identifier "nonexisting_id" with description "New description"
-    Then Response code is "404"
-    And Custom code is "152"
-
-  Scenario: Updating description with missing body parameter
-    When Configuration type description is updated for identifier "conf_id_2" with missing description
-    Then Response code is "400"
-    And Custom code is "53"
-
-  @skipped
-  Scenario: Updating description with missing id parameter
-    When Configuration type description is updated for identifier "" with description "New description"
-    Then Response code is "400"
-    And Custom code is "52"
-
-  #error states
-  #empty body, wrong id, wrong application id
-  Scenario: Getting configuration type
-    When Configuration type with with identifier "with_items_conf_id_1"  is got
-    Then Response code is "200"
-    And Content type is "application/json"
-    And There are "2" configurations returned
-
-
-  Scenario: Getting configuration type with nonexisting id
-    When Configuration type with with identifier "nonexisting_id"  is got
-    Then Response code is "404"
-    And Custom code is "152"
-
-  # error states
-  #wrong id, wrong/missing x-application
-  Scenario Outline: Getting list of configuration types
-    Given The following configuration types exist
-      | identifier      | description                                                                    |
-      | list_conf_id_1  | Description of configuration identifier 1 for listing all configuration types  |
-      | list_conf_id_2  | Description of configuration identifier 2 for listing all configuration types  |
-      | list_conf_id_3  | Description of configuration identifier 3 for listing all configuration types  |
-      | list_conf_id_4  | Description of configuration identifier 4 for listing all configuration types  |
-      | list_conf_id_5  | Description of configuration identifier 5 for listing all configuration types  |
-      | list_conf_id_6  | Description of configuration identifier 6 for listing all configuration types  |
-      | list_conf_id_7  | Description of configuration identifier 7 for listing all configuration types  |
-      | list_conf_id_8  | Description of configuration identifier 8 for listing all configuration types  |
-      | list_conf_id_9  | Description of configuration identifier 9 for listing all configuration types  |
-      | list_conf_id_10 | Description of configuration identifier 10 for listing all configuration types |
-      | list_conf_id_11 | Description of configuration identifier 11 for listing all configuration types |
-      | list_conf_id_12 | Description of configuration identifier 12 for listing all configuration types |
-      | list_conf_id_13 | Description of configuration identifier 13 for listing all configuration types |
-      | list_conf_id_14 | Description of configuration identifier 14 for listing all configuration types |
-      | list_conf_id_15 | Description of configuration identifier 15 for listing all configuration types |
-      | list_conf_id_16 | Description of configuration identifier 16 for listing all configuration types |
-      | list_conf_id_17 | Description of configuration identifier 17 for listing all configuration types |
-      | list_conf_id_18 | Description of configuration identifier 18 for listing all configuration types |
-      | list_conf_id_19 | Description of configuration identifier 19 for listing all configuration types |
-      | list_conf_id_20 | Description of configuration identifier 20 for listing all configuration types |
-      | list_conf_id_21 | Description of configuration identifier 21 for listing all configuration types |
-    When List of configuration types is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
-    Then Response code is "200"
-    And Content type is "application/json"
-    And There are "<limit>" configuration types returned
-
-    Examples:
-      | limit | cursor |
-      |       |        |
-      | 15    |        |
-      |       | 1      |
-      | 20    | 0      |
-      | 10    | 0      |
-      | 5     | 5      |
-
-  #given hodne hodnot, aby se dalo testovat
-  #test limit, cursor, filter, sort with different values
-  Scenario Outline: Checking error codes for getting list of configuration types
-    When List of configuration types is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty
-    Then Response code is "<response_code>"
-    And Custom code is "<custom_code>"
-
-    Examples:
-      | limit | cursor | response_code | custom_code |
-      |       | -1     | 400           | 63          |
-      |       | text   | 400           | 63          |
-      | -1    |        | 400           | 63          |
-      | text  |        | 400           | 63          |
-      | 10    | -1     | 400           | 63          |
-      | text  | 0      | 400           | 63          |
-      | 10    | text   | 400           | 63          |
 
   Scenario Outline: add configuration key:value
     When Configuration is created for configuration type "conf_id_1"
@@ -272,31 +139,84 @@ Feature: configuration
       | list_given_test_key_20 | text value 20 | string |
       | list_given_test_key_21 | text value 21 | string |
       | list_given_test_key_22 | text value 22 | string |
-    When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty for configuration type "conf_id_1"
+      | list_given_test_key_23 | text value 23 | string |
+      | list_given_test_key_24 | text value 24 | string |
+      | list_given_test_key_25 | text value 25 | string |
+      | list_given_test_key_26 | text value 26 | string |
+      | list_given_test_key_27 | text value 27 | string |
+      | list_given_test_key_28 | text value 28 | string |
+      | list_given_test_key_29 | text value 29 | string |
+      | list_given_test_key_30 | text value 30 | string |
+      | list_given_test_key_31 | text value 31 | string |
+      | list_given_test_key_32 | text value 32 | string |
+      | list_given_test_key_33 | text value 33 | string |
+      | list_given_test_key_34 | text value 34 | string |
+      | list_given_test_key_35 | text value 35 | string |
+      | list_given_test_key_36 | text value 36 | string |
+      | list_given_test_key_37 | text value 37 | string |
+      | list_given_test_key_38 | text value 38 | string |
+      | list_given_test_key_39 | text value 39 | string |
+      | list_given_test_key_40 | text value 40 | string |
+      | list_given_test_key_41 | text value 41 | string |
+      | list_given_test_key_42 | text value 42 | string |
+      | list_given_test_key_43 | text value 43 | string |
+      | list_given_test_key_44 | text value 44 | string |
+      | list_given_test_key_45 | text value 45 | string |
+      | list_given_test_key_46 | text value 46 | string |
+      | list_given_test_key_47 | text value 47 | string |
+      | list_given_test_key_48 | text value 48 | string |
+      | list_given_test_key_49 | text value 49 | string |
+      | list_given_test_key_50 | text value 50 | string |
+      | list_given_test_key_51 | text value 51 | string |
+      | list_given_test_key_52 | text value 52 | string |
+      | list_given_test_key_53 | text value 53 | string |
+      | list_given_test_key_54 | text value 54 | string |
+      | list_given_test_key_55 | text value 55 | string |
+      | list_given_test_key_56 | text value 56 | string |
+      | list_given_test_key_57 | text value 57 | string |
+      | list_given_test_key_58 | text value 58 | string |
+      | list_given_test_key_59 | text value 59 | string |
+
+    When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null" for configuration type "conf_id_1"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are "<limit>" configurations returned
+    And There are <returned> configurations returned
+    And Link header is '<link_header>'
 
     Examples:
-      | limit | cursor |
-      |       |        |
-      | 15    |        |
-      |       | 1      |
-      | 20    | 0      |
-      | 10    | 0      |
-      | 5     | 5      |
+      | limit | cursor | returned | link_header                                                                                               |
+      | /null |        | 50       | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      | /null | /null  | 50       | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      |       |        | 50       | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      |       | /null  | 50       | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      | 15    |        | 15       | </identity/customers?limit=15&cursor=15>; rel="next"                                                      |
+      |       | 1      | 50       | </identity/customers?limit=50&cursor=51>; rel="next", </identity/customers?limit=50&cursor=0>; rel="prev" |
+      | 20    | 0      | 20       | </identity/customers?limit=20&cursor=20>; rel="next"                                                      |
+      | 10    | 0      | 10       | </identity/customers?limit=10&cursor=10>; rel="next"                                                      |
+      | 5     | 10     | 5        | </identity/customers?limit=5&cursor=15>; rel="next", </identity/customers?limit=5&cursor=5>; rel="prev"   |
 
   Scenario Outline: Checking error codes for getting list of configurations for configuration type "conf_id_1"
-    When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter empty and sort empty for configuration type "conf_id_1"
+    When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" for configuration type "conf_id_1"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
     Examples:
-      | limit | cursor | response_code | custom_code |
-      |       | -1     | 400           | 63          |
-      |       | text   | 400           | 63          |
-      | -1    |        | 400           | 63          |
-      | text  |        | 400           | 63          |
-      | 10    | -1     | 400           | 63          |
-      | text  | 0      | 400           | 63          |
-      | 10    | text   | 400           | 63          |
+      | limit | cursor | filter          | sort        | sort_desc   | response_code | custom_code |
+      #limit and cursor
+      | /null | -1     | /null           | /null       | /null       | 400           | 63          |
+      |       | -1     | /null           | /null       | /null       | 400           | 63          |
+      | /null | text   | /null           | /null       | /null       | 400           | 63          |
+      |       | text   | /null           | /null       | /null       | 400           | 63          |
+      | -1    |        | /null           | /null       | /null       | 400           | 63          |
+      | -1    | /null  | /null           | /null       | /null       | 400           | 63          |
+      | text  |        | /null           | /null       | /null       | 400           | 63          |
+      | text  | /null  | /null           | /null       | /null       | 400           | 63          |
+      | 10    | -1     | /null           | /null       | /null       | 400           | 63          |
+      | text  | 0      | /null           | /null       | /null       | 400           | 63          |
+      | 10    | text   | /null           | /null       | /null       | 400           | 63          |
+      #filtering and sorting
+      | 10    | 0      | /null           | key         | key         | 400           | 64          |
+      | 10    | 0      | /null           | /null       | nonexistent | 400           | 63          |
+      | 10    | 0      | /null           | nonexistent | /null       | 400           | 63          |
+      | 10    | 0      | key==           | /null       | /null       | 400           | 63          |
+      | 10    | 0      | nonexistent==a* | /null       | /null       | 400           | 63          |
