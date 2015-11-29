@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -43,7 +42,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void followingRolesExist(List<Role> roles) {
         roles.forEach(r -> {
-            Role existingRole = getRoleByNameForApplication(r.getRoleName(), r.getApplicationId());
+            Role existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
             if (existingRole != null) {
                 deleteRole(existingRole.getRoleId());
             }
@@ -57,7 +56,7 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void followingRoleIsCreated(Role role) {
-        Role existingRole = getRoleByNameForApplication(role.getRoleName(), role.getApplicationId());
+        Role existingRole = getRoleByNameForApplicationInternal(role.getRoleName(), role.getApplicationId());
         setSessionVariable(SESSION_CREATED_ROLE, role);
         if (existingRole != null) {
             deleteRole(existingRole.getRoleId());
@@ -95,7 +94,7 @@ public class RolesSteps extends BasicSteps {
         return requestSpecification.when().get("/{id}", id);
     }
 
-    private Role getRoleByNameForApplication(String name, String applicationId) {
+    public Role getRoleByNameForApplicationInternal(String name, String applicationId) {
         String filter = String.format("role_name=='%s' and application_id=='%s'", name, applicationId);
         Role[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(Role[].class);
         return Arrays.asList(roles).stream().findFirst().orElse(null);
@@ -111,7 +110,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void getRoleWithNameForApplicationId(String name, String applicationId) {
         //TODO implement actual customer search
-        Role roleByName = getRoleByNameForApplication(name, applicationId);
+        Role roleByName = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response resp = getRole(roleByName.getRoleId(), null);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
@@ -125,7 +124,11 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void deleteRoleWithNameForApplication(String name, String applicationId) {
-        String roleId = getRoleByNameForApplication(name, applicationId).getRoleId();
+        Role r = getRoleByNameForApplicationInternal(name, applicationId);
+        if (r == null) {
+            return;
+        }
+        String roleId = r.getRoleId();
         Response resp = deleteRole(roleId);//delete role
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
         Serenity.setSessionVariable(SESSION_ROLE_ID).to(roleId);//store to session
@@ -147,7 +150,7 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void updateRoleWithNameForApplicationId(String name, String applicationId, Role updatedRole) {
-        Role original = getRoleByNameForApplication(name, applicationId);
+        Role original = getRoleByNameForApplicationInternal(name, applicationId);
         Response tempResponse = getRole(original.getRoleId(), null);
 
         Map<String, Object> role = new HashMap<>();
@@ -167,7 +170,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void getRoleWithNameForApplicationIdUsingEtag(String name, String applicationId) {
         //TODO implement actual customer search
-        Role roleFromList = getRoleByNameForApplication(name, applicationId);
+        Role roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response tempResponse = getRole(roleFromList.getRoleId(), null);
 
@@ -177,7 +180,7 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void getRoleWithNameForApplicationIdUsingEtagAfterUpdate(String name, String applicationId) {
-        Role roleFromList = getRoleByNameForApplication(name, applicationId);
+        Role roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response tempResponse = getRole(roleFromList.getRoleId(), null);
 
@@ -195,7 +198,7 @@ public class RolesSteps extends BasicSteps {
     }
 
     public void updateRoleWithNameForApplicationIdIfUpdatedBefore(String name, String applicationId, Role updatedRole) {
-        Role original = getRoleByNameForApplication(name, applicationId);
+        Role original = getRoleByNameForApplicationInternal(name, applicationId);
         Response tempResponse = getRole(original.getRoleId(), null);
 
 
@@ -218,7 +221,7 @@ public class RolesSteps extends BasicSteps {
     }
 
     public void roleWithNameForApplicationIdHasData(String name, String applicationId, Role data) {
-        Role roleByName = getRoleByNameForApplication(name, applicationId);
+        Role roleByName = getRoleByNameForApplicationInternal(name, applicationId);
 
         if (StringUtils.isNotBlank(data.getRoleDescription())) {
             assertEquals(data.getRoleDescription(), roleByName.getRoleDescription());
@@ -231,7 +234,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void deleteRoles(List<Role> roles) {
         roles.forEach(r -> {
-            Role existingRole = getRoleByNameForApplication(r.getRoleName(), r.getApplicationId());
+            Role existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
             if (existingRole != null) {
                 deleteRole(existingRole.getRoleId());
             }

@@ -94,7 +94,11 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void deleteUserWithUserName(String userName) {
-        String userId = getUserByUsername(userName).getUserId();
+        User u = getUserByUsername(userName);
+        if (u == null) {
+            return;
+        }
+        String userId = u.getUserId();
         Response response = deleteEntity(userId);
 
         setSessionResponse(response);
