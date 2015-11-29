@@ -64,7 +64,7 @@ public class PropertySetSteps extends BasicSteps {
         Serenity.setSessionVariable(SERENITY_SESSION__PROPERTY_SETS).to(propertySets);
     }
 
-    private PropertySet getPropertySetByNameForCustomer(String propertySetName, String customerId) {
+    public PropertySet getPropertySetByNameForCustomer(String propertySetName, String customerId) {
         String filter = String.format("property_set_name==%s and customer_id==%s", propertySetName, customerId);
         PropertySet[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySet[].class);
         return Arrays.asList(properties).stream().findFirst().orElse(null);

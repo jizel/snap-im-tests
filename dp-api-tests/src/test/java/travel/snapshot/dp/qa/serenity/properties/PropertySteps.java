@@ -165,7 +165,12 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyWithCode(String code) {
-        String propertyId = getPropertyByCodeInternal(code).getPropertyId();
+        Property p = getPropertyByCodeInternal(code);
+        if (p == null) {
+            return;
+        }
+        String propertyId = p.getPropertyId();
+
         Response resp = deleteProperty(propertyId);
 
         //store to session

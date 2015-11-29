@@ -10,11 +10,13 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,24 +43,19 @@ public class ConfigurationSteps extends BasicSteps {
     private static final String SESSION_CONFIGURATION_TYPES = "configuration_types";
     private static final String SESSION_CREATED_CONFIGURATION_TYPE = "created_configuration_type";
     private static final String SESSION_CONFIGURATIONS = "configurations";
+    public static final String CONFIGURATION_BASE_PATH = "/configuration";
 
     public ConfigurationSteps() {
         super();
-        spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));
+        spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI)).basePath(CONFIGURATION_BASE_PATH);
     }
 
     private ConfigurationType getConfigurationTypeFromString(String jsonData) {
         return from(jsonData).getObject("", ConfigurationType.class);
     }
 
-    private Response createConfigurationType(ConfigurationType t) {
-        return given().spec(spec).basePath("/configuration")
-                .body(t)
-                .when().post();
-    }
-
     private Response deleteConfiguration(String key, String identifier) {
-        return given().spec(spec).basePath("/configuration")
+        return given().spec(spec)
                 .when().delete("/{identifier}/{key}", identifier, key);
     }
 
@@ -75,30 +72,36 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private Response getConfiguration(String key, String identifier) {
-        return given().spec(spec).basePath("/configuration")
+        return given().spec(spec)
                 .when().get("/{identifier}/{key}", identifier, key);
     }
 
-    private Response createConfiguration(String key, JsonNode value, String type, String identifier) {
+    private Response createValueForKey(String identifier, String key, String value, String type) {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonValue = stringToJsonField(type, value);
         Map<String, Object> map = new HashMap<>();
         map.put("key", key);
-        map.put("value", value);
+        map.put("value", jsonValue);
         map.put("type", type);
-        return given().spec(spec).basePath("/configuration")
+        return given().spec(spec)
                 .body(map)
                 .when().post("/{id}", identifier);
     }
 
-    private Response updateConfiguration(String key, JsonNode value, String type, String identifier) {
+    private Response updateValueForKey(String identifier, String key, String value, String type, String etag) {
+        JsonNode jsonValue = stringToJsonField(type, value);
+
         Map<String, Object> map = new HashMap<>();
-        map.put("value", value);
+        map.put("value", jsonValue);
         map.put("type", type);
-        return given().spec(spec).basePath("/configuration")
-                .body(map)
-                .when().post("/{id}/{key}", identifier, key);
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        return requestSpecification.body(map).when().post("/{id}/{key}", identifier, key);
     }
 
-    private Response createValueForKey(String identifier, String key, String value, String type) {
+    private JsonNode stringToJsonField(String type, String value) {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
@@ -123,82 +126,24 @@ public class ConfigurationSteps extends BasicSteps {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return createConfiguration(key, actualObj, type, identifier);
-    }
-
-    private Response updateValueForKey(String identifier, String key, String value, String type) {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode actualObj = null;
-        try {
-            switch (type) {
-                case "string": {
-                    actualObj = mapper.readTree("\"" + value + "\"");
-                    break;
-                }
-                case "integer": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "long": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "double": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "boolean": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "date": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "datetime": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                case "object": {
-                    actualObj = mapper.readTree(value);
-                    break;
-                }
-                default:
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return updateConfiguration(key, actualObj, type, identifier);
+        return actualObj;
     }
 
 
     private Response updateConfigurationType(String identifier, String description) {
         Map<String, Object> map = new HashMap<>();
         map.put("description", description);
-        return given().spec(spec).basePath("/configuration")
+        return given().spec(spec)
                 .body(map)
                 .when().post("/{id}/description_update", identifier);
 
     }
 
-    private Response deleteConfigurationType(String id) {
-        return given().spec(spec).basePath("/configuration")
-                .when().delete("/{id}", id);
-    }
-
-    private Response getConfigurationType(String id) {
-        return given().spec(spec).basePath("/configuration")
-                .when().get("/{id}", id);
-    }
-
     private Boolean isConfigurationTypeExist(String identifier) {
-        if (identifier == null || "".equals(identifier)) {
+        if (StringUtils.isBlank(identifier)) {
             return false;
         }
-        Response response = getConfigurationType(identifier);
+        Response response = getEntity(identifier);
         int statusCode = response.statusCode();
         if (statusCode == HttpStatus.SC_OK) {
             return true;
@@ -209,50 +154,16 @@ public class ConfigurationSteps extends BasicSteps {
         }
     }
 
-    /**
-     * getting configuration types over rest api, if limit and cursor is null or empty, it's not
-     * added to query string
-     */
-    private Response getConfigurationTypes(String limit, String cursor) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/configuration");
-
-        if (cursor != null && !"".equals(cursor)) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null && !"".equals(limit)) {
-            requestSpecification.parameter("limit", limit);
-        }
-        return requestSpecification.when().get();
-    }
-
-    /**
-     * getting configurations over rest api, if limit and cursor is null or empty, it's not added to
-     * query string
-     */
-    private Response getConfigurations(String limit, String cursor, String identifier) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .basePath("/configuration");
-
-        if (cursor != null && !"".equals(cursor)) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null && !"".equals(limit)) {
-            requestSpecification.parameter("limit", limit);
-        }
-        return requestSpecification.when().get("/{id}", identifier);
-    }
-
     @Step
     public void tryDeleteConfigurationType(String identifier) {
-        Response resp = deleteConfigurationType(identifier);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+        Response resp = deleteEntity(identifier);
+        setSessionResponse(resp);
     }
 
     @Step
     public void getConfigurationTypeWithId(String configType) {
-        Response resp = getConfigurationType(configType);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+        Response resp = getEntity(configType, null);
+        setSessionResponse(resp);
     }
 
     @Step
@@ -260,10 +171,10 @@ public class ConfigurationSteps extends BasicSteps {
         configurationTypes.forEach(t -> {
 
             if (isConfigurationTypeExist(t.getIdentifier())) {
-                deleteConfigurationType(t.getIdentifier());
+                deleteEntity(t.getIdentifier());
             }
 
-            Response createResponse = createConfigurationType(t);
+            Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Configuration type cannot be created");
             }
@@ -284,10 +195,10 @@ public class ConfigurationSteps extends BasicSteps {
         ConfigurationType ct = getConfigurationTypeFromString(jsonData);
 
         if (deleteBeforeCreate && isConfigurationTypeExist(ct.getIdentifier())) {
-            deleteConfigurationType(ct.getIdentifier());
+            deleteEntity(ct.getIdentifier());
         }
 
-        Response response = createConfigurationType(ct);
+        Response response = createEntity(ct);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
@@ -297,21 +208,21 @@ public class ConfigurationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
-            deleteConfigurationType(configurationType.getIdentifier());
+            deleteEntity(configurationType.getIdentifier());
         }
-        Response response = createConfigurationType(configurationType);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        Response response = createEntity(configurationType);
+        setSessionResponse(response);
     }
 
     @Step
-    public void listOfConfigurationTypesisGot(String limit, String cursor) {
-        Response response = getConfigurationTypes(limit, cursor);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    public void listOfConfigurationTypesisGot(String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
     }
 
     @Step
     public void configurationTypeDoesntExist(String identifier) {
-        Response response = getConfigurationType(identifier);
+        Response response = getEntity(identifier);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
@@ -421,13 +332,13 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void getConfigurationWithKeyForIdentifier(String key, String identifier) {
         Response response = getConfiguration(key, identifier);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+        setSessionResponse(response);
     }
 
     @Step
-    public void listOfConfigurationsIsGot(String limit, String cursor, String identifier) {
-        Response response = getConfigurations(limit, cursor, identifier);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    public void listOfConfigurationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String identifier) {
+        Response response = getSecondLevelEntities(identifier, "", limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
     }
 
     @Step
@@ -439,30 +350,35 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void tryDeleteConfiguration(String key, String identifier) {
         Response resp = deleteConfiguration(key, identifier);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+        setSessionResponse(resp);
     }
 
     @Step
     public void updateConfigurationTypeDescription(String identifier, String newDescription) {
         Response resp = updateConfigurationType(identifier, newDescription);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+        setSessionResponse(resp);
     }
 
     @Step
     public void configurationTypeHasDescription(String identifier, String description) {
-        Response response = getConfigurationType(identifier);
-        fail("How to assert configurationType has description?");
+        String filter = String.format("identifier==%s", identifier);
+        Response response = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null);
+        ConfigurationType ct = Arrays.asList(response.as(ConfigurationType[].class)).get(0);
+
+        assertEquals(description, ct.getDescription());
     }
 
     @Step
     public void updateConfigurationValue(String identifier, String key, String value, String type) {
-        Response resp = updateValueForKey(identifier, key, value, type);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
+        Response tempResponse = getConfiguration(key, identifier);
+
+        Response resp = updateValueForKey(identifier, key, value, type, tempResponse.header(HEADER_ETAG));
+        setSessionResponse(resp);
     }
 
     @Step
     public void configurationHasValue(String identifier, String key, String value) {
         Response response = getConfiguration(key, identifier);
-        response.then().body(is(value));
+        response.then().body("value", is(value));
     }
 }
