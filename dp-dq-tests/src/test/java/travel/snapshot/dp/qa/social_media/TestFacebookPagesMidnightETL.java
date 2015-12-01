@@ -20,7 +20,7 @@ import java.util.List;
  * 
  * The following transfers are covered by tests:
  * Raw data table -> Staging table
- * Staging table -> Fact table for noon runs
+ * Staging table -> Fact table
  * 
  * Midnight ETLs occur at 00:01 local time for hotels in time zones [-6;+4].
  * 
