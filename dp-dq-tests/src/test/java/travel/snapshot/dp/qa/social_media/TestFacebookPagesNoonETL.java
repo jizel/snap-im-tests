@@ -9,12 +9,21 @@ import static travel.snapshot.dp.qa.base.TestUtils.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Automated Tests for Facebook pages Noon ETLs.
+ * 
+ * Noon ETLs occur at 12:01 local time for hotels in time zones [-6;+4]. Tests are meant to be run after all ETLs have passed,
+ * and before midnight ETLs for the next day have started.
+*/
+
 public class TestFacebookPagesNoonETL {
 
     public static final Logger logger = LoggerFactory.getLogger(TestFacebookPagesNoonETL.class);
 
     @Test
     public void testStagingLoad() throws Exception {
+    	//Noon ETL for each hotel is triggered after the third run to get data from Facebook API has passed.
+    	//The check for counts should pass at any point in time.
         String sqlQueryForSource = "select count(*) from RawImportedFacebookPageStatistics where date=curdate() and data_collection_run = 3";
         String sqlQueryForTarget = "select count(*) from IncrementalFacebookPageStatistics where date=curdate()";
 
@@ -22,6 +31,7 @@ public class TestFacebookPagesNoonETL {
         testLoad(sqlQueryForSource, sqlQueryForTarget);
         
         List<String> followUpListToSource = new ArrayList<String>();
+        //separate checks for followers are used, since the values are total, instead of incremental
         followUpListToSource.add("select sum(total_followers) from RawImportedFacebookPageStatistics where date = curdate() and data_collection_run = 3");
         followUpListToSource.add(
         		"select sum(r2.incremental_number_of_posts - r1.incremental_number_of_posts + r3.incremental_number_of_posts) "
@@ -92,9 +102,11 @@ public class TestFacebookPagesNoonETL {
 
     @Test
     public void testFactLoad() throws Exception {
+    	//The transfer to the fact table is triggered immediately after the transfer to the staging table has finished
         String sqlQueryForSource = "select count(*) from IncrementalFacebookPageStatistics where date = curdate()";
         String sqlQueryForTarget = "select count(*) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0";
 
+        //separate checks for followers are used, since the values are total, instead of incremental
         String sqlQueryForSourceFollowers = "select sum(total_followers) from IncrementalFacebookPageStatistics where date = curdate()";
         String sqlQueryForTargetFollowers = "select sum(followers) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0";
         
@@ -103,28 +115,76 @@ public class TestFacebookPagesNoonETL {
         testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers);
         
         List<String> factsYesterdayList = new ArrayList<String>();
-        factsYesterdayList.add("select sum(number_of_posts) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        factsYesterdayList.add("select sum(engagements) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        factsYesterdayList.add("select sum(impressions) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        factsYesterdayList.add("select sum(reached) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        factsYesterdayList.add("select sum(likes) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        factsYesterdayList.add("select sum(unlikes) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
+        factsYesterdayList.add("select sum(number_of_posts) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");       		
+        factsYesterdayList.add("select sum(engagements) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
+        factsYesterdayList.add("select sum(impressions) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
+        factsYesterdayList.add("select sum(reach) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
+        factsYesterdayList.add("select sum(likes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
+        factsYesterdayList.add("select sum(unlikes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
         
         List<String> incrementalsTodayList = new ArrayList<String>();
-        incrementalsTodayList.add("select sum(incremental_number_of_posts) from IncrementalFacebookPageStatistics where date = curdate()");
-        incrementalsTodayList.add("select sum(incremental_engagements) from IncrementalFacebookPageStatistics where date = curdate()");
-        incrementalsTodayList.add("select sum(incremental_impressions) from IncrementalFacebookPageStatistics where date = curdate()");
-        incrementalsTodayList.add("select sum(incremental_reached) from IncrementalFacebookPageStatistics where date = curdate()");
-        incrementalsTodayList.add("select sum(incremental_likes) from IncrementalFacebookPageStatistics where date = curdate()");
-        incrementalsTodayList.add("select sum(incremental_unlikes) from IncrementalFacebookPageStatistics where date = curdate()");
+        incrementalsTodayList.add(
+        		"select sum(incremental_number_of_posts) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = curdate() - interval 1 day "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        incrementalsTodayList.add(
+        		"select sum(incremental_engagements) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = curdate() - interval 1 day "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        incrementalsTodayList.add(
+        		"select sum(incremental_impressions) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = curdate() - interval 1 day "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        incrementalsTodayList.add(
+        		"select sum(incremental_reached) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = curdate() - interval 1 day "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        incrementalsTodayList.add(
+        		"select sum(incremental_likes) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = curdate() - interval 1 day "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        incrementalsTodayList.add(
+        		"select sum(incremental_unlikes) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = curdate() - interval 1 day "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp"); 
         
         List<String> factsTodayList = new ArrayList<String>();
-        incrementalsTodayList.add("select sum(number_of_posts) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        incrementalsTodayList.add("select sum(engagements) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        incrementalsTodayList.add("select sum(impressions) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        incrementalsTodayList.add("select sum(reached) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        incrementalsTodayList.add("select sum(likes) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
-        incrementalsTodayList.add("select sum(unlikes) from T_FactFacebookPageStatsCurrDay where dim_date_id = curdate()+0");
+        factsTodayList.add("select sum(number_of_posts) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select sum(engagements) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select sum(impressions) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select sum(reach) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select sum(likes) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select sum(unlikes) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
         
         followUpLoadTestFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList);
         
