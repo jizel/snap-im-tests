@@ -58,6 +58,7 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
 	protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
+    protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
@@ -208,9 +209,17 @@ public class BasicSteps {
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
-    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
-        return given().spec(spec)
+    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (queryParams != null) {
+            requestSpecification.parameters(queryParams);
+        }
+        return requestSpecification
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+        return deleteSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, null);
     }
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
@@ -249,7 +258,7 @@ public class BasicSteps {
         return requestSpecification.when().get();
     }
 
-    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
+    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
         if (cursor != null) {
@@ -268,7 +277,15 @@ public class BasicSteps {
             requestSpecification.parameter("sort_desc", sortDesc);
         }
 
+        if (queryParams != null) {
+            requestSpecification.parameters(queryParams);
+        }
+
         return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+    }
+
+    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
+        return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
 

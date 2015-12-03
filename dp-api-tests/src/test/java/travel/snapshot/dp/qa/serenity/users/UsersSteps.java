@@ -13,13 +13,17 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.PropertyUser;
+import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.qa.model.UserRole;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -205,5 +209,87 @@ public class UsersSteps extends BasicSteps {
             i++;
         }
 
+    }
+
+    public void roleIsAddedToUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
+        User u = getUserByUsername(username);
+
+        Response response = addRoleToUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        setSessionResponse(response);
+    }
+
+
+    public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
+        User u = getUserByUsername(username);
+
+        UserRole existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        if (existingUserRole != null) {
+
+            Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+                fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
+            }
+        }
+        Response createResponse = addRoleToUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+            fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
+        }
+    }
+
+    private Response deleteRoleFromUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("relationship_type", relationshipType);
+        queryParams.put("relationship_id", entityId);
+        return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_ROLES, roleId, queryParams);
+    }
+
+    private Response addRoleToUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
+        Map<String, String> data = new HashMap<>();
+        data.put("relationship_type", relationshipType);
+        data.put("relationship_id", entityId);
+        data.put("role_id", roleId);
+
+        return given().spec(spec)
+                .body(data)
+                .when().post("/{userId}/roles", userId);
+    }
+
+    private UserRole getRoleForUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("relationship_type", relationshipType);
+        queryParams.put("relationship_id", entityId);
+        Response userRolesResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
+        return Arrays.asList(userRolesResponse.as(UserRole[].class)).stream().findFirst().orElse(null);
+    }
+
+    public void roleIsDeletedFromUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
+        User u = getUserByUsername(username);
+        Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        setSessionResponse(deleteResponse);
+    }
+
+    public void roleDoesntExistForUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
+        User u = getUserByUsername(username);
+        UserRole existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        assertNull("Role should not be present for User", existingUserRole);
+    }
+
+    public void listOfRolesIsGotForRelationshipTypeEntityWIth(String username, String relationshipType, String entityId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        User u = getUserByUsername(username);
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("relationship_type", relationshipType);
+        queryParams.put("relationship_id", entityId);
+        Response response = getSecondLevelEntities(u.getUserId(), SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, queryParams);
+        setSessionResponse(response);
+    }
+
+    public void rolenamesAreInResponseInOrder(List<String> rolenames) {
+        Response response = getSessionResponse();
+        UserRole[] userRoles = response.as(UserRole[].class);
+        int i = 0;
+        for (UserRole ur : userRoles) {
+            assertEquals("UserRole on index=" + i + " is not expected", rolenames.get(i), ur.getRoleName());
+            i++;
+        }
     }
 }

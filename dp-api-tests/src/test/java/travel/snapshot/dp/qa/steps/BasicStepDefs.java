@@ -8,6 +8,8 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 public class BasicStepDefs {
 
+    public static final String NONEXISTENT_ID = "00000000-0000-4000-a000-000000000000";
+
     @Steps
     private BasicSteps basicSteps;
 
