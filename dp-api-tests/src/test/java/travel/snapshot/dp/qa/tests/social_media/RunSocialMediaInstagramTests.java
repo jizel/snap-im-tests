@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.tests;
+package travel.snapshot.dp.qa.tests.social_media;
 
 import net.serenitybdd.cucumber.CucumberWithSerenity;
 
@@ -9,6 +9,6 @@ import cucumber.api.CucumberOptions;
 
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features = "src/test/resources/features/social_media/instagram", glue = "travel.snapshot.dp.qa", tags = {"~@skipped"})
-public class RunSocialMediaTestsInstagram {
+public class RunSocialMediaInstagramTests {
 
 }

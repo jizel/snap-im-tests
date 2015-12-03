@@ -8,7 +8,10 @@ import net.thucydides.core.annotations.Step;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -60,18 +63,18 @@ public class AnalyticsSteps extends BasicSteps {
     @Step
     public void getData(String url, String granularity, String property, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
 
         RequestSpecification requestSpecification = given().spec(spec)
                 .header("x-property", property).parameter("access_token", "aaa");
 
-        if (granularity != null && !"".equals(granularity)) {
+        if (StringUtils.isNotBlank(granularity)) {
             requestSpecification.parameter("granularity", granularity);
         }
-        if (since != null && !"".equals(since)) {
+        if (sinceDate != null) {
             requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
         }
-        if (until != null && !"".equals(until)) {
+        if (untilDate != null) {
             requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
         }
 
@@ -116,10 +119,10 @@ public class AnalyticsSteps extends BasicSteps {
                 .header("x-property", "property")
                 .parameter("access_token", "aaa");
 
-        if (cursor != null && !"".equals(cursor)) {
+        if (cursor != null) {
             requestSpecification.parameter("cursor", cursor);
         }
-        if (limit != null && !"".equals(limit)) {
+        if (limit != null) {
             requestSpecification.parameter("limit", limit);
         }
         Response response = requestSpecification.when().get();
@@ -137,7 +140,14 @@ public class AnalyticsSteps extends BasicSteps {
     @Step
     public void responseContainsValuesForAllMetrics(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().body("data.values.size()", is(count));
+        Map responseMap = response.as(Map.class);
+
+        List<Map<String,Object>> metrics = (List<Map<String, Object>>) responseMap.get("data");
+        metrics.forEach(m -> {
+            Map<String,Object> metric = (Map<String, Object>) m.entrySet().iterator().next().getValue();
+            List values = (List) metric.get("values");
+            assertEquals("Bad number of values for metric "  + metric.get("name"), count, values.size());
+        });
     }
 
     @Step

@@ -1,14 +1,14 @@
 package travel.snapshot.dp.qa.steps.social_media.analytics;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
+import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsSteps;
+
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -56,8 +56,10 @@ public class AnalyticsStepdefs {
         analyticsSteps.maximumNumberOfValuesInResponse(count);
     }
 
-    @When("^List of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter empty and sort empty$")
-    public void List_of_items_is_got_with_limit_and_cursor_and_filter_empty_and_sort_empty(String url, String limit, String cursor) throws Throwable {
+    @When("^List of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
+    public void List_of_items_is_got_with_limit_and_cursor(String url,
+                                                           @Transform(NullEmptyStringConverter.class) String limit,
+                                                           @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         analyticsSteps.getItems(url, limit, cursor);
     }
 
@@ -91,4 +93,8 @@ public class AnalyticsStepdefs {
         analyticsSteps.fieldContains("data_owners", data_owner);
     }
 
+    @Then("^There are (\\d+) posts returned$")
+    public void There_are_count_posts_returned(int count) throws Throwable {
+        analyticsSteps.numberOfEntitiesInResponse(Map.class, count);
+    }
 }
