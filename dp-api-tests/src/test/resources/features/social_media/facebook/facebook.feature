@@ -1,17 +1,17 @@
 Feature: facebook
 
   Scenario Outline: Get facebook analytics data from API for a given granularity
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "200"
-    And Response contains 3 values for all metrics
+    And Response contains 1 values for all metrics
 
     Examples: 
       | url                               | granularity |
       | /social_media/analytics/facebook/ | day         |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "2015-09-01" until "2015-09-01"
     Then Response contains 1 values
     And Content type is "application/json"
     And Response code is "200"
@@ -27,13 +27,13 @@ Feature: facebook
       | /social_media/analytics/facebook/followers       | day         |
 
   Scenario: Getting non-existent analytics data
-    When Getting "/social_media/analytics/facebook/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "/social_media/analytics/facebook/not_present" data with "day" granularity for "999999" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "404"
     And Custom code is "151"
 
   Scenario: Getting mismatched metrics analytics data
-    When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "999999" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "404"
     And Custom code is "151"
@@ -106,7 +106,7 @@ Feature: facebook
       | /social_media/analytics/facebook/followers       | 5     | 5      | 5     |
 
   Scenario: Get facebook posts analytics data from API for an invalid granularity
-    When Getting "/social_media/analytics/facebook/posts" data with "invalid" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "/social_media/analytics/facebook/posts" data with "invalid" granularity for "999999" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "400"
     And Custom code is "63"
@@ -144,7 +144,7 @@ Feature: facebook
       | /social_media/analytics/facebook/followers       | 10    | text   | 400           | 63          |
 
   Scenario Outline: Get analytics data from API with missing parameters
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "<start_date>" until "<end_date>"
     Then Response contains 5 values
     And Content type is "application/json"
     And Response code is "200"
@@ -158,7 +158,7 @@ Feature: facebook
       | /social_media/analytics/facebook/posts |             |            |            |
 
   Scenario Outline: Get analytics data from API from 1800s
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
     And Response code is "200"
 
@@ -206,7 +206,7 @@ Feature: facebook
     text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
     particular number of days/weeks/months from first part of expression
 
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
     And Response code is "200"
     And Response granularity is "<expected_granularity>"
@@ -230,13 +230,13 @@ Feature: facebook
       | /social_media/analytics/facebook/posts | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
 
   Scenario: Get data owners data for facebook
-    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
+    When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "999999" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "200"
     And Data is owned by "facebook"
 
   Scenario Outline: Checking number of values in response for various granularities
-    When Getting "<url>" data with "<granularity>" granularity for "property" since "<since>" until "<until>"
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is "200"
     And Response contains no more than <count> values
