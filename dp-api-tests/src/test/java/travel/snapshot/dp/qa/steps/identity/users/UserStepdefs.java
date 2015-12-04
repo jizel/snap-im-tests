@@ -204,4 +204,9 @@ public class UserStepdefs {
     public void There_are_user_roles_with_following_role_names_returned_in_order(List<String> rolenames) throws Throwable {
         usersSteps.rolenamesAreInResponseInOrder(rolenames);
     }
+    
+    @Given("^The password of user with id \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void setting_the_password_of_user_to(String id, String password) {
+    	usersSteps.setUserPassword(id, password);
+    }
 }
