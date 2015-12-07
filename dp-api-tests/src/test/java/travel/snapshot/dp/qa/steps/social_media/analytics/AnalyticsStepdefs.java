@@ -45,6 +45,11 @@ public class AnalyticsStepdefs {
     public void Response_contains_values(int count) throws Throwable {
         analyticsSteps.responseContainsValues(count);
     }
+    
+    @Then("^Response contains \"([^\"]*)\"  values for all metrics$")
+    public void response_contains_values_for_all_metrics(int count) throws Throwable {
+        analyticsSteps.responseContainsValues(count);
+    }
 
     @Then("^Response contains (\\d+) values for all metrics$")
     public void Response_contains_values_for_all_metrics(int count) throws Throwable {

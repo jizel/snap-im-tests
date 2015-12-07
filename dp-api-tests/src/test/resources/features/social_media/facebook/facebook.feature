@@ -21,7 +21,6 @@ Feature: facebook
 
     Examples: 
       | url                                              | granularity |
-      #not granularity for posts| /social_media/analytics/facebook/posts           | day         |
       | /social_media/analytics/facebook/number_of_posts | day         |
       | /social_media/analytics/facebook/engagement      | day         |
       | /social_media/analytics/facebook/likes           | day         |
@@ -49,7 +48,6 @@ Feature: facebook
     Examples: 
       | url                                              | error_code | custom_code |
       | /social_media/analytics/facebook                 | 400        | 52          |
-      #this is separate functionality | /social_media/analytics/facebook/posts           | 400        | 52          |
       | /social_media/analytics/facebook/number_of_posts | 400        | 52          |
       | /social_media/analytics/facebook/engagement      | 400        | 52          |
       | /social_media/analytics/facebook/likes           | 400        | 52          |
@@ -64,8 +62,6 @@ Feature: facebook
     And Content type is "application/json"
     And There are <count> posts returned
 
-    #validate for exact number of items returned
-    #added possibility to pass /null, which means that parameter won't be in request, or empty string, which will be there as empty string
     Examples: 
       | url                                    | limit | cursor | count |
       | /social_media/analytics/facebook/posts |       |        | 50    |
@@ -81,15 +77,13 @@ Feature: facebook
       | /social_media/analytics/facebook/posts | 5     | 5      | 5     |
 
   #just posts, but not yet implemented, other metrics are not pageable
-  #posts are special - no granularity
-  
+   
   Scenario Outline: Checking error codes for getting list of items
     When List of "<url>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    #again /null can be used
-    Examples: 
+     Examples: 
       | url                                    | limit | cursor | response_code | custom_code |
       | /social_media/analytics/facebook/posts | /null | -1     | 400           | 63          |
       | /social_media/analytics/facebook/posts |       | -1     | 400           | 63          |
@@ -99,8 +93,7 @@ Feature: facebook
       | /social_media/analytics/facebook/posts | text  |        | 400           | 63          |
       | /social_media/analytics/facebook/posts | 10    | text   | 400           | 63          |
 
-  #list of items just for posts
-  Scenario Outline: Get analytics data from API with missing parameters
+   Scenario Outline: Get analytics data from API with missing parameters
     When Getting "<url>" data with "<granularity>" granularity for "999999" since "<start_date>" until "<end_date>"
     Then Response code is "200"
     And Content type is "application/json"
@@ -115,9 +108,7 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | day         |            |            | 30    |
       | /social_media/analytics/facebook/reach           |             |            |            | 30    |
 
-  #not for posts - posts are limit based, other metrics time based for filtering
-
-  Scenario Outline: Get analytics data from API from 1800s
+   Scenario Outline: Get analytics data from API from 1800s
     When Getting "<url>" data with "<granularity>" granularity for "999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
     And Response code is "200"
@@ -138,42 +129,7 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | day         | 1888-09-01 | 1888-09-01 |
       | /social_media/analytics/facebook/reach           | day         | 1888-09-01 | 1888-09-01 |
       | /social_media/analytics/facebook/followers       | day         | 1888-09-01 | 1888-09-01 |
-      
-      
-  Scenario Outline: Get error codes from API for different metrcs
-    When Getting "<url>" data with "<granularity>" granularity for "999999" since "<start_date>" until "<end_date>"
-    Then Content type is "application/json"
-    And Response code is "400"
-    And Custom code is "<custom_code>
-
-  #New test which defines error codes for the cases below should be developed
-      | url                                              | granularity | start_date | end_date   | custom_code 	|
-  	  | /social_media/analytics/facebook                 |             | 2015-12-03 | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook                 | day         |            | 2015-12-03 |		1		|
-   	  | /social_media/analytics/facebook                 | day         | 2015-12-03 |            |		1		|
-  	  | /social_media/analytics/facebook                 | day         |            |            |		1		|
-  	  | /social_media/analytics/facebook                 |             |            |            |		1		|
-  	  | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03 | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/number_of_posts | day         |            | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/number_of_posts | day         | 2015-12-03 |            |		1		|
- 	  | /social_media/analytics/facebook/number_of_posts | day         |            |            |		1		|
-  	  | /social_media/analytics/facebook/number_of_posts |             |            |            |		1		|
-  	  | /social_media/analytics/facebook/engagement      |             | 2015-12-03 | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/engagement      | day         |            | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/engagement      | day         | 2015-12-03 |            |		1		|
-  	  | /social_media/analytics/facebook/engagement      | day         |            |            |		1		|
-  	  | /social_media/analytics/facebook/engagement      |             |            |            |		1		|
-  	  | /social_media/analytics/facebook/likes           |             | 2015-12-03 | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/likes           | day         |            | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/likes           | day         | 2015-12-03 |            |		1		|
-  	  | /social_media/analytics/facebook/likes           | day         |            |            |		1		|
-  	  | /social_media/analytics/facebook/likes           |             |            |            |		1		|
-  	  | /social_media/analytics/facebook/unlikes         |             | 2015-12-03 | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/unlikes         | day         |            | 2015-12-03 |		1		|
-  	  | /social_media/analytics/facebook/unlikes         | day         | 2015-12-03 |            |		1		|
-  	  | /social_media/analytics/facebook/unlikes         | day         |            |            |		1		|
-  	  | /social_media/analytics/facebook/unlikes         |             |            |            |		1		|
-  
+         
   
   Scenario Outline: Checking default parameter values
     Empty column in examples section means default value will be used for this parameter.
@@ -190,8 +146,7 @@ Feature: facebook
     And Response until is "<expected_until>"
     And Response contains no more than <count> values
 
-    #cannot be for posts, just for other metrics
-    Examples: 
+     Examples: 
       | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
       | /social_media/analytics/facebook/number_of_posts |             |                |                   | day                  | today - 1 month   | today          | 32    |
       | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
@@ -279,11 +234,9 @@ Feature: facebook
     And Response code is "200"
     And Response contains no more than <count> values
 
-    #validate exact nummber of values
-    Examples: 
+     Examples: 
       | url                                              | granularity | since           | until | count |
       #this one is different - returns all metrics together, so validation of number of values needs to be different
-      #| /social_media/analytics/facebook                 | day         | today           | today | 1     |
       | /social_media/analytics/facebook/number_of_posts | day         | today - 1 day   | today | 2     |
       | /social_media/analytics/facebook/engagement      | day         | today - 6 days  | today | 7     |
       | /social_media/analytics/facebook/likes           | day         | today - 7 days  | today | 8     |
