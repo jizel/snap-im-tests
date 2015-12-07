@@ -1,15 +1,10 @@
 package travel.snapshot.dp.qa.steps.authorization;
 
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
+import org.slf4j.LoggerFactory;
+
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.serenity.authorization.AuthorizationSteps;
-
-import java.util.List;
 
 public class AuthorizationStepdefs {
 
@@ -17,19 +12,29 @@ public class AuthorizationStepdefs {
 
     @Steps
     private AuthorizationSteps authorizationSteps;
+
+    @When("^Getting token for user \"([^\"]*)\" with password \"([^\"]*)\"$")
+    public void getting_token_for_user_with_username_and_password(String username, String password){
+        authorizationSteps.getToken(username, password);
+    }
     
     @When("^Getting configuration data for \"([^\"]*)\" with token \"([^\"]*)\"$")
     public void getting_configuration_data_for_with_token(String url, String access_token){
         authorizationSteps.getConfigurationData(url, access_token);
     }
     
+    @When("^Getting configuration data for \"([^\"]*)\" with a new token for user \"([^\"]*)\" with password \"([^\"]*)\"$")
+    public void getting_configuration_data_for_with_a_new_token_for_user_with_password(String url, String username, String password) {
+    	authorizationSteps.getConfigurationDataWithNewToken(url, username, password);
+    }
+    
     @When("^Getting identity data for \"([^\"]*)\" with token \"([^\"]*)\"$")
     public void getting_identity_data_for_with_token(String url, String access_token){
         authorizationSteps.getIdentityData(url, access_token);
     }
-
-    @When("^Getting token for user with id \"([^\"]*)\" username \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void getting_token_for_user_with_id_username_and_password(String id, String username, String password){
-        authorizationSteps.getToken(id,username, password);
+    
+    @When("^Getting identity data for \"([^\"]*)\" with a new token for user \"([^\"]*)\" with password \"([^\"]*)\"$")
+    public void getting_identity_data_for_with_a_new_token_for_user_with_password(String url, String username, String password) {
+    	authorizationSteps.getIdentityDataWithNewToken(url, username, password);
     }
 }

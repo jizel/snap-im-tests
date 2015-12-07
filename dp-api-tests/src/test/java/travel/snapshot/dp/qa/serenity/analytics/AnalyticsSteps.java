@@ -79,16 +79,6 @@ public class AnalyticsSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
     
-    public void postData(String url, String username, String password) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .parameter("grant_type", "password")
-                .parameter("username", username)
-                .parameter("password", password);
-
-        Response response = requestSpecification.when().post(url);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-    
     @Step
     public void getPropertyRateData(String property_id, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);

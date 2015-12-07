@@ -292,4 +292,8 @@ public class UsersSteps extends BasicSteps {
             i++;
         }
     }
+    
+    public void setUserPassword(String id, String password){
+    	given().spec(spec).body(password).post("{id}/password",id);
+    }
 }
