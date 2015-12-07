@@ -21,7 +21,7 @@ Feature: facebook
       | /social_media/analytics/twitter   | month       |	1	|
       | /social_media/analytics/instagram | month       |	1	|
 
-  Scenario Outline: Get collective analytics data from API for a given wrong granularity
+  Scenario Outline: Get collective analytics data from API for a given wrong time period
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2014-09-01"
     Then Content type is "application/json"
     #And Response code is "400"
@@ -41,6 +41,17 @@ Feature: facebook
       #| /social_media/analytics/facebook  | month       |
       #| /social_media/analytics/twitter   | month       |
       #| /social_media/analytics/instagram | month       |
+      
+      
+   Scenario Outline: Get facebook analytics data from API for a given granularity
+    When Getting "<url>" data with "<granularity>" granularity for "999999" since "2015-12-03" until "2015-12-03"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And Response contains 1 values for all metrics
+
+    Examples: 
+      | url                               | granularity |
+      | /social_media/analytics/facebook/ | day         |
 
   Scenario Outline: Get collective analytics data from API for a not given since granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "" until "2014-09-01"
