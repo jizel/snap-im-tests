@@ -1,6 +1,7 @@
 Feature: Roles_create_update_delete
 
   Background:
+    Given Database is cleaned
     Given The following roles exist
       | applicationId | roleName    | roleDescription        |
       | 1             | Role name 1 | optional description 1 |

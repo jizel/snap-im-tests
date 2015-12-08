@@ -3,9 +3,12 @@ Feature: customers_create_update_delete
   #TODO add etag things to get/update/create
 
   Background:
+    Given Database is cleaned
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
+
+    Given All users are removed for customers with codes: c1t, c2t
 
   Scenario: Creating Customer without parent with random address
 

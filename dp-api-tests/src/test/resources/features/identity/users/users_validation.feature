@@ -1,6 +1,7 @@
 Feature: users_validation
 
   Background:
+    Given Database is cleaned
     Given the location "identity/users" for object "user"
     Given unique identifier "user_id" for object "user"
     Given the following "user" object definition

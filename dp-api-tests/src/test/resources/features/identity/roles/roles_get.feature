@@ -1,6 +1,7 @@
 Feature: roles_get
 
   Background:
+    Given Database is cleaned
     Given The following roles exist
       | applicationId | roleName    | roleDescription        |
       | 1             | Role name 1 | optional description 1 |

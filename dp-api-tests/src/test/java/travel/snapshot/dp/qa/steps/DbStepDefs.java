@@ -24,4 +24,9 @@ public class DbStepDefs {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         dbSteps.deleteAllPropertyCustomersFromDb(c.getCustomerId(), p.getPropertyId());
     }
+
+    @Given("^Database is cleaned$")
+    public void databaseIsCleaned() throws Throwable {
+        dbSteps.cleanDatabase();
+    }
 }

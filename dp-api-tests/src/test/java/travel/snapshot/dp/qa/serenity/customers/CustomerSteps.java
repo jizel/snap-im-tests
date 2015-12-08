@@ -496,12 +496,14 @@ public class CustomerSteps extends BasicSteps {
     public void removeAllUsersFromCustomers(List<String> codes) {
         codes.forEach(c -> {
             Customer customer = getCustomerByCodeInternal(c);
-            Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
-            CustomerUser[] customerUsers = customerUsersResponse.as(CustomerUser[].class);
-            for (CustomerUser cu : customerUsers) {
-                Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
-                if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
-                    fail("Property set cannot be deleted: " + deleteResponse.asString());
+            if (customer != null) {
+                Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                CustomerUser[] customerUsers = customerUsersResponse.as(CustomerUser[].class);
+                for (CustomerUser cu : customerUsers) {
+                    Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
+                    if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
+                        fail("Property set cannot be deleted: " + deleteResponse.asString());
+                    }
                 }
             }
         });

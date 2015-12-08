@@ -1,6 +1,7 @@
 Feature: customers_properties_create_update_delete
 
   Background:
+    Given Database is cleaned
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |

@@ -1,6 +1,7 @@
 Feature: customers_validation
 
   Background:
+    Given Database is cleaned
     Given the location "identity/customers" for object "customer"
     Given unique identifier "customer_id" for object "customer"
     Given the following "customer" object definition

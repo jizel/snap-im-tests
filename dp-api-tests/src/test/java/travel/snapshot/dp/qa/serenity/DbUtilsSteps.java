@@ -7,11 +7,36 @@ import travel.snapshot.dp.qa.helpers.DbHelper;
  */
 public class DbUtilsSteps {
 
-    private static final String DELETE_CUSTOMER_PROPERTY = "delete from Customer_Property where customer_id = ? and property_id = ?";
+    private static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
+    static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
+    static final String DELETE_CUSTOMER_USER = "delete  from Customer_User";
+    static final String DELETE_USER_PROPERTY = "delete  from User_Property";
+    static final String DELETE_USER_PROPERTYSET = "delete  from User_PropertySet";
+    static final String DELETE_PROPERTY_PROPERTYSET = "delete  from Property_PropertySet";
+    static final String DELETE_PROPERTY = "delete  from Property";
+    static final String DELETE_PROPERTY_SET = "delete  from Property_Set";
+    static final String DELETE_CUSTOMER = "delete  from Customer";
+    static final String DELETE_USER = "delete  from User";
+    static final String DELETE_ADDRESS = "delete  from Address";
+    static final String DELETE_ROLE = "delete  from Role";
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
-        dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY, customerId, propertyId);
+        dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID, customerId, propertyId);
+    }
+
+    public void cleanDatabase() {
+        dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY);
+        dbHelper.identityDb().update(DELETE_CUSTOMER_USER);
+        dbHelper.identityDb().update(DELETE_USER_PROPERTY);
+        dbHelper.identityDb().update(DELETE_USER_PROPERTYSET);
+        dbHelper.identityDb().update(DELETE_PROPERTY_PROPERTYSET);
+        dbHelper.identityDb().update(DELETE_PROPERTY);
+        dbHelper.identityDb().update(DELETE_PROPERTY_SET);
+        dbHelper.identityDb().update(DELETE_CUSTOMER);
+        dbHelper.identityDb().update(DELETE_USER);
+        dbHelper.identityDb().update(DELETE_ADDRESS);
+        dbHelper.identityDb().update(DELETE_ROLE);
     }
 
 

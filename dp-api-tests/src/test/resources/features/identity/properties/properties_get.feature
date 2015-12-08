@@ -1,6 +1,7 @@
 Feature: properties_get
 
   Background:
+    Given Database is cleaned
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |

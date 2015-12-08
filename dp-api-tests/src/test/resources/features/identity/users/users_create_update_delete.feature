@@ -1,6 +1,7 @@
 Feature: users_create_update_delete
 
   Background:
+    Given Database is cleaned
     Given The following users exist
       | userType | userName  | firstName  | lastName  | email                | timezone  | culture |
       | customer | default1  | Default1   | User1     | def1@snapshot.travel | UTC+01:00 | cz      |

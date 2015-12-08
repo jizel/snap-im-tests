@@ -1,6 +1,7 @@
 Feature: properties_validation
 
   Background:
+    Given Database is cleaned
     Given the location "identity/properties" for object "property"
     Given unique identifier "property_id" for object "property"
     Given the following "property" object definition
