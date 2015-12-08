@@ -186,7 +186,15 @@ public class TestFacebookPagesNoonETL {
         String sqlQueryForTarget = "select count(*)*2 from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
 
         //Separate checks for followers are used, since the values are total, instead of incremental
-        String sqlQueryForSourceFollowers = "select sum(total_followers) from IncrementalFacebookPageStatistics where date = curdate() - interval 1 day";
+        String sqlQueryForSourceFollowers = 
+        		"select sum(total_followers) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = date_sub(curdate(), interval 1 day) "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp";
         String sqlQueryForTargetFollowers = "select sum(followers) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
         
         logger.info("\nStart control checks on table 'T_FactFacebookPageStatsCurrDay'");

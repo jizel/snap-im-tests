@@ -9,6 +9,7 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Iterator;
 import java.util.List;
@@ -33,19 +34,6 @@ public class TestUtils {
         assertThat("The outcome from the source and the target is not equal.",
         		outcomeTarget, is(outcomeSource));
     }
-    
-    public static void testLoadFacebook(String sqlFacebookFactsYesterday, String sqlFacebookIncrementalsToday, String sqlFacebookTotalsToday) throws Exception {
-        final int outcomeFactsYesterday = getQueryResultInt(sqlFacebookFactsYesterday);
-        final int outcomeIncrementalsToday = getQueryResultInt(sqlFacebookIncrementalsToday);
-        final int outcomeFactsToday = getQueryResultInt(sqlFacebookTotalsToday);
-
-        logger.info("Facts yesterday: " + outcomeFactsYesterday);
-        logger.info("Incrementals today: " + outcomeIncrementalsToday);
-        logger.info("Facts today: " + outcomeFactsToday);
-
-        assertThat("Sum of totals from yesterday and sum of incrementals from today is not equal to the sum of totals from today",
-        		outcomeFactsYesterday + outcomeIncrementalsToday, is(outcomeFactsToday));
-    }
 
     public static String withStartDate(String queryWithPlaceholder) {
         final String startDate = ConfigProps.getPropValue("etl.startdate");
@@ -65,7 +53,7 @@ public class TestUtils {
         return dbHelper.targetTemplate().queryForObject(sqlQueryForTarget, String.class);
     }
     
-    private static int getQueryResultInt(String sql) throws Exception {
+    public static int getQueryResultInt(String sql) throws Exception {
         return dbHelper.targetTemplate().queryForObject(sql, int.class);
     }
 
@@ -81,17 +69,37 @@ public class TestUtils {
       }
     }
     
-    public static void followUpLoadTestFacebook(List<String> factsYesterdayList, List<String> incrementalsTodayList, List<String> factstodayList) throws Exception {
+    public static void followUpLoadTestFacebook(List<String> factsYesterdayList, List<String> incrementalsTodayList, List<String> factsTodayList) throws Exception {
         
         Iterator<String> it1 = factsYesterdayList.iterator();
         Iterator<String> it2 = incrementalsTodayList.iterator();
-        Iterator<String> it3 = factstodayList.iterator();
+        Iterator<String> it3 = factsTodayList.iterator();
         
         while (it1.hasNext() && it2.hasNext() && it3.hasNext()) {
           String followUpFactsYesterday = it1.next();
           String followUpIncrementalsToday = it2.next();
           String followUpFactsToday = it3.next();
-          testLoadFacebook(followUpFactsYesterday, followUpIncrementalsToday, followUpFactsToday);
+          
+          logger.info("Facts yesterday: " + getQueryResultInt(followUpFactsYesterday));
+          logger.info("Incrementals today: " + getQueryResultInt(followUpIncrementalsToday));
+          logger.info("Facts today: " + getQueryResultInt(followUpFactsToday));
+          
+          assertEquals(
+        		  getQueryResultInt(followUpFactsYesterday) +
+        		  getQueryResultInt(followUpIncrementalsToday),
+        		  getQueryResultInt(followUpFactsToday));
+        }
+      }
+    
+    public static void followUpLoadTestTwitter(List<Integer> source, List<Integer> target) throws Exception {
+        
+        Iterator<Integer> it1 = source.iterator();
+        Iterator<Integer> it2 = target.iterator();
+        
+        while (it1.hasNext() && it2.hasNext()) {
+            logger.info("Source: " + it1.next());
+            logger.info("Target: " + it2.next());
+            assertEquals(it1.next(), it2.next());
         }
       }
 }
