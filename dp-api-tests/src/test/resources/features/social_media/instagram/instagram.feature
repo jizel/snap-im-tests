@@ -164,6 +164,8 @@ Feature: instagram
       | /social_media/analytics/instagram/followers  | day         | 2015-12-03 |            | 31    |
       | /social_media/analytics/instagram/tags       | day         |            |            | 31    |
       | /social_media/analytics/instagram/reach      |             |            |            | 31    |
+      | /social_media/analytics/instagram/likes      |             | 2015-11-09 | 2015-11-02 | 1     |
+      | /social_media/analytics/instagram/comments   |             | 2015-11-02 | 2015-12-02 | 1     |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
@@ -207,79 +209,91 @@ Feature: instagram
     And Response contains no more than <count> values
 
     Examples: 
-      | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
-      | /social_media/analytics/instagram/pictures |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/instagram/pictures |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/instagram/pictures | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/instagram/pictures | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/instagram/pictures | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/instagram/pictures | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/instagram/pictures | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/instagram/pictures | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/instagram/pictures | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/instagram/pictures | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/instagram/pictures | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/instagram/pictures | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/instagram/engagement       |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/instagram/engagement       |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/instagram/engagement       | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/instagram/engagement       | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/instagram/engagement       | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/instagram/engagement       | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/instagram/engagement       | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/instagram/engagement       | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/instagram/engagement       | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/instagram/engagement       | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/instagram/engagement       | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/engagement      | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/instagram/followers           |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/instagram/followers           |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/instagram/followers           | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/instagram/followers           | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/instagram/followers           | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/instagram/followers           | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/instagram/followers           | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/instagram/followers           | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/instagram/followers           | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/instagram/followers           | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/instagram/followers           | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/instagram/followers           | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/unlikes         |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/unlikes         |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/unlikes         | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/unlikes         | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/unlikes         | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/unlikes         | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/unlikes         | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/unlikes         | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/unlikes         | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/unlikes         | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/unlikes         | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/unlikes         | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/reach           |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/reach           |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/reach           | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/reach           | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/reach           | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/reach           | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/reach           | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/reach           | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/reach           | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/reach           | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/reach           | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/reach           | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/followers       |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/followers       |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/followers       | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/followers       | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/followers       | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/followers       | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/followers       | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/followers       | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/followers       | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/followers       | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/followers       | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/followers       | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | url                                          | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
+      | /social_media/analytics/instagram/pictures   |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/pictures   |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/pictures   | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/pictures   | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/pictures   | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/pictures   | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/pictures   | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/pictures   | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/pictures   | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/pictures   | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/pictures   | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/pictures   | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/engagement |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/engagement |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/engagement | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/engagement | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/engagement | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/engagement | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/engagement | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/engagement | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/engagement | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/engagement | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/engagement | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/engagement | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/followers  |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/followers  |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/followers  | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/followers  | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/followers  | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/followers  | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/followers  | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/followers  | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/followers  | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/followers  | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/followers  | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/followers  | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/tags       |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/tags       |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/tags       | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/tags       | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/tags       | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/tags       | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/tags       | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/tags       | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/tags       | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/tags       | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/tags       | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/tags       | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/reach      |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/reach      |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/reach      | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/reach      | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/reach      | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/reach      | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/reach      | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/reach      | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/reach      | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/reach      | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/reach      | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/reach      | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/likes      |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/likes      |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/likes      | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/likes      | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/likes      | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/likes      | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/likes      | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/likes      | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/likes      | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/likes      | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/likes      | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/likes      | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/comments   |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/comments   |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/instagram/comments   | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/instagram/comments   | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/instagram/comments   | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/instagram/comments   | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/instagram/comments   | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/instagram/comments   | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/instagram/comments   | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/instagram/comments   | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/instagram/comments   | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/instagram/comments   | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
 
   # Scenario: Get data owners data for facebook
   #can be combined to other scnearios
@@ -294,12 +308,12 @@ Feature: instagram
     And Response contains <count> values
 
     Examples: 
-      | url                                              | granularity | since           | until | count |
+      | url                                          | granularity | since           | until | count |
       #this one is different - returns all metrics together, so validation of number of values needs to be different
-      | /social_media/analytics/instagram/pictures | day         | today - 1 day   | today | 2     |
-      | /social_media/analytics/facebook/engagement      | day         | today - 6 days  | today | 7     |
-      | /social_media/analytics/facebook/likes           | day         | today - 7 days  | today | 8     |
-      | /social_media/analytics/facebook/unlikes         | day         | today - 8 days  | today | 9     |
-      | /social_media/analytics/facebook/reach           | day         | today - 29 days | today | 30    |
-      | /social_media/analytics/facebook/followers       | day         | today - 30 days | today | 31    |
-      | /social_media/analytics/facebook/likes           | week        | today           | today | 0     |
+      | /social_media/analytics/instagram/pictures   | day         | today - 1 day   | today | 2     |
+      | /social_media/analytics/instagram/engagement | day         | today - 6 days  | today | 7     |
+      | /social_media/analytics/instagram/followers  | day         | today - 7 days  | today | 8     |
+      | /social_media/analytics/instagram/tags       | day         | today - 8 days  | today | 9     |
+      | /social_media/analytics/instagram/reach      | day         | today - 29 days | today | 30    |
+      | /social_media/analytics/instagram/likes      | day         | today - 30 days | today | 31    |
+      | /social_media/analytics/instagram/comments   | week        | today           | today | 0     |
