@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mockito.internal.matchers.Equals;
+
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -167,6 +169,12 @@ public class AnalyticsSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(pathToValue1, lessThanOrEqualTo(pathToValue2));
     }
+    
+    @Step
+    public void numberOfValuesInResponseIsEqueal(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body("values.size()", lessThanOrEqualTo(count));
+    } 
 
     @Step
     public void dateFieldIs(String fieldName, String value) {
