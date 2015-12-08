@@ -10,7 +10,7 @@ Feature: facebook
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "400"
-    And Custom code is "52"
+    And Custom code is "63"
 
     Examples: 
       | url                                              | granularity |
@@ -50,12 +50,12 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | day         | 23    | 2015-12-07 | 2015-12-23 |
       | /social_media/analytics/facebook/reach           | day         | 23    | 2015-12-07 | 2015-12-23 |
       | /social_media/analytics/facebook/followers       | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/facebook/number_of_posts | day         | 90    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/facebook/engagement      | day         | 90    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/facebook/likes           | day         | 90    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/facebook/unlikes         | day         | 90    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/facebook/reach           | day         | 90    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/facebook/followers       | day         | 90    | 2015-06-07 | 2015-12-07 |
+      | /social_media/analytics/facebook/number_of_posts | day         | 92    | 2015-06-07 | 2015-12-07 |
+      | /social_media/analytics/facebook/engagement      | day         | 92    | 2015-06-07 | 2015-12-07 |
+      | /social_media/analytics/facebook/likes           | day         | 92    | 2015-06-07 | 2015-12-07 |
+      | /social_media/analytics/facebook/unlikes         | day         | 92    | 2015-06-07 | 2015-12-07 |
+      | /social_media/analytics/facebook/reach           | day         | 92    | 2015-06-07 | 2015-12-07 |
+      | /social_media/analytics/facebook/followers       | day         | 92    | 2015-06-07 | 2015-12-07 |
       | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-12-07 | 2015-12-13 |
       | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-12-07 | 2015-12-13 |
       | /social_media/analytics/facebook/likes           | week        | 1     | 2015-12-07 | 2015-12-13 |
@@ -136,10 +136,10 @@ Feature: facebook
     Examples: 
       | url                                              | granularity | start_date | end_date   | count |
       | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03 | 2015-12-03 | 1     |
-      | /social_media/analytics/facebook/engagement      | day         |            | 2015-12-03 | 30    |
-      | /social_media/analytics/facebook/likes           | day         | 2015-12-03 |            | 30    |
-      | /social_media/analytics/facebook/unlikes         | day         |            |            | 30    |
-      | /social_media/analytics/facebook/reach           |             |            |            | 30    |
+      | /social_media/analytics/facebook/engagement      | day         |            | 2015-12-03 | 31    |
+      | /social_media/analytics/facebook/likes           | day         | 2015-12-03 |            | 31    |
+      | /social_media/analytics/facebook/unlikes         | day         |            |            | 31    |
+      | /social_media/analytics/facebook/reach           |             |            |            | 31    |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"

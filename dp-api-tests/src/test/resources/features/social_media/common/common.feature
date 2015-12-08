@@ -4,11 +4,12 @@ Feature: facebook
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "200"||"400"
+    #And Response code is "200"
     And Response contains "<int>"  values for all metrics
 
     Examples: 
       | url                               | granularity |	int |
-      #| /social_media/analytics           | day         |	1	|
+      | /social_media/analytics           | day         |	1	|
       | /social_media/analytics/facebook  | day         |	1	|
       | /social_media/analytics/twitter   | day         |	1	|
       | /social_media/analytics/instagram | day         |	1	|
@@ -123,8 +124,8 @@ Feature: facebook
     And Content type is "application/json"
     #And Response code is "400"
     And Response code is "200"
-
     #And Custom code is "53"
+
     Examples: 
       | url                                | granularity |
       | /social_media/analytics            | day         |
@@ -150,49 +151,50 @@ Feature: facebook
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "200"
+    #And Custom code is "151"
 
-  #And Custom code is "151"
   Scenario: Getting "reach" non-existent analytics data
     When Getting "/social_media/analytics/reach/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "500"
     And Response code is "404"
     #And Custom code is "151"
+
   Scenario: Getting "followers"non-existent analytics data
     When Getting "/social_media/analytics/followers/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "500"
+    #And Custom code is "151"
 
-  #And Custom code is "151"
   Scenario: Getting "engagement" non-existent analytics data
     When Getting "/social_media/analytics/engagement/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "500"
+    #And Custom code is "151"
 
-  #And Custom code is "151"
   Scenario: Getting facebook mismatched metrics analytics data
     When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "200"
+    #And Custom code is "151"
 
-  #And Custom code is "151"
   Scenario: Getting tweeter mismatched metrics analytics data
     When Getting "/social_media/analytics/tweeter/likes" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "500"
+    #And Custom code is "151"
 
-  #And Custom code is "151"
   Scenario: Getting instagram mismatched metrics analytics data
     When Getting "/social_media/analytics/instagram/impressions" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "200"
+    #And Custom code is "151"
 
-  #And Custom code is "151"
   Scenario Outline: Get analytics data from API with missing parameters
     When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
     Then Response contains 5 values
