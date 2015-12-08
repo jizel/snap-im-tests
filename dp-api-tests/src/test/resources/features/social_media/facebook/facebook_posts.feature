@@ -30,8 +30,8 @@ Feature: facebook_posts
 
     Examples: 
       | url                                    | limit | cursor | response_code | custom_code |
-      | /social_media/analytics/facebook/posts | /null | -1     | 400           | 63          |
-      | /social_media/analytics/facebook/posts |       | -1     | 400           | 63          |
+      | /social_media/analytics/facebook/posts | /null | -1     | 400           | 52          |
+      | /social_media/analytics/facebook/posts |       | -1     | 400           | 52          |
       | /social_media/analytics/facebook/posts | 10    | -1     | 400           | 63          |
       | /social_media/analytics/facebook/posts | text  | 0      | 400           | 63          |
       | /social_media/analytics/facebook/posts | text  | /null  | 400           | 63          |
