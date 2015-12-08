@@ -31,12 +31,7 @@ import java.util.Map;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -47,6 +42,7 @@ public class BasicSteps {
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
+    protected static final String RATE_SHOPPER_BASE_URI = "rate_shopper.baseURI";
     protected static final String IDENTITY_BASE_URI = "identity.baseURI";
     protected static final String IDENTITY_NGINX_BASE_URI = "identity_nginx.baseURI";
     protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
@@ -112,6 +108,12 @@ public class BasicSteps {
     public void bodyIsEmpty() {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(isEmptyOrNullString());
+    }
+
+    @Step
+    public void bodyContainsCollectionWith(String attributeName, Object item){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(attributeName, hasItem(item));
     }
 
     @Step

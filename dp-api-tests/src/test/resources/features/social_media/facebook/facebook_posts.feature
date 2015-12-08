@@ -3,7 +3,7 @@ Feature: facebook_posts
 
   #not yet implemented
   Scenario Outline: Getting a list of items
-    When List of "<url>" is got with limit "<limit>" and cursor "<cursor>"
+    When List of "<url>" for property id "99999999-9999-4999-a999-999999999999" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <count> posts returned
@@ -24,7 +24,7 @@ Feature: facebook_posts
 
   #just posts, but not yet implemented, other metrics are not pageable
   Scenario Outline: Checking error codes for getting list of items
-    When List of "<url>" is got with limit "<limit>" and cursor "<cursor>"
+    When List of "<url>" for property id "99999999-9999-4999-a999-999999999999" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 

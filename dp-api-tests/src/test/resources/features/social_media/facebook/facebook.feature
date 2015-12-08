@@ -25,7 +25,7 @@ Feature: facebook
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is "200"
     And Content type is "application/json"
-    And Response contains "<count>" values
+    And Response contains <count> values
     And Body contains entity with attribute "since" value "<since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
@@ -102,14 +102,14 @@ Feature: facebook
   Scenario: Getting non-existent analytics data
     When Getting "/social_media/analytics/facebook/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
-    And Response code is "400"
-    And Custom code is "52"
+    And Response code is "404"
+    And Custom code is "151"
 
   Scenario: Getting mismatched metrics analytics data
     When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
-    And Response code is "400"
-    And Custom code is "52"
+    And Response code is "404"
+    And Custom code is "151"
 
   Scenario Outline: Checking error codes for analytics data
     When Property is missing for "<url>"
@@ -178,8 +178,7 @@ Feature: facebook
     And Response granularity is "<expected_granularity>"
     And Response since is "<expected_since>"
     And Response until is "<expected_until>"
-    And Response contains no more than <count> values
-
+    And Response contains <count> values
     Examples: 
       | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
       | /social_media/analytics/facebook/number_of_posts |             |                |                   | day                  | today - 1 month   | today          | 32    |

@@ -26,7 +26,7 @@ Feature: instagram
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is "200"
     And Content type is "application/json"
-    And Response contains "<count>" values
+    And Response contains <count> values
     And Body contains entity with attribute "since" value "<since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
@@ -206,7 +206,7 @@ Feature: instagram
     And Response granularity is "<expected_granularity>"
     And Response since is "<expected_since>"
     And Response until is "<expected_until>"
-    And Response contains no more than <count> values
+    And Response contains <count> values
 
     Examples: 
       | url                                          | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
