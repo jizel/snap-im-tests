@@ -102,4 +102,10 @@ public class AnalyticsStepdefs {
     public void There_are_count_posts_returned(int count) throws Throwable {
         analyticsSteps.numberOfEntitiesInResponse(Map.class, count);
     }
+    
+    @Then("^Response contains \"([^\"]*)\" values$")
+    public void response_contains_valuess(int count) throws Throwable {
+        analyticsSteps.numberOfValuesInResponseIsEqueal(count);
+    }
+ 
 }
