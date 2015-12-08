@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.helpers;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -63,7 +65,7 @@ public class StringUtil {
      * @return date parsed from text
      */
     public static LocalDate parseDate(String text) {
-        if (text == null || "".equals(text)) {
+        if (StringUtils.isBlank(text)) {
             return null;
         }
 
