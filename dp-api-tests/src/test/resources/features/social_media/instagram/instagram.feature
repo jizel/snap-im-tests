@@ -1,11 +1,8 @@
 Feature: instagram
-  Testing of api for facebook with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
-  data in db are increasing for all metrics, inserted to db according to following pattern:
-  starting from d=2014-01-01 as i=0, i++
-  INSERT INTO `DP_SOCIAL_MEDIA`.`FactFacebookPageStats` (`dim_property_id`, `dim_date_id`, `impressions`, `engagements`, `followers`, `number_of_posts`, `reach`, `likes`, `unlikes`, `collected_time_stamp`, `inserted_time_stamp` )
-  VALUES ( VALUES (999999, ${d.format("yyyyMMdd")},  ${i*3},  ${i},  ${i*10},  ${i+100}, ${i*5},  ${i*2}, ${i},  CURRENT_TIMESTAMP,   '${d.format("yyyy-MM-dd HH:mm:ss")}' );
+  #Testing of api for instagram with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
+  #data in db are increasing for all metrics, inserted to db according to following pattern:
 
-  Scenario Outline: Get facebook analytics data from API for a given wrong granularity
+  Scenario Outline: Get instagram analytics data from API for a given wrong granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "400"
@@ -17,10 +14,10 @@ Feature: instagram
       | /social_media/analytics/instagram/pictures   | yy          |
       | /social_media/analytics/instagram/engagement | mm          |
       | /social_media/analytics/instagram/followers  | 1dd         |
-      | /social_media/analytics/instagram/tags       | m1m         |
-      | /social_media/analytics/instagram/reach      | 444         |
-      | /social_media/analytics/instagram/likes      | 33333       |
-      | /social_media/analytics/instagram/comments   | 1ddfg445    |
+      | /social_media/analytics/instagram/tags       | MONTHS      |
+      | /social_media/analytics/instagram/reach      | DAYs        |
+      | /social_media/analytics/instagram/likes      | WEEK        |
+      | /social_media/analytics/instagram/comments   | WEEKS       |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"

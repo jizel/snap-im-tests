@@ -17,9 +17,9 @@ Feature: facebook
       | /social_media/analytics/facebook/                | ddd         |
       | /social_media/analytics/facebook/number_of_posts | www         |
       | /social_media/analytics/facebook/engagement      | yyy         |
-      | /social_media/analytics/facebook/likes           | ttt         |
-      | /social_media/analytics/facebook/unlikes         | uuu         |
-      | /social_media/analytics/facebook/reach           | 1234        |
+      | /social_media/analytics/facebook/likes           | MONTH       |
+      | /social_media/analytics/facebook/unlikes         | weEK        |
+      | /social_media/analytics/facebook/reach           | DAYS        |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"

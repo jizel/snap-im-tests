@@ -1,4 +1,4 @@
-Feature: facebook
+Feature: common
 
   Scenario Outline: Get collective analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"

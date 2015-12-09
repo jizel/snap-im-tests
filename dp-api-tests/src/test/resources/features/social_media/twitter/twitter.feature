@@ -1,11 +1,8 @@
-Feature: instagram
-  Testing of api for facebook with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
-  data in db are increasing for all metrics, inserted to db according to following pattern:
-  starting from d=2014-01-01 as i=0, i++
-  INSERT INTO `DP_SOCIAL_MEDIA`.`FactFacebookPageStats` (`dim_property_id`, `dim_date_id`, `impressions`, `engagements`, `followers`, `number_of_posts`, `reach`, `likes`, `unlikes`, `collected_time_stamp`, `inserted_time_stamp` )
-  VALUES ( VALUES (999999, ${d.format("yyyyMMdd")},  ${i*3},  ${i},  ${i*10},  ${i+100}, ${i*5},  ${i*2}, ${i},  CURRENT_TIMESTAMP,   '${d.format("yyyy-MM-dd HH:mm:ss")}' );
+Feature: twitter
 
-  Scenario Outline: Get facebook analytics data from API for a given wrong granularity
+  #Testing of api for twitter with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
+  #data in db are increasing for all metrics, inserted to db according to following pattern:
+  Scenario Outline: Get twitter analytics data from API for a given wrong granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "400"
@@ -20,9 +17,9 @@ Feature: instagram
       | /social_media/analytics/twitter/impressions      | m1n         |
       | /social_media/analytics/twitter/reach            | 444         |
       | /social_media/analytics/twitter/retweets         | 6655665     |
-      | /social_media/analytics/twitter/retweets_reach   | dasdasdsasa |
-      | /social_media/analytics/twitter/mentions         | dsa         |
-      | /social_media/analytics/twitter/mention_reach    | fffff       |
+      | /social_media/analytics/twitter/retweets_reach   | MONTH       |
+      | /social_media/analytics/twitter/mentions         | DAY         |
+      | /social_media/analytics/twitter/mention_reach    | WEEK        |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
@@ -32,7 +29,7 @@ Feature: instagram
     And Body contains entity with attribute "since" value "<since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
-	And Response contains "<count>" values
+    And Response contains "<count>" values
 
     Examples: 
       | url                                              | granularity | count | since      | until      |
@@ -154,7 +151,7 @@ Feature: instagram
     And Custom code is "52"
 
   Scenario: Getting mismatched metrics analytics data
-    When Getting "/social_media/analytics/instagram/tweets" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    When Getting "/social_media/analytics/twitter/posts" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "400"
     And Custom code is "52"
@@ -179,8 +176,8 @@ Feature: instagram
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
     Then Response code is "200"
     And Content type is "application/json"
-	And Response contains <count> values
-   
+    And Response contains <count> values
+
     Examples: 
       | url                                              | granularity | start_date | end_date   | count |
       | /social_media/analytics/twitter/number_of_tweets |             | 2015-12-03 | 2015-12-03 | 1     |
