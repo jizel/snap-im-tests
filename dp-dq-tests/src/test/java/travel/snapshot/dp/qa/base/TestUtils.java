@@ -69,17 +69,20 @@ public class TestUtils {
       }
     }
     
-    public static void followUpLoadTestFacebook(List<String> factsYesterdayList, List<String> incrementalsTodayList, List<String> factsTodayList) throws Exception {
+    public static void followUpLoadTestFacebook(List<String> factsYesterday, List<String> incrementalsToday, List<String> factsToday, List<String> metrics) throws Exception {
         
-        Iterator<String> it1 = factsYesterdayList.iterator();
-        Iterator<String> it2 = incrementalsTodayList.iterator();
-        Iterator<String> it3 = factsTodayList.iterator();
+        Iterator<String> it1 = factsYesterday.iterator();
+        Iterator<String> it2 = incrementalsToday.iterator();
+        Iterator<String> it3 = factsToday.iterator();
+        Iterator<String> it4 = metrics.iterator();
         
-        while (it1.hasNext() && it2.hasNext() && it3.hasNext()) {
+        while (it1.hasNext() && it2.hasNext() && it3.hasNext() && it4.hasNext()) {
           String followUpFactsYesterday = it1.next();
           String followUpIncrementalsToday = it2.next();
           String followUpFactsToday = it3.next();
+          String metric = it4.next();
           
+          logger.info("Metric - " + metric);
           logger.info("Facts yesterday: " + getQueryResultInt(followUpFactsYesterday));
           logger.info("Incrementals today: " + getQueryResultInt(followUpIncrementalsToday));
           logger.info("Facts today: " + getQueryResultInt(followUpFactsToday));
