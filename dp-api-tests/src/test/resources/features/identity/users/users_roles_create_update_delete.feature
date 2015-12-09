@@ -7,6 +7,9 @@ Feature: users_roles_create_update_delete
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
+    Given The following properties exist with random address and billing address
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
 
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone  | culture |
@@ -23,28 +26,43 @@ Feature: users_roles_create_update_delete
     Given All users are removed for customers with codes: c1t, c2t
 
     Given Relation between role with name "user_role_rel_1" for application id "111" and user with username "default1" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "user_role_rel_1" for application id "111" and user with username "default1" exists with relationship_type "property" and entity with code "p1_code"
 
 
-  Scenario: Adding role to user
+  Scenario Outline: Adding role to user
 
-    When Role with name "user_role_rel_2" for application id "111" is added to user with username "default1" with relationship_type "customer" and entity with code "c1t"
+    When Role with name "<role_name>" for application id "<application_id>" is added to user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
     Then Response code is "204"
+
+    Examples:
+      | role_name       | application_id | username | relationship_type | entity_code |
+      | user_role_rel_2 | 111            | default1 | customer          | c1t         |
+      | user_role_rel_2 | 111            | default1 | property          | p1_code     |
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
 
-  Scenario: Removing role from user
+  Scenario Outline: Removing role from user
 #failing because of not working filtering for customer users
-    When Role with name "user_role_rel_1" for application id "111" is removed from user with username "default2" with relationship_type "customer" and entity with code "c1t"
+    When Role with name "<role_name>" for application id "<application_id>" is removed from user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
     Then Response code is "204"
     And Body is empty
-    And Role with name "user_role_rel_1" for application id "111" is not there for user with username "default2" with relationship_type "customer" and entity with code "c1t"
+    And Role with name "<role_name>" for application id "<application_id>" is not there for user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
 
+    Examples:
+      | role_name       | application_id | username | relationship_type | entity_code |
+      | user_role_rel_1 | 111            | default1 | customer          | c1t         |
+      | user_role_rel_1 | 111            | default1 | property          | p1_code     |
 
-  Scenario: Checking error code for removing user from customer
-    When Nonexistent role is removed from user with username "default2" with relationship_type "customer" and entity with code "c1t"
+  Scenario Outline: Checking error code for removing user from customer
+    When Nonexistent role is removed from user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
     Then Response code is "204"
+
+    Examples:
+      | username | relationship_type | entity_code |
+      | default1 | customer          | c1t         |
+      | default1 | property          | p1_code     |
 
 
   Scenario Outline: Filtering list of roles for user for relationship_type and entity
@@ -73,19 +91,28 @@ Feature: users_roles_create_update_delete
     Given Relation between role with name "other_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
     Given Relation between role with name "other_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
 
+    Given Relation between role with name "filter_user_role_rel_1" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_4" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_5" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_6" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "other_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "other_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
 
-    When List of roles for user with username "filter_user_roles_rel_name" with relationship_type "customer" and entity with code "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of roles for user with username "filter_user_roles_rel_name" with relationship_type "<relationship_type>" and entity with code "<entity_code>" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> user roles returned
     And There are user roles with following role names returned in order: <expected_usernames>
 
     Examples:
-      | limit | cursor | returned | filter                             | sort      | sort_desc | expected_usernames                                                                                                          |
-      | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_1, filter_user_roles_rel_2, filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5 |
-      | 5     | 0      | 5        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_roles_rel_6, filter_user_roles_rel_5, filter_user_roles_rel_4, filter_user_roles_rel_3, filter_user_roles_rel_2 |
-      | 5     | 2      | 4        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5, filter_user_roles_rel_6                          |
-      | 5     | 2      | 4        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_roles_rel_4, filter_user_roles_rel_3, filter_user_roles_rel_2, filter_user_roles_rel_1                          |
-      | /null | /null  | 1        | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_roles_rel_6                                                                                                     |
+      | relationship_type | entity_code | limit | cursor | returned | filter                             | sort      | sort_desc | expected_usernames                                                                                                          |
+      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_1, filter_user_roles_rel_2, filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5 |
+      | property          | p1_code     | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_1, filter_user_roles_rel_2, filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5 |
+      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_roles_rel_6, filter_user_roles_rel_5, filter_user_roles_rel_4, filter_user_roles_rel_3, filter_user_roles_rel_2 |
+      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5, filter_user_roles_rel_6                          |
+      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_roles_rel_4, filter_user_roles_rel_3, filter_user_roles_rel_2, filter_user_roles_rel_1                          |
+      | customer          | c1t         | /null | /null  | 1        | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_roles_rel_6                                                                                                     |
 
     #TODO error codes - if bad relationship_type is used, if wrong id is used,

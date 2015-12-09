@@ -22,7 +22,10 @@ public class DbStepDefs {
     public void All_customerProperties_are_deleted_from_DB_for_customer_code_and_property_code(String customerCode, String propertyCode) throws Throwable {
         Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        dbSteps.deleteAllPropertyCustomersFromDb(c.getCustomerId(), p.getPropertyId());
+        if (c != null && p != null) {
+            dbSteps.deleteAllPropertyCustomersFromDb(c.getCustomerId(), p.getPropertyId());
+        }
+
     }
 
     @Given("^Database is cleaned$")
