@@ -261,7 +261,15 @@ public class TestFacebookPagesMidnightETL {
         factsTodayList.add("select sum(likes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
         factsTodayList.add("select sum(unlikes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
         
-        followUpLoadTestFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("number_of_posts");
+        metrics.add("engagement");
+        metrics.add("impressions");
+        metrics.add("reach");
+        metrics.add("likes");
+        metrics.add("unlikes");
+        
+        followUpLoadTestFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList, metrics);
     }
 
 }
