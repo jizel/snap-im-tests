@@ -5,7 +5,6 @@ Feature: facebook
   INSERT INTO `DP_SOCIAL_MEDIA`.`FactFacebookPageStats` (`dim_property_id`, `dim_date_id`, `impressions`, `engagements`, `followers`, `number_of_posts`, `reach`, `likes`, `unlikes`, `collected_time_stamp`, `inserted_time_stamp` )
   VALUES ( VALUES (999999, ${d.format("yyyyMMdd")},  ${i*3},  ${i},  ${i*10},  ${i+100}, ${i*5},  ${i*2}, ${i},  CURRENT_TIMESTAMP,   '${d.format("yyyy-MM-dd HH:mm:ss")}' );
 
-
   Scenario Outline: Get facebook analytics data from API for a given wrong granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
@@ -62,11 +61,11 @@ Feature: facebook
       | /social_media/analytics/facebook/likes           | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-07 | 2015-11-13 |
-      | /social_media/analytics/facebook/followers       | week        | 1    | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/likes           | week        | 1     | 2015-11-07 | 2015-11-13 |
-      | /social_media/analytics/facebook/unlikes         | week        | 1    | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/number_of_posts | week        | 2     | 2015-11-07 | 2015-11-23 |
@@ -179,7 +178,6 @@ Feature: facebook
     And Response since is "<expected_since>"
     And Response until is "<expected_until>"
     And Response contains no more than <count> values
-
 
     Examples: 
       | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
