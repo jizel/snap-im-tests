@@ -20,7 +20,7 @@ Feature: web_performance
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is "200"
-    And Data is owned by "facebook"
+    #And Data is owned by ""
     And Content type is "application/json"
     And Response contains "<count>" values
     And Body contains entity with attribute "since" value "<since>"
