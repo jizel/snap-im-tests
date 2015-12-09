@@ -6,6 +6,7 @@ Feature: facebook_posts
     When List of "<url>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is "200"
     And Content type is "application/json"
+    And Data is owned by "facebook"
     And There are <count> posts returned
 
     Examples: 

@@ -33,30 +33,30 @@ Feature: instagram
 
     Examples: 
       | url                                          | granularity | count | since      | until      |
-      | /social_media/analytics/instagram            | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/pictures   | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/engagement | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/followers  | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/tags       | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/reach      | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/likes      | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram/comments   | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/instagram            | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/pictures   | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/engagement | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/followers  | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/tags       | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/reach      | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/likes      | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/comments   | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram            | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/pictures   | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/engagement | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/followers  | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/tags       | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/reach      | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/likes      | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/comments   | day         | 23    | 2015-12-07 | 2015-12-23 |
+      | /social_media/analytics/instagram            | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/pictures   | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/engagement | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/followers  | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/tags       | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/reach      | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/likes      | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram/comments   | day         | 1     | 2015-11-07 | 2015-11-07 |
+      | /social_media/analytics/instagram            | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/pictures   | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/engagement | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/followers  | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/tags       | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/reach      | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/likes      | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/comments   | day         | 11    | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram            | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/pictures   | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/engagement | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/followers  | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/tags       | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/reach      | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/likes      | day         | 23    | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/comments   | day         | 23    | 2015-11-07 | 2015-11-23 |
       | /social_media/analytics/instagram            | day         | 92    | 2015-06-07 | 2015-12-07 |
       | /social_media/analytics/instagram/pictures   | day         | 92    | 2015-06-07 | 2015-12-07 |
       | /social_media/analytics/instagram/engagement | day         | 92    | 2015-06-07 | 2015-12-07 |
@@ -65,38 +65,38 @@ Feature: instagram
       | /social_media/analytics/instagram/reach      | day         | 92    | 2015-06-07 | 2015-12-07 |
       | /social_media/analytics/instagram/likes      | day         | 92    | 2015-06-07 | 2015-12-07 |
       | /social_media/analytics/instagram/comments   | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/instagram            | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/pictures   | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/engagement | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/followers  | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/tags       | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/reach      | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/likes      | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram/comments   | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/instagram            | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/pictures   | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/engagement | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/followers  | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/tags       | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/reach      | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/likes      | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram/comments   | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/instagram            | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/pictures   | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/engagement | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/followers  | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/tags       | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/reach      | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/likes      | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/comments   | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/instagram            | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/pictures   | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/engagement | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/followers  | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/tags       | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/reach      | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/likes      | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/instagram/comments   | week        | 26    | 2015-01-07 | 2015-12-23 |
+      | /social_media/analytics/instagram            | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/pictures   | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/engagement | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/followers  | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/tags       | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/reach      | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/likes      | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram/comments   | week        | 1     | 2015-11-07 | 2015-11-13 |
+      | /social_media/analytics/instagram            | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/pictures   | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/engagement | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/followers  | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/tags       | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/reach      | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/likes      | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram/comments   | week        | 1     | 2015-11-03 | 2015-11-13 |
+      | /social_media/analytics/instagram            | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/pictures   | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/engagement | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/followers  | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/tags       | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/reach      | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/likes      | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/comments   | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/instagram            | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/pictures   | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/engagement | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/followers  | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/tags       | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/reach      | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/likes      | week        | 26    | 2015-01-07 | 2015-11-23 |
+      | /social_media/analytics/instagram/comments   | week        | 26    | 2015-01-07 | 2015-11-23 |
       | /social_media/analytics/instagram            | month       | 1     | 2015-11-01 | 2015-11-30 |
       | /social_media/analytics/instagram/pictures   | month       | 1     | 2015-11-01 | 2015-11-30 |
       | /social_media/analytics/instagram/engagement | month       | 1     | 2015-11-01 | 2015-11-30 |
@@ -113,14 +113,14 @@ Feature: instagram
       | /social_media/analytics/instagram/reach      | month       | 1     | 2015-02-01 | 2015-03-23 |
       | /social_media/analytics/instagram/likes      | month       | 1     | 2015-02-01 | 2015-03-23 |
       | /social_media/analytics/instagram/comments   | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/instagram            | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/pictures   | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/engagement | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/followers  | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/tags       | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/reach      | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/likes      | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/instagram/comments   | month       | 36    | 2013-02-01 | 2016-12-31 |
+      | /social_media/analytics/instagram            | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/pictures   | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/engagement | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/followers  | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/tags       | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/reach      | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/likes      | month       | 36    | 2013-02-01 | 2016-11-30 |
+      | /social_media/analytics/instagram/comments   | month       | 36    | 2013-02-01 | 2016-11-30 |
 
   Scenario: Getting non-existent analytics data
     When Getting "/social_media/analytics/instagram/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
@@ -295,12 +295,6 @@ Feature: instagram
       | /social_media/analytics/instagram/comments   | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
       | /social_media/analytics/instagram/comments   | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
 
-  # Scenario: Get data owners data for facebook
-  #can be combined to other scnearios
-  #  When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
-  #  Then Content type is "application/json"
-  #  And Response code is "200"
-  #  And Data is owned by "facebook"
   Scenario Outline: Checking number of values in response for various granularities
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Content type is "application/json"
