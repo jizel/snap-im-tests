@@ -100,6 +100,11 @@ public class SocialMediaStepdefs {
     public void There_are_count_posts_returned(int count) throws Throwable {
         steps.numberOfEntitiesInResponse(Map.class, count);
     }
+    
+    @When("^Verifying sum of \"([^\"]*)\" from Facebook, Twitter, and Instagram with \"([^\"]*)\" granularity for property \"([^\"]*)\", since \"([^\"]*)\", until \"([^\"]*)\"$")
+    public void getting_sum_of_from_Facebook_Twitter_and_Instagram_with_for_property_since_until(String metric, String granularity, String property, String since, String until) {
+        steps.verifySumOfMetricFromSocialMedia(metric, granularity, property, since, until);
+    }
 
     @Then("^The metric count is \"([^\"]*)\"$")
     public void Metric_count_is(int values) throws Throwable {

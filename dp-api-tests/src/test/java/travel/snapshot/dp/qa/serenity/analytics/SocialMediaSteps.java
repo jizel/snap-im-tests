@@ -83,6 +83,43 @@ public class SocialMediaSteps extends BasicSteps {
         Response response = requestSpecification.when().get();
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
+    
+    @Step
+    public void verifySumOfMetricFromSocialMedia(String metric, String granularity, String property, String since, String until) {
+    	List<Integer> facebookValues = given().spec(spec)
+    	.header("x-property",property)
+    	.param("granularity", granularity)
+    	.param("since", since)
+    	.param("until", until)
+    	.get("/social_media/analytics/facebook/{metric}", metric).jsonPath().getList("values");
+    	int facebookSum = facebookValues.stream().mapToInt(i -> i).sum();
+    	
+    	List<Integer> twitterValues = given().spec(spec)
+    	.header("x-property",property)
+    	.param("granularity", granularity)
+    	.param("since", since)
+    	.param("until", until)
+    	.get("/social_media/analytics/twitter/{metric}", metric).jsonPath().getList("values");
+    	int twitterSum = twitterValues.stream().mapToInt(i -> i).sum();
+    	
+    	List<Integer> instagramValues = given().spec(spec)
+    	.header("x-property",property)
+    	.param("granularity", granularity)
+    	.param("since", since)
+    	.param("until", until)
+    	.get("/social_media/analytics/instagram/{metric}", metric).jsonPath().getList("values");
+    	int instagramSum = instagramValues.stream().mapToInt(i -> i).sum();
+    	
+    	List<Integer> totalValues = given().spec(spec)
+    	.header("x-property",property)
+    	.param("granularity", granularity)
+    	.param("since", since)
+    	.param("until", until)
+    	.get("/social_media/analytics/{metric}", metric).jsonPath().getList("values");
+    	int totalSum = totalValues.stream().mapToInt(i -> i).sum();
+    	
+    	assertEquals(facebookSum + twitterSum + instagramSum, totalSum);
+    }
 
     //Response Validation
 
@@ -137,7 +174,6 @@ public class SocialMediaSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, hasItem(value));
     }
-
 
     public void responseContainsCorrectValuesFor(String granularity, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
