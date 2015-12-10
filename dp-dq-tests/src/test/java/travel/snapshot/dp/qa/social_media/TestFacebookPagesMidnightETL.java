@@ -39,7 +39,7 @@ public class TestFacebookPagesMidnightETL {
         String sqlQueryForTarget = "select count(*)*3 from IncrementalFacebookPageStatistics where date=date_sub(curdate(), interval 2 day)";
 
         logger.info("\nStart control checks on table 'IncrementalFacebookPageStatistics'");
-        testLoad(sqlQueryForSource, sqlQueryForTarget);
+        testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
         
         List<String> followUpListToSource = new ArrayList<String>();
         //Separate checks for followers are used, since the values are total, instead of incremental
@@ -164,7 +164,16 @@ public class TestFacebookPagesMidnightETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = max_time_stamp");
         
-        followUpLoadTest(followUpListToSource,followUpListToTarget);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("Metric: followers");
+        metrics.add("Metric: number of posts");
+        metrics.add("Metric: engagement");
+        metrics.add("Metric: impressions");
+        metrics.add("Metric: reach");
+        metrics.add("Metric: likes");
+        metrics.add("Metric: unlikes");
+        
+        followUpLoadTest(followUpListToSource, followUpListToTarget, metrics);
     }
 
     @Test
@@ -186,8 +195,8 @@ public class TestFacebookPagesMidnightETL {
         String sqlQueryForTargetFollowers = "select sum(followers) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0";
         
         logger.info("\nStart control checks on table 'FactFacebookPageStats'");
-        testLoad(sqlQueryForSource, sqlQueryForTarget);
-        testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers);
+        testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
+        testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers, "Metric: followers");
         
         List<String> factsYesterdayList = new ArrayList<String>();
         factsYesterdayList.add("select sum(number_of_posts) from FactFacebookPageStats where dim_date_id = (curdate() - interval 3 day) + 0");
@@ -262,14 +271,14 @@ public class TestFacebookPagesMidnightETL {
         factsTodayList.add("select sum(unlikes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
         
         List<String> metrics = new ArrayList<String>();
-        metrics.add("number_of_posts");
+        metrics.add("number of posts");
         metrics.add("engagement");
         metrics.add("impressions");
         metrics.add("reach");
         metrics.add("likes");
         metrics.add("unlikes");
         
-        followUpLoadTestFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList, metrics);
+        testLoadFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList, metrics);
     }
 
 }

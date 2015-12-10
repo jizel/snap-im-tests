@@ -34,7 +34,7 @@ public class TestFacebookPostsNoonETL {
         String sqlQueryForTarget = "select count(*) from FactFacebookPostStatsCurrDay where date=curdate() - interval 1 day";
 
         logger.info("\nStart control checks on table 'FactFacebookPostStatsCurrDay'");
-        testLoad(sqlQueryForSource, sqlQueryForTarget);
+        testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
         
         List<String> followUpListToSource = new ArrayList<String>();
         followUpListToSource.add("select sum(reach) from RawImportedFacebookPostStatistics where date = curdate() - interval 1 day and data_collection_run = 2");
@@ -44,7 +44,11 @@ public class TestFacebookPostsNoonETL {
         followUpListToTarget.add("select sum(reach) from FactFacebookPostStatsCurrDay where date = curdate() - interval 1 day");
         followUpListToTarget.add("select sum(engagement) from FactFacebookPostStatsCurrDay where date = curdate() - interval 1 day");
         
-        followUpLoadTest(followUpListToSource,followUpListToTarget);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("Metric: reach");
+        metrics.add("Metric: engagement");
+        
+        followUpLoadTest(followUpListToSource, followUpListToTarget, metrics);
     }
 
 }
