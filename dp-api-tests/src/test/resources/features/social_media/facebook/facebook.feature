@@ -20,6 +20,20 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | weEK        |
       | /social_media/analytics/facebook/reach           | DAYS        |
 
+  Scenario Outline: Validate that metrics have valid value in the db
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And The metric count is "<count>"
+
+    Examples: 
+      | url                                              | granularity | count |
+      | /social_media/analytics/facebook/number_of_posts | day         | 801   |
+      | /social_media/analytics/facebook/engagement      | day         | 701   |
+      | /social_media/analytics/facebook/likes           | day         | 1402  |
+      | /social_media/analytics/facebook/unlikes         | day         | 701   |
+      | /social_media/analytics/facebook/reach           | day         | 3505  |
+
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is "200"

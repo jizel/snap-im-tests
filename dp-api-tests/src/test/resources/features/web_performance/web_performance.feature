@@ -17,6 +17,23 @@ Feature: web_performance
       | /web_performance/analytics/conversion_rates/countries | DAY         |
       | /web_performance/analytics/referrals                  | WEEK        |
 
+  Scenario Outline: Validate that metrics have valid value in the db
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And The metric count is "<count>"
+
+    Examples: 
+      | url                                                   | granularity | count |
+      | /web_performance/analytics/visits                     | day         | 1     |
+      | /web_performance/analytics/visits_unique              | day         | 1     |
+      | /web_performance/analytics/revenue                    | day         | 1     |
+      | /web_performance/analytics/conversion_rates           | day         | 1     |
+      | /web_performance/analytics/visits/countries           | day         | 1     |
+      | /web_performance/analytics/visits_unique/countries    | day         | 1     |
+      | /web_performance/analytics/conversion_rates/countries | day         | 1     |
+      | /web_performance/analytics/referrals                  | day         | 1     |
+
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is "200"

@@ -190,4 +190,10 @@ public class AnalyticsSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(fieldName, hasItem(value));
     }
+    
+    @Step
+    public void fieldContainsIntegerValue(String fieldName, int value){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(fieldName, hasItem(value));
+    }
 }

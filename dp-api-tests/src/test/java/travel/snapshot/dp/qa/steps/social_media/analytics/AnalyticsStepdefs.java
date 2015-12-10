@@ -97,6 +97,11 @@ public class AnalyticsStepdefs {
     public void Data_is_owned_by(String data_owner) throws Throwable {
         analyticsSteps.fieldContains("data_owners", data_owner);
     }
+    
+    @Then("^The metric count is \"([^\"]*)\"$")
+    public void Metric_count_is(int values) throws Throwable {
+        analyticsSteps.fieldContainsIntegerValue("values", values);
+    }
 
     @Then("^There are (\\d+) posts returned$")
     public void There_are_count_posts_returned(int count) throws Throwable {
