@@ -16,23 +16,33 @@ Feature: facebook
       | /social_media/analytics/facebook/                | ddd         |
       | /social_media/analytics/facebook/number_of_posts | www         |
       | /social_media/analytics/facebook/engagement      | yyy         |
-      | /social_media/analytics/facebook/likes           | MONTH       |
-      | /social_media/analytics/facebook/unlikes         | weEK        |
-      | /social_media/analytics/facebook/reach           | DAYS        |
+      | /social_media/analytics/facebook/likes           | MONTHs      |
+      | /social_media/analytics/facebook/unlikes         | we3EK       |
+      | /social_media/analytics/facebook/reach           | D@YS        |
 
   Scenario Outline: Validate that metrics have valid value in the db
-    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is "200"
     And The metric count is "<count>"
 
     Examples: 
-      | url                                              | granularity | count |
-      | /social_media/analytics/facebook/number_of_posts | day         | 801   |
-      | /social_media/analytics/facebook/engagement      | day         | 701   |
-      | /social_media/analytics/facebook/likes           | day         | 1402  |
-      | /social_media/analytics/facebook/unlikes         | day         | 701   |
-      | /social_media/analytics/facebook/reach           | day         | 3505  |
+      | url                                              | granularity | count | since      | until      |
+      | /social_media/analytics/facebook/number_of_posts | day         | 801   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/facebook/engagement      | day         | 701   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/facebook/likes           | day         | 1402  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/facebook/unlikes         | day         | 701   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/facebook/reach           | day         | 3505  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-12-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-12-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/likes           | week        | 1     | 2015-12-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-12-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/reach           | week        | 1     | 2015-12-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/number_of_posts | mothn       | 2     | 2015-11-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/engagement      | month       | 2     | 2015-11-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/likes           | month       | 2     | 2015-11-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/unlikes         | month       | 2     | 2015-11-02 | 2015-12-09 |
+      | /social_media/analytics/facebook/reach           | month       | 2     | 2015-11-02 | 2015-12-09 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
@@ -82,12 +92,12 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-07 | 2015-11-13 |
       | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-07 | 2015-11-13 |
-      | /social_media/analytics/facebook/number_of_posts | week        | 2     | 2015-11-07 | 2015-11-23 |
-      | /social_media/analytics/facebook/engagement      | week        | 2     | 2015-11-07 | 2015-11-23 |
-      | /social_media/analytics/facebook/likes           | week        | 2     | 2015-11-07 | 2015-11-23 |
-      | /social_media/analytics/facebook/unlikes         | week        | 2     | 2015-11-07 | 2015-11-23 |
-      | /social_media/analytics/facebook/reach           | week        | 2     | 2015-11-07 | 2015-11-23 |
-      | /social_media/analytics/facebook/followers       | week        | 2     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/facebook/engagement      | week        | 3     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/facebook/likes           | week        | 3     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/facebook/reach           | week        | 3     | 2015-11-07 | 2015-11-23 |
+      | /social_media/analytics/facebook/followers       | week        | 3     | 2015-11-07 | 2015-11-23 |
       | /social_media/analytics/facebook/number_of_posts | week        | 26    | 2015-01-07 | 2015-12-23 |
       | /social_media/analytics/facebook/engagement      | week        | 26    | 2015-01-07 | 2015-11-23 |
       | /social_media/analytics/facebook/likes           | week        | 26    | 2015-01-07 | 2015-11-23 |

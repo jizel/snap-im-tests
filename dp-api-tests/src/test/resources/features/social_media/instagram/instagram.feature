@@ -21,21 +21,37 @@ Feature: instagram
 
   Scenario Outline: Validate that metrics have valid value in the db
     # Covering the points 4 and 5 from DP-74
-    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is "200"
     And The metric count is "<count>"
 
     Examples: 
-      | url                                          | granularity | count |
-      | /social_media/analytics/instagram            | day         | 1     |
-      | /social_media/analytics/instagram/pictures   | day         | 1     |
-      | /social_media/analytics/instagram/engagement | day         | 1     |
-      | /social_media/analytics/instagram/followers  | day         | 1     |
-      | /social_media/analytics/instagram/tags       | day         | 1     |
-      | /social_media/analytics/instagram/reach      | day         | 1     |
-      | /social_media/analytics/instagram/likes      | day         | 1     |
-      | /social_media/analytics/instagram/comments   | day         | 1     |
+      | url                                          | granularity | count | since      | until      |
+      | /social_media/analytics/instagram            | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/pictures   | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/engagement | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/followers  | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/tags       | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/reach      | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/likes      | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/comments   | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram            | week        | 2     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/pictures   | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/engagement | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/followers  | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/tags       | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/reach      | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/likes      | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/comments   | week        | 2     | 2015-12-03 | 2015-12-09 |
+      | /social_media/analytics/instagram            | month       | 3     | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/instagram/pictures   | month       | 3     | 2015-11-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/engagement | month       | 3     | 2015-11-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/followers  | month       | 3     | 2015-11-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/tags       | month       | 3     | 2015-11-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/reach      | month       | 3     | 2015-11-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/likes      | month       | 3     | 2015-11-03 | 2015-12-09 |
+      | /social_media/analytics/instagram/comments   | month       | 3     | 2015-11-03 | 2015-12-09 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"

@@ -17,23 +17,38 @@ Feature: web_performance
       | /web_performance/analytics/conversion_rates/countries | DAY         |
       | /web_performance/analytics/referrals                  | WEEK        |
 
-
   Scenario Outline: Validate that metrics have valid value in the db
-    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is "200"
     And The metric count is "<count>"
 
     Examples: 
-      | url                                                   | granularity | count |
-      | /web_performance/analytics/visits                     | day         | 1     |
-      | /web_performance/analytics/visits_unique              | day         | 1     |
-      | /web_performance/analytics/revenue                    | day         | 1     |
-      | /web_performance/analytics/conversion_rates           | day         | 1     |
-      | /web_performance/analytics/visits/countries           | day         | 1     |
-      | /web_performance/analytics/visits_unique/countries    | day         | 1     |
-      | /web_performance/analytics/conversion_rates/countries | day         | 1     |
-      | /web_performance/analytics/referrals                  | day         | 1     |
+      | url                                                   | granularity | count | since      | until      |
+      | /web_performance/analytics/visits                     | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/visits_unique              | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/revenue                    | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/conversion_rates           | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/visits/countries           | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/visits_unique/countries    | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/conversion_rates/countries | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/referrals                  | day         | 1     | 2015-12-03 | 2015-12-03 |
+      | /web_performance/analytics/visits                     | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/visits_unique              | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/revenue                    | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/conversion_rates           | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/visits/countries           | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/visits_unique/countries    | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/conversion_rates/countries | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/referrals                  | day         | 2     | 2015-12-03 | 2015-12-09 |
+      | /web_performance/analytics/visits                     | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/visits_unique              | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/revenue                    | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/conversion_rates           | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/visits/countries           | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/visits_unique/countries    | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/conversion_rates/countries | day         | 3     | 2015-11-03 | 2015-12-03 |
+      | /web_performance/analytics/referrals                  | day         | 3     | 2015-11-03 | 2015-12-03 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"

@@ -67,7 +67,14 @@ public class AnalyticsStepdefs {
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         analyticsSteps.getItems(url, limit, cursor);
     }
-
+    
+    @When("^List of \"([^\"]*)\" is got with limit (\\d+) and cursor (\\d+)$")
+    public void list_of_is_got_with_limit_and_cursor(String url,
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
+    	analyticsSteps.getItems(url, limit, cursor);
+    }
+    
     @Then("^There are at most (\\d+) items returned$")
     public void There_are_at_most_items_returned(int count) throws Throwable {
         analyticsSteps.maximumNumberOfItemsInResponse(count);
