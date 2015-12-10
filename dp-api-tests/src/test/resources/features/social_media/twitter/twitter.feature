@@ -22,6 +22,7 @@ Feature: twitter
       | /social_media/analytics/twitter/mention_reach    | WEEK        |
 
   Scenario Outline: Validate that metrics have valid value in the db
+  	# Covering the points 4 and 5 in the acceptance criteria from DP-405,DP-72
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "200"

@@ -17,6 +17,7 @@ Feature: web_performance
       | /web_performance/analytics/conversion_rates/countries | DAY         |
       | /web_performance/analytics/referrals                  | WEEK        |
 
+
   Scenario Outline: Validate that metrics have valid value in the db
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"

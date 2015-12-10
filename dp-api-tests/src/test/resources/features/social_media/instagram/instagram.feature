@@ -1,7 +1,7 @@
 Feature: instagram
+
   #Testing of api for instagram with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
   #data in db are increasing for all metrics, inserted to db according to following pattern:
-
   Scenario Outline: Get instagram analytics data from API for a given wrong granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
@@ -18,6 +18,24 @@ Feature: instagram
       | /social_media/analytics/instagram/reach      | DAYs        |
       | /social_media/analytics/instagram/likes      | WEEK        |
       | /social_media/analytics/instagram/comments   | WEEKS       |
+
+  Scenario Outline: Validate that metrics have valid value in the db
+    # Covering the points 4 and 5 from DP-74
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And The metric count is "<count>"
+
+    Examples: 
+      | url                                          | granularity | count |
+      | /social_media/analytics/instagram            | day         | 1     |
+      | /social_media/analytics/instagram/pictures   | day         | 1     |
+      | /social_media/analytics/instagram/engagement | day         | 1     |
+      | /social_media/analytics/instagram/followers  | day         | 1     |
+      | /social_media/analytics/instagram/tags       | day         | 1     |
+      | /social_media/analytics/instagram/reach      | day         | 1     |
+      | /social_media/analytics/instagram/likes      | day         | 1     |
+      | /social_media/analytics/instagram/comments   | day         | 1     |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
