@@ -66,7 +66,18 @@ public class TestTwitterPagesNoonETL {
         followUpListToTarget.add(getQueryResultInt("select sum(mention_reach) from T_FactTwitterPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0"));
         followUpListToTarget.add(getQueryResultInt("select sum(reach) from T_FactTwitterPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0"));
         
-        followUpLoadTestTwitter(followUpListToSource,followUpListToTarget);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("impressions");
+        metrics.add("engagement");
+        metrics.add("followers");
+        metrics.add("tweets");
+        metrics.add("retweets");
+        metrics.add("retweets reach");
+        metrics.add("mentions");
+        metrics.add("mentions reach");
+        metrics.add("reach");
+        
+        testLoadTwitter(followUpListToSource, followUpListToTarget, metrics);
     }
 
 }
