@@ -41,8 +41,8 @@ public class TestFacebookPostsMidnightETL {
         followUpListToSource.add("select sum(engagement) from RawImportedFacebookPostStatistics where date = curdate() - interval 2 day and data_collection_run = 1");
    
         List<String> followUpListToTarget = new ArrayList<String>();
-        followUpListToTarget.add("select sum(reach) from FactFacebookPostStats where dim_date_id = (curdate() - interval 2 day) + 0");
-        followUpListToTarget.add("select sum(engagement) from FactFacebookPostStats where dim_date_id = (curdate() - interval 2 day) + 0");
+        followUpListToTarget.add("select sum(reach) from FactFacebookPostStats where dim_date_id = (curdate() - interval 3 day) + 0");
+        followUpListToTarget.add("select sum(engagement) from FactFacebookPostStats where dim_date_id = (curdate() - interval 3 day) + 0");
         
         List<String> metrics = new ArrayList<String>();
         metrics.add("Metric: reach");

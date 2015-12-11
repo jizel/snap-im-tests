@@ -127,10 +127,14 @@ public class TestUtils {
         Iterator<String> it3 = metrics.iterator();
         
         while (it1.hasNext() && it2.hasNext() && it3.hasNext()) {
-        	logger.info("Metric: " + it3.next());
-            logger.info("Source: " + it1.next());
-            logger.info("Target: " + it2.next());
-            assertEquals(it1.next(), it2.next());
+            int sourceNext = it1.next();
+            int targetNext = it2.next();
+            String metricNext = it3.next();
+            
+        	logger.info("Metric: " + metricNext);
+            logger.info("Source: " + sourceNext);
+            logger.info("Target: " + targetNext);
+            assertEquals(sourceNext, targetNext);
         }
       }
 }
