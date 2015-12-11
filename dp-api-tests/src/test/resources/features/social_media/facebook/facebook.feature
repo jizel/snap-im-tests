@@ -11,7 +11,7 @@ Feature: facebook
     And Response code is "400"
     And Custom code is "63"
 
-    Examples: 
+    Examples:
       | url                                              | granularity |
       | /social_media/analytics/facebook/                | ddd         |
       | /social_media/analytics/facebook/number_of_posts | www         |
@@ -26,7 +26,7 @@ Feature: facebook
     And Response code is "200"
     And The metric count is "<count>"
 
-    Examples: 
+    Examples:
       | url                                              | granularity | count | since      | until      |
       | /social_media/analytics/facebook/number_of_posts | day         | 801   | 2015-12-03 | 2015-12-03 |
       | /social_media/analytics/facebook/engagement      | day         | 701   | 2015-12-03 | 2015-12-03 |
@@ -49,13 +49,14 @@ Feature: facebook
     Then Response code is "200"
     And Data is owned by "facebook"
     And Content type is "application/json"
-    And Response contains "<count>" values
+    And Response contains <count> values
     And Body contains entity with attribute "since" value "<found_since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
 
-    Examples: 
-      | url                                              | granularity | count | since      | until      | found_since | #this  is the returned date - I guess this is equal to until - caount
+    Examples:
+    #found_since  is the returned date - I guess this is equal to until - count
+      | url                                              | granularity | count | since      | until      | found_since |
       | /social_media/analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
       | /social_media/analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
       | /social_media/analytics/facebook/likes           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
@@ -68,12 +69,6 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
       | /social_media/analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
       | /social_media/analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/number_of_posts | day         | 23    | 2015-11-07 | 2015-11-23 | 2015-11-07  |
-      | /social_media/analytics/facebook/engagement      | day         | 23    | 2015-11-07 | 2015-11-23 | 2015-11-07  |
-      | /social_media/analytics/facebook/likes           | day         | 23    | 2015-11-07 | 2015-11-23 | 2015-11-07  |
-      | /social_media/analytics/facebook/unlikes         | day         | 23    | 2015-11-07 | 2015-11-23 | 2015-11-07  |
-      | /social_media/analytics/facebook/reach           | day         | 23    | 2015-11-07 | 2015-11-23 | 2015-11-07  |
-      | /social_media/analytics/facebook/followers       | day         | 23    | 2015-11-07 | 2015-11-23 | 2015-11-07  |
       | /social_media/analytics/facebook/number_of_posts | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
       | /social_media/analytics/facebook/engagement      | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
       | /social_media/analytics/facebook/likes           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
@@ -92,7 +87,7 @@ Feature: facebook
       | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
       | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
       | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  | #here we start failing again actual is 2015-11-07
+      | /social_media/analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
       | /social_media/analytics/facebook/engagement      | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
       | /social_media/analytics/facebook/likes           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
       | /social_media/analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
@@ -127,20 +122,20 @@ Feature: facebook
     When Getting "/social_media/analytics/facebook/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "404"
+    And Custom code is "151"
 
-  #And Custom code is "52"
   Scenario: Getting mismatched metrics analytics data
     When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "404"
+    And Custom code is "151"
 
-  #And Custom code is "52"
   Scenario Outline: Checking error codes for analytics data
     When Property is missing for "<url>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | url                                              | error_code | custom_code |
       | /social_media/analytics/facebook                 | 400        | 52          |
       | /social_media/analytics/facebook/number_of_posts | 400        | 52          |
@@ -156,11 +151,11 @@ Feature: facebook
     And Content type is "application/json"
     And Response contains <count> values
 
-    Examples: 
+    Examples:
       | url                                              | granularity | start_date | end_date   | count |
       | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03 | 2015-12-03 | 1     |
       | /social_media/analytics/facebook/engagement      | day         |            | 2015-12-03 | 31    |
-      | /social_media/analytics/facebook/likes           | day         | 2015-12-03 |            | 31    |
+      | /social_media/analytics/facebook/likes           | day         | 2015-11-03 |            | 31    |
       | /social_media/analytics/facebook/unlikes         | day         |            |            | 31    |
       | /social_media/analytics/facebook/reach           |             |            |            | 31    |
 
@@ -171,7 +166,7 @@ Feature: facebook
     And Body contains entity with attribute "since" value "<start_date>"
     And Body contains entity with attribute "until" value "<end_date>"
 
-    Examples: 
+    Examples:
       | url                                              | granularity | start_date | end_date   |
       | /social_media/analytics/facebook                 | month       | 1888-09-01 | 1890-10-01 |
       | /social_media/analytics/facebook/number_of_posts | month       | 1888-09-01 | 1890-10-01 |
@@ -189,11 +184,11 @@ Feature: facebook
       | /social_media/analytics/facebook/followers       | day         | 1888-09-01 | 1888-09-01 |
 
   Scenario Outline: Checking default parameter values
-    Empty column in examples section means default value will be used for this parameter.
-    if text is empty, returns null
-    if text is date in ISO format (2015-01-01), it returns this date
-    text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
-    particular number of days/weeks/months from first part of expression
+  Empty column in examples section means default value will be used for this parameter.
+  if text is empty, returns null
+  if text is date in ISO format (2015-01-01), it returns this date
+  text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
+  particular number of days/weeks/months from first part of expression
 
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
@@ -201,82 +196,82 @@ Feature: facebook
     And Response granularity is "<expected_granularity>"
     And Response since is "<expected_since>"
     And Response until is "<expected_until>"
-    And Response contains no more than <count> values
+    And Response contains correct number of values for granularity "<granularity>" between "<expected_since>" and "<expected_until>"
 
-    Examples: 
-      | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
-      | /social_media/analytics/facebook/number_of_posts |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/number_of_posts | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/number_of_posts | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/number_of_posts | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/number_of_posts | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/number_of_posts | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/number_of_posts | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/number_of_posts | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/number_of_posts | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/number_of_posts | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/number_of_posts | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/engagement      |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/engagement      |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/engagement      | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/engagement      | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/engagement      | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/engagement      | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/engagement      | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/engagement      | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/engagement      | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/engagement      | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/engagement      | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/engagement      | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/likes           |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/likes           |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/likes           | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/likes           | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/likes           | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/likes           | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/likes           | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/likes           | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/likes           | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/likes           | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/likes           | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/likes           | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/unlikes         |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/unlikes         |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/unlikes         | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/unlikes         | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/unlikes         | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/unlikes         | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/unlikes         | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/unlikes         | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/unlikes         | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/unlikes         | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/unlikes         | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/unlikes         | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/reach           |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/reach           |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/reach           | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/reach           | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/reach           | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/reach           | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/reach           | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/reach           | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/reach           | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/reach           | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/reach           | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/reach           | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/followers       |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/followers       |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/facebook/followers       | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/facebook/followers       | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/facebook/followers       | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/facebook/followers       | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/facebook/followers       | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/facebook/followers       | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/facebook/followers       | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/facebook/followers       | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/facebook/followers       | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/facebook/followers       | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+    Examples:
+      | url                                              | granularity | start_date        | end_date       | expected_granularity | expected_since    | expected_until |
+      | /social_media/analytics/facebook/number_of_posts |             |                   |                | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/facebook/number_of_posts | day         |                   | today          | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/number_of_posts | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/facebook/number_of_posts | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/facebook/number_of_posts | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/facebook/number_of_posts | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/facebook/number_of_posts | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/facebook/number_of_posts | day         | today - 4 months  | today          | day                  | today - 3 months  | today          |
+      | /social_media/analytics/facebook/number_of_posts | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/facebook/number_of_posts | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/facebook/number_of_posts | day         | today - 3 days    | today - 2 days | day                  | today - 3 days    | today - 2 days |
+      | /social_media/analytics/facebook/engagement      |             |                   |                | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/engagement      |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/facebook/engagement      | day         |                   | today          | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/engagement      | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/facebook/engagement      | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/facebook/engagement      | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/facebook/engagement      | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/facebook/engagement      | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/facebook/engagement      | day         | today - 4 months  | today          | day                  | today - 3 months  | today          |
+      | /social_media/analytics/facebook/engagement      | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/facebook/engagement      | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/facebook/engagement      | day         | today - 3 days    | today - 2 days | day                  | today             | today          |
+      | /social_media/analytics/facebook/likes           |             |                   |                | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/likes           |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/facebook/likes           | day         |                   | today          | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/likes           | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/facebook/likes           | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/facebook/likes           | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/facebook/likes           | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/facebook/likes           | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/facebook/likes           | day         | today - 4 months  | today          | day                  | today - 3 months  | today          |
+      | /social_media/analytics/facebook/likes           | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/facebook/likes           | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/facebook/likes           | day         | today - 3 days    | today - 2 days | day                  | today             | today          |
+      | /social_media/analytics/facebook/unlikes         |             |                   |                | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/unlikes         |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/facebook/unlikes         | day         |                   | today          | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/unlikes         | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/facebook/unlikes         | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/facebook/unlikes         | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/facebook/unlikes         | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/facebook/unlikes         | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/facebook/unlikes         | day         | today - 4 months  | today          | day                  | today - 3 months  | today          |
+      | /social_media/analytics/facebook/unlikes         | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/facebook/unlikes         | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/facebook/unlikes         | day         | today - 3 days    | today - 2 days | day                  | today             | today          |
+      | /social_media/analytics/facebook/reach           |             |                   |                | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/reach           |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/facebook/reach           | day         |                   | today          | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/reach           | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/facebook/reach           | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/facebook/reach           | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/facebook/reach           | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/facebook/reach           | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/facebook/reach           | day         | today - 4 months  | today          | day                  | today - 3 months  | today          |
+      | /social_media/analytics/facebook/reach           | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/facebook/reach           | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/facebook/reach           | day         | today - 3 days    | today - 2 days | day                  | today             | today          |
+      | /social_media/analytics/facebook/followers       |             |                   |                | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/followers       |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/facebook/followers       | day         |                   | today          | day                  | today - 1 month   | today          |
+      | /social_media/analytics/facebook/followers       | day         | today             |                | day                  | today             | today          |
+      | /social_media/analytics/facebook/followers       | week        |                   | today          | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/facebook/followers       | week        | today             |                | week                 | today             | today          |
+      | /social_media/analytics/facebook/followers       | month       |                   | today          | month                | today - 6 months  | today          |
+      | /social_media/analytics/facebook/followers       | month       | today             |                | month                | today             | today          |
+      | /social_media/analytics/facebook/followers       | day         | today - 4 months  | today          | day                  | today - 3 months  | today          |
+      | /social_media/analytics/facebook/followers       | week        | today - 30 weeks  | today          | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/facebook/followers       | month       | today - 40 months | today          | month                | today - 36 months | today          |
+      | /social_media/analytics/facebook/followers       | day         | today - 3 days    | today - 2 days | day                  | today             | today          |
 
   Scenario Outline: Checking number of values in response for various granularities
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
@@ -284,7 +279,7 @@ Feature: facebook
     And Response code is "200"
     And Response contains <count> values
 
-    Examples: 
+    Examples:
       | url                                              | granularity | since           | until | count |
       #this one is different - returns all metrics together, so validation of number of values needs to be different
       | /social_media/analytics/facebook/number_of_posts | day         | today - 1 day   | today | 2     |

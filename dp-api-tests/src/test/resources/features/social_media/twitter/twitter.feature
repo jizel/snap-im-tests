@@ -8,7 +8,7 @@ Feature: twitter
     And Response code is "400"
     And Custom code is "63"
 
-    Examples: 
+    Examples:
       | url                                              | granularity |
       | /social_media/analytics/twitter                  | dd          |
       | /social_media/analytics/twitter/number_of_tweets | mm          |
@@ -63,13 +63,12 @@ Feature: twitter
     Then Response code is "200"
     And Content type is "application/json"
     And Data is owned by "twitter"
-    And Response contains "<count>" values
     And Body contains entity with attribute "since" value "<since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
-    And Response contains "<count>" values
+    And Response contains <count> values
 
-    Examples: 
+    Examples:
       | url                                              | granularity | count | since      | until      |
       | /social_media/analytics/twitter                  | day         | 1     | 2015-12-07 | 2015-12-07 |
       | /social_media/analytics/twitter/number_of_tweets | day         | 1     | 2015-12-07 | 2015-12-07 |
@@ -199,7 +198,7 @@ Feature: twitter
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | url                                              | error_code | custom_code |
       | /social_media/analytics/twitter                  | 400        | 52          |
       | /social_media/analytics/twitter/number_of_tweets | 400        | 52          |
@@ -216,7 +215,7 @@ Feature: twitter
     And Content type is "application/json"
     And Response contains <count> values
 
-    Examples: 
+    Examples:
       | url                                              | granularity | start_date | end_date   | count |
       | /social_media/analytics/twitter/number_of_tweets |             | 2015-12-03 | 2015-12-03 | 1     |
       | /social_media/analytics/twitter/engagement       | day         |            | 2015-12-03 | 31    |
@@ -233,7 +232,7 @@ Feature: twitter
     And Body contains entity with attribute "since" value "<start_date>"
     And Body contains entity with attribute "until" value "<end_date>"
 
-    Examples: 
+    Examples:
       | url                                              | granularity | start_date | end_date   |
       | /social_media/analytics/twitter                  | month       | 1888-09-01 | 1890-10-01 |
       | /social_media/analytics/twitter/number_of_tweets | month       | 1888-09-01 | 1890-10-01 |
@@ -253,11 +252,11 @@ Feature: twitter
       | /social_media/analytics/twitter/retweet_reach    | day         | 1888-09-01 | 1888-09-01 |
 
   Scenario Outline: Checking default parameter values
-    Empty column in examples section means default value will be used for this parameter.
-    if text is empty, returns null
-    if text is date in ISO format (2015-01-01), it returns this date
-    text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
-    particular number of days/weeks/months from first part of expression
+  Empty column in examples section means default value will be used for this parameter.
+  if text is empty, returns null
+  if text is date in ISO format (2015-01-01), it returns this date
+  text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
+  particular number of days/weeks/months from first part of expression
 
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
@@ -267,7 +266,7 @@ Feature: twitter
     And Response until is "<expected_until>"
     And Response contains no more than <count> values
 
-    Examples: 
+    Examples:
       | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
       | /social_media/analytics/twitter/number_of_tweets |             |                |                   | day                  | today - 1 month   | today          | 32    |
       | /social_media/analytics/twitter/number_of_tweets |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
@@ -384,7 +383,7 @@ Feature: twitter
     And Response code is "200"
     And Response contains <count> values
 
-    Examples: 
+    Examples:
       | url                                              | granularity | since           | until | count |
       #this one is different - returns all metrics together, so validation of number of values needs to be different
       | /social_media/analytics/twitter/number_of_tweets | day         | today - 1 day   | today | 2     |

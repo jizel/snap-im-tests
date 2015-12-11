@@ -9,14 +9,14 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -29,9 +29,9 @@ public class SocialMediaSteps extends BasicSteps {
         super();
         spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
     }
-    
+
     //GET Requests
-    
+
     @Step
     public void getDataWithoutProperty(String url) {
         Response response = given().spec(spec).parameter("access_token", "aaa").get(url);
@@ -97,7 +97,7 @@ public class SocialMediaSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         Map responseMap = response.as(Map.class);
 
-        List<Map<String,Object>> metrics = (List<Map<String, Object>>) responseMap.get("data");
+        List<Map<String, Object>> metrics = (List<Map<String, Object>>) responseMap.get("data");
         metrics.forEach(m -> {
             Map<String, Object> metric = (Map<String, Object>) m.entrySet().iterator().next().getValue();
             List values = (List) metric.get("values");
@@ -126,5 +126,45 @@ public class SocialMediaSteps extends BasicSteps {
         assertEquals(expectedDate, actualDate);
     }
 
+    @Step
+    public void fieldContainsIntegerValue(String fieldName, int value) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(fieldName, hasItem(value));
+    }
 
+
+    public void responseContainsCorrectValuesFor(String granularity, String since, String until) {
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
+
+
+        int count = 0;
+        LocalDate d = sinceDate;
+        while (!d.isAfter(untilDate)) {
+            switch (granularity) {
+                case "":
+                case "day": {
+                    count++;
+                    break;
+                }
+                case "week": {
+                    if (DayOfWeek.SUNDAY.equals(d.getDayOfWeek())) {
+                        count++;
+                    }
+                    break;
+                }
+                case "month": {
+                    if (d.getDayOfMonth() == d.lengthOfMonth()) {
+                        count++;
+                    }
+                    break;
+                }
+            }
+
+            d = d.plusDays(1);
+        }
+
+
+        responseContainsValues(count);
+    }
 }

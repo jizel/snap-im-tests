@@ -88,4 +88,13 @@ public class SocialMediaStepdefs {
         steps.numberOfEntitiesInResponse(Map.class, count);
     }
 
+    @Then("^The metric count is \"([^\"]*)\"$")
+    public void Metric_count_is(int values) throws Throwable {
+        steps.fieldContainsIntegerValue("values", values);
+    }
+
+    @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void Response_contains_correct_number_of_values_for_granularity_between_and(String granularity, String since, String until) throws Throwable {
+        steps.responseContainsCorrectValuesFor(granularity, since, until);
+    }
 }
