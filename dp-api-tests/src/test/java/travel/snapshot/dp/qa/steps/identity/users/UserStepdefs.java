@@ -4,19 +4,36 @@ import net.thucydides.core.annotations.Steps;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.CustomerUser;
+import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.qa.model.UserRole;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 public class UserStepdefs {
 
     @Steps
     private UsersSteps usersSteps;
+
+    @Steps
+    private RolesSteps rolesSteps;
+
+    @Steps
+    private CustomerSteps customerSteps;
+
+    @Steps
+    private PropertySteps propertySteps;
 
     @Given("^The following users exist$")
     public void The_following_roles_exist(List<User> users) throws Throwable {
@@ -110,5 +127,86 @@ public class UserStepdefs {
     @Then("^There are users with following usernames returned in order: (.*)$")
     public void There_are_users_with_following_usernames_returned_in_order_expected_usernames(List<String> usernames) throws Throwable {
         usersSteps.usernamesAreInResponseInOrder(usernames);
+    }
+
+    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
+    public void Role_with_name_for_application_id_is_added_to_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
+        String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
+        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        usersSteps.roleIsAddedToUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
+    }
+
+    private String getEntityIdForRelationshipType(String relationshipType, String entityCode) {
+        String entityId = null;
+        switch (relationshipType) {
+            case "customer": {
+                entityId = customerSteps.getCustomerByCodeInternal(entityCode).getCustomerId();
+                break;
+            }
+            case "property": {
+                entityId = propertySteps.getPropertyByCodeInternal(entityCode).getPropertyId();
+                break;
+            }
+            case "property_set": {
+                break;
+            }
+        }
+        return entityId;
+    }
+
+    @Given("^Relation between role with name \"([^\"]*)\" for application id \"([^\"]*)\" and user with username \"([^\"]*)\" exists with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
+    public void Relation_between_role_with_name_for_application_i_and_user_with_username_exists_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
+        String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
+        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        usersSteps.relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
+    }
+
+    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
+    public void Role_with_name_for_application_id_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
+        String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
+        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
+    }
+
+    @Then("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is not there for user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
+    public void Role_with_name_for_application_id_is_not_there_for_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
+        String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
+        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        usersSteps.roleDoesntExistForUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
+    }
+
+    @When("^Nonexistent role is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
+    public void Nonexistent_role_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String username, String relationshipType, String entityCode) throws Throwable {
+        String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
+        Role r = new Role();
+        r.setRoleId(BasicStepDefs.NONEXISTENT_ID);
+        usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
+    }
+
+    @When("^List of roles for user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_roles_for_user_with_username_with_relationship_type_and_entity_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String username, String relationshipType, String entityCode,
+                                                                                                                                                                @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                                                                @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+
+        String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
+        usersSteps.listOfRolesIsGotForRelationshipTypeEntityWIth(username, relationshipType, entityId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @Then("^There are (\\d+) user roles returned$")
+    public void There_are_returned_user_roles_returned(int count) throws Throwable {
+        usersSteps.numberOfEntitiesInResponse(UserRole.class, count);
+    }
+
+    @Then("^There are user roles with following role names returned in order: (.*)$")
+    public void There_are_user_roles_with_following_role_names_returned_in_order(List<String> rolenames) throws Throwable {
+        usersSteps.rolenamesAreInResponseInOrder(rolenames);
+    }
+    
+    @Given("^The password of user with id \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void setting_the_password_of_user_to(String id, String password) {
+    	usersSteps.setUserPassword(id, password);
     }
 }

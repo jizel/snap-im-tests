@@ -31,12 +31,7 @@ import java.util.Map;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -47,10 +42,11 @@ public class BasicSteps {
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
+    protected static final String RATE_SHOPPER_BASE_URI = "rate_shopper.baseURI";
     protected static final String IDENTITY_BASE_URI = "identity.baseURI";
-    protected static final String IDENTITY_DEV_BASE_URI = "identity_DEV.baseURI";
+    protected static final String IDENTITY_NGINX_BASE_URI = "identity_nginx.baseURI";
     protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
-    protected static final String CONFIGURATION_DEV_BASE_URI = "configuration_DEV.baseURI";
+    protected static final String CONFIGURATION_NGINX_BASE_URI = "configuration_nginx.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
     protected static final String LIMIT_TO_ALL = "1000000";
     protected static final String LIMIT_TO_ONE = "1";
@@ -58,6 +54,7 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
 	protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
+    protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
@@ -111,6 +108,12 @@ public class BasicSteps {
     public void bodyIsEmpty() {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(isEmptyOrNullString());
+    }
+
+    @Step
+    public void bodyContainsCollectionWith(String attributeName, Object item){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(attributeName, hasItem(item));
     }
 
     @Step
@@ -208,9 +211,17 @@ public class BasicSteps {
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
-    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
-        return given().spec(spec)
+    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (queryParams != null) {
+            requestSpecification.parameters(queryParams);
+        }
+        return requestSpecification
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+        return deleteSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, null);
     }
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
@@ -249,7 +260,7 @@ public class BasicSteps {
         return requestSpecification.when().get();
     }
 
-    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
+    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
         if (cursor != null) {
@@ -268,7 +279,15 @@ public class BasicSteps {
             requestSpecification.parameter("sort_desc", sortDesc);
         }
 
+        if (queryParams != null) {
+            requestSpecification.parameters(queryParams);
+        }
+
         return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+    }
+
+    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
+        return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
 

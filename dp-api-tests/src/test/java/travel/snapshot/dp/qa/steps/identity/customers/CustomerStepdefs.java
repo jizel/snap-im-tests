@@ -19,13 +19,13 @@ import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
+import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 /**
  * Created by sedlacek on 9/18/2015.
  */
 public class CustomerStepdefs {
 
-    public static final String NONEXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Steps
@@ -141,7 +141,7 @@ public class CustomerStepdefs {
     public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode, String customerCode, @Transform(NullEmptyStringConverter.class) String type, @Transform(NullEmptyStringConverter.class) String dateFrom, @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (p == null) {
-            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(NONEXISTENT_ID, customerCode, type, dateFrom, dateTo);
+            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(BasicStepDefs.NONEXISTENT_ID, customerCode, type, dateFrom, dateTo);
         } else {
             customerSteps.propertyIsAddedToCustomerWithTypeFromTo(p.getPropertyId(), customerCode, type, dateFrom, dateTo);
         }
