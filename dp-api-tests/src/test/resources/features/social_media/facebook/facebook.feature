@@ -55,7 +55,7 @@ Feature: facebook
     And Body contains entity with attribute "granularity" value "<granularity>"
 
     Examples: 
-      | url                                              | granularity | count | since      | until      | found_since | #this is the returned date - I guess this is equal to until - caount
+      | url                                              | granularity | count | since      | until      | found_since | #this  is the returned date - I guess this is equal to until - caount
       | /social_media/analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
       | /social_media/analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
       | /social_media/analytics/facebook/likes           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
