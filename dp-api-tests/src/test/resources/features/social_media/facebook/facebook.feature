@@ -11,7 +11,7 @@ Feature: facebook
     And Response code is "400"
     And Custom code is "63"
 
-    Examples:
+    Examples: 
       | url                                              | granularity |
       | /social_media/analytics/facebook/                | ddd         |
       | /social_media/analytics/facebook/number_of_posts | www         |
@@ -26,7 +26,7 @@ Feature: facebook
     And Response code is "200"
     And The metric count is "<count>"
 
-    Examples:
+    Examples: 
       | url                                              | granularity | count | since      | until      |
       | /social_media/analytics/facebook/number_of_posts | day         | 801   | 2015-12-03 | 2015-12-03 |
       | /social_media/analytics/facebook/engagement      | day         | 701   | 2015-12-03 | 2015-12-03 |
@@ -50,73 +50,73 @@ Feature: facebook
     And Data is owned by "facebook"
     And Content type is "application/json"
     And Response contains <count> values
-    And Body contains entity with attribute "since" value "<found_since>"
+    And Body contains entity with attribute "since" value "<calculated_statistics_real_since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
 
-    Examples:
-    #found_since  is the returned date - I guess this is equal to until - count
-      | url                                              | granularity | count | since      | until      | found_since |
-      | /social_media/analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
-      | /social_media/analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
-      | /social_media/analytics/facebook/likes           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
-      | /social_media/analytics/facebook/unlikes         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
-      | /social_media/analytics/facebook/reach           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
-      | /social_media/analytics/facebook/followers       | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07  |
-      | /social_media/analytics/facebook/number_of_posts | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/engagement      | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/likes           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03  |
-      | /social_media/analytics/facebook/number_of_posts | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
-      | /social_media/analytics/facebook/engagement      | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
-      | /social_media/analytics/facebook/likes           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
-      | /social_media/analytics/facebook/unlikes         | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
-      | /social_media/analytics/facebook/reach           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
-      | /social_media/analytics/facebook/followers       | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07  |
-      | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07  |
-      | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07  |
-      | /social_media/analytics/facebook/likes           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07  |
-      | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07  |
-      | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07  |
-      | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07  |
-      | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/likes           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09  |
-      | /social_media/analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
-      | /social_media/analytics/facebook/engagement      | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
-      | /social_media/analytics/facebook/likes           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
-      | /social_media/analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
-      | /social_media/analytics/facebook/reach           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
-      | /social_media/analytics/facebook/followers       | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-13  |
-      | /social_media/analytics/facebook/number_of_posts | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25  |
-      | /social_media/analytics/facebook/engagement      | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25  |
-      | /social_media/analytics/facebook/likes           | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25  |
-      | /social_media/analytics/facebook/unlikes         | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25  |
-      | /social_media/analytics/facebook/reach           | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25  |
-      | /social_media/analytics/facebook/followers       | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25  |
-      | /social_media/analytics/facebook/number_of_posts | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01  |
-      | /social_media/analytics/facebook/engagement      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01  |
-      | /social_media/analytics/facebook/likes           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01  |
-      | /social_media/analytics/facebook/unlikes         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01  |
-      | /social_media/analytics/facebook/reach           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01  |
-      | /social_media/analytics/facebook/followers       | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01  |
-      | /social_media/analytics/facebook/number_of_posts | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-03-23  |
-      | /social_media/analytics/facebook/engagement      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-03-23  |
-      | /social_media/analytics/facebook/likes           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-03-23  |
-      | /social_media/analytics/facebook/unlikes         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-03-23  |
-      | /social_media/analytics/facebook/reach           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-03-23  |
-      | /social_media/analytics/facebook/followers       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-03-23  |
-      | /social_media/analytics/facebook/number_of_posts | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-11-30  |
-      | /social_media/analytics/facebook/engagement      | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-11-30  |
-      | /social_media/analytics/facebook/likes           | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-11-30  |
-      | /social_media/analytics/facebook/unlikes         | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-11-30  |
-      | /social_media/analytics/facebook/reach           | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-11-30  |
-      | /social_media/analytics/facebook/followers       | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-11-30  |
+    Examples: 
+      #found_since  is the returned date - I guess this is equal to until - count
+      | url                                              | granularity | count | since      | until      | calculated_statistics_real_since |
+      | /social_media/analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/facebook/likes           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/facebook/unlikes         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/facebook/reach           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/facebook/followers       | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/facebook/number_of_posts | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/facebook/engagement      | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/facebook/likes           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/facebook/number_of_posts | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/facebook/engagement      | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/facebook/likes           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/facebook/unlikes         | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/facebook/reach           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/facebook/followers       | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/facebook/likes           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/facebook/number_of_posts | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       |
+      | /social_media/analytics/facebook/engagement      | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       |
+      | /social_media/analytics/facebook/likes           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       |
+      | /social_media/analytics/facebook/unlikes         | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       |
+      | /social_media/analytics/facebook/reach           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       |
+      | /social_media/analytics/facebook/followers       | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       |
+      | /social_media/analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/facebook/engagement      | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/facebook/likes           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/facebook/reach           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/facebook/followers       | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/facebook/number_of_posts | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/facebook/engagement      | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/facebook/likes           | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/facebook/unlikes         | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/facebook/reach           | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/facebook/followers       | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/facebook/number_of_posts | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/facebook/engagement      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/facebook/likes           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/facebook/unlikes         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/facebook/reach           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/facebook/followers       | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/facebook/number_of_posts | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/facebook/engagement      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/facebook/likes           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/facebook/unlikes         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/facebook/reach           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/facebook/followers       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/facebook/number_of_posts | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       |
+      | /social_media/analytics/facebook/engagement      | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       |
+      | /social_media/analytics/facebook/likes           | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       |
+      | /social_media/analytics/facebook/unlikes         | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       |
+      | /social_media/analytics/facebook/reach           | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       |
+      | /social_media/analytics/facebook/followers       | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       |
 
   Scenario: Getting non-existent analytics data
     When Getting "/social_media/analytics/facebook/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
@@ -135,7 +135,7 @@ Feature: facebook
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples:
+    Examples: 
       | url                                              | error_code | custom_code |
       | /social_media/analytics/facebook                 | 400        | 52          |
       | /social_media/analytics/facebook/number_of_posts | 400        | 52          |
@@ -151,7 +151,7 @@ Feature: facebook
     And Content type is "application/json"
     And Response contains <count> values
 
-    Examples:
+    Examples: 
       | url                                              | granularity | start_date | end_date   | count |
       | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03 | 2015-12-03 | 1     |
       | /social_media/analytics/facebook/engagement      | day         |            | 2015-12-03 | 31    |
@@ -166,7 +166,7 @@ Feature: facebook
     And Body contains entity with attribute "since" value "<start_date>"
     And Body contains entity with attribute "until" value "<end_date>"
 
-    Examples:
+    Examples: 
       | url                                              | granularity | start_date | end_date   |
       | /social_media/analytics/facebook                 | month       | 1888-09-01 | 1890-10-01 |
       | /social_media/analytics/facebook/number_of_posts | month       | 1888-09-01 | 1890-10-01 |
@@ -184,11 +184,11 @@ Feature: facebook
       | /social_media/analytics/facebook/followers       | day         | 1888-09-01 | 1888-09-01 |
 
   Scenario Outline: Checking default parameter values
-  Empty column in examples section means default value will be used for this parameter.
-  if text is empty, returns null
-  if text is date in ISO format (2015-01-01), it returns this date
-  text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
-  particular number of days/weeks/months from first part of expression
+    Empty column in examples section means default value will be used for this parameter.
+    if text is empty, returns null
+    if text is date in ISO format (2015-01-01), it returns this date
+    text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
+    particular number of days/weeks/months from first part of expression
 
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
@@ -198,7 +198,7 @@ Feature: facebook
     And Response until is "<expected_until>"
     And Response contains correct number of values for granularity "<granularity>" between "<expected_since>" and "<expected_until>"
 
-    Examples:
+    Examples: 
       | url                                              | granularity | start_date        | end_date       | expected_granularity | expected_since    | expected_until |
       | /social_media/analytics/facebook/number_of_posts |             |                   |                | day                  | today - 1 month   | today          |
       | /social_media/analytics/facebook/number_of_posts |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     |
@@ -279,7 +279,7 @@ Feature: facebook
     And Response code is "200"
     And Response contains <count> values
 
-    Examples:
+    Examples: 
       | url                                              | granularity | since           | until | count |
       #this one is different - returns all metrics together, so validation of number of values needs to be different
       | /social_media/analytics/facebook/number_of_posts | day         | today - 1 day   | today | 2     |

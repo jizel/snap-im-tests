@@ -91,6 +91,12 @@ public class SocialMediaSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body("values.size()", is(count));
     }
+    
+    @Step
+    public void responseContainsStringValues(String count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body("values.size()", is(count));
+    }
 
     @Step
     public void responseContainsValuesForAllMetrics(int count) {
