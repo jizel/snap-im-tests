@@ -1,25 +1,19 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.CustomerProperty;
-import travel.snapshot.dp.qa.model.Property;
-import travel.snapshot.dp.qa.model.PropertySetArray;
-import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.qa.model.*;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
+
+import java.util.List;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -303,5 +297,11 @@ public class CustomerStepdefs {
     @Given("^Customer with code \"([^\"]*)\" does not exist$")
     public void Customer_with_code_does_not_exist(String customerCode) throws Throwable {
         customerSteps.customerWithCodeIsDeleted(customerCode);
+    }
+
+    @Then("^Field \"([^\"]*)\" has value \"([^\"]*)\" for property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\"$")
+    public void Field_has_value_for_property_with_code_for_customer_with_code_with_type(String fieldName, String value, String propertyCode, String customerCode, String type) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode, type);
     }
 }

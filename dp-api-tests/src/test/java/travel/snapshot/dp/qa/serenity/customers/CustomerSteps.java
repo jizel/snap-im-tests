@@ -524,4 +524,21 @@ public class CustomerSteps extends BasicSteps {
             i++;
         }
     }
+
+    public void fieldNameHasValueForPropertyForCustomerAndType(String fieldName, String value, String propertyId, String customerCode, String type) {
+        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerProperty cp = getCustomerPropertyForCustomerWithType(c.getCustomerId(), propertyId, type);
+
+        switch (fieldName) {
+            case "valid_from": {
+                assertEquals(value, DateUtils.isoDatefromDate(cp.getValidFrom()));
+                break;
+            }
+            case "valid_to": {
+                assertEquals(value, DateUtils.isoDatefromDate(cp.getValidTo()));
+                break;
+            }
+            default: fail("Bad field for customer property");
+        }
+    }
 }
