@@ -99,9 +99,21 @@ public class JmsSteps extends BasicSteps {
         assertEquals(operation, value);
     }
 
-    public void notificationContainsId(String customerId) {
+    public void notificationContainsId(String entityId) {
         Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
         String value = (String) notification.get("id");
-        assertEquals(customerId, value);
+        assertEquals(entityId, value);
+    }
+
+    public void notificationParentEntityTypeIs(String entityType) {
+        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
+        String value = (String) notification.get("parent_entity_type");
+        assertEquals(entityType, value);
+    }
+
+    public void notificationContainsParentId(String entityId) {
+        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
+        String value = (String) notification.get("parent_id");
+        assertEquals(entityId, value);
     }
 }

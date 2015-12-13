@@ -61,6 +61,15 @@ Feature: customers_properties_create_update_delete
   # update with error fields, bad values, missing fields
   # update nonexistent field
 
+  Scenario: Updating customerProperty with etag
+
+    Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
+    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "valid_from" to value "2014-01-01"
+    Then Response code is "204"
+    And Body is empty
+    And Etag header is present
+    And Updated customerProperty
 
   Scenario: Updating customerProperty with outdated etag
 

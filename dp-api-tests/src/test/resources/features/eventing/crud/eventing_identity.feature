@@ -1,5 +1,8 @@
 Feature: Eventing_identity_module
 
+  Background:
+    Given Database is cleaned
+
   Scenario: Eventing customer created
   Customer clean if existed, then subscription is clean and recreated,
   then is customer is created and then notification is checked.
@@ -66,6 +69,20 @@ Feature: Eventing_identity_module
     And Notification in session id stands for property with code "event_prop_1_create"
     And Subscription with name "Test" for topic "Notifications" is unsubscribed
 
+  Scenario: Eventing property deleted
+
+    Given Subscription with name "Test" for topic "Notifications" does not exist
+    Given The following properties exist with random address and billing address
+      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      |
+      | salesforceid_1 | p1_name      | del_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+    Given Property with code "del_prop_event" is stored in session under key "EVENTING_PROPERTY"
+    Given Subscription with name "Test" for topic "Notifications" is created
+    When Property with code "del_prop_event" is deleted
+    Then Message is received with subscription "Test" from topic "Notifications" and stored in session
+    And Notification in session entity_type is "Property"
+    And Notification in session operation is "Delete"
+    And Notification in session id stands for property in session on key "EVENTING_PROPERTY"
+    And Subscription with name "Test" for topic "Notifications" is unsubscribed
 
   Scenario: Eventing user created
 
@@ -81,6 +98,21 @@ Feature: Eventing_identity_module
     And Notification in session id stands for user with username "event_user_create_1"
     And Subscription with name "Test" for topic "Notifications" is unsubscribed
 
+  Scenario: Eventing user deleted
+
+    Given Subscription with name "Test" for topic "Notifications" does not exist
+    Given The following users exist
+      | userType | userName       | firstName | lastName | email                | timezone      | culture |
+      | customer | del_user_event | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given User with username "del_user_event" is stored in session under key "EVENTING_USER"
+    Given Subscription with name "Test" for topic "Notifications" is created
+    When User with userName "del_user_event" is deleted
+    Then Message is received with subscription "Test" from topic "Notifications" and stored in session
+    And Notification in session entity_type is "User"
+    And Notification in session operation is "Delete"
+    And Notification in session id stands for user in session on key "EVENTING_USER"
+    And Subscription with name "Test" for topic "Notifications" is unsubscribed
+
   Scenario: Eventing role created
 
     Given Role with name "event_role_create_1" for application id "10" is deleted
@@ -93,6 +125,43 @@ Feature: Eventing_identity_module
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Create"
     And Notification in session id stands for role with name "event_role_create_1" for application id  "10"
+    And Subscription with name "Test" for topic "Notifications" is unsubscribed
+
+  Scenario: Eventing role deleted
+    Given Subscription with name "Test" for topic "Notifications" does not exist
+
+    Given The following roles exist
+      | applicationId | roleName          | roleDescription        |
+      | 1             | event_role_delete | optional description 1 |
+
+    Given Subscription with name "Test" for topic "Notifications" is created
+    Given Role with name "event_role_delete" for application id "1" is stored in session under key "EVENTING_ROLE"
+
+    When Role with name "event_role_delete" for application id "1" is deleted
+    Then Message is received with subscription "Test" from topic "Notifications" and stored in session
+    And Notification in session entity_type is "Role"
+    And Notification in session operation is "Delete"
+    And Notification in session id stands for role in session on key "EVENTING_ROLE"
+    And Subscription with name "Test" for topic "Notifications" is unsubscribed
+
+  Scenario: Eventing role updated
+    Given Subscription with name "Test" for topic "Notifications" does not exist
+
+    Given The following roles exist
+      | applicationId | roleName          | roleDescription        |
+      | 1             | event_role_update | optional description 1 |
+
+    Given Subscription with name "Test" for topic "Notifications" is created
+    Given Role with name "event_role_update" for application id "1" is stored in session under key "EVENTING_ROLE"
+
+    When Role with name "event_role_update" for application id "1" is updated with data
+      | applicationId | roleName | roleDescription |
+      |               |          | updated         |
+
+    Then Message is received with subscription "Test" from topic "Notifications" and stored in session
+    And Notification in session entity_type is "Role"
+    And Notification in session operation is "Update"
+    And Notification in session id stands for role in session on key "EVENTING_ROLE"
     And Subscription with name "Test" for topic "Notifications" is unsubscribed
 
   Scenario: Eventing property set created
@@ -110,5 +179,24 @@ Feature: Eventing_identity_module
     And Notification in session entity_type is "PropertySet"
     And Notification in session operation is "Create"
     And Notification in session id stands for property set with name "ps1_event_created" for customer with code "epsc1t"
+    And Subscription with name "Test" for topic "Notifications" is unsubscribed
+
+  Scenario: Eventing property set deleted
+
+    Given The following customers exist with random address
+      | companyName                   | email             | code                   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
+      | Eventing property_set company | epsc1@tenants.biz | event_propset_del_cust | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
+    Given The following property sets exist for customer with code "event_propset_del_cust"
+      | propertySetName           | propertySetDescription | propertySetType |
+      | event_propset_del_propset | description            | branch          |
+
+    Given Property set with name "event_propset_del_propset" for customer with code "event_propset_del_cust" is stored in session under key "EVENTING_PROPERTY_SET"
+    Given Subscription with name "Test" for topic "Notifications" does not exist
+    Given Subscription with name "Test" for topic "Notifications" is created
+    When Property set with name "event_propset_del_propset" for customer with code "event_propset_del_cust" is deleted
+    Then Message is received with subscription "Test" from topic "Notifications" and stored in session
+    And Notification in session entity_type is "PropertySet"
+    And Notification in session operation is "Delete"
+    And Notification in session id stands for property set in session on key "EVENTING_PROPERTY_SET"
     And Subscription with name "Test" for topic "Notifications" is unsubscribed
 
