@@ -35,10 +35,15 @@ public class SocialMediaStepdefs {
     public void Response_contains_values(int count) throws Throwable {
         steps.responseContainsValues(count);
     }
-
-    @Then("^Response contains \"([^\"]*)\"  values for all metrics$")
-    public void response_contains_values_for_all_metrics(int count) throws Throwable {
-        steps.responseContainsValues(count);
+    
+    @Then("^Response contains no more than (\\d+) values$")
+    public void Response_contains__no_more_than_values(int count) throws Throwable {
+        steps.maximumNumberOfItemsInResponse(count);
+    }
+    
+    @Then("^Response contains \"([^\"]*)\" values$")
+    public void Response_contains_values(String count) throws Throwable {
+        steps.responseContainsStringValues(count);
     }
 
     @Then("^Response contains (\\d+) values for all metrics$")
@@ -46,12 +51,20 @@ public class SocialMediaStepdefs {
         steps.responseContainsValuesForAllMetrics(count);
     }
 
+     
     @When("^List of \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
     public void List_of_items_is_got_with_limit_and_cursor(String url, String propertyId,
                                                            @Transform(NullEmptyStringConverter.class) String limit,
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getItems(url, propertyId, limit, cursor);
-    }
+    }  
+    
+    //@When("^List of \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
+    //public void List_of_items_is_got_with_limit_and_cursor(String url, String propertyId,
+    //                                                       @Transform(NullEmptyStringConverter.class) String limit,
+    //                                                       @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
+    //    steps.getItems(url, propertyId, limit, cursor);
+    //} 
 
     @Then("^There are at most (\\d+) items returned$")
     public void There_are_at_most_items_returned(int count) throws Throwable {
@@ -88,4 +101,13 @@ public class SocialMediaStepdefs {
         steps.numberOfEntitiesInResponse(Map.class, count);
     }
 
+    @Then("^The metric count is \"([^\"]*)\"$")
+    public void Metric_count_is(int values) throws Throwable {
+        steps.fieldContainsIntegerValue("values", values);
+    }
+
+    @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")
+    public void Response_contains_correct_number_of_values_for_granularity_between_and(String granularity, String since, String until) throws Throwable {
+        steps.responseContainsCorrectValuesFor(granularity, since, until);
+    }
 }

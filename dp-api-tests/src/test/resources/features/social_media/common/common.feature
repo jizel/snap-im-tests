@@ -1,50 +1,64 @@
-Feature: facebook
+Feature: common
 
   Scenario Outline: Get collective analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     And Response code is "200"||"400"
     #And Response code is "200"
-    And Response contains "<int>"  values for all metrics
+    And Response contains "<count>"  values for all metrics
 
     Examples: 
-      | url                               | granularity |	int |
-      | /social_media/analytics           | day         |	1	|
-      | /social_media/analytics/facebook  | day         |	1	|
-      | /social_media/analytics/twitter   | day         |	1	|
-      | /social_media/analytics/instagram | day         |	1	|
-      | /social_media/analytics           | week        |	1	|
-      | /social_media/analytics/facebook  | week        |	1	|
-      | /social_media/analytics/twitter   | week        |	1	|
-      | /social_media/analytics/instagram | week        |	1	|
-      | /social_media/analytics           | month       |	1	|
-      | /social_media/analytics/facebook  | month       |	1	|
-      | /social_media/analytics/twitter   | month       |	1	|
-      | /social_media/analytics/instagram | month       |	1	|
+      | url                               | granularity | count |
+      | /social_media/analytics           | day         | 1     |
+      | /social_media/analytics/facebook  | day         | 1     |
+      | /social_media/analytics/twitter   | day         | 1     |
+      | /social_media/analytics/instagram | day         | 1     |
+      | /social_media/analytics           | week        | 1     |
+      | /social_media/analytics/facebook  | week        | 1     |
+      | /social_media/analytics/twitter   | week        | 1     |
+      | /social_media/analytics/instagram | week        | 1     |
+      | /social_media/analytics           | month       | 1     |
+      | /social_media/analytics/facebook  | month       | 1     |
+      | /social_media/analytics/twitter   | month       | 1     |
+      | /social_media/analytics/instagram | month       | 1     |
+
+  Scenario Outline: Validate that metrics have valid value in the db
+    # Covering the points 4 and 5 from DP-
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And The metric count is "<count>"
+
+    Examples: 
+      | url                               | granularity | count |
+      | /social_media/analytics           | day         | 1     |
+      | /social_media/analytics/facebook  | day         | 1     |
+      | /social_media/analytics/twitter   | day         | 1     |
+      | /social_media/analytics/instagram | day         | 1     |
 
   Scenario Outline: Get collective analytics data from API for a given wrong time period
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until "2014-09-01"
     Then Content type is "application/json"
     #And Response code is "400"
     And Response code is "200"
+
     #And Custom code is "53"
     Examples: 
-      | url                               | granularity |
-      #| /social_media/analytics           | day         |
-      #| /social_media/analytics/facebook  | day         |
-      #| /social_media/analytics/twitter   | day         |
-      #| /social_media/analytics/instagram | day         |
-      #| /social_media/analytics           | week        |
-      #| /social_media/analytics/facebook  | week        |
-      #| /social_media/analytics/twitter   | week        |
-      #| /social_media/analytics/instagram | week        |
-      #| /social_media/analytics           | month       |
-      #| /social_media/analytics/facebook  | month       |
-      #| /social_media/analytics/twitter   | month       |
-      #| /social_media/analytics/instagram | month       |
-      
-      
-   Scenario Outline: Get facebook analytics data from API for a given granularity
+      | url | granularity |
+
+  #| /social_media/analytics           | day         |
+  #| /social_media/analytics/facebook  | day         |
+  #| /social_media/analytics/twitter   | day         |
+  #| /social_media/analytics/instagram | day         |
+  #| /social_media/analytics           | week        |
+  #| /social_media/analytics/facebook  | week        |
+  #| /social_media/analytics/twitter   | week        |
+  #| /social_media/analytics/instagram | week        |
+  #| /social_media/analytics           | month       |
+  #| /social_media/analytics/facebook  | month       |
+  #| /social_media/analytics/twitter   | month       |
+  #| /social_media/analytics/instagram | month       |
+  Scenario Outline: Get facebook analytics data from API for a given granularity
     When Getting "<url>" data with "<granularity>" granularity for "999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "200"
@@ -61,27 +75,27 @@ Feature: facebook
     And Custom code is "53"
 
     Examples: 
- 	 | url								 | 
-	 | /social_media/analytics           | 
-  	 | /social_media/analytics/facebook  | 
- 	 | /social_media/analytics/twitter   | 
- 	 | /social_media/analytics/instagram | 
-  	 | /social_media/analytics           | 
- 	 | /social_media/analytics/facebook  |
-  	 | /social_media/analytics/twitter   | 
-  	 | /social_media/analytics/instagram | 
-  	 | /social_media/analytics           | 
-  	 | /social_media/analytics/facebook  | 
-  	 | /social_media/analytics/twitter   | 
-  	 | /social_media/analytics/instagram |
-  
+      | url                               |
+      | /social_media/analytics           |
+      | /social_media/analytics/facebook  |
+      | /social_media/analytics/twitter   |
+      | /social_media/analytics/instagram |
+      | /social_media/analytics           |
+      | /social_media/analytics/facebook  |
+      | /social_media/analytics/twitter   |
+      | /social_media/analytics/instagram |
+      | /social_media/analytics           |
+      | /social_media/analytics/facebook  |
+      | /social_media/analytics/twitter   |
+      | /social_media/analytics/instagram |
+
   Scenario Outline: Get collective analytics data from API for a not given until granularity
     When Getting "<url>" data with "<granularity>" granularity for "property" since "2015-09-01" until ""
     Then Content type is "application/json"
     And Response code is "200"
+
     #And Response code is "400"
     #And Custom code is "53"
-    
     Examples: 
       | url                               | granularity |
       | /social_media/analytics           | day         |
@@ -124,8 +138,8 @@ Feature: facebook
     And Content type is "application/json"
     #And Response code is "400"
     And Response code is "200"
-    #And Custom code is "53"
 
+    #And Custom code is "53"
     Examples: 
       | url                                | granularity |
       | /social_media/analytics            | day         |
@@ -151,50 +165,50 @@ Feature: facebook
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "200"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario: Getting "reach" non-existent analytics data
     When Getting "/social_media/analytics/reach/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "500"
     And Response code is "404"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario: Getting "followers"non-existent analytics data
     When Getting "/social_media/analytics/followers/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "500"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario: Getting "engagement" non-existent analytics data
     When Getting "/social_media/analytics/engagement/not_present" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "500"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario: Getting facebook mismatched metrics analytics data
     When Getting "/social_media/analytics/facebook/tweets" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "200"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario: Getting tweeter mismatched metrics analytics data
     When Getting "/social_media/analytics/tweeter/likes" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "500"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario: Getting instagram mismatched metrics analytics data
     When Getting "/social_media/analytics/instagram/impressions" data with "day" granularity for "property" since "2015-09-01" until "2015-09-01"
     Then Content type is "application/json"
     #And Response code is "404"
     And Response code is "200"
-    #And Custom code is "151"
 
+  #And Custom code is "151"
   Scenario Outline: Get analytics data from API with missing parameters
     When Getting "<url>" data with "<granularity>" granularity for "property" since "<start_date>" until "<end_date>"
     Then Response contains 5 values

@@ -1,11 +1,8 @@
-Feature: instagram
-  Testing of api for facebook with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
-  data in db are increasing for all metrics, inserted to db according to following pattern:
-  starting from d=2014-01-01 as i=0, i++
-  INSERT INTO `DP_SOCIAL_MEDIA`.`FactFacebookPageStats` (`dim_property_id`, `dim_date_id`, `impressions`, `engagements`, `followers`, `number_of_posts`, `reach`, `likes`, `unlikes`, `collected_time_stamp`, `inserted_time_stamp` )
-  VALUES ( VALUES (999999, ${d.format("yyyyMMdd")},  ${i*3},  ${i},  ${i*10},  ${i+100}, ${i*5},  ${i*2}, ${i},  CURRENT_TIMESTAMP,   '${d.format("yyyy-MM-dd HH:mm:ss")}' );
+Feature: twitter
 
-  Scenario Outline: Get facebook analytics data from API for a given wrong granularity
+  #Testing of api for twitter with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
+  #data in db are increasing for all metrics, inserted to db according to following pattern:
+  Scenario Outline: Get twitter analytics data from API for a given wrong granularity
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
     And Response code is "400"
@@ -20,124 +17,194 @@ Feature: instagram
       | /social_media/analytics/twitter/impressions      | m1n         |
       | /social_media/analytics/twitter/reach            | 444         |
       | /social_media/analytics/twitter/retweets         | 6655665     |
-      | /social_media/analytics/twitter/retweets_reach   | dasdasdsasa |
-      | /social_media/analytics/twitter/mentions         | dsa         |
-      | /social_media/analytics/twitter/mention_reach    | fffff       |
+      | /social_media/analytics/twitter/retweet_reach    | MONTH1      |
+      | /social_media/analytics/twitter/mentions         | DAY3        |
+      | /social_media/analytics/twitter/mention_reach    | WEEKs1      |
 
-  Scenario Outline: Get specific analytics data from API for a given granularity
+  Scenario Outline: Validate that metrics have valid value in the db
+    # Covering the points 4 and 5 in the acceptance criteria from DP-405,DP-72
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
+    Then Content type is "application/json"
+    And Response code is "200"
+    And The metric count is "<count>"
+
+    Examples: 
+      | url                                              | granularity | count | since      | until      |
+      | /social_media/analytics/twitter/number_of_tweets | day         | 801   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/engagement       | day         | 701   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/followers        | day         | 7010  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/impressions      | day         | 2103  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/reach            | day         | 3505  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/retweets         | day         | 1402  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/retweet_reach    | day         | 701   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/mentions         | day         | 1001  | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/mention_reach    | day         | 751   | 2015-12-03 | 2015-12-03 |
+      | /social_media/analytics/twitter/number_of_tweets | week        | 804   | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/engagement       | week        | 704   | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/followers        | week        | 7040  | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/impressions      | week        | 2112  | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/reach            | week        | 3520  | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/retweets         | week        | 1408  | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/retweet_reach    | week        | 704   | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/mentions         | week        | 1004  | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/mention_reach    | week        | 754   | 2015-12-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/number_of_tweets | month       | 798   | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/engagement       | month       | 698   | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/followers        | month       | 6980  | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/impressions      | month       | 2094  | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/reach            | month       | 3490  | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/retweets         | month       | 1396  | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/retweet_reach    | month       | 698   | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/mentions         | month       | 998   | 2015-11-01 | 2015-12-08 |
+      | /social_media/analytics/twitter/mention_reach    | month       | 748   | 2015-11-01 | 2015-12-08 |
+
+  Scenario Outline: Get specific analytics data from API for a given granularity for overall twitter metrics
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is "200"
     And Content type is "application/json"
-    And Response contains <count> values
-    And Body contains entity with attribute "since" value "<since>"
+    And Data is owned by "twitter"
+    And Body contains entity with attribute "since" value "<calculated_statistics_real_since>"
     And Body contains entity with attribute "until" value "<until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response contains <count> values for all metrics 
 
-    #need to add those | /social_media/analytics/twitter/mentions      | week | today | today | 0 |
-    # need to add those | /social_media/analytics/twitter/mention_reach | week | today | today | 0 |
+    Examples:
+      | url                                              | granularity | count | since      | until      | calculated_statistics_real_since |
+      | /social_media/analytics/twitter                  | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter                  | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter                  | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter                  | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter                  | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter                  | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter                  | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter                  | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter                  | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter                  | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter                  | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+
+
+  Scenario Outline: Get specific analytics data from API for a given granularity for particular twitter metric
+    When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Data is owned by "twitter"
+    And Body contains entity with attribute "since" value "<calculated_statistics_real_since>"
+    And Body contains entity with attribute "until" value "<until>"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response contains <count> values
+
     Examples: 
-      | url                                              | granularity | count | since      | until      |
-      | /social_media/analytics/twitter                  | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/number_of_tweets | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/engagement       | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/followers        | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/impressions      | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/reach            | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/retweets         | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/retweets_reach   | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/mentions         | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/mention_reach    | day         | 1     | 2015-12-07 | 2015-12-07 |
-      | /social_media/analytics/twitter                  | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/number_of_tweets | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/engagement       | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/followers        | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/impressions      | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/reach            | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/retweets         | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/retweets_reach   | day         | 11    | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter                  | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/number_of_tweets | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/engagement       | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/followers        | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/impressions      | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/reach            | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/retweets         | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/retweets_reach   | day         | 23    | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter                  | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/number_of_tweets | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/engagement       | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/followers        | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/impressions      | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/reach            | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/retweets         | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter/retweets_reach   | day         | 92    | 2015-06-07 | 2015-12-07 |
-      | /social_media/analytics/twitter                  | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/number_of_tweets | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/engagement       | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/followers        | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/impressions      | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/reach            | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/retweets         | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter/retweets_reach   | week        | 1     | 2015-12-07 | 2015-12-13 |
-      | /social_media/analytics/twitter                  | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/number_of_tweets | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/engagement       | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/followers        | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/impressions      | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/reach            | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/retweets         | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter/retweets_reach   | week        | 1     | 2015-12-03 | 2015-12-13 |
-      | /social_media/analytics/twitter                  | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/number_of_tweets | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/engagement       | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/followers        | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/impressions      | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/reach            | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/retweets         | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/retweets_reach   | week        | 2     | 2015-12-07 | 2015-12-23 |
-      | /social_media/analytics/twitter                  | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/number_of_tweets | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/engagement       | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/followers        | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/impressions      | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/reach            | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/retweets         | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter/retweets_reach   | week        | 26    | 2015-01-07 | 2015-12-23 |
-      | /social_media/analytics/twitter                  | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/number_of_tweets | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/engagement       | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/followers        | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/impressions      | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/reach            | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/retweets         | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter/retweets_reach   | month       | 1     | 2015-11-01 | 2015-11-30 |
-      | /social_media/analytics/twitter                  | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/number_of_tweets | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/engagement       | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/followers        | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/impressions      | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/reach            | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/retweets         | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter/retweets_reach   | month       | 1     | 2015-02-01 | 2015-03-23 |
-      | /social_media/analytics/twitter                  | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/number_of_tweets | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/engagement       | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/followers        | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/impressions      | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/reach            | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/retweets         | month       | 36    | 2013-02-01 | 2016-12-31 |
-      | /social_media/analytics/twitter/retweets_reach   | month       | 36    | 2013-02-01 | 2016-12-31 |
+      | url                                              | granularity | count | since      | until      | calculated_statistics_real_since |
+      | /social_media/analytics/twitter/number_of_tweets | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/engagement       | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/followers        | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/impressions      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/reach            | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/retweets         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/retweet_reach    | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/mentions         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/mention_reach    | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       |
+      | /social_media/analytics/twitter/number_of_tweets | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/engagement       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/followers        | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/impressions      | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/reach            | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/retweets         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/retweet_reach    | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/mentions         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/mention_reach    | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/number_of_tweets | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/engagement       | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/followers        | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/impressions      | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/reach            | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/retweets         | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/retweet_reach    | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/mentions         | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/mention_reach    | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/number_of_tweets | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/engagement       | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/followers        | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/impressions      | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/reach            | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/retweets         | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/retweet_reach    | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/mentions         | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/mention_reach    | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       |
+      | /social_media/analytics/twitter/number_of_tweets | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/engagement       | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/followers        | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/impressions      | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/reach            | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/retweets         | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/retweet_reach    | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/mentions         | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/mention_reach    | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       |
+      | /social_media/analytics/twitter/number_of_tweets | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/engagement       | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/followers        | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/impressions      | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/reach            | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/retweets         | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/retweet_reach    | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/mentions         | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/mention_reach    | week        | 1     | 2015-11-03 | 2015-11-13 | 2015-11-03                       |
+      | /social_media/analytics/twitter/number_of_tweets | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/engagement       | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/followers        | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/impressions      | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/reach            | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/retweets         | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/retweet_reach    | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/mentions         | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/mention_reach    | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       |
+      | /social_media/analytics/twitter/number_of_tweets | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/engagement       | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/followers        | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/impressions      | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/reach            | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/retweets         | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/retweet_reach    | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/mentions         | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/mention_reach    | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       |
+      | /social_media/analytics/twitter/number_of_tweets | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/engagement       | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/followers        | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/impressions      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/reach            | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/retweets         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/retweet_reach    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/mentions         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/mention_reach    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       |
+      | /social_media/analytics/twitter/number_of_tweets | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/engagement       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/followers        | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/impressions      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/reach            | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/retweets         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/retweet_reach    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/mentions         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/mention_reach    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       |
+      | /social_media/analytics/twitter/number_of_tweets | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/engagement       | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/followers        | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/impressions      | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/reach            | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/retweets         | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/retweet_reach    | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/mentions         | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
+      | /social_media/analytics/twitter/mention_reach    | month       | 23    | 2013-02-01 | 2015-12-12 | 2013-02-01                       |
 
   Scenario: Getting non-existent analytics data
-    When Getting "/social_media/analytics/instagram/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    When Getting "/social_media/analytics/twitter/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
-    And Response code is "400"
+    And Response code is "404"
     And Custom code is "52"
 
   Scenario: Getting mismatched metrics analytics data
-    When Getting "/social_media/analytics/instagram/tweets" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
+    When Getting "/social_media/analytics/twitter/posts" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Content type is "application/json"
-    And Response code is "400"
+    And Response code is "404"
     And Custom code is "52"
 
   Scenario Outline: Checking error codes for analytics data
@@ -154,14 +221,13 @@ Feature: instagram
       | /social_media/analytics/twitter/impressions      | 400        | 52          |
       | /social_media/analytics/twitter/reach            | 400        | 52          |
       | /social_media/analytics/twitter/retweets         | 400        | 52          |
-      | /social_media/analytics/twitter/retweets_reach   | 400        | 52          |
+      | /social_media/analytics/twitter/retweet_reach    | 400        | 52          |
 
   Scenario Outline: Get analytics data from API with missing parameters
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
     Then Response code is "200"
     And Content type is "application/json"
     And Response contains <count> values
-    And Data is owned by "instagram"
 
     Examples: 
       | url                                              | granularity | start_date | end_date   | count |
@@ -170,8 +236,8 @@ Feature: instagram
       | /social_media/analytics/twitter/followers        | day         | 2015-12-03 |            | 31    |
       | /social_media/analytics/twitter/impressions      | day         |            |            | 31    |
       | /social_media/analytics/twitter/reach            |             |            |            | 31    |
-      | /social_media/analytics/twitter/retweets         |             | 2015-11-09 | 2015-11-02 | 1     |
-      | /social_media/analytics/twitter/retweets_reach   |             | 2015-11-02 | 2015-12-02 | 1     |
+      | /social_media/analytics/twitter/retweets         |             | 2015-11-09 | 2015-11-22 | 14     |
+      | /social_media/analytics/twitter/retweet_reach    |             | 2015-12-02 | 2015-12-02 | 1     |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
@@ -189,7 +255,7 @@ Feature: instagram
       | /social_media/analytics/twitter/impressions      | month       | 1888-09-01 | 1890-10-01 |
       | /social_media/analytics/twitter/reach            | month       | 1888-09-01 | 1890-10-01 |
       | /social_media/analytics/twitter/retweets         | month       | 1888-09-01 | 1890-10-01 |
-      | /social_media/analytics/twitter/retweets_reach   | month       | 1888-09-01 | 1890-10-01 |
+      | /social_media/analytics/twitter/retweet_reach    | month       | 1888-09-01 | 1890-10-01 |
       | /social_media/analytics/twitter                  | day         | 1888-09-01 | 1888-09-01 |
       | /social_media/analytics/twitter/number_of_tweets | day         | 1888-09-01 | 1888-09-01 |
       | /social_media/analytics/twitter/engagement       | day         | 1888-09-01 | 1888-09-01 |
@@ -197,7 +263,7 @@ Feature: instagram
       | /social_media/analytics/twitter/impressions      | day         | 1888-09-01 | 1888-09-01 |
       | /social_media/analytics/twitter/reach            | day         | 1888-09-01 | 1888-09-01 |
       | /social_media/analytics/twitter/retweets         | day         | 1888-09-01 | 1888-09-01 |
-      | /social_media/analytics/twitter/retweets_reach   | day         | 1888-09-01 | 1888-09-01 |
+      | /social_media/analytics/twitter/retweet_reach    | day         | 1888-09-01 | 1888-09-01 |
 
   Scenario Outline: Checking default parameter values
     Empty column in examples section means default value will be used for this parameter.
@@ -212,7 +278,7 @@ Feature: instagram
     And Response granularity is "<expected_granularity>"
     And Response since is "<expected_since>"
     And Response until is "<expected_until>"
-    And Response contains <count> values
+    And Response contains no more than <count> values
 
     Examples: 
       | url                                              | granularity | start_date     | end_date          | expected_granularity | expected_since    | expected_until | count |
@@ -288,25 +354,43 @@ Feature: instagram
       | /social_media/analytics/twitter/retweets         | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
       | /social_media/analytics/twitter/retweets         | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
       | /social_media/analytics/twitter/retweets         | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
-      | /social_media/analytics/twitter/retweets_reach   |             |                |                   | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/twitter/retweets_reach   |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
-      | /social_media/analytics/twitter/retweets_reach   | day         |                | today             | day                  | today - 1 month   | today          | 32    |
-      | /social_media/analytics/twitter/retweets_reach   | day         | today          |                   | day                  | today             | today          | 1     |
-      | /social_media/analytics/twitter/retweets_reach   | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
-      | /social_media/analytics/twitter/retweets_reach   | week        | today          |                   | week                 | today             | today          | 0     |
-      | /social_media/analytics/twitter/retweets_reach   | month       |                | today             | month                | today - 6 months  | today          | 6     |
-      | /social_media/analytics/twitter/retweets_reach   | month       | today          |                   | month                | today             | today          | 0     |
-      | /social_media/analytics/twitter/retweets_reach   | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
-      | /social_media/analytics/twitter/retweets_reach   | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
-      | /social_media/analytics/twitter/retweets_reach   | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
-      | /social_media/analytics/twitter/retweets_reach   | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/twitter/retweet_reach    |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/twitter/retweet_reach    |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/twitter/retweet_reach    | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/twitter/retweet_reach    | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/twitter/retweet_reach    | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/twitter/retweet_reach    | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/twitter/retweet_reach    | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/twitter/retweet_reach    | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/twitter/retweet_reach    | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/twitter/retweet_reach    | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/twitter/retweet_reach    | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/twitter/retweet_reach    | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/twitter/mention_reach    |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/twitter/mention_reach    |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/twitter/mention_reach    | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/twitter/mention_reach    | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/twitter/mention_reach    | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/twitter/mention_reach    | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/twitter/mention_reach    | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/twitter/mention_reach    | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/twitter/mention_reach    | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/twitter/mention_reach    | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/twitter/mention_reach    | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/twitter/mention_reach    | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
+      | /social_media/analytics/twitter/mentions         |             |                |                   | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/twitter/mentions         |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     |
+      | /social_media/analytics/twitter/mentions         | day         |                | today             | day                  | today - 1 month   | today          | 32    |
+      | /social_media/analytics/twitter/mentions         | day         | today          |                   | day                  | today             | today          | 1     |
+      | /social_media/analytics/twitter/mentions         | week        |                | today             | week                 | today - 13 weeks  | today          | 13    |
+      | /social_media/analytics/twitter/mentions         | week        | today          |                   | week                 | today             | today          | 0     |
+      | /social_media/analytics/twitter/mentions         | month       |                | today             | month                | today - 6 months  | today          | 6     |
+      | /social_media/analytics/twitter/mentions         | month       | today          |                   | month                | today             | today          | 0     |
+      | /social_media/analytics/twitter/mentions         | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    |
+      | /social_media/analytics/twitter/mentions         | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    |
+      | /social_media/analytics/twitter/mentions         | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    |
+      | /social_media/analytics/twitter/mentions         | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     |
 
-  # Scenario: Get data owners data for facebook
-  #can be combined to other scnearios
-  #  When Getting "/social_media/analytics/facebook/engagement" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
-  #  Then Content type is "application/json"
-  #  And Response code is "200"
-  #  And Data is owned by "facebook"
   Scenario Outline: Checking number of values in response for various granularities
     When Getting "<url>" data with "<granularity>" granularity for "99999999-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Content type is "application/json"
@@ -322,6 +406,6 @@ Feature: instagram
       | /social_media/analytics/twitter/impressions      | day         | today - 8 days  | today | 9     |
       | /social_media/analytics/twitter/reach            | day         | today - 29 days | today | 30    |
       | /social_media/analytics/twitter/retweets         | day         | today - 30 days | today | 31    |
-      | /social_media/analytics/twitter/retweets_reach   | week        | today           | today | 0     |
+      | /social_media/analytics/twitter/retweet_reach    | week        | today           | today | 0     |
       | /social_media/analytics/twitter/mentions         | week        | today           | today | 0     |
       | /social_media/analytics/twitter/mention_reach    | week        | today           | today | 0     |
