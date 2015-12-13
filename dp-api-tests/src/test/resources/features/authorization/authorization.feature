@@ -1,11 +1,13 @@
 Feature: authorization
 
-  #A background 'given' step will be added for verificaion that a user exists after the issue with recreating users is fixed
   Background: 
-    Given The password of user with id "03a8947b-f892-4248-9df9-579cc3f4b6df" is "somepassword22"
+    Given The following users exist
+      | userType | userName  | firstName | lastName  | email          | timezone | culture |
+      | customer | testauth1 | Auth1     | AuthUser1 | auth1@mail.com | GMT      | bg      |
+    Given The password of user "testauth1" is "somepassword22"
 
   Scenario: Get access token for a specific existing user
-    When Getting token for user "u_k_f_T8A_8_OD8_N3kO__1E049_Hq_a_zXnP_5Mgw_wGN0Eh_JP06_qIaGS_D9m" with password "somepassword22"
+    When Getting token for user "testauth1" with password "somepassword22"
     Then Content type is "application/json"
     And Response code is "200"
     And Body contains entity with attribute "access_token"
@@ -15,12 +17,12 @@ Feature: authorization
     And Body contains entity with attribute "scope" value "all"
 
   Scenario: Get access token for a non-existent username, password combination
-    When Getting token for user "list_default_14" with password "invalid_password"
+    When Getting token for user "testauth1" with password "invalid_password"
     Then Content type is "application/json"
     And Response code is "403"
 
   Scenario: Getting configuration data with a valid access token
-    When Getting configuration data for "/configuration" with a new token for user "u_k_f_T8A_8_OD8_N3kO__1E049_Hq_a_zXnP_5Mgw_wGN0Eh_JP06_qIaGS_D9m" with password "somepassword22"
+    When Getting configuration data for "/configuration" with a new token for user "testauth1" with password "somepassword22"
     Then Content type is "application/json"
     And Response code is "200"
 
@@ -29,7 +31,7 @@ Feature: authorization
     Then Response code is "403"
 
   Scenario Outline: Getting identity data with a valid access token
-    When Getting identity data for "<url>" with a new token for user "u_k_f_T8A_8_OD8_N3kO__1E049_Hq_a_zXnP_5Mgw_wGN0Eh_JP06_qIaGS_D9m" with password "somepassword22"
+    When Getting identity data for "<url>" with a new token for user "testauth1" with password "somepassword22"
     Then Content type is "application/json"
     And Response code is "200"
 

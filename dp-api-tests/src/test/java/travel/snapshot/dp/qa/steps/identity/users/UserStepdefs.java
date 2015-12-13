@@ -205,8 +205,8 @@ public class UserStepdefs {
         usersSteps.rolenamesAreInResponseInOrder(rolenames);
     }
     
-    @Given("^The password of user with id \"([^\"]*)\" is \"([^\"]*)\"$")
-    public void setting_the_password_of_user_to(String id, String password) {
-    	usersSteps.setUserPassword(id, password);
+    @Given("^The password of user \"([^\"]*)\" is \"([^\"]*)\"$")
+    public void setting_the_password_of_user_to(String username, String password) {
+    	usersSteps.setUserPasswordByUsername(username, password);
     }
 }

@@ -293,7 +293,12 @@ public class UsersSteps extends BasicSteps {
         }
     }
     
+    public void setUserPasswordByUsername(String username, String password) {
+        User u = getUserByUsername(username);
+        setUserPassword(u.getUserId(), password);
+    }
+    
     public void setUserPassword(String id, String password){
-    	given().spec(spec).body(password).post("{id}/password",id);
+    	given().spec(spec).body(password).post("{id}/password", id);
     }
 }
