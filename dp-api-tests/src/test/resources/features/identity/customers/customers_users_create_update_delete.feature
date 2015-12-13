@@ -9,10 +9,10 @@ Feature: customers_users_create_update_delete
 
 
     Given The following users exist
-      | userType | userName | firstName | lastName | email                | timezone  | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | UTC+01:00 | cz      |
-      | customer | default2 | Default2  | User2    | def2@snapshot.travel | UTC+01:00 | cz      |
-      | customer | default3 | Default3  | User3    | def2@snapshot.travel | UTC+01:00 | cz      |
+      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given All users are removed for customers with codes: c1t, c2t
 
@@ -44,16 +44,16 @@ Feature: customers_users_create_update_delete
 
   Scenario Outline: Filtering list of users for customer
     Given The following users exist
-      | userType | userName            | firstName        | lastName      | email                           | phone        | timezone  | culture |
-      | customer | filter_cu_default_1 | FilterCUDefault1 | FilterCUUser1 | filter_cu_user1@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | customer | filter_cu_default_2 | FilterCUDefault2 | FilterCUUser2 | filter_cu_user2@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | guest    | filter_cu_default_3 | FilterCUDefault3 | FilterCUUser3 | filter_cu_user3@snapshot.travel | +42010111213 | UTC+02:00 | cz      |
-      | customer | filter_cu_default_4 | FilterCUDefault4 | FilterCUUser4 | filter_cu_user4@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | partner  | filter_cu_default_5 | FilterCUDefault5 | FilterCUUser5 | filter_cu_user5@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | customer | filter_cu_default_6 | FilterCUDefault6 | FilterCUUser6 | filter_cu_user6@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | customer | other_cu_default_7  | FilterCUDefault7 | FilterCUUser7 | filter_cu_user7@snapshot.travel | +42010111217 | UTC+01:00 | cz      |
-      | customer | other_cu_default_8  | FilterCUDefault8 | FilterCUUser8 | filter_cu_user8@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
-      | partner  | other_cu_default_9  | FilterCUDefault9 | FilterCUUser9 | filter_cu_user9@snapshot.travel | +42010111213 | UTC+01:00 | sk      |
+      | userType | userName            | firstName        | lastName      | email                           | phone        | timezone      | culture |
+      | customer | filter_cu_default_1 | FilterCUDefault1 | FilterCUUser1 | filter_cu_user1@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
+      | customer | filter_cu_default_2 | FilterCUDefault2 | FilterCUUser2 | filter_cu_user2@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
+      | guest    | filter_cu_default_3 | FilterCUDefault3 | FilterCUUser3 | filter_cu_user3@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
+      | customer | filter_cu_default_4 | FilterCUDefault4 | FilterCUUser4 | filter_cu_user4@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
+      | partner  | filter_cu_default_5 | FilterCUDefault5 | FilterCUUser5 | filter_cu_user5@snapshot.travel | +42010111213 | Europe/Berlin | cs-CZ   |
+      | customer | filter_cu_default_6 | FilterCUDefault6 | FilterCUUser6 | filter_cu_user6@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
+      | customer | other_cu_default_7  | FilterCUDefault7 | FilterCUUser7 | filter_cu_user7@snapshot.travel | +42010111217 | Europe/Prague | cs-CZ   |
+      | customer | other_cu_default_8  | FilterCUDefault8 | FilterCUUser8 | filter_cu_user8@snapshot.travel | +42010111213 | Europe/Prague | sk-SK   |
+      | partner  | other_cu_default_9  | FilterCUDefault9 | FilterCUUser9 | filter_cu_user9@snapshot.travel | +42010111213 | Europe/Prague | sk-SK   |
 
     Given Relation between user with username "filter_cu_default_1" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "filter_cu_default_2" and customer with code "c1t" exists with isPrimary "false"

@@ -8,14 +8,14 @@ Feature: users_roles_create_update_delete
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
     Given The following users exist
-      | userType | userName | firstName | lastName | email                | timezone  | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | UTC+01:00 | cz      |
-      | customer | default2 | Default2  | User2    | def2@snapshot.travel | UTC+01:00 | cz      |
-      | customer | default3 | Default3  | User3    | def2@snapshot.travel | UTC+01:00 | cz      |
+      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following roles exist
       | applicationId | roleName        | roleDescription        |
@@ -67,8 +67,8 @@ Feature: users_roles_create_update_delete
 
   Scenario Outline: Filtering list of roles for user for relationship_type and entity
     Given The following users exist
-      | userType | userName                   | firstName | lastName | email                      | phone        | timezone  | culture |
-      | customer | filter_user_roles_rel_name | Uwe       | Filter   | filter_uwe@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
+      | userType | userName                   | firstName | lastName | email                      | phone        | timezone      | culture |
+      | customer | filter_user_roles_rel_name | Uwe       | Filter   | filter_uwe@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
 
     Given The following roles exist
       | applicationId | roleName               | roleDescription        |

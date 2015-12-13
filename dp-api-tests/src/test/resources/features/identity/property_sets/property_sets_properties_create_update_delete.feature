@@ -17,9 +17,9 @@ Feature: property_sets_properties_create_update_delete
       | ps2_name        | ps2_description        | branch          |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
     #need to be fixed - classcastexception
@@ -48,13 +48,13 @@ Feature: property_sets_properties_create_update_delete
 
   Scenario Outline: Filtering list of properties for property set
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName          | propertyCode          | website                    | email                    | isDemoProperty | timezone  |
-      | salesforceid_1 | filtering_prop_name_1 | filtering_prop_code_1 | http://www.snapshot.travel | filtering_p1@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_2 | filtering_prop_name_2 | filtering_prop_code_2 | http://www.snapshot.travel | filtering_p2@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_3 | filtering_prop_name_3 | filtering_prop_code_3 | http://www.snapshot.travel | filtering_p3@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_4 | filtering_prop_name_4 | filtering_prop_code_4 | http://www.snapshot.travel | filtering_p4@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_5 | filtering_prop_name_5 | filtering_prop_code_5 | http://www.snapshot.travel | filtering_p5@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_6 | filtering_prop_name_6 | filtering_prop_code_6 | http://www.snapshot.travel | filtering_p6@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName          | propertyCode          | website                    | email                    | isDemoProperty | timezone      |
+      | salesforceid_1 | filtering_prop_name_1 | filtering_prop_code_1 | http://www.snapshot.travel | filtering_p1@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | filtering_prop_name_2 | filtering_prop_code_2 | http://www.snapshot.travel | filtering_p2@tenants.biz | true           | Europe/Prague |
+      | salesforceid_3 | filtering_prop_name_3 | filtering_prop_code_3 | http://www.snapshot.travel | filtering_p3@tenants.biz | true           | Europe/Prague |
+      | salesforceid_4 | filtering_prop_name_4 | filtering_prop_code_4 | http://www.snapshot.travel | filtering_p4@tenants.biz | true           | Europe/Prague |
+      | salesforceid_5 | filtering_prop_name_5 | filtering_prop_code_5 | http://www.snapshot.travel | filtering_p5@tenants.biz | true           | Europe/Prague |
+      | salesforceid_6 | filtering_prop_name_6 | filtering_prop_code_6 | http://www.snapshot.travel | filtering_p6@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "filtering_prop_code_1" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between property with code "filtering_prop_code_2" and property set with name "ps1_name" for customer with code "c1t" exists

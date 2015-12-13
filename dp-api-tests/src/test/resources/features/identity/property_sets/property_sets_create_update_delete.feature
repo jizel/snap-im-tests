@@ -18,8 +18,8 @@ Feature: property_sets_create_update_delete
       | ps1_name        | ps1_description        | branch          |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
   Scenario: Creating property set for customer with code "c1t"
 
