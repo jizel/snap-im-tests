@@ -142,18 +142,18 @@ Feature: common
       | /social_media/analytics/engagement  | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          |
       | /social_media/analytics/engagement  | month       | today          | today - 40 months | month                | today - 36 months | today          |
       | /social_media/analytics/engagement  | day         | today + 2 days | today + 3 days    | day                  | today             | today          |
-      | /social_media/analytics/impressions |             |                |                   | day                  | today - 1 month   | today          |
-      | /social_media/analytics/impressions |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     |
-      | /social_media/analytics/impressions | day         |                | today             | day                  | today - 1 month   | today          |
-      | /social_media/analytics/impressions | day         | today          |                   | day                  | today             | today          |
-      | /social_media/analytics/impressions | week        |                | today             | week                 | today - 13 weeks  | today          |
-      | /social_media/analytics/impressions | week        | today          |                   | week                 | today             | today          |
-      | /social_media/analytics/impressions | month       |                | today             | month                | today - 6 months  | today          |
-      | /social_media/analytics/impressions | month       | today          |                   | month                | today             | today          |
-      | /social_media/analytics/impressions | day         | today          | today - 100 days  | day                  | today - 90 days   | today          |
-      | /social_media/analytics/impressions | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          |
-      | /social_media/analytics/impressions | month       | today          | today - 40 months | month                | today - 36 months | today          |
-      | /social_media/analytics/impressions | day         | today + 2 days | today + 3 days    | day                  | today             | today          |
+      | /social_media/analytics/reach |             |                |                   | day                  | today - 1 month   | today          |
+      | /social_media/analytics/reach |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     |
+      | /social_media/analytics/reach | day         |                | today             | day                  | today - 1 month   | today          |
+      | /social_media/analytics/reach | day         | today          |                   | day                  | today             | today          |
+      | /social_media/analytics/reach | week        |                | today             | week                 | today - 13 weeks  | today          |
+      | /social_media/analytics/reach | week        | today          |                   | week                 | today             | today          |
+      | /social_media/analytics/reach | month       |                | today             | month                | today - 6 months  | today          |
+      | /social_media/analytics/reach | month       | today          |                   | month                | today             | today          |
+      | /social_media/analytics/reach | day         | today          | today - 100 days  | day                  | today - 90 days   | today          |
+      | /social_media/analytics/reach | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          |
+      | /social_media/analytics/reach | month       | today          | today - 40 months | month                | today - 36 months | today          |
+      | /social_media/analytics/reach | day         | today + 2 days | today + 3 days    | day                  | today             | today          |
 
   Scenario Outline: Verify overall analytics values
     When Verifying sum of "<metric>" from Facebook, Twitter, and Instagram with "<granularity>" granularity for property "99999999-9999-4999-a999-999999999999", since "<since>", until "<until>"
