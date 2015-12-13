@@ -1,16 +1,9 @@
 package travel.snapshot.dp.qa.steps.jms;
 
-import net.thucydides.core.annotations.Steps;
-
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.Property;
-import travel.snapshot.dp.qa.model.PropertySet;
-import travel.snapshot.dp.qa.model.Role;
-import travel.snapshot.dp.qa.model.User;
+import net.thucydides.core.annotations.Steps;
+import travel.snapshot.dp.qa.model.*;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -92,6 +85,11 @@ public class EventingStepsDefs {
         steps.notificationEntityTypeIs(entityType);
     }
 
+    @Then("^Notification in session parent entity type is \"([^\"]*)\"$")
+    public void Notification_in_session_parent_entity_type_is(String entityType) throws Throwable {
+        steps.notificationParentEntityTypeIs(entityType);
+    }
+
     @Then("^Notification in session operation is \"([^\"]*)\"$")
     public void Notification_in_session_operation_is(String operation) throws Throwable {
         steps.notificationOperationIs(operation);
@@ -144,30 +142,75 @@ public class EventingStepsDefs {
         steps.notificationContainsId(ps.getPropertySetId());
     }
 
+    @Then("^Notification in session parent id stands for customer with code \"([^\"]*)\"$")
+    public void Notification_in_session_parent_id_stands_for_customer_with_code(String customerCode) throws Throwable {
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.notificationContainsParentId(c.getCustomerId());
+    }
 
-    //@And("^publisher sends a message and the subscriber consumes it$")
-    //public void when_message_is_sent() throws Throwable {
-    //	steps.messageSent("MyT");
-    //}
+    @Given("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
+    public void Role_with_name_is_stored_in_session_under_key(String roleName, String applicationId, String sessionKey) throws Throwable {
+        steps.setSessionVariable(sessionKey, rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId));
+    }
 
-//    @Given("^the test is connected to the JMS <server>$")
-//    public void the_test_is_connected_to_the_JMS_server() throws Throwable {
-//        steps.serverIsConnected();
-//    }
-//
-//    @Then("^message was recieved from queue \"([^\"]*)\"$")
-//    public void message_was_recieved_from_queue(String queueName) throws Throwable {
-//        steps.messageIsRecieved(queueName);
-//    }
+    @Then("^Notification in session id stands for role in session on key \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_role_in_session_on_key(String sessionKey) throws Throwable {
+        Role r = steps.getSessionVariable(sessionKey);
+        steps.notificationContainsId(r.getRoleId());
+    }
 
 
-//    @Then("^message contains text \"([^\"]*)\"$")
-//    public void message_contains_text(String text) throws Throwable {
-//        steps.messageContains(text);
-//    }
-//
-//    @Then("^message has size (\\d+)$")
-//    public void message_has_size(int size) throws Throwable {
-//        steps.messagehasSize(size);
-//    }
+    @Then("^Notification in session parent id stands for user with username \"([^\"]*)\"$")
+    public void Notification_in_session_parent_id_stands_for_user_with_username(String username) throws Throwable {
+        User u = usersSteps.getUserByUsername(username);
+        steps.notificationContainsParentId(u.getUserId());
+    }
+
+    @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
+    public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        PropertySet ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+        steps.notificationContainsParentId(ps.getPropertySetId());
+
+    }
+
+    @Then("^Notification in session parent id stands for property with code \"([^\"]*)\"$")
+    public void Notification_in_session_parent_id_stands_for_property_with_code(String propertyCode) throws Throwable {
+        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        steps.notificationContainsParentId(p.getPropertyId());
+    }
+
+    @Given("^Property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
+    public void Property_set_with_name_for_customer_with_code_is_stored_in_session_under_key(String propertySetName, String customerCode, String sessionKey) throws Throwable {
+        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        steps.setSessionVariable(sessionKey, propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId()));
+    }
+
+    @Then("^Notification in session id stands for property set in session on key \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_property_set_in_session_on_key(String sessionKey) throws Throwable {
+        PropertySet ps = steps.getSessionVariable(sessionKey);
+        steps.notificationContainsId(ps.getPropertySetId());
+    }
+
+    @Given("^Property with code \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
+    public void Property_with_code_is_stored_in_session_under_key(String propertyCode, String sessionKey) throws Throwable {
+        steps.setSessionVariable(sessionKey, propertySteps.getPropertyByCodeInternal(propertyCode));
+    }
+
+    @Then("^Notification in session id stands for property in session on key \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_property_in_session_on_key(String sessionKey) throws Throwable {
+        Property p = steps.getSessionVariable(sessionKey);
+        steps.notificationContainsId(p.getPropertyId());
+    }
+
+    @Given("^User with username \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
+    public void User_with_username_is_stored_in_session_under_key(String username, String sessionKey) throws Throwable {
+        steps.setSessionVariable(sessionKey, usersSteps.getUserByUsername(username));
+    }
+
+    @Then("^Notification in session id stands for user in session on key \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_user_in_session_on_key(String sessionKey) throws Throwable {
+        User u = steps.getSessionVariable(sessionKey);
+        steps.notificationContainsId(u.getUserId());
+    }
 }
