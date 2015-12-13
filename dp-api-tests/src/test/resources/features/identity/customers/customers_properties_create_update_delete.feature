@@ -69,7 +69,7 @@ Feature: customers_properties_create_update_delete
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated customerProperty
+    And Field "valid_from" has value "2014-01-01" for property with code "p2_code" for customer with code "c2t" with type "anchor"
 
   Scenario: Updating customerProperty with outdated etag
 
