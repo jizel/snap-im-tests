@@ -14,8 +14,8 @@ Feature: users_validation
       | /salesforce_id | String | false    | \w{32}                                                           | /null        | \w{33}     |
       | /email         | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}[a-z]{9} | \.{10}       | \w{101}    |
       | /phone         | String | false    | +[0-9]{12}                                                       | \.{10}       | \w{101}    |
-      | /timezone      | String | true     | UTC(+\|-)[01][0-9]:[0-5][0-9]                                    | UTC+1:00     | UTC+001:00 |
-      | /culture       | String | true     | (cz\|sk)                                                         | xx           |            |
+      | /timezone      | String | true     | (America/New_York\|Europe/Prague\|GMT)                           | UTC+1:00     | UTC+001:00 |
+      | /culture       | String | true     | (cs-CZ\|sk-SK)                                                   | xx           |            |
       | /comment       | String | false    | \w{255}                                                          | /null        | \w{256}    |
 
   # --- happy path ---
@@ -55,7 +55,7 @@ Feature: users_validation
       | /email      | 400          | 59         |
       | /timezone   | 400          | 59         |
       | /culture    | 400          | 59         |
-      | /user_type    | 400          | 59         |
+      | /user_type  | 400          | 59         |
 
   Scenario: Object creation - missing values
     When create "user" objects each with one missing field
@@ -77,7 +77,7 @@ Feature: users_validation
       | /email      | 400          | 59         |
       | /timezone   | 400          | 59         |
       | /culture    | 400          | 59         |
-      | /user_type | 400          | 59         |
+      | /user_type  | 400          | 59         |
 
 #   TODO when field lengths are stabilized
 #

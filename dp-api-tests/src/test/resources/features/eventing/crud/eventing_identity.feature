@@ -58,8 +58,8 @@ Feature: Eventing_identity_module
     Given Subscription with name "Test" for topic "Notifications" does not exist
     Given Subscription with name "Test" for topic "Notifications" is created
     When Property is created with random address and billing address
-      | salesforceId    | propertyName             | propertyCode        | website                    | email           | isDemoProperty | timezone  |
-      | salesforceid_n1 | Eventing property create | event_prop_1_create | http://www.snapshot.travel | pn1@tenants.biz | true           | UTC+01:00 |
+      | salesforceId    | propertyName             | propertyCode        | website                    | email           | isDemoProperty | timezone      |
+      | salesforceid_n1 | Eventing property create | event_prop_1_create | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague |
     Then Message is received with subscription "Test" from topic "Notifications" and stored in session
     And Notification in session entity_type is "Property"
     And Notification in session operation is "Create"
@@ -73,8 +73,8 @@ Feature: Eventing_identity_module
     Given Subscription with name "Test" for topic "Notifications" does not exist
     Given Subscription with name "Test" for topic "Notifications" is created
     When User is created
-      | userType | userName            | firstName | lastName | email               | timezone  | culture |
-      | customer | event_user_create_1 | Snap      | Shot     | snp@snapshot.travel | UTC+01:00 | cz      |
+      | userType | userName            | firstName | lastName | email               | timezone      | culture |
+      | customer | event_user_create_1 | Snap      | Shot     | snp@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Message is received with subscription "Test" from topic "Notifications" and stored in session
     And Notification in session entity_type is "User"
     And Notification in session operation is "Create"

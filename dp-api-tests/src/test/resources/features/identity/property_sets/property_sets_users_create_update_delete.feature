@@ -17,10 +17,10 @@ Feature: property_sets_users_create_update_delete
       | ps2_name        | ps2_description        | branch          |
 
     Given The following users exist
-      | userType | userName | firstName | lastName | email                | timezone  | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | UTC+01:00 | cz      |
-      | customer | default2 | Default2  | User2    | def2@snapshot.travel | UTC+01:00 | cz      |
-      | customer | default3 | Default3  | User3    | def2@snapshot.travel | UTC+01:00 | cz      |
+      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
 
@@ -49,13 +49,13 @@ Feature: property_sets_users_create_update_delete
 
   Scenario Outline: Filtering list of users for property set
     Given The following users exist
-      | userType | userName             | firstName         | lastName       | email                            | phone        | timezone  | culture |
-      | customer | filter_psu_default_1 | FilterPSUDefault1 | FilterPSUUser1 | filter_psu_user1@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | customer | filter_psu_default_2 | FilterPSUDefault2 | FilterPSUUser2 | filter_psu_user2@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | guest    | filter_psu_default_3 | FilterPSUDefault3 | FilterPSUUser3 | filter_psu_user3@snapshot.travel | +42010111213 | UTC+02:00 | cz      |
-      | customer | filter_psu_default_4 | FilterPSUDefault4 | FilterPSUUser4 | filter_psu_user4@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | partner  | filter_psu_default_5 | FilterPSUDefault5 | FilterPSUUser5 | filter_psu_user5@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
-      | customer | filter_psu_default_6 | FilterPSUDefault6 | FilterPSUUser6 | filter_psu_user6@snapshot.travel | +42010111213 | UTC+01:00 | cz      |
+      | userType | userName             | firstName         | lastName       | email                            | phone        | timezone          | culture |
+      | customer | filter_psu_default_1 | FilterPSUDefault1 | FilterPSUUser1 | filter_psu_user1@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
+      | customer | filter_psu_default_2 | FilterPSUDefault2 | FilterPSUUser2 | filter_psu_user2@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
+      | guest    | filter_psu_default_3 | FilterPSUDefault3 | FilterPSUUser3 | filter_psu_user3@snapshot.travel | +42010111213 | Europe/Bratislava | cs-CZ   |
+      | customer | filter_psu_default_4 | FilterPSUDefault4 | FilterPSUUser4 | filter_psu_user4@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
+      | partner  | filter_psu_default_5 | FilterPSUDefault5 | FilterPSUUser5 | filter_psu_user5@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
+      | customer | filter_psu_default_6 | FilterPSUDefault6 | FilterPSUUser6 | filter_psu_user6@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
 
     Given Relation between user with username "filter_psu_default_1" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_2" and property set with name "ps1_name" for customer with code "c1t" exists

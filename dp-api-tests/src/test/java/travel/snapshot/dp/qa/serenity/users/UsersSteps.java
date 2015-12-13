@@ -178,7 +178,7 @@ public class UsersSteps extends BasicSteps {
         Response tempResponse = getEntity(user.getUserId(), null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("culture", "sk");
+        mapForUpdate.put("culture", "sk-SK");
 
         Response updateResponse = updateEntity(user.getUserId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 

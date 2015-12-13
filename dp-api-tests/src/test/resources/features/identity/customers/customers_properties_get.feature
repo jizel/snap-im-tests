@@ -9,9 +9,9 @@ Feature: customers_properties_get
 
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
@@ -60,15 +60,15 @@ Feature: customers_properties_get
       | List test Given company 2 | list_c2@tenants.biz | list_c2t | list_salesforceid_given_2 | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName           | propertyCode           | website                    | email          | isDemoProperty | timezone  |
-      | salesforceid_1 | list_prop_cust_p1_name | list_prop_cust_p1_code | http://www.snapshot.travel | p1@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_2 | list_prop_cust_p2_name | list_prop_cust_p2_code | http://www.snapshot.travel | p2@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_3 | list_prop_cust_p3_name | list_prop_cust_p3_code | http://www.snapshot.travel | p3@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_4 | list_prop_cust_p4_name | list_prop_cust_p4_code | http://www.snapshot.travel | p4@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_5 | list_prop_cust_p5_name | list_prop_cust_p5_code | http://www.snapshot.travel | p5@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_6 | list_prop_cust_p6_name | list_prop_cust_p6_code | http://www.snapshot.travel | p6@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_7 | list_prop_cust_p7_name | list_prop_cust_p7_code | http://www.snapshot.travel | p7@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_8 | list_prop_cust_p8_name | list_prop_cust_p8_code | http://www.snapshot.travel | p8@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName           | propertyCode           | website                    | email          | isDemoProperty | timezone      |
+      | salesforceid_1 | list_prop_cust_p1_name | list_prop_cust_p1_code | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | list_prop_cust_p2_name | list_prop_cust_p2_code | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
+      | salesforceid_3 | list_prop_cust_p3_name | list_prop_cust_p3_code | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
+      | salesforceid_4 | list_prop_cust_p4_name | list_prop_cust_p4_code | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague |
+      | salesforceid_5 | list_prop_cust_p5_name | list_prop_cust_p5_code | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague |
+      | salesforceid_6 | list_prop_cust_p6_name | list_prop_cust_p6_code | http://www.snapshot.travel | p6@tenants.biz | true           | Europe/Prague |
+      | salesforceid_7 | list_prop_cust_p7_name | list_prop_cust_p7_code | http://www.snapshot.travel | p7@tenants.biz | true           | Europe/Prague |
+      | salesforceid_8 | list_prop_cust_p8_name | list_prop_cust_p8_code | http://www.snapshot.travel | p8@tenants.biz | true           | Europe/Prague |
 
     Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p1_code"
     Given All customerProperties are deleted from DB for customer code "list_c1t" and property code "list_prop_cust_p2_code"
@@ -87,7 +87,7 @@ Feature: customers_properties_get
     Given Relation between property with code "list_prop_cust_p6_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "list_prop_cust_p7_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "list_prop_cust_p8_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "list_prop_cust_p1_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "list_prop_cust_p2_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "list_prop_cust_p3_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "list_prop_cust_p4_code" and customer with code "list_c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
@@ -185,15 +185,15 @@ Feature: customers_properties_get
 
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName                  | propertyCode                  | website                    | email           | isDemoProperty | timezone  |
-      | salesforceid_1 | filter_list_prop_cust_p1_name | filter_list_prop_cust_p1_code | http://www.snapshot.travel | fp1@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_2 | filter_list_prop_cust_p2_name | filter_list_prop_cust_p2_code | http://www.snapshot.travel | fp2@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_3 | filter_list_prop_cust_p3_name | filter_list_prop_cust_p3_code | http://www.snapshot.travel | fp3@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_4 | filter_list_prop_cust_p4_name | filter_list_prop_cust_p4_code | http://www.snapshot.travel | fp4@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_5 | filter_list_prop_cust_p5_name | filter_list_prop_cust_p5_code | http://www.snapshot.travel | fp5@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_6 | filter_list_prop_cust_p6_name | filter_list_prop_cust_p6_code | http://www.snapshot.travel | fp6@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_7 | filter_list_prop_cust_p7_name | filter_list_prop_cust_p7_code | http://www.snapshot.travel | fp7@tenants.biz | true           | UTC+01:00 |
-      | salesforceid_8 | filter_list_prop_cust_p8_name | filter_list_prop_cust_p8_code | http://www.snapshot.travel | fp8@tenants.biz | true           | UTC+01:00 |
+      | salesforceId   | propertyName                  | propertyCode                  | website                    | email           | isDemoProperty | timezone      |
+      | salesforceid_1 | filter_list_prop_cust_p1_name | filter_list_prop_cust_p1_code | http://www.snapshot.travel | fp1@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | filter_list_prop_cust_p2_name | filter_list_prop_cust_p2_code | http://www.snapshot.travel | fp2@tenants.biz | true           | Europe/Prague |
+      | salesforceid_3 | filter_list_prop_cust_p3_name | filter_list_prop_cust_p3_code | http://www.snapshot.travel | fp3@tenants.biz | true           | Europe/Prague |
+      | salesforceid_4 | filter_list_prop_cust_p4_name | filter_list_prop_cust_p4_code | http://www.snapshot.travel | fp4@tenants.biz | true           | Europe/Prague |
+      | salesforceid_5 | filter_list_prop_cust_p5_name | filter_list_prop_cust_p5_code | http://www.snapshot.travel | fp5@tenants.biz | true           | Europe/Prague |
+      | salesforceid_6 | filter_list_prop_cust_p6_name | filter_list_prop_cust_p6_code | http://www.snapshot.travel | fp6@tenants.biz | true           | Europe/Prague |
+      | salesforceid_7 | filter_list_prop_cust_p7_name | filter_list_prop_cust_p7_code | http://www.snapshot.travel | fp7@tenants.biz | true           | Europe/Prague |
+      | salesforceid_8 | filter_list_prop_cust_p8_name | filter_list_prop_cust_p8_code | http://www.snapshot.travel | fp8@tenants.biz | true           | Europe/Prague |
 
     Given All customerProperties are deleted from DB for customer code "filter_list_c1t" and property code "filter_list_prop_cust_p1_code"
     Given All customerProperties are deleted from DB for customer code "filter_list_c1t" and property code "filter_list_prop_cust_p2_code"

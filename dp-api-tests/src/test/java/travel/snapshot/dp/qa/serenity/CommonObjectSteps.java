@@ -295,7 +295,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restFilterObject(String objectLocation, String query) {
-        return given().spec(spec).basePath(objectLocation).param("limit", Integer.MAX_VALUE).param("filter", query)
+        return given().spec(spec).basePath(objectLocation).param("limit", LIMIT_TO_ALL).param("filter", query)
                 .when().get();
     }
 
