@@ -108,11 +108,9 @@ Feature: users_roles_create_update_delete
 
     Examples:
       | relationship_type | entity_code | limit | cursor | returned | filter                             | sort      | sort_desc | expected_usernames                                                                                                          |
-      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_1, filter_user_roles_rel_2, filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5 |
-      | property          | p1_code     | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_1, filter_user_roles_rel_2, filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5 |
-      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_roles_rel_6, filter_user_roles_rel_5, filter_user_roles_rel_4, filter_user_roles_rel_3, filter_user_roles_rel_2 |
-      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_roles_rel_3, filter_user_roles_rel_4, filter_user_roles_rel_5, filter_user_roles_rel_6                          |
-      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_roles_rel_4, filter_user_roles_rel_3, filter_user_roles_rel_2, filter_user_roles_rel_1                          |
-      | customer          | c1t         | /null | /null  | 1        | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_roles_rel_6                                                                                                     |
-
+      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_1, filter_user_role_rel_2, filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5 |
+      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_6, filter_user_role_rel_5, filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2 |
+      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5, filter_user_role_rel_6                          |
+      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2, filter_user_role_rel_1                          |
+      | customer          | c1t         | /null | /null  | 1        | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_role_rel_6                                                                                                     |
     #TODO error codes - if bad relationship_type is used, if wrong id is used,
