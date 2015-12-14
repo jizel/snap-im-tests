@@ -1,0 +1,71 @@
+== JMS integration client
+
+This client simply sends a JMS message to some Integration microservice.
+
+=== How to build?
+
+[source,bash]
+----
+gradle clean fatJar
+----
+
+=== How to run?
+
+Final jar is in build/libs, execute it like:
+
+[source,bash]
+----
+java -jar jmscli.jar help
+----
+
+If you are on Linux and the resulting file is jmscli, you can execute it like:
+
+[source,bash]
+----
+./jmscli help
+----
+
+== Usage
+
+[source,bash]
+----
+$ ./jmscli 
+usage: jmscli <command> [<args>]
+
+The most commonly used jmscli commands are:
+    help                   Display help information
+    scheduling-instagram   sends scheduling message to Instagram Starter module
+
+See 'jmscli help <command>' for more information on a specific command.
+
+$ ./jmscli help scheduling-instagram 
+NAME
+        jmscli scheduling-instagram - sends scheduling message to Instagram
+        Starter module
+
+SYNOPSIS
+        jmscli scheduling-instagram
+                [(-d <destination> | --destination <destination>)] [(-q | --toQueue)]
+                [(-s <sessionAcknowledge> | --sessionAcknowledge <sessionAcknowledge>)]
+                [(-t | --transacted)] [(-u <url> | --url <url>)]
+
+OPTIONS
+        -d <destination>, --destination <destination>
+            destination to send a message to
+
+        -q, --toQueue
+            if set, message will be sent to a queue, when not specified, to a
+            topic
+
+        -s <sessionAcknowledge>, --sessionAcknowledge <sessionAcknowledge>
+            mode of session acknowledge, from 0 to 3, defauls to 1. This
+            reflects to java.jmx.Session acknowledge constants. Defaults to
+            java.jmx.Session.AUTO_ACKNOWLEDGE which is 1.
+
+        -t, --transacted
+            turns on transaction mode, defaults to false
+
+        -u <url>, --url <url>
+            url of JMS broker to send a message to, defaults to
+            tcp://localhost:61616
+----
