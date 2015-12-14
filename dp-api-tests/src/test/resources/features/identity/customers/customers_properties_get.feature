@@ -227,7 +227,7 @@ Feature: customers_properties_get
       | 5     | 0      | 5        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 5     | 2      | 5        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 5     | 4      | 4        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 10    | 0      | 9        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 10    | 0      | 8        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 10    | 0      | 3        | type==data_owner      | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 5     | 2      | 4        | valid_from<2015-06-15 |      | valid_to  | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
   #add all fields
