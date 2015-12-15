@@ -5,12 +5,17 @@ package travel.snapshot.qa.integration.jms;
  */
 public enum MessageDestination {
 
-    INSTAGRAM_SCHEDULING("instagram.start.topic");
+    INSTAGRAM_SCHEDULING("instagram.start.topic", false),
+    INSTAGRAM_GATHERING("integration.instagram.gather", true),
+    INSTAGRAM_LOADER("integration.instagram.load", true);
 
     private final String name;
 
-    private MessageDestination(String name) {
+    private final boolean toQueue;
+
+    private MessageDestination(String name, boolean toQueue) {
         this.name = name;
+        this.toQueue = toQueue;
     }
 
     /**
@@ -26,5 +31,12 @@ public enum MessageDestination {
         }
 
         return customDestination;
+    }
+
+    /**
+     * @return true if message will be sent to queue, false otherwise
+     */
+    public boolean toQueue() {
+        return toQueue;
     }
 }

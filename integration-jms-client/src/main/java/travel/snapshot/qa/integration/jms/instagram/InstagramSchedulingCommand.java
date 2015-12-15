@@ -17,11 +17,11 @@ public class InstagramSchedulingCommand extends AbstractCommand implements Runna
     @Override
     public void run() {
 
-        final JMSMessageSender messanger = new JMSMessageSender(getJMSHelper());
+        final JMSMessageSender messenger = new JMSMessageSender(getJMSHelper().toQueue(MessageDestination.INSTAGRAM_SCHEDULING.toQueue()));
 
         final SchedulerMessage schedulerMessage = new SchedulerMessage(Instant.now());
 
-        messanger.send(schedulerMessage, MessageDestination.INSTAGRAM_SCHEDULING.resolve(destination));
+        messenger.send(schedulerMessage, MessageDestination.INSTAGRAM_SCHEDULING.resolve(destination));
     }
 
 }
