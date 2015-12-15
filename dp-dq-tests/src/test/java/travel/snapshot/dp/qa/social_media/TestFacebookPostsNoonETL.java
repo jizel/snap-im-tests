@@ -9,27 +9,46 @@ import static travel.snapshot.dp.qa.base.TestUtils.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Automated Tests for Facebook posts Noon ETLs.
+ * 
+ * Please consult the page in Confluence to get a basic overview of the Facebook data collection.
+ * All values are total, there are not incremental values
+ * 
+ * This is the path of the data for noon ETLs:
+ * Facebook (2x/day)-> Raw data table (1x/day)-> Fact table for noon runs
+ * 
+ * Noon ETLs occur at 12:01 local time for hotels in time zones [-6;+4].
+ * 
+ * The tests validate ETLs for the previous day and can be executed at any time
+*/
+
 public class TestFacebookPostsNoonETL {
 
 	public static final Logger logger = LoggerFactory.getLogger(TestFacebookPagesNoonETL.class);
 
     @Test
     public void testFactLoad() throws Exception {
-        String sqlQueryForSource = "select count(*) from RawImportedFacebookPostStatistics where date=curdate() and data_collection_run = 2";
-        String sqlQueryForTarget = "select count(*) from FactFacebookPostStatsCurrDay where date=curdate()";
+    	//The noon ETL for each hotel is triggered after the second run to get data from the Facebook API has passed
+        String sqlQueryForSource = "select count(*) from RawImportedFacebookPostStatistics where date=curdate() - interval 1 day and data_collection_run = 2";
+        String sqlQueryForTarget = "select count(*) from FactFacebookPostStatsCurrDay where date=curdate() - interval 1 day";
 
         logger.info("\nStart control checks on table 'FactFacebookPostStatsCurrDay'");
-        testLoad(sqlQueryForSource, sqlQueryForTarget);
+        testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
         
         List<String> followUpListToSource = new ArrayList<String>();
-        followUpListToSource.add("select sum(reach) from RawImportedFacebookPostStatistics where date = curdate() and data_collection_run = 2");
-        followUpListToSource.add("select sum(engagement) from RawImportedFacebookPostStatistics where date = curdate() and data_collection_run = 2");
+        followUpListToSource.add("select sum(reach) from RawImportedFacebookPostStatistics where date = curdate() - interval 1 day and data_collection_run = 2");
+        followUpListToSource.add("select sum(engagement) from RawImportedFacebookPostStatistics where date = curdate() - interval 1 day and data_collection_run = 2");
 
         List<String> followUpListToTarget = new ArrayList<String>();
-        followUpListToTarget.add("select sum(reach) from FactFacebookPostStatsCurrDay where date = curdate()");
-        followUpListToTarget.add("select sum(engagement) from FactFacebookPostStatsCurrDay where date = curdate()");
+        followUpListToTarget.add("select sum(reach) from FactFacebookPostStatsCurrDay where date = curdate() - interval 1 day");
+        followUpListToTarget.add("select sum(engagement) from FactFacebookPostStatsCurrDay where date = curdate() - interval 1 day");
         
-        followUpLoadTest(followUpListToSource,followUpListToTarget);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("Metric: reach");
+        metrics.add("Metric: engagement");
+        
+        followUpLoadTest(followUpListToSource, followUpListToTarget, metrics);
     }
 
 }

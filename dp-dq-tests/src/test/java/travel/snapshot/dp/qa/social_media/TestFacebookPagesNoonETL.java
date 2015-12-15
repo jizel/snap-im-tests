@@ -51,7 +51,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt";
 
         logger.info("\nStart control checks on table 'IncrementalFacebookPageStatistics'");
-        testLoad(sqlQueryForSource, sqlQueryForTarget);
+        testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
         
         List<String> followUpListToSource = new ArrayList<String>();
         //Separate checks for followers are used, since the values are total, instead of incremental
@@ -176,7 +176,16 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         
-        followUpLoadTest(followUpListToSource,followUpListToTarget);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("Metric: followers");
+        metrics.add("Metric: number of posts");
+        metrics.add("Metric: engagement");
+        metrics.add("Metric: impressions");
+        metrics.add("Metric: reach");
+        metrics.add("Metric: likes");
+        metrics.add("Metric: unlikes");
+        
+        followUpLoadTest(followUpListToSource, followUpListToTarget, metrics);
     }
 
     @Test
@@ -186,12 +195,20 @@ public class TestFacebookPagesNoonETL {
         String sqlQueryForTarget = "select count(*)*2 from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
 
         //Separate checks for followers are used, since the values are total, instead of incremental
-        String sqlQueryForSourceFollowers = "select sum(total_followers) from IncrementalFacebookPageStatistics where date = curdate() - interval 1 day";
+        String sqlQueryForSourceFollowers = 
+        		"select sum(total_followers) "
+        		+ "from IncrementalFacebookPageStatistics t "
+        		+ "inner join ("
+        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "from IncrementalFacebookPageStatistics "
+        		+ "where date = date_sub(curdate(), interval 1 day) "
+        		+ "group by property_id) tt "
+        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp";
         String sqlQueryForTargetFollowers = "select sum(followers) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
         
         logger.info("\nStart control checks on table 'T_FactFacebookPageStatsCurrDay'");
-        testLoad(sqlQueryForSource, sqlQueryForTarget);
-        testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers);
+        testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
+        testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers, "Metric: followers");
         
         List<String> factsYesterdayList = new ArrayList<String>();
         factsYesterdayList.add("select sum(number_of_posts) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");       		
@@ -265,7 +282,15 @@ public class TestFacebookPagesNoonETL {
         factsTodayList.add("select sum(likes) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
         factsTodayList.add("select sum(unlikes) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
         
-        followUpLoadTestFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList);
+        List<String> metrics = new ArrayList<String>();
+        metrics.add("number of posts");
+        metrics.add("engagement");
+        metrics.add("impressions");
+        metrics.add("reach");
+        metrics.add("likes");
+        metrics.add("unlikes");
+        
+        testLoadFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList, metrics);
         
     }
 
