@@ -106,7 +106,7 @@ public class SocialMediaStepdefs {
         steps.verifySumOfMetricFromSocialMedia(metric, granularity, property, since, until);
     }
 
-    @Then("^The metric count is \"([^\"]*)\"$")
+    @Then("^The metric count is (\\d+)$")
     public void Metric_count_is(int values) throws Throwable {
         steps.fieldContainsIntegerValue("values", values);
     }

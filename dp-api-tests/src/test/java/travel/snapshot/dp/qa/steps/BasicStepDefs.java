@@ -13,7 +13,7 @@ public class BasicStepDefs {
     @Steps
     private BasicSteps basicSteps;
 
-    @Then("^Response code is \"(\\d+)\"$")
+    @Then("^Response code is (\\d+)$")
     public void response_code_is(int responseCode) throws Throwable {
         basicSteps.responseCodeIs(responseCode);
     }
