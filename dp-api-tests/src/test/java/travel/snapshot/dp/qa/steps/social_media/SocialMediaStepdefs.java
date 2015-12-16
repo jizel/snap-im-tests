@@ -30,6 +30,7 @@ public class SocialMediaStepdefs {
     public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
         // Express the Regexp above with the code you wish you had
         steps.getData("/social_media" + url, granularity, propertyId, since, until);
+
     }
 
     @When("^Get social_media \"([^\"]*)\" with missing property header$")
