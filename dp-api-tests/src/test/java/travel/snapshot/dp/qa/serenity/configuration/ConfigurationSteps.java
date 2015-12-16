@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.serenity.configuration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.restassured.internal.RestAssuredResponseImpl;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -380,5 +381,27 @@ public class ConfigurationSteps extends BasicSteps {
     public void configurationHasValue(String identifier, String key, String value) {
         Response response = getConfiguration(key, identifier);
         response.then().body("value", is(value));
+    }
+
+    public void keysAreInResponseInOrder(List<String> keys) {
+        Response response = getSessionResponse();
+        Configuration[] configs = response.as(Configuration[].class);
+
+        int i = 0;
+        for (Configuration u : configs) {
+            assertEquals("Config on index=" + i + " is not expected", keys.get(i), u.getKey());
+            i++;
+        }
+    }
+
+    public void typesAreInResponseInOrder(List<String> configs) {
+        Response response = getSessionResponse();
+        ConfigurationType[] responseConfigs = response.as(ConfigurationType[].class);
+
+        int i = 0;
+        for (ConfigurationType c : responseConfigs) {
+            assertEquals("Config on index=" + i + " is not expected", configs.get(i), c.getIdentifier());
+            i++;
+        }
     }
 }
