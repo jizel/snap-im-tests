@@ -12,7 +12,8 @@ public abstract class AbstractCommand implements Runnable {
             description = "url of JMS broker to send a message to, defaults to tcp://localhost:61616", arity = 1)
     protected String brokerURL = "tcp://localhost:61616";
 
-    @Option(name = {"-d", "--destination"}, title = "destination", description = "destination to send a message to",
+    @Option(name = {"-d", "--destination"}, title = "destination", description = "destination to send a message to. " +
+            "It is not needed when you are ok with defaults for some particular topic or queue.",
             arity = 1)
     protected String destination;
 
