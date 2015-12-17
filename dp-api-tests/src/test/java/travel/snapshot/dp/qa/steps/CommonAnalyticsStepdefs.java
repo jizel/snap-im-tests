@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -40,11 +41,15 @@ public class CommonAnalyticsStepdefs {
         steps.valueIsLessThanOrEqualTo(value1, value2);
     }
 
-    @Then("^The metric count is (\\d+)$")
-    public void Metric_count_is(int value) throws Throwable {
-        steps.bodyContainsCollectionWith("values", value);
+    @Then("^The metric count is (\\d*[,.]?\\d*)")
+    public void Metric_count_is(BigDecimal value) throws Throwable {
+        steps.bodyContainsR("values", value);
     }
-
+   // @Then("^The metric count is (\\d+)\\.(\\d+)$")
+    //public void Metric_count_is_n(BigDecimal value) throws Throwable {
+     //   steps.bodyContainsCollectionWith("values", value);
+    //}
+    
     @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")
     public void Response_contains_correct_number_of_values_for_granularity_between_and(String granularity, String since, String until) throws Throwable {
         steps.responseContainsCorrectValuesFor(granularity, since, until);

@@ -23,6 +23,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -116,6 +117,12 @@ public class BasicSteps {
 
     @Step
     public void bodyContainsCollectionWith(String attributeName, Object item){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(attributeName, hasItem(item));
+    }
+    
+    @Step
+    public void bodyContainsR(String attributeName, BigDecimal item){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(attributeName, hasItem(item));
     }

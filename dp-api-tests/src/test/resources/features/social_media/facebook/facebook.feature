@@ -19,6 +19,8 @@ Feature: facebook
       | /analytics/facebook/likes           | MONTHs      | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
       | /analytics/facebook/unlikes         | we3EK       | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
       | /analytics/facebook/reach           | D@YS        | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
+      | /analytics/facebook/reach           | week        | ?99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
+      | /analytics/facebook/reach           | week        | 99999999-9999-4999-a999-999999999999 | &2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
 
   Scenario Outline: Validate that metrics have valid value in the db
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
