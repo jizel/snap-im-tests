@@ -28,7 +28,7 @@ public class RateShopperSteps extends BasicSteps {
     @Step
     public void getPropertyRateData(String property_id, String since, String until, String fetched) {
         LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
         
         RequestSpecification requestSpecification = given().spec(spec);
 
