@@ -28,6 +28,7 @@ public class User {
     private String culture = null;
     private String comment = null;
     private String picture = null;
+    private Integer isActive = null;
 
     /**
      * Unique identifier of the user in GUID format.
@@ -198,6 +199,20 @@ public class User {
         this.picture = picture;
     }
 
+    /**
+     * Indicates whether the user is active
+     **/
+    @ApiModelProperty(value = "Indicates whether the user is active")
+    @JsonProperty("is_active")
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -216,6 +231,7 @@ public class User {
         sb.append("  culture: ").append(culture).append("\n");
         sb.append("  comment: ").append(comment).append("\n");
         sb.append("  picture: ").append(picture).append("\n");
+        sb.append("  isActive: ").append(isActive).append("\n");
         sb.append("}\n");
 
         return sb.toString();
