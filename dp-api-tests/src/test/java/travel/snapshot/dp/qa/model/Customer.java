@@ -23,6 +23,7 @@ public class Customer {
     private Boolean isDemoCustomer = null;
     private Address address = null;
     private String notes = null;
+    private Integer isActive = null;
 
 
     /**
@@ -179,7 +180,6 @@ public class Customer {
         this.address = address;
     }
 
-
     /**
      * Additional notes about customer
      **/
@@ -193,6 +193,18 @@ public class Customer {
         this.notes = notes;
     }
 
+    /**
+     * Indicates whether the customer is active
+     **/
+    @ApiModelProperty(value = "Indicates whether the customer is active")
+    @JsonProperty("is_active")
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
 
     @Override
     public String toString() {
@@ -211,6 +223,7 @@ public class Customer {
         sb.append("  isDemoCustomer: ").append(isDemoCustomer).append("\n");
         sb.append("  address: ").append(address).append("\n");
         sb.append("  notes: ").append(notes).append("\n");
+        sb.append("  isActive: ").append(isActive).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
