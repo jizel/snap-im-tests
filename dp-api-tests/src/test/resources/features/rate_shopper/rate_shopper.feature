@@ -68,6 +68,18 @@ Feature: rate_shopper
       | /rate_shopper/analytics/market            | 400        | 52          |
       | /rate_shopper/analytics/market/properties | 400        | 52          |
 
+  Scenario Outline: Checking error codes for invalid values
+    When Getting rate data for "<property>" since "<since>" until "<until>" fetched "<fetch_datetime>"
+    Then Content type is "application/json"
+    And Response code is "<response_code>"
+    And Custom code is "<custom code>"
+
+    Examples: 
+      | property | since   | until      | fetch_datetime      | response_code | custom_code |
+      | 10010003 | invalid | 2015-12-15 | 2015-12-15T10:00:00 | 400           | 63          |
+      | 10010003 | invalid | invalid    | 2015-12-15T10:00:00 | 400           | 63          |
+      | 10010003 | invalid | 2015-12-15 | invalid             | 400           | 63          |
+
   Scenario Outline: Checking default parameter values
     When Getting rate data for "<property>" since "<since>" until "<until>" fetched "<fetch_datetime>"
     Then Content type is "application/json"
@@ -78,7 +90,7 @@ Feature: rate_shopper
 
     #   argument ranges:
     #	fetch_datetime  ( ; last fetch]
-    #            since  [fetch_datetime ; fetch_datetime + 60 days]
+    #            since  [fetch_datetime ; until]
     #            until  [since ; fetch_datetime + 60 days]
     #
     #	defaults:
