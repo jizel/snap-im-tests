@@ -42,6 +42,8 @@ public class BasicSteps {
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
+    protected static final String INSTAGRAM_BASE_URI = "instagram.baseURI";
+    protected static final String WEB_PERFORMANCE_BASE_URI = "web_performance.baseURI";
     protected static final String RATE_SHOPPER_BASE_URI = "rate_shopper.baseURI";
     protected static final String IDENTITY_BASE_URI = "identity.baseURI";
     protected static final String IDENTITY_NGINX_BASE_URI = "identity_nginx.baseURI";

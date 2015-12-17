@@ -19,5 +19,4 @@ public class RateShopperStepdefs {
     public void getting_rate_data_with_for_since_until(String property_id, String since, String until) throws Throwable {
         rateShopperSteps.getPropertyRateData(property_id, since, until);
     }
- 
 }
