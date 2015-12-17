@@ -19,6 +19,7 @@ public class Property {
     private Boolean isDemoProperty = null;
     private Address address = null;
     private String timezone = null;
+    private Integer isActive = null;
 
 
     /**
@@ -147,6 +148,19 @@ public class Property {
         this.timezone = timezone;
     }
 
+    /**
+     * Indicates whether the property is active
+     **/
+    @ApiModelProperty(value = "Indicates whether the property is active")
+    @JsonProperty("is_active")
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
 
     @Override
     public String toString() {
@@ -162,6 +176,7 @@ public class Property {
         sb.append("  isDemoProperty: ").append(isDemoProperty).append("\n");
         sb.append("  address: ").append(address).append("\n");
         sb.append("  timezone: ").append(timezone).append("\n");
+        sb.append("  isActive: ").append(isActive).append("\n");
         sb.append("}\n");
         return sb.toString();
     }
