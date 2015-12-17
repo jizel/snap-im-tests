@@ -18,6 +18,11 @@ public class BasicStepDefs {
         basicSteps.responseCodeIs(responseCode);
     }
 
+    @Then("^Response code is \"([^\"]*)\"$")
+    public void response_code_is_string(String responseCode) throws Throwable {
+        basicSteps.responseCodeIs(Integer.valueOf(responseCode));
+    }
+
     @When("^\"([^\"]*)\" is called without token using \"([^\"]*)\"$")
     public void is_called_without_token_using(String service, String method) throws Throwable {
         basicSteps.isCalledWithoutTokenUsingMethod(service, method);
