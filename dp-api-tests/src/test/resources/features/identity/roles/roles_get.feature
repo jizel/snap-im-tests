@@ -118,18 +118,19 @@ Feature: roles_get
     And Content type is "application/json"
     And There are <returned> roles returned
     And Link header is '<link_header>'
+    And Total count is "<total>"
 
     Examples:
-      | description   | limit | cursor | returned | link_header                                                                                       |
-      | default limit | /null |        | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | default limit |       | /null  | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | default limit | /null | /null  | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | default limit |       |        | 50       | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | limit at 15   | 15    |        | 15       | </identity/roles?limit=15&cursor=15>; rel="next"                                                  |
-      | offset by 1   |       | 1      | 50       | </identity/roles?limit=50&cursor=51>; rel="next", </identity/roles?limit=50&cursor=0>; rel="prev" |
-      | limit by 20   | 20    | 0      | 20       | </identity/roles?limit=20&cursor=20>; rel="next"                                                  |
-      | limit by 10   | 10    | 0      | 10       | </identity/roles?limit=10&cursor=10>; rel="next"                                                  |
-      | l:5 o:5       | 5     | 10     | 5        | </identity/roles?limit=5&cursor=15>; rel="next", </identity/roles?limit=5&cursor=5>; rel="prev"   |
+      | description   | limit | cursor | returned | total | link_header                                                                                       |
+      | default limit | /null |        | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit |       | /null  | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit | /null | /null  | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit |       |        | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
+      | limit at 15   | 15    |        | 15       | 57    | </identity/roles?limit=15&cursor=15>; rel="next"                                                  |
+      | offset by 1   |       | 1      | 50       | 57    | </identity/roles?limit=50&cursor=51>; rel="next", </identity/roles?limit=50&cursor=0>; rel="prev" |
+      | limit by 20   | 20    | 0      | 20       | 57    | </identity/roles?limit=20&cursor=20>; rel="next"                                                  |
+      | limit by 10   | 10    | 0      | 10       | 57    | </identity/roles?limit=10&cursor=10>; rel="next"                                                  |
+      | l:5 o:5       | 5     | 10     | 5        | 57    | </identity/roles?limit=5&cursor=15>; rel="next", </identity/roles?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for lists of roles
@@ -178,17 +179,18 @@ Feature: roles_get
     And Content type is "application/json"
     And There are <returned> roles returned
     And There are roles with following names returned in order: <expected_names>
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | filter                                               | sort      | sort_desc | expected_names                                                                                     |
-      | 5     | 0      | 5        | role_name=='Filter role name*'                       | role_name |           | Filter role name 1, Filter role name 2, Filter role name 3, Filter role name 4, Filter role name 5 |
-      | 5     | 0      | 5        | role_name=='Filter role name*'                       |           | role_name | Filter role name 6, Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2 |
-      | 5     | 2      | 4        | role_name=='Filter role name*'                       | role_name |           | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
-      | 5     | 2      | 4        | role_name=='Filter role name*'                       |           | role_name | Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1                     |
-      | 5     | 4      | 2        | role_name=='Filter role name*'                       | role_name |           | Filter role name 5, Filter role name 6                                                             |
-      | /null | /null  | 1        | role_name=='Filter role name 6'                      | /null     | /null     | Filter role name 6                                                                                 |
-      | /null | /null  | 2        | role_name=='Filter role name*' and application_id==1 | role_name | /null     | Filter role name 1, Filter role name 2                                                             |
-      | /null | /null  | 4        | application_id==2                                    | role_name | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
-      | /null | /null  | 2        | role_description==different*                         | role_name | /null     | Filter role name 3, Filter role name 4                                                             |
+      | limit | cursor | returned | total | filter                                               | sort      | sort_desc | expected_names                                                                                     |
+      | 5     | 0      | 5        | 6     | role_name=='Filter role name*'                       | role_name |           | Filter role name 1, Filter role name 2, Filter role name 3, Filter role name 4, Filter role name 5 |
+      | 5     | 0      | 5        | 6     | role_name=='Filter role name*'                       |           | role_name | Filter role name 6, Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2 |
+      | 5     | 2      | 4        | 6     | role_name=='Filter role name*'                       | role_name |           | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | 5     | 2      | 4        | 6     | role_name=='Filter role name*'                       |           | role_name | Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1                     |
+      | 5     | 4      | 2        | 1     | role_name=='Filter role name*'                       | role_name |           | Filter role name 5, Filter role name 6                                                             |
+      | /null | /null  | 1        | 1     | role_name=='Filter role name 6'                      | /null     | /null     | Filter role name 6                                                                                 |
+      | /null | /null  | 2        | 2     | role_name=='Filter role name*' and application_id==1 | role_name | /null     | Filter role name 1, Filter role name 2                                                             |
+      | /null | /null  | 4        | 4     | application_id==2                                    | role_name | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | /null | /null  | 2        | 2     | role_description==different*                         | role_name | /null     | Filter role name 3, Filter role name 4                                                             |
   #add all fields
 

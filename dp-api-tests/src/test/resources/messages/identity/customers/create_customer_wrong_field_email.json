@@ -17,5 +17,6 @@
     "zip_code": "string",
     "country": "string"
   },
-  "notes": "string"
+  "notes": "string",
+  "timezone" : "Europe/Prague"
 }

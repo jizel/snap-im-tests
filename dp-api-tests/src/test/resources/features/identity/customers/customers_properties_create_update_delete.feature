@@ -3,13 +3,13 @@ Feature: customers_properties_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone  |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
 

@@ -24,6 +24,7 @@ public class Customer {
     private Address address = null;
     private String notes = null;
     private Integer isActive = null;
+    private String timezone = null;
 
 
     /**
@@ -193,6 +194,22 @@ public class Customer {
         this.notes = notes;
     }
 
+
+    /**
+     * Timezone in the structure containing the name of the city and additional data for the zone
+     * itself
+     **/
+    @ApiModelProperty(required = true,
+            value = "Timezone in the structure containing the name of the city and additional data for the zone itself")
+    @JsonProperty("timezone")
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
     /**
      * Indicates whether the customer is active
      **/
@@ -223,6 +240,7 @@ public class Customer {
         sb.append("  isDemoCustomer: ").append(isDemoCustomer).append("\n");
         sb.append("  address: ").append(address).append("\n");
         sb.append("  notes: ").append(notes).append("\n");
+        sb.append("  timezone: ").append(timezone).append("\n");
         sb.append("  isActive: ").append(isActive).append("\n");
         sb.append("}\n");
         return sb.toString();

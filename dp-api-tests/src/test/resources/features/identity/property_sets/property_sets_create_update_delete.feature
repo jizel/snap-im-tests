@@ -6,8 +6,8 @@ Feature: property_sets_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
     Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name
     Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name

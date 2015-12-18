@@ -15,5 +15,6 @@
     "zip_code": "string",
     "country": "Czech"
   },
-  "notes": "string"
+  "notes": "string",
+  "timezone" : "Europe/Prague"
 }

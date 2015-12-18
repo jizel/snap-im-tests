@@ -3,9 +3,9 @@ Feature: customers_users_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
 
     Given The following users exist
@@ -70,12 +70,13 @@ Feature: customers_users_create_update_delete
     And Content type is "application/json"
     And There are <returned> customerUsers returned
     And There are customer users with following usernames returned in order: <expected_usernames>
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | filter                                           | sort      | sort_desc | expected_usernames                                                                                      |
-      | 5     | 0      | 5        | user_name=='filter_cu_default*'                  | user_name |           | filter_cu_default_1, filter_cu_default_2, filter_cu_default_3, filter_cu_default_4, filter_cu_default_5 |
-      | 5     | 0      | 5        | user_name=='filter_cu_default*'                  |           | user_name | filter_cu_default_6, filter_cu_default_5, filter_cu_default_4, filter_cu_default_3, filter_cu_default_2 |
-      | 5     | 2      | 4        | user_name=='filter_cu_default*'                  | user_name |           | filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6                      |
-      | 5     | 2      | 4        | user_name=='filter_cu_default*'                  |           | user_name | filter_cu_default_4, filter_cu_default_3, filter_cu_default_2, filter_cu_default_1                      |
-      | /null | /null  | 1        | user_name==filter_cu_default_6                   | /null     | /null     | filter_cu_default_6                                                                                     |
-      | /null | /null  | 2        | user_name==*_cu_default_* and is_primary==1 | user_name | /null     | filter_cu_default_1, other_cu_default_8                                                                 |
+      | limit | cursor | returned | total | filter                                      | sort      | sort_desc | expected_usernames                                                                                      |
+      | 5     | 0      | 5        | 6     | user_name=='filter_cu_default*'             | user_name |           | filter_cu_default_1, filter_cu_default_2, filter_cu_default_3, filter_cu_default_4, filter_cu_default_5 |
+      | 5     | 0      | 5        | 6     | user_name=='filter_cu_default*'             |           | user_name | filter_cu_default_6, filter_cu_default_5, filter_cu_default_4, filter_cu_default_3, filter_cu_default_2 |
+      | 5     | 2      | 4        | 6     | user_name=='filter_cu_default*'             | user_name |           | filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6                      |
+      | 5     | 2      | 4        | 6     | user_name=='filter_cu_default*'             |           | user_name | filter_cu_default_4, filter_cu_default_3, filter_cu_default_2, filter_cu_default_1                      |
+      | /null | /null  | 1        | 1     | user_name==filter_cu_default_6              | /null     | /null     | filter_cu_default_6                                                                                     |
+      | /null | /null  | 2        | 2     | user_name==*_cu_default_* and is_primary==1 | user_name | /null     | filter_cu_default_1, other_cu_default_8                                                                 |

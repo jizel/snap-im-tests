@@ -5,16 +5,16 @@ Feature: customers_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     Given All users are removed for customers with codes: c1t, c2t
 
   Scenario: Creating Customer without parent with random address
 
     When Customer is created with random address
-      | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    |
-      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     And Body contains entity with attribute "company_name" value "Creation test company"
     And Body contains entity with attribute "email" value "s1@tenants.biz"
@@ -60,20 +60,20 @@ Feature: customers_create_update_delete
     Given The following customers with codes don't exist
       | UPDATED_CODE_c1t |
     When Customer with code "c1t" is updated with data
-      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   |
-      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> |
+      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
+      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Updated customer with code "<code>" has data
-      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   |
-      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> |
+      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
+      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
 
     Examples:
-      | companyName | email | code             | salesforceId         | vatId      | phone         | website        | notes |
-      | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null |
-      | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null |
-      | /null       | /null | UPDATED_CODE_c1t | /null                | /null      | /null         | /null          | /null |
+      | companyName | email | code             | salesforceId         | vatId      | phone         | website        | notes | timezone      |
+      | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null | Europe/Prague |
+      | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null | /null         |
+      | /null       | /null | UPDATED_CODE_c1t | /null                | /null      | /null         | /null          | /null | /null         |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag

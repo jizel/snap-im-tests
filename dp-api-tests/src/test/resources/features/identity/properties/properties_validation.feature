@@ -14,6 +14,7 @@ Feature: properties_validation
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}[a-z]{9} | \.{10}   | \w{101}    |
       | /timezone              | String | true     | (America/New_York\|Europe/Prague)                                | UTC+1:00 | UTC+001:00 |
       | /is_demo_property      | Bool   | true     | (true\|false)                                                    | /null    |            |
+      | /is_active             | String | false    | (0\|1)                                                           | x        |            |
       | /address/address_line1 | String | true     | \w{100}                                                          | /null    | \w{101}    |
       | /address/address_line2 | String | false    | \w{100}                                                          | /null    | \w{101}    |
       | /address/city          | String | true     | \w{50}                                                           | /null    | \w{51}     |
