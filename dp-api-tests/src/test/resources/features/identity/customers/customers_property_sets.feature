@@ -3,15 +3,15 @@ Feature: customers_property_sets
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
     Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All property sets are deleted for customers with codes: c1t, c2t
 
 
-    Scenario Outline: getting list of property sets for customer "c1t" on customers side
+  Scenario Outline: getting list of property sets for customer "c1t" on customers side
 #failing because of not fuctional filtering
     Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
@@ -75,22 +75,23 @@ Feature: customers_property_sets
       | list_ps58_name  | list_ps58_description  | branch          |
       | list_ps59_name  | list_ps59_description  | branch          |
 
-      When List of property sets for customer "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
-      Then Response code is "200"
-      And Content type is "application/json"
-      And There are <returned> customer property sets returned
+    When List of property sets for customer "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <returned> customer property sets returned
+    And Total count is "<total>"
 
-      Examples:
-        | limit | cursor | returned |
-        | /null |        | 50       |
-        | /null | /null  | 50       |
-        |       |        | 50       |
-        |       | /null  | 50       |
-        | 15    |        | 15       |
-        |       | 1      | 50       |
-        | 20    | 0      | 20       |
-        | 10    | 0      | 10       |
-        | 5     | 5      | 5        |
+    Examples:
+      | limit | cursor | returned | total |
+      | /null |        | 50       | 59    |
+      | /null | /null  | 50       | 59    |
+      |       |        | 50       | 59    |
+      |       | /null  | 50       | 59    |
+      | 15    |        | 15       | 59    |
+      |       | 1      | 50       | 59    |
+      | 20    | 0      | 20       | 59    |
+      | 10    | 0      | 10       | 59    |
+      | 5     | 5      | 5        | 59    |
 
   Scenario Outline: Checking error codes for getting list of property sets
     When List of property sets for customer "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -136,11 +137,12 @@ Feature: customers_property_sets
     And Content type is "application/json"
     And There are <returned> customer property sets returned
     And There are property sets with following names returned in order: <expected_codes>
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | filter                                                 | sort              | sort_desc         | expected_codes                                                            |
-      | 5     | 0      | 5        | property_set_name=='list_*'                            | property_set_name |                   | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
-      | 5     | 0      | 5        | property_set_name=='list_*'                            |                   | property_set_name | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
-      | 5     | 2      | 3        | property_set_name=='list_*'                            | property_set_name |                   | list_ps3_name, list_ps4_name, list_ps5_name                               |
-      | 5     | 2      | 3        | property_set_name=='list_*'                            |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
-      | /null | /null  | 1        | property_set_name==list_ps4_name                       | /null             | /null             | list_ps4_name                                                             |
+      | limit | cursor | returned | total | filter                           | sort              | sort_desc         | expected_codes                                                            |
+      | 5     | 0      | 5        | 5     | property_set_name=='list_*'      | property_set_name |                   | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
+      | 5     | 0      | 5        | 5     | property_set_name=='list_*'      |                   | property_set_name | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
+      | 5     | 2      | 3        | 5     | property_set_name=='list_*'      | property_set_name |                   | list_ps3_name, list_ps4_name, list_ps5_name                               |
+      | 5     | 2      | 3        | 5     | property_set_name=='list_*'      |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
+      | /null | /null  | 1        | 1     | property_set_name==list_ps4_name | /null             | /null             | list_ps4_name                                                             |

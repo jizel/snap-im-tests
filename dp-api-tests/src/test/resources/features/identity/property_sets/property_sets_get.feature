@@ -3,9 +3,9 @@ Feature: property_sets_get
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
     Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name
     Given All property sets are deleted for customers with codes: c1t, c2t
@@ -86,18 +86,19 @@ Feature: property_sets_get
     And Content type is "application/json"
     And There are <returned> property sets returned
     And Link header is '<link_header>'
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | link_header                                                                                                       |
-      | /null |        | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      | /null | /null  | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      |       |        | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      |       | /null  | 50       | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      | 15    |        | 15       | </identity/property_sets?limit=15&cursor=15>; rel="next"                                                          |
-      |       | 1      | 50       | </identity/property_sets?limit=50&cursor=51>; rel="next", </identity/property_sets?limit=50&cursor=0>; rel="prev" |
-      | 20    | 0      | 20       | </identity/property_sets?limit=20&cursor=20>; rel="next"                                                          |
-      | 10    | 0      | 10       | </identity/property_sets?limit=10&cursor=10>; rel="next"                                                          |
-      | 5     | 10     | 5        | </identity/property_sets?limit=5&cursor=15>; rel="next", </identity/property_sets?limit=5&cursor=5>; rel="prev"   |
+      | limit | cursor | returned | total | link_header                                                                                                       |
+      | /null |        | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      | /null | /null  | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      |       |        | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      |       | /null  | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      | 15    |        | 15       | 62    | </identity/property_sets?limit=15&cursor=15>; rel="next"                                                          |
+      |       | 1      | 50       | 62    | </identity/property_sets?limit=50&cursor=51>; rel="next", </identity/property_sets?limit=50&cursor=0>; rel="prev" |
+      | 20    | 0      | 20       | 62    | </identity/property_sets?limit=20&cursor=20>; rel="next"                                                          |
+      | 10    | 0      | 10       | 62    | </identity/property_sets?limit=10&cursor=10>; rel="next"                                                          |
+      | 5     | 10     | 5        | 62    | </identity/property_sets?limit=5&cursor=15>; rel="next", </identity/property_sets?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for getting list of property sets
@@ -144,15 +145,16 @@ Feature: property_sets_get
     And Content type is "application/json"
     And There are <returned> property sets returned
     And There are property sets with following names returned in order: <expected_codes>
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | filter                                                 | sort              | sort_desc         | expected_codes                                                            |
-      | 5     | 0      | 5        | property_set_name=='list_*'                            | property_set_name |                   | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
-      | 5     | 0      | 5        | property_set_name=='list_*'                            |                   | property_set_name | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
-      | 5     | 2      | 3        | property_set_name=='list_*'                            | property_set_name |                   | list_ps3_name, list_ps4_name, list_ps5_name                               |
-      | 5     | 2      | 3        | property_set_name=='list_*'                            |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
-      | /null | /null  | 1        | property_set_name==list_ps4_name                       | /null             | /null             | list_ps4_name                                                             |
-      | /null | /null  | 2        | property_set_name==list_* and property_set_type==chain | property_set_name | /null             | list_ps4_name, list_ps5_name                                              |
-      | /null | /null  | 1        | property_set_description==list_ps8_des*                | /null             | /null             | second_list_ps8_name                                                      |
+      | limit | cursor | returned | total | filter                                                 | sort              | sort_desc         | expected_codes                                                            |
+      | 5     | 0      | 5        | 5     | property_set_name=='list_*'                            | property_set_name |                   | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
+      | 5     | 0      | 5        | 5     | property_set_name=='list_*'                            |                   | property_set_name | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
+      | 5     | 2      | 3        | 5     | property_set_name=='list_*'                            | property_set_name |                   | list_ps3_name, list_ps4_name, list_ps5_name                               |
+      | 5     | 2      | 3        | 5     | property_set_name=='list_*'                            |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
+      | /null | /null  | 1        | 1     | property_set_name==list_ps4_name                       | /null             | /null             | list_ps4_name                                                             |
+      | /null | /null  | 2        | 2     | property_set_name==list_* and property_set_type==chain | property_set_name | /null             | list_ps4_name, list_ps5_name                                              |
+      | /null | /null  | 1        | 1     | property_set_description==list_ps8_des*                | /null             | /null             | second_list_ps8_name                                                      |
 
 

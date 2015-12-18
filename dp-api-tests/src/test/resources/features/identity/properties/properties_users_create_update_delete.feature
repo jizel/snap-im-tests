@@ -65,12 +65,13 @@ Feature: properties_users_create_update_delete
     And Content type is "application/json"
     And There are <returned> users returned
     And There are property users with following usernames returned in order: <expected_usernames>
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | filter                          | sort      | sort_desc | expected_usernames                                                                                      |
-      | 5     | 0      | 5        | user_name=='filter_pu_default*' | user_name |           | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5 |
-      | 5     | 0      | 5        | user_name=='filter_pu_default*' |           | user_name | filter_pu_default_6, filter_pu_default_5, filter_pu_default_4, filter_pu_default_3, filter_pu_default_2 |
-      | 5     | 2      | 4        | user_name=='filter_pu_default*' | user_name |           | filter_pu_default_3, filter_pu_default_4, filter_pu_default_5, filter_pu_default_6                      |
-      | 5     | 2      | 4        | user_name=='filter_pu_default*' |           | user_name | filter_pu_default_4, filter_pu_default_3, filter_pu_default_2, filter_pu_default_1                      |
-      | /null | /null  | 1        | user_name==filter_pu_default_6  | /null     | /null     | filter_pu_default_6                                                                                     |
+      | limit | cursor | returned |total | filter                          | sort      | sort_desc | expected_usernames                                                                                      |
+      | 5     | 0      | 5        |6     | user_name=='filter_pu_default*' | user_name |           | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5 |
+      | 5     | 0      | 5        |6     | user_name=='filter_pu_default*' |           | user_name | filter_pu_default_6, filter_pu_default_5, filter_pu_default_4, filter_pu_default_3, filter_pu_default_2 |
+      | 5     | 2      | 4        |6     | user_name=='filter_pu_default*' | user_name |           | filter_pu_default_3, filter_pu_default_4, filter_pu_default_5, filter_pu_default_6                      |
+      | 5     | 2      | 4        |6     | user_name=='filter_pu_default*' |           | user_name | filter_pu_default_4, filter_pu_default_3, filter_pu_default_2, filter_pu_default_1                      |
+      | /null | /null  | 1        |1     | user_name==filter_pu_default_6  | /null     | /null     | filter_pu_default_6                                                                                     |
 

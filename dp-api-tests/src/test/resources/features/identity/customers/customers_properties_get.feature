@@ -3,9 +3,9 @@ Feature: customers_properties_get
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
 
     Given The following properties exist with random address and billing address
@@ -55,9 +55,9 @@ Feature: customers_properties_get
   not working now
 
     Given The following customers exist with random address
-      | companyName               | email               | code     | salesforceId              | vatId      | isDemoCustomer | phone         | website                    |
-      | List test Given company 1 | list_c1@tenants.biz | list_c1t | list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel |
-      | List test Given company 2 | list_c2@tenants.biz | list_c2t | list_salesforceid_given_2 | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel |
+      | companyName               | email               | code     | salesforceId              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | List test Given company 1 | list_c1@tenants.biz | list_c1t | list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Prague |
+      | List test Given company 2 | list_c2@tenants.biz | list_c2t | list_salesforceid_given_2 | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel | Europe/Prague |
 
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName           | propertyCode           | website                    | email          | isDemoProperty | timezone      |
@@ -180,8 +180,8 @@ Feature: customers_properties_get
 
   Scenario Outline: Filtering list of customer properties
     Given The following customers exist with random address
-      | companyName                      | email               | code            | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    |
-      | Filter list test Given company 1 | list_c1@tenants.biz | filter_list_c1t | filter_list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel |
+      | companyName                      | email               | code            | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Filter list test Given company 1 | list_c1@tenants.biz | filter_list_c1t | filter_list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Bratislava |
 
 
     Given The following properties exist with random address and billing address
@@ -221,15 +221,16 @@ Feature: customers_properties_get
     And Content type is "application/json"
     And There are <returned> customerProperties returned
     #And There are customers with following codes returned in order: <string>
+    And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | filter                | sort | sort_desc | expected_codes                                             |
-      | 5     | 0      | 5        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 5     | 2      | 5        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 5     | 4      | 4        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 10    | 0      | 8        | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 10    | 0      | 3        | type==data_owner      | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 5     | 2      | 4        | valid_from<2015-06-15 |      | valid_to  | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
+      | limit | cursor | returned | total | filter                | sort | sort_desc | expected_codes                                             |
+      | 5     | 0      | 5        | 8     | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 2      | 5        | 8     | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 4      | 4        | 8     | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 10    | 0      | 8        | 8     | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 10    | 0      | 3        | 3     | type==data_owner      | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 2      | 4        | 6     | valid_from<2015-06-15 |      | valid_to  | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
   #add all fields
 
     #TODO add test for wrong parameters in url

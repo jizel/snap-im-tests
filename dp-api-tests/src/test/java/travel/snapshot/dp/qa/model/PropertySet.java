@@ -17,6 +17,7 @@ public class PropertySet {
     private String customerId = null;
     private String parentId = null;
     private String propertySetType = null;
+    private Integer isActive = null;
 
 
     /**
@@ -103,6 +104,19 @@ public class PropertySet {
     }
 
 
+    /**
+     * Indicates whether the property is active
+     **/
+    @ApiModelProperty(value = "Indicates whether the property is active")
+    @JsonProperty("is_active")
+    public Integer getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Integer isActive) {
+        this.isActive = isActive;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -114,6 +128,7 @@ public class PropertySet {
         sb.append("  customerId: ").append(customerId).append("\n");
         sb.append("  parentId: ").append(parentId).append("\n");
         sb.append("  propertySetType: ").append(propertySetType).append("\n");
+        sb.append("  isActive: ").append(isActive).append("\n");
         sb.append("}\n");
         return sb.toString();
     }

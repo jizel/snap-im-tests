@@ -3,9 +3,9 @@ Feature: users_roles_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
@@ -105,12 +105,13 @@ Feature: users_roles_create_update_delete
     And Content type is "application/json"
     And There are <returned> user roles returned
     And There are user roles with following role names returned in order: <expected_usernames>
+    And Total count is "<total>"
 
     Examples:
-      | relationship_type | entity_code | limit | cursor | returned | filter                             | sort      | sort_desc | expected_usernames                                                                                                          |
-      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_1, filter_user_role_rel_2, filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5 |
-      | customer          | c1t         | 5     | 0      | 5        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_6, filter_user_role_rel_5, filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2 |
-      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5, filter_user_role_rel_6                          |
-      | customer          | c1t         | 5     | 2      | 4        | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2, filter_user_role_rel_1                          |
-      | customer          | c1t         | /null | /null  | 1        | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_role_rel_6                                                                                                     |
+      | relationship_type | entity_code | limit | cursor | returned |total | filter                             | sort      | sort_desc | expected_usernames                                                                                                          |
+      | customer          | c1t         | 5     | 0      | 5        |6     | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_1, filter_user_role_rel_2, filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5 |
+      | customer          | c1t         | 5     | 0      | 5        |6     | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_6, filter_user_role_rel_5, filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2 |
+      | customer          | c1t         | 5     | 2      | 4        |6     | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5, filter_user_role_rel_6                          |
+      | customer          | c1t         | 5     | 2      | 4        |6     | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2, filter_user_role_rel_1                          |
+      | customer          | c1t         | /null | /null  | 1        |1     | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_role_rel_6                                                                                                     |
     #TODO error codes - if bad relationship_type is used, if wrong id is used,

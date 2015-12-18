@@ -125,16 +125,17 @@ Feature: properties_get
     And Content type is "application/json"
     And There are <returned> properties returned
     And Link header is '<link_header>'
+    And Total count is "<total>"
 
     Examples:
-      | description   | limit | cursor | returned | link_header                                                                                                 |
-      | default limit |       | /null  | 50       | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
-      | default limit | /null |        | 50       | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
-      | limit at 15   | 15    |        | 15       | </identity/properties?limit=15&cursor=15>; rel="next"                                                       |
-      | offset by 1   |       | 1      | 50       | </identity/properties?limit=50&cursor=51>; rel="next", </identity/properties?limit=50&cursor=0>; rel="prev" |
-      | limit by 20   | 20    | 0      | 20       | </identity/properties?limit=20&cursor=20>; rel="next"                                                       |
-      | limit by 10   | 10    | 0      | 10       | </identity/properties?limit=10&cursor=10>; rel="next"                                                       |
-      | l:5 o:5       | 5     | 10     | 5        | </identity/properties?limit=5&cursor=15>; rel="next", </identity/properties?limit=5&cursor=5>; rel="prev"   |
+      | description   | limit | cursor | returned | total | link_header                                                                                                 |
+      | default limit |       | /null  | 50       | 60    | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
+      | default limit | /null |        | 50       | 60    | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
+      | limit at 15   | 15    |        | 15       | 60    | </identity/properties?limit=15&cursor=15>; rel="next"                                                       |
+      | offset by 1   |       | 1      | 50       | 60    | </identity/properties?limit=50&cursor=51>; rel="next", </identity/properties?limit=50&cursor=0>; rel="prev" |
+      | limit by 20   | 20    | 0      | 20       | 60    | </identity/properties?limit=20&cursor=20>; rel="next"                                                       |
+      | limit by 10   | 10    | 0      | 10       | 60    | </identity/properties?limit=10&cursor=10>; rel="next"                                                       |
+      | l:5 o:5       | 5     | 10     | 5        | 60    | </identity/properties?limit=5&cursor=15>; rel="next", </identity/properties?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for lists of properties

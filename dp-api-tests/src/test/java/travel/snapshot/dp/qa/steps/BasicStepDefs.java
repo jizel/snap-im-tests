@@ -1,9 +1,8 @@
 package travel.snapshot.dp.qa.steps;
 
-import net.thucydides.core.annotations.Steps;
-
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 public class BasicStepDefs {
@@ -28,14 +27,14 @@ public class BasicStepDefs {
         basicSteps.isCalledWithoutTokenUsingMethod(service, method);
     }
 
-  //  @Then("^Custom code is \"(\\d+)\"$")
-  //  public void Custom_code_is(Integer customCode) throws Throwable {
-  //      basicSteps.customCodeIs(customCode);
-  //  }
-    
+    //  @Then("^Custom code is \"(\\d+)\"$")
+    //  public void Custom_code_is(Integer customCode) throws Throwable {
+    //      basicSteps.customCodeIs(customCode);
+    //  }
+
     @Then("^Custom code is \"([^\"]*)\"$")
     public void custom_code_is(Integer customCode) throws Throwable {
-    	basicSteps.customCodeIs(customCode);
+        basicSteps.customCodeIs(customCode);
     }
 
     @Then("^Content type is \"([^\"]*)\"$")
@@ -76,5 +75,10 @@ public class BasicStepDefs {
     @Then("^Link header is '(.*)'$")
     public void Link_header_is(String linkHeader) throws Throwable {
         basicSteps.headerIs("Link", linkHeader);
+    }
+
+    @Then("^Total count is \"(.*)\"$")
+    public void Total_count_is_total(String total) throws Throwable {
+        basicSteps.headerIs("X-Total-Count", total);
     }
 }

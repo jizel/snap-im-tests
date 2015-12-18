@@ -13,5 +13,6 @@
     "zip_code": "63500",
     "country": "CZ"
   },
-  "notes": "notes notes"
+  "notes": "notes notes",
+  "timezone" : "Europe/Prague"
 }

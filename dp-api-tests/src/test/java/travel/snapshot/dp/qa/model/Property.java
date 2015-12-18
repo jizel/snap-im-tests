@@ -12,6 +12,7 @@ public class Property {
 
     private String propertyId = null;
     private String salesforceId = null;
+    private Integer ttiId = null;
     private String propertyName = null;
     private String propertyCode = null;
     private String website = null;
@@ -49,6 +50,18 @@ public class Property {
         this.salesforceId = salesforceId;
     }
 
+    /**
+     * Identifier from TTI database
+     **/
+    @ApiModelProperty(value = "Identifier from TTI database")
+    @JsonProperty("tti_id")
+    public Integer getTtiId() {
+        return ttiId;
+    }
+
+    public void setTtiId(Integer ttiId) {
+        this.ttiId = ttiId;
+    }
 
     /**
      * Name of the property
@@ -169,6 +182,7 @@ public class Property {
 
         sb.append("  propertyId: ").append(propertyId).append("\n");
         sb.append("  salesforceId: ").append(salesforceId).append("\n");
+        sb.append("  ttiId: ").append(ttiId).append("\n");
         sb.append("  propertyName: ").append(propertyName).append("\n");
         sb.append("  propertyCode: ").append(propertyCode).append("\n");
         sb.append("  website: ").append(website).append("\n");
