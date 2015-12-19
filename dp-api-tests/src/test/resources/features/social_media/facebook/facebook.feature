@@ -6,7 +6,7 @@ Feature: facebook
   VALUES ( VALUES (999999, ${d.format("yyyyMMdd")},  ${i*3},  ${i},  ${i*10},  ${i+100}, ${i*5},  ${i*2}, ${i},  CURRENT_TIMESTAMP,   '${d.format("yyyy-MM-dd HH:mm:ss")}' );
 
   Scenario Outline: Get facebook analytics data from API for a given wrong granularity
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "<content_type>"
     And Response code is <response_code>
     And Custom code is "<custom_code>"
@@ -21,7 +21,7 @@ Feature: facebook
       | /analytics/facebook/reach           | D@YS        | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
 
   Scenario Outline: Validate that metrics have valid value in the db
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "<content_type>"
     And Response code is <response_code>
     And The metric count is <count>
@@ -33,112 +33,110 @@ Feature: facebook
       | /analytics/facebook/likes           | day         | 1402  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
       | /analytics/facebook/unlikes         | day         | 701   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
       | /analytics/facebook/reach           | day         | 3505  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/number_of_posts | week        | 804   | 2015-12-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/engagement      | week        | 704   | 2015-12-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/likes           | week        | 1408  | 2015-12-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/unlikes         | week        | 704   | 2015-12-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/reach           | week        | 3520  | 2015-12-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/number_of_posts | month       | 798   | 2015-11-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/engagement      | month       | 698   | 2015-11-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/likes           | month       | 1396  | 2015-11-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/unlikes         | month       | 698   | 2015-11-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/facebook/reach           | month       | 3490  | 2015-11-02 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/number_of_posts | week        | 811   | 2015-12-05 | 2015-12-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/engagement      | week        | 711   | 2015-12-06 | 2015-12-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/likes           | week        | 1422  | 2015-12-06 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/unlikes         | week        | 711   | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/reach           | week        | 3555  | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/number_of_posts | month       | 798   | 2015-10-30 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/engagement      | month       | 698   | 2015-10-31 | 2015-12-01 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/likes           | month       | 1396  | 2015-11-01 | 2015-12-01 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/unlikes         | month       | 698   | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/facebook/reach           | month       | 3490  | 2015-10-30 | 2015-12-09 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
     And Data is owned by "<data_owner>"
     And Content type is "<content_type>"
-    And Response contains <count> values
-    And Body contains entity with attribute "since" value "<calculated_statistics_real_since>"
-    And Body contains entity with attribute "until" value "<until>"
+    And Body contains entity with attribute "since" value "<real_since>"
+    And Body contains entity with attribute "until" value "<real_until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response contains <count> values
 
     Examples:
-      | url                                 | granularity | count | since      | until      | calculated_statistics_real_since | property                             | content_type     | response_code | data_owner |
-      | /analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | day         | 92    | 2015-06-07 | 2015-12-07 | 2015-09-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | week        | 1     | 2015-11-09 | 2015-11-15 | 2015-11-09                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | week        | 3     | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-05-25                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | month       | 23    | 2013-02-01 | 2015-11-30 | 2013-02-01                       | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | url                                 | granularity | count | since      | until      | real_since | real_until | property                             | content_type     | response_code | data_owner |
+      | /analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
 
   Scenario Outline: Getting non-existent analytics data
-    When Get social media "<url>" data with "<granularity<" granularity for "<property<" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <response_code>
-    And Custom code is "<custom_code>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is <response_code>
+    And Body is empty
 
     Examples:
       | url                             | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
       | /analytics/facebook/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
 
   Scenario Outline: Getting mismatched metrics analytics data
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <response_code>
-    And Custom code is "<custom_code>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is <response_code>
+    And Body is empty
 
     Examples:
       | url                        | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
       | /analytics/facebook/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
 
   Scenario Outline: Checking error codes for analytics data
-    When Get social_media "<url>" with missing property header
+    When Get facebook "<url>" with missing property header
     Then Response code is <response_code>
     And Content type is "<content_type>"
     And Custom code is "<custom_code>"
@@ -154,7 +152,7 @@ Feature: facebook
       | /analytics/facebook/followers       | 400           | 52          | application/json |
 
   Scenario Outline: Get analytics data from API with missing parameters
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
     And Content type is "<content_type>"
     And Response contains <count> values
@@ -168,29 +166,15 @@ Feature: facebook
       | /analytics/facebook/reach           |             |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
 
   Scenario Outline: Get analytics data from API from 1800s
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<start_date>" until "<end_date>"
     Then Content type is "<content_type>"
     And Response code is <response_code>
-    And Custom code is "<custom_code>"
-    And Body contains entity with attribute "since" value "since>"
+    And Body contains entity with attribute "since" value "<since>"
     And Body contains entity with attribute "until" value "<until>"
 
     Examples:
-      | url                                 | granularity | start_date | end_date   | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/facebook                 | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/number_of_posts | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/engagement      | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/likes           | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/unlikes         | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/reach           | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/followers       | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook                 | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/number_of_posts | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/engagement      | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/likes           | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/unlikes         | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/reach           | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
-      | /analytics/facebook/followers       | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 51          |
+      | url                                 | granularity | start_date | end_date   | property                             | since      | until      | content_type     | response_code |
+      | /analytics/facebook                 | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 200           |
 
   Scenario Outline: Checking default parameter values
   Empty column in examples section means default value will be used for this parameter.
@@ -199,7 +183,7 @@ Feature: facebook
   text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
   particular number of days/weeks/months from first part of expression
 
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "<content_type>"
     And Response code is <response_code>
     And Response granularity is "<expected_granularity>"
@@ -283,7 +267,7 @@ Feature: facebook
       | /analytics/facebook/followers       | day         | today - 3 days    | today - 2 days | day                  | today             | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
 
   Scenario Outline: Checking number of values in response for various granularities
-    When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "<content_type>"
     And Response code is <response_code>
     And Response contains <count> values

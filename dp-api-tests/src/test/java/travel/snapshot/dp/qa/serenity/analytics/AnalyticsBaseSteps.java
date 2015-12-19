@@ -94,9 +94,8 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
         List<Map<String, Object>> metrics = (List<Map<String, Object>>) responseMap.get("data");
         metrics.forEach(m -> {
-            Map<String, Object> metric = (Map<String, Object>) m.entrySet().iterator().next().getValue();
-            List values = (List) metric.get("values");
-            assertEquals("Bad number of values for metric " + metric.get("name"), count, values.size());
+            List values = (List) m.get("values");
+            assertEquals("Bad number of values for metric " + m.get("name"), count, values.size());
         });
     }
 
