@@ -3,7 +3,7 @@ Feature: twitter_tweets
 
   #not yet implemented
   Scenario Outline: Getting a list of items
-    When List of social media items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
+    When List of twitter items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <responce_code>
     And Content type is "<content_type>"
     And Data is owned by "<data_owner>"
@@ -25,7 +25,7 @@ Feature: twitter_tweets
 
   #not yet implemented, other metrics are not pageable
   Scenario Outline: Checking error codes for getting list of items
-    When List of social media items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
+    When List of twitter items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <response_code>
     And Custom code is "<custom_code>"
 

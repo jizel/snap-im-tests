@@ -3,14 +3,14 @@ Feature: facebook_posts
 
   #not yet implemented
   Scenario Outline: Getting a list of items
-    When List of social media items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
+    When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <response_code>
     And Content type is "<content_type>"
     And Data is owned by "<data_owner>"
     And There are <count> posts returned
 
-    Examples: 
-      | url                                    | limit | cursor | count | property                             | response_code | content_type     | data_owner |
+    Examples:
+      | url                       | limit | cursor | count | property                             | response_code | content_type     | data_owner |
       | /analytics/facebook/posts |       |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | facebook   |
       | /analytics/facebook/posts | /null |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | facebook   |
       | /analytics/facebook/posts |       | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | facebook   |
@@ -25,12 +25,12 @@ Feature: facebook_posts
 
   #just posts, but not yet implemented, other metrics are not pageable
   Scenario Outline: Checking error codes for getting list of items
-    When List of social media items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
+    When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <response_code>
     And Custom code is "<custom_code>"
 
-    Examples: 
-      | url                                    | limit | cursor | response_code | custom_code | property                             |
+    Examples:
+      | url                       | limit | cursor | response_code | custom_code | property                             |
       | /analytics/facebook/posts | /null | -1     | 400           | 52          | 99999999-9999-4999-a999-999999999999 |
       | /analytics/facebook/posts |       | -1     | 400           | 52          | 99999999-9999-4999-a999-999999999999 |
       | /analytics/facebook/posts | 10    | -1     | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
