@@ -88,14 +88,14 @@ Feature: instagram
       | /analytics/instagram/reach      | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07     | 2015-11-23     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram/likes      | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07     | 2015-11-23     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram/comments   | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07     | 2015-11-23     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram            | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/pictures   | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/engagement | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/followers  | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/tags       | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/reach      | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/likes      | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/comments   | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram            | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/pictures   | day         | 90    | 2015-01-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/engagement | day         | 90    | 2015-01-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/followers  | day         | 90    | 2015-01-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/tags       | day         | 90    | 2015-01-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/reach      | day         | 90    | 2015-01-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/likes      | day         | 90    | 2015-01-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/comments   | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram            | week        | 1     | 2015-11-07 | 2015-11-16 | 2015-11-09     | 2015-11-15     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram/pictures   | week        | 1     | 2015-11-07 | 2015-11-16 | 2015-11-09     | 2015-11-15     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram/engagement | week        | 1     | 2015-11-07 | 2015-11-16 | 2015-11-09     | 2015-11-15     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
@@ -144,30 +144,30 @@ Feature: instagram
       | /analytics/instagram/reach      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01     | 2015-02-28     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram/likes      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01     | 2015-02-28     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
       | /analytics/instagram/comments   | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01     | 2015-02-28     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram            | month       | 12    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 11             | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/pictures   | month       | 12    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 119            | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/engagement | month       | 12    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 119            | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/followers  | month       | 12    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 119            | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/tags       | month       | 12    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 119            | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/reach      | month       | 12    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 119            | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/likes      | month       | 12    | 2013-02-01 | 2015-11-10 | 2015-01-01     | 119            | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
-      | /analytics/instagram/comments   | month       | 12    | 2013-02-01 | 2015-11-10 | 2015-01-01     | 2016-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram            | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 11             | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/pictures   | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/engagement | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/followers  | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/tags       | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/reach      | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/likes      | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
+      | /analytics/instagram/comments   | month       | 11    | 2013-02-01 | 2015-12-10 | 2015-01-01     | 2015-11-30     | 99999999-9999-4999-a999-999999999999 | application/json | 200           | instagram  |
 
   Scenario Outline: Getting non-existent analytics data
     When Get instagram "<url>" data with "<granularity<" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
 
-   Examples: 
-      | url                              | granularity | property                             | since      | until      | content_type     | response_code | 
-      | /analytics/instagram/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 
-      
+    Examples: 
+      | url                              | granularity | property                             | since      | until      | content_type     | response_code |
+      | /analytics/instagram/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           |
+
   Scenario Outline: Getting mismatched metrics analytics data
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
 
     Examples: 
-      | url                         | granularity | property                             | since      | until      | content_type     | response_code | 
-      | /analytics/instagram/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 
+      | url                         | granularity | property                             | since      | until      | content_type     | response_code |
+      | /analytics/instagram/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           |
 
   Scenario Outline: Checking error codes for analytics data
     When Get instagram "<url>" with missing property header
@@ -194,14 +194,14 @@ Feature: instagram
     And Data is owned by "<data_owner>"
 
     Examples: 
-      | url                             | granularity | since      | until      | count | property                            | response_code | content_type     | data_owner |
+      | url                             | granularity | since      | until      | count | property                             | response_code | content_type     | data_owner |
       | /analytics/instagram/pictures   |             | 2015-12-03 | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
       | /analytics/instagram/engagement | day         |            | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/followers  | day         | 2015-12-03 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/followers  | day         | 2015-12-03 |            | 17    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
       | /analytics/instagram/tags       | day         |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
       | /analytics/instagram/reach      |             |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
       | /analytics/instagram/likes      |             | 2015-11-09 | 2015-11-02 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/comments   |             | 2015-11-02 | 2015-12-02 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/comments   |             | 2015-11-02 | 2015-12-02 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"

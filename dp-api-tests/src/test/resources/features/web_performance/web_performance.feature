@@ -25,12 +25,12 @@ Feature: web_performance
       | /analytics/visits_unique    | day         | 12839      | 2015-12-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/revenue          | day         | 119745.664 | 2015-12-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/conversion_rates | day         | 1          | 2015-12-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
-      | /analytics/visits           | week        | 2          | 2015-12-03 | 2015-12-09 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
-      | /analytics/visits_unique    | week        | 2          | 2015-12-03 | 2015-12-09 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
+      | /analytics/visits           | week        | 15507      | 2015-12-03 | 2015-12-09 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
+      | /analytics/visits_unique    | week        | 12698      | 2015-12-03 | 2015-12-09 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/revenue          | week        | 2          | 2015-12-03 | 2015-12-09 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/conversion_rates | week        | 2          | 2015-12-03 | 2015-12-09 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
-      | /analytics/visits           | month       | 3          | 2015-11-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
-      | /analytics/visits_unique    | month       | 3          | 2015-11-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
+      | /analytics/visits           | month       | 24063      | 2015-11-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
+      | /analytics/visits_unique    | month       | 20183      | 2015-11-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/revenue          | month       | 3          | 2015-11-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/conversion_rates | month       | 3          | 2015-11-03 | 2015-12-03 | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
 
@@ -45,51 +45,51 @@ Feature: web_performance
     And Body contains entity with attribute "granularity" value "<granularity>"
 
     Examples: 
-      | url                         | granularity | count | since      | until      | calculated_statistics_real_since | property                             | content_type     | response_code | data_owner |
-      | /analytics/visits           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | week        | 1     | 2015-11-01 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | week        | 26    | 2015-01-07 | 2015-12-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits           | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/visits_unique    | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/revenue          | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
-      | /analytics/conversion_rates | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics     |
+      | url                         | granularity | count | since      | until      | calculated_statistics_real_since | property                             | content_type     | response_code | data_owner       |
+      | /analytics/visits           | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | week        | 1     | 2015-11-01 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | week        | 1     | 2015-11-07 | 2015-11-13 | 2015-11-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | week        | 26    | 2015-01-07 | 2015-12-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | week        | 26    | 2015-01-07 | 2015-11-23 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | month       | 36    | 2013-02-01 | 2015-11-30 | 2015-12-07                       | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
 
   Scenario Outline: Getting non-existent analytics data
     When Get web_performance "<url>" data with "<granularity>" granularity for "<property<" since "<since>" until "<until>"

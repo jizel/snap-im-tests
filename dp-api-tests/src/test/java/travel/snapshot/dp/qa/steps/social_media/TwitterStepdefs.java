@@ -1,8 +1,11 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
+import cucumber.api.Transform;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.FacebookSteps;
 import travel.snapshot.dp.qa.serenity.analytics.TwitterSteps;
 
@@ -26,5 +29,13 @@ public class TwitterStepdefs {
     public void Get_social_media_with_missing_property_header(String url) throws Throwable {
         steps.getData("/social_media" + url, "day", null, null, null);
     }
+    
+    @When("^List of twitter items \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
+    public void list_of_twitter_items_for_property_id_is_got_with_limit_and_cursor(String url, String propertyId,
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
+    	steps.getItems("/social_media" + url, propertyId, limit, cursor);
+}
+
 
 }
