@@ -1,5 +1,4 @@
 Feature: rate_shopper
-  Tests are meant to be run after the midnight fetch (1:00)
 
   Scenario Outline: Get BAR values for a given property analytics data from API
     When Getting rate data for "<property>" since "<since>" until "<until>" fetched "<fetch_datetime>"
@@ -9,19 +8,19 @@ Feature: rate_shopper
 
     Examples: 
       | property | since      | until      | count | fetch_datetime      |
-      | 10010004 | 2015-12-14 | 2015-12-14 | 1     | 2015-12-14T10:15:30 |
-      | 10010004 | 2015-12-14 | 2015-12-20 | 7     | 2015-12-14T10:15:30 |
-      | 10010004 | 2015-12-14 | 2016-12-31 | 61    | 2015-12-14T10:15:30 |
+      | 10010004 | 2015-12-14 | 2015-12-14 | 1     | 2015-12-14T00:00:01 |
+      | 10010004 | 2015-12-14 | 2015-12-20 | 7     | 2015-12-14T00:00:01 |
+      | 10010004 | 2015-12-14 | 2016-12-31 | 60    | 2015-12-14T00:00:01 |
 
   Scenario Outline: Check minimal, average, and maximal market values
     When Getting BAR values for a given market for "<property>" since "<since>" until "<until>"
-    Then "minimal" value is not more than "average" value
-    And "average" value is not more than "maximal" value
+    Then "minimal" values are not more than "average" values
+    And "average" values are not more than "maximal" values
 
     Examples: 
       | property | since      | until      |
       | 10010003 | 2015-12-14 | 2015-12-14 |
-      | 10010003 | 2015-12-10 | 2015-12-20 |
+      | 10010003 | 2015-12-10 | 2015-12-10 |
       | 10010003 | 2015-12-14 | 2015-12-30 |
       | 10010003 | 2015-12-14 | 2015-12-20 |
       | 10010003 | 2015-12-10 | 2015-12-20 |
@@ -31,103 +30,57 @@ Feature: rate_shopper
       | 10010003 | 2013-02-08 | 2016-12-31 |
 
   Scenario Outline: Getting a list of items
-    When List of "<url>" for property id "10010003" is got with limit "<limit>" and cursor "<cursor>"
+    When List of properties for market of "10010003" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are at most <count> items returned
 
     Examples: 
-      | url                                       | limit | cursor | count |
-      | /rate_shopper/analytics/market/properties |       |        | 50    |
-      | /rate_shopper/analytics/market/properties | 51    |        | 50    |
-      | /rate_shopper/analytics/market/properties |       | 1      | 50    |
-      | /rate_shopper/analytics/market/properties | 20    | 0      | 20    |
-      | /rate_shopper/analytics/market/properties | 49    | 0      | 49    |
-      | /rate_shopper/analytics/market/properties | 5     | 5      | 5     |
-
-  Scenario: Getting non-existent analytics data
-    When Getting rate data for "invalid" since "2015-12-07" until "2015-12-07" fetched ""
-    Then Content type is "application/json"
-    And Response code is "404"
-    And Custom code is "151"
+      | limit | cursor | count |
+      |       |        | 50    |
+      | 51    |        | 50    |
+      |       | 1      | 50    |
+      | 20    | 0      | 20    |
+      | 49    | 0      | 49    |
+      | 5     | 5      | 5     |
 
   Scenario: Getting data for a non-existent property
     When Getting rate data for "non-existent" since "2015-09-01" until "2015-09-01" fetched ""
     Then Content type is "application/json"
     And Response code is "404"
-    And Custom code is "151"
+    And Custom code is "152"
 
   Scenario Outline: Checking error codes for analytics data
-    When Property is missing for "<url>"
+    When Sending an empty request to "<url>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
     Examples: 
-      | url                                       | error_code | custom_code |
-      | /rate_shopper/analytics/property          | 404        | 151         |
-      | /rate_shopper/analytics/market            | 400        | 52          |
-      | /rate_shopper/analytics/market/properties | 400        | 52          |
-
-  Scenario Outline: Checking error codes for invalid values
-    When Getting rate data for "<property>" since "<since>" until "<until>" fetched "<fetch_datetime>"
-    Then Content type is "application/json"
-    And Response code is "<response_code>"
-    And Custom code is "<custom code>"
-
-    Examples: 
-      | property | since   | until      | fetch_datetime      | response_code | custom_code |
-      | 10010003 | invalid | 2015-12-15 | 2015-12-15T10:00:00 | 400           | 63          |
-      | 10010003 | invalid | invalid    | 2015-12-15T10:00:00 | 400           | 63          |
-      | 10010003 | invalid | 2015-12-15 | invalid             | 400           | 63          |
+      | url                                        | error_code | custom_code |
+      | /rate_shopper/analytics/property/invalid   | 404        | 152         |
+      | /rate_shopper/analytics/market/            | 404        | 152         |
+      | /rate_shopper/analytics/market/properties/ | 404        | 152         |
 
   Scenario Outline: Checking default parameter values
     When Getting rate data for "<property>" since "<since>" until "<until>" fetched "<fetch_datetime>"
     Then Content type is "application/json"
     And Response code is "200"
-    And Response since is "<expected_since>"
-    And Response until is "<expected_until>"
-    And Body contains entity with attribute "fetch_datetime" value "<expected_fetch_datetime>"
+    And Response "since" for property "<property>" is "<expected_since>"
+    And Response "until" for property "<property>" is "<expected_until>"
 
-    #   argument ranges:
-    #	fetch_datetime  ( ; last fetch]
-    #            since  [fetch_datetime ; until]
-    #            until  [since ; fetch_datetime + 60 days]
-    #
-    #	defaults:
-    #	fetch_datetime - last fetch  (now - 12h ; now)
-    #            since - last fetch date
-    #            until - last fetch date + 60 days
-    #
-    # 	first fetch - 2015-12-11T16:11
     Examples: 
-      | property | since          | until          | fetch_datetime      | expected_since | expected_until  | expected_fetch_datetime |
-      #defaults:
-      #default since
-      | 10010003 |                | 2015-12-15     | 2015-12-14T10:00:01 | 2015-12-14     | 2015-12-15      | 2015-12-14T10:00:01     |
-      | 10010003 |                | 2015-12-12     | 2015-12-14T10:00:01 | 2015-12-14     | 2016-02-12      | 2015-12-14T10:00:01     |
-      #default until
-      | 10010003 | 2015-12-15     |                | 2015-12-14T10:00:01 | 2015-12-15     | 2016-02-12      | 2015-12-14T10:00:01     |
-      #default fetch datetime, copy-paste to get the last fetch
-      | 10010003 | 2015-12-15     | 2015-12-15     |                     | today          | today + 60 days | last fetch              |
-      | 10010003 | today + 2 days | today + 3 days |                     | today + 2 days | today + 3 days  | last fetch              |
-      #default since, until
-      | 10010003 |                |                | 2015-12-14T10:00:01 | 2015-12-07     | 2016-02-05      | 2015-12-14T10:00:01     |
-      #default since, fetch datetime
-      | 10010003 |                | 2015-12-15     |                     | today          | today + 60 days | last fetch              |
-      | 10010003 |                | today + 2 days |                     | today          | today + 2 days  | last fetch              |
-      #default until, fetch datetime
-      | 10010003 | 2015-12-15     |                |                     | today          | today + 60 days | last fetch              |
-      | 10010003 | today + 3 days |                |                     | today + 3 days | today + 60 days | last fetch              |
-      #default since, until, fetch datetime
-      | 10010003 |                |                |                     | today          | today + 60 days | last fetch              |
-      #ranges:
-      #fetch datetime
-      #requesting fetch_datetime 2003 should return data from the first fetch - 2015-12-11T16:11
-      | 10010003 | 2015-12-15     | 2015-12-15     | 2003-12-07T10:00:01 | 2015-12-11     | 2016-02-09      | 2015-12-11T16:11        |
-      | 10010003 | 2015-12-15     | 2015-12-15     | 2099-12-07T10:00:01 | today          | today + 60 days | last fetch              |
-      #since
-      | 10010003 | 2015-12-10     | 2015-12-15     | 2015-12-14T10:00:01 | 2015-12-14     | 2015-12-15      | 2015-12-14T10:00:01     |
-      | 10010003 | 2099-12-14     | 2015-12-22     | 2015-12-14T10:00:01 | 2015-12-14     | 2015-12-22      | 2015-12-14T10:00:01     |
-      #until
-      | 10010003 | 2015-12-16     | 2015-12-15     | 2015-12-14T10:00:01 | 2015-12-16     | 2016-02-12      | 2015-12-14T10:00:01     |
-      | 10010003 | 2015-12-16     | 2099-12-15     | 2015-12-14T10:00:01 | 2015-12-16     | 2016-02-12      | 2015-12-14T10:00:01     |
+      | property | since          | until           | fetch_datetime      | expected_since  | expected_until  |
+      | 10010003 |                | 2015-12-30      | 2015-12-14T00:00:01 | today           | 2015-12-30      |
+      | 10010003 | 2015-12-22     |                 | 2015-12-14T00:00:01 | 2015-12-22      | today + 59 days |
+      | 10010003 | 2013-12-15     | today + 3 days |                     | last_fetch_date | today + 3 days |
+      | 10010003 |                |                 | 2015-12-14T00:00:01 | today           | today + 59 days |
+      | 10010003 |                | 2015-12-15      |                     | today           | today + 59 days |
+      | 10010003 |                | today + 2 days  |                     | today           | today + 2 days  |
+      | 10010003 | 2013-12-15     | today + 3 days |                     | last_fetch_date | today + 3 days |
+      | 10010003 | today + 3 days |                 |                     | today + 3 days  | today + 59 days |
+      | 10010003 |                |                 |                     | today           | today + 59 days |
+      | 10010003 | 2013-12-15     | today + 3 days | 2099-12-07T00:00:01 | last_fetch_date | today + 3 days |
+      | 10010003 | 2013-07-07     | 2015-12-15      | 2015-12-14T00:00:01 | last_fetch_date | 2015-12-15      |
+      | 10010003 | 2099-12-14     | 2015-12-22      | 2015-12-14T00:00:01 | last_fetch_date | 2015-12-22      |
+      | 10010003 | 2015-12-16     | 2015-12-15      | 2015-12-14T00:00:01 | 2015-12-16      | 2016-02-13      |
+      | 10010003 | 2015-12-16     | 2099-12-15      | 2015-12-14T00:00:01 | 2015-12-16      | 2016-02-13      |
