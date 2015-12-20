@@ -35,40 +35,9 @@ public class CommonAnalyticsStepdefs {
         steps.responseContainsValuesForAllMetrics(count);
     }
 
-
-    @Then("^There are at most (\\d+) items returned$")
-    public void There_are_at_most_items_returned(int count) throws Throwable {
-        steps.maximumNumberOfItemsInResponse(count);
-    }
-
     @Then("^\"([^\"]*)\" value is not more than \"([^\"]*)\" value$")
     public void value_is_no_more_than(String value1, String value2) throws Throwable {
         steps.valueIsLessThanOrEqualTo(value1, value2);
-    }
-
-    @Then("^Response granularity is \"([^\"]*)\"$")
-    public void Response_granularity_is(String granularity) throws Throwable {
-        steps.bodyContainsEntityWith("granularity", granularity);
-    }
-
-    @Then("^Response since is \"([^\"]*)\"$")
-    public void Response_since_is(String since) throws Throwable {
-        steps.dateFieldIs("since", since);
-    }
-
-    @Then("^Response until is \"([^\"]*)\"$")
-    public void Response_until_is(String until) throws Throwable {
-        steps.dateFieldIs("until", until);
-    }
-
-    @Then("^Data is owned by \"([^\"]*)\"$")
-    public void Data_is_owned_by(String data_owner) throws Throwable {
-        steps.bodyContainsCollectionWith("data_owners", data_owner);
-    }
-
-    @Then("^There are (\\d+) posts returned$")
-    public void There_are_count_posts_returned(int count) throws Throwable {
-        steps.numberOfEntitiesInResponse(Map.class, count);
     }
 
     @Then("^The metric count is (\\d+)$")
