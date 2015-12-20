@@ -1,13 +1,24 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.specification.RequestSpecification;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -56,9 +67,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
         assertEquals(facebookSum + twitterSum + instagramSum, totalSum);
     }
-<<<<<<< Upstream, based on origin/master
-=======
-
+    
     @Step
     public void getData(String url, String granularity, String propertyId, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
@@ -152,7 +161,4 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         LocalDate actualDate = LocalDate.parse(response.getBody().path(fieldName));
         assertEquals(expectedDate, actualDate);
     }
-
-
->>>>>>> 2fb93fa Complete automated tests for the rate shopper API
 }

@@ -1,8 +1,12 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
 import cucumber.api.Transform;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+
+import java.util.Map;
+
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.SocialMediaSteps;
@@ -39,9 +43,7 @@ public class SocialMediaStepdefs {
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getItems("/social_media" + url, propertyId, limit, cursor);
     }
-<<<<<<< Upstream, based on origin/master
-=======
-
+    
     @Then("^There are at most (\\d+) items returned$")
     public void There_are_at_most_items_returned(int count) throws Throwable {
         steps.maximumNumberOfItemsInResponse(count);
@@ -76,6 +78,4 @@ public class SocialMediaStepdefs {
     public void There_are_count_posts_returned(int count) throws Throwable {
         steps.numberOfEntitiesInResponse(Map.class, count);
     }
-
->>>>>>> 2fb93fa Complete automated tests for the rate shopper API
 }

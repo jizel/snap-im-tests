@@ -30,9 +30,6 @@ public class RateShopperStepdefs {
     public void getting_market_rate_data_for_since_until(String property_id, String since, String until) {
        steps.getMarketRateData(property_id, since, until);
     }
-<<<<<<< Upstream, based on origin/master
-}
-=======
     
     @When("^List of properties for market of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
     public void List_of_items_is_got_with_limit_and_cursor(String propertyId,
@@ -46,4 +43,3 @@ public class RateShopperStepdefs {
        steps.dateFieldForProperty(fieldName, propertyId, value);
     }
 }
->>>>>>> 2fb93fa Complete automated tests for the rate shopper API
