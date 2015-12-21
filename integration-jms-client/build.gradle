@@ -9,7 +9,7 @@ def versions = [
         fatPlugin: "0.3",
         airline  : "0.7",
         activemq : "5.12.1",
-        message  : "1.0",
+        message  : "1.4",
 
         log4j    : "1.2.17",
         slf4j    : "1.7.13"
@@ -36,6 +36,11 @@ repositories {
     maven {
         name 'snapshot'
         url 'https://nexus.snapshot.travel/content/groups/public'
+        credentials {
+            username nexusUser
+            password nexusPassword
+        }
+
     }
 }
 
