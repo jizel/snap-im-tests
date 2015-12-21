@@ -252,8 +252,7 @@ Feature: configuration
       | 5     | 2      | 3        | key=='other_key*'                    |           | user_name | other_key_9, other_key_8, other_key_7                             |
       | /null | /null  | 1        | key==known_key_3                     | /null     | /null     | known_key_3                                                       |
       | /null | /null  | 2        | key==list_key_* and value==same      | key       | /null     | list_key_5, list_key_6                                            |
-      | /null | /null  | 1        | value==special                       | /null     | /null     | other_default_9                                                   |
-      #| /null | /null  | 1        | type==integer                        | /null     | /null     | spec
+      | /null | /null  | 1        | value==special                       | /null     | /null     | other_default_10                                                  |
 
   Scenario Outline: Filtering list of configurations
     Given The following configuration types exist
