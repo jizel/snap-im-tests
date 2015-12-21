@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.configuration.general;
 
+import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
@@ -186,5 +187,15 @@ public class GeneralConfigurationStepdefs {
                                                                                                                              @Transform(NullEmptyStringConverter.class) String sortDesc,
                                                                                                                              String configurationType) throws Throwable {
         configurationSteps.listOfConfigurationsIsGot(limit, cursor, filter, sort, sortDesc, configurationType);
+    }
+
+    @Then("^There are configurations with following keys returned in order: (.*)$")
+    public void thereAreConfigurationsWithFollowingKeysReturnedInOrderExpected_keys(List<String> keys) throws Throwable {
+        configurationSteps.keysAreInResponseInOrder(keys);
+    }
+
+    @Then("^There are following configurations returned in order: (.*)$")
+    public void thereAreFollowingConfigurationsReturnedInOrderExpected_identifiers(List<String> configs) throws Throwable {
+        configurationSteps.typesAreInResponseInOrder(configs);
     }
 }

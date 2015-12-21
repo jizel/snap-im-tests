@@ -41,9 +41,9 @@ Feature: configuration
 
     Examples:
       | key              | value           | type     | response_code | custom_code |
-      |                  | 11              | integer  | 400           | 61          |
+#      |                  | 11              | integer  | 400           | 61          |
       | given_test_key_1 | text value2     | string   | 400           | 62          |
-      | test_key_1       |                 | string   | 400           | 61          |
+#      | test_key_1       |                 | string   | 400           | 61          |
       | test_date_key_1  | 2015-xxx-11     | date     | 400           | 59          |
       | test_date_key_1  | 2015-01-01Taaaa | datetime | 400           | 59          |
 
@@ -220,3 +220,60 @@ Feature: configuration
       | 10    | 0      | /null           | nonexistent | /null       | 400           | 63          |
       | 10    | 0      | key==           | /null       | /null       | 400           | 63          |
       | 10    | 0      | nonexistent==a* | /null       | /null       | 400           | 63          |
+
+  Scenario Outline: Filtering list of configurations types
+    Given The following configurations exist for configuration type identifier "conf_id_2"
+      | key                    | value          | type    |
+      | known_key_1            | text value 1   | string  |
+      | known_key_2            | text value 2   | string  |
+      | known_key_3            | text value 3   | string  |
+      | list_key_4             | text value 4   | string  |
+      | list_key_5             | same           | string  |
+      | list_key_6             | same           | string  |
+      | other_key_7            | text value 7   | string  |
+      | other_key_8            | text value 8   | string  |
+      | other_key_9            | text value 9   | string  |
+      | other_key_10           | special        | string  |
+      | other_key_11           | text value 11  | string  |
+      | other_key_12           | text value 12  | string  |
+      #| spec                   | 25             | integer |
+
+    When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" for configuration type "conf_id_2"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <returned> configurations returned
+    And There are configurations with following keys returned in order: <expected_keys>
+
+    Examples:
+      | limit | cursor | returned | filter                               | sort      | sort_desc | expected_keys                                                     |
+      | 5     | 0      | 5        | key=='other_key*'                    | key       |           | other_key_7, other_key_8, other_key_9, other_key_10, other_key_11 |
+      | 5     | 0      | 5        | key=='other_key*'                    |           | key       | other_key_11, other_key_10, other_key_9, other_key_8, other_key_7 |
+      | 5     | 2      | 3        | key=='other_key*'                    | user_name |           | other_key_9, other_key_10, other_key_11                           |
+      | 5     | 2      | 3        | key=='other_key*'                    |           | user_name | other_key_9, other_key_8, other_key_7                             |
+      | /null | /null  | 1        | key==known_key_3                     | /null     | /null     | known_key_3                                                       |
+      | /null | /null  | 2        | key==list_key_* and value==same      | key       | /null     | list_key_5, list_key_6                                            |
+      | /null | /null  | 1        | value==special                       | /null     | /null     | other_default_10                                                  |
+
+  Scenario Outline: Filtering list of configurations
+    Given The following configuration types exist
+      | identifier       | description                                |
+      | filter_conf_id_1 | Description of configuration identifier 1  |
+      | filter_conf_id_2 | Description of configuration identifier 2  |
+      | id_1_filter      | Description of configuration identifier 3  |
+      | id_2_filter      | spec                                       |
+
+    When List of configuration types is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <returned> configuration types returned
+    And There are following configurations returned in order: <expected_identifiers>
+
+    Examples:
+      | limit | cursor | returned | filter                                    | sort        | sort_desc  | expected_identifiers                |
+      | 1     | 0      | 1        | identifier=='filter_conf_id_*'            | identifier  |            | filter_conf_id_1                    |
+      | 5     | 0      | 2        | identifier=='filter_conf_id_*'            |             | identifier | filter_conf_id_2, filter_conf_id_1  |
+      | 5     | 1      | 3        | identifier=='filter_conf_id_*'            | identifier  |            | filter_conf_id_2                    |
+      | 5     | 1      | 3        | identifier=='filter_conf_id_*'            |             | identifier | filter_conf_id_1                    |
+      | /null | /null  | 1        | identifier==id_1_filter                   | /null       | /null      | id_1_filter                         |
+      | /null | /null  | 1        | identifier=='id_*' and description==spec  | identifier  | /null      | id_2_filter                         |
+      | /null | /null  | 1        | description==spec                         | /null       | /null      | id_2_filter                         |
