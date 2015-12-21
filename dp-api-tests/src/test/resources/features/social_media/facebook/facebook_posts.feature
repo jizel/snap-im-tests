@@ -5,22 +5,21 @@ Feature: facebook_posts
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <response_code>
     And Content type is "<content_type>"
-    #And Data is owned by "<data_owner>"
     And There are <count> posts returned
 
     Examples:
-      | url                       | limit | cursor | count | property                             | response_code | content_type     | #data_owner |
-      | /analytics/facebook/posts |       |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | /null |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts |       | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | /null | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | 51    |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | 51    | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts |       | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | /null | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | 20    | 0      | 20    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | 60    | 0      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
-      | /analytics/facebook/posts | 5     | 5      | 5     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | #facebook   |
+      | url                       | limit | cursor | count | property                             | response_code | content_type     |
+      | /analytics/facebook/posts |       |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/posts | /null |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts |       | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | /null | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 51    |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 51    | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts |       | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | /null | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/posts | 20    | 0      | 20    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 60    | 0      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 5     | 5      | 5     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
 
   Scenario Outline: Checking error codes for getting list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"

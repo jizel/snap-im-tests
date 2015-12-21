@@ -127,17 +127,16 @@ Feature: facebook
     And Body is empty
 
     Examples: 
-      | url                             | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/facebook/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
-
+      | url                             | granularity | property                             | since      | until      | content_type     | response_code | 
+      | /analytics/facebook/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           |
   Scenario Outline: Getting mismatched metrics analytics data
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
     And Body is empty
 
     Examples: 
-      | url                        | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/facebook/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
+      | url                        | granularity | property                             | since      | until      | content_type     | response_code | 
+      | /analytics/facebook/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 
 
   Scenario Outline: Checking error codes for analytics data
     When Get facebook "<url>" with missing property header
@@ -165,7 +164,7 @@ Feature: facebook
       | url                                 | granularity | since      | until      | count | property                             | response_code | content_type     |
       | /analytics/facebook/number_of_posts |             | 2015-12-03 | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/engagement      | day         |            | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      #| /analytics/facebook/likes           | day         | 2015-11-03 |            | 47    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/likes           | day         | 2015-06-03 |            | 90    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/unlikes         | day         |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/reach           |             |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
 

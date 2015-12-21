@@ -251,7 +251,7 @@ Feature: instagram
       | /analytics/instagram/pictures   |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/instagram/pictures   | day         |                | today             | day                  | today - 1 month   | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/instagram/pictures   | day         | today          |                   | day                  | today             | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/instagram/pictures   | week        |                | today             | week                 | today             | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/instagram/pictures   | week        |                | today             | week                 | today - 13 weeks  | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/instagram/pictures   | week        | today          |                   | week                 | today             | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/instagram/pictures   | month       |                | today             | month                | today - 6 months  | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/instagram/pictures   | month       | today          |                   | month                | today             | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
@@ -346,4 +346,4 @@ Feature: instagram
       | /analytics/instagram/tags       | day         | today - 8 days  | today | 9     | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
       | /analytics/instagram/reach      | day         | today - 29 days | today | 30    | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
       | /analytics/instagram/likes      | day         | today - 30 days | today | 31    | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
-      | /analytics/instagram/comments   | week        | today - 13 days | today | 1     | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
+      | /analytics/instagram/comments   | week        | today - 13 days | today | 2     | 99999999-9999-4999-a999-999999999999 | application/json | 200           |

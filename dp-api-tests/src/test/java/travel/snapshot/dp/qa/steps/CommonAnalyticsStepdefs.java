@@ -41,8 +41,8 @@ public class CommonAnalyticsStepdefs {
     }
 
     @Then("^The metric count is (\\d*[,.]?\\d*)")
-    public void Metric_count_is(int value) throws Throwable {
-        steps.bodyContainsCollectionWith("values", value);
+    public void Metric_count_is(double value) throws Throwable {
+        steps.bodyArrayContainsDouble("values", value);
     }
 
     @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")

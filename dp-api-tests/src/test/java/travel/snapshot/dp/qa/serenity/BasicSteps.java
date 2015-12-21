@@ -34,6 +34,7 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -121,6 +122,11 @@ public class BasicSteps {
         response.then().body(attributeName, hasItem(item));
     }
     
+    public void bodyArrayContainsDouble(String path, double value) {
+    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+    	List<Double> values = response.body().jsonPath().getList(path, double.class);
+    	assertTrue(value == values.get(0));
+    }
     @Step
     public void bodyContainsR(String attributeName, BigDecimal item){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
