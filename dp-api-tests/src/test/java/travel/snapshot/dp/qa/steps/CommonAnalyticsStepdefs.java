@@ -41,7 +41,7 @@ public class CommonAnalyticsStepdefs {
     }
 
     @Then("^The metric count is (\\d*[,.]?\\d*)")
-    public void Metric_count_is(double value) throws Throwable {
+    public void Metric_count_is(int value) throws Throwable {
         steps.bodyArrayContainsDouble("values", value);
     }
 

@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,10 +123,12 @@ public class BasicSteps {
         response.then().body(attributeName, hasItem(item));
     }
     
-    public void bodyArrayContainsDouble(String path, double value) {
+    public void bodyArrayContainsDouble(String path, int value) {
     	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+//    	DecimalFormat df = new DecimalFormat("#");
+//    	df.setMaximumFractionDigits(0);
     	List<Double> values = response.body().jsonPath().getList(path, double.class);
-    	assertTrue(value == values.get(0));
+    	assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
     }
     @Step
     public void bodyContainsR(String attributeName, BigDecimal item){
@@ -355,7 +358,7 @@ public class BasicSteps {
         List<T> objects = mapper.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
-
+    
     public void headerIs(String headerName, String value) {
         Response response = getSessionResponse();
         response.then().header(headerName, is(value));

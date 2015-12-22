@@ -34,7 +34,7 @@ public class WebPerformanceStepdefs {
     public void list_of_web_performance_for_property_id_is_got_with_limit_and_cursor(String url, String propertyId,
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
-    	steps.getItems("/social_media" + url, propertyId, limit, cursor);
+    	steps.getItems("/web_performance" + url, propertyId, limit, cursor);
     	}
     }
 
