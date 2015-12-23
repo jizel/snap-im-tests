@@ -23,7 +23,9 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -116,6 +119,19 @@ public class BasicSteps {
 
     @Step
     public void bodyContainsCollectionWith(String attributeName, Object item){
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        response.then().body(attributeName, hasItem(item));
+    }
+    
+    public void bodyArrayContainsDouble(String path, int value) {
+    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+//    	DecimalFormat df = new DecimalFormat("#");
+//    	df.setMaximumFractionDigits(0);
+    	List<Double> values = response.body().jsonPath().getList(path, double.class);
+    	assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
+    }
+    @Step
+    public void bodyContainsR(String attributeName, BigDecimal item){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(attributeName, hasItem(item));
     }
@@ -342,7 +358,7 @@ public class BasicSteps {
         List<T> objects = mapper.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
-
+    
     public void headerIs(String headerName, String value) {
         Response response = getSessionResponse();
         response.then().header(headerName, is(value));

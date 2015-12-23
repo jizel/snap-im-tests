@@ -40,9 +40,9 @@ public class CommonAnalyticsStepdefs {
         steps.valueIsLessThanOrEqualTo(value1, value2);
     }
 
-    @Then("^The metric count is (\\d+)$")
-    public void Metric_count_is(int values) throws Throwable {
-        steps.fieldContainsIntegerValue("values", values);
+    @Then("^The metric count is (\\d*[,.]?\\d*)")
+    public void Metric_count_is(int value) throws Throwable {
+        steps.bodyArrayContainsDouble("values", value);
     }
 
     @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")

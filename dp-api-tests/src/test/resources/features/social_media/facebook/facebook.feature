@@ -11,14 +11,17 @@ Feature: facebook
     And Response code is <response_code>
     And Custom code is "<custom_code>"
 
-    Examples:
-      | url                                 | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/facebook/                | ddd         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
-      | /analytics/facebook/number_of_posts | www         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
-      | /analytics/facebook/engagement      | yyy         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
-      | /analytics/facebook/likes           | MONTHs      | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
-      | /analytics/facebook/unlikes         | we3EK       | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
-      | /analytics/facebook/reach           | D@YS        | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 400           | 63          |
+    Examples: 
+      | url                                 | granularity | property                              | since       | until       | content_type     | response_code | custom_code |
+      | /analytics/facebook/                | ddd         | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/number_of_posts | www         | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/engagement      | yyy         | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/likes           | MONTHs      | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/unlikes         | we3EK       | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/reach           | D@YS        | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/reach           | week        | ?99999999-9999-4999-a999-999999999999 | 2015-12-03  | 2015-12-03  | application/json | 400           | 63          |
+      | /analytics/facebook/reach           | week        | 99999999-9999-4999-a999-999999999999  | 2015-12-03  | -2015-12-03 | application/json | 400           | 63          |
+      | /analytics/facebook/reach           | week        | 99999999-9999-4999-a999-999999999999  | -2015-12-03 | -2015-12-03 | application/json | 400           | 63          |
 
   Scenario Outline: Validate that metrics have valid value in the db
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -26,7 +29,7 @@ Feature: facebook
     And Response code is <response_code>
     And The metric count is <count>
 
-    Examples:
+    Examples: 
       | url                                 | granularity | count | since      | until      | property                             | content_type     | response_code |
       | /analytics/facebook/number_of_posts | day         | 801   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
       | /analytics/facebook/engagement      | day         | 701   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
@@ -49,12 +52,13 @@ Feature: facebook
     Then Response code is <response_code>
     And Data is owned by "<data_owner>"
     And Content type is "<content_type>"
+    And Response contains <count> values
     And Body contains entity with attribute "since" value "<real_since>"
     And Body contains entity with attribute "until" value "<real_until>"
     And Body contains entity with attribute "granularity" value "<granularity>"
     And Response contains <count> values
 
-    Examples:
+    Examples: 
       | url                                 | granularity | count | since      | until      | real_since | real_until | property                             | content_type     | response_code | data_owner |
       | /analytics/facebook/number_of_posts | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/engagement      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
@@ -68,12 +72,12 @@ Feature: facebook
       | /analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | day         | 91    | 2015-06-07 | 2015-12-07 | 2015-09-08 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/number_of_posts | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/engagement      | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/likes           | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
@@ -110,30 +114,29 @@ Feature: facebook
       | /analytics/facebook/unlikes         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/reach           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/followers       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | month       | 12    | 2014-02-01 | 2015-02-28 | 2014-02-01 | 2015-01-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
 
   Scenario Outline: Getting non-existent analytics data
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
     And Body is empty
 
-    Examples:
-      | url                             | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/facebook/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
-
+    Examples: 
+      | url                             | granularity | property                             | since      | until      | content_type     | response_code | 
+      | /analytics/facebook/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           |
   Scenario Outline: Getting mismatched metrics analytics data
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
     And Body is empty
 
-    Examples:
-      | url                        | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/facebook/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
+    Examples: 
+      | url                        | granularity | property                             | since      | until      | content_type     | response_code | 
+      | /analytics/facebook/tweets | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 
 
   Scenario Outline: Checking error codes for analytics data
     When Get facebook "<url>" with missing property header
@@ -141,7 +144,7 @@ Feature: facebook
     And Content type is "<content_type>"
     And Custom code is "<custom_code>"
 
-    Examples:
+    Examples: 
       | url                                 | response_code | custom_code | content_type     |
       | /analytics/facebook                 | 400           | 52          | application/json |
       | /analytics/facebook/number_of_posts | 400           | 52          | application/json |
@@ -157,11 +160,11 @@ Feature: facebook
     And Content type is "<content_type>"
     And Response contains <count> values
 
-    Examples:
+    Examples: 
       | url                                 | granularity | since      | until      | count | property                             | response_code | content_type     |
       | /analytics/facebook/number_of_posts |             | 2015-12-03 | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/engagement      | day         |            | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/likes           | day         | 2015-11-03 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/likes           | day         | 2015-06-03 |            | 90    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/unlikes         | day         |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/reach           |             |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
 
@@ -172,16 +175,18 @@ Feature: facebook
     And Body contains entity with attribute "since" value "<since>"
     And Body contains entity with attribute "until" value "<until>"
 
-    Examples:
-      | url                                 | granularity | start_date | end_date   | property                             | since      | until      | content_type     | response_code |
-      | /analytics/facebook                 | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 200           |
+    Examples: 
+      | url                 | granularity | start_date | end_date   | property                             | since      | until      | content_type     | response_code | count |
+      | /analytics/facebook/reach | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 2015-12-03 | application/json | 200           | 1     |
+      | /analytics/facebook/likes | week        | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 2015-12-03 | application/json | 200           | 1     |
+      | /analytics/facebook/reach | day         | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 2015-12-03 | application/json | 200           | 1     |
 
   Scenario Outline: Checking default parameter values
-  Empty column in examples section means default value will be used for this parameter.
-  if text is empty, returns null
-  if text is date in ISO format (2015-01-01), it returns this date
-  text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
-  particular number of days/weeks/months from first part of expression
+    Empty column in examples section means default value will be used for this parameter.
+    if text is empty, returns null
+    if text is date in ISO format (2015-01-01), it returns this date
+    text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
+    particular number of days/weeks/months from first part of expression
 
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "<content_type>"
@@ -191,7 +196,7 @@ Feature: facebook
     And Response until is "<expected_until>"
     And Response contains correct number of values for granularity "<granularity>" between "<expected_since>" and "<expected_until>"
 
-    Examples:
+    Examples: 
       | url                                 | granularity | since             | until          | expected_granularity | expected_since    | expected_until | property                             | response_code | content_type     |
       | /analytics/facebook/number_of_posts |             |                   |                | day                  | today - 1 month   | today          | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/number_of_posts |             | 2015-12-03        | 2015-12-03     | day                  | 2015-12-03        | 2015-12-03     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
@@ -272,7 +277,7 @@ Feature: facebook
     And Response code is <response_code>
     And Response contains <count> values
 
-    Examples:
+    Examples: 
       | url                                 | granularity | since           | until | count | property                             | content_type     | response_code |
       | /analytics/facebook/number_of_posts | day         | today - 1 day   | today | 2     | 99999999-9999-4999-a999-999999999999 | application/json | 200           |
       | /analytics/facebook/engagement      | day         | today - 6 days  | today | 7     | 99999999-9999-4999-a999-999999999999 | application/json | 200           |

@@ -1,8 +1,11 @@
 package travel.snapshot.dp.qa.steps.web_performance;
 
+import cucumber.api.Transform;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.WebPerformanceSteps;
 
 /**
@@ -24,5 +27,14 @@ public class WebPerformanceStepdefs {
     @When("^Get web_performance \"([^\"]*)\" with missing property header$")
     public void Get_web_performance_with_missing_property_header(String url) throws Throwable {
         steps.getData("/web_performance" + url, "day", null, null, null);
+        
     }
-}
+    
+    @When("^List of web performance \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
+    public void list_of_web_performance_for_property_id_is_got_with_limit_and_cursor(String url, String propertyId,
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
+    	steps.getItems("/web_performance" + url, propertyId, limit, cursor);
+    	}
+    }
+

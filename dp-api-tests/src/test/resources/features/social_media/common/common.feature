@@ -184,18 +184,16 @@ Feature: common
   Scenario Outline: Getting non-existent analytics data
     When Get social media "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
-    And Content type is "<content_type>"
-    And Custom code is "<custom_code>"
 
     Examples:
-      | url                               | granularity | since      | until      | property                             | content_type     | response_code | custom_code |
-      | /analytics/not_present            | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
-      | /analytics/reach/not_present      | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
-      | /analytics/followers/not_present  | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
-      | /analytics/engagement/not_present | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
-      | /analytics/facebook/tweets        | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
-      | /analytics/twitter/likes          | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
-      | /analytics/instagram/impressions  | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 151         |
+      | url                               | granularity | since      | until      | property                             | content_type     | response_code | 
+      | /analytics/not_present            | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           | 
+      | /analytics/reach/not_present      | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           |
+      | /analytics/followers/not_present  | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           |
+      | /analytics/engagement/not_present | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           |
+      | /analytics/facebook/tweets        | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           |
+      | /analytics/twitter/likes          | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           |
+      | /analytics/instagram/impressions  | day         | 2015-09-01 | 2015-09-01 | 99999999-9999-4999-a999-999999999999 | application/json | 404           |
 
   Scenario Outline: Checking error codes for analytics data
     When Get social_media "<url>" with missing property header
