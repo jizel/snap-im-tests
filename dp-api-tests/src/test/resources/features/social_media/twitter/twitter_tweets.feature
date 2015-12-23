@@ -1,7 +1,6 @@
 Feature: twitter_tweets
   Testing of api for twitter tweets with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
 
-  #not yet implemented
   Scenario Outline: Getting a list of items
     When List of twitter items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <responce_code>

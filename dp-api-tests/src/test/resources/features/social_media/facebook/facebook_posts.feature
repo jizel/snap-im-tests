@@ -13,12 +13,12 @@ Feature: facebook_posts
       | /analytics/facebook/posts | /null |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
       | /analytics/facebook/posts |       | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
       | /analytics/facebook/posts | /null | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
-      | /analytics/facebook/posts | 51    |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
-      | /analytics/facebook/posts | 51    | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 51    |        | 51    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 51    | /null  | 51    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
       | /analytics/facebook/posts |       | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
       | /analytics/facebook/posts | /null | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
       | /analytics/facebook/posts | 20    | 0      | 20    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
-      | /analytics/facebook/posts | 60    | 0      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
+      | /analytics/facebook/posts | 60    | 0      | 60    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
       | /analytics/facebook/posts | 5     | 5      | 5     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 
 
   Scenario Outline: Checking error codes for getting list of items

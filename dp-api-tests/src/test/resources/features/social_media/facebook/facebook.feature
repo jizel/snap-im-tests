@@ -162,12 +162,12 @@ Feature: facebook
     And Response contains <count> values
 
     Examples: 
-      | url                                 | granularity | since           | until      | count | property                             | response_code | content_type                         |
-      | /analytics/facebook/number_of_posts |             | 2015-12-03      | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json                     |
-      | /analytics/facebook/engagement      | day         |                 | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json                     |
-      | /analytics/facebook/likes           | day         | today - 1 month |            | 31    |                                      | 90            | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | day         |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json                     |
-      | /analytics/facebook/reach           |             |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json                     |
+      | url                                 | granularity | since           | until      | count | property                             | response_code | content_type     |
+      | /analytics/facebook/number_of_posts |             | 2015-12-03      | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/engagement      | day         |                 | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/likes           | day         | today - 1 month |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/unlikes         | day         |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+      | /analytics/facebook/reach           |             |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<start_date>" until "<end_date>"
@@ -178,9 +178,9 @@ Feature: facebook
 
     Examples: 
       | url                       | granularity | start_date | end_date   | property                             | since      | until      | content_type     | response_code | count |
-      | /analytics/facebook/reach | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 2015-12-03 | application/json | 200           | 1     |
-      | /analytics/facebook/likes | week        | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 2015-12-03 | application/json | 200           | 1     |
-      | /analytics/facebook/reach | day         | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 2015-12-03 | application/json | 200           | 1     |
+      | /analytics/facebook/reach | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 1888-12-31 | application/json | 200           | 1     |
+      | /analytics/facebook/likes | week        | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2014-12-29 | 1888-12-30 | application/json | 200           | 1     |
+      | /analytics/facebook/reach | day         | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2014-12-23 | 1889-01-01 | application/json | 200           | 1     |
 
   Scenario Outline: Checking default parameter values
     Empty column in examples section means default value will be used for this parameter.
