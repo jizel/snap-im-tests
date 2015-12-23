@@ -16,7 +16,7 @@ public class BasicStepDefs {
     public void response_code_is(int responseCode) throws Throwable {
         basicSteps.responseCodeIs(responseCode);
     }
-
+    
     @Then("^Response code is \"([^\"]*)\"$")
     public void response_code_is_string(String responseCode) throws Throwable {
         basicSteps.responseCodeIs(Integer.valueOf(responseCode));

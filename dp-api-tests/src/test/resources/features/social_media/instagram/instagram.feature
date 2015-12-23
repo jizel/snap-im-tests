@@ -194,14 +194,14 @@ Feature: instagram
     And Data is owned by "<data_owner>"
 
     Examples: 
-      | url                             | granularity | since      | until      | count | property                             | response_code | content_type     | data_owner |
-      | /analytics/instagram/pictures   |             | 2015-12-03 | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/engagement | day         |            | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/followers  | day         | 2015-12-03 |            | 17    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/tags       | day         |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/reach      |             |            |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/likes      |             | 2015-11-09 | 2015-11-02 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
-      | /analytics/instagram/comments   |             | 2015-11-02 | 2015-12-02 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | url                             | granularity | since           | until      | count | property                             | response_code | content_type     | data_owner |
+      | /analytics/instagram/pictures   |             | 2015-12-03      | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/engagement | day         |                 | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/followers  | day         | today - 1 month |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/tags       | day         |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/reach      |             |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/likes      |             | 2015-11-09      | 2015-11-02 | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
+      | /analytics/instagram/comments   |             | 2015-11-02      | 2015-12-02 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json | instagram  |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
