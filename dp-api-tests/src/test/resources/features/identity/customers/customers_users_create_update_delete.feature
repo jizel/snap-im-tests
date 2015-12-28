@@ -12,7 +12,7 @@ Feature: customers_users_create_update_delete
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default3 | Default3  | User3    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given All users are removed for customers with codes: c1t, c2t
 

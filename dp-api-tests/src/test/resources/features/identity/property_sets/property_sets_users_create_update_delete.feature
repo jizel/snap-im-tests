@@ -20,7 +20,7 @@ Feature: property_sets_users_create_update_delete
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default3 | Default3  | User3    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
 
