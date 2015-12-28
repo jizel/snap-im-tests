@@ -17,7 +17,7 @@ class RandomUtils {
 
   private val timeZones = TimeZone.getAvailableIDs.filter {
     z => z.startsWith("Europe") || z.startsWith("America") || z.startsWith("Africa") || z.startsWith("Asia")
-  }.collect({ case zone: String => zone })
+  }
 
   private val timeZonesRandomRange = timeZones.length - 1
 
