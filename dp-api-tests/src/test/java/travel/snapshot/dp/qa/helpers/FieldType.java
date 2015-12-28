@@ -13,6 +13,7 @@ import java.util.Optional;
 public enum FieldType {
 
     STRING,
+    INTEGER,
     BOOL {
         @Override
         public JsonNode getJsonNode(String value) {
