@@ -7,7 +7,7 @@ class IdentityUserSimulation extends AbstractIdentitySimulation {
   runScenario(scenario("create and list customers and their users").exec(
     CreateCustomer(),
     pause(1),
-    CreateAndAssignUsersToCustomer(),
+    CreateAndAssignUsersToCustomer(randomUtils.randomInt(10)),
     pause(1),
     GetCustomersUsers()))
 }

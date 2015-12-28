@@ -78,5 +78,18 @@ class RandomUtils {
     s"""&since=${since.format(DateTimeFormatter.ISO_LOCAL_DATE)}&until=${until.format(DateTimeFormatter.ISO_LOCAL_DATE)}"""
   }
 
+  /**
+    * produce tuple of dates in a form 'yyyy-MM-dd'
+    * dates should be in interval <2014-01-01,2015-12-31>
+    * @param numberOfDays how long the random interval is
+    * @return tuple of two strings, the first is "from" date, the second is "to" date
+    */
+  def randomValidFromAndTo(numberOfDays: Int) = {
+    val since = LocalDate.of(2014, 1, 1).plusDays(randomInt(600))
+    val until = since.plusDays(numberOfDays)
+
+    (since.format(DateTimeFormatter.ISO_LOCAL_DATE), until.format(DateTimeFormatter.ISO_LOCAL_DATE))
+  }
+
   def randomPropertyId = s"""990${"%03d".format(randomInt(999))}99-9999-4999-a999-999999999999"""
 }
