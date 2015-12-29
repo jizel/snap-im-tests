@@ -10,7 +10,7 @@ import travel.snapshot.dp.qa.utils.SessionUtils._
 /**
   * Encapsulates all steps for some concrete identity simulation
   */
-abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityModule-1.0", "identity") {
+abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
   // upper bound for generating random numbers in data
   private val randomBound = 10000000
@@ -21,7 +21,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     */
   object CreateCustomer {
     def apply() = exec(http("add customer")
-      .post(session => s"customers?access_token=$accessToken").body(StringBody(_ =>
+      .post(session => s"identity/customers?access_token=$accessToken").body(StringBody(_ =>
       s"""
           {
             "company_name": "Company ${randomUtils.randomInt(randomBound)}",
@@ -64,7 +64,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     }
 
     def createProperty: ChainBuilder = exec(http("create property")
-      .post(session => s"properties?access_token=$accessToken")
+      .post(session => s"identity/properties?access_token=$accessToken")
       .body(StringBody(session => {
 
         val propertyId = randomUtils.randomUUIDAsString
@@ -87,7 +87,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     )
 
     def assignPropertyToCustomer: ChainBuilder = exec(http("assign property to customer")
-      .post(session => s"customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessToken")
+      .post(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessToken")
       .body(StringBody(session => {
         // random 50 years ahead
         val (validFrom, validTo) = randomUtils.randomValidFromAndTo(randomUtils.randomInt(20000))
@@ -123,7 +123,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     }
 
     def createUser: ChainBuilder = exec(http("create user")
-      .post(session => s"users?access_token=$accessToken")
+      .post(session => s"identity/users?access_token=$accessToken")
       .body(StringBody(session => {
 
         val userId = randomUtils.randomUUIDAsString
@@ -153,7 +153,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     )
 
     def assignUserToCustomer: ChainBuilder = exec(http("assign user to customer")
-      .post(session => s"customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken")
+      .post(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken")
       .body(StringBody(session =>
         s"""
          {
@@ -178,7 +178,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     }
 
     def createAndAssignPropertySet: ChainBuilder = exec(http("create property set")
-      .post(session => s"property_sets?access_token=$accessToken")
+      .post(session => s"identity/property_sets?access_token=$accessToken")
       .body(StringBody(session => {
 
         val userId = randomUtils.randomUUIDAsString
@@ -213,7 +213,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     }
 
     def createAndAssignPropertySet: ChainBuilder = exec(http("create property set")
-      .post(session => s"property_sets?access_token=$accessToken")
+      .post(session => s"identity/property_sets?access_token=$accessToken")
       .body(StringBody(session => {
 
         val userId = randomUtils.randomUUIDAsString
@@ -234,7 +234,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     )
 
     def assignUser: ChainBuilder = exec(http("assign user to property set")
-      .post(session => s"property_sets/${SessionUtils.getValue(session, "propertySetId")}/users")
+      .post(session => s"identity/property_sets/${SessionUtils.getValue(session, "propertySetId")}/users")
       .body(StringBody(session => {
         s"""
           {
@@ -251,7 +251,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
     */
   object GetCustomers {
     def getCustomers = exec(http("get 50 customers")
-      .get(s"customers?access_token=$accessToken")
+      .get(s"identity/customers?access_token=$accessToken")
       .check(status.is(200)))
 
     def apply = getCustomers
@@ -265,7 +265,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       exec(http("get 1 customer")
         .get(session => {
           val id = if (customerId == null) SessionUtils.getValue(session, "customerId") else customerId
-          s"customers/$id?access_token=$accessToken"
+          s"identity/customers/$id?access_token=$accessToken"
         })
         .check(status.is(200)))
     }
@@ -290,7 +290,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       val additionalQueries = new QueryUtils().buildAdditionalQueries(builtFilter, sort, cursor, limit)
 
       exec(http(request)
-        .get(session => s"customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessToken$additionalQueries")
+        .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessToken$additionalQueries")
         .check(status.is(200)))
     }
   }
@@ -306,7 +306,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       val additionalQueries = new QueryUtils().buildAdditionalQueries("", sort, cursor, limit)
 
       exec(http(request)
-        .get(session => s"customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken$additionalQueries")
+        .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken$additionalQueries")
         .check(status.is(200)))
     }
   }
@@ -322,7 +322,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       val additionalQueries = new QueryUtils().buildAdditionalQueries("", sort, cursor, limit)
 
       exec(http(request)
-        .get(session => s"customers/${SessionUtils.getValue(session, "customerId")}/property_sets?access_token=$accessToken$additionalQueries")
+        .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/property_sets?access_token=$accessToken$additionalQueries")
         .check(status.is(200)))
     }
   }

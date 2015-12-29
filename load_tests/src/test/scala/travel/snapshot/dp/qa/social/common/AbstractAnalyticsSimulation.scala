@@ -2,13 +2,13 @@ package travel.snapshot.dp.qa.social.common
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import travel.snapshot.dp.qa.social.AbstractSocialMediaSimulation
+import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils.Granularity._
 
 /**
   * Encapsulates all steps for common analytics simulation
   */
-abstract class AbstractAnalyticsSimulation extends AbstractSocialMediaSimulation {
+abstract class AbstractAnalyticsSimulation extends AbstractSimulation {
 
   object GetAllAnalytics {
 

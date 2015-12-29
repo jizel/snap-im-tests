@@ -2,7 +2,7 @@ package travel.snapshot.dp.qa.social.instagram
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import travel.snapshot.dp.qa.social.AbstractSocialMediaSimulation
+import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils.Granularity
 import travel.snapshot.dp.qa.utils.Granularity.Granularity
 import travel.snapshot.dp.qa.utils.Metrics.InstagramMetric.InstagramMetric
@@ -10,7 +10,7 @@ import travel.snapshot.dp.qa.utils.Metrics.InstagramMetric.InstagramMetric
 /**
   * Encapsulates all steps for Instagram simulation
   */
-class AbstractInstagramSimulation extends AbstractSocialMediaSimulation {
+class AbstractInstagramSimulation extends AbstractSimulation {
 
   object GetOverallInstagram {
 

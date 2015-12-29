@@ -41,7 +41,7 @@ object Metrics {
     val PICTURES = Value("pictures")
     val ENGAGEMENT = Value("engagement")
     val FOLLOWERS = Value("followers")
-    val TAG_POSTS = Value("tag_posts")
+    val TAG_POSTS = Value("tags")
     val REACH = Value("reach")
     val LIKES = Value("likes")
     val COMMENTS = Value("comments")

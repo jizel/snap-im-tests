@@ -4,16 +4,13 @@ import io.gatling.core.Predef._
 import io.gatling.core.scenario.Simulation
 import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
-import travel.snapshot.dp.qa.utils.RandomUtils
+import travel.snapshot.dp.qa.utils.{BaseUrlResolver, RandomUtils}
 
 /**
   * Basic class with reusable code and configuration for gatling simulations.
   * The request path is formatted as follows: {host}/{moduleName}/api/{basePath}
-  *
-  * @param moduleName name of packaged module as deployed to the application server - e.g. "ConfiguratiomModule-1.0"
-  * @param basePath common path to be used by all requests, default is empty path
   */
-abstract class AbstractSimulation(val moduleName: String = "": String, val basePath: String = "") extends Simulation {
+abstract class AbstractSimulation extends Simulation {
 
   val protocol = System.getProperty("protocol", "http")
   val host = System.getProperty("host", "localhost")
@@ -27,7 +24,7 @@ abstract class AbstractSimulation(val moduleName: String = "": String, val baseP
   val accessToken = System.getProperty("access_token")
 
   val httpConf = http
-    .baseURL(s"$protocol://$host:$port/$moduleName/api/$basePath/")
+    .baseURL(BaseUrlResolver())
     .contentTypeHeader("application/json")
     .acceptHeader("application/json")
     .userAgentHeader("Gatling / API Load Test")

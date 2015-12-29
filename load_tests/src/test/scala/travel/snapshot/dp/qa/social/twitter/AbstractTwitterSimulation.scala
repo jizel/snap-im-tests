@@ -2,14 +2,14 @@ package travel.snapshot.dp.qa.social.twitter
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import travel.snapshot.dp.qa.social.AbstractSocialMediaSimulation
+import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils.Granularity.Granularity
 import travel.snapshot.dp.qa.utils.Metrics.TwitterMetric.TwitterMetric
 
 /**
   * Encapsulates all steps for Twitter simulation
   */
-abstract class AbstractTwitterSimulation extends AbstractSocialMediaSimulation {
+abstract class AbstractTwitterSimulation extends AbstractSimulation {
 
   object GetOverallTwitter {
 

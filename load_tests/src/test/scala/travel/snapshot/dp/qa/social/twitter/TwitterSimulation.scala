@@ -7,6 +7,5 @@ class TwitterSimulation extends AbstractTwitterSimulation {
   runScenario(
     scenario("Twitter analytics").exec(
       GetOverallTwitter(),
-      GetTwitterMetric(),
-      GetTwitterTweets()))
+      GetTwitterMetric()))
 }

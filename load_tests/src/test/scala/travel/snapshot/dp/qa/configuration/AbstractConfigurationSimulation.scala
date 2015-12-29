@@ -9,7 +9,7 @@ import travel.snapshot.dp.qa.utils.SessionUtils
 /**
   * Encapsulates all steps for some concrete configuration simulation
   */
-abstract class AbstractConfigurationSimulation extends AbstractSimulation("ConfigurationModule-1.0") {
+abstract class AbstractConfigurationSimulation extends AbstractSimulation {
 
   object CreateConfigurationType {
     def apply() = exec(http("add configuration_type")
