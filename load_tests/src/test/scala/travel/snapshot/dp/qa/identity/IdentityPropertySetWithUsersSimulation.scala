@@ -8,7 +8,8 @@ class IdentityPropertySetWithUsersSimulation extends AbstractIdentitySimulation 
     CreateCustomer(),
     pause(1),
     CreateAndAssignUsersToCustomer(),
-    CreateAndAssignPropertySetsToCustomerAndAssignUser(randomUtils.randomInt(10)),
+    pause(1),
+    CreateAndAssignPropertySetsToCustomerAndAssignUser(10),
     pause(1),
     GetCustomersPropertySets()))
 }

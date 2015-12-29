@@ -21,7 +21,7 @@ class RandomUtils {
 
   private val timeZonesRandomRange = timeZones.length - 1
 
-  private val cultures = Array("cs_CZ", "en_GB", "en_US")
+  private val cultures = Array("cs-CZ", "en-GB", "en-US")
 
   private val culturesRandomRange = cultures.length - 1
 
@@ -39,6 +39,12 @@ class RandomUtils {
     * @return random boolean
     */
   def randomBoolean: Boolean = ThreadLocalRandom.current().nextBoolean()
+
+  /**
+    *
+    * @return random boolean as its string representation - "1" or "0"
+    */
+  def randomBooleanAsBinary: String = if (randomBoolean) "1" else "0"
 
   /**
     *
@@ -67,25 +73,25 @@ class RandomUtils {
   def randomCulture: String = cultures(randomInt(culturesRandomRange))
 
   /**
-    * produce string &since=yyyy-MM-dd&&until=yyyy-MM-dd
-    * dates should be in interval <2014-01-01,2015-12-31>
+    * produce string since=yyyy-MM-dd&&until=yyyy-MM-dd
+    * dates should be in interval <2015-01-01,2016-12-31>
     * @param numberOfDays how long the interval is
     * @return
     */
   def randomSinceUntil(numberOfDays: Int) = {
-    val since = LocalDate.of(2014, 1, 1).plusDays(randomInt(600))
+    val since = LocalDate.of(2015, 1, 1).plusDays(randomInt(600))
     val until = since.plusDays(numberOfDays)
-    s"""&since=${since.format(DateTimeFormatter.ISO_LOCAL_DATE)}&until=${until.format(DateTimeFormatter.ISO_LOCAL_DATE)}"""
+    s"""since=${since.format(DateTimeFormatter.ISO_LOCAL_DATE)}&until=${until.format(DateTimeFormatter.ISO_LOCAL_DATE)}"""
   }
 
   /**
     * produce tuple of dates in a form 'yyyy-MM-dd'
-    * dates should be in interval <2014-01-01,2015-12-31>
+    * dates should be in interval <2015-01-01,2016-12-31>
     * @param numberOfDays how long the random interval is
     * @return tuple of two strings, the first is "from" date, the second is "to" date
     */
   def randomValidFromAndTo(numberOfDays: Int) = {
-    val since = LocalDate.of(2014, 1, 1).plusDays(randomInt(600))
+    val since = LocalDate.of(2015, 1, 1).plusDays(randomInt(600))
     val until = since.plusDays(numberOfDays)
 
     (since.format(DateTimeFormatter.ISO_LOCAL_DATE), until.format(DateTimeFormatter.ISO_LOCAL_DATE))

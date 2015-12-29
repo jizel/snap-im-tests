@@ -129,11 +129,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
         val userId = randomUtils.randomUUIDAsString
         val randomString = userId.reverse
 
-        // need to use "session.get" because short EL syntax doesn't work inside the body
         s"""
          {
            "user_id": "$userId",
-           "partner_id": "partner_id"
+           "partner_id": "partner_id",
            "salesforce_id": "salesforce_id",
            "user_type": "snapshot",
            "user_name": "${randomUtils.randomUUIDAsString}",
@@ -145,9 +144,9 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
            "culture": "${randomUtils.randomCulture}",
            "comment": "$randomString",
            "picture": "$randomString",
-           "is_active": "${randomUtils.randomBoolean}"
+           "is_active": ${randomUtils.randomBooleanAsBinary}
          }
-       """
+       """.stripMargin
       }))
       .check(status.is(201))
       .check(jsonPath("$..user_id").saveAs("userId"))
@@ -178,7 +177,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       exec(createAndAssignPropertySet)
     }
 
-    def createAndAssignPropertySet: ChainBuilder = exec(http("create propertySet")
+    def createAndAssignPropertySet: ChainBuilder = exec(http("create property set")
       .post(session => s"property_sets?access_token=$accessToken")
       .body(StringBody(session => {
 
@@ -213,7 +212,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       exec(createAndAssignPropertySet, assignUser)
     }
 
-    def createAndAssignPropertySet: ChainBuilder = exec(http("create propertySet")
+    def createAndAssignPropertySet: ChainBuilder = exec(http("create property set")
       .post(session => s"property_sets?access_token=$accessToken")
       .body(StringBody(session => {
 
@@ -239,7 +238,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation("IdentityMo
       .body(StringBody(session => {
         s"""
           {
-            "user_id": ${SessionUtils.getValue(session, "userId")}
+            "user_id": "${SessionUtils.getValue(session, "userId")}"
           }
          """
       }))

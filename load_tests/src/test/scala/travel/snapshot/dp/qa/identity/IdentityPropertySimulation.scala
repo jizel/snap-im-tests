@@ -7,7 +7,7 @@ class IdentityPropertySimulation extends AbstractIdentitySimulation {
   runScenario(scenario("create and list customers and their properties").exec(
     CreateCustomer(),
     pause(1),
-    CreateAndAssignPropertiesToCustomer(randomUtils.randomInt(20)),
+    CreateAndAssignPropertiesToCustomer(20),
     pause(1),
     GetCustomersProperties()))
 
