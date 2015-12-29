@@ -71,13 +71,13 @@ abstract class AbstractConfigurationSimulation extends AbstractSimulation("Confi
       // there should be 10 configurations for each new configuration type
       .check(jsonPath("$..value").ofType[Int].is(10)))
 
-    val getConfigurationKeyRetryCountInterval = exec(http("get configuration key for configuration type 'retryCount' ")
-      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/retryCountInterval?access_token=$accessToken")
+    val getConfigurationKeyRetryInterval = exec(http("get configuration key for configuration type 'retryInterval' ")
+      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/retryInterval?access_token=$accessToken")
       .check(status.is(200))
       // there should be 100 configurations for each new configuration type
       .check(jsonPath("$..value").ofType[Int].is(100)))
 
-    def apply() = exec(getConfigurations, getConfigurationKeyRetryCount, getConfigurationKeyRetryCountInterval)
+    def apply() = exec(getConfigurations, getConfigurationKeyRetryCount, getConfigurationKeyRetryInterval)
   }
 
   object UpdateConfigurationDescription {
