@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.rateshopper
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import travel.snapshot.dp.qa.AbstractSimulation
+import travel.snapshot.dp.qa.utils.QueryUtils
 
 class AbstractRateShopperSimulation extends AbstractSimulation {
 
@@ -30,7 +31,13 @@ class AbstractRateShopperSimulation extends AbstractSimulation {
 
     def request(range: Integer, limit: Integer = 50, cursor: Integer = 0) =
       exec(http("Returns list of properties of the given market with random limit up to 50 and random cursor up to 10")
-        .get(session => s"rate_shopper/analytics/market/properties?access_token=$accessToken&property_id=${rateShopperPropertyCodes.getRandomPropertyCode()}&limit=${randomUtils.randomInt(50)}&cursor=${randomUtils.randomInt(10)}")
+        .get(session => {
+
+          val additionalQueries = new QueryUtils().buildAdditionalQueries(null, null, randomUtils.randomInt(10), randomUtils.randomInt(50))
+
+          s"rate_shopper/analytics/market/properties?access_token=$accessToken&property_id=${rateShopperPropertyCodes.getRandomPropertyCode()}$additionalQueries"
+        })
         .check(status.is(200)))
   }
+
 }

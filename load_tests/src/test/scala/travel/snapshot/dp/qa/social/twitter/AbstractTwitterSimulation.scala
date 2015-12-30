@@ -5,6 +5,7 @@ import io.gatling.http.Predef._
 import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils.Granularity.Granularity
 import travel.snapshot.dp.qa.utils.Metrics.TwitterMetric.TwitterMetric
+import travel.snapshot.dp.qa.utils.QueryUtils
 
 /**
   * Encapsulates all steps for Twitter simulation
@@ -39,7 +40,12 @@ abstract class AbstractTwitterSimulation extends AbstractSimulation {
       randomUtils.randomInt(200), randomUtils.randomInt(50))
 
     def request(request: String, limit: Int, cursor: Int) = exec(http(request)
-      .get(session => s"social_media/analytics/twitter/tweets?access_token=$accessToken&limit=$limit&cursor=$cursor")
+      .get(session => {
+
+        val additionalQueries = new QueryUtils().buildAdditionalQueries(null, null, cursor, limit)
+
+        s"social_media/analytics/twitter/tweets?access_token=$accessToken$additionalQueries"
+      })
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))
   }

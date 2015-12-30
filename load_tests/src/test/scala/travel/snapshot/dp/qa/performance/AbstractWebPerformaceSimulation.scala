@@ -3,7 +3,7 @@ package travel.snapshot.dp.qa.performance
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import travel.snapshot.dp.qa.AbstractSimulation
-import travel.snapshot.dp.qa.utils.Granularity
+import travel.snapshot.dp.qa.utils.{QueryUtils, Granularity}
 import travel.snapshot.dp.qa.utils.Granularity._
 import travel.snapshot.dp.qa.utils.WebPerformanceReferralsSortKey.WebPerformanceReferralsSortKey
 
@@ -21,13 +21,9 @@ class AbstractWebPerformaceSimulation extends AbstractSimulation {
     def request(suffix: String, sortKey: WebPerformanceReferralsSortKey, request: String, granularity: Granularity, range: Int) = exec(http(request)
       .get(session => {
 
-        var sort = ""
+        val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sortKey)
 
-        if (sortKey != null) {
-          sort = s"&sort=$sortKey"
-        }
-
-        s"web_performance/$suffix?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}$sort"
+        s"web_performance/$suffix?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}$additionalQueries"
       })
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))

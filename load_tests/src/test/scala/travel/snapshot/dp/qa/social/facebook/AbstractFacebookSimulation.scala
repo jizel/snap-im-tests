@@ -5,6 +5,7 @@ import io.gatling.http.Predef._
 import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils.Granularity.Granularity
 import travel.snapshot.dp.qa.utils.Metrics.FacebookMetric.FacebookMetric
+import travel.snapshot.dp.qa.utils.QueryUtils
 
 /**
   * Encapsulates all steps for Facebook analytics simulation
@@ -27,7 +28,12 @@ abstract class AbstractFacebookSimulation extends AbstractSimulation {
     def apply() = request("get random number of Facebook posts of random property starting from random cursor", randomUtils.randomInt(200), randomUtils.randomInt(50))
 
     def request(request: String, limit: Int, cursor: Int) = exec(http(request)
-      .get(session => s"social_media/analytics/facebook/posts?access_token=$accessToken&limit=$limit&cursor=$cursor")
+      .get(session => {
+
+        val additionalQueries = new QueryUtils().buildAdditionalQueries(null, null, cursor, limit)
+
+        s"social_media/analytics/facebook/posts?access_token=$accessToken$additionalQueries"
+      })
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))
   }

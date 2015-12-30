@@ -303,7 +303,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
     def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
 
-      val additionalQueries = new QueryUtils().buildAdditionalQueries("", sort, cursor, limit)
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
 
       exec(http(request)
         .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken$additionalQueries")
@@ -319,7 +319,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
     def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
 
-      val additionalQueries = new QueryUtils().buildAdditionalQueries("", sort, cursor, limit)
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
 
       exec(http(request)
         .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/property_sets?access_token=$accessToken$additionalQueries")

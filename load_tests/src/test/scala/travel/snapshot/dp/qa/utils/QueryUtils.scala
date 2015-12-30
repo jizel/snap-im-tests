@@ -2,7 +2,7 @@ package travel.snapshot.dp.qa.utils
 
 class QueryUtils {
 
-  def buildAdditionalQueries(filter: String, sort: AnyRef, cursor: Integer, limit: Integer): String = {
+  def buildAdditionalQueries(filter: String, sort: AnyRef, cursor: Integer = -1, limit: Integer = -1): String = {
     var sb: StringBuilder = new StringBuilder
 
     if (filter != null && !filter.isEmpty) {
