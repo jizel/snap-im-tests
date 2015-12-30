@@ -100,4 +100,6 @@ class RandomUtils {
   def randomPropertyId = s"""990${"%03d".format(randomInt(999))}99-9999-4999-a999-999999999999"""
 
   def randomTripAdvisorPropertyId = s"""990${"%03d".format(randomInt(11))}99-9999-4999-a999-999999999999"""
+
+  def getRandomLocationId = randomInt(100)
 }

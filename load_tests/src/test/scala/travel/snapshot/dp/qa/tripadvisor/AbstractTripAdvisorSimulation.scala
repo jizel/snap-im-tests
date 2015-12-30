@@ -3,7 +3,7 @@ package travel.snapshot.dp.qa.tripadvisor
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import travel.snapshot.dp.qa.AbstractSimulation
-import travel.snapshot.dp.qa.utils.Granularity
+import travel.snapshot.dp.qa.utils.{QueryUtils, Granularity}
 import travel.snapshot.dp.qa.utils.tripadvisor.ReviewAnalyticsContext
 import travel.snapshot.dp.qa.utils.tripadvisor.ReviewAnalyticsTravellersContext
 import travel.snapshot.dp.qa.utils.tripadvisor.TripAdvisorTraveller
@@ -54,11 +54,38 @@ abstract class AbstractTripAdvisorSimulation extends AbstractSimulation {
                 travellerFilter: TripAdvisorTraveller.Value = null) =
       exec(http(request).get(session => {
 
-          val traveller = if (travellerFilter != null) s"&traveller=$travellerFilter" else ""
+        val traveller = if (travellerFilter != null) s"&traveller=$travellerFilter" else ""
 
-          s"$context?access_token=$accessToken&${randomUtils.randomSinceUntil(range)}&granularity=$granularity$traveller"
-        })
+        s"$context?access_token=$accessToken&${randomUtils.randomSinceUntil(range)}&granularity=$granularity$traveller"
+      })
         .header("X-Property", session => randomUtils.randomTripAdvisorPropertyId)
         .check(status.is(200)))
   }
+
+  object GetLocations {
+    def apply(requestMessage: String,
+              limit: Integer = 50,
+              cursor: Integer = 0,
+              filter: String = null,
+              sort: String = "location_id") =
+      request(requestMessage, limit, cursor, filter, sort)
+
+    def request(request: String, limit: Integer, cursor: Integer, filter: String, sort: String) =
+      exec(http(request).get(session => {
+
+        val additionalQueries = new QueryUtils().buildAdditionalQueries(filter, sort, cursor, limit)
+
+        s"review/locations?access_token=$accessToken$additionalQueries"
+      })
+        .header("X-Property", session => randomUtils.randomTripAdvisorPropertyId)
+        .check(status.is(200)))
+  }
+
+  object GetLocationProperties {
+    def apply(request: String) =
+      exec(http(request).get(session => {
+        s"review/locations/${randomUtils.getRandomLocationId}/properties?access_token=$accessToken"
+      }).check(status.is(200)))
+  }
+
 }

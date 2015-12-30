@@ -14,6 +14,10 @@ class TripAdvisorSimulation extends AbstractTripAdvisorSimulation {
       GetReviewAnalytics("Returns rating score for the given property.", ReviewAnalyticsContext.RATING_SCORE),
       GetReviewAnalytics("Returns popularity index rank.", ReviewAnalyticsContext.POPULARITY_INDEX_RANK),
 
+      // limit 50, cursor 0, sort = location_id, filter not set
+      GetLocations("Gets locations"),
+      GetLocationProperties("Gets properties of random location"),
+
       GetReviewAnalyticsForTravellers("Returns statistics for random type of traveller", ReviewAnalyticsTravellersContext.TRAVELLERS),
       GetReviewAnalyticsForTravellers("Returns overall bubble rating for random traveller", ReviewAnalyticsTravellersContext.OVERALL_BUBBLE_RATING),
       GetReviewAnalyticsForTravellers("Returns number of reviews for random traveller", ReviewAnalyticsTravellersContext.NUMBER_OF_REVIEWS),
