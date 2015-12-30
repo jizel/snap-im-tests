@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.performance
 
 import io.gatling.core.Predef._
+import travel.snapshot.dp.qa.utils.WebPerformanceReferralsSortKey
 
 class WebPerformanceSimulation extends AbstractWebPerformaceSimulation {
 
@@ -14,6 +15,6 @@ class WebPerformanceSimulation extends AbstractWebPerformaceSimulation {
       GetAnalytics("analytics/revenue"),
       GetAnalytics("analytics/conversion_rates"),
       GetAnalytics("analytics/conversion_rates/countries"),
-      GetAnalytics("analytics/referrals")
+      GetAnalytics("analytics/referrals", WebPerformanceReferralsSortKey.getRandom)
     ))
 }
