@@ -5,7 +5,7 @@ import io.gatling.core.Predef._
 class AllAnalyticsSimulation extends AbstractAnalyticsSimulation {
 
   runScenario(
-    scenario("Aggregated analytics").exec(
+    scenario("Aggregated social analytics").exec(
       GetAllAnalytics()
     ))
 }

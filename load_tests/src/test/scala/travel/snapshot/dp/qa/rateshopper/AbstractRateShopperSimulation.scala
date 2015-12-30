@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 import travel.snapshot.dp.qa.AbstractSimulation
 import travel.snapshot.dp.qa.utils.QueryUtils
 
-class AbstractRateShopperSimulation extends AbstractSimulation {
+abstract class AbstractRateShopperSimulation extends AbstractSimulation {
 
   object GetLARForProperty {
 

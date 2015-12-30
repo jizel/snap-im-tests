@@ -7,7 +7,7 @@ import travel.snapshot.dp.qa.utils.{QueryUtils, Granularity}
 import travel.snapshot.dp.qa.utils.Granularity._
 import travel.snapshot.dp.qa.utils.WebPerformanceReferralsSortKey.WebPerformanceReferralsSortKey
 
-class AbstractWebPerformaceSimulation extends AbstractSimulation {
+abstract class AbstractWebPerformaceSimulation extends AbstractSimulation {
 
   object GetAnalytics {
 

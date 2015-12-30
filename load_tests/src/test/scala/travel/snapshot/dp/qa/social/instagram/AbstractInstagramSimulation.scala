@@ -10,7 +10,7 @@ import travel.snapshot.dp.qa.utils.Metrics.InstagramMetric.InstagramMetric
 /**
   * Encapsulates all steps for Instagram simulation
   */
-class AbstractInstagramSimulation extends AbstractSimulation {
+abstract class AbstractInstagramSimulation extends AbstractSimulation {
 
   object GetOverallInstagram {
 
