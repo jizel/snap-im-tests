@@ -16,7 +16,7 @@ object Metrics {
     val MENTION_REACH = Value("mention_reach")
 
     val seq = values.toSeq
-    val bound = seq.size - 1
+    val bound = seq.size
 
     def getRandom: Value = seq(ThreadLocalRandom.current().nextInt(bound))
   }
@@ -31,7 +31,7 @@ object Metrics {
     val FOLLOWERS = Value("followers")
 
     val seq = values.toSeq
-    val bound = seq.size - 1
+    val bound = seq.size
 
     def getRandom: Value = seq(ThreadLocalRandom.current().nextInt(bound))
   }
@@ -47,7 +47,7 @@ object Metrics {
     val COMMENTS = Value("comments")
 
     val seq = values.toSeq
-    val bound = seq.size - 1
+    val bound = seq.size
 
     def getRandom: Value = seq(ThreadLocalRandom.current().nextInt(bound))
   }

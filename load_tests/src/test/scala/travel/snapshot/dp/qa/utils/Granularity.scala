@@ -9,7 +9,7 @@ object Granularity extends Enumeration {
   val MONTH = Value("month")
 
   val seq = values.toSeq
-  val bound = seq.size - 1
+  val bound = seq.size
 
   def getRandom: Value = seq(ThreadLocalRandom.current().nextInt(bound))
 }

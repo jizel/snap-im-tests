@@ -21,6 +21,7 @@ object LoadTestContext extends Enumeration {
   val SOCIAL_TWITTER = LoadTestContextInternalValue("social.twitter", "TwitterAnalyticsApi-1.0-SNAPSHOT/api/", "TwitterAnalyticsApi-1.0/api/")
   val SOCIAL_INSTAGRAM = LoadTestContextInternalValue("social.instagram", "InstagramAnalyticsApi-1.0-SNAPSHOT/api/", "InstagramAnalyticsApi-1.0/api/")
   val WEB_PERFORMANCE = LoadTestContextInternalValue("performance", "WebPerformance-1.0/api/", "WebPerformance-1.0/api/")
+  val RATE_SHOPPER = LoadTestContextInternalValue("rateshopper", "RateShopper-SA/api/", "RateShopper-SA/api/")
 
   protected final def LoadTestContextInternalValue(name: String,
                                                    localContext: String,
@@ -77,6 +78,8 @@ trait SystemPropertiesGatherer {
       LoadTestContext.SOCIAL_TWITTER
     } else if (gatlingScenario.contains("performance")) {
       LoadTestContext.WEB_PERFORMANCE
+    } else if (gatlingScenario.contains("rateshopper")) {
+      LoadTestContext.RATE_SHOPPER
     } else {
       throw new IllegalStateException("Unable to recognize what type of scenario you are going to execute!")
     }

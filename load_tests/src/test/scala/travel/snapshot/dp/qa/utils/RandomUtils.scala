@@ -19,17 +19,17 @@ class RandomUtils {
     z => z.startsWith("Europe") || z.startsWith("America") || z.startsWith("Africa") || z.startsWith("Asia")
   }
 
-  private val timeZonesRandomRange = timeZones.length - 1
+  private val timeZonesRandomRange = timeZones.length
 
   private val cultures = Array("cs-CZ", "en-GB", "en-US")
 
-  private val culturesRandomRange = cultures.length - 1
+  private val culturesRandomRange = cultures.length
 
   /**
     * Returns random integer from 0 to give bound
     *
     * @param bound upper bound for random number
-    * @return random number from 0 to bound
+    * @return random number from 0 to bound exclusive
     */
   def randomInt(bound: Int): Int = ThreadLocalRandom.current.nextInt(bound)
 

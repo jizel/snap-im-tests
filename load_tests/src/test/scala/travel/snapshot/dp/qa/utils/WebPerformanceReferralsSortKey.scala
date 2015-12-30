@@ -10,7 +10,7 @@ object WebPerformanceReferralsSortKey extends Enumeration {
   val REVENUE = Value("revenue")
 
   val seq = values.toSeq
-  val bound = seq.size - 1
+  val size = values.toSeq.size
 
-  def getRandom: Value = seq(ThreadLocalRandom.current().nextInt(bound))
+  def getRandom: Value = seq(ThreadLocalRandom.current().nextInt(size))
 }

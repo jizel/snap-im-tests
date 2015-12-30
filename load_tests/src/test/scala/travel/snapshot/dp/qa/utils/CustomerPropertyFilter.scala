@@ -10,7 +10,6 @@ object CustomerPropertyFilter extends Enumeration {
   val VALID_TO = Value("valid_to")
 
   val seq = values.toSeq
-  val bound = seq.size - 1
 
   def getRandom: Array[CustomerPropertyFilter.Value] = getRandom(1)
 

@@ -4,6 +4,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.scenario.Simulation
 import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
+import travel.snapshot.dp.qa.utils.rateshopper.RateShopperPropertyCodeParser
 import travel.snapshot.dp.qa.utils.{BaseUrlResolver, RandomUtils}
 
 /**
@@ -31,6 +32,8 @@ abstract class AbstractSimulation extends Simulation {
     .doNotTrackHeader("1")
 
   val randomUtils = new RandomUtils
+
+  val rateShopperPropertyCodes = new RateShopperPropertyCodeParser().parse()
 
   /** Executes the scenario defined in descendant */
   protected def runScenario(scn: ScenarioBuilder): Unit = {
