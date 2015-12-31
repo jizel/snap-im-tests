@@ -1,0 +1,98 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'net.researchgate.release'
+
+group 'travel.snapshot.qa.manager.tomcat'
+version '1.0.0-SNAPSHOT'
+
+def versions = [
+        spacelift  : "1.0.0.Alpha9",
+        shrinkwrap : "2.1.0",
+        httpclient : "4.5.1",
+        junit      : "4.12"
+]
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name 'gradle'
+            url 'https://plugins.gradle.org/m2/'
+        }
+        dependencies {
+            classpath 'net.researchgate:gradle-release:2.3.4'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        name 'snapshot'
+        url 'https://nexus.snapshot.travel/content/groups/public'
+        credentials {
+            username nexusUser
+            password nexusPassword
+        }
+
+    }
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    compile "org.arquillian.spacelift:arquillian-spacelift:${versions.spacelift}"
+    compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
+    compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${versions.shrinkwrap}"
+    compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi:${versions.shrinkwrap}"
+    compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api-maven:${versions.shrinkwrap}"
+    compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi-maven:${versions.shrinkwrap}"
+    compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven:${versions.shrinkwrap}"
+    compile("org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven-archive:${versions.shrinkwrap}") {
+        //  Sisu Plexus depends on Guava 10 while Gradle API requires Guava 11
+        exclude group: "com.google.guava", module: "guava"
+    }
+
+    testCompile "junit:junit:${versions.junit}"
+}
+
+test {
+    testLogging {
+        exceptionFormat "full"
+        events 'started', 'passed'
+    }
+    systemProperties = [
+            remote: System.getProperty('remote', 'false'),
+            remoteHost: System.getProperty('remoteHost', '127.0.0.1')
+    ]
+}
+
+configurations {
+    compile.exclude(module: "shrinkwrap-resolver-depchain")
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = 'travel.snapshot.qa.manager.tomcat'
+
+            repository(url: 'https://nexus.snapshot.travel/content/repositories/releases/') {
+                authentication(userName: nexusUser , password: nexusPassword)
+            }
+            snapshotRepository(url: 'https://nexus.snapshot.travel/content/repositories/snapshots/') {
+                authentication(userName: nexusUser, password: nexusPassword)
+            }
+        }
+    }
+}
+
+afterReleaseBuild.dependsOn uploadArchives
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
+}
