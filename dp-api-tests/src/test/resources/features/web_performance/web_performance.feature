@@ -231,3 +231,29 @@ Feature: web_performance
       | /analytics/visits_unique    | day         | today - 6 days | today | 2     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/revenue          | day         | today - 7 days | today | 3     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
       | /analytics/conversion_rates | day         | today - 8 days | today | 4     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
+
+  Scenario Outline: Verifying sorting
+    When Get web performance referrals with "day" granularity for "<property>" since "<since>" until "<until>" sorted by "<metric>" "<direction>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Values are sorted by "<metric>" in "<direction>"
+
+    Examples: 
+      | property                             | since           | until | metric        | direction  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits        | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | revenue       | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits_unique | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits        | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | revenue       | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits_unique | descending |
+
+  Scenario Outline: Checking error codes for sorting
+    When Get web performance referrals with "day" granularity for "54db88d7-0b3d-4c27-b877-087d9071f5b6" since "today - 80 days" until "today" sorted by "<metric>" "<direction>"
+    Then Content type is "application/json"
+    And Response code is "<response_code>"
+    And Custom code is "<custom_code>"
+
+    Examples: 
+      | metric  | direction  | response_code | custom_code |
+      | invalid | ascending  | 400           | 63          |
+      | invalid | descending | 400           | 63          |

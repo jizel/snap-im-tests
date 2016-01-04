@@ -13,10 +13,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -61,6 +63,35 @@ public class AnalyticsBaseSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
+    //Overloaded for sorting
+    @Step
+    public void getData(String url, String granularity, String propertyId, String since, String until, String metric, String direction) {
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
+
+        RequestSpecification requestSpecification = given().spec(spec)
+                .parameter("access_token", "aaa");
+
+        if (StringUtils.isNotBlank(propertyId)) {
+            requestSpecification.header("x-property", propertyId);
+        }
+        if (StringUtils.isNotBlank(granularity)) {
+            requestSpecification.parameter("granularity", granularity);
+        }
+        if (StringUtils.isNotBlank(metric)) {
+            if(direction.equals("ascending"))requestSpecification.parameter("sort", metric);
+            if(direction.equals("descending"))requestSpecification.parameter("sort_desc", metric);
+        }
+        if (sinceDate != null) {
+            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (untilDate != null) {
+            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+        }
+
+        Response response = requestSpecification.when().get(url);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
 
     @Step
     public void getItems(String url, String propertyId, String limit, String cursor) {
@@ -103,6 +134,18 @@ public class AnalyticsBaseSteps extends BasicSteps {
     public void maximumNumberOfItemsInResponse(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body("size()", lessThanOrEqualTo(count));
+    }
+    
+    @Step
+    public void referralsAreSorted(String metric, boolean ascending) {
+    	BiPredicate<Double, Double> direction = ascending ? (a,b) -> a<=b : (a,b) -> a>=b ;
+    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+    	List<Double> values = response.body().jsonPath().getList("values." + metric, double.class);
+    	for (int i = 0; i < values.size()-1; i++) {
+			assertTrue("\nValue at index "+i+": "+values.get(i)+"\n"
+					+ "Value at index "+(i+1)+": "+values.get(i+1),
+					direction.test(values.get(i),values.get(i+1)));
+    	}
     }
 
     @Step
