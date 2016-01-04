@@ -217,21 +217,36 @@ public class UserStepdefs {
 
     @When("^Deactivating user with username \"([^\"]*)\"$")
     public void deactivatingUserWithUsername(String username) throws Throwable {
-        usersSteps.deactivateUser(username);
+        usersSteps.inactivateUser(username);
     }
 
-    @Then("^Body contains entity with attribute \"([^\"]*)\" integer value \"([^\"]*)\"$")
-    public void Body_contains_entity_with_attribute_value(String atributeName, String value) throws Throwable {
-        usersSteps.bodyContainsEntityWith(atributeName, value);
+    @When("^User with not existing id \"([^\"]*)\" is inactivated$")
+    public void userWithNotExistingIdIsInactivated(String id) throws Throwable {
+        usersSteps.inactivateNotExistingUser(id);
     }
 
-    @When("^Activating none existing user$")
-    public void activatingNoneExistingUser() throws Throwable {
-        usersSteps.activateUser();
+    @When("^User with not existing id \"([^\"]*)\" is activated$")
+    public void userWithNotExistingIdIsActivated(String id) throws Throwable {
+        usersSteps.activateNotExistingUser(id);
     }
 
-    @When("^Deactivating none existing user$")
-    public void deactivatingNoneExistingUser() throws Throwable {
-        usersSteps.deactivateUser();
+    @When("^User with id \"([^\"]*)\" is activated$")
+    public void userWithCodeIsActivated(String name) throws Throwable {
+        usersSteps.activateUserWithName(name);
+    }
+
+    @When("^User with id \"([^\"]*)\" is inactivated$")
+    public void userWithIdIsInactivated(String name) throws Throwable {
+        usersSteps.inactivateUserWithName(name);
+    }
+
+    @Then("^User with id \"([^\"]*)\" is active$")
+    public void userWithIdIsActive(String name) throws Throwable {
+        usersSteps.isActiveSetTo(true, name);
+    }
+
+    @Then("^User with id \"([^\"]*)\" is not active$")
+    public void userWithIdIsNotActive(String name) throws Throwable {
+        usersSteps.isActiveSetTo(false, name);
     }
 }

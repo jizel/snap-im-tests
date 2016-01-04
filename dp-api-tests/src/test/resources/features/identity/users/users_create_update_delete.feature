@@ -57,3 +57,26 @@ Feature: users_create_update_delete
       | NOT_APPLIED |
     Then Response code is "412"
     And Custom code is "57"
+
+  Scenario: User is activated
+    When User with id "default1" is activated
+    Then Response code is "204"
+    And Body is empty
+    And User with id "default1" is active
+    
+  Scenario: User is inactivated
+    Given User with id "default1" is activated
+    When User with id "default1" is inactivated
+    Then Response code is "204"
+    And Body is empty
+    And User with id "default1" is not active
+
+  Scenario: Activating non existing user
+    When User with not existing id "11111111-1111-1111-1111-111111111111" is inactivated
+    Then Response code is "404"
+    And Custom code is "152"
+
+  Scenario: Deactivating non existing user
+    When User with not existing id "11111111-1111-1111-1111-111111111111" is activated
+    Then Response code is "404"
+    And Custom code is "152"

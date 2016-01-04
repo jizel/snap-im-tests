@@ -243,8 +243,11 @@ public class CustomerSteps extends BasicSteps {
         if (activeFlag) {
             assertNotNull("Customer should be returned", customer);
             assertEquals("Customer should have code=" + code, code, customer.getCode());
+            assertEquals("is_active parameter should be set to 0", Integer.valueOf(1), customer.getIsActive());
         } else {
-            assertNull("Customer should not be returned", customer);
+            assertNotNull("Customer should be returned", customer);
+            assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), customer.getIsActive());
+
         }
     }
 

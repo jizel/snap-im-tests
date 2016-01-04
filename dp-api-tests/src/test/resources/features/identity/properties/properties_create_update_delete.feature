@@ -31,3 +31,26 @@ Feature: properties_create_update_delete
   Scenario: Checking error code for deleting property
     When Nonexistent property id is deleted
     Then Response code is "204"
+
+  Scenario: Property is activated
+    When Property with code "p1_code" is activated
+    Then Response code is "204"
+    And Body is empty
+    And Property with code "p1_code" is active
+
+  Scenario: Property is inactivated
+    Given Property with code "p1_code" is activated
+    When Property with code "p1_code" is inactivated
+    Then Response code is "204"
+    And Body is empty
+    And Property with code "p1_code" is not active
+
+  Scenario: Activating non existing properties
+    When Property with non existing property id "11111111-1111-1111-1111-111111111111" is inactivated
+    Then Response code is "404"
+    And Custom code is "152"
+
+  Scenario: Deactivating non existing properties
+    When Property with non existing property id "11111111-1111-1111-1111-111111111111" is activated
+    Then Response code is "404"
+    And Custom code is "152"

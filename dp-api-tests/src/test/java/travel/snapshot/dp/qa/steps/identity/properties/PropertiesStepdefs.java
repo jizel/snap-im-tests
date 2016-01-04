@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
+import cucumber.api.PendingException;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
@@ -167,6 +168,36 @@ public class PropertiesStepdefs {
         propertySteps.comparePropertyOnHeaderWithStored(header);
     }
 
+    @When("^Property with code \"([^\"]*)\" is activated$")
+    public void property_With_Code_Is_Activated(String code) throws Throwable {
+        propertySteps.activatePropertyWithCode(code);
+    }
+
+    @When("^Property with code \"([^\"]*)\" is inactivated$")
+    public void property_With_Code_Is_Inactivated(String code) throws Throwable {
+        propertySteps.inactivatePropertyWithCode(code);
+    }
+
+    @When("^Property with non existing property id \"([^\"]*)\" is inactivated$")
+    public void property_With_Non_Existing_Property_Id_Is_Inactivated(String id) throws Throwable {
+        propertySteps.inactivateNotExistingProperty(id);
+    }
+
+    @When("^Property with non existing property id \"([^\"]*)\" is activated$")
+    public void property_With_Non_Existing_Property_Id_Is_Activated(String id) throws Throwable {
+        propertySteps.activateNotExistingProperty(id);
+    }
+
+    @Then("^Property with code \"([^\"]*)\" is active$")
+    public void Customer_with_code_is_active(String code) throws Throwable {
+        propertySteps.isActiveSetTo(true, code);
+    }
+
+    @Then("^Property with code \"([^\"]*)\" is not active$")
+    public void Customer_with_code_is_not_active(String code) throws Throwable {
+        propertySteps.isActiveSetTo(false, code);
+    }
+
     // TODO reuse existing code
 
 //
@@ -182,7 +213,6 @@ public class PropertiesStepdefs {
 //
 //    }
 //
-//
 //    @When("^Customer with code \"([^\"]*)\" is updated with data$")
 //    public void Customer_with_code_is_updated_with_data(String code, List<Customer> customers) throws Throwable {
 //        propertySteps.updateCustomerWithCode(code, customers.get(0));
@@ -191,26 +221,6 @@ public class PropertiesStepdefs {
 //    @Then("^Updated customer with code \"([^\"]*)\" has data$")
 //    public void Updated_customer_with_code_has_data(String code, List<Customer> customers) throws Throwable {
 //        propertySteps.customerWithCodeHasData(code, customers.get(0));
-//    }
-//
-//    @When("^Customer with code \"([^\"]*)\" is activated$")
-//    public void Customer_with_code_is_activated(String code) throws Throwable {
-//        propertySteps.activateCustomerWithCode(code);
-//    }
-//
-//    @Then("^Customer with code \"([^\"]*)\" is active$")
-//    public void Customer_with_code_is_active(String code) throws Throwable {
-//        propertySteps.isActiveSetTo(true, code);
-//    }
-//
-//    @When("^Customer with code \"([^\"]*)\" is inactivated$")
-//    public void Customer_with_code_is_inactivated(String code) throws Throwable {
-//        propertySteps.inactivateCustomerWithCode(code);
-//    }
-//
-//    @Then("^Customer with code \"([^\"]*)\" is not active$")
-//    public void Customer_with_code_is_not_active(String code) throws Throwable {
-//        propertySteps.isActiveSetTo(false, code);
 //    }
 //
 //    @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")

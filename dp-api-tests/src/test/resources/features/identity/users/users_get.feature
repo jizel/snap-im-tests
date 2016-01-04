@@ -197,24 +197,3 @@ Feature: Users_get
       | /null | /null  | 1        | 1     | phone==+42010111218                           | /null     | /null     | other_default_7                                                                          |
   #add all fields
 
-  Scenario: Activating users
-    When Activating user with username "default1"
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Body contains entity with attribute "is_active" integer value "1"
-
-  Scenario: Deactivating users
-    When Deactivating user with username "default1"
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Body contains entity with attribute "is_active" integer value "0"
-
-  Scenario: Activating non existing users
-    When Activating none existing user
-    Then Response code is "404"
-    And Custom code is "152"
-
-  Scenario: Deactivating non existing users
-    When Deactivating none existing user
-    Then Response code is "404"
-    And Custom code is "152"
