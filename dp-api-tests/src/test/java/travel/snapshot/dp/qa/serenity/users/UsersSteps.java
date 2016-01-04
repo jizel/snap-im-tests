@@ -301,4 +301,37 @@ public class UsersSteps extends BasicSteps {
     public void setUserPassword(String id, String password){
     	given().spec(spec).body(password).post("{id}/password", id);
     }
+
+    @Step
+    public void bodyContainsEntityWith(String attributeName, String attributeValue) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, is(Integer.valueOf(attributeValue)));
+    }
+
+    public void activateUser(String username) {
+        User user = getUserByUsername(username);
+        String id = user.getUserId();
+        given().spec(spec).post("{id}/active", id);
+
+        userWithUsernameIsGot(username);
+    }
+
+    public void activateUser() {
+        Response response = given().spec(spec).post("11111111-1111-1111-1111-111111111111/active");
+        setSessionResponse(response);
+    }
+
+    public void deactivateUser(String username) {
+        User user = getUserByUsername(username);
+        String id = user.getUserId();
+        given().spec(spec).post("{id}/inactive", id);
+
+        userWithUsernameIsGot(username);
+    }
+
+    public void deactivateUser() {
+        Response response = given().spec(spec).post("11111111-1111-1111-1111-111111111111/active");
+        setSessionResponse(response);
+    }
+
 }

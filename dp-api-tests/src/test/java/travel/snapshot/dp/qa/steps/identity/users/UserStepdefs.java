@@ -209,4 +209,29 @@ public class UserStepdefs {
     public void setting_the_password_of_user_to(String username, String password) {
     	usersSteps.setUserPasswordByUsername(username, password);
     }
+
+    @When("^Activating user with username \"([^\"]*)\"$")
+    public void activatingUserWithUsername(String username) throws Throwable {
+        usersSteps.activateUser(username);
+    }
+
+    @When("^Deactivating user with username \"([^\"]*)\"$")
+    public void deactivatingUserWithUsername(String username) throws Throwable {
+        usersSteps.deactivateUser(username);
+    }
+
+    @Then("^Body contains entity with attribute \"([^\"]*)\" integer value \"([^\"]*)\"$")
+    public void Body_contains_entity_with_attribute_value(String atributeName, String value) throws Throwable {
+        usersSteps.bodyContainsEntityWith(atributeName, value);
+    }
+
+    @When("^Activating none existing user$")
+    public void activatingNoneExistingUser() throws Throwable {
+        usersSteps.activateUser();
+    }
+
+    @When("^Deactivating none existing user$")
+    public void deactivatingNoneExistingUser() throws Throwable {
+        usersSteps.deactivateUser();
+    }
 }
