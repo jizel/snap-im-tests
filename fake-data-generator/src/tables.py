@@ -170,7 +170,7 @@ TABLES = [
     },
 
     {
-        'table': 'OTA_DM.D_country',
+        'table': 'OTA_STG.stg_D_country',
         'multiply': [1],
         'columns': [
             lambda data: data['property_id'],                   # id
@@ -179,7 +179,7 @@ TABLES = [
     },
 
     {
-        'table': 'OTA_DM.D_region',
+        'table': 'OTA_STG.stg_D_region',
         'multiply': [1],
         'columns': [
             lambda data: data['property_id'],                  # id
@@ -188,7 +188,7 @@ TABLES = [
     },
 
     {
-        'table': 'OTA_DM.D_city',
+        'table': 'OTA_STG.stg_D_city',
         'multiply': [1],
         'columns': [
             lambda data: data['property_id'],               # id
@@ -201,7 +201,7 @@ TABLES = [
     },
 
     {
-        'table': 'OTA_DM.D_hotel',
+        'table': 'OTA_STG.stg_D_hotel',
         'multiply': [1],
         'columns': [
             lambda data: data['property_id'],                   # id
@@ -210,7 +210,7 @@ TABLES = [
             lambda data: random.randint(3, 5),                  # stars
             lambda data: 'District %d' % data['property_id'],   # district_name
             lambda data: 'Hotel %d' % data['property_id'],      # hotel_name
-            lambda data: 'null',                                # date_loaded
+            lambda data: datetime.now(),                        # date_loaded
         ]
     },
 
@@ -224,5 +224,9 @@ TABLES = [
             lambda data: random.randint(data['property_id'] + 1, 5*data['property_id'] + 1),    # price
         ]
     },
-    
+]
+
+FILES = [
+    'sql/ota_main.sql',
+    'sql/ota_market_snap.sql',
 ]

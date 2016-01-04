@@ -3,7 +3,7 @@
 
 import csv,sys
 from config import PROPERTY_SIZE, DATE_FROM, DATE_TO
-from tables import TABLES
+from tables import TABLES, FILES
 
 
 def main(table_filter):
@@ -32,6 +32,9 @@ def main(table_filter):
                     writer.writerow(last_row)
 
         print "LOAD DATA LOCAL INFILE '%(table)s.tsv' INTO TABLE %(table)s FIELDS TERMINATED BY '\\t';" % {'table': metadata['table']}
+
+    for sql_file in FILES:
+        print "\. %s;" % sql_file
 
               
 def help(): 
