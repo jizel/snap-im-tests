@@ -1,0 +1,28 @@
+{
+  "popularity_index_rank": [
+    {"ranking":"89","total_number":"7776"},
+    {"ranking":"91","total_number":"7777"}
+  ],
+  "overall_bubble_rating":["7.08571","7.2"],
+  "number_of_reviews":["37013","37037"],
+  "rating_score":[
+    {
+      "One":"41946",
+      "Two":"8045",
+      "Three":"48798",
+      "Four":"35928",
+      "Five":"22309"
+    },
+    {
+      "One":"41989",
+      "Two":"8064",
+      "Three":"48811",
+      "Four":"35928",
+      "Five":"22334"
+    }
+  ],
+  "aspects_of_business": [
+    {"location":"3.15714","sleep_quality":"4.51429","room":"0.47143","service":"1.75714","value":"5.3","cleanliness":"0.82857"},
+    {"location":"3.2","sleep_quality":"4.0","room":"0.52857","service":"1.7","value":"5.5","cleanliness":"0.94286"}
+  ]
+}

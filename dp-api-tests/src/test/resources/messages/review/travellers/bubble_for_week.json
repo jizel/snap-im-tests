@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "type": "Friends getaway\r",
+      "overall": [
+        6.9,
+        7.2
+      ]
+    },
+    {
+      "type": "Family\r",
+      "overall": [
+        7.2,
+        null
+      ]
+    },
+    {
+      "type": "Business\r",
+      "overall": [
+        7.1,
+        null
+      ]
+    },
+    {
+      "type": "Solo travel\r",
+      "overall": [
+        7.05,
+        null
+      ]
+    },
+    {
+      "type": "Unspecified\r",
+      "overall": [
+        7.1,
+        7.2
+      ]
+    },
+    {
+      "type": "Couples\r",
+      "overall": [
+        7.2,
+        7.2
+      ]
+    }
+  ]
+}
