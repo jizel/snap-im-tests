@@ -41,9 +41,9 @@ Feature: configuration
 
     Examples:
       | key              | value           | type     | response_code | custom_code |
-#      |                  | 11              | integer  | 400           | 61          |
+      |                  | 11              | integer  | 400           | 61          |
       | given_test_key_1 | text value2     | string   | 400           | 62          |
-#      | test_key_1       |                 | string   | 400           | 61          |
+      | test_key_1       |                 | string   | 400           | 61          |
       | test_date_key_1  | 2015-xxx-11     | date     | 400           | 59          |
       | test_date_key_1  | 2015-01-01Taaaa | datetime | 400           | 59          |
 
