@@ -25,3 +25,4 @@ target/
 # NetBeans project
 **/.nb-gradle/
 **/.nb-gradle-properties
+*.pyc
