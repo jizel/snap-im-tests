@@ -304,4 +304,9 @@ public class CustomerStepdefs {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode, type);
     }
+
+    @Then("^All customers are active$")
+    public void all_customers_are_active() throws Throwable {
+    	customerSteps.allCustomersAreActive();
+    }
 }
