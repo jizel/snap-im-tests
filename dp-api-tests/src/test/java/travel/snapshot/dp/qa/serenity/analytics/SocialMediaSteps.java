@@ -34,6 +34,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
     @Step
     public void verifySumOfMetricFromSocialMedia(String metric, String granularity, String property, String since, String until) {
         List<Integer> facebookValues = given().spec(spec)
+                .baseUri(PropertiesHelper.getProperty(FACEBOOK_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)
@@ -42,6 +43,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         int facebookSum = facebookValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> twitterValues = given().spec(spec)
+                .baseUri(PropertiesHelper.getProperty(TWITTER_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)
@@ -50,6 +52,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         int twitterSum = twitterValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> instagramValues = given().spec(spec)
+                .baseUri(PropertiesHelper.getProperty(INSTAGRAM_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)
@@ -58,6 +61,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         int instagramSum = instagramValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> totalValues = given().spec(spec)
+                .baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
                 .param("since", since)

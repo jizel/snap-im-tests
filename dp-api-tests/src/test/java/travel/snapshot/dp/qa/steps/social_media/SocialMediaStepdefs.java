@@ -37,46 +37,16 @@ public class SocialMediaStepdefs {
     public void Get_social_media_with_missing_property_header(String url) throws Throwable {
         steps.getData("/social_media" + url, "day", null, null, null);
     }
+    
+    @When("^Property is missing for \"([^\"]*)\"$")
+    public void property_is_missing_for(String url) throws Throwable {
+        steps.getDataWithoutProperty(url);
+    }
 
     @When("^List of social media items \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
     public void List_of_items_is_got_with_limit_and_cursor(String url, String propertyId,
                                                            @Transform(NullEmptyStringConverter.class) String limit,
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getItems("/social_media" + url, propertyId, limit, cursor);
-    }
-    
-    @Then("^There are at most (\\d+) items returned$")
-    public void There_are_at_most_items_returned(int count) throws Throwable {
-        steps.maximumNumberOfItemsInResponse(count);
-    }
-
-    @Then("^\"([^\"]*)\" values are not more than \"([^\"]*)\" values$")
-    public void value_is_no_more_than(String lowerValues, String higherValues) throws Throwable {
-        steps.valuesAreLessThanOrEqualTo("values." + lowerValues, "values." + higherValues);
-    }
-
-    @Then("^Response granularity is \"([^\"]*)\"$")
-    public void Response_granularity_is(String granularity) throws Throwable {
-        steps.bodyContainsEntityWith("granularity", granularity);
-    }
-
-    @Then("^Response since is \"([^\"]*)\"$")
-    public void Response_since_is(String since) throws Throwable {
-        steps.dateFieldIs("since", since);
-    }
-
-    @Then("^Response until is \"([^\"]*)\"$")
-    public void Response_until_is(String until) throws Throwable {
-        steps.dateFieldIs("until", until);
-    }
-
-    @Then("^Data is owned by \"([^\"]*)\"$")
-    public void Data_is_owned_by(String data_owner) throws Throwable {
-        steps.bodyContainsCollectionWith("data_owners", data_owner);
-    }
-
-    @Then("^There are (\\d+) posts returned$")
-    public void There_are_count_posts_returned(int count) throws Throwable {
-        steps.numberOfEntitiesInResponse(Map.class, count);
     }
 }

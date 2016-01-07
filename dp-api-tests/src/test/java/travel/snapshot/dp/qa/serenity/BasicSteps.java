@@ -123,13 +123,15 @@ public class BasicSteps {
         response.then().body(attributeName, hasItem(item));
     }
     
-    public void bodyArrayContainsDouble(String path, int value) {
+    public void integerPartOfValueIs(String path, int value) {
     	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-//    	DecimalFormat df = new DecimalFormat("#");
-//    	df.setMaximumFractionDigits(0);
+    	// This method is used instead of bodyContainsCollectionWith()
+    	// when the collection contains values of type Double. 
+    	// Only the integer part of the value is validated.
     	List<Double> values = response.body().jsonPath().getList(path, double.class);
     	assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
     }
+    
     @Step
     public void bodyContainsR(String attributeName, BigDecimal item){
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
