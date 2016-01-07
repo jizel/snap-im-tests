@@ -1,30 +1,70 @@
 Feature: users_create_update_delete
 
-  Background:
+  Background: 
     Given Database is cleaned
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
 
-  Scenario: Creating user
-
+  Scenario Outline: Creating users
     When User is created
-      | userType | userName | firstName | lastName | email               | timezone      | culture |
-      | customer | snp      | Snap      | Shot     | snp@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
+      | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
     Then Response code is "201"
-    And Body contains entity with attribute "user_type" value "customer"
-    And Body contains entity with attribute "user_name" value "snp"
-    And Body contains entity with attribute "first_name" value "Snap"
-    And Body contains entity with attribute "last_name" value "Shot"
-    And Body contains entity with attribute "email" value "snp@snapshot.travel"
-    And Body contains entity with attribute "timezone" value "Europe/Prague"
-    And Body contains entity with attribute "culture" value "cs-CZ"
+    And Body contains entity with attribute "user_type" value "<userType>"
+    And Body contains entity with attribute "user_name" value "<userName>"
+    And Body contains entity with attribute "first_name" value "<firstName>"
+    And Body contains entity with attribute "last_name" value "<lastName>"
+    And Body contains entity with attribute "email" value "<email>"
+    And Body contains entity with attribute "timezone" value "<timezone>"
+    And Body contains entity with attribute "culture" value "<culture>"
     And "Location" header is set and contains the same user
     And Etag header is present
 
-  Scenario: Deleting user
+    Examples: 
+      | userType | userName | firstName | lastName | email                           | timezone      | culture |
+      | customer | snp      | Snap      | Shot     | snp@snapshot.travel             | Europe/Prague | cs-CZ   |
+      | customer | snp1     | Snap1     | Shot1    | dummy_mail+32@gmail.com         | Europe/Prague | cs-CZ   |
+      | customer | snp2     | Snap2     | Shot2    | dummy.test-mail@gmail.com       | Europe/Prague | cs-CZ   |
+      | customer | snp3     | Snap3     | Shot3    | dummy_test-mail.32@gmail.com    | Europe/Prague | cs-CZ   |
+      | customer | snp4     | Snap4     | Shot4    | dummy_test-mail.32+32@gmail.com | Europe/Prague | cs-CZ   |
+      | customer | snp5     | Snap5     | Shot5    | dummy-mail+32@gmail.com         | Europe/Prague | cs-CZ   |
+      | customer | snp6     | Snap6     | Shot6    | dummy-test_mail+32@gmail.com    | Europe/Prague | cs-CZ   |
+      | customer | snp7     | Snap7     | Shot7    | dummy-test_mail@gmail.com       | Europe/Prague | cs-CZ   |
+      | customer | snp8     | Snap8     | Shot8    | dummy_mail@gmail.com            | Europe/Prague | cs-CZ   |
+      | customer | snp9     | Snap9     | Shot9    | dummy_test-mail@gmail.com       | Europe/Prague | cs-CZ   |
+      | customer | snp10    | Snap10    | Shot10   | dummy-mail@gmail.com            | Europe/Prague | cs-CZ   |
+      | customer | snp1     | Snap1     | Shot1    | vlastimil.kaluza+1@gmail.com    | Europe/Prague | cs-CZ   |
+      | customer | snp3     | Snap3     | Shot3    | dummy.test_mail+32@gmail.com    | Europe/Prague | cs-CZ   |
+      | customer | snp4     | Snap4     | Shot4    | dummy.mail+32@gmail.com         | Europe/Prague | cs-CZ   |
+      | customer | snp7     | Snap7     | Shot7    | dummy-test.1_mail+32@gmail.com  | Europe/Prague | cs-CZ   |
 
+  Scenario Outline: Creating users with wrong email
+    When User is created
+      | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
+      | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
+    Then Response code is "400"
+    And Custom code is "<custom_code>"
+
+    Examples: 
+      | userType | userName | firstName | lastName | email                          | timezone      | culture | custom_code |
+      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.                  | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snpsnapshot.travel             | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel            | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel         | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | 'snp@snpsnapshot.travel'       | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel         | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel         | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel         | Europe/Prague | cs-CZ   | 59          |
+      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel         | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      |           | Shot     | snp@snpsnapshot.travel         | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      |          | snp@snpsnapshot.travel         | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     |                                | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel         |               | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel         | Europe/Prague |         | 61          |
+  
+  Scenario: Deleting user
     When User with userName "default1" is deleted
     Then Response code is "204"
     And Body is empty
@@ -46,7 +86,7 @@ Feature: users_create_update_delete
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
 
-    Examples:
+    Examples: 
       | userType | firstName | lastName | email                 | timezone         | culture | comment  |
       | partner  | FNUp1     | LNUp1    | EMUp1@snapshot.travel | Europe/Prague    | cs-CZ   | VIP user |
       | guest    | FNUp2     | LNUp2    | EMUp2@snapshot.travel | America/New_York | en-US   | /null    |
@@ -63,7 +103,7 @@ Feature: users_create_update_delete
     Then Response code is "204"
     And Body is empty
     And User with id "default1" is active
-    
+
   Scenario: User is inactivated
     Given User with id "default1" is activated
     When User with id "default1" is inactivated

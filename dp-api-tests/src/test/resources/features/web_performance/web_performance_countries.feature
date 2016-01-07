@@ -5,8 +5,6 @@ Feature: web_performance_countries
     When List of web performance "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <response_code>
     And Content type is "<content_type>"
-    #And Data is owned by ""
-    #And There are <count> posts returned
     And Response contains <count> values
 
     Examples: 
@@ -56,7 +54,6 @@ Feature: web_performance_countries
       | /analytics/referrals                  | 60    | 0      | 60    | 200           | application/json | 54db88d7-0b3d-4c27-b877-087d9071f5b6 |
       | /analytics/referrals                  | 5     | 5      | 5     | 200           | application/json | 54db88d7-0b3d-4c27-b877-087d9071f5b6 |
 
-  #not yet implemented, other metrics are not pageable
   Scenario Outline: Checking error codes for getting list of items
     When List of web performance "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is <response_code>
@@ -92,3 +89,14 @@ Feature: web_performance_countries
       | /analytics/referrals                  | text  | /null  | 400           | 63          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 |
       | /analytics/referrals                  | text  |        | 400           | 63          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 |
       | /analytics/referrals                  | 10    | text   | 400           | 63          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 |
+
+  Scenario Outline: Verifying countries are presented with their ISO formated country codes
+    When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is <response_code>
+    And All web performance analytics metrics country codes in "<json_argument>" are in ISO format
+
+    Examples: 
+      | url                                   | granularity | since            | until | json_argument  | property                             | response_code |
+      | /analytics/visits/countries           | day         | today - 3 months | today | values.country | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           |
+      | /analytics/visits_unique/countries    | day         | today - 3 months | today | values.country | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           |
+      | /analytics/conversion_rates/countries | day         | today - 3 months | today | values.country | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           |

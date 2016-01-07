@@ -58,10 +58,10 @@ Feature: web_performance
       | /analytics/visits_unique    | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07     | 2015-11-23     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/revenue          | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07     | 2015-11-23     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/conversion_rates | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07     | 2015-11-23     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/visits           | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/visits_unique    | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/revenue          | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/conversion_rates | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09     | 2015-12-07     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14     | 2016-01-14     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14     | 2016-01-14     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14     | 2016-01-14     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14     | 2016-01-14     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/visits           | week        | 0     | 2015-11-07 | 2015-11-13 | 2015-11-07     | 2015-11-13     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/visits_unique    | week        | 0     | 2015-11-07 | 2015-11-13 | 2015-11-07     | 2015-11-13     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/revenue          | week        | 0     | 2015-11-07 | 2015-11-13 | 2015-11-07     | 2015-11-13     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
@@ -74,10 +74,10 @@ Feature: web_performance
       | /analytics/visits_unique    | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-11-09     | 2015-11-22     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/revenue          | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-11-09     | 2015-11-22     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/conversion_rates | week        | 2     | 2015-11-07 | 2015-11-23 | 2015-11-09     | 2015-11-22     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/visits           | week        | 26    | 2015-01-07 | 2015-11-21 | 2015-05-18     | 2015-11-15     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/visits_unique    | week        | 26    | 2015-01-07 | 2015-11-21 | 2015-05-18     | 2015-11-15     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/revenue          | week        | 26    | 2015-01-07 | 2015-11-21 | 2015-05-18     | 2015-11-15     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/conversion_rates | week        | 26    | 2015-01-07 | 2015-11-21 | 2015-05-18     | 2015-11-15     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19     | 2016-01-10     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19     | 2016-01-10     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19     | 2016-01-10     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19     | 2016-01-10     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/visits           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/visits_unique    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/revenue          | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
@@ -86,10 +86,10 @@ Feature: web_performance
       | /analytics/visits_unique    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01     | 2015-02-28     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/revenue          | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01     | 2015-02-28     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
       | /analytics/conversion_rates | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01     | 2015-02-28     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/visits           | month       | 11    | 2013-02-01 | 2015-11-30 | 2015-01-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/visits_unique    | month       | 11    | 2013-02-01 | 2015-11-30 | 2015-01-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/revenue          | month       | 11    | 2013-02-01 | 2015-11-30 | 2015-01-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
-      | /analytics/conversion_rates | month       | 11    | 2013-02-01 | 2015-11-30 | 2015-01-01     | 2015-11-30     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits           | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01     | 2015-12-31     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/visits_unique    | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01     | 2015-12-31     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/revenue          | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01     | 2015-12-31     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
+      | /analytics/conversion_rates | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01     | 2015-12-31     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | Google Analytics |
 
   Scenario Outline: Getting non-existent analytics data
     When Get web_performance "<url>" data with "<granularity>" granularity for "<property<" since "<since>" until "<until>"
@@ -126,8 +126,8 @@ Feature: web_performance
       | url                                   | granularity | since            | until      | count | property                             | response_code | content_type     |
       | /analytics/visits                     |             | 2015-12-03       | 2015-12-03 | 1     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits_unique              | day         |                  | 2015-12-03 | 31    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
-      | /analytics/revenue                    | day         | today - 12 weeks |            | 80    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
-      | /analytics/conversion_rates           | day         |                  |            | 26    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
+      | /analytics/revenue                    | day         | today - 12 weeks |            | 85    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
+      | /analytics/conversion_rates           | day         |                  |            | 31    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits/countries           |             |                  |            | 50    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits_unique/countries    | day         | 2015-12-03       |            | 50    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/conversion_rates/countries | day         |                  |            | 50    | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
@@ -170,7 +170,6 @@ Feature: web_performance
     #And Response contains correct number of values for granularity "<granularity>" between "<expected_since>" and "<expected_until>"
     Examples: 
       | url                         | granularity | since          | until             | expected_granularity | expected_since    | expected_until | property                             | response_code | content_type     |
-      | /analytics/visits           |             |                |                   | day                  | today - 1 month   | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits           |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits           | day         |                | today             | day                  | today - 1 month   | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits           | day         | today          |                   | day                  | today             | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
@@ -180,7 +179,7 @@ Feature: web_performance
       | /analytics/visits           | month       | today          |                   | month                | today             | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits           | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits           | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
-      | /analytics/visits           | month       | today          | today - 40 months | month                | today - 36 months | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
+      | /analytics/visits           | month       | today          | today - 40 months | month                | today             | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits           | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits_unique    |             |                |                   | day                  | today - 1 month   | today          | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
       | /analytics/visits_unique    |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 200           | application/json |
@@ -257,3 +256,13 @@ Feature: web_performance
       | metric  | direction  | response_code | custom_code |
       | invalid | ascending  | 400           | 63          |
       | invalid | descending | 400           | 63          |
+
+  Scenario Outline: Checking ISO country codes
+    When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is <response_code>
+    And All web performance analytics country codes in "<json_argument>" are in ISO format
+
+    Examples: 
+      | url        | granularity | since            | until | property                             | content_type     | response_code | json_argument                 |
+      | /analytics | day         | today - 3 months | today | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | top_values.country_conversion |
+      | /analytics | day         | today - 30 days  | today | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           | top_values.country_visits     |
