@@ -132,7 +132,7 @@ public class PropertiesStepdefs {
                                                                                                                     @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         propertySteps.listOfCustomersIsGotWith(propertyCode, limit, cursor, filter, sort, sortDesc);
     }
-    
+
     // --- then ---
 
     @Then("^Body contains property with attribute \"([^\"]*)\"$")
@@ -154,7 +154,7 @@ public class PropertiesStepdefs {
     public void There_are_properties_returned(int count) throws Throwable {
         propertySteps.numberOfEntitiesInResponse(Property.class, count);
     }
-    
+
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")
     public void each_customer_is_a_customer_of_property_with_code(String propertyCode) throws Throwable {
     	propertySteps.allCustomersAreCustomersOfProperty(propertyCode);

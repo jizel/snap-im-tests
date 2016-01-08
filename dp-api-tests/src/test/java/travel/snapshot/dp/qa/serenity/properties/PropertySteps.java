@@ -451,7 +451,7 @@ public class PropertySteps extends BasicSteps {
         Response response = getSecondLevelEntities(p.getPropertyId(), SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
-    
+
     public void allCustomersAreCustomersOfProperty(String propertyCode) {
     	String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
     	Response response = getSessionResponse();
@@ -567,6 +567,5 @@ public class PropertySteps extends BasicSteps {
 //        if (data.getWebsite() != null && !"".equals(data.getWebsite())) {
 //            assertEquals(data.getWebsite(), customerByCode.getWebsite());
 //        }
-//    }
-
+//    }   
 }

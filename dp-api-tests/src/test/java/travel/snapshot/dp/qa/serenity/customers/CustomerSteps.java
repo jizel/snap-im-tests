@@ -128,7 +128,7 @@ public class CustomerSteps extends BasicSteps {
         return given().spec(spec)
                 .when().post("/{id}/inactive", id);
     }
-    
+
     public void allCustomersAreActive() {
     	Response response = getSessionResponse();
     	List<Integer> isActiveList = response.body().jsonPath().getList("is_active");
