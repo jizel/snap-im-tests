@@ -199,11 +199,13 @@ public class TestFacebookPagesNoonETL {
         		"select sum(total_followers) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
-        		+ "select property_id, min(time_stamp) as min_time_stamp "
+        		+ "select property_id, max(time_stamp) as max_time_stamp "
         		+ "from IncrementalFacebookPageStatistics "
-        		+ "where date = date_sub(curdate(), interval 1 day) "
+        		+ "where date <= date_sub(curdate(), interval 1 day) "
+        		+ "and total_followers is not null "
+        		+ "and time_stamp < addtime(curdate() - interval 1 day, '19:00') " // before the runs for the next day start (20:01 server time) 
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp";
+        		+ "on t.property_id = tt.property_id and t.time_stamp = max_time_stamp";
         String sqlQueryForTargetFollowers = "select sum(followers) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
         
         logger.info("\nStart control checks on table 'T_FactFacebookPageStatsCurrDay'");
@@ -211,16 +213,70 @@ public class TestFacebookPagesNoonETL {
         testLoad(sqlQueryForSourceFollowers, sqlQueryForTargetFollowers, "Metric: followers");
         
         List<String> factsYesterdayList = new ArrayList<String>();
-        factsYesterdayList.add("select sum(number_of_posts) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");       		
-        factsYesterdayList.add("select sum(engagements) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
-        factsYesterdayList.add("select sum(impressions) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
-        factsYesterdayList.add("select sum(reach) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
-        factsYesterdayList.add("select sum(likes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
-        factsYesterdayList.add("select sum(unlikes) from FactFacebookPageStats where dim_date_id = (curdate() - interval 2 day) + 0");
+        factsYesterdayList.add(
+        		"select sum(number_of_posts) "
+        		+ "from FactFacebookPageStats t "
+        		+ "inner join ("
+        		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
+        		+ "from FactFacebookPageStats "
+        		+ "where dim_date_id <= (curdate() - interval 2 day) + 0 "
+        		+ "and number_of_posts is not null "
+        		+ "group by dim_property_id) tt "
+        		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
+        factsYesterdayList.add(
+        		"select sum(engagements) "
+        		+ "from FactFacebookPageStats t "
+        		+ "inner join ("
+        		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
+        		+ "from FactFacebookPageStats "
+        		+ "where dim_date_id <= (curdate() - interval 2 day) + 0 "
+        		+ "and engagements is not null "
+        		+ "group by dim_property_id) tt "
+        		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
+        factsYesterdayList.add(
+        		"select sum(impressions) "
+        		+ "from FactFacebookPageStats t "
+        		+ "inner join ("
+        		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
+        		+ "from FactFacebookPageStats "
+        		+ "where dim_date_id <= (curdate() - interval 2 day) + 0 "
+        		+ "and impressions is not null "
+        		+ "group by dim_property_id) tt "
+        		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
+        factsYesterdayList.add(
+        		"select sum(reach) "
+        		+ "from FactFacebookPageStats t "
+        		+ "inner join ("
+        		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
+        		+ "from FactFacebookPageStats "
+        		+ "where dim_date_id <= (curdate() - interval 2 day) + 0 "
+        		+ "and reach is not null "
+        		+ "group by dim_property_id) tt "
+        		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
+        factsYesterdayList.add(
+        		"select sum(likes) "
+        		+ "from FactFacebookPageStats t "
+        		+ "inner join ("
+        		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
+        		+ "from FactFacebookPageStats "
+        		+ "where dim_date_id <= (curdate() - interval 2 day) + 0 "
+        		+ "and likes is not null "
+        		+ "group by dim_property_id) tt "
+        		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
+        factsYesterdayList.add(
+        		"select sum(unlikes) "
+        		+ "from FactFacebookPageStats t "
+        		+ "inner join ("
+        		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
+        		+ "from FactFacebookPageStats "
+        		+ "where dim_date_id <= (curdate() - interval 2 day) + 0 "
+        		+ "and unlikes is not null "
+        		+ "group by dim_property_id) tt "
+        		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
         
         List<String> incrementalsTodayList = new ArrayList<String>();
         incrementalsTodayList.add(
-        		"select sum(incremental_number_of_posts) "
+        		"select sum(coalesce(incremental_number_of_posts,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -229,7 +285,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         incrementalsTodayList.add(
-        		"select sum(incremental_engagements) "
+        		"select sum(coalesce(incremental_engagements,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -238,7 +294,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         incrementalsTodayList.add(
-        		"select sum(incremental_impressions) "
+        		"select sum(coalesce(incremental_impressions,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -247,7 +303,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         incrementalsTodayList.add(
-        		"select sum(incremental_reached) "
+        		"select sum(coalesce(incremental_reached,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -256,7 +312,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         incrementalsTodayList.add(
-        		"select sum(incremental_likes) "
+        		"select sum(coalesce(incremental_likes,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -265,7 +321,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         incrementalsTodayList.add(
-        		"select sum(incremental_unlikes) "
+        		"select sum(coalesce(incremental_unlikes,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
