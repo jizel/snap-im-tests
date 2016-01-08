@@ -209,4 +209,44 @@ public class UserStepdefs {
     public void setting_the_password_of_user_to(String username, String password) {
     	usersSteps.setUserPasswordByUsername(username, password);
     }
+
+    @When("^Activating user with username \"([^\"]*)\"$")
+    public void activatingUserWithUsername(String username) throws Throwable {
+        usersSteps.activateUser(username);
+    }
+
+    @When("^Deactivating user with username \"([^\"]*)\"$")
+    public void deactivatingUserWithUsername(String username) throws Throwable {
+        usersSteps.inactivateUser(username);
+    }
+
+    @When("^User with not existing id \"([^\"]*)\" is inactivated$")
+    public void userWithNotExistingIdIsInactivated(String id) throws Throwable {
+        usersSteps.inactivateNotExistingUser(id);
+    }
+
+    @When("^User with not existing id \"([^\"]*)\" is activated$")
+    public void userWithNotExistingIdIsActivated(String id) throws Throwable {
+        usersSteps.activateNotExistingUser(id);
+    }
+
+    @When("^User with id \"([^\"]*)\" is activated$")
+    public void userWithCodeIsActivated(String name) throws Throwable {
+        usersSteps.activateUserWithName(name);
+    }
+
+    @When("^User with id \"([^\"]*)\" is inactivated$")
+    public void userWithIdIsInactivated(String name) throws Throwable {
+        usersSteps.inactivateUserWithName(name);
+    }
+
+    @Then("^User with id \"([^\"]*)\" is active$")
+    public void userWithIdIsActive(String name) throws Throwable {
+        usersSteps.isActiveSetTo(true, name);
+    }
+
+    @Then("^User with id \"([^\"]*)\" is not active$")
+    public void userWithIdIsNotActive(String name) throws Throwable {
+        usersSteps.isActiveSetTo(false, name);
+    }
 }

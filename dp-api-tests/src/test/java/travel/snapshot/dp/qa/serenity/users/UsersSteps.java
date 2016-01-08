@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.model.UserRole;
@@ -24,6 +23,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -301,4 +301,55 @@ public class UsersSteps extends BasicSteps {
     public void setUserPassword(String id, String password){
     	given().spec(spec).body(password).post("{id}/password", id);
     }
+
+    @Step
+    public void activateUserWithName(String username) {
+        User user = getUserByUsername(username);
+        String id = user.getUserId();
+        Response response = activateUser(id);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    @Step
+    public void inactivateUserWithName(String username) {
+        User user = getUserByUsername(username);
+        String id = user.getUserId();
+        Response response = inactivateUser(id);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    public Response activateUser(String id) {
+        return given().spec(spec).basePath(USERS_PATH)
+                .when().post("/{id}/active", id);
+    }
+
+    public Response inactivateUser(String id) {
+        return given().spec(spec).basePath(USERS_PATH)
+                .when().post("/{id}/inactive", id);
+    }
+
+    public void inactivateNotExistingUser(String id) {
+        Response response = inactivateUser(id);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+
+    public void activateNotExistingUser(String id) {
+        Response response = inactivateUser(id);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+
+    @Step
+    public void isActiveSetTo(boolean activeFlag, String name) {
+        User user = getUserByUsername(name);
+
+        if (activeFlag) {
+            assertNotNull("user should be returned", user);
+            assertEquals("user should have name=" + name, name, user.getUserName());
+            assertEquals("is_active parameter should be set to 0", Integer.valueOf(1), user.getIsActive());
+        } else {
+            assertNotNull("user should be returned", user);
+            assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), user.getIsActive());
+        }
+    }
+
 }

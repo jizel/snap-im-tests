@@ -23,6 +23,7 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -350,8 +351,8 @@ public class PropertySteps extends BasicSteps {
                 .when().post("/{propertyId}/users", propertyId);
     }
 
-    private PropertyUser getUserForProperty(String propertyId, String userName) {
-        Response customerUserResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
+    private PropertyUser getUserForProperty(String propertyId, String code) {
+        Response customerUserResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + code, null, null);
         return Arrays.asList(customerUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
     }
 
@@ -389,6 +390,60 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
+    @Step
+    public void bodyContainsEntityWith(String attributeName, String attributeValue) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, is(Integer.valueOf(attributeValue)));
+    }
+
+    @Step
+    public void activatePropertyWithCode(String code) {
+        Property property = getPropertyByCodeInternal(code);
+        Response response = activateProperty(property.getPropertyId());
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    @Step
+    public void inactivatePropertyWithCode(String code) {
+        Property property = getPropertyByCodeInternal(code);
+        Response response = inactivateProperty(property.getPropertyId());
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    }
+
+    public Response activateProperty(String id) {
+        return given().spec(spec).basePath(BASE_PATH__PROPERTIES)
+                .when().post("/{id}/active", id);
+    }
+
+    public Response inactivateProperty(String id) {
+        return given().spec(spec).basePath(BASE_PATH__PROPERTIES)
+                .when().post("/{id}/inactive", id);
+    }
+
+    @Step
+    public void isActiveSetTo(boolean activeFlag, String code) {
+        Property property = getPropertyByCodeInternal(code);
+
+        if (activeFlag) {
+            assertNotNull("Property should be returned", property);
+            assertEquals("Property should have code=" + code, code, property.getPropertyCode());
+            assertEquals("is_active parameter should be set to 0", Integer.valueOf(1), property.getIsActive());
+        } else {
+            assertNotNull("Property should be returned", property);
+            assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), property.getIsActive());
+        }
+    }
+
+    public void inactivateNotExistingProperty(String id) {
+        Response response = inactivateProperty(id);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+
+    public void activateNotExistingProperty(String id) {
+        Response response = inactivateProperty(id);
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+
 
     // TODO reuse existing code
 
@@ -405,15 +460,6 @@ public class PropertySteps extends BasicSteps {
 //        return customer;
 //    }
 //
-//    private Response activateCustomer(String id) {
-//        return given().spec(spec).basePath("/identity/customers")
-//                .when().post("/{id}/active", id);
-//    }
-//
-//    private Response inactivateCustomer(String id) {
-//        return given().spec(spec).basePath("/identity/customers")
-//                .when().post("/{id}/inactive", id);
-//    }
 //
 //    @Step
 //    public void customerWithIdIsGot(String customerId) {
@@ -447,26 +493,6 @@ public class PropertySteps extends BasicSteps {
 //        }
 //
 //        Response response = updateCustomer(original.getCustomerId(), customer, tempResponse.getHeader(HEADER_ETAG));
-//        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-//    }
-//
-//    @Step
-//    public void activateCustomerWithCode(String code) {
-//        Customer customer = getCustomerByCode(code);
-//        Response response = activateCustomer(customer.getCustomerId());
-//        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-//    }
-//
-//    @Step
-//    public void isActiveSetTo(boolean activeFlag, String code) {
-//        Customer customer = getCustomerByCode(code);
-//        fail("How to check it was changed?");
-//    }
-//
-//    @Step
-//    public void inactivateCustomerWithCode(String code) {
-//        Customer customer = getCustomerByCode(code);
-//        Response response = inactivateCustomer(customer.getCustomerId());
 //        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
 //    }
 //
