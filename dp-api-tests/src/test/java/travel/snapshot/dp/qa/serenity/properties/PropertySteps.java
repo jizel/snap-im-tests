@@ -567,5 +567,6 @@ public class PropertySteps extends BasicSteps {
 //        if (data.getWebsite() != null && !"".equals(data.getWebsite())) {
 //            assertEquals(data.getWebsite(), customerByCode.getWebsite());
 //        }
-//    }   
+//    }
+
 }

@@ -20,6 +20,7 @@ Feature: customers_properties_get
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
+
   Scenario: Getting customerProperty
     When Property with code "p1_code" from customer with code "c1t" is got with type "anchor"
     Then Response code is "200"
@@ -51,6 +52,7 @@ Feature: customers_properties_get
     When Nonexistent customerPropety id is got for customer with code "c1t"
     Then Response code is "404"
     And Custom code is "152"
+
 
   Scenario Outline: Getting list of customerProperties
   not working now
@@ -154,6 +156,7 @@ Feature: customers_properties_get
       | 10    | 0      | 10       |
       | 5     | 5      | 5        |
 
+
   Scenario Outline: Checking error codes for getting list of customerProperties
     When List of customerProperties is got for customer with code "c1t" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
@@ -182,6 +185,7 @@ Feature: customers_properties_get
     Given The following customers exist with random address
       | companyName                      | email               | code            | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | Filter list test Given company 1 | list_c1@tenants.biz | filter_list_c1t | filter_list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Bratislava |
+
 
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName                  | propertyCode                  | website                    | email           | isDemoProperty | timezone      |
@@ -230,7 +234,6 @@ Feature: customers_properties_get
       | 10    | 0      | 8        | 8     | type==anchor          | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 10    | 0      | 3        | 3     | type==data_owner      | type |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
       | 5     | 2      | 4        | 6     | valid_from<2015-06-15 |      | valid_to  | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
-
   #add all fields
 
     #TODO add test for wrong parameters in url
