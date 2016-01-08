@@ -6,14 +6,17 @@ Feature: customers_properties_get
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-
+      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
+      | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p3_code" and customer with code "c3t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
@@ -235,3 +238,15 @@ Feature: customers_properties_get
 
     #TODO add test for wrong parameters in url
 
+  Scenario Outline: Getting customers of a property
+    When List of customers for property with code "<code>" is got with limit "/null" and cursor "/null" and filter "/null" and sort "/null" and sort_desc "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And All customers are customers of property with code "<code>"
+    And All customers are active
+
+    Examples:
+      | code    |
+      | p1_code |
+      | p2_code |
+      | p3_code |

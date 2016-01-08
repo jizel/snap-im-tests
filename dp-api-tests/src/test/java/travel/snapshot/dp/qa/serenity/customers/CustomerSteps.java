@@ -129,6 +129,14 @@ public class CustomerSteps extends BasicSteps {
                 .when().post("/{id}/inactive", id);
     }
 
+    public void allCustomersAreActive() {
+    	Response response = getSessionResponse();
+    	List<Integer> isActiveList = response.body().jsonPath().getList("is_active");
+    	for (int c : isActiveList) {
+			assertEquals(1, c);
+		}
+    }
+
     private CustomerProperty getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         //TODO add type to query
         String filter = String.format("property_id==%s;type==%s", propertyId, type);

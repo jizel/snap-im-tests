@@ -19,10 +19,12 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -444,6 +446,21 @@ public class PropertySteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
+    public void listOfCustomersIsGotWith(String propertyCode, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Property p = getPropertyByCodeInternal(propertyCode);
+        Response response = getSecondLevelEntities(p.getPropertyId(), SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    public void allCustomersAreCustomersOfProperty(String propertyCode) {
+    	String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
+    	Response response = getSessionResponse();
+    	Customer[] customers = response.as(Customer[].class);
+    	for (Customer c : customers) {
+			given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getCustomerId()+"/properties").
+			then().body("property_id",hasItem(propertyID));
+		}
+    }
 
     // TODO reuse existing code
 

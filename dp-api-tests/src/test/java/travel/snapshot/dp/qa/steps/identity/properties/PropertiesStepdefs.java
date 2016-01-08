@@ -123,6 +123,16 @@ public class PropertiesStepdefs {
         propertySteps.listOfUsersIsGotWith(propertyCode, limit, cursor, filter, sort, sortDesc);
     }
 
+    @When("^List of customers for property with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_customers_for_property_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyCode,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        propertySteps.listOfCustomersIsGotWith(propertyCode, limit, cursor, filter, sort, sortDesc);
+    }
+
     // --- then ---
 
     @Then("^Body contains property with attribute \"([^\"]*)\"$")
@@ -143,6 +153,11 @@ public class PropertiesStepdefs {
     @Then("^There are (\\d+) properties returned$")
     public void There_are_properties_returned(int count) throws Throwable {
         propertySteps.numberOfEntitiesInResponse(Property.class, count);
+    }
+
+    @Then("^All customers are customers of property with code \"([^\"]*)\"$")
+    public void each_customer_is_a_customer_of_property_with_code(String propertyCode) throws Throwable {
+    	propertySteps.allCustomersAreCustomersOfProperty(propertyCode);
     }
 
     // --- and ---
