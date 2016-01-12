@@ -63,35 +63,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
-    //Overloaded for sorting
-    @Step
-    public void getData(String url, String granularity, String propertyId, String since, String until, String metric, String direction) {
-        LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(until);
-
-        RequestSpecification requestSpecification = given().spec(spec)
-                .parameter("access_token", "aaa");
-
-        if (StringUtils.isNotBlank(propertyId)) {
-            requestSpecification.header("x-property", propertyId);
-        }
-        if (StringUtils.isNotBlank(granularity)) {
-            requestSpecification.parameter("granularity", granularity);
-        }
-        if (StringUtils.isNotBlank(metric)) {
-            if(direction.equals("ascending"))requestSpecification.parameter("sort", metric);
-            if(direction.equals("descending"))requestSpecification.parameter("sort_desc", metric);
-        }
-        if (sinceDate != null) {
-            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
-        }
-        if (untilDate != null) {
-            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
-        }
-
-        Response response = requestSpecification.when().get(url);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
 
     @Step
     public void getItems(String url, String propertyId, String limit, String cursor) {
