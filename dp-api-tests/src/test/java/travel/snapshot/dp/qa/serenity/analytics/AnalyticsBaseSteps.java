@@ -13,10 +13,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiPredicate;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -103,6 +105,18 @@ public class AnalyticsBaseSteps extends BasicSteps {
     public void maximumNumberOfItemsInResponse(int count) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body("size()", lessThanOrEqualTo(count));
+    }
+    
+    @Step
+    public void referralsAreSorted(String metric, boolean ascending) {
+    	BiPredicate<Double, Double> direction = ascending ? (a,b) -> a<=b : (a,b) -> a>=b ;
+    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+    	List<Double> values = response.body().jsonPath().getList("values." + metric, double.class);
+    	for (int i = 0; i < values.size()-1; i++) {
+			assertTrue("\nValue at index "+i+": "+values.get(i)+"\n"
+					+ "Value at index "+(i+1)+": "+values.get(i+1),
+					direction.test(values.get(i),values.get(i+1)));
+    	}
     }
 
     @Step
