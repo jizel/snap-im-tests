@@ -72,12 +72,12 @@ Feature: facebook
       | /analytics/facebook/unlikes         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/reach           | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/followers       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | day         | 90    | 2015-06-07 | 2015-12-07 | 2015-09-09 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | day         | 366   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14 | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14 | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14 | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14 | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | day         | 366   | 2014-01-01 | 2016-01-14 | 2015-01-14 | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/number_of_posts | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/engagement      | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/likes           | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
@@ -96,12 +96,12 @@ Feature: facebook
       | /analytics/facebook/unlikes         | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/reach           | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/followers       | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | week        | 26    | 2015-01-07 | 2015-11-30 | 2015-06-01 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/number_of_posts | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/engagement      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/likes           | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
@@ -114,12 +114,12 @@ Feature: facebook
       | /analytics/facebook/unlikes         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/reach           | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
       | /analytics/facebook/followers       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/number_of_posts | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/engagement      | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/likes           | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/unlikes         | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/reach           | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
-      | /analytics/facebook/followers       | month       | 11    | 2014-02-01 | 2015-12-18 | 2015-01-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/number_of_posts | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/engagement      | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/likes           | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/unlikes         | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/reach           | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
+      | /analytics/facebook/followers       | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | application/json | 200           | facebook   |
 
   Scenario Outline: Getting non-existent analytics data
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -178,9 +178,9 @@ Feature: facebook
 
     Examples: 
       | url                       | granularity | start_date | end_date   | property                             | since      | until      | content_type     | response_code | count |
-      | /analytics/facebook/reach | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-01 | 1888-12-31 | application/json | 200           | 1     |
-      | /analytics/facebook/likes | week        | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2014-12-29 | 1888-12-30 | application/json | 200           | 1     |
-      | /analytics/facebook/reach | day         | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2014-12-23 | 1889-01-01 | application/json | 200           | 1     |
+      | /analytics/facebook/reach | month       | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-02-01 | 1888-12-31 | application/json | 200           | 1     |
+      | /analytics/facebook/likes | week        | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-19 | 1888-12-30 | application/json | 200           | 1     |
+      | /analytics/facebook/reach | day         | 1888-11-01 | 1889-01-01 | 99999999-9999-4999-a999-999999999999 | 2015-01-14 | 1889-01-01 | application/json | 200           | 1     |
 
   Scenario Outline: Checking default parameter values
     Empty column in examples section means default value will be used for this parameter.

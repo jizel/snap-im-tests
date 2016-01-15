@@ -196,4 +196,3 @@ Feature: Users_get
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |
       | /null | /null  | 1        | 1     | phone==+42010111218                           | /null     | /null     | other_default_7                                                                          |
   #add all fields
-
