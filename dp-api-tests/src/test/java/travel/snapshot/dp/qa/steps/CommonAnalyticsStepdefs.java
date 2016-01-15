@@ -35,14 +35,9 @@ public class CommonAnalyticsStepdefs {
         steps.responseContainsValuesForAllMetrics(count);
     }
 
-    @Then("^\"([^\"]*)\" value is not more than \"([^\"]*)\" value$")
-    public void value_is_no_more_than(String value1, String value2) throws Throwable {
-        steps.valueIsLessThanOrEqualTo(value1, value2);
-    }
-
-    @Then("^The metric count is (\\d*[,.]?\\d*)")
+    @Then("^The metric count is (\\d+[,.]?\\d*)$")
     public void Metric_count_is(int value) throws Throwable {
-        steps.bodyArrayContainsDouble("values", value);
+        steps.integerPartOfValueIs("values", value);
     }
 
     @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")

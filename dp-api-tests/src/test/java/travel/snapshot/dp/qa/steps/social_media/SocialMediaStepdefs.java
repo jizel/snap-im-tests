@@ -37,6 +37,11 @@ public class SocialMediaStepdefs {
     public void Get_social_media_with_missing_property_header(String url) throws Throwable {
         steps.getData("/social_media" + url, "day", null, null, null);
     }
+    
+    @When("^Property is missing for \"([^\"]*)\"$")
+    public void property_is_missing_for(String url) throws Throwable {
+        steps.getDataWithoutProperty(url);
+    }
 
     @When("^List of social media items \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
     public void List_of_items_is_got_with_limit_and_cursor(String url, String propertyId,

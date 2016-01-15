@@ -27,10 +27,10 @@ public class BasicStepDefs {
         basicSteps.isCalledWithoutTokenUsingMethod(service, method);
     }
 
-    //  @Then("^Custom code is \"(\\d+)\"$")
-    //  public void Custom_code_is(Integer customCode) throws Throwable {
-    //      basicSteps.customCodeIs(customCode);
-    //  }
+     @Then("^Custom code is (\\d+)$")
+     public void Custom_code_is(Integer customCode) throws Throwable {
+         basicSteps.customCodeIs(customCode);
+     }
 
     @Then("^Custom code is \"([^\"]*)\"$")
     public void custom_code_is(Integer customCode) throws Throwable {
