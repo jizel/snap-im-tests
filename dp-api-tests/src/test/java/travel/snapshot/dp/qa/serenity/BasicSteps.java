@@ -123,11 +123,13 @@ public class BasicSteps {
         response.then().body(attributeName, hasItem(item));
     }
     
+    /**
+     * This method is used instead of bodyContainsCollectionWith()
+     * when the collection contains values of type Double.
+     * Only the integer part of the value is validated.
+     */
     public void integerPartOfValueIs(String path, int value) {
     	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-    	// This method is used instead of bodyContainsCollectionWith()
-    	// when the collection contains values of type Double. 
-    	// Only the integer part of the value is validated.
     	List<Double> values = response.body().jsonPath().getList(path, double.class);
     	assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
     }
