@@ -1,32 +1,27 @@
 Feature: properties_create_update_delete
 
   #TODO add etag things to get/update/create
-
-  Background:
+  Background: 
     Given Database is cleaned
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
   Scenario: Creating property without parent with random address
-
     When Property is created with random address and billing address
       | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague |
-
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "property_name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
     And "Location" header is set and contains the same property
 
-
   Scenario: Deleting Property
     When Property with code "p1_code" is deleted
     Then Response code is "204"
     And Body is empty
     And Property with same id doesn't exist
-
 
   Scenario: Checking error code for deleting property
     When Nonexistent property id is deleted
@@ -131,3 +126,78 @@ Feature: properties_create_update_delete
       | 10    | 0      | code==   | /null        | /null        | 400           | 63          |
       | 10    | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
 
+  Scenario Outline: Validate that property regions belong to the correct country
+    When A property from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    Then Content type is "application/json"
+    And Response code is 201
+    And Body contains entity with attribute "address.region" value "<region>"
+
+    Examples: 
+      | country | region         | code       | email           |
+      | US      | Alabama        | propcode1  | mail1@mail.com  |
+      | US      | Alaska         | propcode2  | mail2@mail.com  |
+      | US      | Arizona        | propcode3  | mail3@mail.com  |
+      | US      | Arkansas       | propcode4  | mail4@mail.com  |
+      | US      | California     | propcode5  | mail5@mail.com  |
+      | US      | Colorado       | propcode6  | mail6@mail.com  |
+      | US      | Connecticut    | propcode7  | mail7@mail.com  |
+      | US      | Delaware       | propcode8  | mail8@mail.com  |
+      | US      | Florida        | propcode9  | mail9@mail.com  |
+      | US      | Georgia        | propcode10 | mail10@mail.com |
+      | US      | Hawaii         | propcode11 | mail11@mail.com |
+      | US      | Idaho          | propcode12 | mail12@mail.com |
+      | US      | Illinois       | propcode13 | mail13@mail.com |
+      | US      | Indiana        | propcode14 | mail14@mail.com |
+      | US      | Iowa           | propcode15 | mail15@mail.com |
+      | US      | Kansas         | propcode16 | mail16@mail.com |
+      | US      | Kentucky       | propcode17 | mail17@mail.com |
+      | US      | Louisiana      | propcode18 | mail18@mail.com |
+      | US      | Maine          | propcode19 | mail19@mail.com |
+      | US      | Maryland       | propcode20 | mail20@mail.com |
+      | US      | Massachusetts  | propcode21 | mail21@mail.com |
+      | US      | Michigan       | propcode22 | mail22@mail.com |
+      | US      | Minnesota      | propcode23 | mail23@mail.com |
+      | US      | Mississippi    | propcode24 | mail24@mail.com |
+      | US      | Missouri       | propcode25 | mail25@mail.com |
+      | US      | Montana        | propcode26 | mail26@mail.com |
+      | US      | Nebraska       | propcode27 | mail27@mail.com |
+      | US      | Nevada         | propcode28 | mail28@mail.com |
+      | US      | New Hampshire  | propcode29 | mail29@mail.com |
+      | US      | New Jersey     | propcode30 | mail30@mail.com |
+      | US      | New Mexico     | propcode31 | mail31@mail.com |
+      | US      | New York       | propcode32 | mail32@mail.com |
+      | US      | North Carolina | propcode33 | mail33@mail.com |
+      | US      | North Dakota   | propcode34 | mail34@mail.com |
+      | US      | Ohio           | propcode35 | mail35@mail.com |
+      | US      | Oklahoma       | propcode36 | mail36@mail.com |
+      | US      | Oregon         | propcode37 | mail37@mail.com |
+      | US      | Pennsylvania   | propcode38 | mail38@mail.com |
+      | US      | Rhode Island   | propcode39 | mail39@mail.com |
+      | US      | South Carolina | propcode40 | mail40@mail.com |
+      | US      | South Dakota   | propcode41 | mail41@mail.com |
+      | US      | Tennessee      | propcode42 | mail42@mail.com |
+      | US      | Texas          | propcode43 | mail43@mail.com |
+      | US      | Utah           | propcode44 | mail44@mail.com |
+      | US      | Vermont        | propcode45 | mail45@mail.com |
+      | US      | Virginia       | propcode46 | mail46@mail.com |
+      | US      | Washington     | propcode47 | mail47@mail.com |
+      | US      | West Virginia  | propcode48 | mail48@mail.com |
+      | US      | Wisconsin      | propcode49 | mail49@mail.com |
+      | US      | Wyoming        | propcode50 | mail50@mail.com |
+
+  Scenario Outline: Checking error codes for regions
+    When A property from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    Then Content type is "application/json"
+    And Response code is <response_code>
+    And Custom code is "<custom_code>"
+    And Body contains entity with attribute "message" value "Region with identifier <region> was not found."
+
+    Examples: 
+      | country | region  | code       | email           | response_code | custom_code |
+      | DE      | invalid | propcode8  | mail8@mail.com  | 400           | 63          |
+      | BG      | invalid | propcode9  | mail9@mail.com  | 400           | 63          |
+      | US      | invalid | propcode10 | mail10@mail.com | 400           | 63          |
+      | CZ      | invalid | propcode11 | mail11@mail.com | 400           | 63          |
+      | AU      | invalid | propcode12 | mail12@mail.com | 400           | 63          |
+      | CZ      | Texas   | propcode14 | mail14@mail.com | 400           | 63          |
+      | AU      | Ohio    | propcode15 | mail15@mail.com | 400           | 63          |

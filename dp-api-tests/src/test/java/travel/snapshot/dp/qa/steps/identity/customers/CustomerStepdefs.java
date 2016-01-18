@@ -35,6 +35,23 @@ public class CustomerStepdefs {
     public void The_following_tenants_exist(List<Customer> customers) throws Throwable {
         customerSteps.followingCustomersExist(customers);
     }
+    
+    @When("^A customer from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
+    public void customer_from_country_region_code_email_is_created(String country, String region, String code, String email) {
+        Address address = new Address();
+        Customer customer = new Customer();
+        address.setAddressLine1("someAddress");
+        address.setCity("someCity");
+        address.setZipCode("1234");
+        address.setCountry(country);
+        address.setRegion(region);
+        customer.setCompanyName("someCompany");
+        customer.setCode(code);
+        customer.setEmail(email);
+        customer.setIsDemoCustomer(true);
+        customer.setTimezone("GMT");
+        customerSteps.followingCustomerIsCreatedWithAddress(customer, address);
+    }
 
     @Given("^The following customers with codes don't exist$")
     public void The_following_customers_dont_exist(List<String> customerCodes) throws Throwable {
