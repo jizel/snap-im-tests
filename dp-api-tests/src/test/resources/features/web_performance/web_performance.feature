@@ -232,19 +232,31 @@ Feature: web_performance
       | /analytics/conversion_rates | day         | today - 8 days | today | 4     | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | application/json | 200           |
 
   Scenario Outline: Verifying sorting
-    When Get web performance referrals with "day" granularity for "<property>" since "<since>" until "<until>" sorted by "<metric>" "<direction>"
+    When Get web performance referrals with "<granularity>" granularity for "<property>" since "<since>" until "<until>" sorted by "<metric>" "<direction>"
     Then Response code is "200"
     And Content type is "application/json"
     And Values are sorted by "<metric>" in "<direction>"
 
     Examples: 
-      | property                             | since           | until | metric        | direction  |
-      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits        | ascending  |
-      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | revenue       | ascending  |
-      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits_unique | ascending  |
-      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits        | descending |
-      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | revenue       | descending |
-      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today | visits_unique | descending |
+      | property                             | since           | until      | granularity | metric        | direction  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today      | day         | visits        | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today      | week        | revenue       | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today      | month       | visits_unique | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today      | day         | visits        | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today      | week        | revenue       | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | today - 80 days | today      | month       | visits_unique | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | today      | day         | visits        | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | today      | week        | revenue       | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | today      | month       | visits_unique | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | today      | day         | visits        | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | today      | week        | revenue       | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | today      | month       | visits_unique | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | 2016-01-10 | day         | visits        | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | 2016-01-10 | week        | revenue       | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | 2016-01-10 | month       | visits_unique | ascending  |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | 2016-01-10 | day         | visits        | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | 2016-01-10 | week        | revenue       | descending |
+      | 54db88d7-0b3d-4c27-b877-087d9071f5b6 | 2016-01-01      | 2016-01-10 | month       | visits_unique | descending |
 
   Scenario Outline: Checking error codes for sorting
     When Get web performance referrals with "day" granularity for "54db88d7-0b3d-4c27-b877-087d9071f5b6" since "today - 80 days" until "today" sorted by "<metric>" "<direction>"
