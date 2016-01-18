@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -162,7 +163,7 @@ public class PropertiesStepdefs {
 
     // --- and ---
 
-    @And("^Property with same id doesn't exist$")
+    @Then("^Property with same id doesn't exist$")
     public void Property_with_same_id_doesn_t_exist() throws Throwable {
         propertySteps.propertyIdInSessionDoesntExist();
     }
@@ -212,6 +213,13 @@ public class PropertiesStepdefs {
     public void Customer_with_code_is_not_active(String code) throws Throwable {
         propertySteps.isActiveSetTo(false, code);
     }
+
+    @Then("^Property \"([^\"]*)\" is not assigned to customer \"([^\"]*)\"$")
+    public void propertyIsNotAssignedToCustomer(String propertyCode, String customerCode) throws Throwable {
+        propertySteps.customerDoesNotExistForProperty(customerCode, propertyCode);
+    }
+
+
 
     // TODO reuse existing code
 

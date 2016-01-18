@@ -16,6 +16,7 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -356,6 +358,17 @@ public class PropertySteps extends BasicSteps {
     private PropertyUser getUserForProperty(String propertyId, String code) {
         Response customerUserResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + code, null, null);
         return Arrays.asList(customerUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
+    }
+
+    private Customer getCustomerForProperty(String propertyId, String customerCode){
+        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "code==" + customerCode, null, null);
+        return Arrays.asList(customerResponse.as(Customer[].class)).stream().findFirst().orElse(null);
+    }
+
+    public void customerDoesNotExistForProperty(String customerCode, String propertyCode){
+        Property p = getPropertyByCodeInternal(propertyCode);
+        Customer cust = getCustomerForProperty(p.getPropertyId(), customerCode);
+        assertNull("Customer should not be link with property", cust);
     }
 
     public void userIsAddedToProperty(User u, String propertyCode) {

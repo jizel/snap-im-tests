@@ -63,6 +63,10 @@ public class CustomerSteps extends BasicSteps {
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Customer cannot be created");
             }
+
+            if(t.getIsActive() != 0){
+                activateCustomer(t.getCode());
+            }
         });
         Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
     }
