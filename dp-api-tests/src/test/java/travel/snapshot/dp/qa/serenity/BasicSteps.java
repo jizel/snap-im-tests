@@ -56,7 +56,7 @@ public class BasicSteps {
     protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
     protected static final String CONFIGURATION_NGINX_BASE_URI = "configuration_nginx.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
-    protected static final String LIMIT_TO_ALL = "1000000";
+    protected static final String LIMIT_TO_ALL = "200";
     protected static final String LIMIT_TO_ONE = "1";
     protected static final String CURSOR_FROM_FIRST = "0";
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
