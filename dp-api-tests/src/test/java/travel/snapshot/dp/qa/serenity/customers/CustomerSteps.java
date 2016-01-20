@@ -64,7 +64,7 @@ public class CustomerSteps extends BasicSteps {
                 fail("Customer cannot be created");
             }
 
-            if(t.getIsActive() != 0){
+            if(t.getIsActive() != null && t.getIsActive() != 0){
                 activateCustomer(t.getCode());
             }
         });
