@@ -3,7 +3,7 @@ apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'net.researchgate.release'
 
-group 'travel.snapshot.qa.manager.tomcat'
+group 'travel.snapshot.qa.manager'
 version '1.0.0-SNAPSHOT'
 
 def versions = [
@@ -46,8 +46,11 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
+
+    // Spacelift
     compile "org.arquillian.spacelift:arquillian-spacelift:${versions.spacelift}"
-    compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
+
+    // ShrinkWrap
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${versions.shrinkwrap}"
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi:${versions.shrinkwrap}"
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api-maven:${versions.shrinkwrap}"
@@ -58,6 +61,10 @@ dependencies {
         exclude group: "com.google.guava", module: "guava"
     }
 
+    // Other
+    compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
+
+    // Tests
     testCompile "junit:junit:${versions.junit}"
 }
 
@@ -67,8 +74,8 @@ test {
         events 'started', 'passed'
     }
     systemProperties = [
-            remote: System.getProperty('remote', 'false'),
-            remoteHost: System.getProperty('remoteHost', '127.0.0.1')
+            "remote": System.getProperty('remote', 'false'),
+            "remote.host": System.getProperty('remote.host', '127.0.0.1'),
     ]
 }
 
@@ -79,7 +86,7 @@ configurations {
 uploadArchives {
     repositories {
         mavenDeployer {
-            pom.groupId = 'travel.snapshot.qa.manager.tomcat'
+            pom.groupId = 'travel.snapshot.qa.manager'
 
             repository(url: 'https://nexus.snapshot.travel/content/repositories/releases/') {
                 authentication(userName: nexusUser , password: nexusPassword)

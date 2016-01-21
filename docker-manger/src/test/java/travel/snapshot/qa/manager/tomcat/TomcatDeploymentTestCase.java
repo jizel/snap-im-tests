@@ -53,7 +53,7 @@ public class TomcatDeploymentTestCase {
 
     private static final boolean remote = Boolean.parseBoolean(System.getProperty("remote"));
 
-    private static final String remoteHost = System.getProperty("remoteHost", "127.0.0.1");
+    private static final String remoteHost = System.getProperty("remote.host", "127.0.0.1");
 
     private Archive<WebArchive> archive = ShrinkWrap.create(WebArchive.class, DEPLOYMENT_NAME).setWebXML("web.xml");
 

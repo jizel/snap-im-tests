@@ -24,6 +24,7 @@ public class TomcatManagerConfiguration {
     private final String password;
     private final Charset urlCharset;
     private final URL managerUrl;
+    private final boolean remote;
 
     private TomcatManagerConfiguration(Builder builder) {
         javaHome = builder.javaHome;
@@ -39,6 +40,7 @@ public class TomcatManagerConfiguration {
         password = builder.password;
         urlCharset = builder.urlCharset;
         managerUrl = builder.managerUrl;
+        remote = builder.remote;
     }
 
     public static final class Builder {
@@ -163,7 +165,8 @@ public class TomcatManagerConfiguration {
         }
 
         /**
-         * @param remote true if this container is running on the other host, defaults to false
+         * Sets remote flag to true, it means that Tomcat container is running on other host
+         *
          * @return this builder
          */
         public Builder remote() {
@@ -287,5 +290,9 @@ public class TomcatManagerConfiguration {
 
     public boolean isOutputToConsole() {
         return outputToConsole;
+    }
+
+    public boolean isRemote() {
+        return this.remote;
     }
 }

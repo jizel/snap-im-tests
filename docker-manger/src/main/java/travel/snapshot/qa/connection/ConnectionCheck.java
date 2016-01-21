@@ -1,6 +1,10 @@
 package travel.snapshot.qa.connection;
 
+import org.arquillian.spacelift.task.Task;
+
 public class ConnectionCheck {
+
+    private final Task<?, Boolean> checkingTask;
 
     private final Protocol protocol;
 
@@ -15,29 +19,36 @@ public class ConnectionCheck {
         this.host = builder.host;
         this.port = builder.port;
         this.timeout = builder.timeout;
+        this.checkingTask = builder.checkingTask;
     }
 
     public void execute() {
         new ConnectionCheckExecutor().execute(this);
     }
 
-    public Protocol getProtocol() {
+    Task<?, Boolean> getCheckingTask() {
+        return checkingTask;
+    }
+
+    Protocol getProtocol() {
         return protocol;
     }
 
-    public String getHost() {
+    String getHost() {
         return host;
     }
 
-    public int getPort() {
+    int getPort() {
         return port;
     }
 
-    public long getTimeout() {
+    long getTimeout() {
         return timeout;
     }
 
     public static final class Builder {
+
+        private Task<?, Boolean> checkingTask;
 
         private Protocol protocol = Protocol.TCP;
 
@@ -46,6 +57,14 @@ public class ConnectionCheck {
         private int port = 8080;
 
         private long timeout = 60; // in seconds
+
+        public Builder() {
+            this(null);
+        }
+
+        public Builder(Task<?, Boolean> checkingTask) {
+            this.checkingTask = checkingTask;
+        }
 
         public Builder protocol(Protocol protocol) {
             this.protocol = protocol;
