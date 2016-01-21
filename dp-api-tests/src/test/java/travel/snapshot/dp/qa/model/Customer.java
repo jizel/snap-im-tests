@@ -215,9 +215,7 @@ public class Customer {
      **/
     @ApiModelProperty(value = "Indicates whether the customer is active")
     @JsonProperty("is_active")
-    public Integer getIsActive() {
-        return isActive;
-    }
+    public Integer getIsActive() { return isActive; }
 
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;

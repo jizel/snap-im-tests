@@ -3,20 +3,21 @@ Feature: customers_properties_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive  |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin | 0         |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin | 0         |
+      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin | 1         |
 
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
+      | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
-
+    Given Relation between property with code "p1_code" and customer with code "c2t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c3t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p2_code" and customer with code "c3t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
   Scenario: Adding property to customer with some type valid from date to date
   is failing because create passes just for the first time
@@ -78,6 +79,11 @@ Feature: customers_properties_create_update_delete
     When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "valid_from" to value "2015-01-01" with invalid etag
     Then Response code is "412"
     And Custom code is "57"
+
+  Scenario: Delete customer should remove all related property relation
+    Given Relation between property with code "p3_code" and customer with code "c3t" exists with type "anchor" from "2016-01-01" to "2016-01-15"
+    Given Customer with code "c3t" is deleted
+    Then Property "p3_code" is not assigned to customer "c3t"
 
   Scenario Outline: Updating customerProperty error codes
 
