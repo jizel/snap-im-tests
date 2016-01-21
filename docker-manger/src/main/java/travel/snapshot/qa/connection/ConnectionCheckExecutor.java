@@ -20,19 +20,24 @@ public class ConnectionCheckExecutor {
 
     private static final long REEXECUTION_INTERVAL = 3;
 
+    private void execute(final Task<?, Boolean> checkingTask, final long timeout) {
+        try {
+            checkingTask.execute()
+                    .reexecuteEvery(REEXECUTION_INTERVAL, TimeUnit.SECONDS)
+                    .until(timeout, TimeUnit.SECONDS, CONNECTION_ESTABLISHED_CONDITION);
+        } catch (ExecutionException ex) {
+            throw new ConnectionCheckException(String.format("Unable to connect in %s seconds.", timeout), ex);
+        }
+    }
+
     public void execute(ConnectionCheck check) throws ConnectionCheckException {
 
-        final Class<? extends Task<ConnectionCheck, Boolean>> checkTask = getCheckTask(check.getProtocol());
+        final Task<?, Boolean> setCheckingTask = check.getCheckingTask();
 
-        try {
-            Spacelift.task(check, checkTask)
-                    .execute()
-                    .reexecuteEvery(REEXECUTION_INTERVAL, TimeUnit.SECONDS)
-                    .until(check.getTimeout(), TimeUnit.SECONDS, CONNECTION_ESTABLISHED_CONDITION);
-        } catch (ExecutionException ex) {
-            throw new ConnectionCheckException(String.format("Unable to connect to %s:%s on %s in %s seconds.",
-                    check.getHost(), check.getPort(), check.getProtocol(), check.getTimeout()),
-                    ex);
+        if (setCheckingTask != null) {
+            execute(setCheckingTask, check.getTimeout());
+        } else {
+            execute(Spacelift.task(check, getCheckTask(check.getProtocol())), check.getTimeout());
         }
     }
 

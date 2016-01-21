@@ -224,6 +224,7 @@ public abstract class AbstractCommandExecutor implements CommandExecutor {
         return HttpClients.custom()
                 .setDefaultHeaders(defaultHeaders)
                 .disableAuthCaching()
+                .setRetryHandler(new TomcatRetryRequestHandler())
                 .build();
     }
 

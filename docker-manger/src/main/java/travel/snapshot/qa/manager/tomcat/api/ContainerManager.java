@@ -2,6 +2,7 @@ package travel.snapshot.qa.manager.tomcat.api;
 
 import org.jboss.shrinkwrap.api.Archive;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
+import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 
 /**
  * Manages container lifecycle and deployments.
@@ -103,4 +104,11 @@ public interface ContainerManager {
      * @return Tomcat response from container
      */
     TomcatResponse reloadDeployment(String deployment) throws ContainerDeploymentException;
+
+    /**
+     * Gets configuration of Tomcat manager
+     *
+     * @return configuration of this Tomcat manager
+     */
+    TomcatManagerConfiguration getConfiguration();
 }

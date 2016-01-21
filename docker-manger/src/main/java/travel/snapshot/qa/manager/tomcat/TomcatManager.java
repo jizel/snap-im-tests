@@ -139,21 +139,11 @@ public class TomcatManager implements ContainerManager {
 
     @Override
     public boolean isRunning() throws ContainerManagerException {
-
-        boolean running = false;
-
-        try {
-            if (process != null && process.isAlive()) {
-                listDeployments();
-                running = true;
-            } else {
-                logger.info("Tomcat manager process is not alive.");
-            }
-        } catch (ContainerManagerException ex) {
-            // intentionally empty
+        if (configuration.isRemote()) {
+            return canListDeployments();
         }
 
-        return running;
+        return process != null && process.isAlive() && canListDeployments();
     }
 
     @Override
@@ -255,6 +245,11 @@ public class TomcatManager implements ContainerManager {
         }
     }
 
+    @Override
+    public TomcatManagerConfiguration getConfiguration() {
+        return configuration;
+    }
+
     private static class ConsoleConsumer implements Runnable {
 
         private final Process process;
@@ -291,6 +286,15 @@ public class TomcatManager implements ContainerManager {
                     // intentionally empty
                 }
             }
+        }
+    }
+
+    private boolean canListDeployments() {
+        try {
+            listDeployments();
+            return true;
+        } catch (ContainerDeploymentException ex) {
+            return false;
         }
     }
 }
