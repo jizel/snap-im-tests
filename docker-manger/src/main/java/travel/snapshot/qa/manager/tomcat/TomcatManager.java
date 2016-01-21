@@ -4,6 +4,7 @@ import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.arquillian.spacelift.process.Command;
 import org.jboss.shrinkwrap.api.Archive;
+import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManager;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
@@ -14,7 +15,7 @@ import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseBody;
-import travel.snapshot.qa.manager.tomcat.check.TomcatStartChecker;
+import travel.snapshot.qa.manager.tomcat.check.TomcatStartedCheckTask;
 import travel.snapshot.qa.manager.tomcat.command.TomcatListCommand;
 import travel.snapshot.qa.manager.tomcat.command.deployment.TomcatDeployCommand;
 import travel.snapshot.qa.manager.tomcat.command.deployment.TomcatFileDeployCommand;
@@ -76,7 +77,7 @@ public class TomcatManager implements ContainerManager {
     @Override
     public void start() throws ContainerManagerException {
 
-        if (Spacelift.task(configuration, TomcatStartChecker.class).execute().await()) {
+        if (Spacelift.task(configuration, TomcatStartedCheckTask.class).execute().await()) {
             throw new ContainerManagerException("Tomcat container is already running!");
         }
 
@@ -110,9 +111,9 @@ public class TomcatManager implements ContainerManager {
             // otherwise we would start the container but it would be never killed upon JVM termination
             Runtime.getRuntime().addShutdownHook(shutdownThread);
 
-            Spacelift.task(configuration, TomcatStartChecker.class).execute().until(
+            Spacelift.task(configuration, TomcatStartedCheckTask.class).execute().until(
                     new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS),
-                    TomcatStartChecker.TOMCAT_STARTED_CONDITION);
+                    new BasicWaitingCondition());
         } catch (Exception ex) {
             throw new ContainerManagerException("Could not start Tomcat container.", ex);
         }

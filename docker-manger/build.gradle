@@ -7,10 +7,24 @@ group 'travel.snapshot.qa.manager'
 version '1.0.0-SNAPSHOT'
 
 def versions = [
+        // core
         spacelift  : "1.0.0.Alpha9",
+        cube       : "1.0.0.Alpha7",
+        arquillian : "1.1.8.Final",
         shrinkwrap : "2.1.0",
+
+        // helpers
         httpclient : "4.5.1",
-        junit      : "4.12"
+        mysql      : "5.1.37",
+        mongo      : "3.2.1",
+
+        // test
+        junit      : "4.12",
+
+        // logging
+        log4j      : "1.2.17",
+        slf4j      : "1.7.13"
+
 ]
 
 buildscript {
@@ -50,6 +64,11 @@ dependencies {
     // Spacelift
     compile "org.arquillian.spacelift:arquillian-spacelift:${versions.spacelift}"
 
+    // Docker
+    compile "org.arquillian.cube:arquillian-cube-docker:${versions.cube}"
+    compile "org.jboss.arquillian.core:arquillian-core-impl-base:${versions.arquillian}"
+    compile "org.jboss.arquillian.config:arquillian-config-impl-base:${versions.arquillian}"
+
     // ShrinkWrap
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${versions.shrinkwrap}"
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-spi:${versions.shrinkwrap}"
@@ -63,6 +82,12 @@ dependencies {
 
     // Other
     compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
+    compile "mysql:mysql-connector-java:${versions.mysql}"
+    compile "org.mongodb:mongodb-driver:${versions.mongo}"
+
+    // logging
+    compile "log4j:log4j:${versions.log4j}"
+    compile "org.slf4j:slf4j-log4j12:${versions.slf4j}"
 
     // Tests
     testCompile "junit:junit:${versions.junit}"
@@ -76,6 +101,11 @@ test {
     systemProperties = [
             "remote": System.getProperty('remote', 'false'),
             "remote.host": System.getProperty('remote.host', '127.0.0.1'),
+
+            "snapshot.registry.username": System.getProperty("snapshot.registry.username", "snapshot_docker"),
+            "snapshot.registry.password": System.getProperty("snapshot.registry.password", "aqGG86d1Yf3Y"),
+
+            "arquillian.debug": System.getProperty("arquillian.debug", "true"),
     ]
 }
 

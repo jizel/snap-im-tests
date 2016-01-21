@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.tomcat.configuration;
 
+import travel.snapshot.qa.manager.api.Configuration;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
 
 import java.io.File;
@@ -9,7 +10,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class TomcatManagerConfiguration {
+public class TomcatManagerConfiguration implements Configuration {
 
     private final File javaHome;
     private final String javaVmArguments;

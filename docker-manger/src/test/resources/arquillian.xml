@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian
+  http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <extension qualifier="docker">
+        <property name="serverVersion">1.21</property>
+        <property name="serverUri">http://localhost:2375</property>
+        <property name="dockerRegistry">http://docker.snapshot.travel:5000</property>
+        <property name="username">snapshot_docker</property>
+        <property name="password">aqGG86d1Yf3Y</property>
+        <property name="definitionFormat">CUBE</property>
+        <property name="dockerContainers">
+            tomcat:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                await:
+                    strategy: polling
+                    type: static
+                    ip: 127.0.0.1
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                links:
+                    - mariadb:mariadb
+                    - mongodb:mongodb
+                    - activemq:activemq
+            mariadb:
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.10
+                exposedPorts: [3306/tcp]
+                await:
+                    strategy: polling
+                    type: static
+                    ip: 127.0.0.1
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [3306/tcp]
+            mongodb:
+                image: docker.snapshot.travel:5000/snapshot/mongo:3.2.1
+                exposedPorts: [27017/tcp]
+                await:
+                    strategy: polling
+                    type: static
+                    ip: 127.0.0.1
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [27017/tcp]
+            activemq:
+                image: docker.snapshot.travel:5000/snapshot/activemq:5.12.1
+                exposedPorts: [1099/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+                await:
+                    strategy: polling
+                    type: static
+                    ip: 127.0.0.1
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1098->1099/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+        </property>
+    </extension>
+
+</arquillian>

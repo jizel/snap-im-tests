@@ -21,7 +21,7 @@ public class TomcatStartedCheckTask extends Task<TomcatManagerConfiguration, Boo
     @Override
     protected Boolean process(TomcatManagerConfiguration configuration) throws Exception {
 
-        TomcatCommandExecutor listCommandExecutor = new TomcatCommandExecutor(configuration);
+        final TomcatCommandExecutor listCommandExecutor = new TomcatCommandExecutor(configuration);
 
         boolean running = false;
 
