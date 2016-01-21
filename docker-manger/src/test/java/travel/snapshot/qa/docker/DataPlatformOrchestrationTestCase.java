@@ -2,12 +2,14 @@ package travel.snapshot.qa.docker;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
 
 @RunWith(JUnit4.class)
+@Ignore("be sure you have Docker set up at your host")
 public class DataPlatformOrchestrationTestCase {
 
     private static final DataPlatformOrchestration orchestration = new DataPlatformOrchestration();

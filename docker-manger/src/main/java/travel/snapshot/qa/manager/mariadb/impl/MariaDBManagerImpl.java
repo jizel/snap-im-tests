@@ -9,7 +9,11 @@ import travel.snapshot.qa.manager.mariadb.check.MariaDBStartedCheckTask;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.configuration.Validate;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,6 +47,36 @@ public class MariaDBManagerImpl implements MariaDBManager {
         Connection connection = getConnection();
         executeScript(connection, reader);
         closeConnection(connection);
+    }
+
+    @Override
+    public void executeScript(String sqlScript) {
+        executeScript(new File(sqlScript));
+    }
+
+    @Override
+    public void executeScript(File sqlScript) {
+        try (final Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sqlScript)))) {
+            executeScript(reader);
+        } catch (IOException ex) {
+            throw new MariaDBManagerException(String.format("Unable to find SQL script file to execute: %s. ",
+                    sqlScript.getAbsolutePath()), ex);
+        }
+    }
+
+    @Override
+    public void executeScript(Connection connection, String sqlScript) {
+        executeScript(connection, new File(sqlScript));
+    }
+
+    @Override
+    public void executeScript(Connection connection, File sqlScript) {
+        try (final Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sqlScript)))) {
+            executeScript(connection, reader);
+        } catch (IOException ex) {
+            throw new MariaDBManagerException(String.format("Unable to find SQL script file to execute: %s",
+                    sqlScript.getAbsolutePath()), ex);
+        }
     }
 
     @Override

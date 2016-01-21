@@ -14,6 +14,8 @@ import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.impl.MongoDBManagerImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @RunWith(JUnit4.class)
@@ -63,6 +65,16 @@ public class MongoDBDockerTestCase {
         Assert.assertEquals("Docker manager started container with different container ID", MONGODB_CONTAINER_ID, startedMongoDBContainer.getId());
 
         final MongoClient mongoClient = mongodb.getServiceManager().getClient();
+
+        List<String> databaseNames = new ArrayList<String>() {{
+            add("local");
+            add("admin");
+            add("test");
+        }};
+
+        for (final String databaseName : mongoClient.listDatabaseNames()) {
+            Assert.assertTrue(databaseNames.contains(databaseName));
+        }
 
         Assert.assertNotNull("Returned MongoDB client is a null object!", mongoClient);
         mongodb.getServiceManager().closeClient(mongoClient);

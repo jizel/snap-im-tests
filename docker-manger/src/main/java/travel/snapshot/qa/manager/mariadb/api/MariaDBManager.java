@@ -3,6 +3,7 @@ package travel.snapshot.qa.manager.mariadb.api;
 import travel.snapshot.qa.manager.api.ServiceManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 
+import java.io.File;
 import java.io.Reader;
 import java.sql.Connection;
 
@@ -24,6 +25,36 @@ public interface MariaDBManager extends ServiceManager {
      * @param reader reader of a SQL script
      */
     void executeScript(Reader reader);
+
+    /**
+     * Executes SQL script against MariaDB
+     *
+     * @param sqlScript path to SQL script to execute
+     */
+    void executeScript(String sqlScript);
+
+    /**
+     * Executes SQL script against MariaDB
+     *
+     * @param sqlScript file of SQL script to execute
+     */
+    void executeScript(File sqlScript);
+
+    /**
+     * Executes SQL script against MariaDB
+     *
+     * @param connection connection to use during execution of the script
+     * @param sqlScript  path to SQL script to execute
+     */
+    void executeScript(Connection connection, String sqlScript);
+
+    /**
+     * Executes SQL script against MariaDB
+     *
+     * @param connection connection to use during execution of the script
+     * @param sqlScript  file of SQL script to execute
+     */
+    void executeScript(Connection connection, File sqlScript);
 
     /**
      * Executes SQL script against MariaDB via specified connection.

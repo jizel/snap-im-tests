@@ -1,5 +1,6 @@
 package travel.snapshot.qa.docker;
 
+import org.apache.commons.io.IOUtils;
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -13,6 +14,9 @@ import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.util.logging.Logger;
 
@@ -24,10 +28,16 @@ public class MariaDBDockerTestCase {
 
     private static final String MARIADB_CONTAINER_ID = "mariadb";
 
+    private static final String SQL_SCRIPT = "script.sql";
+
     private static MariaDBDockerManager mariaDBDockerManager;
+
+    private static Reader sqlScriptReader;
 
     @BeforeClass
     public static void setup() throws Exception {
+
+        sqlScriptReader = new BufferedReader(new InputStreamReader(MariaDBDockerTestCase.class.getClassLoader().getResourceAsStream(SQL_SCRIPT)));
 
         final MariaDBManagerConfiguration mariaDBManagerConfiguration = new MariaDBManagerConfiguration.Builder()
                 .bindAddress("127.0.0.1")
@@ -43,6 +53,8 @@ public class MariaDBDockerTestCase {
 
     @AfterClass
     public static void teardown() {
+        IOUtils.closeQuietly(sqlScriptReader);
+
         mariaDBDockerManager.getDockerManager().stopManager();
 
         logger.info("MariaDB Docker manager has stopped.");
@@ -65,6 +77,13 @@ public class MariaDBDockerTestCase {
         final Connection connection = mariaDBDockerManager.getServiceManager().getConnection();
 
         Assert.assertNotNull("Returned JDBC connection is a null object!", connection);
+
+        logger.info("Going to execute SQL script in " + SQL_SCRIPT);
+
+        mariaDBDockerManager.getServiceManager().executeScript(connection, sqlScriptReader);
+
+        logger.info("SQL script executed");
+
         mariaDBDockerManager.getServiceManager().closeConnection(connection);
 
         mariaDBDockerManager.stop(startedMariaDBContainer);
