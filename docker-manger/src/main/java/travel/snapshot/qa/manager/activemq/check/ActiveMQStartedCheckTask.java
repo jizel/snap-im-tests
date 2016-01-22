@@ -1,36 +1,36 @@
 package travel.snapshot.qa.manager.activemq.check;
 
 import org.arquillian.spacelift.task.Task;
-import travel.snapshot.qa.connection.ConnectionCheck;
-import travel.snapshot.qa.connection.ConnectionCheckExecutor;
+import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
+import travel.snapshot.qa.manager.activemq.api.ActiveMQManagerException;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
+import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;
+
+import javax.jms.Connection;
 
 /**
- * Simple check for TCP connection to ActiveMQ broker.
+ * Checks if we are able to get {@link javax.jms.Connection} to ActiveMQ broker.
  */
 public class ActiveMQStartedCheckTask extends Task<ActiveMQManagerConfiguration, Boolean> {
 
     @Override
     protected Boolean process(ActiveMQManagerConfiguration configuration) throws Exception {
 
-        // TODO
-        // There should be check if we can get javax.jms.Connection
-        // it will be added here after the refactoring of integration-jms-client where
-        // that helper API is already implemented
+        final ActiveMQManager activeMQManager = new ActiveMQManagerImpl(configuration);
 
         boolean started = false;
 
-        try {
-            new ConnectionCheck.Builder()
-                    .timeout(configuration.getStartupTimeoutInSeconds())
-                    .reexecutionInterval(5)
-                    .host(configuration.getBrokerAddress())
-                    .port(configuration.getBrokerPort())
-                    .build()
-                    .execute();
-            started = true;
-        } catch (ConnectionCheckExecutor.ConnectionCheckException ex) {
+        Connection connection = null;
 
+        try {
+            connection = activeMQManager.buildConnection();
+            started = true;
+        } catch (ActiveMQManagerException ex) {
+            // intentionally empty
+        } finally {
+            if (connection != null) {
+                activeMQManager.closeConnection(connection);
+            }
         }
 
         return started;

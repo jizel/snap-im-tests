@@ -17,6 +17,7 @@ def versions = [
         httpclient : "4.5.1",
         mysql      : "5.1.37",
         mongo      : "3.2.1",
+        activemq   : "5.12.1",
 
         // test
         junit      : "4.12",
@@ -84,6 +85,7 @@ dependencies {
     compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
     compile "mysql:mysql-connector-java:${versions.mysql}"
     compile "org.mongodb:mongodb-driver:${versions.mongo}"
+    compile "org.apache.activemq:activemq-client:${versions.activemq}"
 
     // logging
     compile "log4j:log4j:${versions.log4j}"

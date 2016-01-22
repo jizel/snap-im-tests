@@ -168,7 +168,7 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * which these services will be started is random. When this method is not overriden, default precedence is of value
      * 0.
      *
-     * @return bigger the number is, later underlying service will be started
+     * @return bigger the number is, sooner underlying service will be started
      */
     public int precedence() {
         return DEFAULT_PRECEDENCE;

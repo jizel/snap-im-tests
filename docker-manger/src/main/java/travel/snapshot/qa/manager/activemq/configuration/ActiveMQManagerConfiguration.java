@@ -10,10 +10,16 @@ public class ActiveMQManagerConfiguration implements Configuration {
 
     private final int brokerPort;
 
+    private final String username;
+
+    private final String password;
+
     private ActiveMQManagerConfiguration(final Builder builder) {
+        this.startupTimeoutInSeconds = builder.startupTimeoutInSeconds;
         this.brokerAddress = builder.brokerAddress;
         this.brokerPort = builder.brokerPort;
-        this.startupTimeoutInSeconds = builder.startupTimeoutInSeconds;
+        this.username = builder.username;
+        this.password = builder.password;
     }
 
     public int getStartupTimeoutInSeconds() {
@@ -28,13 +34,25 @@ public class ActiveMQManagerConfiguration implements Configuration {
         return brokerPort;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     public static class Builder {
+
+        private int startupTimeoutInSeconds = 60;
 
         private String brokerAddress = "127.0.0.1";
 
-        private int brokerPort = 5672;
+        private int brokerPort = 61616;
 
-        private int startupTimeoutInSeconds = 60;
+        private String username = "admin";
+
+        private String password = "admin";
 
         /**
          * @param brokerAddress address where broker is listening, defauls to {@literal 127.0.0.1} when not set.
@@ -60,6 +78,28 @@ public class ActiveMQManagerConfiguration implements Configuration {
          */
         public Builder startupTimeoutInSeconds(final int startupTimeoutInSeconds) {
             this.startupTimeoutInSeconds = startupTimeoutInSeconds;
+            return this;
+        }
+
+        /**
+         * Sets username to use during connection establishment. When not set, defaults to {@literal admin}.
+         *
+         * @param username user name to use during connection establishment
+         * @return this
+         */
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        /**
+         * Sets password to use during connection establishment. When not set, defaults to {@literal admin}.
+         *
+         * @param password password name to use during connection establishment
+         * @return this
+         */
+        public Builder password(String password) {
+            this.password = password;
             return this;
         }
 

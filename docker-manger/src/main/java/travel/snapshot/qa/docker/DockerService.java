@@ -54,6 +54,11 @@ public enum DockerService {
 
         @Override
         public DockerServiceManager<TomcatManager> init(TomcatManagerConfiguration configuration, String containerId) {
+
+            if (!configuration.isRemote()) {
+                throw new IllegalStateException("Used TomcatManagerConfiguration is not remote.");
+            }
+
             return new TomcatDockerManager(new TomcatManager(configuration)).setContainerId(containerId);
         }
 

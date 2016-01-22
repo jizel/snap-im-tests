@@ -47,7 +47,7 @@ public class MongoDBDockerTestCase {
     public static void teardown() {
         mongodb.getDockerManager().stopManager();
 
-        logger.info("MariaDB Docker manager has stopped.");
+        logger.info("MongoDB Docker manager has stopped.");
     }
 
     @Test

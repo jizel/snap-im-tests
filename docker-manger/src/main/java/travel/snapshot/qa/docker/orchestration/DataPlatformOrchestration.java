@@ -4,6 +4,7 @@ import travel.snapshot.qa.docker.ServiceCubePair;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
+import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
@@ -131,6 +132,10 @@ public class DataPlatformOrchestration {
      */
     public MariaDBDockerManager getMariaDBDockerManager() {
         return (MariaDBDockerManager) getDockerServiceManager(ServiceType.MARIADB);
+    }
+
+    public ActiveMQDockerManager getActiveMQDockerManager() {
+        return (ActiveMQDockerManager) getDockerServiceManager(ServiceType.ACTIVEMQ);
     }
 
     /**
