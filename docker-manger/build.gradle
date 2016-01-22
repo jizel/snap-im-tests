@@ -107,6 +107,7 @@ test {
             "snapshot.registry.username": System.getProperty("snapshot.registry.username", "snapshot_docker"),
             "snapshot.registry.password": System.getProperty("snapshot.registry.password", "aqGG86d1Yf3Y"),
 
+            "tomcat.mount.dir": new File(project.rootDir, "src/test/resources/tomcat_mount_dir").absolutePath,
             "arquillian.debug": System.getProperty("arquillian.debug", "true"),
     ]
 }

@@ -26,6 +26,8 @@
                     - mariadb:mariadb
                     - mongodb:mongodb
                     - activemq:activemq
+                binds:
+                    - ${tomcat.mount.dir}:/data/tomcat/config:ro
             mariadb:
                 image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.10
                 exposedPorts: [3306/tcp]

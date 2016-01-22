@@ -1,5 +1,6 @@
 package travel.snapshot.qa.docker;
 
+import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -8,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
@@ -79,6 +81,8 @@ public class TomcatDockerTestCase {
 
         Deployments deployments = tomcatManager.listDeployments();
         Assert.assertEquals(2, deployments.size());
+
+        final DockerClientExecutor dockerClientExecutor = DockerManager.instance().getClientExecutor();
 
         tomcatDockerManager.stop();
     }
