@@ -2,6 +2,7 @@ package travel.snapshot.qa.manager.mariadb.impl;
 
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
+import org.flywaydb.core.Flyway;
 import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManagerException;
@@ -96,6 +97,37 @@ public class MariaDBManagerImpl implements MariaDBManager {
     @Override
     public Connection getConnection() {
         return getConnection(configuration.getDatabase());
+    }
+
+    @Override
+    public Flyway flyway(String... migrationLocations) {
+        return flyway(configuration.getDatabase(), migrationLocations);
+    }
+
+    @Override
+    public Flyway flyway(String database, String... migrationLocations) {
+        return flyway(database, true, migrationLocations);
+    }
+
+    @Override
+    public Flyway flyway(String database, boolean baseline, String... migrationLocations) {
+        final Flyway flyway = new Flyway();
+
+        final String datasource = configuration.getConnectionString(database);
+        final String username = configuration.getUsername();
+        final String password = configuration.getPassword();
+
+        flyway.setDataSource(datasource, username, password);
+
+        if (baseline) {
+            flyway.baseline();
+        }
+
+        if (migrationLocations.length != 0) {
+            flyway.setLocations(migrationLocations);
+        }
+        
+        return flyway;
     }
 
     @Override

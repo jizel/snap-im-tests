@@ -1,5 +1,7 @@
 package travel.snapshot.qa.manager.mariadb.api;
 
+import org.flywaydb.core.Flyway;
+import travel.snapshot.qa.manager.api.FlywayMigration;
 import travel.snapshot.qa.manager.api.ServiceManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 
@@ -10,7 +12,7 @@ import java.sql.Connection;
 /**
  * MariaDB operations interface. Gathers methods which simplifies and enables you to interact with MariaDB.
  */
-public interface MariaDBManager extends ServiceManager {
+public interface MariaDBManager extends ServiceManager, FlywayMigration {
 
     /**
      * Blocks until it is possible to get {@link java.sql.Connection} to MariaDB.

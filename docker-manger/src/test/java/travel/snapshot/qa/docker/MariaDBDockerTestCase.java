@@ -86,6 +86,12 @@ public class MariaDBDockerTestCase {
 
         mariaDBDockerManager.getServiceManager().closeConnection(connection);
 
+        logger.info("Flyway migration starting.");
+
+        mariaDBDockerManager.getServiceManager().flyway().migrate();
+
+        logger.info("Flyway migratiton has finished");
+
         mariaDBDockerManager.stop(startedMariaDBContainer);
         logger.info("Docker MariaDB container has stopped.");
 

@@ -18,6 +18,7 @@ def versions = [
         mysql      : "5.1.37",
         mongo      : "3.2.1",
         activemq   : "5.12.1",
+        flyway     : "3.2.1",
 
         // test
         junit      : "4.12",
@@ -25,7 +26,6 @@ def versions = [
         // logging
         log4j      : "1.2.17",
         slf4j      : "1.7.13"
-
 ]
 
 buildscript {
@@ -57,8 +57,10 @@ repositories {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 dependencies {
 
@@ -86,6 +88,7 @@ dependencies {
     compile "mysql:mysql-connector-java:${versions.mysql}"
     compile "org.mongodb:mongodb-driver:${versions.mongo}"
     compile "org.apache.activemq:activemq-client:${versions.activemq}"
+    compile "org.flywaydb:flyway-core:${versions.flyway}"
 
     // logging
     compile "log4j:log4j:${versions.log4j}"
