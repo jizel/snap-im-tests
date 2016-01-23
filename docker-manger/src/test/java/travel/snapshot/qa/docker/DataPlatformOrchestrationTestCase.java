@@ -114,8 +114,8 @@ public class DataPlatformOrchestrationTestCase {
 
     @Test
     @Ignore("be sure to execute this test in a way that system property ${tomcat.mount.dir} gets expanded in arquillian.xml file.")
-    public void mountingFolderTest() throws Exception {
-        final File configDir = testFolder.newFolder("configDir");
+    public void mountingFolderTestManually() throws Exception {
+        final File configDir = testFolder.newFolder("configDirManual");
 
         final DockerClientExecutor dockerClientExecutor = DockerManager.instance().getClientExecutor();
 
@@ -126,5 +126,16 @@ public class DataPlatformOrchestrationTestCase {
         }
 
         Assert.assertTrue("Archive should contain test.properties file!", new File(configDir, "config/test.properties").exists());
+    }
+
+    @Test
+    @Ignore("be sure to execute this test in a way that system property ${tomcat.mount.dir} gets expanded in arquillian.xml file.")
+    public void mountingFolderTestByAPI() throws Exception {
+        final File destinationDir = testFolder.newFolder("configDirByAPI");
+        final File sourceDir = new File("/data/tomcat/config");
+
+        orchestration.getTomcatDockerManager().fetch(sourceDir, destinationDir);
+
+        Assert.assertTrue("Archive should contain test.properties file!", new File(destinationDir, "config/test.properties").exists());
     }
 }

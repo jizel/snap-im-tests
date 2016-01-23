@@ -1,11 +1,17 @@
 package travel.snapshot.qa.docker.manager;
 
+import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.task.Task;
+import org.jboss.shrinkwrap.impl.base.io.tar.TarArchive;
 import travel.snapshot.qa.connection.ConnectionCheck;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.manager.api.ServiceManager;
 import travel.snapshot.qa.manager.tomcat.configuration.Validate;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This abstract class presents a base Docker service manager from which any particular Docker service manager
@@ -160,6 +166,71 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * @return type of service this Docker service manager handles
      */
     public abstract ServiceType provides();
+
+    /**
+     * Transfers resources between container and host. {@code from} file resides effectively in container. {@code from}
+     * file can represent directory as well.
+     *
+     * @param containerId container ID for which file transfer will be carried out
+     * @param from        source from where files will be fetched on container side
+     * @param to          destination where files will be stored on host side
+     */
+    public void fetch(final String containerId, final String from, final String to) {
+        Validate.notNullOrEmpty(containerId, "Container ID to copy file from can not be a null object or an empty String.");
+        Validate.notNullOrEmpty(from, "Location where to copy files from can not be a null object or an empty String.");
+        Validate.notNullOrEmpty(to, "Location where to copy files from the container can not be a null object or an empty String.");
+
+        final DockerClientExecutor executor = this.dockerManager.getClientExecutor();
+
+        try (final InputStream inputStream = executor.getFileOrDirectoryFromContainerAsTar(containerId, from)) {
+            TarArchive tarArchive = new TarArchive(inputStream);
+            tarArchive.extractContents(new File(to));
+            tarArchive.closeArchive();
+        } catch (IOException ex) {
+            throw new RuntimeException(String.format("Unable to copy content from %s to %s for container %s",
+                    from, to, containerId), ex);
+        }
+    }
+
+    /**
+     * Transfers resources between container and host. {@code from} file resides effectively in container. {@code from}
+     * file can represent directory as well.
+     *
+     * When this version of fetch method is used, it is expected that container ID was previously set by {@link
+     * #setContainerId(String)} method.
+     *
+     * @param from source from where files will be fetched on container side
+     * @param to   destination where files will be stored on host side
+     */
+    public void fetch(final String from, final String to) {
+        fetch(this.containerId, from, to);
+    }
+
+    /**
+     * Transfers resources between container and host. {@code from} file resides effectively in container. {@code from}
+     * file can represent directory as well.
+     *
+     * When this version of fetch method is used, it is expected that container ID was previously set by {@link
+     * #setContainerId(String)} method.
+     *
+     * @param from source from where files will be fetched on container side
+     * @param to   destination where files will be stored on host side
+     */
+    public void fetch(final File from, final File to) {
+        fetch(this.containerId, from, to);
+    }
+
+    /**
+     * Transfers resources between container and host. {@code from} file resides effectively in container. {@code from}
+     * file can represent directory as well.
+     *
+     * @param containerId container ID for which file transfer will be carried out
+     * @param from        source from where files will be fetched on container side
+     * @param to          destination where files will be stored on host side
+     */
+    public void fetch(final String containerId, final File from, final File to) {
+        fetch(containerId, from.getAbsolutePath(), to.getAbsolutePath());
+    }
 
     /**
      * In case of containers which depend on other containers and their services to be already running, precedence has
