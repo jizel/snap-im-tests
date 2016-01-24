@@ -1,6 +1,5 @@
 package travel.snapshot.qa.manager.mariadb.api;
 
-import org.flywaydb.core.Flyway;
 import travel.snapshot.qa.manager.api.FlywayMigration;
 import travel.snapshot.qa.manager.api.ServiceManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;

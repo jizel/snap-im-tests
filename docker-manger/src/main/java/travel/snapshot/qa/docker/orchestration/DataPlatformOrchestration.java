@@ -8,12 +8,15 @@ import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
+import travel.snapshot.qa.inspection.Inspection;
+import travel.snapshot.qa.inspection.InspectionException;
 import travel.snapshot.qa.manager.api.ServiceManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -163,9 +166,51 @@ public class DataPlatformOrchestration {
         return this;
     }
 
-    private DockerServiceManager<?> getDockerServiceManager(final ServiceType service) {
-        return dockerServiceManagers.stream().filter(serviceManager -> serviceManager.provides() == service)
+    public DockerManager getDockerManager() {
+        return dockerManager;
+    }
+
+    public List<ServiceCubePair> getStartedContainers() {
+        return Collections.unmodifiableList(startedContainers);
+    }
+
+    /**
+     * Returns Docker service manager for given {@code serviceType} or null if there is not such service of given type.
+     *
+     * @param serviceType service to get the service manager of
+     * @return Docker service manager of given service type
+     */
+    public DockerServiceManager<?> getDockerServiceManager(final ServiceType serviceType) {
+        return dockerServiceManagers.stream().filter(serviceManager -> serviceManager.provides() == serviceType)
                 .findFirst().orElse(null);
     }
 
+    /**
+     * @return external IP address of all running services
+     */
+    public Map<String, String> inspectAllIPs() {
+        return new Inspection(this).inspectAllIPs();
+    }
+
+    /**
+     * Gets the external IP address of the specified {@code serviceType}.
+     *
+     * @param serviceType type of service to get the external IP address from
+     * @return external IP address of specified {@code serviceType}
+     * @throws InstantiationException in case there is not such service to get the IP address of
+     */
+    public String inspectIP(final ServiceType serviceType) throws InspectionException {
+        return new Inspection(this).inspectIP(serviceType);
+    }
+
+    /**
+     * Gets the external IP address of the specified {@code containerId}.
+     *
+     * @param containerId container ID to the the external IP address of
+     * @return external IP address of the container with specified {@code containerId}
+     * @throws InspectionException in case such container of given id is not found
+     */
+    public String inspectIP(final String containerId) throws InspectionException {
+        return new Inspection(this).inspectIP(containerId);
+    }
 }

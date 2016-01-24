@@ -24,8 +24,12 @@ import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(JUnit4.class)
@@ -88,6 +92,35 @@ public class DataPlatformOrchestrationTestCase {
         Assert.assertTrue(tomcatManager.isRunning());
         // there are already 2 deployments in clean Tomcat - its managers
         Assert.assertEquals(2, tomcatManager.listDeployments().size());
+    }
+
+    @Test
+    public void ipInspectionTest() {
+        Map<String, String> ips = orchestration.inspectAllIPs();
+
+        System.out.println(ips.toString());
+
+        Assert.assertEquals("There are less resolved IPs than running containers!",
+                orchestration.getStartedContainers().size(),
+                ips.size());
+
+        String tomcatResolvedIpFromMap = ips.get("tomcat");
+        String tomcatResolvedIpFromIPMethod = orchestration.inspectIP("tomcat");
+        String tomcatResolvedIpFromServiceTypeMethod = orchestration.inspectIP(ServiceType.TOMCAT);
+
+        Assert.assertEquals(tomcatResolvedIpFromMap, tomcatResolvedIpFromIPMethod);
+        Assert.assertEquals(tomcatResolvedIpFromMap, tomcatResolvedIpFromServiceTypeMethod);
+
+        String mariadbResolvedIp = ips.get("mariadb");
+
+        Assert.assertNotEquals("Some resolved IPs for different containers are same!",
+                tomcatResolvedIpFromMap, mariadbResolvedIp);
+
+        List<String> ipAddressesList = new ArrayList<>(ips.values());
+        Set<String> ipAddressesSet = new HashSet<>(ipAddressesList);
+
+        Assert.assertEquals("IP addresses are not unique across containers!",
+                ipAddressesList.size(), ipAddressesSet.size());
     }
 
     @Test
