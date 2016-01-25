@@ -8,8 +8,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.TomcatTest;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecord;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
@@ -18,7 +18,7 @@ import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper;
 
 import java.util.UUID;
 
-@RunWith(JUnit4.class)
+@Category(TomcatTest.class)
 public class TomcatListDeploymentsTestCase {
 
     private static final String DEPLOYMENT_FILE = "test.war";

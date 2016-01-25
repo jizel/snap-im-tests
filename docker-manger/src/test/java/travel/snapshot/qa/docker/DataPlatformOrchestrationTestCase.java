@@ -11,9 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
@@ -32,8 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-@RunWith(JUnit4.class)
-@Ignore("be sure you have Docker set up on your host")
+@Category(OrchestrationTest.class)
 public class DataPlatformOrchestrationTestCase {
 
     private static final DataPlatformOrchestration orchestration = new DataPlatformOrchestration();

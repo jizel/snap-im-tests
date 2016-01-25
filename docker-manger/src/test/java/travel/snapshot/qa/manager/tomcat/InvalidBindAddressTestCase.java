@@ -5,9 +5,9 @@ import org.arquillian.spacelift.execution.ExecutionException;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
 
@@ -16,8 +16,8 @@ import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
  * to terminate it here which would clash with other tests. We are just checking the right exception. If you want to
  * execute this test, execute just this one.
  */
-@RunWith(JUnit4.class)
 @Ignore
+@Category(UnitTest.class)
 public class InvalidBindAddressTestCase {
 
     private static final String INVALID_BIND_ADDRESS = "locahost"; // typo involved

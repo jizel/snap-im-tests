@@ -25,7 +25,7 @@ integrations services to Docker image (already done by Juraj) and manage it from
 ## How do you check if some service is running?
 
 This is done by connection checks. The reason behind this is rather complicated but to put is simply, Arquillian Cube 
-is the one who manages these containres in the end. When some container is started, e.g. MariaDB, the fact that 
+is the one who manages these containers in the end. When some container is started, e.g. MariaDB, the fact that 
 MariaDB is started, from Arquillian Cube point of view, is deducted from various strategies, e.g from 
 the output of the `ss` command which is executed in container. This `ss` command checks if an exposed port 
 is in its output and when it is, Arquillian Cube in turn assumes that service is started.

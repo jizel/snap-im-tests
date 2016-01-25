@@ -4,10 +4,9 @@ import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
@@ -17,8 +16,7 @@ import java.util.logging.Logger;
 
 import javax.jms.Connection;
 
-@RunWith(JUnit4.class)
-@Ignore("be sure you have Docker set up at your host")
+@Category(DockerTest.class)
 public class ActiveMQDockerTestCase {
 
     private static final Logger logger = Logger.getLogger(ActiveMQDockerTestCase.class.getName());

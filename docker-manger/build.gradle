@@ -8,24 +8,24 @@ version '1.0.0-SNAPSHOT'
 
 def versions = [
         // core
-        spacelift  : "1.0.0.Alpha9",
-        cube       : "1.0.0.Alpha7",
-        arquillian : "1.1.8.Final",
-        shrinkwrap : "2.1.0",
+        spacelift : "1.0.0.Alpha9",
+        cube      : "1.0.0.Alpha7",
+        arquillian: "1.1.8.Final",
+        shrinkwrap: "2.1.0",
 
         // helpers
-        httpclient : "4.5.1",
-        mysql      : "5.1.37",
-        mongo      : "3.2.1",
-        activemq   : "5.12.1",
-        flyway     : "3.2.1",
+        httpclient: "4.5.1",
+        mysql     : "5.1.37",
+        mongo     : "3.2.1",
+        activemq  : "5.12.1",
+        flyway    : "3.2.1",
 
         // test
-        junit      : "4.12",
+        junit     : "4.12",
 
         // logging
-        log4j      : "1.2.17",
-        slf4j      : "1.7.13"
+        log4j     : "1.2.17",
+        slf4j     : "1.7.13"
 ]
 
 buildscript {
@@ -103,15 +103,23 @@ test {
         exceptionFormat "full"
         events 'started', 'passed'
     }
+
+    useJUnit {
+        includeCategories 'travel.snapshot.qa.category.OrchestrationTest'
+        includeCategories 'travel.snapshot.qa.category.DockerTest'
+        includeCategories 'travel.snapshot.qa.category.UnitTest'
+        includeCategories 'travel.snapshot.qa.category.TomcatTest'
+    }
+
     systemProperties = [
-            "remote": System.getProperty('remote', 'false'),
-            "remote.host": System.getProperty('remote.host', '127.0.0.1'),
+            "remote"                    : System.getProperty('remote', 'false'),
+            "remote.host"               : System.getProperty('remote.host', '127.0.0.1'),
 
             "snapshot.registry.username": System.getProperty("snapshot.registry.username", "snapshot_docker"),
             "snapshot.registry.password": System.getProperty("snapshot.registry.password", "aqGG86d1Yf3Y"),
 
-            "tomcat.mount.dir": new File(project.rootDir, "src/test/resources/tomcat_mount_dir").absolutePath,
-            "arquillian.debug": System.getProperty("arquillian.debug", "true"),
+            "tomcat.mount.dir"          : new File(project.rootDir, "src/test/resources/tomcat_mount_dir").absolutePath,
+            "arquillian.debug"          : System.getProperty("arquillian.debug", "true"),
     ]
 }
 
@@ -125,7 +133,7 @@ uploadArchives {
             pom.groupId = 'travel.snapshot.qa.manager'
 
             repository(url: 'https://nexus.snapshot.travel/content/repositories/releases/') {
-                authentication(userName: nexusUser , password: nexusPassword)
+                authentication(userName: nexusUser, password: nexusPassword)
             }
             snapshotRepository(url: 'https://nexus.snapshot.travel/content/repositories/snapshots/') {
                 authentication(userName: nexusUser, password: nexusPassword)

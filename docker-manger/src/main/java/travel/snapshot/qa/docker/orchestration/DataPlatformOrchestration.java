@@ -50,7 +50,7 @@ public class DataPlatformOrchestration {
      */
     public DataPlatformOrchestration start() {
         dockerManager.startManager();
-        logger.info("Data platform orchestration initialized.");
+        logger.info("Data platform orchestration has started.");
         return this;
     }
 
@@ -61,7 +61,7 @@ public class DataPlatformOrchestration {
      */
     public DataPlatformOrchestration stop() {
         dockerManager.stopManager();
-        logger.info("Data platform orchestration shutted down.");
+        logger.info("Data platform orchestration has stopped.");
         return this;
     }
 
@@ -170,6 +170,11 @@ public class DataPlatformOrchestration {
         return dockerManager;
     }
 
+    /**
+     * Returns unmodifiable view to started containers.
+     *
+     * @return unmodifiable list of started containers
+     */
     public List<ServiceCubePair> getStartedContainers() {
         return Collections.unmodifiableList(startedContainers);
     }

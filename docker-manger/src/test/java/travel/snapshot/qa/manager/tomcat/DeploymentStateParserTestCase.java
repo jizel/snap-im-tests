@@ -3,13 +3,13 @@ package travel.snapshot.qa.manager.tomcat;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentStateParserException;
 
-@RunWith(JUnit4.class)
+@Category(UnitTest.class)
 public class DeploymentStateParserTestCase {
 
     private static final String INVALID_DEPLOYMENT_STATE = "invalid-deployment-state";

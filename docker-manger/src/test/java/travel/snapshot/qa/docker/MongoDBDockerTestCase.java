@@ -5,10 +5,9 @@ import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
@@ -18,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-@RunWith(JUnit4.class)
-@Ignore("be sure you have Docker set up at your host")
+@Category(DockerTest.class)
 public class MongoDBDockerTestCase {
 
     private static final Logger logger = Logger.getLogger(MongoDBDockerTestCase.class.getName());

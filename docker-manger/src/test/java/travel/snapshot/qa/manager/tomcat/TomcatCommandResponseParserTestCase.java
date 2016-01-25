@@ -2,8 +2,8 @@ package travel.snapshot.qa.manager.tomcat;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseParser;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseStatus;
@@ -11,7 +11,7 @@ import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(JUnit4.class)
+@Category(UnitTest.class)
 public class TomcatCommandResponseParserTestCase {
 
     @Test

@@ -5,10 +5,9 @@ import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
@@ -20,8 +19,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.util.logging.Logger;
 
-@RunWith(JUnit4.class)
-@Ignore("be sure you have Docker set up at your host")
+@Category(DockerTest.class)
 public class MariaDBDockerTestCase {
 
     private static final Logger logger = Logger.getLogger(MariaDBDockerTestCase.class.getName());

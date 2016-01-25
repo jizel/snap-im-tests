@@ -4,12 +4,22 @@
             xsi:schemaLocation="http://jboss.org/schema/arquillian
   http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
+    <!--
+        There are two Tomcat containers. One with name 'tomcat' which links to other containers and mounts
+        directory tomcat.mount.dir to container. The second one is named 'tomcat_tests' which does not need
+        to link to anything and binds nothing.
+
+        The latter is used in tests which test only standalone Tomcat container and there is not need
+        to link it with other services which would be eventually started as well which is not desired.
+    -->
+
     <extension qualifier="docker">
         <property name="serverVersion">1.21</property>
         <property name="serverUri">http://localhost:2375</property>
-        <property name="dockerRegistry">http://docker.snapshot.travel:5000</property>
+        <property name="dockerRegistry">https://docker.snapshot.travel:5000/v2/</property>
         <property name="username">snapshot_docker</property>
         <property name="password">aqGG86d1Yf3Y</property>
+        <property name="email">docker@snapshot.travel</property>
         <property name="definitionFormat">CUBE</property>
         <property name="dockerContainers">
             tomcat:
@@ -28,6 +38,16 @@
                     - activemq:activemq
                 binds:
                     - ${tomcat.mount.dir}:/data/tomcat/config:ro
+            tomcat_tests:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                await:
+                    strategy: polling
+                    type: static
+                    ip: 127.0.0.1
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
             mariadb:
                 image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.10
                 exposedPorts: [3306/tcp]

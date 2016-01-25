@@ -3,13 +3,13 @@ package travel.snapshot.qa.manager.tomcat;
 import org.arquillian.spacelift.Spacelift;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.TomcatTest;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper;
 
-@RunWith(JUnit4.class)
+@Category(TomcatTest.class)
 public class TomcatLifecycleTestCase {
 
     @Test

@@ -5,10 +5,9 @@ import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
@@ -17,13 +16,12 @@ import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguratio
 
 import java.util.logging.Logger;
 
-@RunWith(JUnit4.class)
-@Ignore("be sure you have Docker set up at your host")
+@Category(DockerTest.class)
 public class TomcatDockerTestCase {
 
     private static final Logger logger = Logger.getLogger(TomcatDockerTestCase.class.getName());
 
-    private static final String TOMCAT_CONTAINER_ID = "tomcat";
+    private static final String TOMCAT_CONTAINER_ID = "tomcat_tests";
 
     private static TomcatDockerManager tomcatDockerManager;
 

@@ -13,9 +13,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.TomcatTest;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
@@ -34,7 +34,7 @@ import java.io.OutputStream;
  *
  * gradle clean build -Dremote=true -DremoteHost=127.0.0.1 -Dtest.single=TomcatDeploymentTestCase test
  */
-@RunWith(JUnit4.class)
+@Category(TomcatTest.class)
 public class TomcatDeploymentTestCase {
 
     {

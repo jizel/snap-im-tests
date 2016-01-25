@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * Wraps Arquillian Cube core services into a separate helper class. We do not depend on Arquillian runner - its core
- * lifecycle is extracted to this class hence it can be easilly encapsulated into your tests.
+ * lifecycle is extracted to this class hence it can be easily encapsulated into your tests.
  *
  * Underlying Arquillian Core Manager for eventing and dependency injection is started automatically in the constructor
  * of DockerManager.
@@ -33,9 +33,9 @@ public final class DockerManager {
 
     private static final String INVALID_CONTAINER_ID_MESSAGE = "Container ID can not be a null object nor an empty String!";
 
-    private static final Manager manager = ManagerBuilder.from().extension(LoadableExtensionLoader.class).create();
+    private Manager manager;
 
-    private boolean isManagerStarted;
+    private static boolean isManagerStarted;
 
     /**
      * Returned DockerManager object has already Arquillian Core Manager started.
@@ -64,9 +64,7 @@ public final class DockerManager {
     public Cube start(final String containerId) {
         Validate.notNullOrEmpty(containerId, INVALID_CONTAINER_ID_MESSAGE);
 
-        if (!isManagerStarted) {
-            throw new IllegalStateException("Manager is not started!");
-        }
+        startManager();
 
         logger.info(String.format("Starting container %s.", containerId));
 
@@ -142,6 +140,7 @@ public final class DockerManager {
      */
     public void startManager() {
         if (!isManagerStarted) {
+            manager = ManagerBuilder.from().extension(LoadableExtensionLoader.class).create();
             manager.start();
             isManagerStarted = true;
             logger.info("Arquillian Core Manager has started.");
@@ -152,11 +151,13 @@ public final class DockerManager {
      * Stops Arquillian Core Manager.
      *
      * This method should be called when you finish the interaction with the Arquillian Core and Cube. This method will
-     * not be called explicitly anywhere and it is the resposibility of the user of this class to stop it.
+     * not be called explicitly anywhere and it is the responsibility of the user of this class to stop it.
      */
     public void stopManager() {
         if (isManagerStarted) {
             manager.shutdown();
+            manager = null;
+            isManagerStarted = false;
             logger.info("Arquillian Core Manager has stopped.");
         }
     }
