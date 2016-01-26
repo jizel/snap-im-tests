@@ -26,7 +26,7 @@ public interface Service<T extends ServiceManager, U extends Configuration> {
     /**
      * Configuration of the service will be the default one.
      *
-     * @param containerId contaier ID which service will manage
+     * @param containerId container ID which service will manage
      * @return concrete Docker service implementation for given service type
      */
     DockerServiceManager<T> init(final String containerId);

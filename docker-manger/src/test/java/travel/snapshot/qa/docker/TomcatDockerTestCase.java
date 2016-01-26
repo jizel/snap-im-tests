@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
@@ -14,12 +16,10 @@ import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 
-import java.util.logging.Logger;
-
 @Category(DockerTest.class)
 public class TomcatDockerTestCase {
 
-    private static final Logger logger = Logger.getLogger(TomcatDockerTestCase.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TomcatDockerTestCase.class);
 
     private static final String TOMCAT_CONTAINER_ID = "tomcat_tests";
 
@@ -29,7 +29,6 @@ public class TomcatDockerTestCase {
     public static void setup() throws Exception {
 
         final TomcatManagerConfiguration tomcatManagerConfiguration = new TomcatManagerConfiguration.Builder()
-                .setBindAddress("127.0.0.1")
                 .remote()
                 .build();
 
@@ -72,6 +71,7 @@ public class TomcatDockerTestCase {
     public void tomcatContainerInDockerTest() {
 
         final Cube startedTomcatContainer = tomcatDockerManager.start(TOMCAT_CONTAINER_ID);
+        Assert.assertNotNull("Started Tomcat container Cube is a null object!", startedTomcatContainer);
 
         final TomcatManager tomcatManager = tomcatDockerManager.getServiceManager();
 
@@ -81,6 +81,7 @@ public class TomcatDockerTestCase {
         Assert.assertEquals(2, deployments.size());
 
         final DockerClientExecutor dockerClientExecutor = DockerManager.instance().getClientExecutor();
+        Assert.assertNotNull("Client executor is a null object!", dockerClientExecutor);
 
         tomcatDockerManager.stop();
     }

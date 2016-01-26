@@ -4,6 +4,8 @@ import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.arquillian.spacelift.process.Command;
 import org.jboss.shrinkwrap.api.Archive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManager;
@@ -39,7 +41,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * Tomcat manager which is returned after container is started by respective task. This object has to be chained to
@@ -50,7 +51,7 @@ import java.util.logging.Logger;
  */
 public class TomcatManager implements ContainerManager {
 
-    private static final Logger logger = Logger.getLogger(TomcatManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TomcatManager.class);
 
     private Thread shutdownThread;
 
@@ -84,7 +85,7 @@ public class TomcatManager implements ContainerManager {
         try {
             final Command command = new TomcatCommandBuilder().build(configuration);
 
-            logger.info(String.format("Starting Tomcat container with: %s.", command.toString()));
+            logger.info("Starting Tomcat container with: {}.", command.toString());
 
             final ProcessBuilder processBuilder = new ProcessBuilder(command.getFullCommand());
             processBuilder.redirectErrorStream(true);

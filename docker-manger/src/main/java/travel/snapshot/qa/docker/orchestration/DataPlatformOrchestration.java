@@ -1,5 +1,8 @@
 package travel.snapshot.qa.docker.orchestration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import travel.snapshot.qa.docker.DockerServiceFactory;
 import travel.snapshot.qa.docker.ServiceCubePair;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerManager;
@@ -17,7 +20,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public class DataPlatformOrchestration {
 
-    private static final Logger logger = Logger.getLogger(DataPlatformOrchestration.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DataPlatformOrchestration.class);
 
     private final DockerManager dockerManager = DockerManager.instance();
 
@@ -92,6 +94,11 @@ public class DataPlatformOrchestration {
         return new ServiceCubePair(serviceManager.provides(), serviceManager.start());
     }
 
+    public DataPlatformOrchestration stopService(final ServiceCubePair startedService) {
+        getDockerServiceManager(startedService.getServiceType(), startedService.getCube().getId()).stop();
+        return this;
+    }
+
     /**
      * Stops all started services.
      *
@@ -109,36 +116,92 @@ public class DataPlatformOrchestration {
      * @return this
      */
     public DataPlatformOrchestration stopServices(final List<ServiceCubePair> startedServices) {
-        startedServices.forEach(serviceCubePair -> getDockerServiceManager(serviceCubePair.getServiceType())
-                .stop(serviceCubePair.getCube()));
+        startedServices.forEach(serviceCubePair ->
+                getDockerServiceManager(serviceCubePair.getServiceType(), serviceCubePair.getCube().getId())
+                        .stop(serviceCubePair.getCube()));
 
         startedServices.clear();
         return this;
     }
 
     /**
+     * Gets Tomcat Docker manager for container with default Tomcat container ID.
+     *
      * @return Docker manager for Tomcat
      */
     public TomcatDockerManager getTomcatDockerManager() {
-        return (TomcatDockerManager) getDockerServiceManager(ServiceType.TOMCAT);
+        return getTomcatDockerManager(DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID);
     }
 
     /**
+     * Gets Tomcat Docker manager for container with specified container ID. This is handy when you started multiple
+     * Tomcat containers and you want specific Tomcat manager just for that container.
+     *
+     * @param containerId ID of container where Tomcat is running
+     * @return Docker manager for Tomcat for specified container ID
+     */
+    public TomcatDockerManager getTomcatDockerManager(String containerId) {
+        return (TomcatDockerManager) getDockerServiceManager(ServiceType.TOMCAT, containerId);
+    }
+
+    /**
+     * Gets Mongo Docker manager for container with default Mongo container ID.
+     *
      * @return Docker manager for Mongo
      */
     public MongoDBDockerManager getMongoDockerManager() {
-        return (MongoDBDockerManager) getDockerServiceManager(ServiceType.MONGODB);
+        return getMongoDockerManager(DockerServiceFactory.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID);
     }
 
     /**
+     * Gets Mongo Docker manager for container with specified container ID. This is handy when you started multiple
+     * Mongo containers and you want specific Mongo manager just for that container.
+     *
+     * @param containerId ID of container where Mongo is running
+     * @return Docker manager for Mongo for specified container ID
+     */
+    public MongoDBDockerManager getMongoDockerManager(String containerId) {
+        return (MongoDBDockerManager) getDockerServiceManager(ServiceType.MONGODB, containerId);
+    }
+
+    /**
+     * Gets MariaDB Docker manager for container with default MariaDB container ID.
+     *
      * @return Docker manager for MariaDB
      */
     public MariaDBDockerManager getMariaDBDockerManager() {
-        return (MariaDBDockerManager) getDockerServiceManager(ServiceType.MARIADB);
+        return getMariaDBDockerManager(DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID);
     }
 
+    /**
+     * Gets MariaDB manager for container with specified container ID. This is handy when you started multiple MariaDB
+     * containers and you want specific MariaDB manager just for that container.
+     *
+     * @param containerId ID of container where MariaDB is running
+     * @return Docker manager for MariaDB for specified container ID
+     */
+    public MariaDBDockerManager getMariaDBDockerManager(String containerId) {
+        return (MariaDBDockerManager) getDockerServiceManager(ServiceType.MARIADB, containerId);
+    }
+
+    /**
+     * Gets ActiveMQ Docker manager for container with default ActiveMQ container ID.
+     *
+     * @return Docker manager for ActiveMQ
+     */
     public ActiveMQDockerManager getActiveMQDockerManager() {
-        return (ActiveMQDockerManager) getDockerServiceManager(ServiceType.ACTIVEMQ);
+        return getActiveMQDockerManager(DockerServiceFactory.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID);
+    }
+
+    /**
+     * Gets ActiveMQ manager for container with specified container ID. This is handy when you start multiple ActiveMQ
+     * containers and you want specific ActiveMQ manager just for that container.
+     *
+     * @param containerId ID of container where ActiveMQ is running
+     * @return Docker manager for ActiveMQ
+     */
+    public ActiveMQDockerManager getActiveMQDockerManager(String containerId) {
+        return (ActiveMQDockerManager) getDockerServiceManager(ServiceType.ACTIVEMQ, containerId);
     }
 
     /**
@@ -171,7 +234,7 @@ public class DataPlatformOrchestration {
     }
 
     /**
-     * Returns unmodifiable view to started containers.
+     * Returns unmodifiable view of started containers.
      *
      * @return unmodifiable list of started containers
      */
@@ -180,32 +243,26 @@ public class DataPlatformOrchestration {
     }
 
     /**
-     * Returns Docker service manager for given {@code serviceType} or null if there is not such service of given type.
+     * Returns Docker service manager for given {@code serviceType} and {@code containerId} or null if there is not such
+     * service manager
      *
-     * @param serviceType service to get the service manager of
-     * @return Docker service manager of given service type
+     * @param serviceType type of service to get manager of
+     * @param containerId container ID to get service manager of
+     * @return Docker service manager of given service type and started container of given {@code containerId}
      */
-    public DockerServiceManager<?> getDockerServiceManager(final ServiceType serviceType) {
-        return dockerServiceManagers.stream().filter(serviceManager -> serviceManager.provides() == serviceType)
+    public DockerServiceManager<?> getDockerServiceManager(final ServiceType serviceType, final String containerId) {
+        return dockerServiceManagers.stream().filter(serviceManager ->
+                serviceManager.provides() == serviceType && serviceManager.getDockerContainer().getId().equals(containerId))
                 .findFirst().orElse(null);
     }
 
     /**
+     * Gets the map of all running services. Keys are container IDs, values are their IPs.
+     *
      * @return external IP address of all running services
      */
     public Map<String, String> inspectAllIPs() {
         return new Inspection(this).inspectAllIPs();
-    }
-
-    /**
-     * Gets the external IP address of the specified {@code serviceType}.
-     *
-     * @param serviceType type of service to get the external IP address from
-     * @return external IP address of specified {@code serviceType}
-     * @throws InstantiationException in case there is not such service to get the IP address of
-     */
-    public String inspectIP(final ServiceType serviceType) throws InspectionException {
-        return new Inspection(this).inspectIP(serviceType);
     }
 
     /**

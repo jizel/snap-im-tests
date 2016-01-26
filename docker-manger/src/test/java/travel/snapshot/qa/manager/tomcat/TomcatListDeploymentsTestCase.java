@@ -13,6 +13,7 @@ import travel.snapshot.qa.category.TomcatTest;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecord;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
+import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper;
 
@@ -31,7 +32,11 @@ public class TomcatListDeploymentsTestCase {
 
     @Before
     public void startContainer() {
-        manager = Spacelift.task(TomcatStarter.class).execute().await();
+        final TomcatManagerConfiguration configuration = new TomcatManagerConfiguration.Builder()
+                .setBindAddress("127.0.0.1")
+                .build();
+
+        manager = Spacelift.task(configuration, TomcatStarter.class).execute().await();
         manager.deploy(archive);
     }
 

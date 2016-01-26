@@ -1,17 +1,17 @@
 package travel.snapshot.qa.manager.tomcat.spacelift;
 
 import org.arquillian.spacelift.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
-
-import java.util.logging.Logger;
 
 /**
  * Starts a Tomcat container. This fails when a container is already started.
  */
 public class TomcatStarter extends Task<TomcatManagerConfiguration, TomcatManager> {
 
-    private static final Logger logger = Logger.getLogger(TomcatStarter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TomcatStarter.class);
 
     private TomcatManagerConfiguration configuration;
 
@@ -31,7 +31,7 @@ public class TomcatStarter extends Task<TomcatManagerConfiguration, TomcatManage
 
         TomcatManager manager = new TomcatManager(this.configuration);
 
-        logger.info(String.format("Starting Tomcat container located at %s", this.configuration.getCatalinaHome()));
+        logger.info("Starting Tomcat container located at {}", this.configuration.getCatalinaHome());
 
         manager.start();
 

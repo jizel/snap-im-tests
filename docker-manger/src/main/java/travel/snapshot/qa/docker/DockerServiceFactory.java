@@ -24,23 +24,21 @@ import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguratio
  *
  * @see travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
  */
-public enum DockerService {
+public class DockerServiceFactory {
 
-    INSTANCE;
-
-    public TomcatService tomcat() {
+    public static TomcatService tomcat() {
         return new TomcatService();
     }
 
-    public MongoDBService mongo() {
+    public static MongoDBService mongodb() {
         return new MongoDBService();
     }
 
-    public MariaDBService mariadb() {
+    public static MariaDBService mariadb() {
         return new MariaDBService();
     }
 
-    public ActiveMQService activemq() {
+    public static ActiveMQService activemq() {
         return new ActiveMQService();
     }
 
@@ -50,7 +48,7 @@ public enum DockerService {
      */
     public static final class TomcatService implements Service<TomcatManager, TomcatManagerConfiguration> {
 
-        private static final String DEFAULT_CONTAINER_ID = "tomcat";
+        public static final String DEFAULT_TOMCAT_CONTAINER_ID = "tomcat";
 
         @Override
         public DockerServiceManager<TomcatManager> init(TomcatManagerConfiguration configuration, String containerId) {
@@ -69,7 +67,7 @@ public enum DockerService {
 
         @Override
         public DockerServiceManager<TomcatManager> init(TomcatManagerConfiguration configuration) {
-            return init(configuration, DEFAULT_CONTAINER_ID);
+            return init(configuration, DEFAULT_TOMCAT_CONTAINER_ID);
         }
 
         @Override
@@ -84,7 +82,7 @@ public enum DockerService {
      */
     public static final class MongoDBService implements Service<MongoDBManager, MongoDBManagerConfiguration> {
 
-        private static final String DEFAULT_CONTAINER_ID = "mongodb";
+        public static final String DEFAULT_MONGODB_CONTAINER_ID = "mongodb";
 
         @Override
         public DockerServiceManager<MongoDBManager> init(MongoDBManagerConfiguration configuration, String containerId) {
@@ -98,7 +96,7 @@ public enum DockerService {
 
         @Override
         public DockerServiceManager<MongoDBManager> init(MongoDBManagerConfiguration configuration) {
-            return init(configuration, DEFAULT_CONTAINER_ID);
+            return init(configuration, DEFAULT_MONGODB_CONTAINER_ID);
         }
 
         @Override
@@ -113,7 +111,7 @@ public enum DockerService {
      */
     public static final class MariaDBService implements Service<MongoDBManager, MariaDBManagerConfiguration> {
 
-        private static final String DEFAULT_CONTAINER_ID = "mariadb";
+        public static final String DEFAULT_MARIADB_CONTAINER_ID = "mariadb";
 
         @Override
         public DockerServiceManager<MongoDBManager> init(MariaDBManagerConfiguration configuration, String containerId) {
@@ -127,7 +125,7 @@ public enum DockerService {
 
         @Override
         public DockerServiceManager<MongoDBManager> init(MariaDBManagerConfiguration configuration) {
-            return init(configuration, DEFAULT_CONTAINER_ID);
+            return init(configuration, DEFAULT_MARIADB_CONTAINER_ID);
         }
 
         @Override
@@ -136,9 +134,13 @@ public enum DockerService {
         }
     }
 
+    /**
+     * Represents Docker service with running ActiveMQ container. When not explicitly specified, the name of the
+     * container to start will be "activemq".
+     */
     public static final class ActiveMQService implements Service<ActiveMQManager, ActiveMQManagerConfiguration> {
 
-        private static final String DEFAULT_CONTAINER_ID = "activemq";
+        public static final String DEFAULT_ACTIVEMQ_CONTAINER_ID = "activemq";
 
         @Override
         public DockerServiceManager<ActiveMQManager> init(ActiveMQManagerConfiguration configuration, String containerId) {
@@ -152,7 +154,7 @@ public enum DockerService {
 
         @Override
         public DockerServiceManager<ActiveMQManager> init(ActiveMQManagerConfiguration configuration) {
-            return init(configuration, DEFAULT_CONTAINER_ID);
+            return init(configuration, DEFAULT_ACTIVEMQ_CONTAINER_ID);
         }
 
         @Override

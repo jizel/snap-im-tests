@@ -2,6 +2,8 @@ package travel.snapshot.qa.manager.activemq.impl;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.jboss.arquillian.core.spi.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManagerException;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 
@@ -17,6 +19,8 @@ import javax.jms.Session;
  * Builds connection, session, destination and closes these resources.
  */
 public class JMSHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(JMSHelper.class);
 
     private static final String DEFAULT_BROKER_ADDRESS = "127.0.0.1";
 
@@ -152,11 +156,14 @@ public class JMSHelper {
      * Closes a session.
      *
      * @param session session to close
-     * @throws IllegalArgumentException if {@code session} is a null object
      * @throws ActiveMQManagerException if it is not possible to close the session
      */
     public void close(final Session session) {
-        Validate.notNull(session, "Session to close is a null object.");
+
+        if (session == null) {
+            logger.debug("Session to close is a null object.");
+            return;
+        }
 
         try {
             session.close();
@@ -169,11 +176,14 @@ public class JMSHelper {
      * Closes a connection.
      *
      * @param connection connection to close
-     * @throws IllegalArgumentException     if {@code connection} to close is a null object.
      * @throws ActiveMQManagerConfiguration if it is not possible to close the connection
      */
     public void close(final Connection connection) {
-        Validate.notNull(connection, "Connection to close is a null object.");
+
+        if (connection == null) {
+            logger.debug("Connection to close is a null object.");
+            return;
+        }
 
         try {
             connection.close();

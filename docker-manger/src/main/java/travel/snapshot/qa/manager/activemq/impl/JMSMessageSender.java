@@ -1,6 +1,8 @@
 package travel.snapshot.qa.manager.activemq.impl;
 
 import org.jboss.arquillian.core.spi.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 
 import java.io.Serializable;
@@ -15,6 +17,8 @@ import javax.jms.Session;
  * Effectively sends JMS message to topic / queue and close resources.
  */
 public class JMSMessageSender {
+
+    private static final Logger logger = LoggerFactory.getLogger(JMSMessageSender.class);
 
     private final JMSHelper jmsHelper;
 
@@ -41,23 +45,35 @@ public class JMSMessageSender {
      */
     public <T extends Serializable> void send(final T messageObject, final String destination) {
 
-        final Connection connection = jmsHelper.buildConnection(configuration);
-
-        final Session session = jmsHelper.buildSession(connection);
-
-        final Destination jmsDestination = jmsHelper.buildDestination(session, destination);
-
-        final Message message = jmsHelper.buildMessage(messageObject, session);
-
         final JMSProducerHelper producerHelper = new JMSProducerHelper();
 
-        final MessageProducer producer = producerHelper.buildProducer(session, jmsDestination);
+        MessageProducer producer = null;
 
-        producerHelper.send(message, producer);
+        Session session = null;
 
-        producerHelper.close(producer);
-        jmsHelper.close(session);
-        jmsHelper.close(connection);
+        Connection connection = null;
+
+        try {
+            connection = jmsHelper.buildConnection(configuration);
+
+            session = jmsHelper.buildSession(connection);
+
+            final Destination jmsDestination = jmsHelper.buildDestination(session, destination);
+
+            final Message message = jmsHelper.buildMessage(messageObject, session);
+
+            producer = producerHelper.buildProducer(session, jmsDestination);
+
+            producerHelper.send(message, producer);
+        } finally {
+            try {
+                producerHelper.close(producer);
+                jmsHelper.close(session);
+                jmsHelper.close(connection);
+            } catch (Exception ex) {
+                logger.warn("Unable to close resources: {}", ex.getMessage());
+            }
+        }
     }
 
 }

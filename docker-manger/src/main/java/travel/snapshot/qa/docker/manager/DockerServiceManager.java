@@ -236,8 +236,8 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * In case of containers which depend on other containers and their services to be already running, precedence has
      * to be set. Lets say that there are two containers, c1 and c2. c2 depends on c1 to be fully started hence we have
      * to set the precedence of c1 to be bigger then the precedence of c2. When these values are same, the order in
-     * which these services will be started is random. When this method is not overriden, default precedence is of value
-     * 0.
+     * which these services will be started is random. When this method is not overridden, default precedence is of
+     * value 0.
      *
      * @return bigger the number is, sooner underlying service will be started
      */

@@ -1,5 +1,7 @@
 package travel.snapshot.qa.docker;
 
+import static travel.snapshot.qa.docker.DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
+
 import org.apache.commons.io.IOUtils;
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
@@ -7,6 +9,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
@@ -17,14 +21,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Connection;
-import java.util.logging.Logger;
 
 @Category(DockerTest.class)
 public class MariaDBDockerTestCase {
 
-    private static final Logger logger = Logger.getLogger(MariaDBDockerTestCase.class.getName());
-
-    private static final String MARIADB_CONTAINER_ID = "mariadb";
+    private static final Logger logger = LoggerFactory.getLogger(MariaDBDockerTestCase.class);
 
     private static final String SQL_SCRIPT = "script.sql";
 
@@ -37,11 +38,7 @@ public class MariaDBDockerTestCase {
 
         sqlScriptReader = new BufferedReader(new InputStreamReader(MariaDBDockerTestCase.class.getClassLoader().getResourceAsStream(SQL_SCRIPT)));
 
-        final MariaDBManagerConfiguration mariaDBManagerConfiguration = new MariaDBManagerConfiguration.Builder()
-                .bindAddress("127.0.0.1")
-                .build();
-
-        final MariaDBManager mariaDBManager = new MariaDBManagerImpl(mariaDBManagerConfiguration);
+        final MariaDBManager mariaDBManager = new MariaDBManagerImpl(new MariaDBManagerConfiguration.Builder().build());
 
         mariaDBDockerManager = new MariaDBDockerManager(mariaDBManager);
         mariaDBDockerManager.getDockerManager().startManager();
@@ -61,7 +58,7 @@ public class MariaDBDockerTestCase {
     @Test
     public void dockerContainerTest() {
 
-        final Cube startedMariaDBContainer = mariaDBDockerManager.start(MARIADB_CONTAINER_ID);
+        final Cube startedMariaDBContainer = mariaDBDockerManager.start(DEFAULT_MARIADB_CONTAINER_ID);
         logger.info("MariaDB Docker container has started");
 
         Assert.assertTrue("Docker MariaDB container is not running!", mariaDBDockerManager.serviceRunning());
@@ -70,7 +67,7 @@ public class MariaDBDockerTestCase {
         final Cube givenMariaDBContainer = mariaDBDockerManager.getDockerContainer();
 
         Assert.assertEquals("Started and saved Docker containers are not equal!", startedMariaDBContainer, givenMariaDBContainer);
-        Assert.assertEquals("Docker manager started container with different container ID", MARIADB_CONTAINER_ID, startedMariaDBContainer.getId());
+        Assert.assertEquals("Docker manager started container with different container ID", DEFAULT_MARIADB_CONTAINER_ID, startedMariaDBContainer.getId());
 
         final Connection connection = mariaDBDockerManager.getServiceManager().getConnection();
 

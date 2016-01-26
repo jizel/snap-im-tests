@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.mariadb.configuration;
 
+import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
 import travel.snapshot.qa.manager.api.Configuration;
 
 public class MariaDBManagerConfiguration implements Configuration {
@@ -68,7 +69,7 @@ public class MariaDBManagerConfiguration implements Configuration {
         return startupTimeoutInSeconds;
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractConfigurationBuilder {
 
         private String username = "root";
 
@@ -81,6 +82,10 @@ public class MariaDBManagerConfiguration implements Configuration {
         private String database = "test";
 
         private long startupTimeoutInSeconds = 60l;
+
+        public Builder() {
+            this.bindAddress = resolveHostIp();
+        }
 
         public MariaDBManagerConfiguration build() {
             return new MariaDBManagerConfiguration(this);
@@ -118,6 +123,7 @@ public class MariaDBManagerConfiguration implements Configuration {
          * @return this
          */
         public Builder bindPort(final int bindPort) {
+            validatePort(bindPort);
             this.bindPort = bindPort;
             return this;
         }

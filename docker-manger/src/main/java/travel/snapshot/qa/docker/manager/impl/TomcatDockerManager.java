@@ -20,6 +20,7 @@ public class TomcatDockerManager extends DockerServiceManager<TomcatManager> {
         super(tomcatManager);
     }
 
+    @Override
     public Cube start(final String containerId) {
         final Task<TomcatManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), TomcatStartedCheckTask.class);
         return super.start(checkingTask, containerId, serviceManager.getConfiguration().getStartupTimeoutInSeconds(), 5);

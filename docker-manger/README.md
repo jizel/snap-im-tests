@@ -57,9 +57,27 @@ is started so we have a lot of room to improve the testing experience in the lon
 
 ## Can I use this in connection with Docker machine?
 
-This is WIP and I have not verified it is possible yet but I do not see any particular reason why it should not be. 
-The only thing is to get right IP address of the Docker machine to operate with while the checking and 
-interactions with Docker containers in Docker machine is being done.
+Yes! You can use it with Docker machine as well. You have to start it with config file like [here](src/test/resources/arquillian-docker-machine.xml).
+Note there is another `serverUri` address. That `dockerHost` string will be automatically evaluated to the right 
+remote Docker daemon, effectively sitting in your VirtualBox machine of name `machineName` (`dev` in out example). So 
+you have to have that VirtualBox started beforehand.
+
+## How do I create a VirtualBox machine?
+
+Be sure you have Docker machine toolchain installed. Execute this once done:
+
+    docker-machine create --driver=virtualbox --virtualbox-memory "3072" --virtualbox-cpu-count "2" dev
+
+Adjust to your needs. The above command creates VirtualBox instance with 3GB of memory and 2 CPUs. After it is created, start it like
+
+    docker-machine start dev
+
+Once started, it is recommended to evaluate these settings in your shell by executing
+
+    eval "$(docker-machine env dev)"
+
+From now on, while still in that shell, if you invoke `docker` command, it will in fact talk to the remote Docker daemon 
+in started VirtualBox machine instead of the Docker daemon at your localhost.
 
 ## Can I use this with my docker-compose.yml?
 
@@ -68,6 +86,79 @@ Among other waiting strategies, `ss` command output strategy is going to be used
 possibility to change its configuration in `docker-compose.yml` so Arquillian Cube terminates prematurely because of the 
 inability to see these ports because the default timeouts are just too low. Remember - these checks are checking that 
 ports are indeed exported and bound to the host but it does not mean that the service behind it is really ready.
+
+## How do I set IP address of the Docker host or service IP?
+
+You have three options. The first one is to set it manually via each service configuration builder. The second 
+way is to set environment property of name `DOCKER_HOST`. This environment property is set when you evaluate the 
+environment of `docker-machine` by `eval "$(docker-machine env dev)"` where `dev` is your machine name. The third 
+option is to set system property of name `docker.host` which eventually overrides the environment one when set.
+
+When either of properties are set, you can safely create service configuration without explicitly specifying what 
+the binding IP address should be because by default, these properties are resolved underneath.
+
+## How do I run tests?
+
+In case of tests against Docker machine, you have to create Docker machine of name `dev` and start it beforehand and execute:
+
+    gradle clean test -Darquillian.xml=arquillian-docker-machine.xml
+
+In case you want tests to be executed against Docker containers which runs at your host, execute them like:
+
+    gradle clean test -Ddocker.host=127.0.0.1
+
+Be sure that you have Tomcat instance installed locally and `CATALINA_HOME` and `CATALINA_BASE` are set correctly and 
+you can login in there with `admin:admin` and there are only two deployments - manager and manager-host.
+
+## ActiveMQ manager
+
+[ActiveMQManager](src/main/java/travel/snapshot/qa/manager/activemq/api/ActiveMQManager.java) gives you the possibility 
+to construct and send messages to started ActiveMQ container. You get the instance of ActiveMQManager by instantiating it like:
+
+    ActiveMQManager activeMQManager = new ActiveMQManagerImpl(new ActiveMQManagerConfiguration.Builder().build());
+
+or via orchestration API like:
+
+    DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
+    ORCHESTRATION.with(activemq()).startServices();
+    ActiveMQManager activeMQManager = ORCHESTRATION.getActiveMQDockerManager().getServiceManager();
+
+## MariaDB manager
+
+[MariaDBManager](src/main/java/travel/snapshot/qa/manager/mariadb/api/MariaDBManager.java) gives you the possibility to 
+interact with MariaDB database, execute some SQL script or do Flyway migrations against some database. You get the reference to it by:
+
+    final MariaDBManager mariaDBManager = new MariaDBManagerImpl(new MariaDBManagerConfiguration.Builder().build());
+
+or via orchestration API like:
+
+    DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
+    ORCHESTRATION.with(mariadb()).startServices();
+    MariaDBManager mariaDBManager = ORCHESTRATION.getMariaDBDockerManager().getServiceManager();
+
+## MongoDB manager
+
+[MongoDBManager](src/main/java/travel/snapshot/qa/manager/mongodb/api/MongoDBManager.java) gives you the possibility to 
+interact with MongoDB database. You can get MongoClient from official MongoDB driver and interact with the database afterwards.
+
+    final MongoDBManager mongoDBManager = new MongoDBManagerImpl(new MongoDBManagerConfiguration.Builder().build());
+
+or via orchestration API like:
+
+    DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
+    ORCHESTRATION.with(mongodb()).startServices();
+    MongoDBManager mongoDBManager = ORCHESTRATION.getMongoDockerManager().getServiceManager();
+
+You get methods you put to `with` method on the orchestration object by importing statically methods in 
+[DockerServiceFactory](src/main/java/travel/snapshot/qa/docker/DockerServiceFactory.java)
+
+It is important to say that you can use these managers without dockerization by the first approach. All it takes to 
+talk to some existing service, e.g. started at your localhost, is to instantiate managers like it is shown in the 
+first examples above. You would only configure ports and hosts where it connects and how.
+
+In case you want to use Docker and orchestration API, you have to have `arquillian.xml` on classpath. Example 
+how you can try it with Docker machine is [here](src/test/resources/arquillian-docker-machine.xml) and example 
+without Docker machine is [here](src/test/resources/arquillian.xml).
 
 ## Tomcat manager
 

@@ -1,6 +1,8 @@
 package travel.snapshot.qa.manager.activemq.impl;
 
 import org.jboss.arquillian.core.spi.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManagerException;
 
 import javax.jms.Destination;
@@ -10,6 +12,8 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 public class JMSProducerHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(JMSProducerHelper.class.getName());
 
     /**
      * Builts a message producer from given {@code session} and {@code destination}.
@@ -53,13 +57,16 @@ public class JMSProducerHelper {
     }
 
     /**
-     * Closes a producer.
+     * Closes a producer. This method returns without closing the producer when it is a null object.
      *
      * @param producer producer to close
-     * @throws IllegalArgumentException if {@code producer} is a null object
      */
     public void close(final MessageProducer producer) {
-        Validate.notNull(producer, "Message producer to close is a null object");
+
+        if (producer == null) {
+            logger.debug("Producer to close is a null object.");
+            return;
+        }
 
         try {
             producer.close();

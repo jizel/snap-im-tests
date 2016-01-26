@@ -9,6 +9,11 @@ import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.check.ActiveMQStartedCheckTask;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 
+/**
+ * Implements ActiveMQ Docker service with respective startup checking task.
+ *
+ * ActiveMQ has precedence 100.
+ */
 public class ActiveMQDockerManager extends DockerServiceManager<ActiveMQManager> {
 
     private static final int PRECENDENCE = 100;

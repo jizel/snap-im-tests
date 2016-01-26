@@ -11,8 +11,8 @@ import org.jboss.arquillian.core.impl.loadable.LoadableExtensionLoader;
 import org.jboss.arquillian.core.spi.Manager;
 import org.jboss.arquillian.core.spi.ManagerBuilder;
 import org.jboss.arquillian.core.spi.Validate;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wraps Arquillian Cube core services into a separate helper class. We do not depend on Arquillian runner - its core
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  */
 public final class DockerManager {
 
-    private static final Logger logger = Logger.getLogger(DockerManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DockerManager.class);
 
     private static final String INVALID_CONTAINER_ID_MESSAGE = "Container ID can not be a null object nor an empty String!";
 
@@ -66,12 +66,12 @@ public final class DockerManager {
 
         startManager();
 
-        logger.info(String.format("Starting container %s.", containerId));
+        logger.info("Starting container {}.", containerId);
 
         manager.fire(new CreateCube(containerId));
         manager.fire(new StartCube(containerId));
 
-        logger.info(String.format("Started container %s.", containerId));
+        logger.info("Started container {}.", containerId);
 
         return getContainer(containerId);
     }
@@ -90,12 +90,12 @@ public final class DockerManager {
             throw new IllegalStateException("Manager is not started!");
         }
 
-        logger.info(String.format("Stopping container %s.", containerId));
+        logger.info("Stopping container {}.", containerId);
 
         manager.fire(new StopCube(containerId));
         manager.fire(new DestroyCube(containerId));
 
-        logger.info(String.format("Stopped container %s.", containerId));
+        logger.info("Stopped container {}.", containerId);
     }
 
     /**

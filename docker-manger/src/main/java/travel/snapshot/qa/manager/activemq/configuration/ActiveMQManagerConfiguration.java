@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.activemq.configuration;
 
+import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
 import travel.snapshot.qa.manager.api.Configuration;
 
 public class ActiveMQManagerConfiguration implements Configuration {
@@ -42,7 +43,7 @@ public class ActiveMQManagerConfiguration implements Configuration {
         return password;
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractConfigurationBuilder {
 
         private int startupTimeoutInSeconds = 60;
 
@@ -53,6 +54,10 @@ public class ActiveMQManagerConfiguration implements Configuration {
         private String username = "admin";
 
         private String password = "admin";
+
+        public Builder() {
+            this.brokerAddress = resolveHostIp();
+        }
 
         /**
          * @param brokerAddress address where broker is listening, defauls to {@literal 127.0.0.1} when not set.
@@ -68,6 +73,7 @@ public class ActiveMQManagerConfiguration implements Configuration {
          * @return this
          */
         public Builder brokerPort(final int brokerPort) {
+            validatePort(brokerPort);
             this.brokerPort = brokerPort;
             return this;
         }

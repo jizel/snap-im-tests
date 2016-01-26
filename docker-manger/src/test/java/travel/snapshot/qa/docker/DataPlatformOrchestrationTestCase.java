@@ -1,5 +1,14 @@
 package travel.snapshot.qa.docker;
 
+import static travel.snapshot.qa.docker.DockerServiceFactory.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
+import static travel.snapshot.qa.docker.DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
+import static travel.snapshot.qa.docker.DockerServiceFactory.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
+import static travel.snapshot.qa.docker.DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID;
+import static travel.snapshot.qa.docker.DockerServiceFactory.activemq;
+import static travel.snapshot.qa.docker.DockerServiceFactory.mariadb;
+import static travel.snapshot.qa.docker.DockerServiceFactory.mongodb;
+import static travel.snapshot.qa.docker.DockerServiceFactory.tomcat;
+
 import com.github.dockerjava.api.model.Container;
 import com.mongodb.MongoClient;
 import org.arquillian.cube.ChangeLog;
@@ -13,6 +22,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
@@ -35,7 +46,9 @@ import java.util.concurrent.TimeUnit;
 @Category(OrchestrationTest.class)
 public class DataPlatformOrchestrationTestCase {
 
-    private static final DataPlatformOrchestration orchestration = new DataPlatformOrchestration();
+    private static final Logger logger = LoggerFactory.getLogger(DataPlatformOrchestrationTestCase.class);
+
+    private static final DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
@@ -43,35 +56,32 @@ public class DataPlatformOrchestrationTestCase {
     @BeforeClass
     public static void setup() {
 
-        final DockerService service = DockerService.INSTANCE;
-
-        orchestration.with(service.activemq().init())
-                .with(service.mariadb().init())
-                .with(service.mongo().init())
-                .with(service.tomcat().init());
-
-        orchestration.startServices();
+        ORCHESTRATION.with(activemq().init(DEFAULT_ACTIVEMQ_CONTAINER_ID))
+                .with(mariadb().init(DEFAULT_MARIADB_CONTAINER_ID))
+                .with(mongodb().init(DEFAULT_MONGODB_CONTAINER_ID))
+                .with(tomcat().init(DEFAULT_TOMCAT_CONTAINER_ID))
+                .startServices();
     }
 
     @AfterClass
     public static void teardown() {
-        orchestration.stopServices();
-        orchestration.stop();
+        ORCHESTRATION.stopServices();
+        ORCHESTRATION.stop();
     }
 
     @Test
     public void test() {
 
-        MariaDBManager mariaDBManager = orchestration.getMariaDBDockerManager().getServiceManager();
-        ActiveMQManager activeMQManager = orchestration.getActiveMQDockerManager().getServiceManager();
-        MongoDBManager mongoDBManager = orchestration.getMongoDockerManager().getServiceManager();
-        TomcatManager tomcatManager = orchestration.getTomcatDockerManager().getServiceManager();
+        MariaDBManager mariaDBManager = ORCHESTRATION.getMariaDBDockerManager().getServiceManager();
+        ActiveMQManager activeMQManager = ORCHESTRATION.getActiveMQDockerManager().getServiceManager();
+        MongoDBManager mongoDBManager = ORCHESTRATION.getMongoDockerManager().getServiceManager();
+        TomcatManager tomcatManager = ORCHESTRATION.getTomcatDockerManager().getServiceManager();
 
         // MariaDB
 
-        final Connection sqlConnecetion = mariaDBManager.getConnection();
-        Assert.assertNotNull(sqlConnecetion);
-        mariaDBManager.closeConnection(sqlConnecetion);
+        final Connection sqlConnection = mariaDBManager.getConnection();
+        Assert.assertNotNull(sqlConnection);
+        mariaDBManager.closeConnection(sqlConnection);
 
         // ActiveMQ
 
@@ -95,22 +105,20 @@ public class DataPlatformOrchestrationTestCase {
 
     @Test
     public void ipInspectionTest() {
-        Map<String, String> ips = orchestration.inspectAllIPs();
+        Map<String, String> ips = ORCHESTRATION.inspectAllIPs();
 
-        System.out.println(ips.toString());
+        logger.info("Resolved container IPs: {}", ips);
 
         Assert.assertEquals("There are less resolved IPs than running containers!",
-                orchestration.getStartedContainers().size(),
+                ORCHESTRATION.getStartedContainers().size(),
                 ips.size());
 
-        String tomcatResolvedIpFromMap = ips.get("tomcat");
-        String tomcatResolvedIpFromIPMethod = orchestration.inspectIP("tomcat");
-        String tomcatResolvedIpFromServiceTypeMethod = orchestration.inspectIP(ServiceType.TOMCAT);
+        String tomcatResolvedIpFromMap = ips.get(DEFAULT_TOMCAT_CONTAINER_ID);
+        String tomcatResolvedIpFromIPMethod = ORCHESTRATION.inspectIP(DEFAULT_TOMCAT_CONTAINER_ID);
 
         Assert.assertEquals(tomcatResolvedIpFromMap, tomcatResolvedIpFromIPMethod);
-        Assert.assertEquals(tomcatResolvedIpFromMap, tomcatResolvedIpFromServiceTypeMethod);
 
-        String mariadbResolvedIp = ips.get("mariadb");
+        String mariadbResolvedIp = ips.get(DEFAULT_MARIADB_CONTAINER_ID);
 
         Assert.assertNotEquals("Some resolved IPs for different containers are same!",
                 tomcatResolvedIpFromMap, mariadbResolvedIp);
@@ -129,15 +137,14 @@ public class DataPlatformOrchestrationTestCase {
         final List<Container> containers = dockerClientExecutor.listRunningContainers();
 
         for (final Container container : containers) {
-            System.out.println("container id: " + container.getId());
-            System.out.println("container image: " + container.getImage());
-            System.out.println("container names: ");
-            Arrays.asList(container.getNames()).forEach(name -> System.out.println(name));
+            logger.info("container id: {}", container.getId());
+            logger.info("container image: {}", container.getImage());
+            logger.info("container names: {}", Arrays.asList(container.getNames()));
         }
 
         dockerClientExecutor.pingDockerServer();
 
-        final List<ChangeLog> changeLogs = dockerClientExecutor.inspectChangesOnContainerFilesystem("tomcat");
+        final List<ChangeLog> changeLogs = dockerClientExecutor.inspectChangesOnContainerFilesystem(DEFAULT_TOMCAT_CONTAINER_ID);
 
         for (final ChangeLog changeLog : changeLogs) {
             System.out.println(String.format("%s -> %s", changeLog.getKind(), changeLog.getPath()));
@@ -151,7 +158,7 @@ public class DataPlatformOrchestrationTestCase {
 
         final DockerClientExecutor dockerClientExecutor = DockerManager.instance().getClientExecutor();
 
-        try (final InputStream inputStream = dockerClientExecutor.getFileOrDirectoryFromContainerAsTar("tomcat", "/data/tomcat/config")) {
+        try (final InputStream inputStream = dockerClientExecutor.getFileOrDirectoryFromContainerAsTar(DEFAULT_TOMCAT_CONTAINER_ID, "/data/tomcat/config")) {
             TarArchive tarArchive = new TarArchive(inputStream);
             tarArchive.extractContents(configDir);
             tarArchive.closeArchive();
@@ -166,7 +173,7 @@ public class DataPlatformOrchestrationTestCase {
         final File destinationDir = testFolder.newFolder("configDirByAPI");
         final File sourceDir = new File("/data/tomcat/config");
 
-        orchestration.getTomcatDockerManager().fetch(sourceDir, destinationDir);
+        ORCHESTRATION.getTomcatDockerManager().fetch(sourceDir, destinationDir);
 
         Assert.assertTrue("Archive should contain test.properties file!", new File(destinationDir, "config/test.properties").exists());
     }

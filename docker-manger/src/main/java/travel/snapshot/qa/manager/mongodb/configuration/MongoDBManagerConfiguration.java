@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.mongodb.configuration;
 
+import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
 import travel.snapshot.qa.manager.api.Configuration;
 
 import java.util.ArrayList;
@@ -36,27 +37,31 @@ public class MongoDBManagerConfiguration implements Configuration {
         return this.servers.stream().map(server -> server.toString()).collect(Collectors.joining(","));
     }
 
-    public static class Builder {
-
-        private static final String DEFAULT_HOST = "127.0.0.1";
+    public static class Builder extends AbstractConfigurationBuilder {
 
         private static final int DEFAULT_PORT = 27017;
 
-        private static List<MongoHostPortPair> servers = new ArrayList<MongoHostPortPair>() {{
-            add(new MongoHostPortPair(DEFAULT_HOST, DEFAULT_PORT));
-        }};
+        private List<MongoHostPortPair> servers;
+
+        public Builder() {
+            servers = new ArrayList<MongoHostPortPair>() {{
+                add(new MongoHostPortPair(resolveHostIp(), DEFAULT_PORT));
+            }};
+        }
 
         private String database = "test";
 
         private int startupTimeoutInSeconds = 60;
 
         public Builder setServer(final MongoHostPortPair mongoHostPortPair) {
+            validatePort(mongoHostPortPair.getPort());
             this.servers.clear();
             this.servers.add(mongoHostPortPair);
             return this;
         }
 
         public Builder addServer(final MongoHostPortPair mongoHostPortPair) {
+            validatePort(mongoHostPortPair.getPort());
             this.servers.add(mongoHostPortPair);
             return this;
         }
@@ -73,22 +78,6 @@ public class MongoDBManagerConfiguration implements Configuration {
 
         public MongoDBManagerConfiguration build() {
             return new MongoDBManagerConfiguration(this);
-        }
-    }
-
-    public static class MongoHostPortPair {
-
-        public final String host;
-        public final int port;
-
-        public MongoHostPortPair(final String host, final int port) {
-            this.host = host;
-            this.port = port;
-        }
-
-        @Override
-        public String toString() {
-            return host + ":" + port;
         }
     }
 }

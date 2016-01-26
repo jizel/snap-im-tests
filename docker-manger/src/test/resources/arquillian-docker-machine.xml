@@ -15,12 +15,16 @@
 
     <extension qualifier="docker">
         <property name="serverVersion">1.21</property>
-        <property name="serverUri">http://localhost:2375</property>
+        <property name="serverUri">https://dockerHost:2376</property>
         <property name="dockerRegistry">https://docker.snapshot.travel:5000/v2/</property>
         <property name="username">snapshot_docker</property>
         <property name="password">aqGG86d1Yf3Y</property>
         <property name="email">docker@snapshot.travel</property>
         <property name="definitionFormat">CUBE</property>
+
+        <!-- The property which says that we will run on Docker machine of the given name -->
+        <property name="machineName">dev</property>
+
         <property name="dockerContainers">
             tomcat:
                 image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
@@ -31,12 +35,6 @@
                     sleepPollingTime: 5 s
                     iterations: 15
                 portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
-                links:
-                    - mariadb:mariadb
-                    - mongodb:mongodb
-                    - activemq:activemq
-                binds:
-                    - ${tomcat.mount.dir}:/data/tomcat/config:ro
             tomcat_tests:
                 image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]

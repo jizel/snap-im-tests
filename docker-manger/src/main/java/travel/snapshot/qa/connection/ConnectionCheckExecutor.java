@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.ExecutionException;
 import org.arquillian.spacelift.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ import java.util.concurrent.TimeUnit;
  * seconds.
  */
 public class ConnectionCheckExecutor {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionCheckExecutor.class);
 
     /**
      * Executes the connection check.
@@ -73,6 +77,7 @@ public class ConnectionCheckExecutor {
                 tcpClient = new Socket(connectionCheck.getHost(), connectionCheck.getPort());
                 return true;
             } catch (IOException ex) {
+                logger.debug("Unable to make TCP connection to {}:{}", connectionCheck.getHost(), connectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(tcpClient);
@@ -98,6 +103,7 @@ public class ConnectionCheckExecutor {
                 udpClient.send(packet);
                 return true;
             } catch (IOException ex) {
+                logger.debug("Unable to make UDP connection to {}:{}", connectionCheck.getHost(), connectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(udpClient);

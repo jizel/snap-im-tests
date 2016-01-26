@@ -75,7 +75,11 @@ public class TomcatDeploymentTestCase {
     @Before
     public void setup() {
         if (!remote) {
-            manager = Spacelift.task(TomcatStarter.class).execute().await();
+            final TomcatManagerConfiguration configuration = new TomcatManagerConfiguration.Builder()
+                    .setBindAddress("127.0.0.1")
+                    .build();
+
+            manager = Spacelift.task(configuration, TomcatStarter.class).execute().await();
         } else {
             manager = new TomcatManager(new TomcatManagerConfiguration.Builder().setBindAddress(remoteHost).remote().build());
         }
@@ -111,6 +115,8 @@ public class TomcatDeploymentTestCase {
 
         if (remote) {
             builder.setBindAddress(remoteHost).remote();
+        } else {
+            builder.setBindAddress("127.0.0.1");
         }
 
         final TomcatManager manager = new TomcatManager(builder.build());

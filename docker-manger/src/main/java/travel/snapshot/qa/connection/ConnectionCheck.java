@@ -84,7 +84,7 @@ public class ConnectionCheck {
          * however, in a lot of cases, it is not sure if the service is fully up and running. For example Docker does
          * port binding and it is possible to open a socket there but it does not mean that the service is fully
          * listening. For that reason, given check is service-specific and performs some action against the service
-         * which is successful iff service is trully up.
+         * which is successful iff service is truly up.
          *
          * @param checkingTask task which performs the check.
          */
@@ -144,7 +144,7 @@ public class ConnectionCheck {
         /**
          * Sets reexecution interval as time in seconds after which a check is executed again
          *
-         * @param reexecutionInterval interal after which a check is executed again
+         * @param reexecutionInterval interval after which a check is executed again
          * @return this builder
          * @throws IllegalArgumentException if {@code reexecutionInterval} is lower then 1.
          */

@@ -2,8 +2,6 @@ package travel.snapshot.qa.inspection;
 
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
-import travel.snapshot.qa.docker.ServiceType;
-import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
 import travel.snapshot.qa.manager.tomcat.configuration.Validate;
 
@@ -36,25 +34,6 @@ public class Inspection {
     public Map<String, String> inspectAllIPs() {
         return orchestration.getStartedContainers().stream()
                 .collect(Collectors.toMap(c -> c.getCube().getId(), c -> inspectIP(c.getCube().getId())));
-    }
-
-    /**
-     * Gets external IP address of the service of given type.
-     *
-     * @param serviceType service type to get the external IP address of
-     * @return external IP address of the specified service of given type
-     * @throws InspectionException in case service manager of given type was not found or it is not possible to get the
-     *                             IP address
-     */
-    public String inspectIP(ServiceType serviceType) {
-        final DockerServiceManager serviceManager = orchestration.getDockerServiceManager(serviceType);
-
-        if (serviceManager == null) {
-            throw new InspectionException(String.format("Unable to get IP of service type '%s'. Such service is " +
-                    "not up and running.", serviceType.toString()));
-        }
-
-        return inspectIP(serviceManager.getDockerContainer().getId());
     }
 
     /**

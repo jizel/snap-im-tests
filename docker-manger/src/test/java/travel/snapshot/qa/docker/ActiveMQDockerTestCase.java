@@ -1,39 +1,34 @@
 package travel.snapshot.qa.docker;
 
+import static travel.snapshot.qa.docker.DockerServiceFactory.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
+
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;
 
-import java.util.logging.Logger;
-
 import javax.jms.Connection;
 
 @Category(DockerTest.class)
 public class ActiveMQDockerTestCase {
 
-    private static final Logger logger = Logger.getLogger(ActiveMQDockerTestCase.class.getName());
-
-    private static final String ACTIVEMQ_CONTAINER_ID = "activemq";
+    private static final Logger logger = LoggerFactory.getLogger(ActiveMQDockerTestCase.class);
 
     private static ActiveMQDockerManager activeMQDockerManager;
 
     @BeforeClass
     public static void setup() throws Exception {
 
-        final ActiveMQManagerConfiguration activeMQManagerConfiguration = new ActiveMQManagerConfiguration.Builder()
-                .brokerAddress("127.0.0.1")
-                .brokerPort(61616)
-                .build();
-
-        final ActiveMQManager activeMQManager = new ActiveMQManagerImpl(activeMQManagerConfiguration);
+        final ActiveMQManager activeMQManager = new ActiveMQManagerImpl(new ActiveMQManagerConfiguration.Builder().build());
 
         activeMQDockerManager = new ActiveMQDockerManager(activeMQManager);
         activeMQDockerManager.getDockerManager().startManager();
@@ -51,7 +46,7 @@ public class ActiveMQDockerTestCase {
     @Test
     public void dockerContainerTest() {
 
-        final Cube startedActiveMQContainer = activeMQDockerManager.start(ACTIVEMQ_CONTAINER_ID);
+        final Cube startedActiveMQContainer = activeMQDockerManager.start(DEFAULT_ACTIVEMQ_CONTAINER_ID);
         logger.info("ActiveMQ Docker container has started");
 
         Assert.assertTrue("Docker ActiveMQ container is not running!", activeMQDockerManager.serviceRunning());
@@ -60,7 +55,7 @@ public class ActiveMQDockerTestCase {
         final Cube activeMQContainer = activeMQDockerManager.getDockerContainer();
 
         Assert.assertEquals("Started and saved Docker containers are not equal!", startedActiveMQContainer, activeMQContainer);
-        Assert.assertEquals("Docker manager started container with different container ID", ACTIVEMQ_CONTAINER_ID, startedActiveMQContainer.getId());
+        Assert.assertEquals("Docker manager started container with different container ID", DEFAULT_ACTIVEMQ_CONTAINER_ID, startedActiveMQContainer.getId());
 
         final Connection connection = activeMQDockerManager.getServiceManager().buildConnection();
         Assert.assertNotNull("JMS connection is null!", connection);

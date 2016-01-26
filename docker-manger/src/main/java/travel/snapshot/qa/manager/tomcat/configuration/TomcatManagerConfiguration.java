@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.tomcat.configuration;
 
+import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
 import travel.snapshot.qa.manager.api.Configuration;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
 
@@ -44,7 +45,7 @@ public class TomcatManagerConfiguration implements Configuration {
         remote = builder.remote;
     }
 
-    public static final class Builder {
+    public static final class Builder extends AbstractConfigurationBuilder {
 
         private File javaHome = resolveProperty("java.home", "JAVA_HOME");
 
@@ -79,6 +80,10 @@ public class TomcatManagerConfiguration implements Configuration {
         private HTTPScheme httpScheme = HTTPScheme.HTTP;
 
         private boolean remote = false;
+
+        public Builder() {
+            bindAddress = resolveHostIp();
+        }
 
         public Builder setUser(final String user) {
             this.user = user;
@@ -156,6 +161,7 @@ public class TomcatManagerConfiguration implements Configuration {
         }
 
         public Builder setBindPort(int bindPort) {
+            validatePort(bindPort);
             this.bindHttpPort = bindPort;
             return this;
         }

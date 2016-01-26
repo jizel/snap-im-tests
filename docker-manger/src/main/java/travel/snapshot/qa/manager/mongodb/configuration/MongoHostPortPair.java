@@ -40,4 +40,9 @@ public class MongoHostPortPair {
         result = 31 * result + port;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return host + ":" + port;
+    }
 }

@@ -3,6 +3,8 @@ package travel.snapshot.qa.manager.mariadb.impl;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManagerException;
@@ -20,11 +22,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 public class MariaDBManagerImpl implements MariaDBManager {
 
-    private static final Logger logger = Logger.getLogger(MariaDBManagerImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(MariaDBManagerImpl.class);
 
     private final MariaDBManagerConfiguration configuration;
 
@@ -126,7 +127,7 @@ public class MariaDBManagerImpl implements MariaDBManager {
         if (migrationLocations.length != 0) {
             flyway.setLocations(migrationLocations);
         }
-        
+
         return flyway;
     }
 
@@ -152,7 +153,7 @@ public class MariaDBManagerImpl implements MariaDBManager {
         try {
             connection.close();
         } catch (SQLException ex) {
-            logger.severe(String.format("Unable to close SQL connection. Error code: %s. Message: %s.", ex.getErrorCode(), ex.getMessage()));
+            logger.warn("Unable to close SQL connection. Error code: {}. Message: {}.", ex.getErrorCode(), ex.getMessage());
         }
     }
 

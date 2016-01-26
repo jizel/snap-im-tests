@@ -1,14 +1,14 @@
 package travel.snapshot.qa.manager.tomcat.check;
 
 import org.arquillian.spacelift.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.command.TomcatListCommand;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.impl.TomcatCommandExecutor;
 
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Checks if a container backed by some configuration is started or not by executing of a listing command and getting
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class TomcatStartedCheckTask extends Task<TomcatManagerConfiguration, Boolean> {
 
-    private static final Logger logger = Logger.getLogger(TomcatStartedCheckTask.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TomcatStartedCheckTask.class);
 
     @Override
     protected Boolean process(TomcatManagerConfiguration configuration) throws Exception {
@@ -34,9 +34,7 @@ public class TomcatStartedCheckTask extends Task<TomcatManagerConfiguration, Boo
                 logger.info(ex.getCause().getMessage());
             }
         } catch (Exception ex) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(ex.getMessage());
-            }
+            logger.debug(ex.getMessage());
         }
 
         return running;
