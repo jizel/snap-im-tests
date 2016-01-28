@@ -8,7 +8,7 @@ import random
 __all__ = ['increment', 'rating', 'dates']
 
 increment   = lambda data, pos: data['row'][pos] + random.randint(5, 40)
-rating      = lambda: random.choice([ x * 2. for x in range(2, 11)])
+rating      = lambda: random.choice([ x * 0.5 for x in range(1, 11)])
 
 dates = []
 date  = DATE_FROM

@@ -139,6 +139,27 @@ TABLES = [
     },
 
     {
+        'table': 'dp.tripadvisor_geo_location',
+        'multiply': [1],
+        'columns': [
+            lambda data: data['property_id'],               # location_id
+            lambda data: 'town %d' % data['property_id']    # location_name
+        ]
+    },
+
+    {
+        'table': 'dp.tripadvisor_property',
+        'multiply': [1],
+        'columns': [
+            lambda data: '990%03d99-9999-4999-a999-999999999999' % data['property_id'],     # property_id
+            lambda data: '59%04d' % data['property_id'],                                    # property_location_id
+            lambda data: random.randint(18,21),                                             # geo_location_id
+            lambda data: '0',                                                               # last_num_reviews
+            lambda data: '2016-01-15 00:00:00'                                              # last_review_timestamp
+        ]
+    },
+
+    {
         'table': 'dp.Fact_web_performance_cumulative',
         'multiply': dates,
         'columns': [
