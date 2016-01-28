@@ -17,6 +17,7 @@ public class Address {
     private String city = null;
     private String zipCode = null;
     private String country = null;
+    private String region = null;
 
 
     /**
@@ -89,6 +90,20 @@ public class Address {
     }
 
 
+    /**
+     * Region
+     **/
+    @ApiModelProperty(value = "Region")
+    @JsonProperty("region")
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -99,6 +114,7 @@ public class Address {
         sb.append("    city: ").append(StringUtil.toIndentedString(city)).append("\n");
         sb.append("    zipCode: ").append(StringUtil.toIndentedString(zipCode)).append("\n");
         sb.append("    country: ").append(StringUtil.toIndentedString(country)).append("\n");
+        sb.append("    region: ").append(StringUtil.toIndentedString(region)).append("\n");
         sb.append("}");
         return sb.toString();
     }

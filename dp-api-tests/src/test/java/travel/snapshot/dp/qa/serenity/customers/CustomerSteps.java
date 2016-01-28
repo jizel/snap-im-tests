@@ -17,6 +17,7 @@ import java.util.Map;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.DateUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Address;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.CustomerUser;
@@ -83,6 +84,18 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void followingCustomerIsCreated(Customer customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+        Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
+        Customer existingCustomer = getCustomerByCodeInternal(customer.getCode());
+        if (existingCustomer != null) {
+            deleteEntity(existingCustomer.getCustomerId());
+        }
+        Response response = createEntity(customer);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void followingCustomerIsCreatedWithAddress(Customer customer, Address address) {
+        customer.setAddress(address);
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
         Customer existingCustomer = getCustomerByCodeInternal(customer.getCode());
         if (existingCustomer != null) {

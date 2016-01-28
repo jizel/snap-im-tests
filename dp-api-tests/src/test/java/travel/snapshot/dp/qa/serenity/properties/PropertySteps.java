@@ -20,6 +20,7 @@ import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.qa.model.Address;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -146,6 +147,18 @@ public class PropertySteps extends BasicSteps {
     @Step
     public void followingPropertyIsCreated(Property property) {
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+        Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
+        Property existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
+        if (existingProperty != null) {
+            deleteProperty(existingProperty.getPropertyId());
+        }
+        Response response = createProperty(property);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void followingPropertyIsCreatedWithAddress(Property property, Address address) {
+    	property.setAddress(address);
         Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
         Property existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
         if (existingProperty != null) {

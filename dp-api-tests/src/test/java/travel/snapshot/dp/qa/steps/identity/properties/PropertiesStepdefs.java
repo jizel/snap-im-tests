@@ -14,6 +14,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.model.Address;
+import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -83,6 +85,23 @@ public class PropertiesStepdefs {
     @When("^Property is created with random address and billing address$")
     public void property_is_created(List<Property> properties) throws Throwable {
         propertySteps.followingPropertyIsCreated(properties.get(0));
+    }
+
+    @When("^A property from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
+    public void property_from_country_region_code_email_is_created(String country, String region, String code, String email) {
+        Address address = new Address();
+        Property property = new Property();
+        address.setAddressLine1("someAddress");
+        address.setCity("someCity");
+        address.setZipCode("1234");
+        address.setCountry(country);
+        address.setRegion(region);
+        property.setPropertyName("someProperty");
+        property.setPropertyCode(code);
+        property.setEmail(email);
+        property.setIsDemoProperty(true);
+        property.setTimezone("GMT");
+        propertySteps.followingPropertyIsCreatedWithAddress(property, address);
     }
 
     @When("^Property with code \"([^\"]*)\" is deleted$")
