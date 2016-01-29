@@ -35,9 +35,10 @@ public class CustomerStepdefs {
     public void The_following_tenants_exist(List<Customer> customers) throws Throwable {
         customerSteps.followingCustomersExist(customers);
     }
-    
+
     @When("^A customer from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
-    public void customer_from_country_region_code_email_is_created(String country, String region, String code, String email) {
+    public void customer_from_country_region_code_email_is_created(String country, String region, String code,
+            String email) {
         Address address = new Address();
         Customer customer = new Customer();
         address.setAddressLine1("someAddress");
@@ -53,20 +54,40 @@ public class CustomerStepdefs {
         customerSteps.followingCustomerIsCreatedWithAddress(customer, address);
     }
 
+    @When("^A customer from country \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" vatId \"([^\"]*)\" company nqma \"([^\"]*)\"is created$")
+    public void a_customer_from_country_with_code_and_email_is_created_with_proper_vatID(String country, String code,
+            String email, String vatId, String companyName) {
+        Address address = new Address();
+        Customer customer = new Customer();
+        address.setAddressLine1("someAddress");
+        address.setCity("someCity");
+        address.setZipCode("1234");
+        address.setCountry(country);
+        customer.setCompanyName(companyName);
+        customer.setCode(code);
+        customer.setEmail(email);
+        customer.setIsDemoCustomer(true);
+        customer.setTimezone("GMT");
+        customer.setVatId(vatId);
+        customerSteps.followingCustomerIsCreatedWithAddress(customer, address);
+    }
+
     @Given("^The following customers with codes don't exist$")
     public void The_following_customers_dont_exist(List<String> customerCodes) throws Throwable {
         customerSteps.followingCustomersDontExist(customerCodes);
     }
 
     @Given("^Relation between property with code \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
-    public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode, String customerCode, String type, String validFrom, String validTo) throws Throwable {
+    public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
+            String customerCode, String type, String validFrom, String validTo) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(p, customerCode, type, validFrom, validTo);
 
     }
 
     @Given("^Relation between user with username \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
-    public void Relation_between_user_with_username_and_customer_with_code_exists_with_isPrimary(String username, String customerCode, String isPrimary) throws Throwable {
+    public void Relation_between_user_with_username_and_customer_with_code_exists_with_isPrimary(String username,
+            String customerCode, String isPrimary) throws Throwable {
         User user = usersSteps.getUserByUsername(username);
         customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerCode, isPrimary);
     }
@@ -100,11 +121,12 @@ public class CustomerStepdefs {
     }
 
     @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_customers_is_got_with_limit_and_cursor_and_filter_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                        @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                        @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                        @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                        @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+    public void List_of_customers_is_got_with_limit_and_cursor_and_filter_filter_and_sort_and_sort_desc(
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         customerSteps.listOfCustomersIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
@@ -144,23 +166,30 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")
-    public void Customer_with_code_is_updated_with_data_if_updated_before(String code, List<Customer> customers) throws Throwable {
+    public void Customer_with_code_is_updated_with_data_if_updated_before(String code, List<Customer> customers)
+            throws Throwable {
         customerSteps.updateCustomerWithCodeIfUpdatedBefore(code, customers.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
-    public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode, String customerCode, @Transform(NullEmptyStringConverter.class) String type, @Transform(NullEmptyStringConverter.class) String dateFrom, @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
+    public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode,
+            String customerCode, @Transform(NullEmptyStringConverter.class) String type,
+            @Transform(NullEmptyStringConverter.class) String dateFrom,
+            @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (p == null) {
-            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(BasicStepDefs.NONEXISTENT_ID, customerCode, type, dateFrom, dateTo);
+            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(BasicStepDefs.NONEXISTENT_ID, customerCode, type,
+                    dateFrom, dateTo);
         } else {
-            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(p.getPropertyId(), customerCode, type, dateFrom, dateTo);
+            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(p.getPropertyId(), customerCode, type, dateFrom,
+                    dateTo);
         }
 
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\"$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerCode, String type) throws Throwable {
+    public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerCode,
+            String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsgotForCustomerWithType(p, customerCode, type);
     }
@@ -171,24 +200,25 @@ public class CustomerStepdefs {
     }
 
     @When("^List of customerProperties is got for customer with code \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_customerProperties_is_got_for_customer_with_code_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String customerCode,
-                                                                                                                                 @Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                                                 @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                                                 @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                                                 @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                                                 @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomerPropertiesIsGotWith(customerCode,
-                limit, cursor, filter, sort, sortDesc);
+    public void List_of_customerProperties_is_got_for_customer_with_code_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+            String customerCode, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        customerSteps.listOfCustomerPropertiesIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^User with username \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
-    public void User_with_username_is_added_to_customer_with_code_with_isPrimary(String username, String customerCode, String isPrimary) throws Throwable {
+    public void User_with_username_is_added_to_customer_with_code_with_isPrimary(String username, String customerCode,
+            String isPrimary) throws Throwable {
         User u = usersSteps.getUserByUsername(username);
         customerSteps.userIsAddedToCustomerWithIsPrimary(u, customerCode, isPrimary);
     }
 
     @When("^User with username \"([^\"]*)\" is removed from customer with code \"([^\"]*)\"$")
-    public void User_with_username_is_removed_from_customer_with_code(String username, String customerCode) throws Throwable {
+    public void User_with_username_is_removed_from_customer_with_code(String username, String customerCode)
+            throws Throwable {
         User u = usersSteps.getUserByUsername(username);
         customerSteps.userIsDeletedFromCustomer(u, customerCode);
     }
@@ -234,7 +264,8 @@ public class CustomerStepdefs {
     }
 
     @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")
-    public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerCode) throws Throwable {
+    public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerCode)
+            throws Throwable {
         User u = usersSteps.getUserByUsername(username);
         customerSteps.userDoesntExistForCustomer(u, customerCode);
     }
@@ -252,25 +283,29 @@ public class CustomerStepdefs {
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
-    public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
+    public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode,
+            String customerCode, String type, String fieldName, String value) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsUpdateForCustomerWithType(p, customerCode, type, fieldName, value);
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
-    public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
+    public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(
+            String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(p, customerCode, type, fieldName, value);
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\" with etag$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type_with_etag(String propertyCode, String customerCode, String type) throws Throwable {
+    public void Property_with_code_from_customer_with_code_is_got_with_type_with_etag(String propertyCode,
+            String customerCode, String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsgotForCustomerWithTypeWithEtag(p, customerCode, type);
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\" for etag, updated and got with previous etag$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type_for_etag_updated_and_got_with_previous_etag(String propertyCode, String customerCode, String type) throws Throwable {
+    public void Property_with_code_from_customer_with_code_is_got_with_type_for_etag_updated_and_got_with_previous_etag(
+            String propertyCode, String customerCode, String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(p, customerCode, type);
     }
@@ -282,12 +317,12 @@ public class CustomerStepdefs {
     }
 
     @When("^List of property sets for customer \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String customerCode,
-                                                                                                                  @Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                                  @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                                  @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+    public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+            String customerCode, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         customerSteps.listOfCustomerPropertySetsIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
     }
 
@@ -297,17 +332,18 @@ public class CustomerStepdefs {
     }
 
     @When("^List of users for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_users_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String customerCode,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+    public void List_of_users_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+            String customerCode, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         customerSteps.listOfUsersIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are customer users with following usernames returned in order: (.*)$")
-    public void There_are_customer_users_with_following_usernames_returned_in_order_expected_usernames(List<String> usernames) throws Throwable {
+    public void There_are_customer_users_with_following_usernames_returned_in_order_expected_usernames(
+            List<String> usernames) throws Throwable {
         customerSteps.usernamesAreInResponseInOrder(usernames);
     }
 
@@ -317,13 +353,15 @@ public class CustomerStepdefs {
     }
 
     @Then("^Field \"([^\"]*)\" has value \"([^\"]*)\" for property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\"$")
-    public void Field_has_value_for_property_with_code_for_customer_with_code_with_type(String fieldName, String value, String propertyCode, String customerCode, String type) throws Throwable {
+    public void Field_has_value_for_property_with_code_for_customer_with_code_with_type(String fieldName, String value,
+            String propertyCode, String customerCode, String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode, type);
+        customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode,
+                type);
     }
 
     @Then("^All customers are active$")
     public void all_customers_are_active() throws Throwable {
-    	customerSteps.allCustomersAreActive();
+        customerSteps.allCustomersAreActive();
     }
 }
