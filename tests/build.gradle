@@ -1,0 +1,158 @@
+import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
+import travel.snapshot.qa.DataPlatformTestOrchestration
+import travel.snapshot.qa.installation.DockerMachine
+import travel.snapshot.qa.installation.DockerService
+import travel.snapshot.qa.installation.Docker
+import travel.snapshot.qa.test.DataPlatformTest
+import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.interaction.DockerInteraction
+
+import static travel.snapshot.qa.docker.DockerServiceFactory.*
+
+apply plugin: 'org.arquillian.spacelift'
+
+spacelift {
+
+    workspace new File(project.rootDir, 'snapshot/workspace')
+    cacheDir new File(project.rootDir, 'snapshot/cache')
+
+    final DataPlatformTestOrchestration platform = new DataPlatformTestOrchestration()
+
+    configuration {
+        dockerInstallations {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value { ['docker', 'dockerMachine'] }
+        }
+        serviceInstallations {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value { ['tomcat', 'mariadb', 'mongodb', 'activemq'] }
+        }
+        dockerImages {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value {
+                [
+                        "docker.snapshot.travel:5000/snapshot/tomcat:8.0.30",
+                        "docker.snapshot.travel:5000/snapshot/mariadb:10.1.10",
+                        "docker.snapshot.travel:5000/snapshot/mongo:3.2.1",
+                        "docker.snapshot.travel:5000/snapshot/activemq:5.12.1"
+                ]
+            }
+        }
+        dockerMachine {
+            value PropertyResolver.resolveDockerMachine()
+        }
+        dockerMode {
+            value PropertyResolver.resolveDockerMode()
+        }
+        connectionMode {
+            value PropertyResolver.resolveConnectionMode()
+        }
+        dockerRegistryPassword {
+            // this can be externalized when desired
+            value PropertyResolver.resolveDockerRegistryPassword()
+        }
+    }
+
+    profiles {
+        dataPlatform {
+            enabledInstallations (dockerInstallations + serviceInstallations)
+        }
+        platformStart(from: dataPlatform) {
+            tests 'platformStart'
+        }
+        platformStop(from: dataPlatform) {
+            tests 'platformStop'
+        }
+        copyTest {
+            enabledInstallations (dockerInstallations << 'tomcat_standalone')
+            tests 'copyTest'
+        }
+        apiTests(from: dataPlatform) {
+            tests 'apiTests'
+        }
+    }
+
+    installations {
+        docker(from: Docker) {
+        }
+        dockerMachine(from: DockerMachine) {
+        }
+        tomcat(from: DockerService) {
+            setup {
+                platform.with(tomcat().init())
+            }
+        }
+        tomcat_standalone(from: DockerService) {
+            setup {
+                platform.with(tomcat().init('tomcat_standalone'))
+            }
+        }
+        mariadb(from: DockerService) {
+            setup {
+                platform.with(mariadb().init())
+            }
+        }
+        mongodb(from: DockerService) {
+            setup {
+                platform.with(mongodb().init())
+            }
+        }
+        activemq(from: DockerService) {
+            setup {
+                platform.with(activemq().init())
+            }
+        }
+    }
+
+    tests {
+        platformStart(from: DataPlatformTest) {
+            with platform
+            teardown false
+        }
+        platformStop(from: DataPlatformTest) {
+            with platform
+            setup false
+        }
+        copyTest(from: DataPlatformTest) {
+            with platform
+            execute {
+                DockerInteraction.execute("rm -rf /home/docker/tomcat_standalone")
+                DockerInteraction.execute("mkdir /home/docker/tomcat_standalone")
+                DockerInteraction.copy("/home/smikloso/test.txt", "default:/home/docker/tomcat_standalone", true)
+                DockerInteraction.execute("ls /home/docker/tomcat_standalone")
+                DockerInteraction.execute("cat /home/docker/tomcat_standalone/test.txt")
+            }
+        }
+        apiTests(from: DataPlatformTest) {
+            with platform
+            execute {
+                println "hello"
+            }
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven {
+            name 'snapshot'
+            url 'https://nexus.snapshot.travel/content/groups/public'
+            credentials {
+                username nexusUser
+                password nexusPassword
+            }
+        }
+    }
+
+    dependencies {
+        classpath 'org.arquillian.spacelift.gradle:arquillian-spacelift-gradle:1.0.0-alpha-18-SNAPSHOT'
+        classpath 'org.arquillian.spacelift:arquillian-spacelift:1.0.0.Alpha8'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.0-SNAPSHOT'
+    }
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '2.9' }
