@@ -1,0 +1,81 @@
+{
+  "data": [
+    {
+      "type": "Friends getaway\r",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Family\r",
+      "overall": [
+        7.4
+      ],
+      "number_of_reviews": [
+        37050
+      ],
+      "aspects_of_business": [
+        {
+          "room": 0.9,
+          "service": 1.7,
+          "value": 5.4,
+          "cleanliness": 0.9
+        }
+      ]
+    },
+    {
+      "type": "Business\r",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Solo travel\r",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Unspecified\r",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Couples\r",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    }
+  ]
+}

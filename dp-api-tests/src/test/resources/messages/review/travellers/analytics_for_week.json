@@ -1,0 +1,151 @@
+{
+  "data": [
+    {
+      "type": "Friends getaway\r",
+      "overall": [
+        6.9,
+        7.2
+      ],
+      "number_of_reviews": [
+        36999,
+        37037
+      ],
+      "aspects_of_business": [
+        {
+          "location": 3.2,
+          "sleep_quality": 4.5,
+          "room": 0.6,
+          "service": 1.8,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {
+          "location": 3.2,
+          "sleep_quality": 3.95,
+          "room": 0.5,
+          "service": 1.7,
+          "value": 5.5,
+          "cleanliness": 1
+        }
+      ]
+    },
+    {
+      "type": "Family\r",
+      "overall": [
+        7.2,
+        null
+      ],
+      "number_of_reviews": [
+        36981,
+        null
+      ],
+      "aspects_of_business": [
+        {
+          "location": 3.1,
+          "room": 0.4,
+          "service": 1.8,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {}
+      ]
+    },
+    {
+      "type": "Business\r",
+      "overall": [
+        7.1,
+        null
+      ],
+      "number_of_reviews": [
+        37013,
+        null
+      ],
+      "aspects_of_business": [
+        {
+          "sleep_quality": 4.5,
+          "room": 0.5,
+          "service": 1.7,
+          "cleanliness": 0.8
+        },
+        {}
+      ]
+    },
+    {
+      "type": "Solo travel\r",
+      "overall": [
+        7.05,
+        null
+      ],
+      "number_of_reviews": [
+        37013,
+        null
+      ],
+      "aspects_of_business": [
+        {
+          "location": 3.2,
+          "sleep_quality": 4.3,
+          "room": 0.45,
+          "service": 1.75,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {}
+      ]
+    },
+    {
+      "type": "Unspecified\r",
+      "overall": [
+        7.1,
+        7.2
+      ],
+      "number_of_reviews": [
+        36999,
+        37037
+      ],
+      "aspects_of_business": [
+        {
+          "location": 3.2,
+          "sleep_quality": 4.5,
+          "service": 1.7,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {
+          "location": 3.2,
+          "sleep_quality": 4.1,
+          "room": 0.6,
+          "service": 1.7,
+          "value": 5.6,
+          "cleanliness": 0.95
+        }
+      ]
+    },
+    {
+      "type": "Couples\r",
+      "overall": [
+        7.2,
+        7.2
+      ],
+      "number_of_reviews": [
+        36981,
+        37037
+      ],
+      "aspects_of_business": [
+        {
+          "location": 3.1,
+          "sleep_quality": 4.6,
+          "room": 0.4,
+          "service": 1.8,
+          "cleanliness": 1
+        },
+        {
+          "sleep_quality": 4.06667,
+          "room": 0.5,
+          "service": 1.7,
+          "value": 5.5,
+          "cleanliness": 1
+        }
+      ]
+    }
+  ]
+}

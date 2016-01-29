@@ -95,7 +95,7 @@ public class BasicSteps {
         spec = builder.build();
     }
 
-    private String getRequestDataFromFile(InputStream inputStream) throws IOException {
+    public String getRequestDataFromFile(InputStream inputStream) throws IOException {
         return IOUtils.toString(inputStream, Charset.forName("utf-8"));
     }
 

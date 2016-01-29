@@ -1,0 +1,28 @@
+{
+  "values": [
+    {
+      "location": 3.15667,
+      "sleep_quality": 4.97667,
+      "room": 2.10667,
+      "service": 1.71,
+      "value": 5.00333,
+      "cleanliness": 1.52
+    },
+    {
+      "location": 2.95806,
+      "sleep_quality": 4.78065,
+      "room": 1.73226,
+      "service": 1.35484,
+      "value": 5.37742,
+      "cleanliness": 1.33871
+    },
+    {
+      "location": 3.06667,
+      "sleep_quality": 4.44,
+      "room": 0.66333,
+      "service": 1.65,
+      "value": 5.39333,
+      "cleanliness": 1.11
+    }
+  ]
+}

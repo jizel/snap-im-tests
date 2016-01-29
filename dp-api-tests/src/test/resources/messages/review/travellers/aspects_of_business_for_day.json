@@ -1,0 +1,45 @@
+{
+  "data": [
+    {
+      "type": "Friends getaway\r",
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Family\r",
+      "aspects_of_business": [
+        {
+          "room": 0.9,
+          "service": 1.7,
+          "value": 5.4,
+          "cleanliness": 0.9
+        }
+      ]
+    },
+    {
+      "type": "Business\r",
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Solo travel\r",
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Unspecified\r",
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "Couples\r",
+      "aspects_of_business": [
+        {}
+      ]
+    }
+  ]
+}

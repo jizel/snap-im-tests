@@ -4,6 +4,16 @@ def serenityVersion = "1.1.12"
 repositories {
     mavenLocal()
     jcenter()
+    maven {
+        url "https://nexus.snapshot.travel/content/groups/public/"
+        credentials {
+            username nexusUser
+            password nexusPassword
+        }
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
 }
 
 buildscript {
@@ -14,6 +24,7 @@ buildscript {
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:1.1.12")
     }
+
 }
 
 apply plugin: 'java'
@@ -37,6 +48,9 @@ dependencies {
     compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.6.2'
     compile 'org.json:json:20150729'
     compile 'com.google.code.gson:gson:2.4'
+
+    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: '1.0.0-SNAPSHOT'
+
     testCompile 'org.apache.activemq:activemq-client:5.12.1'
     testCompile 'javax.jms:jms:1.1'
     testCompile 'junit:junit:4.11'

@@ -1,0 +1,103 @@
+{
+  "data": [
+    {
+      "type": "Friends getaway\r",
+      "aspects_of_business": [
+        {
+          "location": 3.2,
+          "sleep_quality": 4.5,
+          "room": 0.6,
+          "service": 1.8,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {
+          "location": 3.2,
+          "sleep_quality": 3.95,
+          "room": 0.5,
+          "service": 1.7,
+          "value": 5.5,
+          "cleanliness": 1
+        }
+      ]
+    },
+    {
+      "type": "Family\r",
+      "aspects_of_business": [
+        {
+          "location": 3.1,
+          "room": 0.4,
+          "service": 1.8,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {}
+      ]
+    },
+    {
+      "type": "Business\r",
+      "aspects_of_business": [
+        {
+          "sleep_quality": 4.5,
+          "room": 0.5,
+          "service": 1.7,
+          "cleanliness": 0.8
+        },
+        {}
+      ]
+    },
+    {
+      "type": "Solo travel\r",
+      "aspects_of_business": [
+        {
+          "location": 3.2,
+          "sleep_quality": 4.3,
+          "room": 0.45,
+          "service": 1.75,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {}
+      ]
+    },
+    {
+      "type": "Unspecified\r",
+      "aspects_of_business": [
+        {
+          "location": 3.2,
+          "sleep_quality": 4.5,
+          "service": 1.7,
+          "value": 5.3,
+          "cleanliness": 0.8
+        },
+        {
+          "location": 3.2,
+          "sleep_quality": 4.1,
+          "room": 0.6,
+          "service": 1.7,
+          "value": 5.6,
+          "cleanliness": 0.95
+        }
+      ]
+    },
+    {
+      "type": "Couples\r",
+      "aspects_of_business": [
+        {
+          "location": 3.1,
+          "sleep_quality": 4.6,
+          "room": 0.4,
+          "service": 1.8,
+          "cleanliness": 1
+        },
+        {
+          "sleep_quality": 4.06667,
+          "room": 0.5,
+          "service": 1.7,
+          "value": 5.5,
+          "cleanliness": 1
+        }
+      ]
+    }
+  ]
+}

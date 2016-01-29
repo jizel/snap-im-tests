@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "type": "Friends getaway\r",
+      "number_of_reviews": [
+        null
+      ]
+    },
+    {
+      "type": "Family\r",
+      "number_of_reviews": [
+        37050
+      ]
+    },
+    {
+      "type": "Business\r",
+      "number_of_reviews": [
+        null
+      ]
+    },
+    {
+      "type": "Solo travel\r",
+      "number_of_reviews": [
+        null
+      ]
+    },
+    {
+      "type": "Unspecified\r",
+      "number_of_reviews": [
+        null
+      ]
+    },
+    {
+      "type": "Couples\r",
+      "number_of_reviews": [
+        null
+      ]
+    }
+  ]
+}
