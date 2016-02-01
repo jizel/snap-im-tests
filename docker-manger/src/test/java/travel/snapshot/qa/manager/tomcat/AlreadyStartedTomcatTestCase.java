@@ -9,24 +9,29 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.TomcatTest;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
+import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper;
 
-@RunWith(JUnit4.class)
+@Category(TomcatTest.class)
 public class AlreadyStartedTomcatTestCase {
 
     private static TomcatManager manager;
+
+    private static final TomcatManagerConfiguration configuration = new TomcatManagerConfiguration.Builder()
+            .setBindAddress("127.0.0.1")
+            .build();
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @BeforeClass
     public static void startContainer() {
-        manager = Spacelift.task(TomcatStarter.class).execute().await();
+        manager = Spacelift.task(configuration, TomcatStarter.class).execute().await();
     }
 
     @AfterClass
@@ -40,6 +45,6 @@ public class AlreadyStartedTomcatTestCase {
         expectedException.expect(ExecutionException.class);
         expectedException.expectCause(is(instanceOf(ContainerManagerException.class)));
 
-        Spacelift.task(TomcatStarter.class).execute().await();
+        Spacelift.task(configuration, TomcatStarter.class).execute().await();
     }
 }

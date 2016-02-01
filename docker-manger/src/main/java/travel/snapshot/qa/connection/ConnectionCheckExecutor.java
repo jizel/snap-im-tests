@@ -2,9 +2,11 @@ package travel.snapshot.qa.connection;
 
 import org.apache.commons.io.IOUtils;
 import org.arquillian.spacelift.Spacelift;
-import org.arquillian.spacelift.execution.ExecutionCondition;
 import org.arquillian.spacelift.execution.ExecutionException;
 import org.arquillian.spacelift.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,30 +16,39 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Executes {@link ConnectionCheck}, possibly with given checking task. Connection check is executed periodically up to
+ * {@link ConnectionCheck#getTimeout()} seconds, repeating check every {@link ConnectionCheck#getReexecutionInterval()}
+ * seconds.
+ */
 public class ConnectionCheckExecutor {
 
-    private static final ExecutionCondition<Boolean> CONNECTION_ESTABLISHED_CONDITION = new ConnectionCheckExecutor.ConnectionEstablishedCondition();
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionCheckExecutor.class);
 
-    private static final long REEXECUTION_INTERVAL = 3;
-
-    private void execute(final Task<?, Boolean> checkingTask, final long timeout) {
-        try {
-            checkingTask.execute()
-                    .reexecuteEvery(REEXECUTION_INTERVAL, TimeUnit.SECONDS)
-                    .until(timeout, TimeUnit.SECONDS, CONNECTION_ESTABLISHED_CONDITION);
-        } catch (ExecutionException ex) {
-            throw new ConnectionCheckException(String.format("Unable to connect in %s seconds.", timeout), ex);
-        }
-    }
-
-    public void execute(ConnectionCheck check) throws ConnectionCheckException {
+    /**
+     * Executes the connection check.
+     *
+     * @param check check to execute
+     * @throws ConnectionCheckException if it is not possible to perform connection check in a successful manner
+     */
+    public void execute(final ConnectionCheck check) throws ConnectionCheckException {
 
         final Task<?, Boolean> setCheckingTask = check.getCheckingTask();
 
         if (setCheckingTask != null) {
-            execute(setCheckingTask, check.getTimeout());
+            execute(setCheckingTask, check.getTimeout(), check.getReexecutionInterval());
         } else {
-            execute(Spacelift.task(check, getCheckTask(check.getProtocol())), check.getTimeout());
+            execute(Spacelift.task(check, getCheckTask(check.getProtocol())), check.getTimeout(), check.getReexecutionInterval());
+        }
+    }
+
+    private void execute(final Task<?, Boolean> checkingTask, final long timeout, final long reexecutionInterval) {
+        try {
+            checkingTask.execute()
+                    .reexecuteEvery(reexecutionInterval, TimeUnit.SECONDS)
+                    .until(timeout, TimeUnit.SECONDS, new BasicWaitingCondition());
+        } catch (ExecutionException ex) {
+            throw new ConnectionCheckException(String.format("Unable to connect in %s seconds.", timeout), ex);
         }
     }
 
@@ -52,6 +63,9 @@ public class ConnectionCheckExecutor {
         }
     }
 
+    /**
+     * Checks connection by trying to open a socket to the other side.
+     */
     public static final class TCPConnectionCheckTask extends Task<ConnectionCheck, Boolean> {
 
         @Override
@@ -63,6 +77,7 @@ public class ConnectionCheckExecutor {
                 tcpClient = new Socket(connectionCheck.getHost(), connectionCheck.getPort());
                 return true;
             } catch (IOException ex) {
+                logger.debug("Unable to make TCP connection to {}:{}", connectionCheck.getHost(), connectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(tcpClient);
@@ -70,6 +85,10 @@ public class ConnectionCheckExecutor {
         }
     }
 
+    /**
+     * Checks "connection" (even UDP is connection-less in its nature) by trying to sent a DatagramPacket to the other
+     * side.
+     */
     public static final class UDPConnectionCheckTask extends Task<ConnectionCheck, Boolean> {
 
         @Override
@@ -84,6 +103,7 @@ public class ConnectionCheckExecutor {
                 udpClient.send(packet);
                 return true;
             } catch (IOException ex) {
+                logger.debug("Unable to make UDP connection to {}:{}", connectionCheck.getHost(), connectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(udpClient);
@@ -97,11 +117,4 @@ public class ConnectionCheckExecutor {
         }
     }
 
-    private static class ConnectionEstablishedCondition implements ExecutionCondition<Boolean> {
-
-        @Override
-        public boolean satisfiedBy(Boolean connected) throws ExecutionException {
-            return connected;
-        }
-    }
 }

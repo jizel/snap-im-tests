@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian
+  http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <!--
+        There are two Tomcat containers. One with name 'tomcat' which links to other containers and mounts
+        directory tomcat.mount.dir to container. The second one is named 'tomcat_tests' which does not need
+        to link to anything and binds nothing.
+
+        The latter is used in tests which test only standalone Tomcat container and there is not need
+        to link it with other services which would be eventually started as well which is not desired.
+    -->
+
+    <extension qualifier="docker">
+        <property name="serverVersion">1.21</property>
+        <property name="serverUri">http://localhost:2375</property>
+        <property name="dockerRegistry">https://docker.snapshot.travel:5000/v2/</property>
+        <property name="username">snapshot_docker</property>
+        <property name="password">aqGG86d1Yf3Y</property>
+        <property name="email">docker@snapshot.travel</property>
+        <property name="definitionFormat">CUBE</property>
+        <property name="dockerContainers">
+            tomcat:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                links:
+                    - mariadb:mariadb
+                    - mongodb:mongodb
+                    - activemq:activemq
+                binds:
+                    - ${tomcat.mount.dir}:/data/tomcat/config:ro
+            tomcat_tests:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+            mariadb:
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.10
+                exposedPorts: [3306/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [3306/tcp]
+            mongodb:
+                image: docker.snapshot.travel:5000/snapshot/mongo:3.2.1
+                exposedPorts: [27017/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [27017/tcp]
+            mongodb_2:
+                image: docker.snapshot.travel:5000/snapshot/mongo:3.2.1
+                exposedPorts: [27018/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                env: [MONGO_PORT=27018]
+                portBindings: [27018/tcp]
+            activemq:
+                image: docker.snapshot.travel:5000/snapshot/activemq:5.12.1
+                exposedPorts: [1099/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1098->1099/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+        </property>
+    </extension>
+
+</arquillian>

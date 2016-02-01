@@ -5,9 +5,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.UnitTest;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -17,7 +17,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
-@RunWith(JUnit4.class)
+@Category(UnitTest.class)
 public class ConnectionCheckTestCase {
 
     private static final int TCP_SERVER_PORT = 8081;

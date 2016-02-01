@@ -7,10 +7,26 @@ group 'travel.snapshot.qa.manager'
 version '1.0.0-SNAPSHOT'
 
 def versions = [
-        spacelift  : "1.0.0.Alpha9",
-        shrinkwrap : "2.1.0",
-        httpclient : "4.5.1",
-        junit      : "4.12"
+        // core
+        spacelift : "1.0.0.Alpha9",
+        cube      : "1.0.0.Alpha7",
+        arquillian: "1.1.8.Final",
+        shrinkwrap: "2.1.0",
+
+        // helpers
+        httpclient: "4.5.1",
+        mysql     : "5.1.37",
+        mongo     : "3.2.1",
+        activemq  : "5.12.1",
+        flyway    : "3.2.1",
+
+        // test
+        junit     : "4.12",
+        mockito   : "1.10.19",
+
+        // logging
+        log4j     : "1.2.17",
+        slf4j     : "1.7.13"
 ]
 
 buildscript {
@@ -42,13 +58,20 @@ repositories {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 dependencies {
 
     // Spacelift
     compile "org.arquillian.spacelift:arquillian-spacelift:${versions.spacelift}"
+
+    // Docker
+    compile "org.arquillian.cube:arquillian-cube-docker:${versions.cube}"
+    compile "org.jboss.arquillian.core:arquillian-core-impl-base:${versions.arquillian}"
+    compile "org.jboss.arquillian.config:arquillian-config-impl-base:${versions.arquillian}"
 
     // ShrinkWrap
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${versions.shrinkwrap}"
@@ -63,19 +86,73 @@ dependencies {
 
     // Other
     compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
+    compile "mysql:mysql-connector-java:${versions.mysql}"
+    compile "org.mongodb:mongodb-driver:${versions.mongo}"
+    compile "org.apache.activemq:activemq-client:${versions.activemq}"
+    compile "org.flywaydb:flyway-core:${versions.flyway}"
+
+    // logging
+    compile "log4j:log4j:${versions.log4j}"
+    compile "org.slf4j:slf4j-log4j12:${versions.slf4j}"
 
     // Tests
     testCompile "junit:junit:${versions.junit}"
+    testCompile("org.mockito:mockito-core:${versions.mockito}") {
+        exclude group: "org.hamcrest", module: "hamcrest-core"
+    }
 }
+
+// if this is set to "host" then "arquillian.xml" file is used
+// if this is set to "machine" then "arquillian-docker-machine.xml" is used
+// if it is set to something else or not set at all, "arquillian.xml" is used
+String dockerMode=System.getProperty("docker.mode", "host")
 
 test {
     testLogging {
         exceptionFormat "full"
         events 'started', 'passed'
     }
+
+    useJUnit {
+        // if you want to include this categories, be sure that:
+        // in case you want to run tests against Docker machine:
+        //     - set system property 'docker.mode' to 'machine'
+        //     - set environment property DOCKER_HOST to IP of the host of Docker machine
+        //         (in case you have this environment property set from the evaluation of docker-machine env dev
+        //          you do not need to do anything but be sure that gradle process picks it) or
+        //         set docker.host system property to IP of the host of Docker machine
+        //
+        // in case you want to run tests against docker containers at your host:
+        //     - set system property 'docker.mode' to 'host'
+        //     - set system property 'docker.host' to 127.0.0.1
+        //
+        // Name of Docker machine to execute tests against is set by system property named "docker.machine"
+        // when not set, the machine of name "default" will be expected to exists
+        includeCategories 'travel.snapshot.qa.category.OrchestrationTest'
+        includeCategories 'travel.snapshot.qa.category.DockerTest'
+
+        includeCategories 'travel.snapshot.qa.category.UnitTest'
+        includeCategories 'travel.snapshot.qa.category.TomcatTest'
+    }
+
     systemProperties = [
-            "remote": System.getProperty('remote', 'false'),
-            "remote.host": System.getProperty('remote.host', '127.0.0.1'),
+            "remote"                    : System.getProperty('remote', 'false'),
+            "remote.host"               : System.getProperty('remote.host', '127.0.0.1'),
+
+            "snapshot.registry.username": System.getProperty("snapshot.registry.username", "snapshot_docker"),
+            "snapshot.registry.password": System.getProperty("snapshot.registry.password", "aqGG86d1Yf3Y"),
+
+            "tomcat.mount.dir"          : new File(project.rootDir, "src/test/resources/tomcat_mount_dir").absolutePath,
+            "arquillian.debug"          : System.getProperty("arquillian.debug", "true"),
+
+            "docker.host"               : System.getProperty("docker.host"),
+
+            // set the value of this property to "arquillian-docker-machine.xml" in case you want
+            // to run OrchestrationTest and DockerTest category against docker machine
+            "arquillian.xml"            : dockerMode.equals("host") ? "arquillian.xml" : (dockerMode.equals("machine") ? "arquillian-docker-machine.xml" : "arquillian.xml"),
+
+            // name of Docker machine to execute Docker test againsts, when omitted, machine with name "default" will be expected to exist prior to test execution
+            "dockerMachine"             : System.getProperty("docker.machine", "default")
     ]
 }
 
@@ -89,7 +166,7 @@ uploadArchives {
             pom.groupId = 'travel.snapshot.qa.manager'
 
             repository(url: 'https://nexus.snapshot.travel/content/repositories/releases/') {
-                authentication(userName: nexusUser , password: nexusPassword)
+                authentication(userName: nexusUser, password: nexusPassword)
             }
             snapshotRepository(url: 'https://nexus.snapshot.travel/content/repositories/snapshots/') {
                 authentication(userName: nexusUser, password: nexusPassword)

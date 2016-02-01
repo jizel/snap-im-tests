@@ -14,6 +14,8 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.tomcat.api.CommandExecutor;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
@@ -32,15 +34,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Encapsulates core communication primitives to Tomcat container instance.
  */
 public abstract class AbstractCommandExecutor implements CommandExecutor {
 
-    private static final Logger logger = Logger.getLogger(AbstractCommandExecutor.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(AbstractCommandExecutor.class);
 
     private static final String TOMCAT_MANAGER_USER_AGENT = "Snapshot-Tomcat-Manager/1.0";
 
@@ -185,9 +185,7 @@ public abstract class AbstractCommandExecutor implements CommandExecutor {
 
             TomcatResponse commandResponse = new TomcatResponseParser().parse(lines);
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine(commandResponse.toString());
-            }
+            logger.debug(commandResponse.toString());
 
             return commandResponse;
         } catch (IOException ex) {

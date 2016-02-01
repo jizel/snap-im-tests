@@ -4,6 +4,9 @@ import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.arquillian.spacelift.process.Command;
 import org.jboss.shrinkwrap.api.Archive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import travel.snapshot.qa.manager.api.BasicWaitingCondition;
 import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManager;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
@@ -14,7 +17,7 @@ import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseBody;
-import travel.snapshot.qa.manager.tomcat.check.TomcatStartChecker;
+import travel.snapshot.qa.manager.tomcat.check.TomcatStartedCheckTask;
 import travel.snapshot.qa.manager.tomcat.command.TomcatListCommand;
 import travel.snapshot.qa.manager.tomcat.command.deployment.TomcatDeployCommand;
 import travel.snapshot.qa.manager.tomcat.command.deployment.TomcatFileDeployCommand;
@@ -38,7 +41,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * Tomcat manager which is returned after container is started by respective task. This object has to be chained to
@@ -49,7 +51,7 @@ import java.util.logging.Logger;
  */
 public class TomcatManager implements ContainerManager {
 
-    private static final Logger logger = Logger.getLogger(TomcatManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TomcatManager.class);
 
     private Thread shutdownThread;
 
@@ -76,14 +78,14 @@ public class TomcatManager implements ContainerManager {
     @Override
     public void start() throws ContainerManagerException {
 
-        if (Spacelift.task(configuration, TomcatStartChecker.class).execute().await()) {
+        if (Spacelift.task(configuration, TomcatStartedCheckTask.class).execute().await()) {
             throw new ContainerManagerException("Tomcat container is already running!");
         }
 
         try {
             final Command command = new TomcatCommandBuilder().build(configuration);
 
-            logger.info(String.format("Starting Tomcat container with: %s.", command.toString()));
+            logger.info("Starting Tomcat container with: {}.", command.toString());
 
             final ProcessBuilder processBuilder = new ProcessBuilder(command.getFullCommand());
             processBuilder.redirectErrorStream(true);
@@ -110,9 +112,9 @@ public class TomcatManager implements ContainerManager {
             // otherwise we would start the container but it would be never killed upon JVM termination
             Runtime.getRuntime().addShutdownHook(shutdownThread);
 
-            Spacelift.task(configuration, TomcatStartChecker.class).execute().until(
+            Spacelift.task(configuration, TomcatStartedCheckTask.class).execute().until(
                     new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS),
-                    TomcatStartChecker.TOMCAT_STARTED_CONDITION);
+                    new BasicWaitingCondition());
         } catch (Exception ex) {
             throw new ContainerManagerException("Could not start Tomcat container.", ex);
         }

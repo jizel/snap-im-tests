@@ -2,12 +2,12 @@ package travel.snapshot.qa.manager.tomcat;
 
 import org.arquillian.spacelift.process.Command;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.impl.TomcatCommandBuilder;
 
-@RunWith(JUnit4.class)
+@Category(UnitTest.class)
 public class TomcatCommandBuilderTestCase {
 
     @Test

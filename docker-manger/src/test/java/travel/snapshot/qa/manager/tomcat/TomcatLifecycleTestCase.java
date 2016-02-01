@@ -3,20 +3,21 @@ package travel.snapshot.qa.manager.tomcat;
 import org.arquillian.spacelift.Spacelift;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.experimental.categories.Category;
+import travel.snapshot.qa.category.TomcatTest;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper;
 
-@RunWith(JUnit4.class)
+@Category(TomcatTest.class)
 public class TomcatLifecycleTestCase {
+
+    private final TomcatManagerConfiguration configuration = new TomcatManagerConfiguration.Builder()
+            .setBindAddress("127.0.0.1")
+            .build();
 
     @Test
     public void startAndStopTomcatVerbose() {
-
-        TomcatManagerConfiguration configuration = new TomcatManagerConfiguration.Builder().build();
-
         TomcatManager tomcatManager = Spacelift.task(configuration, TomcatStarter.class).execute().await();
 
         Spacelift.task(tomcatManager, TomcatStopper.class).execute().await();
@@ -24,20 +25,20 @@ public class TomcatLifecycleTestCase {
 
     @Test
     public void startAndStopTomcatMinimal() {
-        Spacelift.task(TomcatStarter.class).then(TomcatStopper.class).execute().await();
+        Spacelift.task(configuration, TomcatStarter.class).then(TomcatStopper.class).execute().await();
     }
 
     @Test
     public void isContainerRunningWithStoppedContainerTest() {
-        Assert.assertFalse(new TomcatManager().isRunning());
+        final TomcatManager manager = new TomcatManager(configuration);
+
+        Assert.assertFalse(manager.isRunning());
     }
 
     @Test
     public void isContainerRunningWithStartedContainer() {
-        TomcatManager tomcatManager = Spacelift.task(TomcatStarter.class).execute().await();
-
+        TomcatManager tomcatManager = Spacelift.task(configuration, TomcatStarter.class).execute().await();
         Assert.assertTrue(tomcatManager.isRunning());
-
         Spacelift.task(tomcatManager, TomcatStopper.class).execute().await();
     }
 }

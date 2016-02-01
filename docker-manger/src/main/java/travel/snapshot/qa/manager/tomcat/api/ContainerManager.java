@@ -1,13 +1,14 @@
 package travel.snapshot.qa.manager.tomcat.api;
 
 import org.jboss.shrinkwrap.api.Archive;
+import travel.snapshot.qa.manager.api.ServiceManager;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 
 /**
  * Manages container lifecycle and deployments.
  */
-public interface ContainerManager {
+public interface ContainerManager extends ServiceManager {
 
     /**
      * Starts a container.

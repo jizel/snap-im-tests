@@ -1,5 +1,8 @@
 package travel.snapshot.qa.connection;
 
+/**
+ * Enumeration of possible transport protocols for connection checking purposes.
+ */
 public enum Protocol {
     TCP("tcp"),
     UDP("udp");

@@ -5,15 +5,15 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecord;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecordsBuilderException;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentStateParserException;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseBody;
 
-@RunWith(JUnit4.class)
+@Category(UnitTest.class)
 public class DeploymentRecordsBuilderTestCase {
 
     private static final String NON_MATCHABLE_DEPLOYMENT_LINE = "nonsense";
