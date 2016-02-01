@@ -2,12 +2,12 @@ Feature: customers_create_update_delete
 
   #TODO add etag things to get/update/create
   Background: 
-    Given Database is cleaned
-    Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given All users are removed for customers with codes: c1t, c2t
 
+   Given Database is cleaned
+   Given The following customers exist with random address
+     | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+     | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+   Given All users are removed for customers with codes: c1t, c2t
   Scenario: Creating Customer without parent with random address
     When Customer is created with random address
       | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
@@ -182,3 +182,165 @@ Feature: customers_create_update_delete
       | US      | bg_region | propcode13 | mail13@mail.com | 400           | 63          |
       | CZ      | us_region | propcode14 | mail14@mail.com | 400           | 63          |
       | AU      | bg_region | propcode15 | mail15@mail.com | 400           | 63          |
+
+  Scenario Outline: Validate that customer has invalid VAT ID
+    When A customer from country "<country>" code "<code>" email "<email>" vatId "<vatId>" company nqma "<companyName>"is created
+    Then Content type is "application/json"
+    And Response code is 400
+    And Custom code is 59
+
+    Examples: 
+      | country | code     | email                       | vatId                | companyName    |
+      | AL      | AL_code  | albania@mail.com            | K414A4801U           | companyName1   |
+      | AL      | AL_code  | albania@mail.com            | K414A4801U           | companyName12  |
+      | AL      | AL_code2 | albania2@mail.com           | K41424801            | companyName13  |
+      | AL      | AL_code3 | albania3@mail.com           | K4142481U            | companyName14  |
+      | AU      | AU_code  | australia@mail.com          | 5634572455           | companyName2   |
+      | AU      | AU_code1 | australia1@mail.com         | 5634572455z          | companyName21  |
+      | AU      | AU_code2 | australia2@mail.com         | 5634572455Z          | companyName22  |
+      | AU      | AU_code3 | australia3@mail.com         | 563457245533         | companyName23  |
+      | AU      | AU_code4 | australia4@mail.com         | 53 004 085 616       | companyName24  |
+      | BY      | BY_code  | belarus@mail.com            | 10058192             | companyName3   |
+      | BY      | BY_code2 | belarus1@mail.com           | 10058192A            | companyName31  |
+      | BY      | BY_code3 | belarus2@mail.com           | 1005819211           | companyName32  |
+      | BY      | BY_code4 | belarus3@mail.com           | A10058192            | companyName33  |
+      | CA      | CA_code  | canada@mail.com             | CZ12345678           | companyName4   |
+      | IS      | IS_code  | iceland@mail.com            | 1234567              | companyName5   |
+      | IN      | IN_code  | india@mail.com              | 5634572455V          | companyName6   |
+      | IN      | IN_code1 | india1@mail.com             | 563V5724553V         | companyName61  |
+      | ID      | ID_code  | indonesia@mail.com          | 99.999.999.9-999.99  | companyName7   |
+      | ID      | ID_code1 | indonesia1@mail.com         | 99.999.999.9-99.999  | companyName71  |
+      | ID      | ID_code2 | indonesia2@mail.com         | 99.999.99.9-999.999  | companyName72  |
+      | ID      | ID_code3 | indonesia3@mail.com         | 99.99.999.9-999.9999 | companyName73  |
+      | ID      | ID_code4 | indonesia4@mail.com         | 99.999.9A9.9-999.999 | companyName74  |
+      | MC      | MC_code  | Monaco@mail.com             | 9999999999X          | companyName8   |
+      | MC      | MC_code1 | Monaco1@mail.com            | 9999999999           | companyName81  |
+      | NO      | NO_code  | Norway@mail.com             | 87654321MVA          | companyName9   |
+      | NO      | NO_code1 | Norway1@mail.com            | 987654321            | companyName91  |
+      | NO      | NO_code2 | Norway2@mail.com            | 987654321XYZ         | companyName92  |
+      | NO      | NO_code3 | Norway3@mail.com            | 9AB654321MVA         | companyName93  |
+      | PH      | PH_code  | Philippines@mail.com        | 999.999.999.999N     | companyName11  |
+      | PH      | PH_code1 | Philippines1@mail.com       | 999.999.999.999V     | companyName111 |
+      | RU      | RU_code  | Russia@mail.com             | 123456789            | companyName12  |
+      | RU      | RU_code1 | Russia1@mail.com            | A234567890           | companyName121 |
+      | RU      | RU_code2 | Russia2@mail.com            | 12345678901          | companyName122 |
+      | SM      | SM_code  | SanMarino@mail.com          | 1ABC25               | companyName13  |
+      | SM      | SM_code1 | SanMarino1@mail.com         | 123456               | companyName131 |
+      | SM      | SM_code2 | SanMarino2@mail.com         | 1234                 | companyName132 |
+      | RS      | RS_code  | Serbia@mail.com             | 1234567890           | companyName14  |
+      | RS      | RS_code1 | Serbia1@mail.com            | 12345678             | companyName141 |
+      | RS      | RS_code2 | Serbia2@mail.com            | 123456A89            | companyName142 |
+      | CH      | CH_code  | Switzerland@nail.com        | CHE-999.999.999      | companyName15  |
+      | CH      | CH_code1 | Switzerland1@nail.com       | CHE-999.999.999MWST  | companyName151 |
+      | CH      | CH_code2 | Switzerland2@nail.com       | CHE-999.ABC.999 MWST | companyName152 |
+      | CH      | CH_code3 | Switzerland3@nail.com       | CHE999.999.999MWST   | companyName153 |
+      | CH      | CH_code4 | Switzerland4@nail.com       | CHE-999999999 MWST   | companyName154 |
+      | TR      | TR_code  | Turkey@nail.com             | 123456789            | companyName16  |
+      | TR      | TR_code1 | Turkey1@nail.com            | 12345678901          | companyName161 |
+      | TR      | TR_code2 | Turkey2@nail.com            | 123A567890           | companyName162 |
+      | UA      | UA_code  | Ukraine@nail.com            | 123456789            | companyName17  |
+      | UA      | UA_code1 | Ukraine1@nail.com           | 12345678901          | companyName171 |
+      | UA      | UA_code2 | Ukraine2@nail.com           | 123A567890           | companyName172 |
+      | AR      | AR_code  | Argentina@nail.com          | 123456789012         | companyName18  |
+      | AR      | AR_code1 | Argentina1@nail.com         | 1234567890           | companyName181 |
+      | AR      | AR_code2 | Argentina2@nail.com         | 123456789A1          | companyName182 |
+      | BR      | BR_code  | Brazil@nail.com             | 12.123.123/1234-123  | companyName19  |
+      | BR      | BR_code1 | Brazil1@nail.com            | 12.123.123 1234-12   | companyName191 |
+      | BR      | BR_code2 | Brazil2@nail.com            | 123.123.123/1234-12  | companyName192 |
+      | CL      | CL_code  | Chile@nail.com              | 12345678-12          | companyName21  |
+      | CL      | CL_code2 | Chile2@nail.com             | 123456789-1          | companyName212 |
+      | CL      | CL_code3 | Chile3@nail.com             | 12345A78-1           | companyName213 |
+      | CR      | CR_code  | CostaRica@nail.com          | CZ12345678           | companyName22  |
+      | EC      | EC_code  | Ecuador@nail.com            | '123456789012        | companyName23  |
+      | EC      | EC_code1 | Ecuador1@nail.com           | 12345678901234       | companyName231 |
+      | EC      | EC_code2 | Ecuador2@nail.com           | 123456789012A        | companyName232 |
+      | GT      | GT_code  | Guatemala@nail.com          | 123456A-1            | companyName24  |
+      | GT      | GT_code1 | Guatemala1@nail.com         | 12345678-1           | companyName241 |
+      | GT      | GT_code2 | Guatemala2@nail.com         | 1234567-11           | companyName242 |
+      | GT      | GT_code3 | Guatemala3@nail.com         | 1234567-Z            | companyName243 |
+      | MX      | MX_code  | Mexico@nail.com             | ABCD123456ABCD       | companyName25  |
+      | MX      | MX_code1 | Mexico1@nail.com            | ABCD123Z56ABC        | companyName251 |
+      | MX      | MX_code2 | Mexico2@nail.com            | ABCD123456AB         | companyName252 |
+      | PE      | PE_code  | Peru@nail.com               | 1234567890           | companyName26  |
+      | PE      | PE_code1 | Peru1@nail.com              | 1234567890A          | companyName261 |
+      | PE      | PE_code2 | Peru2@nail.com              | 123456789012         | companyName262 |
+      | DO      | DO_code  | DominicanRepublic@nail.com  | 12345678             | companyName27  |
+      | DO      | DO_code1 | DominicanRepublic1@nail.com | 1234567890           | companyName271 |
+      | DO      | DO_code2 | DominicanRepublic2@nail.com | 12345678Z            | companyName272 |
+      | VE      | VE_code  | Venezuela@nail.com          | V-1234567890         | companyName28  |
+      | VE      | VE_code1 | Venezuela1@nail.com         | Z23456789            | companyName281 |
+
+  Scenario Outline: Validate that customer has valid VAT ID
+    When A customer from country "<country>" code "<code>" email "<email>" vatId "<vatId>" company nqma "<companyName>"is created
+    Then Content type is "application/json"
+    And Response code is 201
+    And Body contains entity with attribute "vat_id" value "<vatId>"
+
+    Examples: 
+      | country | code     | email                       | vatId                | companyName    |
+      | AL      | AL_code  | albania@mail.com            | K71501003R           | companyName1   |
+      | AL      | AL_code  | albania@mail.com            | K91811014B           | companyName12  |
+      | AL      | AL_code2 | albania2@mail.com           | K41424801U           | companyName13  |
+      | AU      | AU_code  | australia@mail.com          | 53004085616          | companyName2   |
+      | BY      | BY_code  | belarus@mail.com            | 100581921            | companyName3   |
+      | CA      | CA_code  | canada@mail.com             | 123456789BC0001      | companyName4   |
+      | CA      | CA_code1 | canada1@mail.com            | 123456789            | companyName41  |
+      | CA      | CA_code2 | canada2@mail.com            | 123456789 BC0001     | companyName42  |
+      | CA      | CA_code3 | canada3@mail.com            | 123456789 BW0001     | companyName43  |
+      | CA      | CA_code4 | canada4@mail.com            | 123456789 BB0001     | companyName44  |
+      | IS      | IS_code  | iceland@mail.com            | 12ABCD               | companyName5   |
+      | IS      | IS_code  | iceland@mail.com            | ABCDEF               | companyName5   |
+      | IS      | IS_code  | iceland@mail.com            | 123456               | companyName5   |
+      | IS      | IS_code  | iceland@mail.com            | 789BC1               | companyName5   |
+      | IN      | IN_code  | india@mail.com              | 56345724553V         | companyName6   |
+      | IN      | IN_code1 | india1@mail.com             | 56345724553C         | companyName61  |
+      | ID      | ID_code  | indonesia@mail.com          | 99.999.999.9-999.999 | companyName7   |
+      | ID      | ID_code1 | indonesia1@mail.com         | 02.271.824.1-413.000 | companyName71  |
+      | MC      | MC_code  | Monaco@mail.com             | 99999999999          | companyName8   |
+      | MC      | MC_code1 | Monaco1@mail.com            | X9999999999          | companyName81  |
+      | MC      | MC_code  | Monaco@mail.com             | 9X999999999          | companyName8   |
+      | MC      | MC_code1 | Monaco1@mail.com            | xx999999999          | companyName81  |
+      | MC      | MC_code1 | Monaco1@mail.com            | XX999999999          | companyName81  |
+      | NO      | NO_code  | Norway@mail.com             | 987654321MVA         | companyName9   |
+      | NO      | NO_code1 | Norway1@mail.com            | 190190190MVA         | companyName91  |
+      | PH      | PH_code  | Philippines@mail.com        | 123 123 123 123      | companyName11  |
+      | RU      | RU_code  | Russia@mail.com             | 2190190190           | companyName12  |
+      | RU      | RU_code1 | Russia1@mail.com            | 1234567890           | companyName121 |
+      | SM      | SM_code  | SanMarino@mail.com          | 12345                | companyName13  |
+      | SM      | SM_code1 | SanMarino1@mail.com         | 99999                | companyName131 |
+      | RS      | RS_code  | Serbia@mail.com             | 190190190            | companyName14  |
+      | RS      | RS_code1 | Serbia1@mail.com            | 123456789            | companyName141 |
+      | CH      | CH_code  | Switzerland@nail.com        | CHE-123.456.789 TVA  | companyName15  |
+      | CH      | CH_code0 | Switzerland0@nail.com       | 123456               | companyName150 |
+      | CH      | CH_code1 | Switzerland1@nail.com       | CHE-999.999.999 MWST | companyName151 |
+      | CH      | CH_code2 | Switzerland2@nail.com       | CHE-999.999.999 IVA  | companyName152 |
+      | CH      | CH_code3 | Switzerland3@nail.com       | CHE-999.999.999 TVA  | companyName153 |
+      | TR      | TR_code  | Turkey@nail.com             | 2190190190           | companyName16  |
+      | TR      | TR_code1 | Turkey1@nail.com            | 1234567890           | companyName161 |
+      | UA      | UA_code  | Ukraine@nail.com            | 2190190190           | companyName17  |
+      | UA      | UA_code1 | Ukraine1@nail.com           | 1234567890           | companyName171 |
+      | AR      | AR_code  | Argentina@nail.com          | 23190190190          | companyName18  |
+      | AR      | AR_code1 | Argentina1@nail.com         | 12345678901          | companyName181 |
+      | BR      | BR_code  | Brazil@nail.com             | 11.111.111/0001-55   | companyName19  |
+      | BR      | BR_code1 | Brazil1@nail.com            | 12.123.123/1234-12   | companyName191 |
+      | CL      | CL_code  | Chile@nail.com              | 12345678-1           | companyName21  |
+      | CL      | CL_code2 | Chile2@nail.com             | 12345678-K           | companyName212 |
+      | CL      | CL_code3 | Chile3@nail.com             | 1234567-1            | companyName213 |
+      | CR      | CR_code  | CostaRica@nail.com          | 1234567890           | companyName22  |
+      | CR      | CR_code1 | CostaRica1@nail.com         | 12345678901          | companyName221 |
+      | CR      | CR_code2 | CostaRica2@nail.com         | 123456789012         | companyName222 |
+      | EC      | EC_code  | Ecuador@nail.com            | 1234567890123        | companyName23  |
+      | GT      | GT_code  | Guatemala@nail.com          | 1234567-1            | companyName24  |
+      | MX      | MX_code  | Mexico@nail.com             | AAGB860519G31        | companyName25  |
+      | MX      | MX_code1 | Mexico1@nail.com            | ABCD123456ABC        | companyName251 |
+      | MX      | MX_code2 | Mexico2@nail.com            | ABC123456ABC         | companyName252 |
+      | MX      | MX_code3 | Mexico3@nail.com            | ABCD123456123        | companyName253 |
+      | PE      | PE_code  | Peru@nail.com               | 23190190190          | companyName26  |
+      | PE      | PE_code1 | Peru1@nail.com              | 12345678901          | companyName261 |
+      | DO      | DO_code  | DominicanRepublic@nail.com  | 190190190            | companyName27  |
+      | DO      | DO_code1 | DominicanRepublic1@nail.com | 123456789            | companyName271 |
+      | VE      | VE_code  | Venezuela@nail.com          | J-305959918          | companyName28  |
+      | VE      | VE_code1 | Venezuela1@nail.com         | V-123456789          | companyName281 |
+      | VE      | VE_code1 | Venezuela1@nail.com         | E-123456789          | companyName281 |
+      | VE      | VE_code1 | Venezuela1@nail.com         | J-123456789          | companyName281 |
+      | VE      | VE_code1 | Venezuela1@nail.com         | G-123456789          | companyName281 |
