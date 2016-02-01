@@ -101,11 +101,13 @@ the binding IP address should be because by default, these properties are resolv
 
 In case of tests against Docker machine, you have to create Docker machine of name `dev` and start it beforehand and execute:
 
-    gradle clean test -Darquillian.xml=arquillian-docker-machine.xml
+    gradle clean test -Ddocker.mode=machine -Ddocker.machine=yourMachine
 
 In case you want tests to be executed against Docker containers which runs at your host, execute them like:
 
-    gradle clean test -Ddocker.host=127.0.0.1
+    gradle clean test -Ddocker.mode=host -Ddocker.host=127.0.0.1
+
+By default, `docker.mode` has value `host` and `docker.machine` has value `default`.
 
 Be sure that you have Tomcat instance installed locally and `CATALINA_HOME` and `CATALINA_BASE` are set correctly and 
 you can login in there with `admin:admin` and there are only two deployments - manager and manager-host.

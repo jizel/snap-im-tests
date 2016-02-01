@@ -102,6 +102,11 @@ dependencies {
     }
 }
 
+// if this is set to "host" then "arquillian.xml" file is used
+// if this is set to "machine" then "arquillian-docker-machine.xml" is used
+// if it is set to something else or not set at all, "arquillian.xml" is used
+String dockerMode=System.getProperty("docker.mode", "host")
+
 test {
     testLogging {
         exceptionFormat "full"
@@ -111,15 +116,18 @@ test {
     useJUnit {
         // if you want to include this categories, be sure that:
         // in case you want to run tests against Docker machine:
-        //     - set system property 'arquillian.xml' to 'arquillian-docker-machine.xml'
+        //     - set system property 'docker.mode' to 'machine'
         //     - set environment property DOCKER_HOST to IP of the host of Docker machine
         //         (in case you have this environment property set from the evaluation of docker-machine env dev
         //          you do not need to do anything but be sure that gradle process picks it) or
         //         set docker.host system property to IP of the host of Docker machine
         //
         // in case you want to run tests against docker containers at your host:
-        //     - set system property 'arquillian.xml' to 'arquillian.xml'
+        //     - set system property 'docker.mode' to 'host'
         //     - set system property 'docker.host' to 127.0.0.1
+        //
+        // Name of Docker machine to execute tests against is set by system property named "docker.machine"
+        // when not set, the machine of name "default" will be expected to exists
         includeCategories 'travel.snapshot.qa.category.OrchestrationTest'
         includeCategories 'travel.snapshot.qa.category.DockerTest'
 
@@ -140,8 +148,11 @@ test {
             "docker.host"               : System.getProperty("docker.host"),
 
             // set the value of this property to "arquillian-docker-machine.xml" in case you want
-            // to run OrchestrationTest and DockerTest category against docker machine of name 'dev'
-            "arquillian.xml"            : System.getProperty('arquillian.xml', 'arquillian.xml'),
+            // to run OrchestrationTest and DockerTest category against docker machine
+            "arquillian.xml"            : dockerMode.equals("host") ? "arquillian.xml" : (dockerMode.equals("machine") ? "arquillian-docker-machine.xml" : "arquillian.xml"),
+
+            // name of Docker machine to execute Docker test againsts, when omitted, machine with name "default" will be expected to exist prior to test execution
+            "dockerMachine"             : System.getProperty("docker.machine", "default")
     ]
 }
 

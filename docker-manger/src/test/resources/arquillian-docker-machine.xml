@@ -23,7 +23,7 @@
         <property name="definitionFormat">CUBE</property>
 
         <!-- The property which says that we will run on Docker machine of the given name -->
-        <property name="machineName">dev</property>
+        <property name="machineName">${dockerMachine}</property>
 
         <property name="dockerContainers">
             tomcat:
