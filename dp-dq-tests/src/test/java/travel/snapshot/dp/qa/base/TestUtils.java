@@ -5,6 +5,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import travel.snapshot.dp.qa.ConfigProps;
 
@@ -29,6 +30,9 @@ public class TestUtils {
   public static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
   public static final DbHelper dbHelper = new DbHelper();
+  
+  public static JdbcTemplate templateToSource = dbHelper.sourceTemplate();
+  public static JdbcTemplate templateToTarget = dbHelper.targetTemplate();
 
   private TestUtils() {
     throw new AssertionError("Utility class - DO NOT INSTANTIATE!");
@@ -78,8 +82,10 @@ public class TestUtils {
     return dbHelper.targetTemplate().queryForMap(sqlQueryForTarget);
   }
 
-  public static int getQueryResultInt(String sql) throws Exception {
-    return dbHelper.targetTemplate().queryForObject(sql, int.class);
+  public static int getQueryResultInt(JdbcTemplate templateTo, String sql) throws Exception {
+
+    return templateTo.queryForObject(sql, int.class);
+    
   }
 
   public static void followUpLoadTest(List<String> followUpListToSource,
@@ -110,7 +116,7 @@ public class TestUtils {
     }
   }
 
-  public static void testLoadFacebook(List<String> factsYesterday, List<String> incrementalsToday,
+  public static void verifyLoad(List<String> factsYesterday, List<String> incrementalsToday,
       List<String> factsToday, List<String> metrics) throws Exception {
 
     Iterator<String> it1 = factsYesterday.iterator();
@@ -125,17 +131,17 @@ public class TestUtils {
       String metric = it4.next();
 
       logger.info("Metric: " + metric);
-      logger.info("Facts yesterday: " + getQueryResultInt(followUpFactsYesterday));
-      logger.info("Incrementals today: " + getQueryResultInt(followUpIncrementalsToday));
-      logger.info("Facts today: " + getQueryResultInt(followUpFactsToday));
+      logger.info("Facts yesterday: " + getQueryResultInt(templateToTarget,followUpFactsYesterday));
+      logger.info("Incrementals today: " + getQueryResultInt(templateToTarget,followUpIncrementalsToday));
+      logger.info("Facts today: " + getQueryResultInt(templateToTarget,followUpFactsToday));
 
       assertEquals(
-          getQueryResultInt(followUpFactsYesterday) + getQueryResultInt(followUpIncrementalsToday),
-          getQueryResultInt(followUpFactsToday));
+          getQueryResultInt(templateToTarget,followUpFactsYesterday) + getQueryResultInt(templateToTarget,followUpIncrementalsToday),
+          getQueryResultInt(templateToTarget,followUpFactsToday));
     }
   }
 
-  public static void testLoadTwitter(List<Integer> source, List<Integer> target,
+  public static void verifyLoad(List<Integer> source, List<Integer> target,
       List<String> metrics) throws Exception {
 
     Iterator<Integer> it1 = source.iterator();
@@ -150,7 +156,9 @@ public class TestUtils {
       logger.info("Metric: " + metricNext);
       logger.info("Source: " + sourceNext);
       logger.info("Target: " + targetNext);
-      assertEquals(sourceNext, targetNext);
+      
+      assertThat("The outcome from the source and the target is not equal.", targetNext,
+          is(sourceNext));
     }
   }
 

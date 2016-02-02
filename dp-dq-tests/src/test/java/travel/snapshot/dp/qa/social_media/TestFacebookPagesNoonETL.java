@@ -55,9 +55,9 @@ public class TestFacebookPagesNoonETL {
         
         List<String> followUpListToSource = new ArrayList<String>();
         //Separate checks for followers are used, since the values are total, instead of incremental
-        followUpListToSource.add("select sum(total_followers) from RawImportedFacebookPageStatistics where date = curdate() - interval 1 day and data_collection_run = 3");
+        followUpListToSource.add("select coalesce(sum(total_followers), 0) from RawImportedFacebookPageStatistics where date = curdate() - interval 1 day and data_collection_run = 3");
         followUpListToSource.add(
-        		"select sum(r2.incremental_number_of_posts - r1.incremental_number_of_posts + r3.incremental_number_of_posts) "
+        		"select coalesce(sum(r2.incremental_number_of_posts - r1.incremental_number_of_posts + r3.incremental_number_of_posts), 0) "
         		+ "from "
         		+ "(select * from RawImportedFacebookPageStatistics fbr1 where fbr1.data_collection_run = 1) r1 "
         		+ "inner join "
@@ -66,7 +66,7 @@ public class TestFacebookPagesNoonETL {
         		+ "(select * from RawImportedFacebookPageStatistics fbr3 where fbr3.data_collection_run = 3) r3 ON r2.property_id = r3.property_id AND r2.date_id = r3.date_id "
         		+ "where r1.date = curdate() - interval 1 day");
         followUpListToSource.add(
-        		"select sum(r2.incremental_engagements - r1.incremental_engagements + r3.incremental_engagements) "
+        		"select coalesce(sum(r2.incremental_engagements - r1.incremental_engagements + r3.incremental_engagements), 0) "
         		+ "from "
         		+ "(select * from RawImportedFacebookPageStatistics fbr1 where fbr1.data_collection_run = 1) r1 "
         		+ "inner join "
@@ -75,7 +75,7 @@ public class TestFacebookPagesNoonETL {
         		+ "(select * from RawImportedFacebookPageStatistics fbr3 where fbr3.data_collection_run = 3) r3 ON r2.property_id = r3.property_id AND r2.date_id = r3.date_id "
         		+ "where r1.date = curdate() - interval 1 day");
         followUpListToSource.add(
-        		"select sum(r2.incremental_impressions - r1.incremental_impressions + r3.incremental_impressions) "
+        		"select coalesce(sum(r2.incremental_impressions - r1.incremental_impressions + r3.incremental_impressions), 0) "
         		+ "from "
         		+ "(select * from RawImportedFacebookPageStatistics fbr1 where fbr1.data_collection_run = 1) r1 "
         		+ "inner join "
@@ -84,7 +84,7 @@ public class TestFacebookPagesNoonETL {
         		+ "(select * from RawImportedFacebookPageStatistics fbr3 where fbr3.data_collection_run = 3) r3 ON r2.property_id = r3.property_id AND r2.date_id = r3.date_id "
         		+ "where r1.date = curdate() - interval 1 day");
         followUpListToSource.add(
-        		"select sum(r2.incremental_reached - r1.incremental_reached + r3.incremental_reached) "
+        		"select coalesce(sum(r2.incremental_reached - r1.incremental_reached + r3.incremental_reached), 0) "
         		+ "from "
         		+ "(select * from RawImportedFacebookPageStatistics fbr1 where fbr1.data_collection_run = 1) r1 "
         		+ "inner join "
@@ -93,7 +93,7 @@ public class TestFacebookPagesNoonETL {
         		+ "(select * from RawImportedFacebookPageStatistics fbr3 where fbr3.data_collection_run = 3) r3 ON r2.property_id = r3.property_id AND r2.date_id = r3.date_id "
         		+ "where r1.date = curdate() - interval 1 day");
         followUpListToSource.add(
-        		"select sum(r2.incremental_likes - r1.incremental_likes + r3.incremental_likes) "
+        		"select coalesce(sum(r2.incremental_likes - r1.incremental_likes + r3.incremental_likes), 0) "
         		+ "from "
         		+ "(select * from RawImportedFacebookPageStatistics fbr1 where fbr1.data_collection_run = 1) r1 "
         		+ "inner join "
@@ -102,7 +102,7 @@ public class TestFacebookPagesNoonETL {
         		+ "(select * from RawImportedFacebookPageStatistics fbr3 where fbr3.data_collection_run = 3) r3 ON r2.property_id = r3.property_id AND r2.date_id = r3.date_id "
         		+ "where r1.date = curdate() - interval 1 day");
         followUpListToSource.add(
-        		"select sum(r2.incremental_unlikes - r1.incremental_unlikes + r3.incremental_unlikes) "
+        		"select coalesce(sum(r2.incremental_unlikes - r1.incremental_unlikes + r3.incremental_unlikes), 0) "
         		+ "from "
         		+ "(select * from RawImportedFacebookPageStatistics fbr1 where fbr1.data_collection_run = 1) r1 "
         		+ "inner join "
@@ -113,7 +113,7 @@ public class TestFacebookPagesNoonETL {
    
         List<String> followUpListToTarget = new ArrayList<String>();
         followUpListToTarget.add(
-        		"select sum(total_followers) "
+        		"select coalesce(sum(total_followers), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -122,7 +122,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         followUpListToTarget.add(
-        		"select sum(incremental_number_of_posts) "
+        		"select coalesce(sum(incremental_number_of_posts), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -131,7 +131,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         followUpListToTarget.add(
-        		"select sum(incremental_engagements) "
+        		"select coalesce(sum(incremental_engagements), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -140,7 +140,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         followUpListToTarget.add(
-        		"select sum(incremental_impressions) "
+        		"select coalesce(sum(incremental_impressions), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -149,7 +149,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         followUpListToTarget.add(
-        		"select sum(incremental_reached) "
+        		"select coalesce(sum(incremental_reached), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -158,7 +158,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         followUpListToTarget.add(
-        		"select sum(incremental_likes) "
+        		"select coalesce(sum(incremental_likes), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -167,7 +167,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
         followUpListToTarget.add(
-        		"select sum(incremental_unlikes) "
+        		"select coalesce(sum(incremental_unlikes), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, min(time_stamp) as min_time_stamp "
@@ -196,7 +196,7 @@ public class TestFacebookPagesNoonETL {
 
         //Separate checks for followers are used, since the values are total, instead of incremental
         String sqlQueryForSourceFollowers = 
-        		"select sum(total_followers) "
+        		"select coalesce(sum(total_followers), 0) "
         		+ "from IncrementalFacebookPageStatistics t "
         		+ "inner join ("
         		+ "select property_id, max(time_stamp) as max_time_stamp "
@@ -206,7 +206,7 @@ public class TestFacebookPagesNoonETL {
         		+ "and time_stamp < addtime(curdate() - interval 1 day, '19:00') " // before the runs for the next day start (20:01 server time) 
         		+ "group by property_id) tt "
         		+ "on t.property_id = tt.property_id and t.time_stamp = max_time_stamp";
-        String sqlQueryForTargetFollowers = "select sum(followers) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
+        String sqlQueryForTargetFollowers = "select coalesce(sum(followers), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day)+0";
         
         logger.info("\nStart control checks on table 'T_FactFacebookPageStatsCurrDay'");
         testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
@@ -214,7 +214,7 @@ public class TestFacebookPagesNoonETL {
         
         List<String> factsYesterdayList = new ArrayList<String>();
         factsYesterdayList.add(
-        		"select sum(number_of_posts) "
+        		"select coalesce(sum(number_of_posts), 0) "
         		+ "from FactFacebookPageStats t "
         		+ "inner join ("
         		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
@@ -224,7 +224,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by dim_property_id) tt "
         		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
         factsYesterdayList.add(
-        		"select sum(engagements) "
+        		"select coalesce(sum(engagements), 0) "
         		+ "from FactFacebookPageStats t "
         		+ "inner join ("
         		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
@@ -234,7 +234,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by dim_property_id) tt "
         		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
         factsYesterdayList.add(
-        		"select sum(impressions) "
+        		"select coalesce(sum(impressions), 0) "
         		+ "from FactFacebookPageStats t "
         		+ "inner join ("
         		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
@@ -244,7 +244,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by dim_property_id) tt "
         		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
         factsYesterdayList.add(
-        		"select sum(reach) "
+        		"select coalesce(sum(reach), 0) "
         		+ "from FactFacebookPageStats t "
         		+ "inner join ("
         		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
@@ -254,7 +254,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by dim_property_id) tt "
         		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
         factsYesterdayList.add(
-        		"select sum(likes) "
+        		"select coalesce(sum(likes), 0) "
         		+ "from FactFacebookPageStats t "
         		+ "inner join ("
         		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
@@ -264,7 +264,7 @@ public class TestFacebookPagesNoonETL {
         		+ "group by dim_property_id) tt "
         		+ "on t.dim_property_id = tt.dim_property_id and t.inserted_time_stamp = max_time_stamp ");
         factsYesterdayList.add(
-        		"select sum(unlikes) "
+        		"select coalesce(sum(unlikes), 0) "
         		+ "from FactFacebookPageStats t "
         		+ "inner join ("
         		+ "select dim_property_id, max(inserted_time_stamp) as max_time_stamp "
@@ -283,7 +283,7 @@ public class TestFacebookPagesNoonETL {
         		+ "from IncrementalFacebookPageStatistics "
         		+ "where date = curdate() - interval 1 day "
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        		+ "on t.property_id = tt.property_id and t.time_stamp = tt.min_time_stamp");
         incrementalsTodayList.add(
         		"select sum(coalesce(incremental_engagements,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
@@ -292,7 +292,7 @@ public class TestFacebookPagesNoonETL {
         		+ "from IncrementalFacebookPageStatistics "
         		+ "where date = curdate() - interval 1 day "
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        		+ "on t.property_id = tt.property_id and t.time_stamp = tt.min_time_stamp");
         incrementalsTodayList.add(
         		"select sum(coalesce(incremental_impressions,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
@@ -301,7 +301,7 @@ public class TestFacebookPagesNoonETL {
         		+ "from IncrementalFacebookPageStatistics "
         		+ "where date = curdate() - interval 1 day "
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        		+ "on t.property_id = tt.property_id and t.time_stamp = tt.min_time_stamp");
         incrementalsTodayList.add(
         		"select sum(coalesce(incremental_reached,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
@@ -310,7 +310,7 @@ public class TestFacebookPagesNoonETL {
         		+ "from IncrementalFacebookPageStatistics "
         		+ "where date = curdate() - interval 1 day "
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        		+ "on t.property_id = tt.property_id and t.time_stamp = tt.min_time_stamp");
         incrementalsTodayList.add(
         		"select sum(coalesce(incremental_likes,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
@@ -319,7 +319,7 @@ public class TestFacebookPagesNoonETL {
         		+ "from IncrementalFacebookPageStatistics "
         		+ "where date = curdate() - interval 1 day "
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp");
+        		+ "on t.property_id = tt.property_id and t.time_stamp = tt.min_time_stamp");
         incrementalsTodayList.add(
         		"select sum(coalesce(incremental_unlikes,0)) "
         		+ "from IncrementalFacebookPageStatistics t "
@@ -328,15 +328,15 @@ public class TestFacebookPagesNoonETL {
         		+ "from IncrementalFacebookPageStatistics "
         		+ "where date = curdate() - interval 1 day "
         		+ "group by property_id) tt "
-        		+ "on t.property_id = tt.property_id and t.time_stamp = min_time_stamp"); 
+        		+ "on t.property_id = tt.property_id and t.time_stamp = tt.min_time_stamp"); 
         
         List<String> factsTodayList = new ArrayList<String>();
-        factsTodayList.add("select sum(number_of_posts) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
-        factsTodayList.add("select sum(engagements) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
-        factsTodayList.add("select sum(impressions) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
-        factsTodayList.add("select sum(reach) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
-        factsTodayList.add("select sum(likes) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
-        factsTodayList.add("select sum(unlikes) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select coalesce(sum(number_of_posts), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select coalesce(sum(engagements), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select coalesce(sum(impressions), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select coalesce(sum(reach), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select coalesce(sum(likes), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
+        factsTodayList.add("select coalesce(sum(unlikes), 0) from T_FactFacebookPageStatsCurrDay where dim_date_id = (curdate() - interval 1 day) + 0");
         
         List<String> metrics = new ArrayList<String>();
         metrics.add("number of posts");
@@ -346,7 +346,7 @@ public class TestFacebookPagesNoonETL {
         metrics.add("likes");
         metrics.add("unlikes");
         
-        testLoadFacebook(factsYesterdayList, incrementalsTodayList, factsTodayList, metrics);
+        verifyLoad(factsYesterdayList, incrementalsTodayList, factsTodayList, metrics);
         
     }
 
