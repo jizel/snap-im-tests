@@ -51,7 +51,6 @@ public final class DockerManager {
     }
 
     private DockerManager() {
-        startManager();
     }
 
     /**
