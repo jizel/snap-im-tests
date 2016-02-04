@@ -48,7 +48,7 @@ public class DataPlatformOrchestrationTestCase {
 
     private static final Logger logger = LoggerFactory.getLogger(DataPlatformOrchestrationTestCase.class);
 
-    private static final DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
+    private static final DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration().start();
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();

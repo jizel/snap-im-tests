@@ -35,6 +35,8 @@ public final class DockerManager {
 
     private Manager manager;
 
+    private final DockerManagerCubeRegistry cubeRegistry = new DockerManagerCubeRegistry();
+
     private static boolean isManagerStarted;
 
     /**
@@ -51,7 +53,6 @@ public final class DockerManager {
     }
 
     private DockerManager() {
-        startManager();
     }
 
     /**
@@ -66,6 +67,10 @@ public final class DockerManager {
 
         startManager();
 
+        if (!new DockerContainerLifecycleDecider().init(cubeRegistry, manager).shouldStart(containerId)) {
+            return getContainer(containerId);
+        }
+
         logger.info("Starting container {}.", containerId);
 
         manager.fire(new CreateCube(containerId));
@@ -73,7 +78,11 @@ public final class DockerManager {
 
         logger.info("Started container {}.", containerId);
 
-        return getContainer(containerId);
+        final Cube startedContainer = getContainer(containerId);
+
+        cubeRegistry.addCube(startedContainer);
+
+        return startedContainer;
     }
 
     /**
@@ -90,10 +99,16 @@ public final class DockerManager {
             throw new IllegalStateException("Manager is not started!");
         }
 
+        if (!new DockerContainerLifecycleDecider().init(cubeRegistry, manager).shouldStop(containerId)) {
+            return;
+        }
+
         logger.info("Stopping container {}.", containerId);
 
         manager.fire(new StopCube(containerId));
         manager.fire(new DestroyCube(containerId));
+
+        cubeRegistry.removeCube(containerId);
 
         logger.info("Stopped container {}.", containerId);
     }
@@ -160,5 +175,9 @@ public final class DockerManager {
             isManagerStarted = false;
             logger.info("Arquillian Core Manager has stopped.");
         }
+    }
+
+    public Manager getManager() {
+        return manager;
     }
 }

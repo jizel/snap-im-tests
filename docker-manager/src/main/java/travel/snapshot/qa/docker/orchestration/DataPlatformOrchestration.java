@@ -39,13 +39,6 @@ public class DataPlatformOrchestration {
     private final List<ServiceCubePair> startedContainers = new ArrayList<>();
 
     /**
-     * Underlying {@link DockerManager} instance is started after the constructor is done.
-     */
-    public DataPlatformOrchestration() {
-        start();
-    }
-
-    /**
      * Starts underlying {@link DockerManager}.
      *
      * @return this
