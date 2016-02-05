@@ -1,9 +1,13 @@
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
+import org.arquillian.spacelift.gradle.git.GitBasedInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.installation.DockerMachine
 import travel.snapshot.qa.installation.DockerService
 import travel.snapshot.qa.installation.Docker
+import travel.snapshot.qa.installation.GradleInstallation
 import travel.snapshot.qa.test.DataPlatformTest
+import travel.snapshot.qa.test.execution.DataPlatformBuildExecutor
+import travel.snapshot.qa.test.execution.DataPlatformModules
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.interaction.DockerInteraction
 
@@ -51,11 +55,25 @@ spacelift {
             // this can be externalized when desired
             value PropertyResolver.resolveDockerRegistryPassword()
         }
+
+        dataPlatformRepositories {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value { [ "dataPlatformRepository", "dataPlatformQARepository" ] }
+        }
+        dataPlatformRepositoryCommit {
+            value PropertyResolver.resolveDataPlatformRespositoryCommit("master")
+        }
+        dataPlatformQARepositoryCommit {
+            value PropertyResolver.resolveDataPlatformQARespositoryCommit("master")
+        }
     }
 
     profiles {
         dataPlatform {
             enabledInstallations (dockerInstallations + serviceInstallations)
+        }
+        dataPlatformTest {
+            enabledInstallations (dockerInstallations + serviceInstallations + dataPlatformRepositories + 'gradle')
         }
         platformStart(from: dataPlatform) {
             tests 'platformStart'
@@ -63,28 +81,21 @@ spacelift {
         platformStop(from: dataPlatform) {
             tests 'platformStop'
         }
-        copyTest {
-            enabledInstallations (dockerInstallations << 'tomcat_standalone')
+        copyTest(from: dataPlatform) {
             tests 'copyTest'
         }
-        apiTests(from: dataPlatform) {
+        apiTests(from: dataPlatformTest) {
             tests 'apiTests'
         }
     }
 
     installations {
-        docker(from: Docker) {
-        }
-        dockerMachine(from: DockerMachine) {
-        }
+        docker(from: Docker) {}
+        dockerMachine(from: DockerMachine) {}
+
         tomcat(from: DockerService) {
             setup {
                 platform.with(tomcat().init())
-            }
-        }
-        tomcat_standalone(from: DockerService) {
-            setup {
-                platform.with(tomcat().init('tomcat_standalone'))
             }
         }
         mariadb(from: DockerService) {
@@ -102,6 +113,19 @@ spacelift {
                 platform.with(activemq().init())
             }
         }
+
+        gradle(from: GradleInstallation) {}
+
+        dataPlatformRepository(from: GitBasedInstallation) {
+            repository "git@bitbucket.org:bbox/data-platform.git"
+            commit dataPlatformRepositoryCommit
+            home "data-platform"
+        }
+        dataPlatformQARepository(from: GitBasedInstallation) {
+            repository "git@bitbucket.org:bbox/dataplatformqa.git"
+            commit dataPlatformQARepositoryCommit
+            home "dataplatformqa"
+        }
     }
 
     tests {
@@ -116,17 +140,19 @@ spacelift {
         copyTest(from: DataPlatformTest) {
             with platform
             execute {
-                DockerInteraction.execute("rm -rf /home/docker/tomcat_standalone")
-                DockerInteraction.execute("mkdir /home/docker/tomcat_standalone")
-                DockerInteraction.copy("/home/smikloso/test.txt", "default:/home/docker/tomcat_standalone", true)
-                DockerInteraction.execute("ls /home/docker/tomcat_standalone")
-                DockerInteraction.execute("cat /home/docker/tomcat_standalone/test.txt")
+                DockerInteraction.execute("rm -rf /home/docker/testdir")
+                DockerInteraction.execute("mkdir /home/docker/testdir")
+                DockerInteraction.copy("/etc/hosts", "default:/testdir", true)
+                DockerInteraction.execute("ls /home/docker/testdir")
+                DockerInteraction.execute("cat /home/docker/testdir/hosts")
             }
         }
         apiTests(from: DataPlatformTest) {
             with platform
+            beforeTest {
+                new DataPlatformBuildExecutor().with(DataPlatformModules.TOMCAT_MODULES).execute()
+            }
             execute {
-                println "hello"
             }
         }
     }

@@ -41,4 +41,12 @@ class PropertyResolver {
     static def resolveDockerRegistryPassword() {
         System.getProperty("dockerRegistryPassword", DOCKER_REGISTRY_PASSWORD)
     }
+
+    static def resolveDataPlatformRespositoryCommit(String defaultCommit) {
+        System.getProperty("dataPlatformRepositoryCommit", defaultCommit)
+    }
+
+    static def resolveDataPlatformQARespositoryCommit(String defaultCommit) {
+        System.getProperty("dataPlatformQARepositoryCommit", defaultCommit)
+    }
 }

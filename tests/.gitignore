@@ -22,3 +22,5 @@ buildSrc/build
 
 *.backup*
 log-cleaner.log
+
+/snapshot

@@ -68,6 +68,11 @@ class DockerToolsRegister {
             }
             this
         }
+
+        @Override
+        String toString() {
+            "DockerTool (${commandBuilder})"
+        }
     }
 
     class DockerMachineTool extends CommandTool {
@@ -89,6 +94,11 @@ class DockerToolsRegister {
                 super.environment.putAll(properties)
             }
             this
+        }
+
+        @Override
+        String toString() {
+            "DockerMachineTool (${commandBuilder})"
         }
     }
 }
