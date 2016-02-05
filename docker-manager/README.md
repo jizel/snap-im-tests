@@ -101,7 +101,14 @@ the binding IP address should be because by default, these properties are resolv
 
 In case of tests against Docker machine, you have to create Docker machine of name `dev` and start it beforehand and execute:
 
-    gradle clean test -Ddocker.mode=machine -Ddocker.machine=yourMachine
+    gradle clean test -Ddocker.mode=machine -Ddocker.machine=yourMachine -Ddocker.host=192.168.99.100
+
+`docker.host` IP address is the address of the started Docker machine. You get this information from this command:
+
+    docker-machine ip yourMachine
+
+You do not need to set this property in case there is environment property of name `DOCKER_HOST` set with that IP. This 
+happens when you execute tests in the same shell where you executed evaluation command `eval "$(docker-machine env myMachine)"`.
 
 In case you want tests to be executed against Docker containers which runs at your host, execute them like:
 
