@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.rate_shopper;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.When;
 import cucumber.api.java.en.Then;
@@ -22,12 +23,17 @@ public class RateShopperStepdefs {
     }
 
     @When("^Getting rate data for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\" fetched \"([^\"]*)\"$")
-    public void getting_rate_data_for_since_until(String property_id, String since, String until, String fetched) {
+    public void getting_rate_data_for_since_until(String property_id,
+                                                  @Transform(NullEmptyStringConverter.class) String since,
+                                                  @Transform(NullEmptyStringConverter.class) String until,
+                                                  @Transform(NullEmptyStringConverter.class) String fetched) {
         steps.getPropertyRateData(property_id, since, until, fetched);
     }
     
     @When("^Getting BAR values for a given market for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void getting_market_rate_data_for_since_until(String property_id, String since, String until) {
+    public void getting_market_rate_data_for_since_until(String property_id,
+                                                         @Transform(NullEmptyStringConverter.class) String since,
+                                                         @Transform(NullEmptyStringConverter.class) String until) {
        steps.getMarketRateData(property_id, since, until);
     }
     
@@ -35,11 +41,24 @@ public class RateShopperStepdefs {
     public void List_of_items_is_got_with_limit_and_cursor(String propertyId,
                                                            @Transform(NullEmptyStringConverter.class) String limit,
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
-        steps.getProperties(propertyId, limit, cursor);
+        steps.getProperties(propertyId, limit, cursor, null);
     }
     
     @Then("^Response \"([^\"]*)\" for property \"([^\"]*)\" is \"([^\"]*)\"$")
     public void response_since_for_property(String fieldName, String propertyId, String value) {
        steps.dateFieldForProperty(fieldName, propertyId, value);
+    }
+
+    @When("^List of properties for market of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" fetched \"([^\"]*)\"$")
+    public void listOfPropertiesForMarketOfIsGotWithLimitAndCursorFetched(String propertyId,
+                                                                          @Transform(NullEmptyStringConverter.class) String limit,
+                                                                          @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                          @Transform(NullEmptyStringConverter.class) String fetchDateTime) throws Throwable {
+        steps.getProperties(propertyId, limit, cursor, fetchDateTime);
+    }
+
+    @Then("^Response contains (\\d+) properties$")
+    public void responseContainsCountProperties(int count) throws Throwable {
+        steps.responseContainsValues(count);
     }
 }
