@@ -83,7 +83,7 @@ public class MariaDBDockerTestCase {
 
         logger.info("Flyway migration starting.");
 
-        mariaDBDockerManager.getServiceManager().flyway().migrate();
+        mariaDBDockerManager.getServiceManager().flyway("testDatabase").migrate();
 
         logger.info("Flyway migratiton has finished");
 

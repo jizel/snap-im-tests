@@ -21,6 +21,8 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MariaDBManagerImpl implements MariaDBManager {
@@ -101,31 +103,40 @@ public class MariaDBManagerImpl implements MariaDBManager {
     }
 
     @Override
-    public Flyway flyway(String... migrationLocations) {
-        return flyway(configuration.getDatabase(), migrationLocations);
+    public Flyway flyway(String scheme) {
+        return flyway(configuration.getDataSource(), scheme, null);
     }
 
     @Override
-    public Flyway flyway(String database, String... migrationLocations) {
-        return flyway(database, true, migrationLocations);
+    public Flyway flyway(String dataSource, String scheme) {
+        return flyway(dataSource, scheme, null);
     }
 
     @Override
-    public Flyway flyway(String database, boolean baseline, String... migrationLocations) {
+    public Flyway flyway(String dataSource, String scheme, String migrationLocation, String... migrationLocations) {
         final Flyway flyway = new Flyway();
 
-        final String datasource = configuration.getConnectionString(database);
+        final String datasource = configuration.getDataSource();
         final String username = configuration.getUsername();
         final String password = configuration.getPassword();
 
         flyway.setDataSource(datasource, username, password);
+        flyway.setSchemas(scheme);
 
-        if (baseline) {
-            flyway.baseline();
+        final List<String> migrations = new ArrayList<>();
+
+        if (migrationLocation != null) {
+            migrations.add(migrationLocation);
         }
 
-        if (migrationLocations.length != 0) {
-            flyway.setLocations(migrationLocations);
+        for (String migration : migrationLocations) {
+            if (migration != null) {
+                migrations.add(migration);
+            }
+        }
+
+        if (!migrations.isEmpty()) {
+            flyway.setLocations(migrations.toArray(new String[migrations.size()]));
         }
 
         return flyway;
