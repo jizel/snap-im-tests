@@ -49,4 +49,8 @@ class PropertyResolver {
     static def resolveDataPlatformQARespositoryCommit(String defaultCommit) {
         System.getProperty("dataPlatformQARepositoryCommit", defaultCommit)
     }
+
+    static def resolveForceDataPlatformBuild() {
+        Boolean.parseBoolean(System.getProperty("forceDataPlatformBuild"))
+    }
 }

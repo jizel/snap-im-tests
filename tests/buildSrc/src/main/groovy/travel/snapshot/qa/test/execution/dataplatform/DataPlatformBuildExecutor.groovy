@@ -1,17 +1,30 @@
-package travel.snapshot.qa.test.execution
+package travel.snapshot.qa.test.execution.dataplatform
 
 /**
  * Encapsulates module builing
  */
 class DataPlatformBuildExecutor {
 
-    String dataPlatformPath = "snapshot/workspace/data-platform"
+    static String DEFAULT_DATA_PLATFORM_DIR = "data-platform"
+
+    File workspace
+
+    String dataPlatformDir = DEFAULT_DATA_PLATFORM_DIR
 
     List<DataPlatformModule> modules = []
 
     boolean withoutTests = true
 
     boolean force = false
+
+    DataPlatformBuildExecutor(File workspace) {
+        this(workspace, DEFAULT_DATA_PLATFORM_DIR)
+    }
+
+    DataPlatformBuildExecutor(File workspace, String dataPlatformDir) {
+        this.workspace = workspace
+        this.dataPlatformDir = dataPlatformDir
+    }
 
     /**
      *
@@ -24,7 +37,7 @@ class DataPlatformBuildExecutor {
     }
 
     /**
-     * when called, all modules will be tested during build, this is skipped by default
+     * When called, all modules will be tested during build, this is skipped by default.
      *
      * @return this
      */
@@ -38,7 +51,7 @@ class DataPlatformBuildExecutor {
      * @param modules modules to build
      * @return this
      */
-    DataPlatformBuildExecutor with(DataPlatformModules modules) {
+    DataPlatformBuildExecutor build(DataPlatformModules modules) {
         this.modules.addAll(modules.modules())
         this
     }
@@ -48,22 +61,33 @@ class DataPlatformBuildExecutor {
      * @param modules modules to build
      * @return this
      */
-    DataPlatformBuildExecutor with(List<DataPlatformModule> modules) {
+    DataPlatformBuildExecutor build(List<DataPlatformModule> modules) {
         this.modules.addAll(modules)
         this
     }
 
-    DataPlatformBuildExecutor with(DataPlatformModule module) {
+    DataPlatformBuildExecutor build(DataPlatformModule module) {
         modules << module
         this
     }
 
     /**
-     * Builds all added modules
+     * Builds all added modules.
      *
      * @return this
      */
     DataPlatformBuildExecutor execute() {
+        execute(force)
+        this
+    }
+
+    /**
+     * Builds all added modules.
+     *
+     * @param force if set to true, even already built modules will be build again
+     * @return this
+     */
+    DataPlatformBuildExecutor execute(boolean force) {
         execute(withoutTests, force)
         this
     }
@@ -76,7 +100,10 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor execute(boolean withoutTests, boolean force) {
-        def dataPlatformBuilder = new DataPlatformBuilder(dataPlatformPath, withoutTests)
+
+        def dataPlatform = new File(workspace, dataPlatformDir).absolutePath
+
+        def dataPlatformBuilder = new DataPlatformBuilder(dataPlatform, withoutTests)
 
         if (force) {
             dataPlatformBuilder.forceBuild(modules)

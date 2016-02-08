@@ -1,4 +1,4 @@
-package travel.snapshot.qa.test.execution
+package travel.snapshot.qa.test.execution.dataplatform
 
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.task.os.CommandTool

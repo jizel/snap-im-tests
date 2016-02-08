@@ -6,8 +6,12 @@ import travel.snapshot.qa.installation.DockerService
 import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.installation.GradleInstallation
 import travel.snapshot.qa.test.DataPlatformTest
-import travel.snapshot.qa.test.execution.DataPlatformBuildExecutor
-import travel.snapshot.qa.test.execution.DataPlatformModules
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
+import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
+import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
+import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.interaction.DockerInteraction
 
@@ -66,6 +70,10 @@ spacelift {
         dataPlatformQARepositoryCommit {
             value PropertyResolver.resolveDataPlatformQARespositoryCommit("master")
         }
+        forceDataPlatformBuild {
+            type Boolean
+            value PropertyResolver.resolveForceDataPlatformBuild()
+        }
     }
 
     profiles {
@@ -120,11 +128,12 @@ spacelift {
             repository "git@bitbucket.org:bbox/data-platform.git"
             commit dataPlatformRepositoryCommit
             home "data-platform"
+            commit dataPlatformRepositoryCommit
         }
         dataPlatformQARepository(from: GitBasedInstallation) {
             repository "git@bitbucket.org:bbox/dataplatformqa.git"
             commit dataPlatformQARepositoryCommit
-            home "dataplatformqa"
+            home dataPlatformQARepositoryCommit
         }
     }
 
@@ -150,9 +159,20 @@ spacelift {
         apiTests(from: DataPlatformTest) {
             with platform
             beforeTest {
-                new DataPlatformBuildExecutor().with(DataPlatformModules.TOMCAT_MODULES).execute()
+                new DataPlatformBuildExecutor(workspace)
+                        .build(DataPlatformModules.TOMCAT_MODULES)
+                        .execute(forceDataPlatformBuild)
+
+                new MariaDBInitializer(workspace, platform)
+                        .init(DataPlatformModule.IDENTITY)
+                        .execute()
+
+                new DataPlatformDeployer(platform).deploy(DataPlatformModules.TOMCAT_MODULES).execute()
             }
             execute {
+            }
+            afterTest {
+                new MariaDBDropper(platform).drop(DataPlatformModules.TOMCAT_MODULES).execute()
             }
         }
     }
