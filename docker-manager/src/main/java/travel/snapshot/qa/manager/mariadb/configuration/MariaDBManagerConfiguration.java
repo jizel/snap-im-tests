@@ -65,6 +65,15 @@ public class MariaDBManagerConfiguration implements Configuration {
         return String.format("jdbc:mysql://%s:%s/%s", bindAddress, bindPort, database);
     }
 
+    /**
+     * This is used in connection with FlyWay datasource setting.
+     *
+     * @return JDBC datasource, without database string, e.g "jdbc:mysql://127.0.0.1:3306.
+     */
+    public String getDataSource() {
+        return String.format("jdbc:mysql://%s:%s", bindAddress, bindPort);
+    }
+
     public long getStartupTimeoutInSeconds() {
         return startupTimeoutInSeconds;
     }

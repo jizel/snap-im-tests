@@ -8,36 +8,34 @@ import org.flywaydb.core.Flyway;
 public interface FlywayMigration {
 
     /**
-     * Returns Flyway object which is prepared for executing migrations. There is data source already set with username
-     * and password found in configuration and its database is used as well. There will be baseline method called on the
-     * flyway instance before it is returned to caller of this method.
+     * Returns Flyway object which performs migrations against specified {@code scheme}. Data source, user name and
+     * password will be constructed from the underlying configuration. Migrations will be picked from the default
+     * location.
      *
-     * @param migrationLocations locations of migration scripts to execute against the database
-     * @return flyway instance configured to execute migrations
-     */
-    Flyway flyway(String... migrationLocations);
-
-    /**
-     * Returns Flyway object which is prepared for executing migrations. There is data source already set with username
-     * and password found in configuration and specified {@code database} used as well. There will be baseline method
-     * called on the flyway instance before it is returned to caller of this method.
-     *
-     * @param database           database to set for migration
-     * @param migrationLocations locations of migration scripts to execute against the database
+     * @param scheme scheme to use for migration
      * @return Flyway instance configured to execute migrations
      */
-    Flyway flyway(String database, String... migrationLocations);
+    Flyway flyway(String scheme);
 
     /**
-     * Returns Flyway object which is prepared for executing migrations against specified {@code database}. There is
-     * data source already set with username and password found in configuration. This method overrides database set in
-     * configuration by the specified one.
+     * Returns Flyway object which is prepared for executing migrations against specified {@code dataSource} and {@code
+     * scheme}. There is data source already set with username and password found in configuration.
      *
-     * @param database           database to set for migration
-     * @param baseline           sets baseline flag, respective flyway's baseline method will be called automatically
-     *                           when set to true
-     * @param migrationLocations locations of migration scripts to execute agains the
+     * @param dataSource database to set for migration
+     * @param scheme     locations of migration scripts to execute against the database
      * @return Flyway instance configured to execute migrations
      */
-    Flyway flyway(String database, boolean baseline, String... migrationLocations);
+    Flyway flyway(String dataSource, String scheme);
+
+    /**
+     * Returns Flyway object which is prepared for executing migrations against specified {@code dataSource} and {@code
+     * scheme}. There is data source already set with username and password found in configuration.
+     *
+     * @param dataSource         datasource to set for migration
+     * @param scheme             scheme to use for migration
+     * @param migrationLocation  location of migration scripts to execute against the datasource and scheme
+     * @param migrationLocations addition locations of migration scripts to execute against the datasource and scheme
+     * @return Flyway instance configured to execute migrations
+     */
+    Flyway flyway(String dataSource, String scheme, String migrationLocation, String... migrationLocations);
 }
