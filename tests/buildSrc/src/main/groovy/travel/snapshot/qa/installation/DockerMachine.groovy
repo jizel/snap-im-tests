@@ -11,6 +11,7 @@ import travel.snapshot.qa.util.DockerToolsRegister
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.image.DockerImagesDowloader
+import travel.snapshot.qa.util.interaction.DockerInteraction
 import travel.snapshot.qa.util.machine.DockerMachineHelper
 
 class DockerMachine extends BaseContainerizableObject<DockerMachine> implements Installation {
@@ -139,6 +140,15 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         System.setProperty("arquillian.xml.docker.port", "2376")
 
         System.setProperty("arquillian.xml.docker.machine", dockerMachine)
+
+        // in case we run on VM, we need to copy configs to VM and set property from where configs will be picked
+        // this is set here to "/data/tomcat/config" but that directory will be in virtual machine so we need to be sure
+        // that it exists
+
+        DockerInteraction.execute("rm -rf /home/docker/configuration")
+        DockerInteraction.execute("mkdir -p /home/docker/configuration")
+
+        System.setProperty("arquillian.xml.data.tomcat.config.dir", "/home/docker/configuration/tomcat")
     }
 
     @Override

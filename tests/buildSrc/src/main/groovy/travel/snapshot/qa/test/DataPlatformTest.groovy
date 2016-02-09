@@ -16,6 +16,9 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
 
     DeferredValue<List> dataProvider = DeferredValue.of(List).from([null])
 
+    // this will be resolved as the first execution in beforeSuite closure
+    DeferredValue<Void> init = DeferredValue.of(Void)
+
     DeferredValue<Void> beforeSuite = DeferredValue.of(Void)
 
     DeferredValue<Void> beforeTest = DeferredValue.of(Void)
@@ -36,7 +39,7 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
         super(testName, parent)
 
         dataProvider.from({ data.resolve() as ArrayList })
-        beforeSuite.from({ orchestrationSetup() })
+        beforeSuite.from({ init.resolve(); orchestrationSetup() })
         afterSuite.from({ orchestrationTeardown() })
     }
 
@@ -122,7 +125,6 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
     }
 
     private def orchestrationSetup() {
-
         def orchestration = with.resolve()
 
         if (orchestration && setup.resolve()) {

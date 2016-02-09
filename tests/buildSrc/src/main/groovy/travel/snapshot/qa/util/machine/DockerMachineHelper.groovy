@@ -10,7 +10,7 @@ class DockerMachineHelper {
     }
 
     static def start(String machine) {
-        Spacelift.task("docker-machine").parameters("start", machine).execute().await()
+        Spacelift.task("docker-machine").parameters("start", machine).shouldExitWith(0,1).execute().await()
     }
 
     static def stop(String machine) {

@@ -12,6 +12,7 @@ import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
+import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.interaction.DockerInteraction
 
@@ -73,6 +74,9 @@ spacelift {
         forceDataPlatformBuild {
             type Boolean
             value PropertyResolver.resolveForceDataPlatformBuild()
+        }
+        tomcatSpringConfigDirectory {
+            value PropertyResolver.resolveTomcatSpringConfigDirectory()
         }
     }
 
@@ -158,6 +162,9 @@ spacelift {
         }
         apiTests(from: DataPlatformTest) {
             with platform
+            init {
+                new TomcatConfigurationDeployer(dockerMachine).deploy()
+            }
             beforeTest {
                 new DataPlatformBuildExecutor(workspace)
                         .build(DataPlatformModules.TOMCAT_MODULES)

@@ -1,5 +1,6 @@
 package travel.snapshot.qa.util
 
+import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 
 class PropertyResolver {
@@ -52,5 +53,13 @@ class PropertyResolver {
 
     static def resolveForceDataPlatformBuild() {
         Boolean.parseBoolean(System.getProperty("forceDataPlatformBuild"))
+    }
+
+    static def resolveTomcatSpringConfigDirectory() {
+
+        File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
+        File tomcatConfigurationDirectory = new File(rootDir, "configuration/tomcat")
+
+        System.getProperty("tomcatSpringConfigDirectory", tomcatConfigurationDirectory.getAbsolutePath())
     }
 }

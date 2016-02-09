@@ -75,7 +75,11 @@ class DockerInteraction {
      * @param command command to execute
      */
     static def execute(String command) {
-        execute("default", command)
+        execute("default", command, null)
+    }
+
+    static def execute(String command, Integer... exitCodes) {
+        execute("default", command, exitCodes)
     }
 
     /**
@@ -84,10 +88,22 @@ class DockerInteraction {
      * @param machineName name of machine to execute command agains
      * @param command command to execute
      */
-    static def execute(String machineName, String command) {
+    static def execute(String machineName, String command, Integer... exitCodes) {
 
-        logger.info("executing '{}' on '{}'", command, machineName)
+        logger.debug("executing '{}' on '{}'", command, machineName)
 
-        Spacelift.task("docker-machine").parameter("ssh").parameter(machineName).splitToParameters(command).execute().await()
+        def shouldExitWith = []
+
+        if (!exitCodes) {
+            shouldExitWith << 0
+        } else {
+            shouldExitWith.addAll(Arrays.asList(exitCodes))
+        }
+
+        Spacelift.task("docker-machine").parameter("ssh")
+                .parameter(machineName)
+                .splitToParameters(command)
+                .shouldExitWith(shouldExitWith.toArray(new Integer[shouldExitWith.size()]))
+                .execute().await()
     }
 }
