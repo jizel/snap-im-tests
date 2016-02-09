@@ -7,6 +7,7 @@ import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfigurat
 import java.io.File;
 import java.io.Reader;
 import java.sql.Connection;
+import java.sql.Statement;
 
 /**
  * MariaDB operations interface. Gathers methods which simplifies and enables you to interact with MariaDB.
@@ -86,6 +87,13 @@ public interface MariaDBManager extends ServiceManager, FlywayMigration {
      * @param connection connection to close
      */
     void closeConnection(Connection connection);
+
+    /**
+     * Closes SQL statement.
+     *
+     * @param statement statement to close
+     */
+    void closeStatement(Statement statement);
 
     /**
      * Gets configuration of MariaDB manager.

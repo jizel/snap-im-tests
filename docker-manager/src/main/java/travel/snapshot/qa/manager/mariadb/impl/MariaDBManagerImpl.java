@@ -3,6 +3,7 @@ package travel.snapshot.qa.manager.mariadb.impl;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.flywaydb.core.Flyway;
+import org.jboss.arquillian.core.spi.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.api.BasicWaitingCondition;
@@ -10,7 +11,6 @@ import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManagerException;
 import travel.snapshot.qa.manager.mariadb.check.MariaDBStartedCheckTask;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
-import travel.snapshot.qa.manager.tomcat.configuration.Validate;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -165,6 +166,17 @@ public class MariaDBManagerImpl implements MariaDBManager {
             connection.close();
         } catch (SQLException ex) {
             logger.warn("Unable to close SQL connection. Error code: {}. Message: {}.", ex.getErrorCode(), ex.getMessage());
+        }
+    }
+
+    @Override
+    public void closeStatement(Statement statement) {
+        Validate.notNull(statement, "Statement to close must not be a null object!");
+
+        try {
+            statement.close();
+        } catch (SQLException ex) {
+            logger.warn("Unable to close SQL statement. Error code: {}. Message: {}.", ex.getErrorCode(), ex.getMessage());
         }
     }
 
