@@ -13,11 +13,11 @@ class DockerService extends BaseContainerizableObject<DockerService> implements 
 
     DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from({ false })
 
-    DeferredValue<String> product = DeferredValue.of(String).from("dp")
+    DeferredValue<String> product = DeferredValue.of(String).from(getProduct())
 
-    DeferredValue<String> version = DeferredValue.of(String).from("1.0.0")
+    DeferredValue<String> version = DeferredValue.of(String).from(getVersion())
 
-    DeferredValue<File> home = DeferredValue.of(File.class).from(name)
+    DeferredValue<File> home = DeferredValue.of(File).from(name)
 
     DeferredValue<String> fileName = DeferredValue.of(String).from(name)
 

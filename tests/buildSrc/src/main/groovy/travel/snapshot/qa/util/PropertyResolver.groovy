@@ -62,4 +62,8 @@ class PropertyResolver {
 
         System.getProperty("tomcatSpringConfigDirectory", tomcatConfigurationDirectory.getAbsolutePath())
     }
+
+    static def resolveRepositoryFetchSkip() {
+        Boolean.parseBoolean(System.getProperty("repositorySkipFetch"))
+    }
 }

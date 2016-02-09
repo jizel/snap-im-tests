@@ -3,6 +3,9 @@ package travel.snapshot.qa.test.execution.db.mariadb
 import travel.snapshot.qa.docker.ServiceType
 import travel.snapshot.qa.test.execution.db.ModuleDatabaseConfiguration
 
+/**
+ * Database configuration of MariaDB database for some Data platform module.
+ */
 class MariaDBModuleConfiguration implements ModuleDatabaseConfiguration {
 
     String scheme

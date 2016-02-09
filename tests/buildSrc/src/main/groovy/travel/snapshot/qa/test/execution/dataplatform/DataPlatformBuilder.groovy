@@ -191,6 +191,13 @@ class DataPlatformBuilder {
         getBuilt(modules.modules())
     }
 
+    /**
+     * Checks if some module is already built or not
+     *
+     * @param dataPlatformPath path to data platform repository
+     * @param module module to check the existency of its war file
+     * @return true if war file exists, false otherwise
+     */
     private boolean isWarPresent(String dataPlatformPath, DataPlatformModule module) {
         new File(dataPlatformPath, module.war).exists()
     }

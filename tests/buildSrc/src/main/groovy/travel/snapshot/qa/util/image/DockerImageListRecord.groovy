@@ -1,5 +1,8 @@
 package travel.snapshot.qa.util.image
 
+/**
+ * Abstraction of Docker image. The output line of 'docker images' represents this class.
+ */
 class DockerImageListRecord {
 
     String repository
@@ -8,6 +11,12 @@ class DockerImageListRecord {
 
     String imageId
 
+    /**
+     * Parses output of 'docker images' into its model class.
+     *
+     * @param lines raw lines from 'docker images' output
+     * @return parsed Docker images
+     */
     static List<DockerImageListRecord> parse(List<String> lines) {
 
         // skip header

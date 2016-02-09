@@ -142,8 +142,8 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         System.setProperty("arquillian.xml.docker.machine", dockerMachine)
 
         // in case we run on VM, we need to copy configs to VM and set property from where configs will be picked
-        // this is set here to "/data/tomcat/config" but that directory will be in virtual machine so we need to be sure
-        // that it exists
+        // this is set here to "/home/docker/configuration/tomcat" but that directory will be in virtual machine so we
+        // need to be sure that it exists
 
         DockerInteraction.execute("rm -rf /home/docker/configuration")
         DockerInteraction.execute("mkdir -p /home/docker/configuration")

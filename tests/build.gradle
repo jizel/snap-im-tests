@@ -1,20 +1,18 @@
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
 import org.arquillian.spacelift.gradle.git.GitBasedInstallation
+import org.arquillian.spacelift.gradle.gradle.GradleInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.installation.DockerMachine
 import travel.snapshot.qa.installation.DockerService
 import travel.snapshot.qa.installation.Docker
-import travel.snapshot.qa.installation.GradleInstallation
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
-import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.PropertyResolver
-import travel.snapshot.qa.util.interaction.DockerInteraction
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
 
@@ -71,6 +69,9 @@ spacelift {
         dataPlatformQARepositoryCommit {
             value PropertyResolver.resolveDataPlatformQARespositoryCommit("master")
         }
+        repositorySkipFetch {
+            value PropertyResolver.resolveRepositoryFetchSkip()
+        }
         forceDataPlatformBuild {
             type Boolean
             value PropertyResolver.resolveForceDataPlatformBuild()
@@ -92,9 +93,6 @@ spacelift {
         }
         platformStop(from: dataPlatform) {
             tests 'platformStop'
-        }
-        copyTest(from: dataPlatform) {
-            tests 'copyTest'
         }
         apiTests(from: dataPlatformTest) {
             tests 'apiTests'
@@ -133,11 +131,13 @@ spacelift {
             commit dataPlatformRepositoryCommit
             home "data-platform"
             commit dataPlatformRepositoryCommit
+            skipFetch repositorySkipFetch
         }
         dataPlatformQARepository(from: GitBasedInstallation) {
             repository "git@bitbucket.org:bbox/dataplatformqa.git"
             commit dataPlatformQARepositoryCommit
             home dataPlatformQARepositoryCommit
+            skipFetch repositorySkipFetch
         }
     }
 
@@ -149,16 +149,6 @@ spacelift {
         platformStop(from: DataPlatformTest) {
             with platform
             setup false
-        }
-        copyTest(from: DataPlatformTest) {
-            with platform
-            execute {
-                DockerInteraction.execute("rm -rf /home/docker/testdir")
-                DockerInteraction.execute("mkdir /home/docker/testdir")
-                DockerInteraction.copy("/etc/hosts", "default:/testdir", true)
-                DockerInteraction.execute("ls /home/docker/testdir")
-                DockerInteraction.execute("cat /home/docker/testdir/hosts")
-            }
         }
         apiTests(from: DataPlatformTest) {
             with platform
@@ -174,12 +164,9 @@ spacelift {
                         .init(DataPlatformModule.IDENTITY)
                         .execute()
 
-                new DataPlatformDeployer(platform).deploy(DataPlatformModules.TOMCAT_MODULES).execute()
+                new DataPlatformDeployer(workspace, platform).deploy(DataPlatformModules.TOMCAT_MODULES).execute()
             }
             execute {
-            }
-            afterTest {
-                new MariaDBDropper(platform).drop(DataPlatformModules.TOMCAT_MODULES).execute()
             }
         }
     }
@@ -188,7 +175,6 @@ spacelift {
 buildscript {
     repositories {
         mavenCentral()
-        mavenLocal()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
         maven {
@@ -199,12 +185,12 @@ buildscript {
                 password nexusPassword
             }
         }
+        maven { url "https://jitpack.io" }
     }
 
     dependencies {
-        classpath 'org.arquillian.spacelift.gradle:arquillian-spacelift-gradle:1.0.0-alpha-18-SNAPSHOT'
-        classpath 'org.arquillian.spacelift:arquillian-spacelift:1.0.0.Alpha8'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.0-SNAPSHOT'
+        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.0.Final'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.0'
     }
 }
 

@@ -32,8 +32,6 @@ class TomcatConfigurationDeployer {
 
         logger.info("Copying Tomcat Spring configuration directory from {} to {}.", from, to)
 
-        DockerInteraction.execute("ls -la /home/docker /home/docker/configuration")
-
         DockerInteraction.execute("sudo -i chown -R docker:staff /home/docker/configuration/tomcat", 0, 1)
         DockerInteraction.copy(from, to, true)
 

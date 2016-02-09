@@ -5,6 +5,15 @@ import travel.snapshot.qa.util.PropertyResolver
 
 class DockerContainer {
 
+    /**
+     * Deletes containers when necessary.
+     *
+     * If connection mode is "STARTANDSTOP", containers with status "Running" will be removed. After that, all
+     * containers with status "Exited" are removed as well.
+     *
+     * @param containers containers to iterate over for deletion
+     * @return
+     */
     static def removeContainers(List containers) {
         if (PropertyResolver.resolveConnectionMode() == "STARTANDSTOP") {
             removeContainers("Running", containers)
@@ -16,6 +25,12 @@ class DockerContainer {
         removeContainers("Exited", containers)
     }
 
+    /**
+     * Removes containers of given status.
+     *
+     * @param status status of container to remove
+     * @param containers containers to iterate over
+     */
     static def removeContainers(String status, List containers) {
         Spacelift.task("docker")
                 .parameter("ps")

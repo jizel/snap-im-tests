@@ -1,17 +1,26 @@
 package travel.snapshot.qa.util.machine
 
+/**
+ * Abstraction of Docker machine. The output line of 'docker-machine ls' represents this class.
+ */
 class DockerMachineListRecord {
 
-    def name
+    String name
 
-    def active
+    String active
 
-    def driver
+    String driver
 
-    def state
+    String state
 
-    def url
+    String url
 
+    /**
+     * Parses Docker machines from its raws output from 'docker-machine ls'
+     *
+     * @param lines raw lines from 'docker-machine ls' output
+     * @return parsed Docker images
+     */
     static List<DockerMachineListRecord> parse(List<String> lines) {
 
         // skip header

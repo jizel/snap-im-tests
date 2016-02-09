@@ -5,23 +5,53 @@ import org.arquillian.spacelift.process.ProcessResult
 
 class DockerMachineHelper {
 
+    /**
+     * Checks if given machine is running or not
+     *
+     * @param machine machine to check
+     * @return true if machine is in state "Running", false otherwise
+     */
     static boolean isRunning(String machine) {
         hasState(machine, "Running")
     }
 
-    static def start(String machine) {
-        Spacelift.task("docker-machine").parameters("start", machine).shouldExitWith(0,1).execute().await()
+    /**
+     * Starts given machine
+     *
+     * @param machine machine to start
+     * @return result of the execution
+     */
+    static ProcessResult start(String machine) {
+        Spacelift.task("docker-machine").parameters("start", machine).shouldExitWith(0, 1).execute().await()
     }
 
-    static def stop(String machine) {
+    /**
+     * Stops given machine
+     *
+     * @param machine machine to stop
+     * @return result of the execution
+     */
+    static ProcessResult stop(String machine) {
         Spacelift.task("docker-machine").parameters("stop", machine).execute().await()
     }
 
-    static def restart(String machine) {
+    /**
+     * Restarts given machine
+     *
+     * @param machine machine to restart
+     * @return result of the execution
+     */
+    static ProcessResult restart(String machine) {
         Spacelift.task("docker-machine").parameters("restart", machine).execute().await()
     }
 
-    static def create(String machine) {
+    /**
+     * Creates machine of given name.
+     *
+     * @param machine machine to create
+     * @return result of the execution
+     */
+    static ProcessResult create(String machineName) {
 
         // do we want this to be configurable?
 
@@ -30,16 +60,27 @@ class DockerMachineHelper {
                 .parameter("--driver=virtualbox")
                 .parameter("--virtualbox-memory=3072")
                 .parameter("--virtualbox-cpu-count=2")
-                .parameter(machine)
+                .parameter(machineName)
                 .execute()
                 .await()
     }
 
+    /**
+     * Parses output of 'docker-machine ls' into its model classes.
+     *
+     * @return list of parsed machines
+     */
     static List<DockerMachineListRecord> parseMachines() {
         ProcessResult result = Spacelift.task("docker-machine").parameter("ls").execute().await()
         DockerMachineListRecord.parse(result.output())
     }
 
+    /**
+     * Check if machine is present in 'docker-machine ls' output.
+     *
+     * @param machine machine to check
+     * @return true if machine is present, false otherwise
+     */
     static boolean isPresent(String machine) {
         boolean contains = false
 
@@ -53,6 +94,13 @@ class DockerMachineHelper {
         contains
     }
 
+    /**
+     * Checks if given machine is in a given state
+     *
+     * @param machine machine to check the state of
+     * @param state state to check
+     * @return true if machine is in given state, false otherwise
+     */
     static boolean hasState(String machine, String state) {
 
         boolean hasState = false
@@ -67,10 +115,23 @@ class DockerMachineHelper {
         hasState
     }
 
-    static def getIp(String machine) {
+    /**
+     * Resolves IP address of the specified machine
+     *
+     * @param machine machine to get the IP of
+     * @return IP of the machine
+     */
+    static String getIp(String machine) {
         Spacelift.task("docker-machine").parameters("ip", machine).execute().await().output().get(0)
     }
 
+    /**
+     * Resolves environment properties of some machine. Internally calls 'docker-machine env machine' and
+     * parses environment propertis found there into the map to be returned.
+     *
+     * @param machine machine to get environment properties for
+     * @return environment properties of specified machine
+     */
     static Map getEnvironmentProperties(String machine) {
         List<String> rawPropertyLines = Spacelift.task("docker-machine").parameters("env", machine)
                 .execute()

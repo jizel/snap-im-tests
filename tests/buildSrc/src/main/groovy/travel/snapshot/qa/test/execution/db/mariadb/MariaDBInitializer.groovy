@@ -16,16 +16,16 @@ class MariaDBInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(MariaDBInitializer)
 
-    private DataPlatformTestOrchestration orchestration
-
     private static final String DEFAULT_MARIADB_CONTAINER =
             DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID
+
+    private final File workspace
+
+    private final DataPlatformTestOrchestration orchestration
 
     private List<DataPlatformModule> modules = []
 
     private String containerId = DEFAULT_MARIADB_CONTAINER
-
-    private File workspace
 
     MariaDBInitializer(File workspace, DataPlatformTestOrchestration orchestration) {
         this.workspace = workspace

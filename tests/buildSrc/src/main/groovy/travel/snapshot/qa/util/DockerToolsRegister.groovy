@@ -8,12 +8,29 @@ import org.arquillian.spacelift.task.TaskFactory
 import org.arquillian.spacelift.task.TaskRegistry
 import org.arquillian.spacelift.task.os.CommandTool
 
+/**
+ * Registers Spacelift tasks into the register so they can be later retrieved from the register and used,
+ * referencing just its alias. There are environment properties set as well for such task.
+ */
 class DockerToolsRegister {
 
+    /**
+     * Registers tools to provided registry. Environment properties will not be set.
+     *
+     * @param registry register to register tools / tasks into
+     */
     def register(TaskRegistry registry) {
         register(registry, null)
     }
 
+    /**
+     * Registers tools into the specified registry with provided properties. There are two tools registered -
+     * 'docker' and 'docker-machine'.
+     *
+     * @param registry register to register tools / tasks into
+     * @param properties properties to pass to tools before registering them into the registry
+     * @return
+     */
     def register(TaskRegistry registry, Map properties) {
 
         registry.register(DockerTool, new TaskFactory() {

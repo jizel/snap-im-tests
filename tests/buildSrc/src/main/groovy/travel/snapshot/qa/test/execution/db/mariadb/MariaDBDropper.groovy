@@ -21,10 +21,10 @@ class MariaDBDropper {
 
     private static final Logger logger = LoggerFactory.getLogger(MariaDBDropper)
 
-    private DataPlatformTestOrchestration orchestration
-
     private static final String DEFAULT_MARIADB_CONTAINER =
             DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID
+
+    private final DataPlatformTestOrchestration orchestration
 
     private List<DataPlatformModule> modules = []
 

@@ -63,6 +63,10 @@ enum DataPlatformModule {
         }
     }
 
+    String getDeploymentContext() {
+        return war.substring(war.lastIndexOf("/"), war.lastIndexOf("."))
+    }
+
     /**
      * Gets database configuration for given service type.
      *
@@ -90,7 +94,7 @@ enum DataPlatformModule {
     boolean hasDatabase(ServiceType serviceType) {
 
         if (serviceType != ServiceType.MARIADB && serviceType != ServiceType.MONGODB) {
-            return false;
+            return false
         }
 
         for (ModuleDatabaseConfiguration configuration : databaseConfigurations) {

@@ -160,7 +160,6 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
                     .findAll { !it['name'].startsWith("docker") }
                     .each { installation ->
                 try {
-                    println "stopping " + installation['name']
                     orchestrationDelegate.dockerManager.stop(installation['name'])
                 } catch (Exception ex) {
                     throw new RuntimeException(ex)
