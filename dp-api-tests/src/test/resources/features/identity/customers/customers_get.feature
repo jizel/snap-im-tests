@@ -9,6 +9,15 @@ Feature: customers_get
 #      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 |CZ10000003 || +420123456789|http://www.snapshot.travel|
 
 
+  Scenario: Get token, positive scenario, valid user with valid password
+    Given The following users exist
+      | userType | userName   | firstName | lastName | email                | timezone      | culture |
+      | customer | ManagerPrague | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The password of user "ManagerPrague" is "Password01"
+    When Get token for user "ManagerPrague" with password "Password01"
+    Then Response code is "200"
+
+
   Scenario: Getting customer
     When Customer with code "c1t" is got
     Then Response code is "200"

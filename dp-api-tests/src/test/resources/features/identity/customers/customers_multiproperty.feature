@@ -1,6 +1,6 @@
 Feature: DP returns all customer's property sets which are available to certain user.
 
-  Scenario: Setup 1
+  Background: Initial data to DB
     Given Database is cleaned
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
@@ -14,6 +14,10 @@ Feature: DP returns all customer's property sets which are available to certain 
       | customer | limited    | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       #user that has everything accessible
       | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+
+    Given The password of user "everything" is "Password01"
+    Given The password of user "limited" is "Password01"
+    Given The password of user "snapshot" is "Password01"
 
     Given Relation between user with username "everything" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "limited" and customer with code "c1t" exists with isPrimary "true"
@@ -51,7 +55,23 @@ Feature: DP returns all customer's property sets which are available to certain 
     Given Relation between user with username "limited" and property with code "p1_code" exists
     Given Relation between user with username "limited" and property with code "p2_code" exists
 
+
+  Scenario: Accessing customer's property_sets should return only those user has access to (user taken from token)
+    Given:
+
+
+
     #user snapshot should get all property sets because he has access to all
+
+
+
+
+
+
+
+
+
+
 
   # -------------------------------------------------------------------------------------------------------------------
   Scenario: Setup 2
@@ -76,7 +96,6 @@ Feature: DP returns all customer's property sets which are available to certain 
     #users without customer
       | customer | out1            | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | out2            | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-
 
 
     Given Relation between user with username "everything" and customer with code "c1t" exists with isPrimary "true"
