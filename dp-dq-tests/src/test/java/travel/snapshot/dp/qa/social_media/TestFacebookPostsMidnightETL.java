@@ -37,12 +37,12 @@ public class TestFacebookPostsMidnightETL {
         testLoad(sqlQueryForSource, sqlQueryForTarget, "Total counts: ");
         
         List<String> followUpListToSource = new ArrayList<String>();
-        followUpListToSource.add("select sum(reach) from RawImportedFacebookPostStatistics where date = curdate() - interval 2 day and data_collection_run = 1");
-        followUpListToSource.add("select sum(engagement) from RawImportedFacebookPostStatistics where date = curdate() - interval 2 day and data_collection_run = 1");
+        followUpListToSource.add("select coalesce(sum(reach), 0) from RawImportedFacebookPostStatistics where date = curdate() - interval 2 day and data_collection_run = 1");
+        followUpListToSource.add("select coalesce(sum(engagement), 0) from RawImportedFacebookPostStatistics where date = curdate() - interval 2 day and data_collection_run = 1");
    
         List<String> followUpListToTarget = new ArrayList<String>();
-        followUpListToTarget.add("select sum(reach) from FactFacebookPostStats where dim_date_id = (curdate() - interval 3 day) + 0");
-        followUpListToTarget.add("select sum(engagement) from FactFacebookPostStats where dim_date_id = (curdate() - interval 3 day) + 0");
+        followUpListToTarget.add("select coalesce(sum(reach), 0) from FactFacebookPostStats where dim_date_id = (curdate() - interval 3 day) + 0");
+        followUpListToTarget.add("select coalesce(sum(engagement), 0) from FactFacebookPostStats where dim_date_id = (curdate() - interval 3 day) + 0");
         
         List<String> metrics = new ArrayList<String>();
         metrics.add("Metric: reach");

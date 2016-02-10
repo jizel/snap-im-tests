@@ -54,6 +54,66 @@ Feature: Eventing_identity_module
     And Notification in session operation is "Update"
     And Notification in session id stands for customer in session on key "EVENTING_CUSTOMER"
     And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+    
+   Scenario: Eventing customer activated
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    	And The following customers exist with random address
+      	| companyName                | email            | code  | salesforceId             | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      	| Activate Eventing  company | aev1@tenants.biz | aev1t | salesforceid_del_event_1 | CZ00011111 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    	And Subscription with name "Test" for topic "Notifications.crud" is created
+    	And Customer with code "aev1t" is stored in session under key "EVENTING_CUSTOMER"
+    When Customer with code "aev1t" is activated
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+	    And Notification in session entity_type is "Customer"
+	    And Notification in session operation is "Activate"
+	    And Notification in session id stands for customer in session on key "EVENTING_CUSTOMER"
+	    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+    
+   Scenario: Eventing customer deactivated
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    And The following customers exist with random address
+      	| companyName              	   | email            | code  | salesforceId             | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      	| Deactivate Eventing  company | dev1@tenants.biz | dev1t | salesforceid_del_event_1 | CZ00011111 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    	And Subscription with name "Test" for topic "Notifications.crud" is created
+    	And Customer with code "dev1t" is stored in session under key "EVENTING_CUSTOMER"
+		And Customer with code "dev1t" is activated
+		And Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    When Customer with code "dev1t" is inactivated
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session	
+    	And Notification in session entity_type is "Customer"
+    	And Notification in session operation is "Deactivate"
+    	And Notification in session id stands for customer in session on key "EVENTING_CUSTOMER"
+    	And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+    
+   Scenario: Eventing property activated
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    	And The following properties exist with random address and billing address
+     	 | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      |
+     	 | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+    	And Property with code "act_prop_event" is stored in session under key "EVENTING_PROPERTY"
+    	And Subscription with name "Test" for topic "Notifications.crud" is created
+    When Property with code "act_prop_event" is activated
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    	And Notification in session entity_type is "Property"
+    	And Notification in session operation is "Activate"
+    	And Notification in session id stands for property in session on key "EVENTING_PROPERTY"
+    	And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+    
+  Scenario: Eventing property deactivated
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    	And The following properties exist with random address and billing address
+      	| salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      |
+      	| salesforceid_1 | p1_name      | dact_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+    	And Property with code "dact_prop_event" is stored in session under key "EVENTING_PROPERTY"
+    	And Subscription with name "Test" for topic "Notifications.crud" is created
+    	And Property with code "dact_prop_event" is activated
+    	And Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    When Property with code "dact_prop_event" is inactivated
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    	And Notification in session entity_type is "Property"
+    	And Notification in session operation is "Deactivate"
+    	And Notification in session id stands for property in session on key "EVENTING_PROPERTY"
+    	And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
 
   Scenario: Eventing property created
 
