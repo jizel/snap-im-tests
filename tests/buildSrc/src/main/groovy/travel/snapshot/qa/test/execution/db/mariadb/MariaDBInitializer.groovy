@@ -59,6 +59,7 @@ class MariaDBInitializer {
                 init(module)
             }
         }
+        this
     }
 
     /**

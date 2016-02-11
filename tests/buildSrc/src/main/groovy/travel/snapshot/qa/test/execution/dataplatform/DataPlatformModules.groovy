@@ -22,11 +22,11 @@ enum DataPlatformModules {
             new Builder()
                     .add(CONFIGURATION)
                     .add(IDENTITY)
-                    //.add(OTA_INTEGRATION)
-                    //.add(TWITTER)
-                    //.add(RATE_SHOPPER)
-                    //.add(WEB_PERFORMANCE)
-                    //.add(REVIEW)
+                    .add(OTA_INTEGRATION)
+                    .add(TWITTER)
+                    .add(RATE_SHOPPER)
+                    .add(WEB_PERFORMANCE)
+                    .add(REVIEW)
                     .build()
         }
     },

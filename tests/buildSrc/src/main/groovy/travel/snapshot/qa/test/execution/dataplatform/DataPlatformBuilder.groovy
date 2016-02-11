@@ -41,7 +41,7 @@ class DataPlatformBuilder {
      * @param dataPlatformModules modules to build
      */
     def forceBuild(DataPlatformModules dataPlatformModules) {
-        buildAll(dataPlatformModules.modules())
+        build(dataPlatformModules.modules())
     }
 
     /**
@@ -98,6 +98,27 @@ class DataPlatformBuilder {
         gradleBuild.execute().await()
 
         logger.info("Building of module ${module.path} has finished")
+    }
+
+    /**
+     * Builds whole data-platform project, regardless of previously added modules
+     *
+     * @param withoutTests
+     */
+    def buildProject(boolean withoutTests) {
+        logger.info("Building whole Data Platform " + withoutTests ? "without tests" : "")
+
+        CommandTool gradleBuild = Spacelift.task("gradle")
+                .parameters("--project-dir", dataPlatformPath)
+                .parameter("build")
+
+        if (withoutTests) {
+            gradleBuild.parameters("-x", "test")
+        }
+
+        gradleBuild.execute().await()
+
+        logger.info("Building of whole Data Platform has finished")
     }
 
     /**

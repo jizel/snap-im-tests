@@ -32,7 +32,7 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor dataPlatform(String dataPlatformPath) {
-        this.dataPlatformPath = dataPlatformPath
+        this.dataPlatformDir = dataPlatformPath
         this
     }
 
@@ -52,7 +52,7 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor build(DataPlatformModules modules) {
-        this.modules.addAll(modules.modules())
+        build(modules.modules())
         this
     }
 
@@ -62,12 +62,23 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor build(List<DataPlatformModule> modules) {
-        this.modules.addAll(modules)
+        for (DataPlatformModule module : modules) {
+            build(module)
+        }
         this
     }
 
-    DataPlatformBuildExecutor build(DataPlatformModule module) {
-        modules << module
+    /**
+     *
+     * @param module module to build
+     * @return this
+     */
+    DataPlatformBuildExecutor build(DataPlatformModule... modules) {
+        if (modules) {
+            for (DataPlatformModule module : modules) {
+                this.modules << module
+            }
+        }
         this
     }
 
@@ -104,6 +115,11 @@ class DataPlatformBuildExecutor {
         def dataPlatform = new File(workspace, dataPlatformDir).absolutePath
 
         def dataPlatformBuilder = new DataPlatformBuilder(dataPlatform, withoutTests)
+
+        if (modules.size() == 1 && modules.get(0) == DataPlatformModule.PROJECT) {
+            dataPlatformBuilder.buildProject(withoutTests)
+            return this
+        }
 
         if (force) {
             dataPlatformBuilder.forceBuild(modules)

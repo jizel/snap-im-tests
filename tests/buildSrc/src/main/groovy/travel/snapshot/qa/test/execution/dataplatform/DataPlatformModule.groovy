@@ -9,6 +9,8 @@ import travel.snapshot.qa.test.execution.db.mariadb.MariaDBModuleConfiguration
  */
 enum DataPlatformModule {
 
+    PROJECT,
+
     // Tomcat modules
 
     CONFIGURATION("ConfigurationModule", "ConfigurationModule/build/libs/ConfigurationModule-1.0.war"),
@@ -21,10 +23,10 @@ enum DataPlatformModule {
 
     // Tomcat service API modules
 
-    INSTAGRAM_SERVICE_API("Integration/Instagram/ServiceApi", "Integration/Instagram/ServiceApi/build/libs/InstagramAnalyticsApi-1.0-SNAPSHOT.war"),
-    FACEBOOK_SERVICE_API("Integration/Facebook/ServiceApi", "Integration/Facebook/ServiceApi/build/libs/FacebookAnalyticsApi-1.0-SNAPSHOT.war"),
-    TWITTER_SERVICE_API("Integration/Twitter/ServiceApi", "Integration/Twitter/ServiceApi/build/libs/TwitterAnalyticsApi-1.0-SNAPSHOT.war"),
-    SOCIAL_MEDIA_API("Integration/SocialMediaApi", "Integration/SocialMediaApi/build/libs/SocialMediaAnalyticsApi-1.0-SNAPSHOT.war"),
+    INSTAGRAM_SERVICE_API("Integration:Instagram:ServiceApi", "Integration/Instagram/ServiceApi/build/libs/InstagramAnalyticsApi-1.0-SNAPSHOT.war"),
+    FACEBOOK_SERVICE_API("Integration:Facebook:ServiceApi", "Integration/Facebook/ServiceApi/build/libs/FacebookAnalyticsApi-1.0-SNAPSHOT.war"),
+    TWITTER_SERVICE_API("Integration:Twitter:ServiceApi", "Integration/Twitter/ServiceApi/build/libs/TwitterAnalyticsApi-1.0-SNAPSHOT.war"),
+    SOCIAL_MEDIA_API("Integration:SocialMediaApi", "Integration/SocialMediaApi/build/libs/SocialMediaAnalyticsApi-1.0-SNAPSHOT.war"),
 
     // Tomcat integrations
 
@@ -33,6 +35,8 @@ enum DataPlatformModule {
     String path
     String war
     List<ModuleDatabaseConfiguration> databaseConfigurations = []
+
+    DataPlatformModule() {}
 
     /**
      * Path to that module from the root of the repository is equal to its name.

@@ -8,7 +8,6 @@ import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
-import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
@@ -100,6 +99,10 @@ spacelift {
         platformStop(from: dataPlatform) {
             tests 'platformStop'
         }
+        platformBuild {
+            enabledInstallations (dataPlatformRepositories + 'gradle')
+            tests 'platformBuild'
+        }
         apiTests(from: dataPlatformTest) {
             tests 'apiTests'
         }
@@ -156,6 +159,12 @@ spacelift {
             with platform
             setup false
         }
+        platformBuild(from: DataPlatformTest) {
+            with platform
+            execute {
+                new DataPlatformBuildExecutor(workspace).build(DataPlatformModule.PROJECT).execute(true)
+            }
+        }
         apiTests(from: DataPlatformTest) {
             with platform
             init {
@@ -163,14 +172,15 @@ spacelift {
             }
             beforeTest {
                 new DataPlatformBuildExecutor(workspace)
-                        .build(DataPlatformModules.TOMCAT_MODULES)
+                        .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
                         .execute(forceDataPlatformBuild)
 
                 new MariaDBInitializer(workspace, platform)
                         .init(DataPlatformModule.IDENTITY)
                         .execute()
 
-                new DataPlatformDeployer(workspace, platform).deploy(DataPlatformModules.TOMCAT_MODULES).execute()
+                new DataPlatformDeployer(workspace, platform)
+                        .deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute()
             }
             execute {
             }

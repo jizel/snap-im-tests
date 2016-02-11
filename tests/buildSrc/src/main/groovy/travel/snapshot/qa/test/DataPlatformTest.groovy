@@ -42,7 +42,7 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
         super(testName, parent)
 
         dataProvider.from({ data.resolve() as ArrayList })
-        beforeSuite.from({ init.resolve(); orchestrationSetup() })
+        beforeSuite.from({ orchestrationSetup() })
         afterSuite.from({ orchestrationTeardown() })
     }
 
@@ -148,7 +148,18 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
         new DataPlatformTest(name, this)
     }
 
+    private def isInteractingWithDocker() {
+        ! new GradleSpaceliftDelegate().project().selectedInstallations.findAll { it['name'].startsWith("docker") }.isEmpty()
+    }
+
     private def orchestrationSetup() {
+
+        if (!isInteractingWithDocker()) {
+            return
+        }
+
+        init.resolve();
+
         def orchestration = with.resolve()
 
         if (orchestration && setup.resolve()) {
@@ -158,6 +169,10 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
     }
 
     private def orchestrationTeardown() {
+
+        if (!isInteractingWithDocker()) {
+            return
+        }
 
         def orchestration = with.resolve()
 

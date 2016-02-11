@@ -13,7 +13,7 @@ class PropertyResolver {
 
     private static final int DEFAULT_VM_MEMORY_SIZE = 3072
 
-    private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOY_OR_REDEPLOY
+    private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOYORREDEPLOY
 
     static def resolveDockerMode() {
         def mode = System.getProperty("dockerMode", DockerMode.HOST.toString())
@@ -91,7 +91,7 @@ class PropertyResolver {
 
     /**
      *
-     * @return resolved deployment strategy, when not set on command line, default to DEPLOY_OR_REDEPLOY
+     * @return resolved deployment strategy, when not set on command line, default to DEPLOYORREDEPLOY
      */
     static DeploymentStrategy resolveTomcatDeploymentStrategy() {
 

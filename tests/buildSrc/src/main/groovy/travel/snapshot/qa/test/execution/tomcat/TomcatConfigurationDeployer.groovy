@@ -22,7 +22,7 @@ class TomcatConfigurationDeployer {
 
     def deploy() {
 
-        if (PropertyResolver.resolveDockerMode() != DockerMode.MACHINE) {
+        if (PropertyResolver.resolveDockerMode() != DockerMode.MACHINE.toString()) {
             return
         }
 

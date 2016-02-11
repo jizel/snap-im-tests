@@ -5,15 +5,15 @@ enum DeploymentStrategy {
     /**
      * If module is already deployed, whole deployment fails.
      */
-    DEPLOY_OR_FAIL,
+    DEPLOYORFAIL,
 
     /**
      * If such module is already deployed, that deployment is skipped.
      */
-    DEPLOY_OR_SKIP,
+    DEPLOYORSKIP,
 
     /**
      * If such module is already deployed - it is undeployed and deployed again - otherwise it is just deployed.
      */
-    DEPLOY_OR_REDEPLOY;
+    DEPLOYORREDEPLOY;
 }

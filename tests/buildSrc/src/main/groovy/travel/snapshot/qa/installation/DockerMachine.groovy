@@ -146,8 +146,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         // this is set here to "/home/docker/configuration/tomcat" but that directory will be in virtual machine so we
         // need to be sure that it exists
 
-        DockerInteraction.execute("rm -rf /home/docker/configuration")
-        DockerInteraction.execute("mkdir -p /home/docker/configuration")
+        DockerInteraction.execute("mkdir -p /home/docker/configuration", 0, 1)
 
         System.setProperty("arquillian.xml.data.tomcat.config.dir", "/home/docker/configuration/tomcat")
     }

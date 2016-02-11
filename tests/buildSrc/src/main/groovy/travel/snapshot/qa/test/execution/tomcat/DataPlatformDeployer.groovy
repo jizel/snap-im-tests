@@ -10,6 +10,7 @@ import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Timer
 
 /**
  * Deploys modules (wars) to Tomcat instance.
@@ -62,6 +63,7 @@ class DataPlatformDeployer {
                 deploy(module)
             }
         }
+        this
     }
 
     /**
@@ -109,31 +111,32 @@ class DataPlatformDeployer {
             boolean isDeployed = manager.isDeployed(module.getDeploymentContext())
 
             switch (deploymentStrategy) {
-                case DeploymentStrategy.DEPLOY_OR_FAIL:
+                case DeploymentStrategy.DEPLOYORFAIL:
                     if (isDeployed) {
                         logger.info(String.format("Deployment of %s is already deployed and you have set " +
-                                "DEPLOY_OR_FAIL deployment strategy.", module.getDeploymentContext()))
+                                "'deploy or fail' deployment strategy.", module.getDeploymentContext()))
                         throw new ContainerDeploymentException(String.format("Unable to deploy %s. Such module is already deployed.", module))
                     }
                     deployModule(module, manager)
                     break
-                case DeploymentStrategy.DEPLOY_OR_REDEPLOY:
+                case DeploymentStrategy.DEPLOYORREDEPLOY:
                     if (isDeployed) {
                         logger.info(String.format("Deployment of %s is already deployed and you have set " +
-                                "DEPLOY_OR_REDEPLOY deployment strategy. This deployment is going to be undeployed and " +
+                                "'deploy or redeploy' deployment strategy. This deployment is going to be undeployed and " +
                                 "deployed again.", module.getDeploymentContext()))
                         undeployModule(module, manager)
                     }
                     deployModule(module, manager)
                     break
-                case DeploymentStrategy.DEPLOY_OR_SKIP:
+                case DeploymentStrategy.DEPLOYORSKIP:
                     if (isDeployed) {
                         logger.info(String.format("Deployment of %s is already deployed and you have set " +
-                                "DEPLOY_OR_SKIP deployment strategy. This deployment is going to be skipped",
+                                "'deploy or skip' deployment strategy. This deployment is going to be skipped.",
                                 module.getDeploymentContext()))
                         break
                     }
                     deployModule(module, manager)
+                    break
                 default:
                     throw new IllegalStateException(String.format("Unable to resolve deployment strategy %s.", deploymentStrategy.name()))
             }
@@ -149,19 +152,31 @@ class DataPlatformDeployer {
             throw new IllegalStateException(String.format("Deployment file %s does not exist.", deployment.absolutePath))
         }
 
+        Timer timer = new Timer()
+
         logger.info("Deploying of {} module started.", module.getDeploymentContext())
+
+        timer.start()
 
         manager.deploy(deployment.absolutePath)
 
-        logger.info("Deploying of {} module finished.", module.getDeploymentContext())
+        timer.stop()
+
+        logger.info("Deploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
     }
 
     private def undeployModule(DataPlatformModule module, TomcatManager manager) {
 
+        Timer timer = new Timer()
+
         logger.info("Undeploying of {} module started.", module.getDeploymentContext())
+
+        timer.start()
 
         manager.undeploy(module.war)
 
-        logger.info("Undeploying of {} module finished.", module.getDeploymentContext())
+        timer.stop()
+
+        logger.info("Undeploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
     }
 }
