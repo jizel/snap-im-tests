@@ -10,6 +10,7 @@ import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.util.container.DockerContainer
+import travel.snapshot.qa.util.container.DockerIPLogger
 
 class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> implements Test {
 
@@ -166,6 +167,8 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
             orchestration.initDockerManagers()
             orchestration.start()
         }
+
+        DockerIPLogger.log(orchestration.get())
     }
 
     private def orchestrationTeardown() {
