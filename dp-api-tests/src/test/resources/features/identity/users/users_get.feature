@@ -6,6 +6,7 @@ Feature: Users_get
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
 
   Scenario: Getting user
     When User with username "default1" is got
@@ -21,6 +22,15 @@ Feature: Users_get
     And Body contains entity with attribute "email" value "def1@snapshot.travel"
     And Body contains entity with attribute "timezone" value "Europe/Prague"
     And Body contains entity with attribute "culture" value "cs-CZ"
+
+  Scenario: Get token, positive scenario, valid user with valid password
+    Given The password of user "default3" is "Password01"
+    When Get token for user "default3" with password "Password01"
+    Then Response code is "200"
+
+  Scenario: Get token, negative scenario, valid user with invalid password
+    When Get token for user "default3" with password "NonValidPassword01"
+    Then Response code is "403"
 
   Scenario: Getting user with etag
     When User with username "default1" is got with etag

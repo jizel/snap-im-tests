@@ -21,6 +21,7 @@ import static com.jayway.restassured.RestAssured.given;
 public class OAuthSteps extends BasicSteps{
 
     private static final String BASE_PATH__OAUTH = "/oauth/authorize";
+    private static final String OAUTH_PARAMETER_NAME = "access_token";
     private static final String OAUTH_CODE = "s24fet6yhd7";
     
     public OAuthSteps() {
@@ -39,9 +40,10 @@ public class OAuthSteps extends BasicSteps{
         }};
 
         spec.parameters(queryParams);
-        String token = given().spec(spec).get().getBody().asString();
+        Response response = given().spec(spec).get();
+        setSessionResponse(response);
 
-        Serenity.setSessionVariable();
+        setSessionVariable(OAUTH_PARAMETER_NAME, response.getBody().asString());
 
     }
 
