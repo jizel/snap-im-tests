@@ -48,6 +48,9 @@ spacelift {
         dockerMachine {
             value PropertyResolver.resolveDockerMachine()
         }
+        dockerMachineMemorySize {
+            value PropertyResolver.resolveDockerMachineMemorySize()
+        }
         dockerMode {
             value PropertyResolver.resolveDockerMode()
         }
@@ -78,6 +81,9 @@ spacelift {
         }
         tomcatSpringConfigDirectory {
             value PropertyResolver.resolveTomcatSpringConfigDirectory()
+        }
+        tomcatDeploymentStrategy {
+            value PropertyResolver.resolveTomcatDeploymentStrategy().toString()
         }
     }
 

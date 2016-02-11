@@ -1,5 +1,7 @@
 package travel.snapshot.qa.test
 
+import com.github.dockerjava.api.InternalServerErrorException
+import org.arquillian.cube.spi.CubeControlException
 import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
@@ -7,6 +9,7 @@ import org.arquillian.spacelift.gradle.Test
 import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.manager.ConnectionMode
+import travel.snapshot.qa.util.container.DockerContainer
 
 class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> implements Test {
 
@@ -49,6 +52,27 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
         try {
             logger.info(":test:${name} before suite execution")
             beforeSuite.resolve()
+        }
+        catch (CubeControlException e) {
+            Throwable cause = e.getCause()
+            if (cause instanceof InternalServerErrorException) {
+
+                def m = cause.getMessage() =~ /.* address already in use$/
+
+                if (m) {
+                    List<String> containers = new GradleSpaceliftDelegate().project().spacelift.configuration['serviceInstallations'].value
+                    DockerContainer.removeContainers("Created", containers)
+                    DockerContainer.removeContainers("Running", containers)
+
+                    logger.error(cause.getMessage())
+                    logger.error("Try to shut down services you are running locally in order not to block services " +
+                            "from binding to already bound ports by them.")
+
+                    System.exit(1)
+                }
+
+                throw e
+            }
         }
         catch (Exception e) {
             logger.error(":test:${name} failed before suite phase: ${e.getMessage()}")

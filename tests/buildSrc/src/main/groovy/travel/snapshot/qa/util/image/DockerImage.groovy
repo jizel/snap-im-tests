@@ -6,6 +6,7 @@ import org.arquillian.spacelift.process.ProcessResult
 class DockerImage {
 
     /**
+     * Parses images to model classes - executes 'docker images' command internally.
      *
      * @return locally installed images
      */
@@ -15,7 +16,7 @@ class DockerImage {
     }
 
     /**
-     * Installs images from registry
+     * Installs images from registry - executes 'docker pull' command internally
      *
      * @param images images to download
      */

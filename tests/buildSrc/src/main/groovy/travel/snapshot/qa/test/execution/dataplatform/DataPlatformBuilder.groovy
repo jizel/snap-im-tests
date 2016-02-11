@@ -14,7 +14,7 @@ class DataPlatformBuilder {
 
     final String dataPlatformPath
 
-    final boolean withoutTests = true
+    final boolean withoutTests
 
     /**
      *

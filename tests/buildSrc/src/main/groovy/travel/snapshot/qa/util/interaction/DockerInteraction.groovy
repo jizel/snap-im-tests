@@ -54,7 +54,7 @@ class DockerInteraction {
             scp.parameter("-r")
         }
 
-        logger.info("copying from '{}' to '{}' {}", from, to, recursively ? "recursively" : "")
+        logger.info("copying from '{}' to '{}' {}", from, to, recursively ?: "")
 
         scp.parameter(from).parameter(to).execute().await()
     }

@@ -1,6 +1,7 @@
 package travel.snapshot.qa.util.container
 
 import org.arquillian.spacelift.Spacelift
+import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.util.PropertyResolver
 
 class DockerContainer {
@@ -15,7 +16,7 @@ class DockerContainer {
      * @return
      */
     static def removeContainers(List containers) {
-        if (PropertyResolver.resolveConnectionMode() == "STARTANDSTOP") {
+        if (PropertyResolver.resolveConnectionMode() == ConnectionMode.STARTANDSTOP.name()) {
             removeContainers("Running", containers)
         }
         // when there is other connection mode then STARTANDSTOP (STARTORCONNECT or STARTORCONNECTANDLEAVE)

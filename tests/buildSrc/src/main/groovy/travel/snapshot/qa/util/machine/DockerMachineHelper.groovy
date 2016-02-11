@@ -2,6 +2,7 @@ package travel.snapshot.qa.util.machine
 
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.process.ProcessResult
+import travel.snapshot.qa.util.PropertyResolver
 
 class DockerMachineHelper {
 
@@ -22,7 +23,7 @@ class DockerMachineHelper {
      * @return result of the execution
      */
     static ProcessResult start(String machine) {
-        Spacelift.task("docker-machine").parameters("start", machine).shouldExitWith(0, 1).execute().await()
+        Spacelift.task("docker-machine").parameters("start", machine).execute().await()
     }
 
     /**
@@ -46,19 +47,18 @@ class DockerMachineHelper {
     }
 
     /**
-     * Creates machine of given name.
+     * Creates machine of given name. Amount of memory in MB to dedicate for VM can be set by
+     * 'dockerMachineMemorySize' system property and by default it is set to '3072'
      *
      * @param machine machine to create
      * @return result of the execution
      */
     static ProcessResult create(String machineName) {
 
-        // do we want this to be configurable?
-
         Spacelift.task("docker-machine")
                 .parameter("create")
                 .parameter("--driver=virtualbox")
-                .parameter("--virtualbox-memory=3072")
+                .parameter("--virtualbox-memory=${PropertyResolver.resolveDockerMachineMemorySize()}")
                 .parameter("--virtualbox-cpu-count=2")
                 .parameter(machineName)
                 .execute()

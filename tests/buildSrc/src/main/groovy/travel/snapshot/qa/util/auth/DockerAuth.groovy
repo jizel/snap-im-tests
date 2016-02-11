@@ -9,7 +9,7 @@ import org.arquillian.spacelift.process.ProcessResult
 class DockerAuth {
 
     /**
-     * Authenticates against Docker repository
+     * Authenticates against Docker repository - executes 'docker login' internally
      *
      * @param password password for login Docker repository
      * @param username username for login to Docker repository

@@ -2,6 +2,7 @@ package travel.snapshot.qa.util
 
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
+import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
 class PropertyResolver {
 
@@ -10,11 +11,15 @@ class PropertyResolver {
      */
     private static final String DOCKER_REGISTRY_PASSWORD = "aqGG86d1Yf3Y"
 
-    static def resolveDockerMode() {
-        def mode = System.getProperty("dockerMode", "host")
+    private static final int DEFAULT_VM_MEMORY_SIZE = 3072
 
-        if (mode != "host" && mode != "machine") {
-            mode = "host"
+    private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOY_OR_REDEPLOY
+
+    static def resolveDockerMode() {
+        def mode = System.getProperty("dockerMode", DockerMode.HOST.toString())
+
+        if (mode != DockerMode.HOST.toString() && mode != DockerMode.MACHINE.toString()) {
+            mode = DockerMode.HOST.toString()
         }
 
         mode
@@ -65,5 +70,39 @@ class PropertyResolver {
 
     static def resolveRepositoryFetchSkip() {
         Boolean.parseBoolean(System.getProperty("repositorySkipFetch"))
+    }
+
+    /**
+     *
+     * @return size of memory for VM in MB, when not set on command line, defaults to 3072
+     */
+    static def resolveDockerMachineMemorySize() {
+
+        int memory = DEFAULT_VM_MEMORY_SIZE
+
+        try {
+            memory = Integer.parseInt(System.getProperty("dockerMachineMemorySize", "3072"))
+        } catch (NumberFormatException ex) {
+
+        }
+
+        memory.toString()
+    }
+
+    /**
+     *
+     * @return resolved deployment strategy, when not set on command line, default to DEPLOY_OR_REDEPLOY
+     */
+    static DeploymentStrategy resolveTomcatDeploymentStrategy() {
+
+        DeploymentStrategy deploymentStrategy = DEFAULT_DEPLOYMENT_STRATEGY
+
+        try {
+            deploymentStrategy = DeploymentStrategy.valueOf(System.getProperty("tomcatDeploymentStrategy", DEFAULT_DEPLOYMENT_STRATEGY.toString()))
+        } catch (Exception ex) {
+            // intentionally empty
+        }
+
+        deploymentStrategy
     }
 }

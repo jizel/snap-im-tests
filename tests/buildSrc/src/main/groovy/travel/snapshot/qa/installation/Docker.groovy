@@ -8,6 +8,7 @@ import org.arquillian.spacelift.gradle.Installation
 import org.arquillian.spacelift.task.TaskRegistry
 import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
+import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.DockerToolsRegister
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
@@ -111,7 +112,7 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
 
         def selectedProfile = new GradleSpaceliftDelegate().project().selectedProfile['name']
 
-        if (PropertyResolver.resolveDockerMode() == "host" && selectedProfile != "platformStop") {
+        if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && selectedProfile != "platformStop") {
 
             // registering tools in registerTools method in this class is too late for us
             // tools are registered after the installation has completed

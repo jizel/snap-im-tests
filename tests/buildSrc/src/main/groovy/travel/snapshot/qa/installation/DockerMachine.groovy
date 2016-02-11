@@ -7,6 +7,7 @@ import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.Installation
 import org.arquillian.spacelift.task.TaskRegistry
 import org.slf4j.Logger
+import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.DockerToolsRegister
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
@@ -87,7 +88,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
     @Override
     void install(Logger logger) {
 
-        if (PropertyResolver.resolveDockerMode() != "machine") {
+        if (PropertyResolver.resolveDockerMode() != DockerMode.MACHINE.toString()) {
             logger.info(":install:${name} Skipping, did not meet preconditions.")
             return
         }

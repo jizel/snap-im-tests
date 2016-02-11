@@ -3,6 +3,7 @@ package travel.snapshot.qa.test.execution.tomcat
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.interaction.DockerInteraction
 
@@ -21,7 +22,7 @@ class TomcatConfigurationDeployer {
 
     def deploy() {
 
-        if (PropertyResolver.resolveDockerMode() != "machine") {
+        if (PropertyResolver.resolveDockerMode() != DockerMode.MACHINE) {
             return
         }
 
