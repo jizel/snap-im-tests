@@ -4,7 +4,6 @@ apply plugin: 'maven'
 apply plugin: 'net.researchgate.release'
 
 group 'travel.snapshot.qa.manager'
-version '1.0.0-SNAPSHOT'
 
 def versions = [
         // core
