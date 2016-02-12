@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -12,6 +13,7 @@ import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
+import travel.snapshot.dp.qa.steps.review.ReviewMultipropertyCustomerSteps;
 
 import java.util.List;
 
@@ -31,6 +33,18 @@ public class CustomerStepdefs {
     @Steps
     private UsersSteps usersSteps;
 
+    @Steps
+    private ReviewMultipropertyCustomerSteps reviewMultipropertyCustomerSteps;
+
+    @Given("^Set access token from session for customer steps defs$")
+    public void setAccessTokenFromSessionForCustomerStepsDefs() throws Throwable {
+        customerSteps.setAccessToken();
+        propertySteps.setAccessToken();
+        usersSteps.setAccessToken();
+        reviewMultipropertyCustomerSteps.setAccessToken();
+    }
+
+
     @Given("^The following customers exist with random address$")
     public void The_following_tenants_exist(List<Customer> customers) throws Throwable {
         customerSteps.followingCustomersExist(customers);
@@ -38,7 +52,7 @@ public class CustomerStepdefs {
 
     @When("^A customer from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
     public void customer_from_country_region_code_email_is_created(String country, String region, String code,
-            String email) {
+                                                                   String email) {
         Address address = new Address();
         Customer customer = new Customer();
         address.setAddressLine1("someAddress");
@@ -56,7 +70,7 @@ public class CustomerStepdefs {
 
     @When("^A customer from country \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" vatId \"([^\"]*)\" company nqma \"([^\"]*)\"is created$")
     public void a_customer_from_country_with_code_and_email_is_created_with_proper_vatID(String country, String code,
-            String email, String vatId, String companyName) {
+                                                                                         String email, String vatId, String companyName) {
         Address address = new Address();
         Customer customer = new Customer();
         address.setAddressLine1("someAddress");
@@ -79,15 +93,14 @@ public class CustomerStepdefs {
 
     @Given("^Relation between property with code \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
     public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
-            String customerCode, String type, String validFrom, String validTo) throws Throwable {
+                                                                                                    String customerCode, String type, String validFrom, String validTo) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(p, customerCode, type, validFrom, validTo);
-
     }
 
     @Given("^Relation between user with username \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
     public void Relation_between_user_with_username_and_customer_with_code_exists_with_isPrimary(String username,
-            String customerCode, String isPrimary) throws Throwable {
+                                                                                                 String customerCode, String isPrimary) throws Throwable {
         User user = usersSteps.getUserByUsername(username);
         customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerCode, isPrimary);
     }
@@ -173,9 +186,9 @@ public class CustomerStepdefs {
 
     @When("^Property with code \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
     public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode,
-            String customerCode, @Transform(NullEmptyStringConverter.class) String type,
-            @Transform(NullEmptyStringConverter.class) String dateFrom,
-            @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
+                                                                                    String customerCode, @Transform(NullEmptyStringConverter.class) String type,
+                                                                                    @Transform(NullEmptyStringConverter.class) String dateFrom,
+                                                                                    @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (p == null) {
             customerSteps.propertyIsAddedToCustomerWithTypeFromTo(BasicStepDefs.NONEXISTENT_ID, customerCode, type,
@@ -189,7 +202,7 @@ public class CustomerStepdefs {
 
     @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\"$")
     public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerCode,
-            String type) throws Throwable {
+                                                                            String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsgotForCustomerWithType(p, customerCode, type);
     }
@@ -211,7 +224,7 @@ public class CustomerStepdefs {
 
     @When("^User with username \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
     public void User_with_username_is_added_to_customer_with_code_with_isPrimary(String username, String customerCode,
-            String isPrimary) throws Throwable {
+                                                                                 String isPrimary) throws Throwable {
         User u = usersSteps.getUserByUsername(username);
         customerSteps.userIsAddedToCustomerWithIsPrimary(u, customerCode, isPrimary);
     }
@@ -284,7 +297,7 @@ public class CustomerStepdefs {
 
     @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode,
-            String customerCode, String type, String fieldName, String value) throws Throwable {
+                                                                                               String customerCode, String type, String fieldName, String value) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsUpdateForCustomerWithType(p, customerCode, type, fieldName, value);
     }
@@ -298,7 +311,7 @@ public class CustomerStepdefs {
 
     @When("^Property with code \"([^\"]*)\" from customer with code \"([^\"]*)\" is got with type \"([^\"]*)\" with etag$")
     public void Property_with_code_from_customer_with_code_is_got_with_type_with_etag(String propertyCode,
-            String customerCode, String type) throws Throwable {
+                                                                                      String customerCode, String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsgotForCustomerWithTypeWithEtag(p, customerCode, type);
     }
@@ -354,7 +367,7 @@ public class CustomerStepdefs {
 
     @Then("^Field \"([^\"]*)\" has value \"([^\"]*)\" for property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\"$")
     public void Field_has_value_for_property_with_code_for_customer_with_code_with_type(String fieldName, String value,
-            String propertyCode, String customerCode, String type) throws Throwable {
+                                                                                        String propertyCode, String customerCode, String type) throws Throwable {
         Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode,
                 type);
@@ -364,4 +377,6 @@ public class CustomerStepdefs {
     public void all_customers_are_active() throws Throwable {
         customerSteps.allCustomersAreActive();
     }
+
+
 }

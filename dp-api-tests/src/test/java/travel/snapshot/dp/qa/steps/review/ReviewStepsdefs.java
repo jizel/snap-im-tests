@@ -2,7 +2,7 @@ package travel.snapshot.dp.qa.steps.review;
 
 import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
@@ -11,6 +11,7 @@ import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.review.model.Location;
 import travel.snapshot.dp.qa.model.review.model.Property;
 import travel.snapshot.dp.qa.serenity.analytics.ReviewSteps;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 
 import java.util.List;
 
@@ -28,6 +29,23 @@ public class ReviewStepsdefs {
     @Steps
     private ReviewTravelersSteps reviewTravelersSteps;
 
+    @Steps
+    private ReviewMultipropertyCustomerSteps reviewMultipropertyCustomerSteps;
+
+    @Steps
+    private ReviewMultipropertyPropertySetSteps reviewMultipropertyPropertySetSteps;
+
+    @Steps
+    private ReviewMultipropertySinglePropertySteps reviewMultipropertySinglePropertySteps;
+
+    @Given("^Set access token for review steps defs$")
+    public void setAccessTokenForReviewStepsDefs() throws Throwable {
+        reviewSteps.setAccessToken();
+        reviewLocationSteps.setAccessToken();
+        reviewMultipropertyCustomerSteps.setAccessToken();
+        reviewMultipropertyPropertySetSteps.setAccessToken();
+        reviewMultipropertySinglePropertySteps.setAccessToken();
+    }
 
     @When("^Get trip advisor \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
@@ -162,5 +180,20 @@ public class ReviewStepsdefs {
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for number of reviews$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForNumberOfReviews(String filename) throws Throwable {
         reviewTravelersSteps.checkFileAgainstResponseTravellersNumberOfReviews("/messages/review/travellers"+filename);
+    }
+
+    @When("^Get \"([^\"]*)\" for list of properties for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" and granularity \"([^\"]*)\"$")
+    public void getForListOfPropertiesForCustomerWithSinceUntilAndGranularity(String metric, String customerCode, String since, String until, String granularity) throws Throwable {
+        reviewMultipropertyCustomerSteps.getCustomerPropertiesMetric(metric, customerCode, since, until, granularity);
+    }
+
+    @When("^Get \"([^\"]*)\" for statistics agregated for property set \"([^\"]*)\" for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" and granularity \"([^\"]*)\"$")
+    public void getForStatisticsAgregatedForPropertySetForCustomerWithSinceUntilAndGranularity(String metric, String pSetCode, String customer, String since, String until, String granularity) throws Throwable {
+        reviewMultipropertyPropertySetSteps.getAggregatedStatisticsForPropertySet(metric, pSetCode, customer, since, until, granularity);
+    }
+
+    @When("^Get \"([^\"]*)\" for single property \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" and granularity \"([^\"]*)\"$")
+    public void getForSinglePropertyWithSinceUntilAndGranularity(String metric, String property_id, String since, String until, String granularity) throws Throwable {
+        reviewMultipropertySinglePropertySteps.getStatisticsForSingleProperty(metric, property_id, since, until, granularity);
     }
 }

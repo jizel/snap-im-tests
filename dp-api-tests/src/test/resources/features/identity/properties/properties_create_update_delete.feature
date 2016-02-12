@@ -72,8 +72,8 @@ Feature: properties_create_update_delete
     Given Customer with code "c2t" is activated
     Given Customer with code "c3t" is activated
     Given Customer with code "c4t" is activated
-
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customers returned
