@@ -41,8 +41,7 @@ public class OAuthSteps extends BasicSteps {
         }};
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.parameters(queryParams);
-        Response response = requestSpecification.get();
-        setSessionResponse(response);
+        return requestSpecification.get();
     }
 
 }
