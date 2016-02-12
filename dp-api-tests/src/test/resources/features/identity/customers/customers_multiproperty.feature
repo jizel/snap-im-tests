@@ -19,6 +19,7 @@ Feature: DP returns all customer's property sets which are available to certain 
     Given The password of user "limited" is "Password01"
     Given The password of user "snapshot" is "Password01"
 
+
     Given Relation between user with username "everything" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "limited" and customer with code "c1t" exists with isPrimary "true"
 
@@ -36,6 +37,60 @@ Feature: DP returns all customer's property sets which are available to certain 
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
       | salesforceid_2 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
       | salesforceid_2 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | p5_name      | p5_code      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague |
+      | salesforceid_2 | p6_name      | p6_code      | http://www.snapshot.travel | p6@tenants.biz | true           | Europe/Prague |
+
+    Given Get token for user "snapshot" with password "Password01"
+
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p4_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p5_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p6_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+
+
+    #BUG: ordering not working if user owns property set, working just for snapshot user
+  Scenario Outline: Accessing customer's property_sets with everything user with each property in just one ps
+  Property set 1 and property set 2 properties are disjuncted, everything user has access just for properties from ps1
+
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with code "c1t" exists
+
+    Given Relation between property with code "p5_code" and property set with name "ps2_name" for customer with code "c1t" exists
+    Given Relation between property with code "p6_code" and property set with name "ps2_name" for customer with code "c1t" exists
+
+      #user everything should get properties from ps1
+    Given Relation between user with username "everything" and property with code "p1_code" exists
+    Given Relation between user with username "everything" and property with code "p2_code" exists
+    Given Relation between user with username "everything" and property with code "p3_code" exists
+    Given Relation between user with username "everything" and property with code "p4_code" exists
+
+      #limited should get only property set 2
+    Given Relation between user with username "limited" and property with code "p5_code" exists
+    Given Relation between user with username "limited" and property with code "p6_code" exists
+
+    Given Get token for user "<username>" with password "<password>"
+
+    When List of property sets for customer "c1t" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <count> customer property sets returned
+    And There are property sets with following names returned in order: <names>
+
+    Examples:
+      | username   | password   | count | names              | order             |
+      | snapshot   | Password01 | 2     | ps1_name, ps2_name | property_set_name |
+      | everything | Password01 | 1     | ps1_name           | /null             |
+      | everything | Password01 | 1     | ps1_name           | property_set_name |
+      | limited    | Password01 | 1     | ps2_name           | property_set_name |
+
+
+    #BUG - if property is in 2 property sets, then property sets are not returned back for user
+  Scenario Outline: Accessing customer's property_sets with everything user with one property in both sets
+  There are same properties in property set 1 and 2, everything user has access to all properties, both property sets should be returned
 
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with code "c1t" exists
@@ -45,44 +100,28 @@ Feature: DP returns all customer's property sets which are available to certain 
     Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with code "c1t" exists
     Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with code "c1t" exists
 
-    #limited should get only property set 2
-    Given Relation between user with username "limited" and property with code "p1_code" exists
-    Given Relation between user with username "limited" and property with code "p2_code" exists
-
-
-
-
-  Scenario: Accessing customer's property_sets should return only those user has access to (user taken from token)
-    #there is no connection user-property, so no propertySets should be returned
-    Given Set token to session, username "everything", password "Password01"
-    When Customer's Property sets for customer with code "c1t" are returned
-    Then There are 0 property sets returned
-
-  Scenario: Accessing customer's property_sets with snapshot user
-  #there is no connection user-property, but snapshot user should see all(2) propertySets
-    Given Set token to session, username "snapshot", password "Password01"
-    When Customer's Property sets for customer with code "c1t" are returned
-    Then There are 2 property sets returned
-
-  Scenario: Accessing customer's property_sets with user having access to all properties
+    #user everything should get both property sets
     Given Relation between user with username "everything" and property with code "p1_code" exists
     Given Relation between user with username "everything" and property with code "p2_code" exists
     Given Relation between user with username "everything" and property with code "p3_code" exists
     Given Relation between user with username "everything" and property with code "p4_code" exists
-    Given Set token to session, username "everything", password "Password01"
-    When Customer's Property sets for customer with code "c1t" are returned
-    Then There are 2 property sets returned
 
-  Scenario: Accessing customer's property_sets with limited user
     Given Relation between user with username "limited" and property with code "p1_code" exists
     Given Relation between user with username "limited" and property with code "p2_code" exists
-    Given Set token to session, username "limited", password "Password01"
-    When Customer's Property sets for customer with code "c1t" are returned
-    Then There are 2 property sets returned
 
+    Given Get token for user "<username>" with password "<password>"
 
+    When List of property sets for customer "c1t" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And There are <count> customer property sets returned
+    And There are property sets with following names returned in order: <names>
 
-    #user snapshot should get all property sets because he has access to all
-
+    Examples:
+      | username   | password   | count | names              | order             |
+      | snapshot   | Password01 | 2     | ps1_name, ps2_name | property_set_name |
+      | everything | Password01 | 2     | ps1_name, ps2_name | /null             |
+      | everything | Password01 | 2     | ps1_name, ps2_name | property_set_name |
+      | limited    | Password01 | 1     | ps2_name           | property_set_name |
 
 

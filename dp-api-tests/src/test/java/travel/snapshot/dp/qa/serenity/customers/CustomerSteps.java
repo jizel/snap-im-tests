@@ -68,7 +68,7 @@ public class CustomerSteps extends BasicSteps {
                 fail("Customer cannot be created");
             }
 
-            if(t.getIsActive() != null && t.getIsActive() != 0){
+            if (t.getIsActive() != null && t.getIsActive() != 0) {
                 activateCustomer(t.getCode());
             }
         });
@@ -366,8 +366,12 @@ public class CustomerSteps extends BasicSteps {
     public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(Property p, String customerCode, String type, String validFrom, String validTo) {
         Customer c = getCustomerByCodeInternal(customerCode);
 
+        //TODO FIX temporary turned off checking of already created relationship
+        /*setAccessTokenParamFromSession();
+
         CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         if (existingCustomerProperty != null) {
+
             Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
             String etag = customerPropertyResponseWithEtag.header(HEADER_ETAG);
 
@@ -379,12 +383,12 @@ public class CustomerSteps extends BasicSteps {
             if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("CustomerProperty cannot be modified");
             }
-        } else {
+        } else {*/
             Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("CustomerProperty cannot be created");
             }
-        }
+        //}
     }
 
     public void propertyIsUpdateForCustomerWithType(Property p, String customerCode, String type, String fieldName, String value) {
@@ -486,6 +490,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void listOfCustomerPropertySetsIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
         Customer c = getCustomerByCodeInternal(customerCode);
+        setAccessTokenParamFromSession();
         Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
