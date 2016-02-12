@@ -133,10 +133,9 @@ class DockerMachineHelper {
      * @return environment properties of specified machine
      */
     static Map getEnvironmentProperties(String machine) {
-        List<String> rawPropertyLines = Spacelift.task("docker-machine").parameters("env", machine)
+        List<String> rawPropertyLines = Spacelift.task(machine, DockerMachineEnvTask)
                 .execute()
                 .await()
-                .output()
                 .findAll { it -> it.startsWith("export") }
 
         Map environmentProperties = [:]

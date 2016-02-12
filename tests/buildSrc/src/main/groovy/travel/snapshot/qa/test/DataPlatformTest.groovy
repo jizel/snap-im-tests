@@ -166,9 +166,8 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
         if (orchestration && setup.resolve()) {
             orchestration.initDockerManagers()
             orchestration.start()
+            DockerIPLogger.log(orchestration.get())
         }
-
-        DockerIPLogger.log(orchestration.get())
     }
 
     private def orchestrationTeardown() {

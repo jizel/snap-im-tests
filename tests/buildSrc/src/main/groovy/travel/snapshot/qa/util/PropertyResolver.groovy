@@ -1,6 +1,5 @@
 package travel.snapshot.qa.util
 
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
@@ -16,7 +15,7 @@ class PropertyResolver {
     private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOYORREDEPLOY
 
     static def resolveDockerMode() {
-        def mode = System.getProperty("dockerMode", DockerMode.HOST.toString())
+        def mode = System.getProperty("dockerMode", DockerMode.MACHINE.toString())
 
         if (mode != DockerMode.HOST.toString() && mode != DockerMode.MACHINE.toString()) {
             mode = DockerMode.HOST.toString()
@@ -61,11 +60,7 @@ class PropertyResolver {
     }
 
     static def resolveTomcatSpringConfigDirectory() {
-
-        File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
-        File tomcatConfigurationDirectory = new File(rootDir, "configuration/tomcat")
-
-        System.getProperty("tomcatSpringConfigDirectory", tomcatConfigurationDirectory.getAbsolutePath())
+        System.getProperty("tomcatSpringConfigDirectory", "configuration/tomcat")
     }
 
     static def resolveRepositoryFetchSkip() {
