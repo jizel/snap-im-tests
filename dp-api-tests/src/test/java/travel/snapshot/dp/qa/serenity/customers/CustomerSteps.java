@@ -159,6 +159,7 @@ public class CustomerSteps extends BasicSteps {
 
     private CustomerProperty getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         //TODO add type to query
+        setAccessTokenParamFromSession();
         String filter = String.format("property_id==%s;type==%s", propertyId, type);
         CustomerProperty[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(CustomerProperty[].class);
         return Arrays.asList(customerProperties).stream().findFirst().orElse(null);
@@ -442,8 +443,8 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void propertyIsgotForCustomerWithType(Property p, String customerCode, String type) {
         Customer c = getCustomerByCodeInternal(customerCode);
+        setAccessTokenParamFromSession();
         CustomerProperty tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
-
         Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
         setSessionResponse(response);
     }

@@ -20,6 +20,17 @@ Feature: customers_properties_get
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
+    Given The following users exist
+      | userType | userName             | firstName | lastName      | email                                 | timezone      | culture |
+      | snapshot | defaultSnapshotuser  | Default   | SnapshotUser  | defaultSnapshotUser1@snapshot.travel  | Europe/Prague | cs-CZ   |
+
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c2t" exists with isPrimary "true"
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c3t" exists with isPrimary "true"
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c3t" exists with isPrimary "true"
+
+    Given The password of user "defaultSnapshotuser" is "Password01"
+    Given Get token for user "defaultSnapshotuser" with password "Password01"
 
   Scenario: Getting customerProperty
     When Property with code "p1_code" from customer with code "c1t" is got with type "anchor"
