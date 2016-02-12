@@ -31,6 +31,16 @@ Feature: Users_get
     Then Response code is "304"
     And Body is empty
 
+  # Failing scenario till DP-1090 will be solved
+  #Scenario: Get token for deleted user
+  #  Given The following users exist
+  #   | userType | userName | firstName | lastName | email                | timezone      | culture |
+  #    | customer | default5 | Default5  | User5    | def5@snapshot.travel | Europe/Prague | cs-CZ   |
+  # Given The password of user "default5" is "Password01"
+  #  Given User with userName "default5" is deleted
+  #  When Get token for user "default5" with password "Password01"
+  #  Then Response code is 401
+
   Scenario Outline: Checking error codes for work with tokens
     When Get token for user "<username>" with password "<password>"
     Then Response code is "<response_code>"
