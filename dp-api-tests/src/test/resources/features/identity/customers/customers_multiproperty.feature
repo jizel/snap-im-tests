@@ -7,21 +7,24 @@ Feature: DP returns all customer's property sets which are available to certain 
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
     Given The following users exist
-      | userType | userName   | firstName | lastName | email                | timezone      | culture |
+      | userType | userName   | firstName | lastName | email                  | timezone      | culture |
       #all properties availabe
-      | customer | everything | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | everything | Default1  | User1    | def1@snapshot.travel   | Europe/Prague | cs-CZ   |
       #some properties not available
-      | customer | limited    | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | limited    | Default2  | User2    | def2@snapshot.travel   | Europe/Prague | cs-CZ   |
       #user that has everything accessible
-      | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel   | Europe/Prague | cs-CZ   |
+      #random user with no access to properties
+      | customer   | random     | random    | random   | random@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The password of user "everything" is "Password01"
     Given The password of user "limited" is "Password01"
     Given The password of user "snapshot" is "Password01"
-
+    Given The password of user "random" is "Password01"
 
     Given Relation between user with username "everything" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "limited" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "random" and customer with code "c1t" exists with isPrimary "true"
 
     #Even though user "snapshot" do not have relation with customer he should have access to all property sets
     #Given Relation between user with username "snapshot" and customer with code "c1t" exists with isPrimary "true"
@@ -50,7 +53,6 @@ Feature: DP returns all customer's property sets which are available to certain 
     Given Relation between property with code "p6_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
 
 
-    #BUG: ordering not working if user owns property set, working just for snapshot user
   Scenario Outline: Accessing customer's property_sets with everything user with each property in just one ps
   Property set 1 and property set 2 properties are disjuncted, everything user has access just for properties from ps1
 
@@ -72,8 +74,10 @@ Feature: DP returns all customer's property sets which are available to certain 
     Given Relation between user with username "limited" and property with code "p5_code" exists
     Given Relation between user with username "limited" and property with code "p6_code" exists
 
-    Given Get token for user "<username>" with password "<password>"
+     #random user has no access to properties
 
+
+    Given Get token for user "<username>" with password "<password>"
     When List of property sets for customer "c1t" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
@@ -86,6 +90,7 @@ Feature: DP returns all customer's property sets which are available to certain 
       | everything | Password01 | 1     | ps1_name           | /null             |
       | everything | Password01 | 1     | ps1_name           | property_set_name |
       | limited    | Password01 | 1     | ps2_name           | property_set_name |
+      | random     | Password01 | 0     |                    | /null             |
 
 
     #BUG - if property is in 2 property sets, then property sets are not returned back for user
@@ -123,5 +128,6 @@ Feature: DP returns all customer's property sets which are available to certain 
       | everything | Password01 | 2     | ps1_name, ps2_name | /null             |
       | everything | Password01 | 2     | ps1_name, ps2_name | property_set_name |
       | limited    | Password01 | 1     | ps2_name           | property_set_name |
+      | random     | Password01 | 0     |                    | /null             |
 
 
