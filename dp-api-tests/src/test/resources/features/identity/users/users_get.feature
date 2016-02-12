@@ -29,6 +29,11 @@ Feature: Users_get
     Then Response code is "200"
 
   Scenario: Get token, negative scenario, valid user with invalid password
+    Given The password of user "default3" is "Password01"
+    When Get token for user "default3" with password "NonValidPassword01"
+    Then Response code is "403"
+
+  Scenario: Get token, negative scenario, valid user with empty password
     When Get token for user "default3" with password "NonValidPassword01"
     Then Response code is "403"
 
