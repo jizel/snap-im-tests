@@ -47,6 +47,7 @@ public final class ShrinkWrapUtil {
 
             root.delete();
             root.mkdirs();
+            root.deleteOnExit();
 
             final File deployment = new File(root, archive.getName());
             deployment.deleteOnExit();
