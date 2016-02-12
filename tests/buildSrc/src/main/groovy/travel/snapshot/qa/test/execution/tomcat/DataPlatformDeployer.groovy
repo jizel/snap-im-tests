@@ -1,5 +1,8 @@
 package travel.snapshot.qa.test.execution.tomcat
 
+import org.apache.commons.io.IOUtils
+import org.arquillian.spacelift.Spacelift
+import org.arquillian.spacelift.execution.Execution
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.DataPlatformTestOrchestration
@@ -156,11 +159,19 @@ class DataPlatformDeployer {
 
         logger.info("Deploying of {} module started.", module.getDeploymentContext())
 
+        TomcatContainerLogger loggerTask = Spacelift.task(orchestration.get(), TomcatContainerLogger).container(containerId)
+        // we do not await() here, this runs in background so we see Tomcat logs
+        Execution<Void> loggerExecution = loggerTask.execute()
+
         timer.start()
 
         manager.deploy(deployment.absolutePath)
 
         timer.stop()
+
+        // here we terminate logging task and close a logging stream
+        loggerExecution.terminate()
+        IOUtils.closeQuietly(loggerTask.getLogOutputStream())
 
         logger.info("Deploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
     }
@@ -171,11 +182,19 @@ class DataPlatformDeployer {
 
         logger.info("Undeploying of {} module started.", module.getDeploymentContext())
 
+        TomcatContainerLogger loggerTask = Spacelift.task(orchestration.get(), TomcatContainerLogger).container(containerId)
+        // we do not await() here, this runs in background so we see Tomcat logs
+        Execution<Void> loggerExecution = loggerTask.execute()
+
         timer.start()
 
         manager.undeploy(module.war)
 
         timer.stop()
+
+        // here we terminate logging task and close a logging stream
+        loggerExecution.terminate()
+        IOUtils.closeQuietly(loggerTask.getLogOutputStream())
 
         logger.info("Undeploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
     }
