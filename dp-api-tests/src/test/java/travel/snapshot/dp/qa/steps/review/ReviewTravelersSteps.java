@@ -2,13 +2,19 @@ package travel.snapshot.dp.qa.steps.review;
 
 import com.jayway.restassured.response.Response;
 
+import com.jayway.restassured.specification.RequestSpecification;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.model.review.model.Traveller;
 import travel.snapshot.dp.qa.model.review.model.TravellerAspectsOfBusiness;
 import travel.snapshot.dp.qa.model.review.model.TravellerNumberOfReviews;
 import travel.snapshot.dp.qa.model.review.model.TravellerOverall;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static junit.framework.TestCase.assertEquals;
 
@@ -20,7 +26,6 @@ public class ReviewTravelersSteps extends AnalyticsBaseSteps {
         super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_LOCATIONS);
-        spec.parameter("access_token", "aaa");
     }
 
     public TravellerOverall[] parseOverallTravelersFromSession() {
@@ -121,5 +126,30 @@ public class ReviewTravelersSteps extends AnalyticsBaseSteps {
             assertEquals(expectedStatistics[i].getType(), actualStatistics[i].getType());
             assertEquals(expectedStatistics[i].getNumberOfReviews(), actualStatistics[i].getNumberOfReviews());
         }
+    }
+
+    public void getDataForSpecificTraveler(String url, String traveler, String granularity, String propertyId, String since, String until) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
+
+        if (sinceDate != null) {
+            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (untilDate != null) {
+            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (granularity != null) {
+            requestSpecification.parameter("granularity", granularity);
+        }
+        if (propertyId != null) {
+            requestSpecification.parameter("property", propertyId);
+        }
+        if (traveler != null) {
+            requestSpecification.parameter("traveller", traveler);
+        }
+
+        Response response = requestSpecification.when().get(url);
+        setSessionResponse(response);
     }
 }

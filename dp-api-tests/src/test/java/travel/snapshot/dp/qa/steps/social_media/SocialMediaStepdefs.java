@@ -84,4 +84,14 @@ public class SocialMediaStepdefs {
     public void There_are_count_posts_returned(int count) throws Throwable {
         steps.numberOfEntitiesInResponse(Map.class, count);
     }
+
+    @Then("^Response since is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
+    public void responseSinceIsForGranularity(String value, String granularity) throws Throwable {
+        steps.dateFieldIs("since", value, granularity);
+    }
+
+    @Then("^Response until is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
+    public void responseUntilIsForGranularity(String value, String granularity) throws Throwable {
+        steps.dateFieldIs("until", value, granularity);
+    }
 }

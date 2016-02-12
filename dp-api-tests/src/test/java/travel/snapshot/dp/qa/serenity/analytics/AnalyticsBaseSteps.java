@@ -43,8 +43,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
 
-        RequestSpecification requestSpecification = given().spec(spec)
-                .parameter("access_token", "aaa");
+        RequestSpecification requestSpecification = given().spec(spec);
 
         if (StringUtils.isNotBlank(propertyId)) {
             requestSpecification.header("x-property", propertyId);

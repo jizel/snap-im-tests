@@ -2,11 +2,14 @@ package travel.snapshot.dp.qa.serenity.analytics;
 
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+import org.joda.time.DateTime;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -164,5 +167,30 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
         LocalDate actualDate = LocalDate.parse(response.getBody().path(fieldName));
         assertEquals(expectedDate, actualDate);
+    }
+
+    //this method trims dates to start/end of week/month depending on parameter and granularity
+    public void dateFieldIs(String fieldName, String value, String granularity) {
+        LocalDate expectedDate = StringUtil.parseDate(value);
+
+        if(fieldName.equals("until")) {
+            if (expectedDate.getDayOfWeek() != DayOfWeek.SUNDAY && granularity.equals("week")) {
+                expectedDate = expectedDate.minusDays(expectedDate.getDayOfWeek().getValue());
+            }
+            if (expectedDate.getDayOfMonth() != LocalDate.parse(expectedDate.toString()).lengthOfMonth() && granularity.equals("month")) {
+                expectedDate = expectedDate.minusDays(expectedDate.getDayOfMonth());
+            }
+        }
+
+        if(fieldName.equals("since")) {
+            if (expectedDate.getDayOfWeek() != DayOfWeek.MONDAY && granularity.equals("week")) {
+                expectedDate = expectedDate.plusDays(expectedDate.getDayOfWeek().getValue());
+            }
+            if (expectedDate.getDayOfMonth() != 1 && granularity.equals("month")) {
+                expectedDate = expectedDate.plusDays(LocalDate.parse(expectedDate.toString()).lengthOfMonth());
+                expectedDate = expectedDate.minusDays(expectedDate.getDayOfMonth()-1);
+            }
+        }
+        dateFieldIs(fieldName, expectedDate.toString());
     }
 }

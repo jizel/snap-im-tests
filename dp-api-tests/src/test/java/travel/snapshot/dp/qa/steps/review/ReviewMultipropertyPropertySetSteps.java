@@ -18,15 +18,14 @@ public class ReviewMultipropertyPropertySetSteps extends AnalyticsBaseSteps {
         spec.basePath(BASE_PATH_PROPERTY_SET);
     }
 
-    public Response getAggregatedStatisticsForPropertySet(String metric, String pSetCode, String customerCode, String since, String until, String granularity) {
+    public void getAggregatedStatisticsForPropertySet(String metric, String pSetCode, String customerCode, String since, String until, String granularity, String limit, String cursor) {
         CustomerSteps customerSteps = new CustomerSteps();
         Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
 
         PropertySetSteps propertySetSteps = new PropertySetSteps();
         PropertySet propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, c.getCustomerId());
 
-        Response customerProperties = getSecondLevelEntities(propertySet.getPropertySetId(), metric, null, null, null, null, null);
-
-        return customerProperties;
+        Response aggregatedPropertySet = getSecondLevelEntitiesForDates(propertySet.getPropertySetId(), metric, limit, cursor, since, until, granularity);
+        setSessionResponse(aggregatedPropertySet);
     }
 }

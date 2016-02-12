@@ -38,10 +38,10 @@ public class CustomerStepdefs {
 
     @Given("^Set access token from session for customer steps defs$")
     public void setAccessTokenFromSessionForCustomerStepsDefs() throws Throwable {
-        customerSteps.setAccessToken();
-        propertySteps.setAccessToken();
-        usersSteps.setAccessToken();
-        reviewMultipropertyCustomerSteps.setAccessToken();
+        customerSteps.setAccessTokenParamFromSession();
+        propertySteps.setAccessTokenParamFromSession();
+        usersSteps.setAccessTokenParamFromSession();
+        reviewMultipropertyCustomerSteps.setAccessTokenParamFromSession();
     }
 
 

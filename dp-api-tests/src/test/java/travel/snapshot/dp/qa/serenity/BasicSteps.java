@@ -26,11 +26,14 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -103,11 +106,6 @@ public class BasicSteps {
         if (StringUtils.isNotEmpty(token)) {
             spec.queryParam(OAUTH_PARAMETER_NAME, token);
         }
-    }
-
-    public void setAccessToken() {
-        String loadedToken = getSessionVariable("access_token");
-        spec.queryParam("access_token", loadedToken);
     }
 
     public String getRequestDataFromFile(InputStream inputStream) throws IOException {
@@ -331,6 +329,29 @@ public class BasicSteps {
         return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
+    protected Response getSecondLevelEntitiesForDates(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
+
+        if (sinceDate != null) {
+            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (untilDate != null) {
+            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (granularity != null) {
+            requestSpecification.parameter("granularity", granularity);
+        }
+        if (limit != null) {
+            requestSpecification.parameter("limit", limit);
+        }
+        if (cursor != null) {
+            requestSpecification.parameter("cursor", cursor);
+        }
+
+        return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+    }
 
     protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
         Map<String, Object> data = new HashMap<>();
