@@ -66,10 +66,10 @@ spacelift {
             value { [ "dataPlatformRepository", "dataPlatformQARepository" ] }
         }
         dataPlatformRepositoryCommit {
-            value PropertyResolver.resolveDataPlatformRespositoryCommit("master")
+            value PropertyResolver.resolveDataPlatformRespositoryCommit("origin/master")
         }
         dataPlatformQARepositoryCommit {
-            value PropertyResolver.resolveDataPlatformQARespositoryCommit("master")
+            value PropertyResolver.resolveDataPlatformQARespositoryCommit("origin/master")
         }
         repositorySkipFetch {
             value PropertyResolver.resolveRepositoryFetchSkip()
@@ -139,13 +139,12 @@ spacelift {
             repository "git@bitbucket.org:bbox/data-platform.git"
             commit dataPlatformRepositoryCommit
             home "data-platform"
-            commit dataPlatformRepositoryCommit
             skipFetch repositorySkipFetch
         }
         dataPlatformQARepository(from: GitBasedInstallation) {
             repository "git@bitbucket.org:bbox/dataplatformqa.git"
             commit dataPlatformQARepositoryCommit
-            home dataPlatformQARepositoryCommit
+            home "dataplatformqa"
             skipFetch repositorySkipFetch
         }
     }
