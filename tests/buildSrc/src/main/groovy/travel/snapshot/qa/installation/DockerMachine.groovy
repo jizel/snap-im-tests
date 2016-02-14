@@ -148,7 +148,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
 
         DockerInteraction.execute("mkdir -p /home/docker/configuration", 0, 1)
 
-        System.setProperty("arquillian.xml.data.tomcat.config.dir", "/home/docker/configuration/tomcat")
+        System.setProperty("arquillian.xml.data.tomcat.config.dir", "/home/docker/configuration")
     }
 
     @Override

@@ -1,5 +1,6 @@
 package travel.snapshot.qa.util
 
+import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
@@ -10,18 +11,25 @@ class PropertyResolver {
      */
     private static final String DOCKER_REGISTRY_PASSWORD = "aqGG86d1Yf3Y"
 
-    private static final int DEFAULT_VM_MEMORY_SIZE = 3072
+    private static final int DEFAULT_VM_MEMORY_SIZE = 3072 // in MB
 
     private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOYORREDEPLOY
 
-    static def resolveDockerMode() {
-        def mode = System.getProperty("dockerMode", DockerMode.MACHINE.toString())
+    private static final ConnectionMode DEFAULT_CONNECTION_MODE = ConnectionMode.STARTORCONNECTANDLEAVE
 
-        if (mode != DockerMode.HOST.toString() && mode != DockerMode.MACHINE.toString()) {
-            mode = DockerMode.HOST.toString()
+    private static final DockerMode DEFAULT_DOCKER_MODE = DockerMode.MACHINE
+
+    static def resolveDockerMode() {
+
+        DockerMode resolvedDockerMode
+
+        try {
+            resolvedDockerMode = DockerMode.valueOf(System.getProperty("dockerMode", DEFAULT_DOCKER_MODE.name()))
+        } catch (Exception ex) {
+            resolvedDockerMode = DEFAULT_DOCKER_MODE
         }
 
-        mode
+        resolvedDockerMode.name()
     }
 
     static def resolveDockerMachine() {
@@ -30,14 +38,12 @@ class PropertyResolver {
 
     static def resolveConnectionMode() {
 
-        def defaultConnectionMode = ConnectionMode.STARTANDSTOP
-
-        def resolvedConnectionMode
+        ConnectionMode resolvedConnectionMode
 
         try {
-            resolvedConnectionMode = ConnectionMode.valueOf(System.getProperty("connectionMode"))
+            resolvedConnectionMode = ConnectionMode.valueOf(System.getProperty("connectionMode", DEFAULT_CONNECTION_MODE.name()))
         } catch (Exception ex) {
-            resolvedConnectionMode = defaultConnectionMode
+            resolvedConnectionMode = DEFAULT_CONNECTION_MODE
         }
 
         resolvedConnectionMode.name()
@@ -60,7 +66,8 @@ class PropertyResolver {
     }
 
     static def resolveTomcatSpringConfigDirectory() {
-        System.getProperty("tomcatSpringConfigDirectory", "configuration/tomcat")
+        File root = new GradleSpaceliftDelegate().project().rootDir
+        System.getProperty("tomcatSpringConfigDirectory", new File(root, "configuration").absolutePath)
     }
 
     static def resolveRepositoryFetchSkip() {
@@ -73,12 +80,12 @@ class PropertyResolver {
      */
     static def resolveDockerMachineMemorySize() {
 
-        int memory = DEFAULT_VM_MEMORY_SIZE
+        int memory
 
         try {
             memory = Integer.parseInt(System.getProperty("dockerMachineMemorySize", "3072"))
         } catch (NumberFormatException ex) {
-
+            memory = DEFAULT_VM_MEMORY_SIZE
         }
 
         memory.toString()
@@ -88,16 +95,16 @@ class PropertyResolver {
      *
      * @return resolved deployment strategy, when not set on command line, default to DEPLOYORREDEPLOY
      */
-    static DeploymentStrategy resolveTomcatDeploymentStrategy() {
+    static def resolveTomcatDeploymentStrategy() {
 
-        DeploymentStrategy deploymentStrategy = DEFAULT_DEPLOYMENT_STRATEGY
+        def deploymentStrategy
 
         try {
             deploymentStrategy = DeploymentStrategy.valueOf(System.getProperty("tomcatDeploymentStrategy", DEFAULT_DEPLOYMENT_STRATEGY.toString()))
         } catch (Exception ex) {
-            // intentionally empty
+            deploymentStrategy = DEFAULT_DEPLOYMENT_STRATEGY
         }
 
-        deploymentStrategy
+        deploymentStrategy.name()
     }
 }

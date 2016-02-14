@@ -18,9 +18,9 @@ import travel.snapshot.qa.util.Timer
 /**
  * Deploys modules (wars) to Tomcat instance.
  */
-class DataPlatformDeployer {
+class TomcatModuleDeployer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataPlatformDeployer)
+    private static final Logger logger = LoggerFactory.getLogger(TomcatModuleDeployer)
 
     private static final String DEFAULT_TOMCAT_CONTAINER =
             DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
@@ -33,9 +33,15 @@ class DataPlatformDeployer {
 
     private String containerId = DEFAULT_TOMCAT_CONTAINER
 
-    DataPlatformDeployer(File workspace, DataPlatformTestOrchestration orchestration) {
+    private String deploymentStrategy = parseDeploymentStrategy()
+
+    TomcatModuleDeployer(File workspace, DataPlatformTestOrchestration orchestration) {
         this.workspace = workspace
         this.orchestration = orchestration
+    }
+
+    TomcatModuleDeployer strategy(DeploymentStrategy deploymentStrategy) {
+        this.deploymentStrategy = deploymentStrategy
     }
 
     /**
@@ -44,7 +50,7 @@ class DataPlatformDeployer {
      * @param module module to deploy
      * @return this
      */
-    DataPlatformDeployer deploy(DataPlatformModule module) {
+    TomcatModuleDeployer deploy(DataPlatformModule module) {
         if (module) {
 
             logger.info("Adding {} for deployment.", module.toString())
@@ -60,7 +66,7 @@ class DataPlatformDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    DataPlatformDeployer deploy(DataPlatformModule... modules) {
+    TomcatModuleDeployer deploy(DataPlatformModule... modules) {
         if (modules) {
             for (DataPlatformModule module : modules) {
                 deploy(module)
@@ -75,7 +81,7 @@ class DataPlatformDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    DataPlatformDeployer deploy(List<DataPlatformModule> modules) {
+    TomcatModuleDeployer deploy(List<DataPlatformModule> modules) {
         for (DataPlatformModule module : modules) {
             deploy(module)
         }
@@ -88,7 +94,7 @@ class DataPlatformDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    DataPlatformDeployer deploy(DataPlatformModules modules) {
+    TomcatModuleDeployer deploy(DataPlatformModules modules) {
         this.modules.addAll(modules.modules())
         this
     }
@@ -98,7 +104,7 @@ class DataPlatformDeployer {
      *
      * @return this
      */
-    DataPlatformDeployer execute() {
+    TomcatModuleDeployer execute() {
         final TomcatDockerManager dockerManager = orchestration.get().getTomcatDockerManager(containerId)
         final TomcatManager manager = dockerManager.getServiceManager()
 
@@ -107,7 +113,7 @@ class DataPlatformDeployer {
                     String.format("Unable to perform module deployment, managers for container %s are null.", containerId))
         }
 
-        final DeploymentStrategy deploymentStrategy = PropertyResolver.resolveTomcatDeploymentStrategy()
+        final DeploymentStrategy deploymentStrategy = parseDeploymentStrategy()
 
         modules.each { DataPlatformModule module ->
 
@@ -170,8 +176,8 @@ class DataPlatformDeployer {
         timer.stop()
 
         // here we terminate logging task and close a logging stream
-        loggerExecution.terminate()
         IOUtils.closeQuietly(loggerTask.getLogOutputStream())
+        loggerExecution.terminate()
 
         logger.info("Deploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
     }
@@ -193,9 +199,13 @@ class DataPlatformDeployer {
         timer.stop()
 
         // here we terminate logging task and close a logging stream
-        loggerExecution.terminate()
         IOUtils.closeQuietly(loggerTask.getLogOutputStream())
+        loggerExecution.terminate()
 
         logger.info("Undeploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
+    }
+
+    private DeploymentStrategy parseDeploymentStrategy() {
+        DeploymentStrategy.valueOf(PropertyResolver.resolveTomcatDeploymentStrategy())
     }
 }

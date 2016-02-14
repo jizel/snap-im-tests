@@ -1,24 +1,17 @@
 package travel.snapshot.qa.test
 
-import com.github.dockerjava.api.InternalServerErrorException
-import org.arquillian.cube.spi.CubeControlException
 import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.Test
 import org.slf4j.Logger
-import travel.snapshot.qa.DataPlatformTestOrchestration
-import travel.snapshot.qa.docker.manager.ConnectionMode
-import travel.snapshot.qa.util.container.DockerContainer
-import travel.snapshot.qa.util.container.DockerIPLogger
 
 class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> implements Test {
 
     // lifecycle closures
 
-    DeferredValue<Void> execute = DeferredValue.of(Void)
+    DeferredValue<List> dataProvider = DeferredValue.of(List)
 
-    DeferredValue<List> dataProvider = DeferredValue.of(List).from([null])
+    DeferredValue<List<String>> data = DeferredValue.of(List).from([null])
 
     // this will be resolved as the first execution in beforeSuite closure
     DeferredValue<Void> init = DeferredValue.of(Void)
@@ -27,24 +20,39 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
 
     DeferredValue<Void> beforeTest = DeferredValue.of(Void)
 
-    DeferredValue<Void> afterSuite = DeferredValue.of(Void)
+    DeferredValue<Void> execute = DeferredValue.of(Void)
 
     DeferredValue<Void> afterTest = DeferredValue.of(Void)
 
-    DeferredValue<List<String>> data = DeferredValue.of(List).from([null])
+    DeferredValue<Void> afterSuite = DeferredValue.of(Void)
 
-    DeferredValue<Boolean> setup = DeferredValue.of(Boolean).from(Boolean.TRUE)
+    DeferredValue<Void> report = DeferredValue.of(Void)
 
-    DeferredValue<Boolean> teardown = DeferredValue.of(Boolean).from(Boolean.TRUE)
+    DataPlatformTest(String name, Object parent) {
+        super(name, parent)
 
-    DeferredValue<DataPlatformTestOrchestration> with = DeferredValue.of(DataPlatformTestOrchestration)
+        this.dataProvider.from({ data.resolve() as ArrayList })
+        beforeSuite.from({ init.resolve() })
+        afterSuite.from({ report.resolve() })
+    }
 
-    DataPlatformTest(String testName, Object parent) {
-        super(testName, parent)
+    DataPlatformTest(String name, DataPlatformTest template) {
+        super(name, template)
 
-        dataProvider.from({ data.resolve() as ArrayList })
-        beforeSuite.from({ orchestrationSetup() })
-        afterSuite.from({ orchestrationTeardown() })
+        this.dataProvider = template.@dataProvider.copy()
+        this.data = template.@data.copy()
+        this.init = template.@init.copy()
+        this.beforeSuite = template.@beforeSuite.copy()
+        this.beforeTest = template.@beforeTest.copy()
+        this.execute = template.@execute.copy()
+        this.afterTest = template.@afterTest.copy()
+        this.afterSuite = template.@afterSuite.copy()
+        this.report = template.@report.copy()
+    }
+
+    @Override
+    DataPlatformTest clone(String name) {
+        new DataPlatformTest(name, this)
     }
 
     @Override
@@ -53,27 +61,6 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
         try {
             logger.info(":test:${name} before suite execution")
             beforeSuite.resolve()
-        }
-        catch (CubeControlException e) {
-            Throwable cause = e.getCause()
-            if (cause instanceof InternalServerErrorException) {
-
-                def m = cause.getMessage() =~ /.* address already in use$/
-
-                if (m) {
-                    List<String> containers = new GradleSpaceliftDelegate().project().spacelift.configuration['serviceInstallations'].value
-                    DockerContainer.removeContainers("Created", containers)
-                    DockerContainer.removeContainers("Running", containers)
-
-                    logger.error(cause.getMessage())
-                    logger.error("Try to shut down services you are running locally in order not to block services " +
-                            "from binding to already bound ports by them.")
-
-                    System.exit(1)
-                }
-
-                throw e
-            }
         }
         catch (Exception e) {
             logger.error(":test:${name} failed before suite phase: ${e.getMessage()}")
@@ -139,71 +126,6 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
             finally {
                 if (cause) {
                     throw cause
-                }
-            }
-        }
-    }
-
-    @Override
-    DataPlatformTest clone(String name) {
-        new DataPlatformTest(name, this)
-    }
-
-    private def isInteractingWithDocker() {
-        ! new GradleSpaceliftDelegate().project().selectedInstallations.findAll { it['name'].startsWith("docker") }.isEmpty()
-    }
-
-    private def orchestrationSetup() {
-
-        if (!isInteractingWithDocker()) {
-            return
-        }
-
-        init.resolve();
-
-        def orchestration = with.resolve()
-
-        if (orchestration && setup.resolve()) {
-            orchestration.initDockerManagers()
-            orchestration.start()
-            DockerIPLogger.log(orchestration.get())
-        }
-    }
-
-    private def orchestrationTeardown() {
-
-        if (!isInteractingWithDocker()) {
-            return
-        }
-
-        def orchestration = with.resolve()
-
-        if (orchestration && teardown.resolve()) {
-            if (setup.resolve()) {
-                orchestration.initDockerManagers()
-                orchestration.stop()
-                return
-            }
-
-            // we have not set setup to true and teardown is true
-            // so we are just stopping the platform
-            // we have to set system property for connectionMode in arquillian.xml
-            // to STARTANDSTOP because that is the only mode which will stop running containers
-            // when already started
-
-            System.setProperty("arquillian.xml.connection.mode", ConnectionMode.STARTANDSTOP.name())
-
-            orchestration.initDockerManagers()
-
-            def orchestrationDelegate = orchestration.get()
-
-            new GradleSpaceliftDelegate().project().selectedInstallations
-                    .findAll { !it['name'].startsWith("docker") }
-                    .each { installation ->
-                try {
-                    orchestrationDelegate.dockerManager.stop(installation['name'])
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex)
                 }
             }
         }

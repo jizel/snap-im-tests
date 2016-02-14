@@ -66,7 +66,7 @@
                     - mongodb:mongodb
                     - activemq:activemq
                 binds:
-                    - ${arquillian.xml.data.tomcat.config.dir}:/data/tomcat/config
+                    - ${arquillian.xml.data.tomcat.config.dir}/tomcat:/data/tomcat/config
             tomcat_standalone:
                 image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
