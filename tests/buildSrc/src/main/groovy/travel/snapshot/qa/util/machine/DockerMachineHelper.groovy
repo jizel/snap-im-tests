@@ -16,6 +16,10 @@ class DockerMachineHelper {
         hasState(machine, "Running")
     }
 
+    static boolean isTimeouted(String machine) {
+        hasState(machine, "Timeout")
+    }
+
     /**
      * Starts given machine
      *
@@ -71,7 +75,11 @@ class DockerMachineHelper {
      * @return list of parsed machines
      */
     static List<DockerMachineListRecord> parseMachines() {
-        ProcessResult result = Spacelift.task("docker-machine").parameter("ls").execute().await()
+        ProcessResult result = Spacelift.task("docker-machine")
+                .parameter("ls")
+                .parameter("--format")
+                .parameter("{{.Name}}:{{.DriverName}}:{{.State}}:{{.URL}}:")
+                .execute().await()
         DockerMachineListRecord.parse(result.output())
     }
 

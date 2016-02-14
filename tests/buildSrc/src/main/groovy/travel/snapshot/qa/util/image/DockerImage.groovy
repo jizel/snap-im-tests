@@ -41,7 +41,11 @@ class DockerImage {
             boolean isMissing = true
 
             for (DockerImageListRecord downloadedImage : downloadedImages) {
-                if (image.startsWith(downloadedImage.repository) && image.endsWith(downloadedImage.tag)) {
+
+                String imageRepository = DockerImage.getRepository(image)
+                String imageTag = DockerImage.getTag(image)
+
+                if (imageRepository == downloadedImage.repository && imageTag == downloadedImage.tag) {
                     isMissing = false
                     break
                 }
@@ -51,7 +55,60 @@ class DockerImage {
                 missingImages << image
             }
         }
-
+        
         missingImages
+    }
+
+    /**
+     * Gets repository part of some image
+     *
+     * @param image gets repository from image
+     * @return repository of image
+     */
+    static String getRepository(String image) {
+        valueOf(image).get(0)
+    }
+
+    /**
+     * Gets tag part of some image
+     *
+     * @param image gets tag from image
+     * @return tag of image
+     */
+    static String getTag(String image) {
+        valueOf(image).get(1)
+    }
+
+    static def valueOf(String image) {
+        def name
+        def tag
+
+        // <repositoryurl>:<port>/<organization_namespace>/<image_name>:<tag>
+        String[] parts = image.split("/")
+
+        switch (parts.length) {
+            case 1: // <image_name>[:<tag>]
+            case 2: // <organization_namespace>/<image_name>[:tag]
+                String imageName = image
+                final int colonIndex = imageName.indexOf(':')
+                if (colonIndex > -1) {
+                    name = imageName.substring(0, colonIndex)
+                    tag = imageName.substring(colonIndex + 1)
+                } else {
+                    name = imageName
+                }
+                break
+            case 3:  // <repositoryurl>[:<port>]/<organization_namespace>/<image_name>[:<tag>]
+                String imageName = parts[2]
+                final int colonIndex = imageName.indexOf(':')
+                if (colonIndex > -1) {
+                    name = parts[0] + "/" + parts[1] + "/" + imageName.substring(0, colonIndex)
+                    tag = imageName.substring(colonIndex + 1)
+                } else {
+                    name = image
+                }
+        }
+
+        [name, tag]
     }
 }

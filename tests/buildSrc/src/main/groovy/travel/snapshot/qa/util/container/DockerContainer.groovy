@@ -47,4 +47,12 @@ class DockerContainer {
             Spacelift.task("docker").parameters("rm", "-f", it).execute().await()
         }
     }
+
+    static List<String> list() {
+        Spacelift.task("docker").parameters("ps", "--format", "{{.Names}}").execute().await().output()
+    }
+
+    static List<String> listWithImages() {
+        Spacelift.task("docker").parameters("ps", "--format", "{{.Names}} {{.Image}}").execute().await().output()
+    }
 }

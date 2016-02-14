@@ -7,8 +7,6 @@ class DockerMachineListRecord {
 
     String name
 
-    String active
-
     String driver
 
     String state
@@ -23,23 +21,20 @@ class DockerMachineListRecord {
      */
     static List<DockerMachineListRecord> parse(List<String> lines) {
 
-        // skip header
-        if (lines.size() > 0) {
-            lines.remove(0)
-        }
-
         List<DockerMachineListRecord> records = []
 
         lines.each { line ->
-            String[] splits = line.trim().replaceAll(" +", " ").split(" ")
+            String[] splits = line.tokenize(":")
 
             DockerMachineListRecord record = new DockerMachineListRecord()
 
             record.name = splits[0]
-            record.active = splits[1]
-            record.driver = splits[2]
-            record.state = splits[3]
-            record.url = splits[4]
+            record.driver = splits[1]
+            record.state = splits[2]
+
+            if (splits.length == 4) {
+                record.url = splits[3]
+            }
 
             records << record
         }
@@ -49,6 +44,6 @@ class DockerMachineListRecord {
 
     @Override
     String toString() {
-        String.format("%s %s %s %s %s", name, active, driver, state, url)
+        String.format("%s %s %s %s", name, driver, state, url)
     }
 }

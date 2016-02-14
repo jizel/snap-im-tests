@@ -2,14 +2,15 @@ import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemCon
 import org.arquillian.spacelift.gradle.git.GitBasedInstallation
 import org.arquillian.spacelift.gradle.gradle.GradleInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
+import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.installation.DockerMachine
 import travel.snapshot.qa.installation.DockerService
-import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
+import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatModuleDeployer
 import travel.snapshot.qa.util.PropertyResolver
@@ -39,8 +40,8 @@ spacelift {
             value {
                 [
                         "docker.snapshot.travel:5000/snapshot/tomcat:8.0.30",
-                        "docker.snapshot.travel:5000/snapshot/mariadb:10.1.10",
-                        "docker.snapshot.travel:5000/snapshot/mongo:3.2.1",
+                        "docker.snapshot.travel:5000/snapshot/mariadb:10.1.11",
+                        "docker.snapshot.travel:5000/snapshot/mongodb:3.2.1",
                         "docker.snapshot.travel:5000/snapshot/activemq:5.12.1"
                 ]
             }
@@ -167,7 +168,12 @@ spacelift {
                 new DataPlatformBuildExecutor(workspace).build(DataPlatformModule.PROJECT).execute(true)
             }
         }
-        apiTests(from: DataPlatformTest) {
+        reportableTest(from: DataPlatformTest) {
+            report {
+                new DataPlatformLogReporter(platform, serviceInstallations, workspace).report()
+            }
+        }
+        apiTests(inherits: reportableTest) {
             beforeTest {
                 new DataPlatformBuildExecutor(workspace)
                         .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)

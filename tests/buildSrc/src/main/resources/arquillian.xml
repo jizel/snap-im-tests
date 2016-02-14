@@ -77,8 +77,9 @@
                     iterations: 15
                 portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
             mariadb:
-                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.10
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.11
                 exposedPorts: [3306/tcp]
+                env: [GENERAL_LOG_FILE=/var/lib/mysql/localhost.localdomain.log, LOG_ERROR=/var/lib/mysql/localhost.localdomain.err]
                 await:
                     strategy: polling
                     type: ping
@@ -86,8 +87,9 @@
                     iterations: 15
                 portBindings: [3306/tcp]
             mongodb:
-                image: docker.snapshot.travel:5000/snapshot/mongo:3.2.1
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.1
                 exposedPorts: [27017/tcp]
+                env: [LOG_PATH=/var/log/mongodb/server.log]
                 await:
                     strategy: polling
                     type: ping
