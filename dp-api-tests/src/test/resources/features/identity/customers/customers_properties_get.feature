@@ -23,12 +23,13 @@ Feature: customers_properties_get
     Given The following users exist
       | userType | userName             | firstName | lastName      | email                                 | timezone      | culture |
       | snapshot | defaultSnapshotuser  | Default   | SnapshotUser  | defaultSnapshotUser1@snapshot.travel  | Europe/Prague | cs-CZ   |
+      | customer | custProp1            | customer  | property      | customerProperty1@snapshot.travel     | Europe/Prague | cs-CZ   |
 
     Given Relation between user with username "defaultSnapshotuser" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "defaultSnapshotuser" and customer with code "c2t" exists with isPrimary "true"
     Given Relation between user with username "defaultSnapshotuser" and customer with code "c3t" exists with isPrimary "true"
-    Given Relation between user with username "defaultSnapshotuser" and customer with code "c3t" exists with isPrimary "true"
 
+    #Get token for snapshot user and set it to session (?access_token={token})
     Given The password of user "defaultSnapshotuser" is "Password01"
     Given Get token for user "defaultSnapshotuser" with password "Password01"
 
@@ -261,3 +262,37 @@ Feature: customers_properties_get
       | p1_code |
       | p2_code |
       | p3_code |
+
+  Scenario: Relation between user and customer does not exist
+    Given The password of user "custProp1" is "Password01"
+    Given Get token for user "custProp1" with password "Password01"
+    When List of customerProperties is got for customer with code "c1t" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
+    Then Response code is 404
+
+  Scenario: No relation between user and property, 0 properties visible for user
+    Given Relation between user with username "custProp1" and customer with code "c1t" exists with isPrimary "true"
+    Given The password of user "custProp1" is "Password01"
+    Given Get token for user "custProp1" with password "Password01"
+    When List of customerProperties is got for customer with code "c1t" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
+    Then Response code is 200
+    And Total count is "0"
+
+  Scenario: Relation between user and property, 3 property visible for user
+    Given Relation between user with username "custProp1" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "custProp1" and property with code "p1_code" exists
+    Given The password of user "custProp1" is "Password01"
+    Given Get token for user "custProp1" with password "Password01"
+    When List of customerProperties is got for customer with code "c1t" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
+    Then Response code is 200
+    And Total count is "3"
+
+  Scenario: Relation between user and all properties, 5 properties visible for user
+    Given Relation between user with username "custProp1" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "custProp1" and property with code "p1_code" exists
+    Given Relation between user with username "custProp1" and property with code "p2_code" exists
+    Given Relation between user with username "custProp1" and property with code "p3_code" exists
+    Given The password of user "custProp1" is "Password01"
+    Given Get token for user "custProp1" with password "Password01"
+    When List of customerProperties is got for customer with code "c1t" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
+    Then Response code is 200
+    And Total count is "4"

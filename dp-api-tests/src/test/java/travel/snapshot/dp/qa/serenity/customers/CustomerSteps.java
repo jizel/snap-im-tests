@@ -484,6 +484,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void listOfCustomerPropertiesIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
         Customer c = getCustomerByCodeInternal(customerCode);
+        setAccessTokenParamFromSession();
         Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
