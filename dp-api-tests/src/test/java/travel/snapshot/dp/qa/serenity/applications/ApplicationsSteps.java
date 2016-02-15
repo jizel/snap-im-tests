@@ -46,7 +46,7 @@ public class ApplicationsSteps extends BasicSteps {
   }
 
   @Step
-  public void followingApplicationExist(List<Application> application) {
+  public void followingApplicationsExist(List<Application> application) {
     application.forEach(t -> {
       Application existingApplication = getApplicationById(t.getApplicationId());
       if (existingApplication != null) {

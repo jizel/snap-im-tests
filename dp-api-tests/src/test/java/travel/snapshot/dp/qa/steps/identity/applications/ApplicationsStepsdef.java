@@ -25,9 +25,9 @@ public class ApplicationsStepsdef {
     applicationSteps.followingApplicationIsCreated(applications.get(0));
   }
 
-  @Given("^The following application exist$")
-  public void The_following_application_exist(List<Application> applications) throws Throwable {
-    applicationSteps.followingApplicationExist(applications);
+  @Given("^The following applications exist$")
+  public void The_following_applications_exist(List<Application> applications) throws Throwable {
+    applicationSteps.followingApplicationsExist(applications);
   }
 
   @When("^Application with id \"([^\"]*)\" is deleted$")

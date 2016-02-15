@@ -4,7 +4,7 @@ Feature: applications_get
     Given Database is cleaned
 
   Scenario: Getting applications
-    Given The following application exist
+    Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got
@@ -17,7 +17,7 @@ Feature: applications_get
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
 
   Scenario: Getting application with etag
-    Given The following application exist
+    Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
@@ -25,7 +25,7 @@ Feature: applications_get
     And Body is empty
 
   Scenario: Getting application with expired etag
-    Given The following application exist
+    Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got for etag, updated and got with previous etag
@@ -43,7 +43,7 @@ Feature: applications_get
 
   @important
   Scenario Outline: Getting list of applications
-    Given The following application exist
+    Given The following applications exist
       | applicationName             | description                | website                    | applicationId                        |
       | Application test company 1  | Application description 1  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace111 |
       | Application test company 2  | Application description 2  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace112 |
@@ -142,7 +142,7 @@ Feature: applications_get
       | 10          | 0      | code== | /null       | /null       | 400           | 63          |
 
   Scenario Outline: Filtering list of applications
-    Given The following application exist
+    Given The following applications exist
       | applicationName             | description                | website                      |
       | Application test company 1  | Application description 1  | http://www.snapshot1.travel  |
       | Application test company 2  | Application description 2  | http://www.snapshot2.travel  |
