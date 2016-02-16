@@ -97,12 +97,10 @@ public class BasicSteps {
     }
 
     public void setAccessTokenParamFromSession() {
-        Map<String, Object> params = new HashMap<>();
         String token = getSessionVariable(OAUTH_PARAMETER_NAME);
         if (StringUtils.isNotEmpty(token)) {
-            params.put(OAUTH_PARAMETER_NAME, token);
+            spec.queryParam(OAUTH_PARAMETER_NAME, token);
         }
-        spec.parameters(params);
     }
 
     public String getRequestDataFromFile(InputStream inputStream) throws IOException {
