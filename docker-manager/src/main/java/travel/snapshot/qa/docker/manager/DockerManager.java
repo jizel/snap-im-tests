@@ -180,4 +180,16 @@ public final class DockerManager {
     public Manager getManager() {
         return manager;
     }
+
+    /**
+     * Checks if containers are already started or not. If they are stared before test
+     * execution, it means that there are not any cubes in internal Cube registry because
+     * if there would be any cubes, it means we have started them so they were not
+     * started beforehand.
+     *
+     * @return
+     */
+    public boolean containersAlreadyStarted() {
+        return cubeRegistry.getCubes().isEmpty();
+    }
 }
