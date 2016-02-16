@@ -31,7 +31,7 @@ Feature: Users_get
     Then Response code is "304"
     And Body is empty
 
-   Failing scenario till DP-1090 will be solved
+   #Failing scenario till DP-1090 will be solved
   Scenario: Get token for deleted user
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |

@@ -17,6 +17,11 @@ Feature: property_sets_get
       | ps3_name        | ps3_description        | branch          |
 
 
+  Scenario: Checking error code for getting property set
+    When Nonexistent property set id is got
+    Then Response code is "404"
+    And Custom code is "152"
+
   Scenario Outline: Getting property sets
     Given The following property sets exist for customer with code "c2t"
       | propertySetName | propertySetDescription | propertySetType |

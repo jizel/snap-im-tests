@@ -378,4 +378,9 @@ public class PropertySetSteps extends BasicSteps {
                 .body("customer_id", is(originalProperty.getCustomerId()));
 
     }
+
+    public void propertysetWithIdIsGot(String propertySet) {
+        Response response = getEntity(propertySet, null);
+        setSessionResponse(response);
+    }
 }
