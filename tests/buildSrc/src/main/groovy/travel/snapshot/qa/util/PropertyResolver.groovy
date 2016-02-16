@@ -6,11 +6,6 @@ import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
 class PropertyResolver {
 
-    /**
-     * This should be externalized to some file we do not know the location of yet
-     */
-    private static final String DOCKER_REGISTRY_PASSWORD = "aqGG86d1Yf3Y"
-
     private static final int DEFAULT_VM_MEMORY_SIZE = 3072 // in MB
 
     private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOYORREDEPLOY
@@ -50,7 +45,15 @@ class PropertyResolver {
     }
 
     static def resolveDockerRegistryPassword() {
-        System.getProperty("dockerRegistryPassword", DOCKER_REGISTRY_PASSWORD)
+        String password = System.getProperty("dockerRegistryPassword")
+
+        if (!password) {
+            throw new IllegalStateException("You have not set system property 'dockerRegistryPassword' with " +
+                    "password to Docker registry. The best way to set this property is to add line " +
+                    "'systemProp.dockerRegistryPassword=<password>' into your gradle.properties file.")
+        }
+
+        password
     }
 
     static def resolveDataPlatformRespositoryCommit(String defaultCommit) {
