@@ -96,6 +96,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.propertySetWithNameForCustomerIsDeleted(c, propertySetName);
     }
 
+    @When("^Nonexistent property set id is got$")
+    public void Nonexistent_property_set_id_is_got() throws Throwable {
+        propertySetSteps.propertysetWithIdIsGot("nonexistent");
+    }
+
     @When("^Nonexistent property set id is deleted$")
     public void Nonexistent_property_set_id_is_deleted() throws Throwable {
         propertySetSteps.deletePropertySetWithId("nonexistent");
