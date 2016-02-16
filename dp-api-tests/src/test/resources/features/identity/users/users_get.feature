@@ -6,6 +6,10 @@ Feature: Users_get
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default4 | Default4  | User4    | def4@snapshot.travel | Europe/Prague | cs-CZ   |
+
+    Given The password of user "default3" is "Password01"
 
   Scenario: Getting user
     When User with username "default1" is got
@@ -26,6 +30,28 @@ Feature: Users_get
     When User with username "default1" is got with etag
     Then Response code is "304"
     And Body is empty
+
+   Failing scenario till DP-1090 will be solved
+  Scenario: Get token for deleted user
+    Given The following users exist
+      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | customer | default5 | Default5  | User5    | def5@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The password of user "default5" is "Password01"
+    Given User with userName "default5" is deleted
+    When Get token for user "default5" with password "Password01"
+    Then Response code is 401
+
+  Scenario Outline: Checking error codes for work with tokens
+    When Get token for user "<username>" with password "<password>"
+    Then Response code is "<response_code>"
+
+    Examples:
+      | username  |  password           | response_code |
+      | default3  |  Password01         | 200           |
+      | default3  |  NonValidPassword   | 401           |
+      | default4  |                     | 401           |
+      |           |  NonExistingUser    | 401           |
+      |           |                     | 401           |
 
   Scenario: Getting user with not current etag
   User is got, etag is saved to tmp, then user culture is updated to "sk" so etag should change and is got again with previous etag
@@ -122,15 +148,15 @@ Feature: Users_get
 
     Examples:
       | limit | cursor | returned | total | link_header                                                                                       |
-      | /null |        | 50       | 61    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      | /null | /null  | 50       | 61    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      |       |        | 50       | 61    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      |       | /null  | 50       | 61    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      | 15    |        | 15       | 61    | </identity/users?limit=15&cursor=15>; rel="next"                                                  |
-      |       | 1      | 50       | 61    | </identity/users?limit=50&cursor=51>; rel="next", </identity/users?limit=50&cursor=0>; rel="prev" |
-      | 20    | 0      | 20       | 61    | </identity/users?limit=20&cursor=20>; rel="next"                                                  |
-      | 10    | 0      | 10       | 61    | </identity/users?limit=10&cursor=10>; rel="next"                                                  |
-      | 5     | 10     | 5        | 61    | </identity/users?limit=5&cursor=15>; rel="next", </identity/users?limit=5&cursor=5>; rel="prev"   |
+      | /null |        | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      | /null | /null  | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      |       |        | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      |       | /null  | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      | 15    |        | 15       | 63    | </identity/users?limit=15&cursor=15>; rel="next"                                                  |
+      |       | 1      | 50       | 63    | </identity/users?limit=50&cursor=51>; rel="next", </identity/users?limit=50&cursor=0>; rel="prev" |
+      | 20    | 0      | 20       | 63    | </identity/users?limit=20&cursor=20>; rel="next"                                                  |
+      | 10    | 0      | 10       | 63    | </identity/users?limit=10&cursor=10>; rel="next"                                                  |
+      | 5     | 10     | 5        | 63    | </identity/users?limit=5&cursor=15>; rel="next", </identity/users?limit=5&cursor=5>; rel="prev"   |
 
   Scenario Outline: Checking error codes for getting list of users
     When List of users is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"

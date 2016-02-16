@@ -70,6 +70,7 @@ public class BasicSteps {
     protected static final String HEADER_ETAG = "ETag";
     public static final String HEADER_IF_MATCH = "If-Match";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
+    public static final String OAUTH_PARAMETER_NAME = "access_token";
 
     protected RequestSpecification spec = null;
 
@@ -93,6 +94,13 @@ public class BasicSteps {
 
         builder.setContentType(ContentType.JSON);
         spec = builder.build();
+    }
+
+    public void setAccessTokenParamFromSession() {
+        String token = getSessionVariable(OAUTH_PARAMETER_NAME);
+        if (StringUtils.isNotEmpty(token)) {
+            spec.queryParam(OAUTH_PARAMETER_NAME, token);
+        }
     }
 
     public String getRequestDataFromFile(InputStream inputStream) throws IOException {
