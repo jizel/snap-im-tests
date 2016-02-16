@@ -1,3 +1,4 @@
+import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
 import org.arquillian.spacelift.gradle.git.GitBasedInstallation
 import org.arquillian.spacelift.gradle.gradle.GradleInstallation
@@ -188,6 +189,17 @@ spacelift {
                         .execute()
             }
             execute {
+                Spacelift.task("gradle")
+                        .parameters("--project-dir", new File(workspace, "dataplatformqa/dp-api-tests").absolutePath)
+                        .parameter("-Ddp.properties=${PropertyResolver.resolveApiTestsDpProperties()}")
+                        .parameter("-Dtest.single=RunConfigurationTests")
+                        .parameter("test")
+                        .execute().await()
+
+                Spacelift.task("gradle")
+                        .parameters("--project-dir", new File(workspace, "dataplatformqa/dp-api-tests").absolutePath)
+                        .parameter("aggregate")
+                        .execute().await()
             }
         }
     }

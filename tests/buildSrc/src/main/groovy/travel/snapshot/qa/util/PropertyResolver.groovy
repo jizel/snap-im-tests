@@ -1,6 +1,5 @@
 package travel.snapshot.qa.util
 
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
@@ -108,5 +107,16 @@ class PropertyResolver {
         }
 
         deploymentStrategy.name()
+    }
+
+    /**
+     * Returns properties file for DP API tests. When not set, 'dp.properties' is default.
+     *
+     * This will be set in apiTests Spacelift gradle task as a property.
+     *
+     * @return properties file for DP API tests
+     */
+    static def resolveApiTestsDpProperties() {
+        System.getProperty("dp.properties", "dp.properties")
     }
 }
