@@ -106,7 +106,7 @@ spacelift {
             tests 'platformBuild'
         }
         apiTests(from: dataPlatformTest) {
-            tests 'platformStart', 'apiTests'
+            tests 'platformStart', 'apiTests', 'platformStop'
         }
     }
 
@@ -211,7 +211,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.0.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.1'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.2'
     }
 }
 

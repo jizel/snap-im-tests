@@ -44,8 +44,12 @@ class DockerContainer {
             containers.contains(it)
         }
         .each {
-            Spacelift.task("docker").parameters("rm", "-f", it).execute().await()
+            removeContainer(it)
         }
+    }
+
+    static def removeContainer(String container) {
+        Spacelift.task("docker").parameters("rm", "-f", container).execute().await()
     }
 
     static List<String> list() {

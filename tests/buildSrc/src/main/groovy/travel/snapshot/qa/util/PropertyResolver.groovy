@@ -69,8 +69,7 @@ class PropertyResolver {
     }
 
     static def resolveTomcatSpringConfigDirectory() {
-        File root = new GradleSpaceliftDelegate().project().rootDir
-        System.getProperty("tomcatSpringConfigDirectory", new File(root, "configuration").absolutePath)
+        System.getProperty("tomcatSpringConfigDirectory", "configuration")
     }
 
     static def resolveRepositoryFetchSkip() {

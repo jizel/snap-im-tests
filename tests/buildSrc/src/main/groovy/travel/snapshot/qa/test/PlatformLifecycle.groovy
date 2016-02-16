@@ -9,6 +9,7 @@ import org.arquillian.spacelift.gradle.Test
 import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.manager.ConnectionMode
+import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.container.DockerIPLogger
 
@@ -48,6 +49,10 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
     private def orchestrationSetup(Logger logger) {
 
+        if (!setup.resolve()) {
+            return
+        }
+
         if (!isInteractingWithDocker()) {
             logger.info("Orchestration setup will be skipped because there is not any docker-like installation selected.")
             return
@@ -58,11 +63,11 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
         init.resolve()
 
         try {
-            if (orchestration && setup.resolve()) {
+            if (orchestration) {
                 orchestration.initDockerManagers()
                 orchestration.start()
                 DockerIPLogger.log(orchestration.get())
-            }  else {
+            } else {
                 logger.info("Orchestration setup will be skipped because setup closure was resolved to false.")
             }
         } catch (CubeControlException e) {
@@ -73,6 +78,10 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
     private def orchestrationTeardown(Logger logger) {
 
+        if (!teardown.resolve()) {
+            return
+        }
+
         if (!isInteractingWithDocker()) {
             logger.info("Orchestration teardowns will be skipped because there is not any docker-like installation selected.")
             return
@@ -80,7 +89,45 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
         def orchestration = with.resolve()
 
-        if (orchestration && teardown.resolve()) {
+        def connectionMode = ConnectionMode.valueOf(PropertyResolver.resolveConnectionMode())
+
+        boolean containersAlreadyStarted = orchestration.get().getDockerManager().containersAlreadyStarted()
+
+        boolean shouldStop = false
+
+        if (isPlatformStopProfileSelected()) {
+            shouldStop = true
+            logger.info("platformStop profile has been selected. Going to shutdown the platform.")
+        } else if (isPlatformStopTestSelected()) {
+            // for STARTANDSTOP we will just stop them
+            // for STARTORCONNECT if we could not connect to them we started them so in that case we will stop them
+            // for STARTORCONNECTANDLEAVE we are not stopping them
+            if ((connectionMode == ConnectionMode.STARTORCONNECT) && !containersAlreadyStarted) {
+                logger.info("plaformStop test was selected, STARTORCONNECT connection mod was set and " +
+                        "containers were not started before test execution. Containers will be shut down.")
+                shouldStop = true
+            } else if (connectionMode == ConnectionMode.STARTANDSTOP) {
+                logger.info("platformStop test was selected, STARTANDSTOP connection mode was set. Containers will be " +
+                        "shut down.")
+                shouldStop = true
+            } else {
+                if (connectionMode == ConnectionMode.STARTORCONNECTANDLEAVE) {
+                    logger.info("platformStop test was selected and STARTORCONNECTANDLEAVE connection mode " +
+                            "was set. Containers will not be shut down.")
+                }
+
+                if (connectionMode == ConnectionMode.STARTORCONNECT) {
+                    logger.info("platformStop test was selected and STARTORCONNECT connection mode was set. " +
+                            "Containers were started before test execution. Containers will not be shut down.")
+                }
+            }
+        }
+
+        if (!shouldStop) {
+            return
+        }
+
+        if (orchestration) {
             if (setup.resolve()) {
                 orchestration.initDockerManagers()
                 orchestration.stop()
@@ -93,17 +140,17 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
             // to STARTANDSTOP because that is the only mode which will stop running containers
             // when already started
 
-            System.setProperty("arquillian.xml.connection.mode", ConnectionMode.STARTANDSTOP.name())
+            //System.setProperty("arquillian.xml.connection.mode", ConnectionMode.STARTANDSTOP.name())
 
             orchestration.initDockerManagers()
 
-            def orchestrationDelegate = orchestration.get()
-
-            new GradleSpaceliftDelegate().project().selectedInstallations
-                    .findAll { !it['name'].startsWith("docker") }
-                    .each { installation ->
+            new GradleSpaceliftDelegate().project().spacelift.configuration['serviceInstallations'].value.each { installation ->
                 try {
-                    orchestrationDelegate.dockerManager.stop(installation['name'])
+                    DockerContainer.removeContainer(installation)
+                    // TODO this does not work properly with Cube 1.0.0.Alpha7 and Docker 1.10.1
+                    // it works with Docker 1.9.1 and it works with current Cube 1.0.0.Final-SNAPSHOT
+                    // once Cube 1.0.0.Final is released, it will be done correctly
+                    //orchestration.dockerManager.stop(installation)
                 } catch (Exception ex) {
                     throw new RuntimeException(ex)
                 }
@@ -139,5 +186,15 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
             throw ex
         }
+    }
+
+    private boolean isPlatformStopProfileSelected() {
+        new GradleSpaceliftDelegate().project().selectedProfile['name'] == "platformStop"
+    }
+
+    private boolean isPlatformStopTestSelected() {
+        ! new GradleSpaceliftDelegate().project().selectedTests.findAll { test ->
+            test['name'] == "platformStop"
+        }.isEmpty()
     }
 }
