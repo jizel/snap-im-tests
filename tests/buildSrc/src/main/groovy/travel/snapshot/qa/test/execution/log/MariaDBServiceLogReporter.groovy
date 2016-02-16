@@ -15,10 +15,6 @@ class MariaDBServiceLogReporter extends AbstractServiceLogReporter {
         }
     }
 
-    MariaDBServiceLogReporter(File workspace) {
-        super(workspace)
-    }
-
     @Override
     def report(String container) {
         String reportDirectory = getReportDirectory(container)

@@ -14,10 +14,6 @@ class MongoDBServiceLogReporter extends AbstractServiceLogReporter {
         }
     }
 
-    MongoDBServiceLogReporter(File workspace) {
-        super(workspace)
-    }
-
     @Override
     def report(String container) {
         String reportDirectory = getReportDirectory(container)

@@ -10,10 +10,6 @@ class TomcatServiceLogReporter extends AbstractServiceLogReporter {
 
     private static final String TOMCAT_LOGS_DIRECTORY = "/opt/tomcat/logs"
 
-    TomcatServiceLogReporter(File workspace) {
-        super(workspace)
-    }
-
     @Override
     def report(String container) {
         try {

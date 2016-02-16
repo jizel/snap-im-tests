@@ -9,17 +9,11 @@ import java.time.format.DateTimeFormatter
 
 abstract class AbstractServiceLogReporter {
 
-    File workspace
-
     boolean hostMode = (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString())
 
     String dockerMachine = PropertyResolver.resolveDockerMachine()
 
     static String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-
-    AbstractServiceLogReporter(File workspace) {
-        this.workspace = workspace
-    }
 
     /**
      * Gets logs from container of specified service type to local host
@@ -50,9 +44,9 @@ abstract class AbstractServiceLogReporter {
         File reportDirectory
 
         if (hostMode) {
-            reportDirectory = new File(workspace, "reports/host/${dateTime}/${container}")
+            reportDirectory = new File("snapshot/workspace/reports/host/${dateTime}/${container}")
         } else {
-            reportDirectory = new File(workspace, "reports/machine/${dockerMachine}/${dateTime}/${container}")
+            reportDirectory = new File("snapshot/workspace/reports/machine/${dockerMachine}/${dateTime}/${container}")
         }
 
         FileUtils.deleteQuietly(reportDirectory)

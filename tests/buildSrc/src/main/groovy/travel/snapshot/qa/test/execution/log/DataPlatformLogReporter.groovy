@@ -11,12 +11,9 @@ class DataPlatformLogReporter {
 
     private List<String> services = []
 
-    private File workspace
-
-    DataPlatformLogReporter(DataPlatformTestOrchestration testOrchestration, List<String> services, File workspace) {
+    DataPlatformLogReporter(DataPlatformTestOrchestration testOrchestration, List<String> services) {
         this.testOrchestration = testOrchestration
         this.services = services
-        this.workspace = workspace
     }
 
     def report() {
@@ -29,23 +26,23 @@ class DataPlatformLogReporter {
 
         for (ServiceType serviceType : ServiceType.values()) {
             List<String> resolvedContainers = resolveContainers(serviceType, services, orchestration)
-            resolveReport(workspace, serviceType, resolvedContainers)
+            resolveReport(serviceType, resolvedContainers)
         }
     }
 
-    private void resolveReport(File workspace, ServiceType serviceType, List<String> containers) {
+    private void resolveReport(ServiceType serviceType, List<String> containers) {
         switch (serviceType) {
             case ServiceType.TOMCAT:
-                new TomcatServiceLogReporter(workspace).report(containers)
+                new TomcatServiceLogReporter().report(containers)
                 break
             case ServiceType.ACTIVEMQ:
-                new ActiveMQServiceLogReporter(workspace).report(containers)
+                new ActiveMQServiceLogReporter().report(containers)
                 break
             case ServiceType.MARIADB:
-                new MariaDBServiceLogReporter(workspace).report(containers)
+                new MariaDBServiceLogReporter().report(containers)
                 break
             case ServiceType.MONGODB:
-                new MongoDBServiceLogReporter(workspace).report(containers)
+                new MongoDBServiceLogReporter().report(containers)
                 break
             default:
                 throw new IllegalStateException(String.format("Unable to resolve reporting for service type %s.", serviceType.name()))
