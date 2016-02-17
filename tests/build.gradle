@@ -191,9 +191,10 @@ spacelift {
             execute {
                 Spacelift.task("gradle")
                         .parameters("--project-dir", new File(workspace, "dataplatformqa/dp-api-tests").absolutePath)
-                        .parameter("-Ddp.properties=${PropertyResolver.resolveApiTestsDpProperties()}")
+                        .parameter("-Dapi-tests-config=${PropertyResolver.resolveApiTestsDpProperties()}")
                         .parameter("-Dtest.single=RunConfigurationTests")
                         .parameter("test")
+                        .shouldExitWith(0, 1)
                         .execute().await()
 
                 Spacelift.task("gradle")

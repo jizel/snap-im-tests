@@ -1,5 +1,6 @@
 package travel.snapshot.qa.util
 
+import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
@@ -117,6 +118,9 @@ class PropertyResolver {
      * @return properties file for DP API tests
      */
     static def resolveApiTestsDpProperties() {
-        System.getProperty("dp.properties", "dp.properties")
+        File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
+        File apiTestsConfiguration = new File(rootDir, "configuration/api-tests/dp.properties")
+    
+        System.getProperty("dp.properties", apiTestsConfiguration.getAbsolutePath())
     }
 }
