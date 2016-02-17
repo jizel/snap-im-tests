@@ -1,5 +1,6 @@
 package travel.snapshot.qa.util
 
+import org.apache.commons.lang3.SystemUtils
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
@@ -69,7 +70,16 @@ class PropertyResolver {
     }
 
     static def resolveTomcatSpringConfigDirectory() {
-        System.getProperty("tomcatSpringConfigDirectory", "configuration")
+
+        def defaultConfiguration
+
+        if (SystemUtils.IS_OS_UNIX) {
+            defaultConfiguration = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
+        } else {
+            defaultConfiguration = "configuration"
+        }
+
+        System.getProperty("tomcatSpringConfigDirectory", defaultConfiguration)
     }
 
     static def resolveRepositoryFetchSkip() {
