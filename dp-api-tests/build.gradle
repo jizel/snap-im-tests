@@ -36,6 +36,7 @@ apply plugin: 'groovy'
 version = '1.0-SNAPSHOT'
 
 test {
+    systemProperties['api-tests-config'] = System.getProperty("api-tests-config")
     testLogging {
         showStandardStreams = true
     }
