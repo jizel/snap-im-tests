@@ -1,11 +1,14 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+import org.jruby.ast.HashNode;
 import org.seleniumhq.jetty7.util.ajax.JSON;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.review.model.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +16,7 @@ import java.util.List;
 
 import static com.jayway.restassured.path.json.JsonPath.from;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 
 public class ReviewSteps extends AnalyticsBaseSteps {
@@ -121,5 +125,21 @@ public class ReviewSteps extends AnalyticsBaseSteps {
 
         AspectsOfBusiness[] actual = getAspectOfBusinessFromResponse();
         assertEquals(expected, actual);
+    }
+
+    public void checkNumberOfValuesReturnedForEachProperty(int count) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        ArrayList propertyValues = response.jsonPath().get("properties.values");
+        for (Object property : propertyValues){
+            assertEquals(((ArrayList) property).size(), count);
+        }
+    }
+
+    public void checkFileAgainstResponse(String filename) throws IOException {
+        String expected = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
+        expected = expected.replaceAll("\r|\n|\t| ", "");
+
+        String actual = getSessionResponse().getBody().asString();
+        assertEquals(expected,actual);
     }
 }

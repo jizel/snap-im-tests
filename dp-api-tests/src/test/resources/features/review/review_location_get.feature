@@ -44,7 +44,7 @@ Feature: review_locaitons
     | 10          | text   | /null       | /null         | /null         | 400           | 63          |
     #filtering and sorting
     #not implemented ?
-    | 10          | 0      | /null       | location_name | location_name | 400           | 64          |
+    | 10          | 0      | /null       | location_name | location_name | 400           | 63          |
     | 10          | 0      | /null       | /null         | nonexistent   | 400           | 63          |
     | 10          | 0      | /null       | nonexistent   | /null         | 400           | 63          |
     | 10          | 0      | not_here==  | /null         | /null         | 400           | 63          |

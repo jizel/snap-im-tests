@@ -26,11 +26,14 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -62,7 +65,7 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
     protected static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
-	protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
+    protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
@@ -76,6 +79,7 @@ public class BasicSteps {
 
     public BasicSteps() {
         RequestSpecBuilder builder = new RequestSpecBuilder();
+
         String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
         String requestLogLevel = PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
 
@@ -95,6 +99,7 @@ public class BasicSteps {
         builder.setContentType(ContentType.JSON);
         spec = builder.build();
     }
+
 
     public void setAccessTokenParamFromSession() {
         String token = getSessionVariable(OAUTH_PARAMETER_NAME);
@@ -128,24 +133,24 @@ public class BasicSteps {
     }
 
     @Step
-    public void bodyContainsCollectionWith(String attributeName, Object item){
+    public void bodyContainsCollectionWith(String attributeName, Object item) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(attributeName, hasItem(item));
     }
-    
+
     /**
      * This method is used instead of bodyContainsCollectionWith()
      * when the collection contains values of type Double.
      * Only the integer part of the value is validated.
      */
     public void integerPartOfValueIs(String path, int value) {
-    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-    	List<Double> values = response.body().jsonPath().getList(path, double.class);
-    	assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        List<Double> values = response.body().jsonPath().getList(path, double.class);
+        assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
     }
-    
+
     @Step
-    public void bodyContainsR(String attributeName, BigDecimal item){
+    public void bodyContainsR(String attributeName, BigDecimal item) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body(attributeName, hasItem(item));
     }
@@ -324,6 +329,29 @@ public class BasicSteps {
         return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
+    protected Response getSecondLevelEntitiesForDates(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        LocalDate sinceDate = StringUtil.parseDate(since);
+        LocalDate untilDate = StringUtil.parseDate(until);
+
+        if (sinceDate != null) {
+            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (untilDate != null) {
+            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+        }
+        if (granularity != null) {
+            requestSpecification.parameter("granularity", granularity);
+        }
+        if (limit != null) {
+            requestSpecification.parameter("limit", limit);
+        }
+        if (cursor != null) {
+            requestSpecification.parameter("cursor", cursor);
+        }
+
+        return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+    }
 
     protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
         Map<String, Object> data = new HashMap<>();
@@ -362,7 +390,7 @@ public class BasicSteps {
         Serenity.setSessionVariable(key).to(value);
     }
 
-    public  <T> T getSessionVariable(String key) {
+    public <T> T getSessionVariable(String key) {
         return Serenity.<T>sessionVariableCalled(key);
     }
 
@@ -372,7 +400,7 @@ public class BasicSteps {
         List<T> objects = mapper.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
-    
+
     public void headerIs(String headerName, String value) {
         Response response = getSessionResponse();
         response.then().header(headerName, is(value));

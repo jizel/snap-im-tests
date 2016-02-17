@@ -140,10 +140,10 @@ Feature: review
     Then Review file "<json_input_file>" is equals to previous response for analytics
 
     Examples:
-      | json_input_file           | url         | property_id                          | granularity | since      | until      |
-      | /analytics_for_day.json   | /analytics/ | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
-      | /analytics_for_week.json  | /analytics/ | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
-      | /analytics_for_month.json | /analytics/ | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
+      | json_input_file                     | url         | property_id                          | granularity | since      | until      |
+      | /analytics/analytics_for_day.json   | /analytics/ | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
+      | /analytics/analytics_for_week.json  | /analytics/ | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
+      | /analytics/analytics_for_month.json | /analytics/ | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Validate that aspects of business have valid value in the db
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -152,10 +152,10 @@ Feature: review
     And Review file "<json_input_file>" is equals to previous response for aspects of business
 
     Examples:
-      | json_input_file                     | url                            | property                             | granularity | since      | until      |
-      | /aspects_of_business_for_day.json   | /analytics/aspects_of_business | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
-      | /aspects_of_business_for_week.json  | /analytics/aspects_of_business | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
-      | /aspects_of_business_for_month.json | /analytics/aspects_of_business | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
+      | json_input_file                               | url                            | property                             | granularity | since      | until      |
+      | /analytics/aspects_of_business_for_day.json   | /analytics/aspects_of_business | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
+      | /analytics/aspects_of_business_for_week.json  | /analytics/aspects_of_business | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
+      | /analytics/aspects_of_business_for_month.json | /analytics/aspects_of_business | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Validate that overall bubble rating have valid value in the db
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
