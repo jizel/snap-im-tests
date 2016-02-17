@@ -84,7 +84,7 @@ class PropertyResolver {
         int memory
 
         try {
-            memory = Integer.parseInt(System.getProperty("dockerMachineMemorySize", "3072"))
+            memory = Integer.parseInt(System.getProperty("dockerMachineMemorySize", Integer.toString(DEFAULT_VM_MEMORY_SIZE)))
         } catch (NumberFormatException ex) {
             memory = DEFAULT_VM_MEMORY_SIZE
         }
