@@ -129,12 +129,14 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
             DockerContainer.removeContainers(containers.resolve())
         }
 
+        String dockerMachineIp = DockerMachineHelper.getIp(dockerMachine)
+
         // here we set docker.host system property which is eventually picked by Docker Manager
         // so service managers for Docker will talk to the right services running in Docker machine
         // when service installations resolve their 'setup' closures after this property is set,
         // they will internally be set to talk to Docker machine out of the box
 
-        System.setProperty("docker.host", DockerMachineHelper.getIp(dockerMachine))
+        System.setProperty("docker.host", dockerMachineIp)
 
         // This is set here so when Arquillian gets involved with arquillian.xml file, they will be
         // expanded in 'serverUri' property
@@ -150,8 +152,15 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         // need to be sure that it exists
 
         DockerInteraction.execute("mkdir -p /home/docker/configuration", 0, 1)
+        System.setProperty("arquillian.xml.data.tomcat.config.dir", PropertyResolver.resolveTomcatSpringConfigDirectoryMount())
+        //DockerInteraction.execute("mkdir -p /home/docker/deployments", 0, 1)
 
-        System.setProperty("arquillian.xml.data.tomcat.config.dir", "/home/docker/configuration")
+        DockerInteraction.execute("mkdir -p ${PropertyResolver.resolveTomcatDeploymentDirectory()}", 0, 1)
+        DockerInteraction.execute("sudo -i chown -R docker:staff ${PropertyResolver.resolveTomcatDeploymentDirectory()}", 0, 1)
+        System.setProperty("arquillian.xml.deployments.mount", PropertyResolver.resolveTomcatDeploymentDirectoryBind())
+
+        // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
+        System.setProperty("arquillian.xml.java.rmi.server.hostname", dockerMachineIp)
     }
 
     @Override

@@ -34,7 +34,7 @@ class TomcatConfigurationDeployer {
             return
         }
 
-        String tomcatConfigurationDir = new GradleSpaceliftDelegate().project().spacelift.configuration['tomcatSpringConfigDirectory'].value
+        String tomcatConfigurationDir = PropertyResolver.resolveTomcatSpringConfigDirectorySource()
 
         String from = tomcatConfigurationDir + "/${containerId}"
         String to = dockerMachine + ":/home/docker/configuration"

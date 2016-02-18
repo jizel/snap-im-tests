@@ -5,6 +5,11 @@ import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
+import static travel.snapshot.qa.util.DockerMode.HOST
+import static travel.snapshot.qa.util.DockerMode.MACHINE
+import static travel.snapshot.qa.util.TestExecutionMode.DEVELOPMENT
+import static travel.snapshot.qa.util.TestExecutionMode.TEST
+
 class PropertyResolver {
 
     private static final int DEFAULT_VM_MEMORY_SIZE = 3072 // in MB
@@ -14,6 +19,8 @@ class PropertyResolver {
     private static final ConnectionMode DEFAULT_CONNECTION_MODE = ConnectionMode.STARTORCONNECTANDLEAVE
 
     private static final DockerMode DEFAULT_DOCKER_MODE = DockerMode.MACHINE
+
+    private static final TestExecutionMode DEFAULT_EXECUTION_MODE = DEVELOPMENT
 
     static def resolveDockerMode() {
 
@@ -69,17 +76,33 @@ class PropertyResolver {
         Boolean.parseBoolean(System.getProperty("forceDataPlatformBuild"))
     }
 
-    static def resolveTomcatSpringConfigDirectory() {
+    static def resolveTomcatSpringConfigDirectoryMount() {
+        def mount
 
-        def defaultConfiguration
-
-        if (SystemUtils.IS_OS_UNIX) {
-            defaultConfiguration = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
+        if (PropertyResolver.resolveDockerMode() == HOST.name()) {
+            if (SystemUtils.IS_OS_UNIX) {
+                mount = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
+            } else {
+                mount = "configuration"
+            }
         } else {
-            defaultConfiguration = "configuration"
+            mount = "/home/docker/configuration"
         }
 
-        System.getProperty("tomcatSpringConfigDirectory", defaultConfiguration)
+        mount
+    }
+
+    static def resolveTomcatSpringConfigDirectorySource() {
+
+        def configurationSource
+
+        if (SystemUtils.IS_OS_UNIX) {
+            configurationSource = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
+        } else {
+            configurationSource = "configuration"
+        }
+
+        configurationSource
     }
 
     static def resolveRepositoryFetchSkip() {
@@ -130,7 +153,69 @@ class PropertyResolver {
     static def resolveApiTestsDpProperties() {
         File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
         File apiTestsConfiguration = new File(rootDir, "configuration/api-tests/dp.properties")
-    
+
         System.getProperty("dp.properties", apiTestsConfiguration.getAbsolutePath())
     }
+
+    /**
+     * Return execution mode of Snapshot Data Platform test project.
+     *
+     * There are two modes, DEVELOPMENT and TEST, in case TEST is resolved, platform will be started in such way
+     * it will be possible to deploy wars directly from IDE (such as IDEA) to Docker containers. In case TEST is choosen,
+     * it will be possible just to run tests in a CI manner.
+     *
+     * Default test execution mode is DEVELOPMENT.
+     *
+     * @return resolved test execution mode
+     */
+    static def resolveTestExecutionMode() {
+        def testExecutionMode
+
+        try {
+            testExecutionMode = TestExecutionMode.valueOf(System.getProperty("testExecutionMode", DEFAULT_EXECUTION_MODE.toString()))
+        } catch (Exception ex) {
+            testExecutionMode = DEFAULT_EXECUTION_MODE
+        }
+
+        testExecutionMode.name()
+    }
+
+    /**
+     * When running in TEST execution mode, we do not want to mount anything because that mount would
+     * overlay manager deployment in Tomcat so we would not be able to connect to it because that connection check
+     * checks if we are able to list deployments via manager which is not there because binding of directory from
+     * localhost or Docker machine would make that directory effectively empty.
+     *
+     * On the other hand if we are running in DEVELOPMENT mode, we want mount directory to Tomcat from which
+     * it will pick deployments we copy there from local host or IDEA copies them there by Tomcat remote configuration.
+     *
+     * @return bind record which get propagated to arquillian.xml for Tomcat container
+     */
+    static def resolveTomcatDeploymentDirectoryBind() {
+        TestExecutionMode testExecutionMode = TestExecutionMode.valueOf(PropertyResolver.resolveTestExecutionMode())
+
+        switch (testExecutionMode) {
+            case DEVELOPMENT:
+                return "- ${resolveTomcatDeploymentDirectory()}:/opt/tomcat/webapps"
+            case TEST:
+                return ""
+            default:
+                throw new IllegalStateException("Unable to get deployment directory bind for " + testExecutionMode.name())
+        }
+    }
+
+    static def resolveTomcatDeploymentDirectory() {
+        DockerMode dockerMode = DockerMode.valueOf(resolveDockerMode())
+        switch (dockerMode) {
+            case HOST:
+                if (SystemUtils.IS_OS_UNIX) {
+                    return new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/deployments"
+                } else {
+                    return "deployments"
+                }
+            case MACHINE:
+                return "/opt/tomcat/webapps"
+        }
+    }
+
 }

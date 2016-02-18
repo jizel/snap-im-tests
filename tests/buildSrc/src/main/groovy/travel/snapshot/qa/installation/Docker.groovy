@@ -103,7 +103,11 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
         System.setProperty("arquillian.xml.docker.registry.password", PropertyResolver.resolveDockerRegistryPassword())
 
         // in case we do not use VM, config directory will be automatically mounted to respective container transparently
-        System.setProperty("arquillian.xml.data.tomcat.config.dir", PropertyResolver.resolveTomcatSpringConfigDirectory())
+        System.setProperty("arquillian.xml.data.tomcat.config.dir", PropertyResolver.resolveTomcatSpringConfigDirectoryMount())
+        System.setProperty("arquillian.xml.deployments.mount", PropertyResolver.resolveTomcatDeploymentDirectoryBind())
+
+        // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
+        System.setProperty("arquillian.xml.java.rmi.server.hostname", "")
 
         // if Docker mode is 'machine', we will download images in Docker Machine installation
         // into the Docker's VM so we prevent from downloading them twice

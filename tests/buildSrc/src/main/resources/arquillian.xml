@@ -53,8 +53,9 @@
 
         <property name="dockerContainers">
             tomcat:
-                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.32
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
                 await:
                     strategy: polling
                     type: ping
@@ -67,9 +68,11 @@
                     - activemq:activemq
                 binds:
                     - ${arquillian.xml.data.tomcat.config.dir}/tomcat:/data/tomcat/config
+                    ${arquillian.xml.deployments.mount}
             tomcat_standalone:
-                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.30
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.32
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
                 await:
                     strategy: polling
                     type: ping
@@ -97,14 +100,15 @@
                     iterations: 15
                 portBindings: [27017/tcp]
             activemq:
-                image: docker.snapshot.travel:5000/snapshot/activemq:5.12.1
-                exposedPorts: [1099/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+                image: docker.snapshot.travel:5000/snapshot/activemq:5.12.3
+                exposedPorts: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
                 await:
                     strategy: polling
                     type: ping
                     sleepPollingTime: 5 s
                     iterations: 15
-                portBindings: [1098->1099/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+                portBindings: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
         </property>
     </extension>
 

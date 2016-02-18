@@ -152,7 +152,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
                     // once Cube 1.0.0.Final is released, it will be done correctly
                     //orchestration.dockerManager.stop(installation)
                 } catch (Exception ex) {
-                    throw new RuntimeException(ex)
+                    logger.warn("Unable to remove container: {}", ex.getMessage())
                 }
             }
         } else {

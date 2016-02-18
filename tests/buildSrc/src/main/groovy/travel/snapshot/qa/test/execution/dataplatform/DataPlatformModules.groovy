@@ -22,8 +22,6 @@ enum DataPlatformModules {
             new Builder()
                     .add(CONFIGURATION)
                     .add(IDENTITY)
-                    .add(OTA_INTEGRATION)
-                    .add(TWITTER)
                     .add(RATE_SHOPPER)
                     .add(WEB_PERFORMANCE)
                     .add(REVIEW)
@@ -48,6 +46,8 @@ enum DataPlatformModules {
         List<DataPlatformModule> modules() {
             new Builder()
                     .add(DataPlatformModule.GOOGLE_ANALYTICS_INTEGRATION)
+                    .add(OTA_INTEGRATION)
+                    .add(TWITTER)
                     .build()
         }
     }

@@ -6,6 +6,7 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.installation.DockerMachine
 import travel.snapshot.qa.installation.DockerService
+import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
@@ -40,10 +41,10 @@ spacelift {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value {
                 [
-                        "docker.snapshot.travel:5000/snapshot/tomcat:8.0.30",
+                        "docker.snapshot.travel:5000/snapshot/tomcat:8.0.32",
                         "docker.snapshot.travel:5000/snapshot/mariadb:10.1.11",
                         "docker.snapshot.travel:5000/snapshot/mongodb:3.2.1",
-                        "docker.snapshot.travel:5000/snapshot/activemq:5.12.1"
+                        "docker.snapshot.travel:5000/snapshot/activemq:5.12.3"
                 ]
             }
         }
@@ -59,8 +60,11 @@ spacelift {
         connectionMode {
             value PropertyResolver.resolveConnectionMode()
         }
+        testExecutionMode {
+            value PropertyResolver.resolveTestExecutionMode()
+        }
         dockerRegistryPassword {
-            // this can be externalized when desired
+            // you have to set systemProp.dockerRegistryPassword variable with Docker registry password in gradle.properties
             value PropertyResolver.resolveDockerRegistryPassword()
         }
 
@@ -81,9 +85,6 @@ spacelift {
             type Boolean
             value PropertyResolver.resolveForceDataPlatformBuild()
         }
-        tomcatSpringConfigDirectory {
-            value PropertyResolver.resolveTomcatSpringConfigDirectory()
-        }
         tomcatDeploymentStrategy {
             value PropertyResolver.resolveTomcatDeploymentStrategy()
         }
@@ -102,6 +103,9 @@ spacelift {
         platformStop(from: dataPlatform) {
             tests 'platformStop'
         }
+        platformInit(from: dataPlatformTest) {
+            tests 'platformStart','platformInit'
+        }
         platformBuild {
             enabledInstallations (dataPlatformRepositories + 'gradle')
             tests 'platformBuild'
@@ -117,7 +121,7 @@ spacelift {
 
         tomcat(from: DockerService) {
             setup {
-                platform.with(tomcat().init())
+                new TomcatInstallationResolver(platform).resolve()
             }
         }
         mariadb(from: DockerService) {
@@ -167,6 +171,13 @@ spacelift {
         platformBuild(from: DataPlatformTest) {
             execute {
                 new DataPlatformBuildExecutor(workspace).build(DataPlatformModule.PROJECT).execute(true)
+            }
+        }
+        platformInit(from: DataPlatformTest) {
+            execute {
+                new MariaDBInitializer(workspace, platform)
+                        .init(DataPlatformModule.IDENTITY)
+                        .execute()
             }
         }
         reportableTest(from: DataPlatformTest) {
@@ -224,7 +235,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.0.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.2'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.3'
     }
 }
 
