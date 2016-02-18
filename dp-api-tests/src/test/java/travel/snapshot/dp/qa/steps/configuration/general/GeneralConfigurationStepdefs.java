@@ -1,13 +1,11 @@
 package travel.snapshot.dp.qa.steps.configuration.general;
 
-import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;

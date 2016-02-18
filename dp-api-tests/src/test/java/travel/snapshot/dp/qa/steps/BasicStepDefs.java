@@ -1,8 +1,9 @@
 package travel.snapshot.dp.qa.steps;
 
+import net.thucydides.core.annotations.Steps;
+
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 public class BasicStepDefs {
@@ -16,7 +17,7 @@ public class BasicStepDefs {
     public void response_code_is(int responseCode) throws Throwable {
         basicSteps.responseCodeIs(responseCode);
     }
-    
+
     @Then("^Response code is \"([^\"]*)\"$")
     public void response_code_is_string(String responseCode) throws Throwable {
         basicSteps.responseCodeIs(Integer.valueOf(responseCode));
@@ -27,10 +28,10 @@ public class BasicStepDefs {
         basicSteps.isCalledWithoutTokenUsingMethod(service, method);
     }
 
-     @Then("^Custom code is (\\d+)$")
-     public void Custom_code_is(Integer customCode) throws Throwable {
-         basicSteps.customCodeIs(customCode);
-     }
+    @Then("^Custom code is (\\d+)$")
+    public void Custom_code_is(Integer customCode) throws Throwable {
+        basicSteps.customCodeIs(customCode);
+    }
 
     @Then("^Custom code is \"([^\"]*)\"$")
     public void custom_code_is(Integer customCode) throws Throwable {

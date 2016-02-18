@@ -16,18 +16,16 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Address;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
-import travel.snapshot.dp.qa.model.Address;
-import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -158,7 +156,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void followingPropertyIsCreatedWithAddress(Property property, Address address) {
-    	property.setAddress(address);
+        property.setAddress(address);
         Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
         Property existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
         if (existingProperty != null) {
@@ -373,12 +371,12 @@ public class PropertySteps extends BasicSteps {
         return Arrays.asList(customerUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
     }
 
-    private Customer getCustomerForProperty(String propertyId, String customerCode){
+    private Customer getCustomerForProperty(String propertyId, String customerCode) {
         Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "code==" + customerCode, null, null);
         return Arrays.asList(customerResponse.as(Customer[].class)).stream().findFirst().orElse(null);
     }
 
-    public void customerDoesNotExistForProperty(String customerCode, String propertyCode){
+    public void customerDoesNotExistForProperty(String customerCode, String propertyCode) {
         Property p = getPropertyByCodeInternal(propertyCode);
         Customer cust = getCustomerForProperty(p.getPropertyId(), customerCode);
         assertNull("Customer should not be link with property", cust);
@@ -479,13 +477,13 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void allCustomersAreCustomersOfProperty(String propertyCode) {
-    	String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
-    	Response response = getSessionResponse();
-    	Customer[] customers = response.as(Customer[].class);
-    	for (Customer c : customers) {
-			given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getCustomerId()+"/properties").
-			then().body("property_id",hasItem(propertyID));
-		}
+        String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
+        Response response = getSessionResponse();
+        Customer[] customers = response.as(Customer[].class);
+        for (Customer c : customers) {
+            given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getCustomerId() + "/properties").
+                    then().body("property_id", hasItem(propertyID));
+        }
     }
 
     // TODO reuse existing code

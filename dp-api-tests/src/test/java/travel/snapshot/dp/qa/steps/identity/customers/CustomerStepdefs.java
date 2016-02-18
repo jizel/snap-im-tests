@@ -1,21 +1,27 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
-import cucumber.api.PendingException;
+import net.thucydides.core.annotations.Steps;
+
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import net.thucydides.core.annotations.Steps;
-import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.*;
+import travel.snapshot.dp.qa.model.Address;
+import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.CustomerProperty;
+import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertySetArray;
+import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
 import travel.snapshot.dp.qa.steps.review.ReviewMultipropertyCustomerSteps;
-
-import java.util.List;
 
 /**
  * Created by sedlacek on 9/18/2015.

@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -36,7 +35,13 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -139,9 +144,8 @@ public class BasicSteps {
     }
 
     /**
-     * This method is used instead of bodyContainsCollectionWith()
-     * when the collection contains values of type Double.
-     * Only the integer part of the value is validated.
+     * This method is used instead of bodyContainsCollectionWith() when the collection contains
+     * values of type Double. Only the integer part of the value is validated.
      */
     public void integerPartOfValueIs(String path, int value) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);

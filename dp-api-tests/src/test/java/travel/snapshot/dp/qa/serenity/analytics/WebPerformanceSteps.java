@@ -1,24 +1,22 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
-import static com.jayway.restassured.RestAssured.given;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import javax.validation.constraints.AssertTrue;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
-import static org.junit.Assert.*;
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -36,7 +34,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
 
     @Step
     public void getData(String url, String granularity, String propertyId, String since, String until, String metric,
-            String direction) {
+                        String direction) {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
 

@@ -1,20 +1,20 @@
 package travel.snapshot.dp.qa.steps.review;
 
-import cucumber.api.PendingException;
+import net.thucydides.core.annotations.Steps;
+
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import net.thucydides.core.annotations.Steps;
-import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.review.model.Location;
 import travel.snapshot.dp.qa.model.review.model.Property;
 import travel.snapshot.dp.qa.serenity.analytics.ReviewSteps;
-import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
-
-import java.util.List;
 
 
 public class ReviewStepsdefs {
@@ -192,7 +192,6 @@ public class ReviewStepsdefs {
                                                                               @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         reviewMultipropertyCustomerSteps.getCustomerPropertiesMetric(metric, customerCode, since, until, granularity, limit, cursor);
     }
-
 
 
     @When("^Get \"([^\"]*)\" for single property \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" and granularity \"([^\"]*)\"$")
