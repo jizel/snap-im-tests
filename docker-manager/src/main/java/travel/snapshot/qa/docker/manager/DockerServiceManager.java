@@ -32,6 +32,8 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
 
     protected boolean started = false;
 
+    protected Task<?, Boolean> checkingTask;
+
     public DockerServiceManager(final T serviceManager) {
         Validate.notNull(serviceManager, "Service manager can not be a null object!");
         this.serviceManager = serviceManager;
@@ -46,6 +48,19 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      */
     public <T extends DockerServiceManager<? extends ServiceManager>> T setContainerId(final String containerId) {
         this.containerId = containerId;
+        return (T) this;
+    }
+
+    /**
+     * Sets custom checking task to use. When this is not set, you have to provide your checking task explicitly when
+     * calling task version of start method. This also provides a way how to specify your custom checking task for a
+     * service.
+     *
+     * @param checkingTask checking task to use
+     * @return this
+     */
+    public <T extends DockerServiceManager<? extends ServiceManager>> T setCheckingTask(final Task<?, Boolean> checkingTask) {
+        this.checkingTask = checkingTask;
         return (T) this;
     }
 
@@ -77,11 +92,13 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * @param reexecutionInterval interval after checking task will execute itself again to check if service is running
      * @return started Docker container as Arquillian Cube
      * @throws IllegalStateException    if container to start is already started
-     * @throws IllegalArgumentException if container ID is a null object or an empty String
+     * @throws IllegalArgumentException if container ID is a null object or an empty String or checking task is a null
+     *                                  object
      */
     public Cube start(final Task<?, Boolean> checkingTask, final String containerId, long timeout, long reexecutionInterval) {
 
         Validate.notNullOrEmpty(containerId, "Container ID to start must not be a null object or an empty String!");
+        Validate.notNull(checkingTask, "Checking task must not be a null object!");
 
         if (started) {
             throw new IllegalStateException(String.format("Unable to start already started container '%s'", containerId));
@@ -94,6 +111,19 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
         started = true;
 
         return dockerContainer;
+    }
+
+    /**
+     * Starts container with checking task already set by {@link #setCheckingTask(Task)} method.
+     *
+     * @param containerId         id of Docker container to start
+     * @param timeout             time after service's start is considered unsuccessful when checking task is not done
+     * @param reexecutionInterval interval after checking task will execute itself again to check if service is running
+     * @throws IllegalStateException    if container to start is already started
+     * @throws IllegalArgumentException if container ID is a null object or an empty String
+     */
+    public Cube start(final String containerId, long timeout, long reexecutionInterval) {
+        return start(this.checkingTask, containerId, timeout, reexecutionInterval);
     }
 
     /**
