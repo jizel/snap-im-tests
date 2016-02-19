@@ -1,22 +1,37 @@
 package travel.snapshot.dp.qa.steps.review;
 
-import com.jayway.restassured.response.Response;
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+import groovy.io.FileType;
+import net.thucydides.core.annotations.Step;
+import org.apache.commons.lang3.reflect.TypeUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.model.review.model.Traveller;
-import travel.snapshot.dp.qa.model.review.model.TravellerAspectsOfBusiness;
-import travel.snapshot.dp.qa.model.review.model.TravellerNumberOfReviews;
-import travel.snapshot.dp.qa.model.review.model.TravellerOverall;
+import travel.snapshot.dp.qa.model.review.model.TravellersStats;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static junit.framework.TestCase.assertEquals;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class ReviewTravelersSteps extends AnalyticsBaseSteps {
 
@@ -28,106 +43,40 @@ public class ReviewTravelersSteps extends AnalyticsBaseSteps {
         spec.basePath(BASE_PATH_LOCATIONS);
     }
 
-    public TravellerOverall[] parseOverallTravelersFromSession() {
-        Response response = getSessionResponse();
-        String responseAsString = response.getBody().asString();
-        return from(responseAsString).getObject("data", TravellerOverall[].class);
+    /**
+     *
+     * @param assertStatement lambda with assert statement checking the object from session response
+     * @param type class with type of object receiving from response
+     * @param <T>
+     * @throws Exception
+     */
+    @Step
+    public <T> void checkAnalyticsReturnedForType(Consumer<T> assertStatement, Class<T> type) throws Exception{
+        T traveller = getSessionResponse().as(type);
+        assertStatement.accept(traveller);
     }
 
-    public TravellerAspectsOfBusiness[] parseAspectsTravelersFromSession() {
-        Response response = getSessionResponse();
-        String responseAsString = response.getBody().asString();
-        return from(responseAsString).getObject("data", TravellerAspectsOfBusiness[].class);
+    /**
+     *
+     * @param filePath path to file with expected data
+     * @param assertStatement lambda with assert statement checking reponse against the file data
+     * @param fileType type of object loaded from file
+     * @param sessionType type of object loaded from session
+     * @param <T>
+     * @param <U>
+     * @throws Exception
+     */
+    @Step
+    public <T, U> void checkFileAgainstResponse(String filePath, BiConsumer<T, U> assertStatement, Class<T> fileType, Class<U> sessionType) throws Exception{
+        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filePath));
+        T expectedStatistics = from(data).getObject("", fileType);
+
+        U actualStatistics = getSessionResponse().as(sessionType);
+
+        assertStatement.accept(expectedStatistics, actualStatistics);
     }
 
-    public TravellerNumberOfReviews[] parseReviewsTravelersFromSession() {
-        Response response = getSessionResponse();
-        String responseAsString = response.getBody().asString();
-        return from(responseAsString).getObject("data", TravellerNumberOfReviews[].class);
-    }
-
-    public Traveller[] parseTravellersFromSession() {
-        Response response = getSessionResponse();
-        String responseAsString = response.getBody().asString();
-        return from(responseAsString).getObject("data", Traveller[].class);
-    }
-
-    public void checkNumberOfAnalyticsReturnedForTravelers(int count) {
-        Traveller[] traveller = parseTravellersFromSession();
-        for (Traveller aTraveller : traveller) {
-            assertEquals(aTraveller.getAspectsOfBusiness().size(), count);
-            assertEquals(aTraveller.getNumberOfReviews().size(), count);
-            assertEquals(aTraveller.getOverall().size(), count);
-        }
-    }
-
-    public void checkNumberOfAnalyticsReturnedForTravelersReviews(int count) {
-        TravellerNumberOfReviews[] traveller = parseReviewsTravelersFromSession();
-        for (TravellerNumberOfReviews aTraveller : traveller) {
-            assertEquals(aTraveller.getNumberOfReviews().size(), count);
-        }
-    }
-
-    public void checkNumberOfAnalyticsReturnedForTravelersAspects(int count) {
-        TravellerAspectsOfBusiness[] traveller = parseAspectsTravelersFromSession();
-        for (TravellerAspectsOfBusiness aTraveller : traveller) {
-            assertEquals(aTraveller.getAspectsOfBusiness().size(), count);
-        }
-    }
-
-    public void checkNumberOfAnalyticsReturnedForTravelersOverallBubble(int count) {
-        TravellerOverall[] traveller = parseOverallTravelersFromSession();
-        for (TravellerOverall aTraveller : traveller) {
-            assertEquals(aTraveller.getOverall().size(), count);
-        }
-    }
-
-    public void checkFileAgainstResponseTravellers(String filename) throws Exception {
-        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        Traveller[] expectedStatistics = from(data).getObject("data", Traveller[].class);
-
-        Traveller[] actualStatistics = parseTravellersFromSession();
-        for (int i = 0; i < actualStatistics.length; i++) {
-            assertEquals(expectedStatistics[i].getType(), actualStatistics[i].getType());
-            assertEquals(expectedStatistics[i].getOverall(), actualStatistics[i].getOverall());
-            assertEquals(expectedStatistics[i].getNumberOfReviews(), actualStatistics[i].getNumberOfReviews());
-            assertEquals(expectedStatistics[i].getAspectsOfBusiness(), actualStatistics[i].getAspectsOfBusiness());
-        }
-    }
-
-    public void checkFileAgainstResponseTravellersBubbleRating(String filename) throws Exception {
-        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        TravellerOverall[] expectedStatistics = from(data).getObject("data", TravellerOverall[].class);
-
-        Traveller[] actualStatistics = parseTravellersFromSession();
-        for (int i = 0; i < actualStatistics.length; i++) {
-            assertEquals(expectedStatistics[i].getType(), actualStatistics[i].getType());
-            assertEquals(expectedStatistics[i].getOverall(), actualStatistics[i].getOverall());
-        }
-    }
-
-    public void checkFileAgainstResponseTravellersAspectsOfBusiness(String filename) throws Exception {
-        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        TravellerAspectsOfBusiness[] expectedStatistics = from(data).getObject("data", TravellerAspectsOfBusiness[].class);
-
-        Traveller[] actualStatistics = parseTravellersFromSession();
-        for (int i = 0; i < actualStatistics.length; i++) {
-            assertEquals(expectedStatistics[i].getType(), actualStatistics[i].getType());
-            assertEquals(expectedStatistics[i].getAspectsOfBusiness(), actualStatistics[i].getAspectsOfBusiness());
-        }
-    }
-
-    public void checkFileAgainstResponseTravellersNumberOfReviews(String filename) throws Exception {
-        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        TravellerNumberOfReviews[] expectedStatistics = from(data).getObject("data", TravellerNumberOfReviews[].class);
-
-        Traveller[] actualStatistics = parseTravellersFromSession();
-        for (int i = 0; i < actualStatistics.length; i++) {
-            assertEquals(expectedStatistics[i].getType(), actualStatistics[i].getType());
-            assertEquals(expectedStatistics[i].getNumberOfReviews(), actualStatistics[i].getNumberOfReviews());
-        }
-    }
-
+    @Step
     public void getDataForSpecificTraveler(String url, String traveler, String granularity, String propertyId, String since, String until) {
         RequestSpecification requestSpecification = given().spec(spec);
         LocalDate sinceDate = StringUtil.parseDate(since);
@@ -151,5 +100,14 @@ public class ReviewTravelersSteps extends AnalyticsBaseSteps {
 
         Response response = requestSpecification.when().get(url);
         setSessionResponse(response);
+    }
+
+    /**
+     *
+     * @param expected
+     * @param actual
+     */
+    public static void assertTravellersData(TravellersStats expected, TravellersStats actual) {
+        assertThat(expected.getData(), equalTo(actual.getData()));
     }
 }

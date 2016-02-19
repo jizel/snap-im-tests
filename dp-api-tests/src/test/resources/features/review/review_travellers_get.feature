@@ -2,6 +2,30 @@ Feature: review travelers
   Testing of api for review modul alias trip_advisor with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
   data in db are mostly increasing some of the data also includes nulls
 
+  Background:
+    Given Database is cleaned
+    Given The following properties exist with random address and billing address
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+
+    Given The following customers exist with random address
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+
+    Given The following users exist
+      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+
+    Given The password of user "default1" is "Password1"
+    Given Relation between user with username "default1" and customer with code "c1t" exists with isPrimary "true"
+
+    Given Get token for user "default1" with password "Password1"
+    Given Set access token from session for customer steps defs
+    Given Set access token for review steps defs
+
+    Given Relation between user with username "default1" and property with code "p1_code" exists
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
+
   Scenario Outline: Get specific analytics data from API for a given granularity for travelers overall bubble rating
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
