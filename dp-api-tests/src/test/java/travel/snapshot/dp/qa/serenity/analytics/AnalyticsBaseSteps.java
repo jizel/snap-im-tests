@@ -1,10 +1,17 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.jayway.restassured.response.Response;
-
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.StringUtil;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -13,22 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
-import travel.snapshot.dp.qa.helpers.StringUtil;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Created by sedlacek on 10/5/2015.
  */
 public class AnalyticsBaseSteps extends BasicSteps {
 
 
-    public AnalyticsBaseSteps() {}
+    public AnalyticsBaseSteps() {
+    }
 
     //GET Requests
 
@@ -93,6 +92,42 @@ public class AnalyticsBaseSteps extends BasicSteps {
     }
 
     @Step
+    public void responseContainsObjectsAllWithPropertyAndValues(String property, List<String> values) {
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        List responseList = response.as(List.class);
+
+        for (Object record : responseList) {
+            List dataOwners = (List) ((Map) record).get(property);
+            assertTrue(dataOwners.containsAll(values));
+        }
+    }
+
+    @Step
+    public void listOfObjectsAreSortedAccordingToProperty(String property, boolean ascending, Class propertyClassType) {
+
+        BiPredicate equalityPredicate = null;
+
+        BiPredicate<Double, Double> numberEquality = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
+        BiPredicate<String, String> stringEquality = ascending ? (a, b) -> a.compareTo(b) <= 0 : (a, b) -> a.compareTo(b) >= 0;
+
+        if (propertyClassType == Double.class || propertyClassType == Long.class || propertyClassType == Integer.class) {
+            equalityPredicate = numberEquality;
+        }
+
+        if (propertyClassType == String.class) {
+            equalityPredicate = stringEquality;
+        }
+
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        List values = response.body().jsonPath().getList(property, propertyClassType);
+
+        for (int i = 0; i < values.size() - 1; i++) {
+            assertTrue("\nValue at index " + i + ": " + values.get(i) + "\nValue at index " + (i + 1) + ": " + values.get(i + 1),
+                    equalityPredicate.test(values.get(i), values.get(i + 1)));
+        }
+    }
+
+    @Step
     public void referralsAreSorted(String metric, boolean ascending) {
         BiPredicate<Double, Double> direction = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
         Response response = getSessionResponse();
@@ -118,13 +153,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
         LocalDate actualDate = LocalDate.parse(response.getBody().path(fieldName));
         assertEquals(expectedDate, actualDate);
     }
-
-    //@Step
-    //public void fieldContainsIntegerValue(String fieldName, int value) {
-    //    Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-    //    response.then().body(fieldName, hasItem(value));
-    //}
-
 
     public void responseContainsCorrectValuesFor(String granularity, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
