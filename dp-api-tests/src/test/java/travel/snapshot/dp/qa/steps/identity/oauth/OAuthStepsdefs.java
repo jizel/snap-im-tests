@@ -1,7 +1,8 @@
 package travel.snapshot.dp.qa.steps.identity.oauth;
 
-import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+
+import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.serenity.oauth.OAuthSteps;
 
 /**

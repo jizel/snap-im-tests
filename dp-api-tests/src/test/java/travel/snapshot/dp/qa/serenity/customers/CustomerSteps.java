@@ -22,11 +22,8 @@ import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.CustomerUser;
 import travel.snapshot.dp.qa.model.Property;
-import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
-import travel.snapshot.dp.qa.serenity.oauth.OAuthSteps;
-import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
@@ -129,7 +126,7 @@ public class CustomerSteps extends BasicSteps {
         given().spec(spec).get(customerLocation).then()
                 .body("property_id", is(originalCustomerProperty.getPropertyId()))
                 .body("property_name", is(originalCustomerProperty.getPropertyName()))
-                        //.body("type", is(originalCustomerProperty.getType()))
+                //.body("type", is(originalCustomerProperty.getType()))
                 .body("valid_from", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidFrom())))
                 .body("valid_to", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidTo())));
 
@@ -150,11 +147,11 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void allCustomersAreActive() {
-    	Response response = getSessionResponse();
-    	List<Integer> isActiveList = response.body().jsonPath().getList("is_active");
-    	for (int c : isActiveList) {
-			assertEquals(1, c);
-		}
+        Response response = getSessionResponse();
+        List<Integer> isActiveList = response.body().jsonPath().getList("is_active");
+        for (int c : isActiveList) {
+            assertEquals(1, c);
+        }
     }
 
     private CustomerProperty getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
@@ -385,10 +382,10 @@ public class CustomerSteps extends BasicSteps {
                 fail("CustomerProperty cannot be modified");
             }
         } else {*/
-            Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("CustomerProperty cannot be created");
-            }
+        Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
+        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+            fail("CustomerProperty cannot be created");
+        }
         //}
     }
 
@@ -576,7 +573,8 @@ public class CustomerSteps extends BasicSteps {
                 assertEquals(value, DateUtils.isoDatefromDate(cp.getValidTo()));
                 break;
             }
-            default: fail("Bad field for customer property");
+            default:
+                fail("Bad field for customer property");
         }
     }
 }

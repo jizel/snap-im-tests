@@ -1,9 +1,14 @@
 package travel.snapshot.dp.qa.steps.jms;
 
+import net.thucydides.core.annotations.Steps;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import net.thucydides.core.annotations.Steps;
-import travel.snapshot.dp.qa.model.*;
+import travel.snapshot.dp.qa.model.Customer;
+import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertySet;
+import travel.snapshot.dp.qa.model.Role;
+import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;

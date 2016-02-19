@@ -1,13 +1,14 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
-import cucumber.api.Transform;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-import org.slf4j.LoggerFactory;
+import cucumber.api.Transform;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.SocialMediaSteps;
 
@@ -37,7 +38,7 @@ public class SocialMediaStepdefs {
     public void Get_social_media_with_missing_property_header(String url) throws Throwable {
         steps.getData("/social_media" + url, "day", null, null, null);
     }
-    
+
     @When("^Property is missing for \"([^\"]*)\"$")
     public void property_is_missing_for(String url) throws Throwable {
         steps.getDataWithoutProperty(url);
@@ -49,7 +50,7 @@ public class SocialMediaStepdefs {
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getItems("/social_media" + url, propertyId, limit, cursor);
     }
-    
+
     @Then("^There are at most (\\d+) items returned$")
     public void There_are_at_most_items_returned(int count) throws Throwable {
         steps.maximumNumberOfItemsInResponse(count);

@@ -2,11 +2,11 @@ package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,8 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
+import travel.snapshot.dp.qa.helpers.StringUtil;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -105,17 +109,17 @@ public class AnalyticsBaseSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         response.then().body("size()", lessThanOrEqualTo(count));
     }
-    
+
     @Step
     public void referralsAreSorted(String metric, boolean ascending) {
-    	BiPredicate<Double, Double> direction = ascending ? (a,b) -> a<=b : (a,b) -> a>=b ;
-    	Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-    	List<Double> values = response.body().jsonPath().getList("values." + metric, double.class);
-    	for (int i = 0; i < values.size()-1; i++) {
-			assertTrue("\nValue at index "+i+": "+values.get(i)+"\n"
-					+ "Value at index "+(i+1)+": "+values.get(i+1),
-					direction.test(values.get(i),values.get(i+1)));
-    	}
+        BiPredicate<Double, Double> direction = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
+        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        List<Double> values = response.body().jsonPath().getList("values." + metric, double.class);
+        for (int i = 0; i < values.size() - 1; i++) {
+            assertTrue("\nValue at index " + i + ": " + values.get(i) + "\n"
+                            + "Value at index " + (i + 1) + ": " + values.get(i + 1),
+                    direction.test(values.get(i), values.get(i + 1)));
+        }
     }
 
     @Step

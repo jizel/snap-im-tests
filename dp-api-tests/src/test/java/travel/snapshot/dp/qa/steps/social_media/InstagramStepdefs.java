@@ -1,12 +1,11 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
-import cucumber.api.Transform;
-import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+
+import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.serenity.analytics.InstagramSteps;
-import travel.snapshot.dp.qa.serenity.analytics.SocialMediaSteps;
 
 /**
  * Created by sedlacek on 9/18/2015.

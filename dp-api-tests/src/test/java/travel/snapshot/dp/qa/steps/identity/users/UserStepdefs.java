@@ -4,9 +4,7 @@ import net.thucydides.core.annotations.Steps;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -204,10 +202,10 @@ public class UserStepdefs {
     public void There_are_user_roles_with_following_role_names_returned_in_order(List<String> rolenames) throws Throwable {
         usersSteps.rolenamesAreInResponseInOrder(rolenames);
     }
-    
+
     @Given("^The password of user \"([^\"]*)\" is \"([^\"]*)\"$")
     public void setting_the_password_of_user_to(String username, String password) {
-    	usersSteps.setUserPasswordByUsername(username, password);
+        usersSteps.setUserPasswordByUsername(username, password);
     }
 
     @When("^Activating user with username \"([^\"]*)\"$")

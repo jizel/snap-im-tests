@@ -1,16 +1,17 @@
 package travel.snapshot.dp.qa.steps.review;
 
 import com.jayway.restassured.response.Response;
+
+import java.util.List;
+
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.review.model.Location;
 import travel.snapshot.dp.qa.model.review.model.Property;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
-public class ReviewLocationSteps extends AnalyticsBaseSteps{
+public class ReviewLocationSteps extends AnalyticsBaseSteps {
 
     private static final String BASE_PATH_LOCATIONS = "/review/locations";
 

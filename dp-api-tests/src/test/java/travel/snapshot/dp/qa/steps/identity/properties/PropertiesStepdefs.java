@@ -1,21 +1,17 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
-import cucumber.api.PendingException;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Address;
-import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -145,11 +141,11 @@ public class PropertiesStepdefs {
 
     @When("^List of customers for property with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_customers_for_property_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyCode,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+                                                                                                                        @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                        @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                        @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                        @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                        @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         propertySteps.listOfCustomersIsGotWith(propertyCode, limit, cursor, filter, sort, sortDesc);
     }
 
@@ -177,7 +173,7 @@ public class PropertiesStepdefs {
 
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")
     public void each_customer_is_a_customer_of_property_with_code(String propertyCode) throws Throwable {
-    	propertySteps.allCustomersAreCustomersOfProperty(propertyCode);
+        propertySteps.allCustomersAreCustomersOfProperty(propertyCode);
     }
 
     // --- and ---
@@ -237,7 +233,6 @@ public class PropertiesStepdefs {
     public void propertyIsNotAssignedToCustomer(String propertyCode, String customerCode) throws Throwable {
         propertySteps.customerDoesNotExistForProperty(customerCode, propertyCode);
     }
-
 
 
     // TODO reuse existing code

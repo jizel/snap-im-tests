@@ -1,15 +1,17 @@
 package travel.snapshot.dp.qa.serenity.oauth;
 
-import static com.jayway.restassured.RestAssured.given;
-
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.thucydides.core.annotations.Step;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+
+import static com.jayway.restassured.RestAssured.given;
 
 /**
  * Created by vlcek on 2/9/2016.

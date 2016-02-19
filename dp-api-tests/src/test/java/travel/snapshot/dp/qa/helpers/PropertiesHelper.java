@@ -14,7 +14,6 @@ import java.util.Properties;
  */
 public class PropertiesHelper {
 
-
     private static boolean initializedFromFile = false;
 
     public static String getProperty(String key) {
@@ -30,7 +29,7 @@ public class PropertiesHelper {
             }
         }
         //If file cannot be loaded, take default one
-        if (stream == null){
+        if (stream == null) {
             stream = PropertiesHelper.class
                     .getResourceAsStream("/dp.properties");
         }
