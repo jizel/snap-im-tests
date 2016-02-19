@@ -50,6 +50,16 @@ enum DataPlatformModules {
                     .add(TWITTER)
                     .build()
         }
+    },
+    DATABASE_SCHEMES {
+
+        @Override
+        List<DataPlatformModule> modules() {
+            new Builder()
+                .add(DataPlatformModule.SCHEME_DP)
+                .add(DataPlatformModule.SCHEME_IDENTITY)
+                .build()
+        }
     }
 
     abstract List<DataPlatformModule> modules()

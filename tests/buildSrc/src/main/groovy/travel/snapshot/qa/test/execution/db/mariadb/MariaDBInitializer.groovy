@@ -8,6 +8,7 @@ import travel.snapshot.qa.docker.ServiceType
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 
 /**
  * Initializes MariaDB container with Flyway scripts.
@@ -72,6 +73,20 @@ class MariaDBInitializer {
         for (DataPlatformModule module : modules) {
             init(module)
         }
+        this
+    }
+
+    /**
+     * Adds modules for initialization
+     *
+     * @param modules modules to pefrom database initialization for
+     * @return this
+     */
+    MariaDBInitializer init(DataPlatformModules modules) {
+        for (DataPlatformModule module : modules.modules()) {
+            init(module)
+        }
+
         this
     }
 

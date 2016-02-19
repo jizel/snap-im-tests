@@ -11,6 +11,7 @@ import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
@@ -176,7 +177,7 @@ spacelift {
         platformInit(from: DataPlatformTest) {
             execute {
                 new MariaDBInitializer(workspace, platform)
-                        .init(DataPlatformModule.IDENTITY)
+                        .init(DataPlatformModules.DATABASE_SCHEMES)
                         .execute()
             }
         }

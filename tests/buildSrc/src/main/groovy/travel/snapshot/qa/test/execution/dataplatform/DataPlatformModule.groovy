@@ -30,7 +30,12 @@ enum DataPlatformModule {
 
     // Tomcat integrations
 
-    GOOGLE_ANALYTICS_INTEGRATION("GoogleAnalyticsIntegration", "GoogleAnalyticsIntegration/build/libs/GoogleAnalyticsIntegration-1.0.war")
+    GOOGLE_ANALYTICS_INTEGRATION("GoogleAnalyticsIntegration", "GoogleAnalyticsIntegration/build/libs/GoogleAnalyticsIntegration-1.0.war"),
+
+    // meta Data Platform modules for initializing database schemes
+
+    SCHEME_DP("SCHEME_DP", "SCHEME_DP", new MariaDBModuleConfiguration("dp", "DB/dp/sql")),
+    SCHEME_IDENTITY("SCHEME_IDENTITY", "SCHEME_IDENTITY", new MariaDBModuleConfiguration("identity", "DB/identity/sql"))
 
     String path
     String war
