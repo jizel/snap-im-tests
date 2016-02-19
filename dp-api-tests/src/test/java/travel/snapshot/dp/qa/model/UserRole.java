@@ -16,7 +16,7 @@ public class UserRole {
     private String relationshipId = null;
 
     public enum RelationshipTypeEnum {
-        customer, property, property_set,
+        CUSTOMER, PROPERTY, PROPERTY_SET,
     }
 
     ;

@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import travel.snapshot.dp.qa.helpers.FieldType;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.helpers.ObjectField;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.ResponseEntry;
 
@@ -37,6 +38,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * @author konkol
@@ -50,7 +52,6 @@ public class CommonObjectSteps extends BasicSteps {
     private static final String SERENITY__PREFIX_OBJECT_RECEIVED = "object_received:";
 
     private final Logger logger = LoggerFactory.getLogger(CommonObjectSteps.class);
-    private final ObjectMapper mapper;
     private final JsonNodeFactory factory;
 
     public CommonObjectSteps() {
@@ -58,10 +59,6 @@ public class CommonObjectSteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
         factory = new JsonNodeFactory(false);
 
-        // mapper config
-        mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
     }
 
     @Step
@@ -356,7 +353,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @throws IOException for mapper failures (invalid JSON in response body, etc.)
      */
     private JsonNode getJsonNode(Response response) throws IOException {
-        return mapper.readTree(response.body().asString());
+        return OBJECT_MAPPER.readTree(response.body().asString());
     }
 
     /**
@@ -367,7 +364,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @throws JsonProcessingException for invalid structures
      */
     private String getJsonString(JsonNode root) throws JsonProcessingException {
-        return mapper.writeValueAsString(root);
+        return OBJECT_MAPPER.writeValueAsString(root);
     }
 
     // --- other ---
@@ -454,7 +451,7 @@ public class CommonObjectSteps extends BasicSteps {
                 // #1 create correct object server-side
                 ObjectNode correctObject = getCorrectObject(objectName);
                 Response correctObjectResponse = restCreateObject(getObjectLocation(objectName),
-                        mapper.writeValueAsString(correctObject));
+                        OBJECT_MAPPER.writeValueAsString(correctObject));
 
                 // #2 extract object ID and ETag from response
                 String objectID = getJsonNode(correctObjectResponse).get(getObjectIDField(objectName)).asText();
@@ -465,7 +462,7 @@ public class CommonObjectSteps extends BasicSteps {
 
                 // #4 update object server-side
                 Response updatedObjectResponse = restUpdateObject(getObjectLocation(objectName),
-                        objectID, etag, mapper.writeValueAsString(correctObject));
+                        objectID, etag, OBJECT_MAPPER.writeValueAsString(correctObject));
 
                 // #5 store responses for evaluation in next steps
                 responses.put(field.getPath(), updatedObjectResponse);

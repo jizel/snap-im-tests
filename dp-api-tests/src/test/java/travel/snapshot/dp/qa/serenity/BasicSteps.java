@@ -10,23 +10,10 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.DeserializationConfig;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.config.ObjectMapperConfig;
@@ -40,6 +27,7 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
@@ -91,39 +79,6 @@ public class BasicSteps {
     public static final String HEADER_IF_MATCH = "If-Match";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
     public static final String OAUTH_PARAMETER_NAME = "access_token";
-
-    public static ObjectMapper OBJECT_MAPPER;
-
-    static {
-        SimpleModule module = new SimpleModule();
-        module.setDeserializerModifier(new BeanDeserializerModifier() {
-            @Override
-            public JsonDeserializer<Enum> modifyEnumDeserializer(DeserializationConfig config,
-                                                                 final JavaType type,
-                                                                 BeanDescription beanDesc,
-                                                                 final JsonDeserializer<?> deserializer) {
-                return new JsonDeserializer<Enum>() {
-                    @Override
-                    public Enum deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-                        Class<? extends Enum> rawClass = (Class<Enum<?>>) type.getRawClass();
-                        return Enum.valueOf(rawClass, jp.getValueAsString().toUpperCase());
-                    }
-                };
-            }
-        });
-        module.addSerializer(Enum.class, new StdSerializer<Enum>(Enum.class) {
-            @Override
-            public void serialize(Enum value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-                jgen.writeString(value.name().toLowerCase());
-            }
-        });
-        OBJECT_MAPPER = new ObjectMapper();
-        OBJECT_MAPPER.registerModule(new JavaTimeModule());
-        OBJECT_MAPPER.registerModule(module);
-        OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        OBJECT_MAPPER.configure(SerializationFeature.INDENT_OUTPUT, true);
-        OBJECT_MAPPER.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-    }
 
     protected RequestSpecification spec = null;
 

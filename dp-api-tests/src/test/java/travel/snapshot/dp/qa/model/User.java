@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class User {
 
     public enum UserTypeEnum {
-        snapshot, customer, partner, guest,
+        SNAPSHOT, CUSTOMER, PARTNER, GUEST,
     }
 
     ;
