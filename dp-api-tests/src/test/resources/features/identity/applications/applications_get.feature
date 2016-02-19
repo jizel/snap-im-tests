@@ -41,7 +41,6 @@ Feature: applications_get
     Then Response code is "404"
     And Custom code is "152"
 
-  @important
   Scenario Outline: Getting list of applications
     Given The following applications exist
       | applicationName             | description                | website                    | applicationId                        |
@@ -158,15 +157,16 @@ Feature: applications_get
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> applications returned
+    And There are applications with following names returned in order: <expected_names>
     And Total count is "<total>"
 
     Examples: 
-      | limit | cursor | returned | total | filter                                                                  | sort        | sort_desc   |
-      | 5     | 0      | 5        | 5     | application_name=='Application test*'                                   | description |             |
-      | 5     | 0      | 5        | 5     | application_name=='Application test*'                                   |             | description |
-      | 5     | 2      | 3        | 5     | application_name=='Application test*'                                   | description |             |
-      | 5     | 2      | 3        | 5     | application_name=='Application test*'                                   |             | description |
-      | 5     | 3      | 2        | 5     | application_name=='Application test*'                                   | description |             |
-      | /null | /null  | 1        | 1     | description=='*description 2'                                           | /null       | /null       |
-      | /null | /null  | 1        | 1     | website==http://www.snapshot8.travel                                    | /null       | /null       |
-      | /null | /null  | 1        | 1     | application_name=='Application test*' and description=='*description 2' | /null       | /null       |
+      | limit | cursor | returned | total | filter                                                                  | sort        | sort_desc   | expected_names                                                                                                                              |
+      | 5     | 0      | 5        | 10    | application_name=='Application test*'                                   | description | /null       | Application test company 1, Application test company 10, Application test company 2, Application test company 3, Application test company 4 |
+      | 5     | 0      | 5        | 10    | application_name=='Application test*'                                   | /null       | description | Application test company 9, Application test company 8, Application test company 7, Application test company 6, Application test company 5  |
+      | 5     | 2      | 5        | 10    | application_name=='Application test*'                                   | description | /null       | Application test company 2, Application test company 3, Application test company 4, Application test company 5, Application test company 6  |
+      | 5     | 2      | 5        | 10    | application_name=='Application test*'                                   | /null       | description | Application test company 7, Application test company 6, Application test company 5,Application test company 4, Application test company 3   |
+      | 5     | 3      | 5        | 10    | application_name=='Application test*'                                   | description | /null       | Application test company 3, Application test company 4, Application test company 5, Application test company 6,Application test company 7   |
+      | /null | /null  | 1        | 1     | description=='*description 2'                                           | /null       | /null       | Application test company 2                                                                                                                  |
+      | /null | /null  | 1        | 1     | website==http://www.snapshot8.travel                                    | /null       | /null       | Application test company 8                                                                                                                  |
+      | /null | /null  | 1        | 1     | application_name=='Application test*' and description=='*description 2' | /null       | /null       | Application test company 2                                                                                                                  |
