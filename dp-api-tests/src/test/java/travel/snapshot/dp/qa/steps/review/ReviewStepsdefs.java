@@ -1,20 +1,32 @@
 package travel.snapshot.dp.qa.steps.review;
 
-import net.thucydides.core.annotations.Steps;
 
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.review.model.Location;
 import travel.snapshot.dp.qa.model.review.model.Property;
+import travel.snapshot.dp.qa.model.review.model.Traveller;
+import travel.snapshot.dp.qa.model.review.model.TravellerAspectsOfBusiness;
+import travel.snapshot.dp.qa.model.review.model.TravellerNumberOfReviews;
+import travel.snapshot.dp.qa.model.review.model.TravellerOverall;
+import travel.snapshot.dp.qa.model.review.model.TravellersStats;
+import travel.snapshot.dp.qa.model.review.model.TravellersStatsAspectsOfBusiness;
+import travel.snapshot.dp.qa.model.review.model.TravellersStatsNumberOfReviews;
+import travel.snapshot.dp.qa.model.review.model.TravellersStatsOverall;
 import travel.snapshot.dp.qa.serenity.analytics.ReviewSteps;
+
+import java.util.List;
 
 
 public class ReviewStepsdefs {
@@ -130,7 +142,9 @@ public class ReviewStepsdefs {
 
     @Then("^Response contains (\\d+) number of analytics for travelers$")
     public void responseContainsNumberOfAnalyticsForTravelers(int count) throws Throwable {
-        reviewTravelersSteps.checkNumberOfAnalyticsReturnedForTravelers(count);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("numberOfReviews", hasSize(count)))), TravellersStats.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("aspectsOfBusiness", hasSize(count)))), TravellersStats.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("overall", hasSize(count)))), TravellersStats.class);
     }
 
     @When("^Get trip advisor travellers \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
@@ -140,17 +154,17 @@ public class ReviewStepsdefs {
 
     @Then("^Response contains (\\d+) number of analytics for travelers number of reviews$")
     public void responseContainsCountNumberOfAnalyticsForTravelersNumberOfReviews(int count) throws Throwable {
-        reviewTravelersSteps.checkNumberOfAnalyticsReturnedForTravelersReviews(count);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("numberOfReviews", hasSize(count)))), TravellersStatsNumberOfReviews.class);
     }
 
     @Then("^Response contains (\\d+) number of analytics for travelers for aspect of business$")
     public void responseContainsCountNumberOfAnalyticsForTravelersForAspectOfBusiness(int count) throws Throwable {
-        reviewTravelersSteps.checkNumberOfAnalyticsReturnedForTravelersAspects(count);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("aspectsOfBusiness", hasSize(count)))), TravellersStatsAspectsOfBusiness.class);
     }
 
     @Then("^Response contains (\\d+) number of analytics for travelers overall bubble rating$")
     public void responseContainsCountNumberOfAnalyticsForTravelersOverallBubbleRating(int count) throws Throwable {
-        reviewTravelersSteps.checkNumberOfAnalyticsReturnedForTravelersOverallBubble(count);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("overall", hasSize(count)))), TravellersStatsOverall.class);
     }
 
     @Then("^Review file \"([^\"]*)\" is equals to previous response for analytics$")
@@ -165,22 +179,32 @@ public class ReviewStepsdefs {
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response$")
     public void reviewTravellersFileIsEqualsToPreviousResponse(String filename) throws Throwable {
-        reviewTravelersSteps.checkFileAgainstResponseTravellers("/messages/review/travellers" + filename);
+        String path = "/messages/review/travellers" + filename;
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> ReviewTravelersSteps.assertTravellersData(t, u), TravellersStats.class, TravellersStats.class);
     }
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for bubble rating$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForBubbleRating(String filename) throws Throwable {
-        reviewTravelersSteps.checkFileAgainstResponseTravellersBubbleRating("/messages/review/travellers" + filename);
+        String path = "/messages/review/travellers" + filename;
+        //TODO fix asserts
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getType().equals(u.getType()), TravellerOverall.class, Traveller.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getOverall().equals(u.getOverall()), TravellerOverall.class, Traveller.class);
     }
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for acpects of business$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForAcpectsOfBusiness(String filename) throws Throwable {
-        reviewTravelersSteps.checkFileAgainstResponseTravellersAspectsOfBusiness("/messages/review/travellers" + filename);
+        String path = "/messages/review/travellers" + filename;
+        //TODO fix asserts
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getType().equals(u.getType()), TravellerAspectsOfBusiness.class, Traveller.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getAspectsOfBusiness().equals(u.getAspectsOfBusiness()), TravellerAspectsOfBusiness.class, Traveller.class);
     }
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for number of reviews$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForNumberOfReviews(String filename) throws Throwable {
-        reviewTravelersSteps.checkFileAgainstResponseTravellersNumberOfReviews("/messages/review/travellers" + filename);
+        String path = "/messages/review/travellers" + filename;
+        //TODO fix asserts
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getType().equals(u.getType()), TravellerNumberOfReviews.class, Traveller.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getNumberOfReviews().equals(u.getNumberOfReviews()), TravellerNumberOfReviews.class, Traveller.class);
     }
 
     @When("^Get \"([^\"]*)\" for list of properties for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")

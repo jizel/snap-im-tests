@@ -1,21 +1,35 @@
 package travel.snapshot.dp.qa.serenity;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.config.ObjectMapperConfig;
+import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.filter.log.LogDetail;
 import com.jayway.restassured.filter.log.ResponseLoggingFilter;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -30,20 +44,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -83,6 +83,10 @@ public class BasicSteps {
     protected RequestSpecification spec = null;
 
     public BasicSteps() {
+
+        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
+                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
+
         RequestSpecBuilder builder = new RequestSpecBuilder();
 
         String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
@@ -144,8 +148,8 @@ public class BasicSteps {
     }
 
     /**
-     * This method is used instead of bodyContainsCollectionWith() when the collection contains
-     * values of type Double. Only the integer part of the value is validated.
+     * This method is used instead of bodyContainsCollectionWith() when the collection contains values of type Double.
+     * Only the integer part of the value is validated.
      */
     public void integerPartOfValueIs(String path, int value) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
@@ -276,8 +280,7 @@ public class BasicSteps {
     }
 
     /**
-     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query
-     * string
+     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query string
      *
      * @param sortDesc @return
      */
@@ -400,8 +403,7 @@ public class BasicSteps {
 
     public <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Throwable {
         Response response = getSessionResponse();
-        ObjectMapper mapper = new ObjectMapper();
-        List<T> objects = mapper.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        List<T> objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
 

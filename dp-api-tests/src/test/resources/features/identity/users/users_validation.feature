@@ -5,19 +5,19 @@ Feature: users_validation
     Given the location "identity/users" for object "user"
     Given unique identifier "user_id" for object "user"
     Given the following "user" object definition
-      | path           | type    | required | correct                                                          | invalid      | longer     |
+      | path           | type    | required | correct                                                     | invalid      | longer     |
       #---------------------------------------------------------------------------------------------------------------------------------------------------------
-      | /first_name    | String  | true     | \w{255}                                                          | /null        | \w{256}    |
-      | /last_name     | String  | true     | \w{255}                                                          | /null        | \w{256}    |
-      | /user_type     | String  | true     | (snapshot\|customer\|partner\|guest)                             | nonexisstent | \w{256}    |
-      | /user_name     | String  | true     | \w{64}                                                           | /null        | \w{65}     |
-      | /salesforce_id | String  | false    | \w{32}                                                           | /null        | \w{33}     |
-      | /email         | String  | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}[a-z]{9} | \.{10}       | \w{101}    |
-      | /phone         | String  | false    | +[0-9]{12}                                                       | \.{10}       | \w{101}    |
-      | /timezone      | String  | true     | (America/New_York\|Europe/Prague\|GMT)                           | UTC+1:00     | UTC+001:00 |
-      | /culture       | String  | true     | (cs-CZ\|sk-SK)                                                   | xx           |            |
-      | /comment       | String  | false    | \w{255}                                                          | /null        | \w{256}    |
-      | /is_active     | Integer | false    | (1\|0)                                                           | 2            |            |
+      | /first_name    | String  | true     | \w{255}                                                     | /null        | \w{256}    |
+      | /last_name     | String  | true     | \w{255}                                                     | /null        | \w{256}    |
+      | /user_type     | String  | true     | (snapshot\|customer\|partner\|guest)                        | nonexisstent | \w{256}    |
+      | /user_name     | String  | true     | \w{64}                                                      | /null        | \w{65}     |
+      | /salesforce_id | String  | false    | \w{32}                                                      | /null        | \w{33}     |
+      | /email         | String  | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | \w{101}    |
+      | /phone         | String  | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
+      | /timezone      | String  | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
+      | /culture       | String  | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
+      | /comment       | String  | false    | \w{255}                                                     | /null        | \w{256}    |
+      #| /is_active     | Integer | false    | (1\|0)                                                      | 2            |            |
 
   # --- happy path ---
 
