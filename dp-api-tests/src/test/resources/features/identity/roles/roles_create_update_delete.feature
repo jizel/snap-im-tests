@@ -2,21 +2,25 @@ Feature: Roles_create_update_delete
 
   Background:
     Given Database is cleaned
+    Given The following applications exist
+      | applicationName            | description               | website                    | applicationId                        |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following roles exist
-      | applicationId | roleName    | roleDescription        |
-      | 1             | Role name 1 | optional description 1 |
-      | 1             | Role name 2 | optional description 2 |
-      | 1             | Role name 3 | optional description 3 |
+      | applicationId                        | roleName    | roleDescription        |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
     Given The following roles don't exist
-      | applicationId | roleName          |
-      | 1             | Updated role name |
+      | applicationId                        | roleName          |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Updated role name |
 
 
   Scenario: Creating role
 
     When Role is created
-      | applicationId | roleName            | roleDescription        |
-      | 1             | Created role name 1 | optional description 1 |
+      | applicationId                        | roleName            | roleDescription        |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
     Then Response code is "201"
     And Body contains entity with attribute "role_name" value "Created role name 1"
     And Body contains entity with attribute "role_description" value "optional description 1"
@@ -39,10 +43,10 @@ Feature: Roles_create_update_delete
 
   Scenario: Deleting role
 
-    When Role with name "Role name 1" for application id "1" is deleted
+    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
     Then Response code is "204"
     And Body is empty
-    And Role with same id doesn't exist for application id "1"
+    And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
 
   Scenario: Checking error code for deleting role
@@ -51,13 +55,13 @@ Feature: Roles_create_update_delete
 
 
   Scenario Outline: Updating role
-    When Role with name "<roleName>" for application id "1" is updated with data
+    When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
       | applicationId   | roleName           | roleDescription   |
       | <applicationId> | <updated_roleName> | <roleDescription> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated role with name "<updated_roleName>" for application id "1" has data
+    And Updated role with name "<updated_roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" has data
       | applicationId   | roleName           | roleDescription   |
       | <applicationId> | <updated_roleName> | <roleDescription> |
 
@@ -71,7 +75,7 @@ Feature: Roles_create_update_delete
   #TODO update with error fields, bad values, missing fields, not unique fields
 
   Scenario: Updating role with outdated etag
-    When Role with name "Role name 1" for application id "1" is updated with data if updated before
+    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data if updated before
       | applicationId | roleName          | roleDescription |
       |               | Updated role name |                 |
     Then Response code is "412"
