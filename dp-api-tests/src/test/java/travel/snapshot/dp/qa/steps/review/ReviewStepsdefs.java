@@ -62,7 +62,7 @@ public class ReviewStepsdefs {
 
     @When("^Get trip advisor \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
-        reviewSteps.getData("/review" + url, granularity, propertyId, since, until);
+        reviewSteps.getPropertiesWithDate("/review" + url, granularity, propertyId, since, until);
     }
 
     @Then("^Response of bubble rating contains \"([^\"]*)\" values$")
@@ -73,7 +73,7 @@ public class ReviewStepsdefs {
 
     @When("^Get trip advisor \"([^\"]*)\" with missing property header$")
     public void get_trip_advisor_with_missing_property_header(String url) throws Throwable {
-        reviewSteps.getData("/review" + url, "day", null, null, null);
+        reviewSteps.getPropertiesWithDate("/review" + url, "day", null, null, null);
     }
 
     @Then("^Response of number of reviews contains \"([^\"]*)\" values$")
@@ -92,7 +92,7 @@ public class ReviewStepsdefs {
                                                                                             @Transform(NullEmptyStringConverter.class) String limit,
                                                                                             @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
 
-        reviewSteps.getItems("/review" + url, "", limit, cursor);
+        reviewSteps.getPropertiesWithPaging("/review" + url, "", limit, cursor);
 
     }
 
@@ -117,7 +117,7 @@ public class ReviewStepsdefs {
 
     @When("^Get trip advisor \"([^\"]*)\" for \"([^\"]*)\"$")
     public void getTripAdvisorFor(String url, String property) throws Throwable {
-        reviewSteps.getItems("review" + url, property, null, null);
+        reviewSteps.getPropertiesWithPaging("review" + url, property, null, null);
     }
 
     @When("^List of location properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\" for location id \"([^\"]*)\"$")
@@ -149,7 +149,7 @@ public class ReviewStepsdefs {
 
     @When("^Get trip advisor travellers \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void getTripAdvisorTravellersDataWithGranularityForSinceUntil(String url, String granularity, String propertyId, String since, String until) throws Throwable {
-        reviewTravelersSteps.getData(url, granularity, propertyId, since, until);
+        reviewTravelersSteps.getPropertiesWithDate(url, granularity, propertyId, since, until);
     }
 
     @Then("^Response contains (\\d+) number of analytics for travelers number of reviews$")
@@ -255,5 +255,15 @@ public class ReviewStepsdefs {
     @And("^Response contains correct granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")
     public void responseContainsCorrectGranularityBetweenAnd(String granularity, String since, String until) throws Throwable {
         reviewSteps.responseContainsCorrectValuesFor(granularity, since, until);
+    }
+
+    @When("^Get review \"([^\"]*)\" data with \"([^\"]*)\" granularity with since \"([^\"]*)\" until \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
+    public void getReviewDataWithGranularityWithSinceUntilLimitAndCursor(String url,
+                                                                         @Transform(NullEmptyStringConverter.class) String granularity,
+                                                                         @Transform(NullEmptyStringConverter.class) String since,
+                                                                         @Transform(NullEmptyStringConverter.class) String until,
+                                                                         @Transform(NullEmptyStringConverter.class) String limit,
+                                                                         @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
+        reviewSteps.getReviewAnalyticsData("/review" + url, granularity, since, until, limit, cursor);
     }
 }

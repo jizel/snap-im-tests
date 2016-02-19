@@ -24,7 +24,7 @@ public class WebPerformanceStepdefs {
     @When("^Get web_performance \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void Get_web_performance_data_with_granularity_for_since_until(String url, String granularity,
                                                                           String propertyId, String since, String until) throws Throwable {
-        steps.getData("/web_performance" + url, granularity, propertyId, since, until);
+        steps.getPropertiesWithDate("/web_performance" + url, granularity, propertyId, since, until);
     }
 
     @When("^Get web performance referrals with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\" sorted by \"([^\"]*)\" \"([^\"]*)\"$")
@@ -35,7 +35,7 @@ public class WebPerformanceStepdefs {
 
     @When("^Get web_performance \"([^\"]*)\" with missing property header$")
     public void Get_web_performance_with_missing_property_header(String url) throws Throwable {
-        steps.getData("/web_performance" + url, "day", null, null, null);
+        steps.getPropertiesWithDate("/web_performance" + url, "day", null, null, null);
 
     }
 
@@ -43,7 +43,7 @@ public class WebPerformanceStepdefs {
     public void list_of_web_performance_for_property_id_is_got_with_limit_and_cursor(String url, String propertyId,
                                                                                      @Transform(NullEmptyStringConverter.class) String limit,
                                                                                      @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
-        steps.getItems("/web_performance" + url, propertyId, limit, cursor);
+        steps.getPropertiesWithPaging("/web_performance" + url, propertyId, limit, cursor);
     }
 
     @Then("^Values are sorted by \"([^\"]*)\" in \"([^\"]*)\"$")

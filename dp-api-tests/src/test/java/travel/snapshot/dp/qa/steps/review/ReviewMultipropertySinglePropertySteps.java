@@ -15,7 +15,8 @@ public class ReviewMultipropertySinglePropertySteps extends AnalyticsBaseSteps {
     }
 
     public void getStatisticsForSingleProperty(String metric, String property_id, String since, String until, String granularity) {
-        Response propertyStatistics = getSecondLevelEntitiesForDates(property_id, metric, null, null, since, until, granularity);
+        Response propertyStatistics = getSecondLevelEntitiesForDates(property_id, metric, null, null, since, until, granularity, null, null, null);
+
         setSessionResponse(propertyStatistics);
     }
 }

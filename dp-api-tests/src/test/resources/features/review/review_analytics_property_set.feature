@@ -11,8 +11,6 @@ Feature: review_multiproperty_property_set
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
       | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
       | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
-      | 99000499-9999-4999-a999-999999999999 | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague |
-      | 99000599-9999-4999-a999-999999999999 | salesforceid_5 | p5_name      | p5_code      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague |
 
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
@@ -36,20 +34,14 @@ Feature: review_multiproperty_property_set
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p5_code" and property set with name "ps1_name" for customer with code "c1t" exists
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p4_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p5_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
     Given Relation between user with username "default1" and property with code "p2_code" exists
     Given Relation between user with username "default1" and property with code "p3_code" exists
-    Given Relation between user with username "default1" and property with code "p4_code" exists
-    Given Relation between user with username "default1" and property with code "p5_code" exists
 
     Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
 
@@ -77,6 +69,39 @@ Feature: review_multiproperty_property_set
       | popularity_index_rank | ps1_name          | month       | 2015-12-03 | 2015-12-03 | -23486       | /null        |
       | popularity_index_rank | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | -23486       |
 
+      | aspects_of_business   | ps1_name          | dd          | 2015-12-03 | 2015-12-03 | /null        | /null        |
+      | aspects_of_business   | ps1_name          | yy          | 2015-12-03 | 2015-12-03 | /null        | /null        |
+      | aspects_of_business   | ps1_name          | day         | 2015-12    | 2015-12-03 | /null        | /null        |
+      | aspects_of_business   | ps1_name          | day         | 2015-12-03 | 2015-03    | /null        | /null        |
+      | aspects_of_business   | ps1_name          | day         | 2015-12-03 | 2015-12-03 | bad          | /null        |
+      | aspects_of_business   | ps1_name          | week        | 2015-12-03 | 2015-12-03 | /null        | bad          |
+      | aspects_of_business   | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | 301947534059 |
+      | aspects_of_business   | ps1_name          | day         | 2015-12-03 | 2015-12-03 | 301947534059 | /null        |
+      | aspects_of_business   | ps1_name          | month       | 2015-12-03 | 2015-12-03 | -23486       | /null        |
+      | aspects_of_business   | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | -23486       |
+
+      | number_of_reviews     | ps1_name          | dd          | 2015-12-03 | 2015-12-03 | /null        | /null        |
+      | number_of_reviews     | ps1_name          | yy          | 2015-12-03 | 2015-12-03 | /null        | /null        |
+      | number_of_reviews     | ps1_name          | day         | 2015-12    | 2015-12-03 | /null        | /null        |
+      | number_of_reviews     | ps1_name          | day         | 2015-12-03 | 2015-03    | /null        | /null        |
+      | number_of_reviews     | ps1_name          | day         | 2015-12-03 | 2015-12-03 | bad          | /null        |
+      | number_of_reviews     | ps1_name          | week        | 2015-12-03 | 2015-12-03 | /null        | bad          |
+      | number_of_reviews     | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | 301947534059 |
+      | number_of_reviews     | ps1_name          | day         | 2015-12-03 | 2015-12-03 | 301947534059 | /null        |
+      | number_of_reviews     | ps1_name          | month       | 2015-12-03 | 2015-12-03 | -23486       | /null        |
+      | number_of_reviews     | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | -23486       |
+
+      | overall_bubble_rating | ps1_name          | dd          | 2015-12-03 | 2015-12-03 | /null        | /null        |
+      | overall_bubble_rating | ps1_name          | yy          | 2015-12-03 | 2015-12-03 | /null        | /null        |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12    | 2015-12-03 | /null        | /null        |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-03 | 2015-03    | /null        | /null        |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-03 | 2015-12-03 | bad          | /null        |
+      | overall_bubble_rating | ps1_name          | week        | 2015-12-03 | 2015-12-03 | /null        | bad          |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | 301947534059 |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-03 | 2015-12-03 | 301947534059 | /null        |
+      | overall_bubble_rating | ps1_name          | month       | 2015-12-03 | 2015-12-03 | -23486       | /null        |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | -23486       |
+
   Scenario Outline: Checking default values for response
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "/null" until "/null" granularity "/null" limit "/null" and cursor "/null"
     Then Response code is "200"
@@ -87,8 +112,10 @@ Feature: review_multiproperty_property_set
     Examples:
       | metric                | property_set_name |
       | popularity_index_rank | ps1_name          |
+      | aspects_of_business   | ps1_name          |
+      | number_of_reviews     | ps1_name          |
+      | overall_bubble_rating | ps1_name          |
 
-#todo problem when not using day but week or month, extend with more examples (min, average, max)
   Scenario Outline: Get specific analytics data from API for a given granularity
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 200
@@ -97,20 +124,48 @@ Feature: review_multiproperty_property_set
     And Body contains entity with attribute "granularity" value "<granularity>"
     And Response since is "<real_since>" for granularity "<granularity>"
     And Response until is "<real_until>" for granularity "<granularity>"
-    And Response contains 5 properties
+    And Response contains 3 properties
     And Response properties contains "<count>" values
 
     Examples:
-      | metric                | property_set_name | granularity | count | since      | until      | real_since        | real_until |
-      | popularity_index_rank | ps1_name          | day         | 1     | 2015-12-03 | 2015-12-03 | 2015-12-03        | 2015-12-03 |
-      | popularity_index_rank | ps1_name          | day         | 31    | 2015-11-03 | 2015-12-03 | 2015-11-03        | 2015-12-03 |
-      | popularity_index_rank | ps1_name          | day         | 366   | 2015-01-01 | today      | today - 365 days  | today      |
-      | popularity_index_rank | ps1_name          | week        | 1     | 2015-11-17 | 2015-12-03 | 2015-11-23        | 2015-11-29 |
-      | popularity_index_rank | ps1_name          | week        | 3     | 2015-11-03 | 2015-12-03 | 2015-11-09        | 2015-11-29 |
-      | popularity_index_rank | ps1_name          | week        | 52    | 2015-01-01 | today      | today - 12 months | today      |
-      | popularity_index_rank | ps1_name          | month       | 1     | 2015-10-26 | 2015-12-03 | 2015-11-01        | 2015-11-30 |
-      | popularity_index_rank | ps1_name          | month       | 3     | 2015-08-03 | 2015-12-03 | 2015-09-01        | 2015-11-30 |
-      | popularity_index_rank | ps1_name          | month       | 11    | 2015-01-01 | today      | today - 12 months | today      |
+      | metric                | property_set_name | granularity | count | since             | until | real_since        | real_until |
+      | popularity_index_rank | ps1_name          | day         | 1     | today             | today | today             | today      |
+      | popularity_index_rank | ps1_name          | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
+      | popularity_index_rank | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
+      | popularity_index_rank | ps1_name          | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | popularity_index_rank | ps1_name          | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | popularity_index_rank | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | popularity_index_rank | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
+      | popularity_index_rank | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
+      | popularity_index_rank | ps1_name          | month       | 11    | today - 40 months | today | today - 12 months | today      |
+
+      | aspects_of_business   | ps1_name          | day         | 1     | today             | today | today             | today      |
+      | aspects_of_business   | ps1_name          | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
+      | aspects_of_business   | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
+      | aspects_of_business   | ps1_name          | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | aspects_of_business   | ps1_name          | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | aspects_of_business   | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | aspects_of_business   | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
+      | aspects_of_business   | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
+
+      | number_of_reviews     | ps1_name          | day         | 1     | today             | today | today             | today      |
+      | number_of_reviews     | ps1_name          | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
+      | number_of_reviews     | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
+      | number_of_reviews     | ps1_name          | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | number_of_reviews     | ps1_name          | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | number_of_reviews     | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | number_of_reviews     | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
+      | number_of_reviews     | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
+      | number_of_reviews     | ps1_name          | month       | 11    | today - 40 months | today | today - 12 months | today      |
+
+      | overall_bubble_rating | ps1_name          | day         | 1     | today             | today | today             | today      |
+      | overall_bubble_rating | ps1_name          | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
+      | overall_bubble_rating | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
+      | overall_bubble_rating | ps1_name          | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | overall_bubble_rating | ps1_name          | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | overall_bubble_rating | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | overall_bubble_rating | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
+      | overall_bubble_rating | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
 
   # data are same for customer and are created in background
   Scenario Outline: Checking data corectness for analitics
@@ -120,10 +175,22 @@ Feature: review_multiproperty_property_set
     And Review file "<json_input_file>" equals to previous response
 
     Examples:
-      | metric                | json_input_file                                     | property_set_name | granularity | since      | until      |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_day.json   | ps1_name          | day         | 2015-12-03 | 2015-12-03 |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_week.json  | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
+      | metric                | json_input_file                                        | property_set_name | granularity | since      | until      |
+      | popularity_index_rank | /multiproperty/customer/popularity_index_day.json      | ps1_name          | day         | 2015-12-03 | 2015-12-03 |
+      | popularity_index_rank | /multiproperty/customer/popularity_index_week.json     | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
+      | popularity_index_rank | /multiproperty/customer/popularity_index_month.json    | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
+
+      | aspects_of_business   | /multiproperty/customer/aspects_of_business_day.json   | ps1_name          | day         | 2015-12-03 | 2015-12-03 |
+      | aspects_of_business   | /multiproperty/customer/aspects_of_business_week.json  | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
+      | aspects_of_business   | /multiproperty/customer/aspects_of_business_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
+
+      | number_of_reviews     | /multiproperty/customer/number_of_reviews_day.json     | ps1_name          | day         | 2015-12-03 | 2015-12-03 |
+      | number_of_reviews     | /multiproperty/customer/number_of_reviews_week.json    | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
+      | number_of_reviews     | /multiproperty/customer/number_of_reviews_month.json   | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
+
+      | overall_bubble_rating | /multiproperty/property/bubble_for_day.json            | ps1_name          | day         | 2015-12-03 | 2015-12-03 |
+      | overall_bubble_rating | /multiproperty/property/bubble_for_week.json           | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
+      | overall_bubble_rating | /multiproperty/property/bubble_for_month.json          | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Get analytics data from TA API that are more than year old
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
@@ -138,6 +205,18 @@ Feature: review_multiproperty_property_set
       | popularity_index_rank | ps1_name          | week        | 1880-11-01 | 1880-12-03 |
       | popularity_index_rank | ps1_name          | month       | 1880-10-01 | 1880-12-03 |
 
+      | aspects_of_business   | ps1_name          | day         | 1880-12-01 | 1880-12-03 |
+      | aspects_of_business   | ps1_name          | week        | 1880-11-01 | 1880-12-03 |
+      | aspects_of_business   | ps1_name          | month       | 1880-10-01 | 1880-12-03 |
+
+      | number_of_reviews     | ps1_name          | day         | 1880-12-01 | 1880-12-03 |
+      | number_of_reviews     | ps1_name          | week        | 1880-11-01 | 1880-12-03 |
+      | number_of_reviews     | ps1_name          | month       | 1880-10-01 | 1880-12-03 |
+
+      | overall_bubble_rating | ps1_name          | day         | 1880-12-01 | 1880-12-03 |
+      | overall_bubble_rating | ps1_name          | week        | 1880-11-01 | 1880-12-03 |
+      | overall_bubble_rating | ps1_name          | month       | 1880-10-01 | 1880-12-03 |
+
   Scenario Outline: Get analytics data from TA API that has wrong time interval
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 200
@@ -150,3 +229,15 @@ Feature: review_multiproperty_property_set
       | popularity_index_rank | ps1_name          | day         | 2015-12-02 | 2015-12-03 |
       | popularity_index_rank | ps1_name          | week        | 2015-11-02 | 2015-12-03 |
       | popularity_index_rank | ps1_name          | month       | 2015-10-02 | 2015-12-03 |
+
+      | aspects_of_business   | ps1_name          | day         | 2015-12-02 | 2015-12-03 |
+      | aspects_of_business   | ps1_name          | week        | 2015-11-02 | 2015-12-03 |
+      | aspects_of_business   | ps1_name          | month       | 2015-10-02 | 2015-12-03 |
+
+      | number_of_reviews     | ps1_name          | day         | 2015-12-02 | 2015-12-03 |
+      | number_of_reviews     | ps1_name          | week        | 2015-11-02 | 2015-12-03 |
+      | number_of_reviews     | ps1_name          | month       | 2015-10-02 | 2015-12-03 |
+
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-02 | 2015-12-03 |
+      | overall_bubble_rating | ps1_name          | week        | 2015-11-02 | 2015-12-03 |
+      | overall_bubble_rating | ps1_name          | month       | 2015-10-02 | 2015-12-03 |

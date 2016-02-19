@@ -146,4 +146,9 @@ public class ReviewSteps extends AnalyticsBaseSteps {
         String actual = getSessionResponse().getBody().asString();
         assertEquals(expected, actual);
     }
+
+    public void getReviewAnalyticsData(String url, String granularity, String since, String until, String limit, String cursor) {
+        Response aggregatedPropertySet = getEntitiesForURLWihDates(url, limit, cursor, since, until, granularity, null);
+        setSessionResponse(aggregatedPropertySet);
+    }
 }

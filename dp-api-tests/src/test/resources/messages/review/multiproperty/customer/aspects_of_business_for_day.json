@@ -1,0 +1,23 @@
+{
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
+  "data_owners": [
+    "tripadvisor"
+  ],
+  "properties": [
+    {
+      "property_id": "99000199-9999-4999-a999-999999999999",
+      "values": [
+        {
+          "location": 3.2,
+          "sleep_quality": 3.3,
+          "room": 0.9,
+          "service": 1.7,
+          "value": 5.4,
+          "cleanliness": 0.9
+        }
+      ]
+    }
+  ]
+}

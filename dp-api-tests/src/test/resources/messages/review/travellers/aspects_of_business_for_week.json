@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "type": "Friends getaway\r",
+      "type": "friends",
       "aspects_of_business": [
         {
           "location": 3.2,
@@ -22,7 +22,7 @@
       ]
     },
     {
-      "type": "Family\r",
+      "type": "family",
       "aspects_of_business": [
         {
           "location": 3.1,
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "type": "Business\r",
+      "type": "business",
       "aspects_of_business": [
         {
           "sleep_quality": 4.5,
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "type": "Solo travel\r",
+      "type": "solo",
       "aspects_of_business": [
         {
           "location": 3.2,
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "type": "Unspecified\r",
+      "type": "unspecified",
       "aspects_of_business": [
         {
           "location": 3.2,
@@ -81,7 +81,7 @@
       ]
     },
     {
-      "type": "Couples\r",
+      "type": "couples",
       "aspects_of_business": [
         {
           "location": 3.1,

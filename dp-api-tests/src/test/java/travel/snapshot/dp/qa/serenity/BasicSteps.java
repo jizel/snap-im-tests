@@ -41,6 +41,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,28 +123,28 @@ public class BasicSteps {
     }
 
     public void responseCodeIs(int responseCode) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().statusCode(responseCode);
     }
 
     public void contentTypeIs(String contentType) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().contentType(contentType);
     }
 
     public void customCodeIs(Integer customCode) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body("code", is(customCode));
     }
 
     public void bodyIsEmpty() {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body(isEmptyOrNullString());
     }
 
     @Step
     public void bodyContainsCollectionWith(String attributeName, Object item) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body(attributeName, hasItem(item));
     }
 
@@ -152,14 +153,14 @@ public class BasicSteps {
      * Only the integer part of the value is validated.
      */
     public void integerPartOfValueIs(String path, int value) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         List<Double> values = response.body().jsonPath().getList(path, double.class);
         assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
     }
 
     @Step
     public void bodyContainsR(String attributeName, BigDecimal item) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body(attributeName, hasItem(item));
     }
 
@@ -183,11 +184,11 @@ public class BasicSteps {
         Response response = spec
                 .when()
                 .get(service);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        setSessionResponse(response);
     }
 
     public void etagIsPresent() {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().header(HEADER_ETAG, not(isEmptyOrNullString()));
     }
 
@@ -218,7 +219,7 @@ public class BasicSteps {
         Response response = given().spec(spec).basePath(url)
                 .body(data)
                 .when().post();
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+        setSessionResponse(response);
 
     }
 
@@ -284,49 +285,90 @@ public class BasicSteps {
      *
      * @param sortDesc @return
      */
-    protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc) {
+    protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc){
+        return getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+    }
+
+    protected Response getEntities(String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
-        if (filter != null) {
-            requestSpecification.parameter("filter", filter);
-        }
-        if (sort != null) {
-            requestSpecification.parameter("sort", sort);
-        }
-        if (sortDesc != null) {
-            requestSpecification.parameter("sort_desc", sortDesc);
+        if(url == null){
+            url = "";
         }
 
-        return requestSpecification.when().get();
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc,queryParams);
+        if (params != null) {
+            requestSpecification.parameters(params);
+        }
+
+        return requestSpecification.when().get(url);
+    }
+
+    protected Response getEntitiesForURLWihDates(String url, String limit, String cursor, String since, String until, String granularity,  Map<String, String> queryParams){
+        Map<String, String> preparedParams = buildQueryParamMapForDates(since, until, granularity);
+        if (queryParams != null) {
+            preparedParams.putAll(queryParams);
+        }
+        return getEntities(url, limit, cursor, null, null, null, preparedParams);
+    }
+
+    private Map<String, String> buildQueryParamMapForDates(String since, String until, String granularity) {
+        Map<String, String> queryParams = new HashMap<>();
+        //ignoring parsing when fails in order to run negative tests
+        try{
+            LocalDate sinceDate = StringUtil.parseDate(since);
+            if (sinceDate != null) {
+                queryParams.put("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
+            }
+        }catch(DateTimeParseException e){
+            queryParams.put("since", since);
+        }
+
+        try{
+            LocalDate untilDate = StringUtil.parseDate(until);
+            if (untilDate != null) {
+                queryParams.put("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+            }
+        }catch(DateTimeParseException e){
+            queryParams.put("until", until);
+        }
+
+        if (StringUtils.isNotBlank(granularity)) {
+            queryParams.put("granularity", granularity);
+        }
+        return queryParams;
+    }
+
+    private Map<String, String> buildQueryParamMapForPaging(String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParameters) {
+        Map<String, String> queryParams = new HashMap<>();
+        if (cursor != null) {
+            queryParams.put("cursor", cursor);
+        }
+        if (limit != null) {
+            queryParams.put("limit", limit);
+        }
+        if (filter != null) {
+            queryParams.put("filter", filter);
+        }
+        if (sort != null) {
+            queryParams.put("sort", sort);
+        }
+        if (sortDesc != null) {
+            queryParams.put("sort_desc", sortDesc);
+        }
+        if (queryParameters != null) {
+            queryParams.putAll(queryParameters);
+        }
+
+        return queryParams;
     }
 
     protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
-        if (filter != null) {
-            requestSpecification.parameter("filter", filter);
-        }
-        if (sort != null) {
-            requestSpecification.parameter("sort", sort);
-        }
-        if (sortDesc != null) {
-            requestSpecification.parameter("sort_desc", sortDesc);
-        }
-
-        if (queryParams != null) {
-            requestSpecification.parameters(queryParams);
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc,queryParams);
+        if (params != null) {
+            requestSpecification.parameters(params);
         }
 
         return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
@@ -336,28 +378,10 @@ public class BasicSteps {
         return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
-    protected Response getSecondLevelEntitiesForDates(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(until);
+    protected Response getSecondLevelEntitiesForDates(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity, String filter, String sort, String sortDesc) {
+        Map<String, String> queryParams = buildQueryParamMapForDates(since, until, granularity);
 
-        if (sinceDate != null) {
-            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
-        }
-        if (untilDate != null) {
-            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
-        }
-        if (granularity != null) {
-            requestSpecification.parameter("granularity", granularity);
-        }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-
-        return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+        return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
     }
 
     protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {

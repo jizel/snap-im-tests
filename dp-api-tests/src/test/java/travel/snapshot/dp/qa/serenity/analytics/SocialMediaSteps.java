@@ -76,7 +76,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getData(String url, String granularity, String propertyId, String since, String until) {
+    public void getPropertiesWithDate(String url, String granularity, String propertyId, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
 
@@ -99,7 +99,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
 
     @Step
-    public void getItems(String url, String propertyId, String limit, String cursor) {
+    public void getPropertiesWithPaging(String url, String propertyId, String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath(url)
                 .header("x-property", propertyId)
@@ -184,7 +184,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
         if (fieldName.equals("since")) {
             if (expectedDate.getDayOfWeek() != DayOfWeek.MONDAY && granularity.equals("week")) {
-                expectedDate = expectedDate.plusDays(expectedDate.getDayOfWeek().getValue());
+                expectedDate = expectedDate.plusDays(7 - expectedDate.getDayOfWeek().getValue() + 1);
             }
             if (expectedDate.getDayOfMonth() != 1 && granularity.equals("month")) {
                 expectedDate = expectedDate.plusDays(LocalDate.parse(expectedDate.toString()).lengthOfMonth());

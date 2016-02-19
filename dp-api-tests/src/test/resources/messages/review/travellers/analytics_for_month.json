@@ -1,7 +1,7 @@
 {
   "data": [
     {
-      "type": "Friends getaway\r",
+      "type": "friends",
       "overall": [
         7.56667,
         7.4,
@@ -40,7 +40,7 @@
       ]
     },
     {
-      "type": "Family\r",
+      "type": "family",
       "overall": [
         7.4125,
         7.5,
@@ -79,7 +79,7 @@
       ]
     },
     {
-      "type": "Business\r",
+      "type": "business",
       "overall": [
         7.5,
         7.56,
@@ -118,7 +118,7 @@
       ]
     },
     {
-      "type": "Solo travel\r",
+      "type": "solo",
       "overall": [
         7.36667,
         7.5,
@@ -157,7 +157,7 @@
       ]
     },
     {
-      "type": "Unspecified\r",
+      "type": "unspecified",
       "overall": [
         7.38571,
         7.58,
@@ -196,7 +196,7 @@
       ]
     },
     {
-      "type": "Couples\r",
+      "type": "couples",
       "overall": [
         7.46667,
         7.33333,
