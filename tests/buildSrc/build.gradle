@@ -1,0 +1,31 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        name 'snapshot'
+        url 'https://nexus.snapshot.travel/content/groups/public'
+        credentials {
+            username nexusUser
+            password nexusPassword
+        }
+    }
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+
+    compile 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.0.Final'
+    compile 'travel.snapshot.qa.manager:docker-manager:1.0.3'
+    compile "log4j:log4j:1.2.17"
+    compile "org.slf4j:slf4j-log4j12:1.7.13"
+}
+
+configurations {
+    compile.exclude(module: "shrinkwrap-resolver-depchain")
+}

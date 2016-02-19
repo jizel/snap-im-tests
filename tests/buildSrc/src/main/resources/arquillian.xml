@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://jboss.org/schema/arquillian"
+            xsi:schemaLocation="http://jboss.org/schema/arquillian
+  http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <extension qualifier="docker">
+
+        <property name="serverVersion">1.21</property>
+
+        <!--
+            This will be automatically expanded when Arquillian Cube gets involved.
+
+            In case it will run against Docker machine, arquillian.xml.docker.host will be replaced with 'dockerHost'
+            which will be eventually replaced by Arquillian Cube again and 'arquillian.xml.docker.port' will be 2376
+
+            In case it will run against local Docker containers, 'arquillian.xml.docker.host' will be replaced with
+            'localhost' and port 'arquillian.xml.docker.port' will be 2375.
+
+            arquillian.xml.docker.scheme is set either to 'https' when running against machine and 'http' otherwise
+        -->
+
+        <property name="serverUri">${arquillian.xml.docker.scheme}://${arquillian.xml.docker.host}:${arquillian.xml.docker.port}</property>
+
+        <property name="dockerRegistry">https://docker.snapshot.travel:5000/v2/</property>
+        <property name="username">snapshot_docker</property>
+        <property name="password">${arquillian.xml.docker.registry.password}</property>
+        <property name="email">docker@snapshot.travel</property>
+        <property name="definitionFormat">CUBE</property>
+
+        <!-- Specifies name of Docker machine to execute tests against -->
+
+        <property name="machineName">${arquillian.xml.docker.machine}</property>
+
+        <!--
+            Connection Mode to bypass the Create/Start Cube commands if the a Docker Container with the same
+            name is already running on the target system. This parameter can receive three possible values.
+
+            STARTANDSTOP which is the default one if not set any and simply creates and stops all Docker Containers.
+            If a container is already running, an exception is thrown.
+
+            STARTORCONNECT mode tries to bypass the Create/Start Cube commands if a container with the same
+            name is already running, and if it is the case it does not stop it at the end. But if container
+            is not already running, Cube will start one and stop it at the end of the execution.
+
+            The last mode is STARTORCONNECTANDLEAVE which is exactly the same of STARTORCONNECT but if container is
+            started by Cube it will not be stopped at the end of the execution so it can be reused in next executions.
+        -->
+
+        <property name="connectionMode">${arquillian.xml.connection.mode}</property>
+
+        <!-- tomcat_standalone container just does not link to any other service so we can start it alone -->
+
+        <property name="dockerContainers">
+            tomcat:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.32
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                links:
+                    - mariadb:mariadb
+                    - mongodb:mongodb
+                    - activemq:activemq
+                binds:
+                    - ${arquillian.xml.data.tomcat.config.dir}/tomcat:/data/tomcat/config
+                    ${arquillian.xml.deployments.mount}
+            tomcat_standalone:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.32
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+            mariadb:
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.11
+                exposedPorts: [3306/tcp]
+                env: [GENERAL_LOG_FILE=/var/lib/mysql/localhost.localdomain.log, LOG_ERROR=/var/lib/mysql/localhost.localdomain.err]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [3306/tcp]
+            mongodb:
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.1
+                exposedPorts: [27017/tcp]
+                env: [LOG_PATH=/var/log/mongodb/server.log]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [27017/tcp]
+            activemq:
+                image: docker.snapshot.travel:5000/snapshot/activemq:5.12.3
+                exposedPorts: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+        </property>
+    </extension>
+
+</arquillian>
