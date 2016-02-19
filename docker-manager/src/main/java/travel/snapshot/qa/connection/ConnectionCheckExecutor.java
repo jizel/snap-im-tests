@@ -68,8 +68,36 @@ public class ConnectionCheckExecutor {
      */
     public static final class TCPConnectionCheckTask extends Task<ConnectionCheck, Boolean> {
 
+        private ConnectionCheck connectionCheck;
+
+        public TCPConnectionCheckTask() {
+            if (getExecutionService() == null) {
+                setExecutionService(Spacelift.service());
+            }
+        }
+
+        /**
+         * Sets connection check. In case there is some connection check which is chained, that connection check will be
+         * used instead of this one.
+         *
+         * @param connectionCheck connection check to set when not chained
+         * @return this
+         */
+        public TCPConnectionCheckTask connectionCheck(final ConnectionCheck connectionCheck) {
+            this.connectionCheck = connectionCheck;
+            return this;
+        }
+
         @Override
         protected Boolean process(ConnectionCheck connectionCheck) throws Exception {
+
+            if (connectionCheck == null) {
+                connectionCheck = this.connectionCheck;
+            }
+
+            if (connectionCheck == null) {
+                throw new IllegalStateException("Connection check must not be a null object.");
+            }
 
             Socket tcpClient = null;
 
@@ -91,8 +119,36 @@ public class ConnectionCheckExecutor {
      */
     public static final class UDPConnectionCheckTask extends Task<ConnectionCheck, Boolean> {
 
+        private ConnectionCheck connectionCheck;
+
+        public UDPConnectionCheckTask() {
+            if (getExecutionService() == null) {
+                setExecutionService(Spacelift.service());
+            }
+        }
+
+        /**
+         * Sets connection check. In case there is some connection check which is chained, that connection check will be
+         * used instead of this one.
+         *
+         * @param connectionCheck connection check to set when not chained
+         * @return this
+         */
+        public UDPConnectionCheckTask connectionCheck(final ConnectionCheck connectionCheck) {
+            this.connectionCheck = connectionCheck;
+            return this;
+        }
+
         @Override
         protected Boolean process(ConnectionCheck connectionCheck) throws Exception {
+
+            if (connectionCheck == null) {
+                connectionCheck = this.connectionCheck;
+            }
+
+            if (connectionCheck == null) {
+                throw new IllegalStateException("Connection check must not be a null object.");
+            }
 
             final DatagramSocket udpClient = new DatagramSocket();
 

@@ -26,6 +26,9 @@ public class TomcatManagerConfiguration implements Configuration {
     private final String password;
     private final Charset urlCharset;
     private final URL managerUrl;
+    private final HTTPScheme managerScheme;
+    private final String managerHost;
+    private final int managerPort;
     private final boolean remote;
 
     private TomcatManagerConfiguration(Builder builder) {
@@ -42,6 +45,9 @@ public class TomcatManagerConfiguration implements Configuration {
         password = builder.password;
         urlCharset = builder.urlCharset;
         managerUrl = builder.managerUrl;
+        managerScheme = builder.managerScheme;
+        managerHost = builder.managerHost;
+        managerPort = builder.managerPort;
         remote = builder.remote;
     }
 
@@ -76,6 +82,12 @@ public class TomcatManagerConfiguration implements Configuration {
         private Charset urlCharset = StandardCharsets.ISO_8859_1;
 
         private URL managerUrl;
+
+        private HTTPScheme managerScheme;
+
+        private String managerHost;
+
+        private int managerPort;
 
         private HTTPScheme httpScheme = HTTPScheme.HTTP;
 
@@ -211,6 +223,9 @@ public class TomcatManagerConfiguration implements Configuration {
             Validate.notNullOrEmpty(bindAddress, "Bind address must not be null or empty");
 
             this.managerUrl = createManagerUrl();
+            this.managerScheme = HTTPScheme.valueOf(managerUrl.getProtocol().toUpperCase());
+            this.managerHost = managerUrl.getHost();
+            this.managerPort = resolvePort(managerUrl, managerScheme);
         }
 
         private static File resolveProperty(String propertyName, String envPropertyName) {
@@ -233,6 +248,25 @@ public class TomcatManagerConfiguration implements Configuration {
                         ex);
             }
         }
+
+        private int resolvePort(URL managerUrl, HTTPScheme scheme) {
+            Validate.notNull(scheme, "HTTP scheme to resolve default port for must not be a null object.");
+
+            int port = managerUrl.getPort();
+
+            if (port == -1) {
+                switch (scheme) {
+                    case HTTP:
+                        return 80;
+                    case HTTPS:
+                        return 443;
+                    default:
+                        throw new IllegalStateException(String.format("Unable to resolve default HTTP scheme for scheme %s.", scheme.toString()));
+                }
+            } else {
+                return port;
+            }
+        }
     }
 
     public String getUser() {
@@ -253,6 +287,18 @@ public class TomcatManagerConfiguration implements Configuration {
 
     public URL getManagerUrl() {
         return managerUrl;
+    }
+
+    public String getManagerHost() {
+        return managerHost;
+    }
+
+    public HTTPScheme getManagerScheme() {
+        return managerScheme;
+    }
+
+    public int getManagerPort() {
+        return managerPort;
     }
 
     public File getCatalinaHome() {
