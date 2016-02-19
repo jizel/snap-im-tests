@@ -60,7 +60,7 @@ Feature: applications_create_update_delete
       | Application test 1      | New description     | http://www.snapshot.travel  |
 
   Scenario: Updating application with outdated etag
-     Given Application is created
+    Given Application is created
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data if updated before
