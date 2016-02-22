@@ -50,14 +50,14 @@ Feature: common
 
   Scenario: Getting non-existent analytics data
     When Get social media "/analytics/not_present" data with "day" granularity for "99999999-9999-4999-a999-999999999999" since "2015-09-01" until "2015-09-01"
-    Then Content type is "application/json"
-    And Response code is "404"
-    And Custom code is 151
+    Then Response code is "404"
+    And Body is empty
+
 
   Scenario Outline: Checking error codes for analytics data
     When Property is missing for "<url>"
     Then Response code is "<error_code>"
-    And Custom code is <custom_code>
+    And Body is empty
 
     Examples: 
       | url                   | error_code | custom_code |
