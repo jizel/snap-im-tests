@@ -10,8 +10,12 @@
       "property_id": "99000399-9999-4999-a999-999999999999",
       "values": [
         {
-          "ranking": 118,
-          "total_number": 4322
+          "location": 0.7,
+          "sleep_quality": 1.8,
+          "room": 2.8,
+          "service": 3.3,
+          "value": 1.3,
+          "cleanliness": 4.4
         }
       ]
     },
@@ -19,8 +23,12 @@
       "property_id": "99000299-9999-4999-a999-999999999999",
       "values": [
         {
-          "ranking": 87,
-          "total_number": 4285
+          "location": 0.9,
+          "sleep_quality": 1.6,
+          "room": 2,
+          "service": 2.1,
+          "value": 2.5,
+          "cleanliness": 4.5
         }
       ]
     },
@@ -28,8 +36,12 @@
       "property_id": "99000199-9999-4999-a999-999999999999",
       "values": [
         {
-          "ranking": 93,
-          "total_number": 7778
+          "location": 3.2,
+          "sleep_quality": 3.3,
+          "room": 0.9,
+          "service": 1.7,
+          "value": 5.4,
+          "cleanliness": 0.9
         }
       ]
     }

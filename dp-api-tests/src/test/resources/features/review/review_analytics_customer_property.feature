@@ -158,29 +158,54 @@ Feature: review_multiproperty_customer_property
       | overall_bubble_rating | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | overall_bubble_rating | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
 
-  Scenario Outline: Checking data corectness for analitics data
+
+  Scenario Outline: Checking data corectness for popularity_index_rank
     When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
     And Content type is "application/json"
-    And Review file "<json_input_file>" equals to previous response
+    And Review file "<json_input_file>" equals to previous response for popularity index
 
     Examples:
-      | metric                | json_input_file                                        | customer_code | granularity | since      | until      |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_day.json      | c1t           | day         | 2015-12-03 | 2015-12-03 |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_week.json     | c1t           | week        | 2015-11-12 | 2015-12-03 |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_month.json    | c1t           | month       | 2015-08-26 | 2015-12-03 |
+      | metric                | json_input_file                                     | customer_code | granularity | since      | until      |
+      | popularity_index_rank | /multiproperty/customer/popularity_index_day.json   | c1t           | day         | 2015-12-03 | 2015-12-03 |
+      | popularity_index_rank | /multiproperty/customer/popularity_index_week.json  | c1t           | week        | 2015-11-12 | 2015-12-03 |
+      | popularity_index_rank | /multiproperty/customer/popularity_index_month.json | c1t           | month       | 2015-08-26 | 2015-12-03 |
 
-      | aspects_of_business   | /multiproperty/customer/aspects_of_business_day.json   | c1t           | day         | 2015-12-03 | 2015-12-03 |
-      | aspects_of_business   | /multiproperty/customer/aspects_of_business_week.json  | c1t           | week        | 2015-11-12 | 2015-12-03 |
-      | aspects_of_business   | /multiproperty/customer/aspects_of_business_month.json | c1t           | month       | 2015-08-26 | 2015-12-03 |
+  Scenario Outline: Checking data corectness for aspects_of_business
+    When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "<json_input_file>" equals to previous response for aspects of business
 
-      | number_of_reviews     | /multiproperty/customer/number_of_reviews_day.json     | c1t           | day         | 2015-12-03 | 2015-12-03 |
-      | number_of_reviews     | /multiproperty/customer/number_of_reviews_week.json    | c1t           | week        | 2015-11-12 | 2015-12-03 |
-      | number_of_reviews     | /multiproperty/customer/number_of_reviews_month.json   | c1t           | month       | 2015-08-26 | 2015-12-03 |
+    Examples:
+      | metric              | json_input_file                                        | customer_code | granularity | since      | until      |
+      | aspects_of_business | /multiproperty/customer/aspects_of_business_day.json   | c1t           | day         | 2015-12-03 | 2015-12-03 |
+      | aspects_of_business | /multiproperty/customer/aspects_of_business_week.json  | c1t           | week        | 2015-11-12 | 2015-12-03 |
+      | aspects_of_business | /multiproperty/customer/aspects_of_business_month.json | c1t           | month       | 2015-08-26 | 2015-12-03 |
 
-      | overall_bubble_rating | /multiproperty/customer/bubble_for_day.json            | c1t           | day         | 2015-12-03 | 2015-12-03 |
-      | overall_bubble_rating | /multiproperty/customer/bubble_for_week.json           | c1t           | week        | 2015-11-12 | 2015-12-03 |
-      | overall_bubble_rating | /multiproperty/customer/bubble_for_month.json          | c1t           | month       | 2015-08-26 | 2015-12-03 |
+  Scenario Outline: Checking data corectness for number_of_reviews
+    When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "<json_input_file>" equals to previous response for number of reviews
+
+    Examples:
+      | metric            | json_input_file                                      | customer_code | granularity | since      | until      |
+      | number_of_reviews | /multiproperty/customer/number_of_reviews_day.json   | c1t           | day         | 2015-12-03 | 2015-12-03 |
+      | number_of_reviews | /multiproperty/customer/number_of_reviews_week.json  | c1t           | week        | 2015-11-12 | 2015-12-03 |
+      | number_of_reviews | /multiproperty/customer/number_of_reviews_month.json | c1t           | month       | 2015-08-26 | 2015-12-03 |
+
+  Scenario Outline: Checking data corectness for overall_bubble_rating
+    When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "<json_input_file>" equals to previous response for overall bubble rating
+
+    Examples:
+      | metric                | json_input_file                               | customer_code | granularity | since      | until      |
+      | overall_bubble_rating | /multiproperty/customer/bubble_for_day.json   | c1t           | day         | 2015-12-03 | 2015-12-03 |
+      | overall_bubble_rating | /multiproperty/customer/bubble_for_week.json  | c1t           | week        | 2015-11-12 | 2015-12-03 |
+      | overall_bubble_rating | /multiproperty/customer/bubble_for_month.json | c1t           | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Get analytics data from TA API that are more than year old
     When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"

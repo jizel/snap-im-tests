@@ -1,7 +1,37 @@
 {
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
+  "data_owners": [
+    "tripadvisor"
+  ],
   "data": [
     {
       "type": "friends",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "couples",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "solo",
       "overall": [
         null
       ],
@@ -30,30 +60,6 @@
       ]
     },
     {
-      "type": "business",
-      "overall": [
-        null
-      ],
-      "number_of_reviews": [
-        null
-      ],
-      "aspects_of_business": [
-        {}
-      ]
-    },
-    {
-      "type": "solo",
-      "overall": [
-        null
-      ],
-      "number_of_reviews": [
-        null
-      ],
-      "aspects_of_business": [
-        {}
-      ]
-    },
-    {
       "type": "unspecified",
       "overall": [
         null
@@ -66,7 +72,7 @@
       ]
     },
     {
-      "type": "couples",
+      "type": "business",
       "overall": [
         null
       ],

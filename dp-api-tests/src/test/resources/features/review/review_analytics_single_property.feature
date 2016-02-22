@@ -91,7 +91,7 @@ Feature: review_multiproperty_single_property
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | day         | 1     | today             | today | today             | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
@@ -101,7 +101,7 @@ Feature: review_multiproperty_single_property
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | day         | 1     | today             | today | today             | today      |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
@@ -111,7 +111,7 @@ Feature: review_multiproperty_single_property
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | day         | 1     | today             | today | today             | today      |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
@@ -121,19 +121,18 @@ Feature: review_multiproperty_single_property
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | day         | 1     | today             | today | today             | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
+      | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | month       | 11    | today - 40 months | today | today - 12 months | today      |
 
-    #todo rewrite json check
-  Scenario Outline: Checking data corectness for analitics
+  Scenario Outline: Checking data corectness for popularity_index_rank
     When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
     Then Response code is "200"
     And Content type is "application/json"
-    And Review file "<json_input_file>" equals to previous response
+    And Review file "<json_input_file>" equals to previous response for popularity index
 
     Examples:
       | metric                | json_input_file                                        | property_id                          | granularity | since      | until      |
@@ -141,14 +140,38 @@ Feature: review_multiproperty_single_property
       | popularity_index_rank | /multiproperty/property/popularity_index_week.json     | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | popularity_index_rank | /multiproperty/property/popularity_index_month.json    | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
+  Scenario Outline: Checking data corectness for aspects_of_business
+    When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "<json_input_file>" equals to previous response for aspects of business
+
+    Examples:
+      | metric                | json_input_file                                        | property_id                          | granularity | since      | until      |
       | aspects_of_business   | /multiproperty/property/aspects_of_business_day.json   | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
       | aspects_of_business   | /multiproperty/property/aspects_of_business_week.json  | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | aspects_of_business   | /multiproperty/property/aspects_of_business_month.json | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
+  Scenario Outline: Checking data corectness for number_of_reviews
+    When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "<json_input_file>" equals to previous response for number of reviews
+
+    Examples:
+      | metric                | json_input_file                                        | property_id                          | granularity | since      | until      |
       | number_of_reviews     | /multiproperty/property/number_of_reviews_day.json     | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
       | number_of_reviews     | /multiproperty/property/number_of_reviews_week.json    | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | number_of_reviews     | /multiproperty/property/number_of_reviews_month.json   | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
+  Scenario Outline: Checking data corectness for overall_bubble_rating
+    When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "<json_input_file>" equals to previous response for overall bubble rating
+
+    Examples:
+      | metric                | json_input_file                                        | property_id                          | granularity | since      | until      |
       | overall_bubble_rating | /multiproperty/property/bubble_for_day.json            | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
       | overall_bubble_rating | /multiproperty/property/bubble_for_week.json           | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | overall_bubble_rating | /multiproperty/property/bubble_for_month.json          | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |

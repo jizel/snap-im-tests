@@ -1,4 +1,10 @@
 {
+  "since": "2015-09-01",
+  "until": "2015-11-30",
+  "granularity": "month",
+  "data_owners": [
+    "tripadvisor"
+  ],
   "data": [
     {
       "type": "friends",

@@ -1,44 +1,29 @@
 {
-  "data": [
+  "since": "2015-11-16",
+  "until": "2015-11-29",
+  "granularity": "week",
+  "data_owners": [
+    "tripadvisor"
+  ],
+  "properties": [
     {
-      "type": "friends",
-      "number_of_reviews": [
-        36999,
-        37037
+      "property_id": "99000399-9999-4999-a999-999999999999",
+      "values": [
+        25321,
+        25340
       ]
     },
     {
-      "type": "family",
-      "number_of_reviews": [
-        36981,
-        null
+      "property_id": "99000299-9999-4999-a999-999999999999",
+      "values": [
+        49377,
+        49391
       ]
     },
     {
-      "type": "business",
-      "number_of_reviews": [
+      "property_id": "99000199-9999-4999-a999-999999999999",
+      "values": [
         37013,
-        null
-      ]
-    },
-    {
-      "type": "solo",
-      "number_of_reviews": [
-        37013,
-        null
-      ]
-    },
-    {
-      "type": "unspecified",
-      "number_of_reviews": [
-        36999,
-        37037
-      ]
-    },
-    {
-      "type": "couples",
-      "number_of_reviews": [
-        36981,
         37037
       ]
     }

@@ -1,11 +1,7 @@
 package travel.snapshot.dp.qa.steps.review;
 
 
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -13,20 +9,15 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.api.review.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.review.model.Location;
-import travel.snapshot.dp.qa.model.review.model.Property;
-import travel.snapshot.dp.qa.model.review.model.Traveller;
-import travel.snapshot.dp.qa.model.review.model.TravellerAspectsOfBusiness;
-import travel.snapshot.dp.qa.model.review.model.TravellerNumberOfReviews;
-import travel.snapshot.dp.qa.model.review.model.TravellerOverall;
-import travel.snapshot.dp.qa.model.review.model.TravellersStats;
-import travel.snapshot.dp.qa.model.review.model.TravellersStatsAspectsOfBusiness;
-import travel.snapshot.dp.qa.model.review.model.TravellersStatsNumberOfReviews;
-import travel.snapshot.dp.qa.model.review.model.TravellersStatsOverall;
+import travel.snapshot.dp.qa.model.review.model.*;
 import travel.snapshot.dp.qa.serenity.analytics.ReviewSteps;
 
 import java.util.List;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
 
 
 public class ReviewStepsdefs {
@@ -180,31 +171,41 @@ public class ReviewStepsdefs {
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response$")
     public void reviewTravellersFileIsEqualsToPreviousResponse(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> ReviewTravelersSteps.assertTravellersData(t, u), TravellersStats.class, TravellersStats.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
+            assertThat(t, is(u));
+        }, TravellersOverallStatisticsDto.class);
     }
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for bubble rating$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForBubbleRating(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
-        //TODO fix asserts
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getType().equals(u.getType()), TravellerOverall.class, Traveller.class);
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getOverall().equals(u.getOverall()), TravellerOverall.class, Traveller.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
+            assertThat(t, is(u));
+        }, TravellersOverallBubbleRatingStatsDto.class);
     }
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for acpects of business$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForAcpectsOfBusiness(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
-        //TODO fix asserts
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getType().equals(u.getType()), TravellerAspectsOfBusiness.class, Traveller.class);
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getAspectsOfBusiness().equals(u.getAspectsOfBusiness()), TravellerAspectsOfBusiness.class, Traveller.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
+            assertThat(t, is(u));
+        }, TravellersAspectsOfBusinessStatsDto.class);
     }
 
     @Then("^Review travellers file \"([^\"]*)\" is equals to previous response for number of reviews$")
     public void reviewTravellersFileIsEqualsToPreviousResponseForNumberOfReviews(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
-        //TODO fix asserts
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getType().equals(u.getType()), TravellerNumberOfReviews.class, Traveller.class);
-        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> t.getNumberOfReviews().equals(u.getNumberOfReviews()), TravellerNumberOfReviews.class, Traveller.class);
+        reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
+            assertThat(t, is(u));
+        }, TravellersNumberOfReviewsStatsDto.class);
     }
 
     @When("^Get \"([^\"]*)\" for list of properties for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
@@ -243,7 +244,13 @@ public class ReviewStepsdefs {
 
     @Then("^Review file \"([^\"]*)\" equals to previous response$")
     public void reviewFileEqualsToPreviousResponse(String filename) throws Throwable {
-        reviewSteps.checkFileAgainstResponse("/messages/review" + filename);
+        //reviewSteps.checkFileAgainstResponse("/messages/review" + filename);
+        String path = "/messages/review" + filename;
+        reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
+            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
+            assertThat(t, is(u));
+        }, PopularityIndexRankStatsDto.class);
     }
 
     @When("^Get trip advisor travellers \"([^\"]*)\" data for \"([^\"]*)\" with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
@@ -265,5 +272,46 @@ public class ReviewStepsdefs {
                                                                          @Transform(NullEmptyStringConverter.class) String limit,
                                                                          @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         reviewSteps.getReviewAnalyticsData("/review" + url, granularity, since, until, limit, cursor);
+    }
+
+    @Then("^Review file \"([^\"]*)\" equals to previous response for popularity index$")
+    public void reviewFileEqualsToPreviousResponseForPopularityIndex(String filename) throws Throwable {
+        String path = "/messages/review" + filename;
+        reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
+            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
+            assertThat(t, is(u));
+        }, PopularityIndexRankStatsDto.class);
+    }
+
+    @Then("^Review file \"([^\"]*)\" equals to previous response for aspects of business$")
+    public void reviewFileEqualsToPreviousResponseForAspectsOfBusiness(String filename) throws Throwable {
+        String path = "/messages/review" + filename;
+        reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
+            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
+            assertThat(t, is(u));
+        }, AspectsOfBusinessStatsDto.class);
+    }
+
+    @Then("^Review file \"([^\"]*)\" equals to previous response for number of reviews$")
+    public void reviewFileEqualsToPreviousResponseForNumberOfReviews(String filename) throws Throwable {
+        String path = "/messages/review" + filename;
+        reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
+            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
+            assertThat(t, is(u));
+        }, NumberOfReviewsStatsDto.class);
+    }
+
+    @Then("^Review file \"([^\"]*)\" equals to previous response for overall bubble rating$")
+    public void reviewFileEqualsToPreviousResponseForOverallBubbleRating(String filename) throws Throwable {
+        String path = "/messages/review" + filename;
+        reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
+            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
+            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
+            assertThat(t, is(u));
+        }, OverallBubbleRatingStatsDto.class);
+
     }
 }

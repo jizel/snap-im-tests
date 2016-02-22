@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.review.model.AspectsOfBusiness;
@@ -29,6 +31,35 @@ public class ReviewSteps extends AnalyticsBaseSteps {
     public ReviewSteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
+    }
+
+    /**
+     * @param assertStatement lambda with assert statement checking the object from session response
+     * @param type            class with type of object receiving from response
+     * @param <traveler1>
+     * @throws Exception
+     */
+    @Step
+    public <traveler1> void checkAnalyticsReturnedForType(Consumer<traveler1> assertStatement, Class<traveler1> type) throws Exception {
+        traveler1 traveller = getSessionResponse().as(type);
+        assertStatement.accept(traveller);
+    }
+
+    /**
+     * @param filePath        path to file with expected data
+     * @param assertStatement lambda with assert statement checking reponse against the file data
+     * @param type            type of object loaded from file
+     * @param <T>
+     * @throws Exception
+     */
+    @Step
+    public <T> void checkFileAgainstResponse(String filePath, BiConsumer<T, T> assertStatement, Class<T> type) throws Exception {
+        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filePath));
+        T expectedStatistics = OBJECT_MAPPER.readValue(data, type);
+
+        T actualStatistics = getSessionResponse().as(type);
+
+        assertStatement.accept(expectedStatistics, actualStatistics);
     }
 
     @Step

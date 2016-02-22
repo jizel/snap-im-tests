@@ -1,6 +1,8 @@
 Feature: review
   Testing of api for review modul alias trip_advisor with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
   data in db are mostly increasing some of the data also includes nulls
+
+  NOTE: every monday will some tests fails because date calculation
   #todo granularity (date values) new rules when finished add tests
 
   Background:
@@ -92,10 +94,10 @@ Feature: review
       | /analytics/number_of_reviews     | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/rating_score          | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       #---weeks--- #min value
-      | /analytics/aspects_of_business   | week        | 1     | today - 14 days   | today | today - 14 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/overall_bubble_rating | week        | 1     | today - 14 days   | today | today - 14 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/number_of_reviews     | week        | 1     | today - 14 days   | today | today - 14 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score          | week        | 1     | today - 14 days   | today | today - 14 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/aspects_of_business   | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/overall_bubble_rating | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/number_of_reviews     | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score          | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
       # average
       | /analytics/aspects_of_business   | week        | 4     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/overall_bubble_rating | week        | 4     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
@@ -138,7 +140,7 @@ Feature: review
       | /analytics/ | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/ | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | week        | 1     | today - 14 days   | today | today - 14 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/ | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/ | week        | 4     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/ | week        | 51    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/ | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |

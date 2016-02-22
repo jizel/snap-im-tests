@@ -1,0 +1,73 @@
+{
+  "since": "2015-11-16",
+  "until": "2015-11-29",
+  "granularity": "week",
+  "data_owners": [
+    "tripadvisor"
+  ],
+  "properties": [
+    {
+      "property_id": "99000399-9999-4999-a999-999999999999",
+      "values": [
+        {
+          "location": 0.82857,
+          "sleep_quality": 1.81429,
+          "room": 2.54286,
+          "service": 2.74286,
+          "value": 1.54286,
+          "cleanliness": 3.94286
+        },
+        {
+          "location": 1.05714,
+          "sleep_quality": 1.87143,
+          "room": 2.68571,
+          "service": 2.98571,
+          "value": 1.38571,
+          "cleanliness": 4.34286
+        }
+      ]
+    },
+    {
+      "property_id": "99000299-9999-4999-a999-999999999999",
+      "values": [
+        {
+          "location": 0.67143,
+          "sleep_quality": 1,
+          "room": 1.9,
+          "service": 1.9,
+          "value": 2.2,
+          "cleanliness": 3.77143
+        },
+        {
+          "location": 0.67143,
+          "sleep_quality": 1.34286,
+          "room": 2.15714,
+          "service": 2.01429,
+          "value": 2.15714,
+          "cleanliness": 4.11429
+        }
+      ]
+    },
+    {
+      "property_id": "99000199-9999-4999-a999-999999999999",
+      "values": [
+        {
+          "location": 3.15714,
+          "sleep_quality": 4.51429,
+          "room": 0.47143,
+          "service": 1.75714,
+          "value": 5.3,
+          "cleanliness": 0.82857
+        },
+        {
+          "location": 3.2,
+          "sleep_quality": 4,
+          "room": 0.52857,
+          "service": 1.7,
+          "value": 5.5,
+          "cleanliness": 0.94286
+        }
+      ]
+    }
+  ]
+}
