@@ -14,6 +14,7 @@ import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Application;
+import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -89,21 +90,19 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationWithId(String applicationId, Application applicationUpdates)
-            throws Throwable {
+    public void updateApplicationWithId(String applicationId, Application applicationUpdates) throws Throwable {
         Application original = getApplicationById(applicationId);
         Response tempResponse = getEntity(original.getApplicationId(), null);
 
         Map<String, Object> applicationData = retrieveData(Application.class, applicationUpdates);
 
-        Response response = updateEntity(original.getApplicationId(), applicationData,
-                tempResponse.getHeader(HEADER_ETAG));
+        Response response =
+                updateEntity(original.getApplicationId(), applicationData, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
     @Step
-    public void updateApplicationWithIdIfUpdatedBefore(String applicationId, Application application)
-            throws Throwable {
+    public void updateApplicationWithIdIfUpdatedBefore(String applicationId, Application application) throws Throwable {
         Application original = getApplicationById(applicationId);
 
         Map<String, Object> customerData = retrieveData(Application.class, application);
@@ -113,10 +112,8 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void applicationWithIdHasData(String applicationId, Application applicationData)
-            throws Throwable {
-        Map<String, Object> originalData =
-                retrieveData(Application.class, getApplicationById(applicationId));
+    public void applicationWithIdHasData(String applicationId, Application applicationData) throws Throwable {
+        Map<String, Object> originalData = retrieveData(Application.class, getApplicationById(applicationId));
         Map<String, Object> expectedData = retrieveData(Application.class, applicationData);
 
         expectedData.forEach((k, v) -> {
@@ -146,8 +143,7 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfApplicationsIsGotWith(String limit, String cursor, String filter, String sort,
-                                            String sortDesc) {
+    public void listOfApplicationsIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
@@ -162,11 +158,10 @@ public class ApplicationsSteps extends BasicSteps {
         mapForUpdate.put("description", "UpdatedDescription");
         mapForUpdate.put("website", "http://www.snapshot.travel");
 
-        Response updateResponse =
-                updateEntity(applicationId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+        Response updateResponse = updateEntity(applicationId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
         if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Customer cannot be updated: " + updateResponse.asString());
+            fail("Application cannot be updated: " + updateResponse.asString());
         }
 
         Response resp = getEntity(applicationId, tempResponse.getHeader(HEADER_ETAG));
@@ -178,6 +173,43 @@ public class ApplicationsSteps extends BasicSteps {
                 getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_id==" + applicationId, null, null)
                         .as(Application[].class);
         return Arrays.asList(applications).stream().findFirst().orElse(null);
+    }
+
+    @Step
+    public void namesInResponseInOrder(List<String> applications) {
+        Response response = getSessionResponse();
+        Application[] apps = response.as(Application[].class);
+        int i = 0;
+        for (Application a : apps) {
+            assertEquals("Application on index=" + i + " is not expected", applications.get(i), a.getApplicationName());
+            i++;
+        }
+    }
+
+    @Step
+    public void getApplicationsRolesForApplicationId(String applicationId) {
+        Response customerUsersResponse = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ALL,
+                CURSOR_FROM_FIRST, null, null, null);
+        setSessionResponse(customerUsersResponse);
+    }
+
+    @Step
+    public void listOfApplicationsRolesIsGotWith(String applicationId, String limit, String cursor, String filter,
+            String sort, String sortDesc) {
+        Response response =
+                getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void roleNamesInResponseInOrder(List<String> roleNames) {
+        Response response = getSessionResponse();
+        Role[] roles = response.as(Role[].class);
+        int i = 0;
+        for (Role r : roles) {
+            assertEquals("Application role on index=" + i + " is not expected", roleNames.get(i), r.getRoleName());
+            i++;
+        }
     }
 
     private Response deleteApplication(String id) {
