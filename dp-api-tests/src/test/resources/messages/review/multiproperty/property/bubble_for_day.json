@@ -5,41 +5,11 @@
   "data_owners": [
     "tripadvisor"
   ],
-  "data": [
+  "properties": [
     {
-      "type": "friends",
-      "overall": [
-        null
-      ]
-    },
-    {
-      "type": "couples",
-      "overall": [
-        null
-      ]
-    },
-    {
-      "type": "solo",
-      "overall": [
-        null
-      ]
-    },
-    {
-      "type": "family",
-      "overall": [
+      "property_id": "99000199-9999-4999-a999-999999999999",
+      "values": [
         7.4
-      ]
-    },
-    {
-      "type": "unspecified",
-      "overall": [
-        null
-      ]
-    },
-    {
-      "type": "business",
-      "overall": [
-        null
       ]
     }
   ]

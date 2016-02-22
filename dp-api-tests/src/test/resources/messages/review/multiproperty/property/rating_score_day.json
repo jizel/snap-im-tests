@@ -5,12 +5,13 @@
   "data_owners": [
     "tripadvisor"
   ],
-  "properties": [
+  "values": [
     {
-      "property_id": "99000199-9999-4999-a999-999999999999",
-      "values": [
-        37050
-      ]
+      "One": 41997,
+      "Two": 8081,
+      "Three": 48821,
+      "Four": 35960,
+      "Five": 22359
     }
   ]
 }

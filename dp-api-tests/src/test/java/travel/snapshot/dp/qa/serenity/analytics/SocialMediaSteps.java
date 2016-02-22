@@ -169,23 +169,37 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         assertEquals(expectedDate, actualDate);
     }
 
-    //this method trims dates to start/end of week/month depending on parameter and granularity
+    /**
+     * This method trims dates to start/end of week/month depending on parameter and granularity
+     * week - since must be monday, until must be sunday
+     * month - since must be first of month, until must be last of month
+     *
+     * @param fieldName - since/until
+     * @param value - 20150101/today
+     * @param granularity - granularity for date interval, day/week/month
+     */
     public void dateFieldIs(String fieldName, String value, String granularity) {
         LocalDate expectedDate = StringUtil.parseDate(value);
 
+        //calculation for until
         if (fieldName.equals("until")) {
+            //calculation for week; if not end of the week, go back(minus) to last sunday
             if (expectedDate.getDayOfWeek() != DayOfWeek.SUNDAY && granularity.equals("week")) {
                 expectedDate = expectedDate.minusDays(expectedDate.getDayOfWeek().getValue());
             }
+            //calculation for month; if not end of the month, go back(minus) to last ending of month
             if (expectedDate.getDayOfMonth() != LocalDate.parse(expectedDate.toString()).lengthOfMonth() && granularity.equals("month")) {
                 expectedDate = expectedDate.minusDays(expectedDate.getDayOfMonth());
             }
         }
 
+        //calculation for since
         if (fieldName.equals("since")) {
+            //calculation for week; if not start of week go to future(plus) to start of the week
             if (expectedDate.getDayOfWeek() != DayOfWeek.MONDAY && granularity.equals("week")) {
                 expectedDate = expectedDate.plusDays(7 - expectedDate.getDayOfWeek().getValue() + 1);
             }
+            //calculation for month; if not start of month go into future(plus) to start of next month
             if (expectedDate.getDayOfMonth() != 1 && granularity.equals("month")) {
                 expectedDate = expectedDate.plusDays(LocalDate.parse(expectedDate.toString()).lengthOfMonth());
                 expectedDate = expectedDate.minusDays(expectedDate.getDayOfMonth() - 1);

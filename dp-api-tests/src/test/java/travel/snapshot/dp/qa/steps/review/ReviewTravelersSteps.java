@@ -29,7 +29,7 @@ public class ReviewTravelersSteps extends ReviewSteps {
             queryParams.put("traveller", traveler);
         }
 
-        Response response = getEntitiesForURLWihDates(url, null, null, since, until, granularity, queryParams);
+        Response response = getEntitiesForUrlWihDates(url, null, null, since, until, granularity, queryParams);
         setSessionResponse(response);
     }
 }

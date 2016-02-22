@@ -1,16 +1,13 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
 
-import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsBaseSteps extends BasicSteps {
 
 
-    public AnalyticsBaseSteps() {
-        super();
-    }
+    public AnalyticsBaseSteps() {}
 
     //GET Requests
 
@@ -54,7 +49,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
             prepareParams.put("property", propertyId);
         }
 
-        Response response = getEntitiesForURLWihDates(url, null, null, since, until, granularity, prepareParams);
+        Response response = getEntitiesForUrlWihDates(url, null, null, since, until, granularity, prepareParams);
         setSessionResponse(response);
     }
 
@@ -68,8 +63,8 @@ public class AnalyticsBaseSteps extends BasicSteps {
         if (StringUtils.isNotBlank(propertyId)) {
             queryParams.put("property", propertyId);
         }
-        Response response_c = getEntities(url, limit, cursor, null, null, null, queryParams);
-        setSessionResponse(response_c);
+        Response response = getEntities(url, limit, cursor, null, null, null, queryParams);
+        setSessionResponse(response);
     }
 
     //Response Validation

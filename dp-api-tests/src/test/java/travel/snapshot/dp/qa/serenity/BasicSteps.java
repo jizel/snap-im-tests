@@ -1,17 +1,5 @@
 package travel.snapshot.dp.qa.serenity;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
@@ -27,7 +15,6 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
@@ -45,6 +32,12 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -297,14 +290,12 @@ public class BasicSteps {
         }
 
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc,queryParams);
-        if (params != null) {
-            requestSpecification.parameters(params);
-        }
+        requestSpecification.parameters(params);
 
         return requestSpecification.when().get(url);
     }
 
-    protected Response getEntitiesForURLWihDates(String url, String limit, String cursor, String since, String until, String granularity,  Map<String, String> queryParams){
+    protected Response getEntitiesForUrlWihDates(String url, String limit, String cursor, String since, String until, String granularity, Map<String, String> queryParams){
         Map<String, String> preparedParams = buildQueryParamMapForDates(since, until, granularity);
         if (queryParams != null) {
             preparedParams.putAll(queryParams);

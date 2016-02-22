@@ -243,7 +243,7 @@ Feature: review travelers
 
 
 
-  #todo - return separate travelers for all enpoints (not working for now)
+  #todo - return separate travelers for all enpoints (forgoten)
 #  Scenario Outline: Get error codes specific traveler
 #    When Get trip advisor travellers "<url>" data for "<traveler>" with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
 #    Then Response code is 404

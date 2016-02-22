@@ -1,0 +1,31 @@
+{
+  "since": "2015-09-01",
+  "until": "2015-11-30",
+  "granularity": "month",
+  "data_owners": [
+    "tripadvisor"
+  ],
+  "values": [
+    {
+      "One": 41796,
+      "Two": 7849,
+      "Three": 48556,
+      "Four": 35699,
+      "Five": 22210
+    },
+    {
+      "One": 41873,
+      "Two": 7931,
+      "Three": 48750,
+      "Four": 35795,
+      "Five": 22275
+    },
+    {
+      "One": 41997,
+      "Two": 8064,
+      "Three": 48811,
+      "Four": 35928,
+      "Five": 22334
+    }
+  ]
+}

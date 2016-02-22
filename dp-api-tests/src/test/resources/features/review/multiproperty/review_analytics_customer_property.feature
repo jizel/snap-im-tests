@@ -121,8 +121,8 @@ Feature: review_multiproperty_customer_property
       | popularity_index_rank | c1t           | day         | 1     | today             | today | today             | today      |
       | popularity_index_rank | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | popularity_index_rank | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | popularity_index_rank | c1t           | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
-      | popularity_index_rank | c1t           | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | popularity_index_rank | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
+      | popularity_index_rank | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
       | popularity_index_rank | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | popularity_index_rank | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | popularity_index_rank | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
@@ -131,8 +131,8 @@ Feature: review_multiproperty_customer_property
       | aspects_of_business   | c1t           | day         | 1     | today             | today | today             | today      |
       | aspects_of_business   | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | aspects_of_business   | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | aspects_of_business   | c1t           | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
-      | aspects_of_business   | c1t           | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | aspects_of_business   | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
+      | aspects_of_business   | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
       | aspects_of_business   | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | aspects_of_business   | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | aspects_of_business   | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
@@ -141,8 +141,8 @@ Feature: review_multiproperty_customer_property
       | number_of_reviews     | c1t           | day         | 1     | today             | today | today             | today      |
       | number_of_reviews     | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | number_of_reviews     | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | number_of_reviews     | c1t           | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
-      | number_of_reviews     | c1t           | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | number_of_reviews     | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
+      | number_of_reviews     | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
       | number_of_reviews     | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | number_of_reviews     | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | number_of_reviews     | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
@@ -151,8 +151,8 @@ Feature: review_multiproperty_customer_property
       | overall_bubble_rating | c1t           | day         | 1     | today             | today | today             | today      |
       | overall_bubble_rating | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | overall_bubble_rating | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | overall_bubble_rating | c1t           | week        | 1     | today - 14 days   | today | today - 14 days   | today      |
-      | overall_bubble_rating | c1t           | week        | 3     | today - 1 month   | today | today - 1 month   | today      |
+      | overall_bubble_rating | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
+      | overall_bubble_rating | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
       | overall_bubble_rating | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
       | overall_bubble_rating | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | overall_bubble_rating | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
