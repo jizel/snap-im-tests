@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.steps.review;
 
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -11,9 +10,12 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.review.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.review.model.*;
+import travel.snapshot.dp.qa.model.review.model.Location;
+import travel.snapshot.dp.qa.model.review.model.Property;
 import travel.snapshot.dp.qa.serenity.analytics.ReviewSteps;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
@@ -172,9 +174,7 @@ public class ReviewStepsdefs {
     public void reviewTravellersFileIsEqualsToPreviousResponse(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, TravellersOverallStatisticsDto.class);
     }
 
@@ -182,9 +182,7 @@ public class ReviewStepsdefs {
     public void reviewTravellersFileIsEqualsToPreviousResponseForBubbleRating(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, TravellersOverallBubbleRatingStatsDto.class);
     }
 
@@ -192,9 +190,7 @@ public class ReviewStepsdefs {
     public void reviewTravellersFileIsEqualsToPreviousResponseForAcpectsOfBusiness(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, TravellersAspectsOfBusinessStatsDto.class);
     }
 
@@ -202,9 +198,7 @@ public class ReviewStepsdefs {
     public void reviewTravellersFileIsEqualsToPreviousResponseForNumberOfReviews(String filename) throws Throwable {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, TravellersNumberOfReviewsStatsDto.class);
     }
 
@@ -267,9 +261,7 @@ public class ReviewStepsdefs {
     public void reviewFileEqualsToPreviousResponseForPopularityIndex(String filename) throws Throwable {
         String path = "/messages/review" + filename;
         reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
-            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, PopularityIndexRankStatsDto.class);
     }
 
@@ -277,9 +269,7 @@ public class ReviewStepsdefs {
     public void reviewFileEqualsToPreviousResponseForAspectsOfBusiness(String filename) throws Throwable {
         String path = "/messages/review" + filename;
         reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
-            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, AspectsOfBusinessStatsDto.class);
     }
 
@@ -287,9 +277,7 @@ public class ReviewStepsdefs {
     public void reviewFileEqualsToPreviousResponseForNumberOfReviews(String filename) throws Throwable {
         String path = "/messages/review" + filename;
         reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
-            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, NumberOfReviewsStatsDto.class);
     }
 
@@ -297,9 +285,7 @@ public class ReviewStepsdefs {
     public void reviewFileEqualsToPreviousResponseForOverallBubbleRating(String filename) throws Throwable {
         String path = "/messages/review" + filename;
         reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
-            t.getProperties().sort((t1, t2) -> t1.getPropertyId().compareTo(t2.getPropertyId()));
-            u.getProperties().sort((u1, u2) -> u1.getPropertyId().compareTo(u2.getPropertyId()));
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, OverallBubbleRatingStatsDto.class);
 
     }
@@ -308,7 +294,7 @@ public class ReviewStepsdefs {
     public void reviewFileIsEqualsToPreviousResponseForRatingScore(String filename) throws Throwable {
         String path = "/messages/review" + filename;
         reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
-            assertThat(t, is(u));
+            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, RatingScoreStatsDto.class);
     }
 }
