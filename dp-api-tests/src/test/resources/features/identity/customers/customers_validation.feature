@@ -12,7 +12,7 @@ Feature: customers_validation
       | /salesforce_id         | String | false    | \w{100}                                                      | /null     | \w{101}  |
       | /vat_id                | String | true     | CZ[0-9]{9}                                                   | /null     | \w{101}  |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                   | \.{10}    | \w{1001} |
-      | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}.com | \.{10}    | \w{101}  |
+      | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}    | \w{101}  |
       | /phone                 | String | false    | +[0-9]{12}                                                   | \.{10}    | \w{101}  |
       | /is_demo_customer      | Bool   | true     | (true\|false)                                                | /null     |          |
       #| /is_active             | String | false    | (0\|1)                                                       | x         |          |

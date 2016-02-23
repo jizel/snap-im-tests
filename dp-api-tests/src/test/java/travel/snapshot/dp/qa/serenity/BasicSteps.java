@@ -64,6 +64,7 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
     protected static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
+    protected static final String SECOND_LEVEL_OBJECT_RECORDS = "records";
     protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     protected static final String SECOND_LEVEL_OBJECT_VERSIONS = "versions";

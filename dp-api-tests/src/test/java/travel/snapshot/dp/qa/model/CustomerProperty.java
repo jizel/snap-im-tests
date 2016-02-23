@@ -17,7 +17,7 @@ public class CustomerProperty {
     private String propertyId = null;
 
     public enum TypeEnum {
-        anchor, data_owner, owner, asset_management, management, chains, membership,
+        ANCHOR, DATA_OWNER, OWNER, ASSET_MANAGEMENT, MANAGEMENT, CHAINS, MEMBERSHIP,
     }
 
     ;

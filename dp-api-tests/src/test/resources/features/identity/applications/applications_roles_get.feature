@@ -147,7 +147,7 @@ Feature: applications_roles_get
       | 10          | -1     | /null  | /null       | /null       | 400           | 63          |
       | text        | 0      | /null  | /null       | /null       | 400           | 63          |
       | 10          | text   | /null  | /null       | /null       | 400           | 63          |
-      | 10          | 0      | /null  | role_name   | role_name   | 400           | 63          |
+      | 10          | 0      | /null  | role_name   | role_name   | 400           | 64          |
       | 10          | 0      | /null  | /null       | nonexistent | 400           | 63          |
       | 10          | 0      | /null  | nonexistent | /null       | 400           | 63          |
       | 10          | 0      | code== | /null       | /null       | 400           | 63          |
