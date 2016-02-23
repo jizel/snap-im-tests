@@ -358,9 +358,7 @@ public class BasicSteps {
         RequestSpecification requestSpecification = given().spec(spec);
 
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc,queryParams);
-        if (params != null) {
-            requestSpecification.parameters(params);
-        }
+        requestSpecification.parameters(params);
 
         return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
     }
