@@ -73,7 +73,7 @@ TABLES = [
     },
 
     {
-        'table': 'dp.FactTwitterPageStats',
+        'table': 'dp.Fact_twitter_daily',
         'multiply': dates,
         'columns': [
             lambda data: data['property_id'],       # dim_property_id
@@ -92,7 +92,7 @@ TABLES = [
     },
 
     {
-        'table': 'dp.FactTwitterTweetStats',
+        'table': 'dp.Fact_twitter_tweets',
         'multiply': range(0,100),
         'columns': [
             lambda data: data['property_id'],               # dim_property_id
