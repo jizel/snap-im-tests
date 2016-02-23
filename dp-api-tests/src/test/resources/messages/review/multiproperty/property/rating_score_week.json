@@ -1,0 +1,24 @@
+{
+  "since": "2015-11-16",
+  "until": "2015-11-29",
+  "granularity": "week",
+  "data_owners": [
+    "tripadvisor"
+  ],
+  "values": [
+    {
+      "One": 41946,
+      "Two": 8045,
+      "Three": 48798,
+      "Four": 35928,
+      "Five": 22309
+    },
+    {
+      "One": 41989,
+      "Two": 8064,
+      "Three": 48811,
+      "Four": 35928,
+      "Five": 22334
+    }
+  ]
+}

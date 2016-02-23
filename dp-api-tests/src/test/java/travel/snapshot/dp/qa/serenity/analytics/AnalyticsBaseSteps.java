@@ -1,16 +1,14 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
 
-import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -30,71 +28,55 @@ import static org.junit.Assert.assertTrue;
 public class AnalyticsBaseSteps extends BasicSteps {
 
 
-    public AnalyticsBaseSteps() {
-
-    }
+    public AnalyticsBaseSteps() {}
 
     //GET Requests
 
     @Step
     public void getDataWithoutProperty(String url) {
         Response response = given().spec(spec).parameter("access_token", "aaa").get(url);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        setSessionResponse(response);
     }
 
     @Step
-    public void getData(String url, String granularity, String propertyId, String since, String until) {
-        LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(until);
-
-        RequestSpecification requestSpecification = given().spec(spec);
-
+    //TODO try out test that have been affected (all social media)
+    /**
+     * returns entities for certain property for certain date granularity
+     */
+    public void getPropertiesWithDate(String url, String granularity, String propertyId, String since, String until) {
+        Map<String, String> prepareParams = new HashMap<>();
         if (StringUtils.isNotBlank(propertyId)) {
-            requestSpecification.header("x-property", propertyId);
-        }
-        if (StringUtils.isNotBlank(granularity)) {
-            requestSpecification.parameter("granularity", granularity);
-        }
-        if (sinceDate != null) {
-            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
-        }
-        if (untilDate != null) {
-            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
+            prepareParams.put("property", propertyId);
         }
 
-        Response response = requestSpecification.when().get(url);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        Response response = getEntitiesForUrlWihDates(url, null, null, since, until, granularity, prepareParams);
+        setSessionResponse(response);
     }
 
-
     @Step
-    public void getItems(String url, String propertyId, String limit, String cursor) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .basePath(url)
-                .header("x-property", propertyId)
-                .parameter("access_token", "aaa");
-
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
+    //TODO try out test that have been affected (all social media)
+    /**
+     * returns entities with paging for certain property
+     */
+    public void getPropertiesWithPaging(String url, String propertyId, String limit, String cursor) {
+        Map<String, String> queryParams = new HashMap<>();
+        if (StringUtils.isNotBlank(propertyId)) {
+            queryParams.put("property", propertyId);
         }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
-        Response response = requestSpecification.when().get();
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        Response response = getEntities(url, limit, cursor, null, null, null, queryParams);
+        setSessionResponse(response);
     }
 
     //Response Validation
-
     @Step
     public void responseContainsValues(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body("values.size()", is(count));
     }
 
     @Step
     public void responseContainsValuesForAllMetrics(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         Map responseMap = response.as(Map.class);
 
         List<Map<String, Object>> metrics = (List<Map<String, Object>>) responseMap.get("data");
@@ -106,14 +88,14 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void maximumNumberOfItemsInResponse(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body("size()", lessThanOrEqualTo(count));
     }
 
     @Step
     public void referralsAreSorted(String metric, boolean ascending) {
         BiPredicate<Double, Double> direction = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         List<Double> values = response.body().jsonPath().getList("values." + metric, double.class);
         for (int i = 0; i < values.size() - 1; i++) {
             assertTrue("\nValue at index " + i + ": " + values.get(i) + "\n"
@@ -124,14 +106,14 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void valueIsLessThanOrEqualTo(String pathToValue1, String pathToValue2) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body(pathToValue1, lessThanOrEqualTo(pathToValue2));
     }
 
     @Step
     public void dateFieldIs(String fieldName, String value) {
         LocalDate expectedDate = StringUtil.parseDate(value);
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
 
         LocalDate actualDate = LocalDate.parse(response.getBody().path(fieldName));
         assertEquals(expectedDate, actualDate);
@@ -147,7 +129,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
     public void responseContainsCorrectValuesFor(String granularity, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
-
 
         int count = 0;
         LocalDate d = sinceDate;
@@ -174,8 +155,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
             d = d.plusDays(1);
         }
-
-
         responseContainsValues(count);
     }
 }

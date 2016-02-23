@@ -1,25 +1,18 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
-
-import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.seleniumhq.jetty7.util.ajax.JSON;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.review.model.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.review.model.AspectsOfBusiness;
-import travel.snapshot.dp.qa.model.review.model.NumberOfReviewsStats;
-import travel.snapshot.dp.qa.model.review.model.OverallBubbleRatingStats;
-import travel.snapshot.dp.qa.model.review.model.PopularityIndexRank;
-import travel.snapshot.dp.qa.model.review.model.RatingScore;
-import travel.snapshot.dp.qa.model.review.model.Statistics;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.junit.Assert.assertEquals;
@@ -29,6 +22,36 @@ public class ReviewSteps extends AnalyticsBaseSteps {
     public ReviewSteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
+    }
+
+    /**
+     * @param assertStatement lambda with assert statement checking the object from session response
+     * @param type            class with type of object receiving from response
+     * @param <T>
+     * @throws Exception
+     */
+    @Step
+    public <T> void checkAnalyticsReturnedForType(Consumer<T> assertStatement, Class<T> type) throws Exception {
+        T traveller = getSessionResponse().as(type);
+        assertStatement.accept(traveller);
+    }
+
+    /**
+     * @param filePath        path to file with expected data
+     * @param assertStatement lambda with assert statement checking reponse against the file data
+     * @param type            type of object loaded from file
+     * @param <T>
+     * @throws Exception
+     */
+    @Step
+    public <T> void checkFileAgainstResponse(String filePath, BiConsumer<T, T> assertStatement, Class<T> type) throws Exception {
+
+        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filePath));
+        T expectedStatistics = ObjectMappers.OBJECT_MAPPER.readValue(data, type);
+
+        T actualStatistics = getSessionResponse().as(type);
+
+        assertStatement.accept(expectedStatistics, actualStatistics);
     }
 
     @Step
@@ -117,7 +140,7 @@ public class ReviewSteps extends AnalyticsBaseSteps {
 
     public void checkFileAgainstResponseForAnalytics(String filename) throws Exception {
         String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        Statistics expectedStatistics = from(data).getObject("", Statistics.class);
+        Statistics expectedStatistics = ObjectMappers.OBJECT_MAPPER.readValue(data, Statistics.class);
 
         Statistics currentStatistics = getAnalyticsFromResponse();
         assertEquals(expectedStatistics, currentStatistics);
@@ -132,18 +155,15 @@ public class ReviewSteps extends AnalyticsBaseSteps {
     }
 
     public void checkNumberOfValuesReturnedForEachProperty(int count) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         ArrayList propertyValues = response.jsonPath().get("properties.values");
         for (Object property : propertyValues) {
             assertEquals(((ArrayList) property).size(), count);
         }
     }
 
-    public void checkFileAgainstResponse(String filename) throws IOException {
-        String expected = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        expected = expected.replaceAll("\r|\n|\t| ", "");
-
-        String actual = getSessionResponse().getBody().asString();
-        assertEquals(expected, actual);
+    public void getReviewAnalyticsData(String url, String granularity, String since, String until, String limit, String cursor) {
+        Response aggregatedPropertySet = getEntitiesForUrlWihDates(url, limit, cursor, since, until, granularity, null);
+        setSessionResponse(aggregatedPropertySet);
     }
 }

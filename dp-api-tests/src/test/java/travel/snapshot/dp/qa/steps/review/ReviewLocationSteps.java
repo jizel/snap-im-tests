@@ -20,13 +20,11 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
         super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_LOCATIONS);
-        spec.parameter("access_token", "aaa");
     }
 
     public void listOfLocationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
-
     }
 
     public void locationNamesAreInResponseInOrder(List<String> names) {

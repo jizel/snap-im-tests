@@ -1,42 +1,48 @@
 {
+  "since": "2015-11-16",
+  "until": "2015-11-29",
+  "granularity": "week",
+  "data_owners": [
+    "tripadvisor"
+  ],
   "data": [
     {
-      "type": "Friends getaway\r",
+      "type": "friends",
       "number_of_reviews": [
         36999,
         37037
       ]
     },
     {
-      "type": "Family\r",
+      "type": "family",
       "number_of_reviews": [
         36981,
         null
       ]
     },
     {
-      "type": "Business\r",
+      "type": "business",
       "number_of_reviews": [
         37013,
         null
       ]
     },
     {
-      "type": "Solo travel\r",
+      "type": "solo",
       "number_of_reviews": [
         37013,
         null
       ]
     },
     {
-      "type": "Unspecified\r",
+      "type": "unspecified",
       "number_of_reviews": [
         36999,
         37037
       ]
     },
     {
-      "type": "Couples\r",
+      "type": "couples",
       "number_of_reviews": [
         36981,
         37037

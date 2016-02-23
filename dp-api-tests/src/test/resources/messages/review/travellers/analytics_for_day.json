@@ -1,7 +1,13 @@
 {
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
+  "data_owners": [
+    "tripadvisor"
+  ],
   "data": [
     {
-      "type": "Friends getaway\r",
+      "type": "friends",
       "overall": [
         null
       ],
@@ -13,7 +19,31 @@
       ]
     },
     {
-      "type": "Family\r",
+      "type": "couples",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "solo",
+      "overall": [
+        null
+      ],
+      "number_of_reviews": [
+        null
+      ],
+      "aspects_of_business": [
+        {}
+      ]
+    },
+    {
+      "type": "family",
       "overall": [
         7.4
       ],
@@ -30,7 +60,7 @@
       ]
     },
     {
-      "type": "Business\r",
+      "type": "unspecified",
       "overall": [
         null
       ],
@@ -42,31 +72,7 @@
       ]
     },
     {
-      "type": "Solo travel\r",
-      "overall": [
-        null
-      ],
-      "number_of_reviews": [
-        null
-      ],
-      "aspects_of_business": [
-        {}
-      ]
-    },
-    {
-      "type": "Unspecified\r",
-      "overall": [
-        null
-      ],
-      "number_of_reviews": [
-        null
-      ],
-      "aspects_of_business": [
-        {}
-      ]
-    },
-    {
-      "type": "Couples\r",
+      "type": "business",
       "overall": [
         null
       ],

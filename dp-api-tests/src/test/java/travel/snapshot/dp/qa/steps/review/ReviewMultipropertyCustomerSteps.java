@@ -26,7 +26,7 @@ public class ReviewMultipropertyCustomerSteps extends AnalyticsBaseSteps {
         CustomerSteps customerStep = new CustomerSteps();
         Customer c = customerStep.getCustomerByCodeInternal(customerCode);
 
-        Response customerProperties = getSecondLevelEntitiesForDates(c.getCustomerId(), metric, limit, cursor, since, until, granularity);
+        Response customerProperties = getSecondLevelEntitiesForDates(c.getCustomerId(), metric, limit, cursor, since, until, granularity, null, null, null);
         setSessionResponse(customerProperties);
     }
 }

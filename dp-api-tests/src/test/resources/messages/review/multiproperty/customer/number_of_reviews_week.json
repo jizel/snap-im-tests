@@ -1,7 +1,7 @@
 {
-  "since": "2015-12-03",
-  "until": "2015-12-03",
-  "granularity": "day",
+  "since": "2015-11-16",
+  "until": "2015-11-29",
+  "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
@@ -9,28 +9,22 @@
     {
       "property_id": "99000399-9999-4999-a999-999999999999",
       "values": [
-        {
-          "ranking": 118,
-          "total_number": 4322
-        }
+        25321,
+        25340
       ]
     },
     {
       "property_id": "99000299-9999-4999-a999-999999999999",
       "values": [
-        {
-          "ranking": 87,
-          "total_number": 4285
-        }
+        49377,
+        49391
       ]
     },
     {
       "property_id": "99000199-9999-4999-a999-999999999999",
       "values": [
-        {
-          "ranking": 93,
-          "total_number": 7778
-        }
+        37013,
+        37037
       ]
     }
   ]
