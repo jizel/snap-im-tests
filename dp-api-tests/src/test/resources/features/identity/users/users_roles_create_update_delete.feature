@@ -3,9 +3,9 @@ Feature: users_roles_create_update_delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     Given The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
@@ -17,17 +17,20 @@ Feature: users_roles_create_update_delete
       | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
 
+    Given The following applications exist
+      | applicationName            | description               | website                    | applicationId                        |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+
     Given The following roles exist
-      | applicationId | roleName        | roleDescription        |
-      | 111           | user_role_rel_1 | optional description 1 |
-      | 111           | user_role_rel_2 | optional description 2 |
-      | 111           | user_role_rel_3 | optional description 3 |
+      | applicationId                        | roleName        | roleDescription        |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_rel_1 | optional description 1 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_rel_2 | optional description 2 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_rel_3 | optional description 3 |
 
     Given All users are removed for customers with codes: c1t, c2t
 
-    Given Relation between role with name "user_role_rel_1" for application id "111" and user with username "default1" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "user_role_rel_1" for application id "111" and user with username "default1" exists with relationship_type "property" and entity with code "p1_code"
-
+    Given Relation between role with name "user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "default1" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "default1" exists with relationship_type "property" and entity with code "p1_code"
 
   Scenario Outline: Adding role to user
 
@@ -35,9 +38,9 @@ Feature: users_roles_create_update_delete
     Then Response code is "204"
 
     Examples:
-      | role_name       | application_id | username | relationship_type | entity_code |
-      | user_role_rel_2 | 111            | default1 | customer          | c1t         |
-      | user_role_rel_2 | 111            | default1 | property          | p1_code     |
+      | role_name       | application_id                       | username | relationship_type | entity_code |
+      | user_role_rel_2 | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1 | customer          | c1t         |
+      | user_role_rel_2 | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1 | property          | p1_code     |
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
@@ -51,9 +54,9 @@ Feature: users_roles_create_update_delete
     And Role with name "<role_name>" for application id "<application_id>" is not there for user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
 
     Examples:
-      | role_name       | application_id | username | relationship_type | entity_code |
-      | user_role_rel_1 | 111            | default1 | customer          | c1t         |
-      | user_role_rel_1 | 111            | default1 | property          | p1_code     |
+      | role_name       | application_id                       | username | relationship_type | entity_code |
+      | user_role_rel_1 | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1 | customer          | c1t         |
+      | user_role_rel_1 | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1 | property          | p1_code     |
 
   Scenario Outline: Checking error code for removing user from customer
     When Nonexistent role is removed from user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
@@ -72,33 +75,33 @@ Feature: users_roles_create_update_delete
 
     Given The following roles exist
       | applicationId | roleName               | roleDescription        |
-      | 111           | filter_user_role_rel_1 | optional description 1 |
-      | 111           | filter_user_role_rel_2 | optional description 2 |
-      | 111           | filter_user_role_rel_3 | optional description 3 |
-      | 111           | filter_user_role_rel_4 | optional description 4 |
-      | 111           | filter_user_role_rel_5 | optional description 5 |
-      | 111           | filter_user_role_rel_6 | optional description 6 |
-      | 111           | other_user_role_rel_2  | optional description 2 |
-      | 111           | other_user_role_rel_3  | optional description 3 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_1 | optional description 1 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_2 | optional description 2 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_3 | optional description 3 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_4 | optional description 4 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_5 | optional description 5 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_6 | optional description 6 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | other_user_role_rel_2  | optional description 2 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123           | other_user_role_rel_3  | optional description 3 |
 
 
-    Given Relation between role with name "filter_user_role_rel_1" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "filter_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "filter_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "filter_user_role_rel_4" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "filter_user_role_rel_5" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "filter_user_role_rel_6" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "other_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
-    Given Relation between role with name "other_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "filter_user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "filter_user_role_rel_2" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "filter_user_role_rel_3" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "filter_user_role_rel_4" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "filter_user_role_rel_5" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "filter_user_role_rel_6" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "other_user_role_rel_2" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
+    Given Relation between role with name "other_user_role_rel_3" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"
 
-    Given Relation between role with name "filter_user_role_rel_1" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "filter_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "filter_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "filter_user_role_rel_4" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "filter_user_role_rel_5" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "filter_user_role_rel_6" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "other_user_role_rel_2" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
-    Given Relation between role with name "other_user_role_rel_3" for application id "111" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_2" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_3" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_4" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_5" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "filter_user_role_rel_6" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "other_user_role_rel_2" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
+    Given Relation between role with name "other_user_role_rel_3" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "property" and entity with code "p1_code"
 
     When List of roles for user with username "filter_user_roles_rel_name" with relationship_type "<relationship_type>" and entity with code "<entity_code>" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -108,10 +111,10 @@ Feature: users_roles_create_update_delete
     And Total count is "<total>"
 
     Examples:
-      | relationship_type | entity_code | limit | cursor | returned |total | filter                             | sort      | sort_desc | expected_usernames                                                                                                          |
-      | customer          | c1t         | 5     | 0      | 5        |6     | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_1, filter_user_role_rel_2, filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5 |
-      | customer          | c1t         | 5     | 0      | 5        |6     | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_6, filter_user_role_rel_5, filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2 |
-      | customer          | c1t         | 5     | 2      | 4        |6     | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5, filter_user_role_rel_6                          |
-      | customer          | c1t         | 5     | 2      | 4        |6     | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2, filter_user_role_rel_1                          |
-      | customer          | c1t         | /null | /null  | 1        |1     | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_role_rel_6                                                                                                     |
+      | relationship_type | entity_code | limit | cursor | returned | total | filter                             | sort      | sort_desc | expected_usernames                                                                                                     |
+      | customer          | c1t         | 5     | 0      | 5        | 6     | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_1, filter_user_role_rel_2, filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5 |
+      | customer          | c1t         | 5     | 0      | 5        | 6     | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_6, filter_user_role_rel_5, filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2 |
+      | customer          | c1t         | 5     | 2      | 4        | 6     | role_name=='filter_user_role_rel*' | role_name |           | filter_user_role_rel_3, filter_user_role_rel_4, filter_user_role_rel_5, filter_user_role_rel_6                         |
+      | customer          | c1t         | 5     | 2      | 4        | 6     | role_name=='filter_user_role_rel*' |           | role_name | filter_user_role_rel_4, filter_user_role_rel_3, filter_user_role_rel_2, filter_user_role_rel_1                         |
+      | customer          | c1t         | /null | /null  | 1        | 1     | role_name==filter_user_role_rel_6  | /null     | /null     | filter_user_role_rel_6                                                                                                 |
     #TODO error codes - if bad relationship_type is used, if wrong id is used,

@@ -10,9 +10,17 @@ Feature: customers_property_sets
     Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All property sets are deleted for customers with codes: c1t, c2t
 
+    Given The following users exist
+      | userType | userName             | firstName | lastName      | email                                 | timezone      | culture |
+      | snapshot | defaultSnapshotuser  | Default   | SnapshotUser  | defaultSnapshotUser1@snapshot.travel  | Europe/Prague | cs-CZ   |
+
+    #Get token for snapshot user and set it to session (?access_token={token})
+    Given The password of user "defaultSnapshotuser" is "Password01"
+    Given Get token for user "defaultSnapshotuser" with password "Password01"
+
 
   Scenario Outline: getting list of property sets for customer "c1t" on customers side
-#failing because of not fuctional filtering
+#failing because of not functional filtering
     Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | branch          |

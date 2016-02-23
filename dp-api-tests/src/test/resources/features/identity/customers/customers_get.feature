@@ -19,6 +19,19 @@ Feature: customers_get
     And Body contains entity with attribute "email" value "c1@tenants.biz"
     And Body contains entity with attribute "vat_id" value "CZ10000001"
 
+  Scenario: Getting customer with Chinese symbols
+    Given The following customers exist with random address
+      | companyName       | email              | code | salesforceId               | vatId      | isDemoCustomer | phone         | website              | timezone      |
+      | 特殊特殊特殊       | china1@tenants.biz | ch1t | salesforceid_given_chine_1 | CH10000001 | true           | +420123456789 | http://www.china.com | Asia/Shanghai |
+    When Customer with code "ch1t" is got
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Etag header is present
+    And Body contains entity with attribute "code" value "ch1t"
+    And Body contains entity with attribute "email" value "china1@tenants.biz"
+    And Body contains entity with attribute "company_name" value "特殊特殊特殊"
+    And Body contains entity with attribute "vat_id" value "CH10000001"
+
   Scenario: Getting customer with etag
     When Customer with code "c1t" is got with etag
     Then Response code is "304"
@@ -149,11 +162,11 @@ Feature: customers_get
       | 10          | text   | /null    | /null        | /null        | 400           | 63          |
 
       #filtering and sorting
-      | 10    | 0      | /null    | company_name | company_name | 400           | 64          |
-      | 10    | 0      | /null    | /null        | nonexistent  | 400           | 63          |
-      | 10    | 0      | /null    | nonexistent  | /null        | 400           | 63          |
-      | 10    | 0      | code==   | /null        | /null        | 400           | 63          |
-      | 10    | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+      | 10          | 0      | /null    | company_name | company_name | 400           | 64          |
+      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 63          |
+      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 63          |
+      | 10          | 0      | code==   | /null        | /null        | 400           | 63          |
+      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
 
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address

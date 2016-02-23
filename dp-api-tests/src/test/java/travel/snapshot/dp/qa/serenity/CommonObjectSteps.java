@@ -226,6 +226,9 @@ public class CommonObjectSteps extends BasicSteps {
         // remove the ID field for comparison - original object does not need to have ID included
         ((ObjectNode) returnedObject).remove(getObjectIDField(objectName));
 
+        // is_active is special field (cannot be updated by update method, just by special api call), should not be part of generic objects
+        ((ObjectNode) returnedObject).remove("is_active");
+
         Assert.assertThat(originalObject, is(returnedObject));
     }
 
