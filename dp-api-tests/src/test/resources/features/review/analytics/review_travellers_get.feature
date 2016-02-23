@@ -46,8 +46,8 @@ Feature: review travelers
       | /travellers/overall_bubble_rating | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/overall_bubble_rating | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/overall_bubble_rating | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | week        | 3     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | week        | 51    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/overall_bubble_rating | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/overall_bubble_rating | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/overall_bubble_rating | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
@@ -69,8 +69,8 @@ Feature: review travelers
       | /travellers/aspects_of_business | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | week        | 3     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | week        | 51    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
@@ -92,8 +92,8 @@ Feature: review travelers
       | /travellers/number_of_reviews | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/number_of_reviews | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/number_of_reviews | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | week        | 3     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | week        | 51    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/number_of_reviews | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/number_of_reviews | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/number_of_reviews | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/number_of_reviews | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/number_of_reviews | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
@@ -115,13 +115,13 @@ Feature: review travelers
       | /travellers/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/ | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/ | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | week        | 3     | today - 1 month   | today | today - 1 month   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | week        | 51    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/ | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/ | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/ | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
-
+#TODO sorting not working
   Scenario Outline: Checking data corectness for all travellers analitics
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     Then Review travellers file "<json_input_file>" is equals to previous response
@@ -148,7 +148,7 @@ Feature: review travelers
 
   Scenario Outline: Checking data corectness for aspects of business
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
-    Then Review travellers file "<json_input_file>" is equals to previous response for acpects of business
+    Then Review travellers file "<json_input_file>" is equals to previous response for aspects of business
     And Response code is "200"
     And Content type is "application/json"
 

@@ -21,7 +21,7 @@ import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
-import travel.snapshot.dp.qa.steps.review.ReviewMultipropertyCustomerSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
 
 /**
  * Created by sedlacek on 9/18/2015.

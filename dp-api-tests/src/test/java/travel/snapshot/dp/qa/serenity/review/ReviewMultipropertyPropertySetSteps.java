@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.steps.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;

@@ -1,7 +1,13 @@
 {
+  "since": "2015-11-16",
+  "until": "2015-11-29",
+  "granularity": "week",
+  "data_owners": [
+    "tripadvisor"
+  ],
   "popularity_index_rank": [
-    {"ranking":"89","total_number":"7776"},
-    {"ranking":"91","total_number":"7777"}
+    {"ranking":"90","total_number":"7776"},
+    {"ranking":"92","total_number":"7778"}
   ],
   "overall_bubble_rating":["7.08571","7.2"],
   "number_of_reviews":["37013","37037"],

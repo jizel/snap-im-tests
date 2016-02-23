@@ -1,16 +1,10 @@
-package travel.snapshot.dp.qa.steps.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.review.model.Statistics;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
-
-import java.io.IOException;
-
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.junit.Assert.assertEquals;
 
 public class ReviewMultipropertyCustomerSteps extends AnalyticsBaseSteps {
 
