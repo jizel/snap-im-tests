@@ -29,7 +29,7 @@ Feature: configuration_types
 
     Examples:
       | json_data                                                          | method | error_code | custom_code |
-      | { "identifier":"", "description":"identifier is empty"}            | POST   | 400        | 53          |
+      | { "identifier":"", "description":"identifier is empty"}            | POST   | 400        | 61          |
       | { "description":"identifier is missing"}                           | POST   | 400        | 53          |
       | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 400        | 62          |
 
@@ -62,7 +62,7 @@ Feature: configuration_types
   Scenario: Updating description with missing body parameter
     When Configuration type description is updated for identifier "conf_id_2" with missing description
     Then Response code is "400"
-    And Custom code is "53"
+    And Custom code is "61"
 
 
   #error states

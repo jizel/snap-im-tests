@@ -62,7 +62,7 @@ public class CustomerSteps extends BasicSteps {
             }
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Customer cannot be created");
+                fail("Customer cannot be created " + createResponse.getBody().asString());
             }
 
             if (t.getIsActive() != null && t.getIsActive() != 0) {
@@ -384,7 +384,7 @@ public class CustomerSteps extends BasicSteps {
         } else {*/
         Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-            fail("CustomerProperty cannot be created");
+            fail("CustomerProperty cannot be created " + createResponse.getBody().asString());
         }
         //}
     }
@@ -423,12 +423,12 @@ public class CustomerSteps extends BasicSteps {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-                fail("CustomerUser cannot be deleted");
+                fail("CustomerUser cannot be deleted " + deleteResponse.getBody().asString());
             }
         }
         Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), c.getCustomerId(), isPrimary);
         if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("CustomerUser cannot be created");
+            fail("CustomerUser cannot be created " + createResponse.getBody().asString());
         }
     }
 
@@ -537,7 +537,7 @@ public class CustomerSteps extends BasicSteps {
                 for (CustomerUser cu : customerUsers) {
                     Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
-                        fail("Property set cannot be deleted: " + deleteResponse.asString());
+                        fail("Property set cannot be deleted: " + deleteResponse.getBody().asString());
                     }
                 }
             }
