@@ -9,6 +9,7 @@ import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
+import travel.snapshot.qa.util.PropertyResolver
 
 /**
  * Initializes MariaDB container with Flyway scripts.
@@ -20,7 +21,7 @@ class MariaDBInitializer {
     private static final String DEFAULT_MARIADB_CONTAINER =
             DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID
 
-    private final File workspace
+    private final String dataPlatformDir
 
     private final DataPlatformTestOrchestration orchestration
 
@@ -28,8 +29,8 @@ class MariaDBInitializer {
 
     private String containerId = DEFAULT_MARIADB_CONTAINER
 
-    MariaDBInitializer(File workspace, DataPlatformTestOrchestration orchestration) {
-        this.workspace = workspace
+    MariaDBInitializer(DataPlatformTestOrchestration orchestration) {
+        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
         this.orchestration = orchestration
     }
 
@@ -122,7 +123,7 @@ class MariaDBInitializer {
 
             String dataSource = manager.getConfiguration().getDataSource()
             String scheme = configuration.scheme
-            String scripts = "filesystem:" + new File(workspace, "data-platform/" + configuration.flywayScripts).absolutePath
+            String scripts = "filesystem:" + new File(dataPlatformDir, configuration.flywayScripts).absolutePath
 
             manager.flyway(dataSource, scheme, scripts).migrate()
         }

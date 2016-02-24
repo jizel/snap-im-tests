@@ -27,7 +27,7 @@ class TomcatModuleDeployer {
 
     private final DataPlatformTestOrchestration orchestration
 
-    private final File workspace
+    private final File dataPlatformDir
 
     private List<DataPlatformModule> modules = []
 
@@ -35,13 +35,14 @@ class TomcatModuleDeployer {
 
     private String deploymentStrategy = parseDeploymentStrategy()
 
-    TomcatModuleDeployer(File workspace, DataPlatformTestOrchestration orchestration) {
-        this.workspace = workspace
+    TomcatModuleDeployer(DataPlatformTestOrchestration orchestration) {
+        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
         this.orchestration = orchestration
     }
 
     TomcatModuleDeployer strategy(DeploymentStrategy deploymentStrategy) {
         this.deploymentStrategy = deploymentStrategy
+        this
     }
 
     /**
@@ -155,7 +156,7 @@ class TomcatModuleDeployer {
     }
 
     private def deployModule(DataPlatformModule module, TomcatManager manager) {
-        File deployment = new File(workspace, "data-platform/" + module.war)
+        File deployment = new File(dataPlatformDir, module.war)
 
         if (!deployment.exists()) {
             throw new IllegalStateException(String.format("Deployment file %s does not exist.", deployment.absolutePath))

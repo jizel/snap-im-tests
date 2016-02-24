@@ -1,15 +1,13 @@
 package travel.snapshot.qa.test.execution.dataplatform
 
+import travel.snapshot.qa.util.PropertyResolver
+
 /**
  * Encapsulates module builing
  */
 class DataPlatformBuildExecutor {
 
-    static String DEFAULT_DATA_PLATFORM_DIR = "data-platform"
-
-    File workspace
-
-    String dataPlatformDir = DEFAULT_DATA_PLATFORM_DIR
+    File dataPlatformDir
 
     List<DataPlatformModule> modules = []
 
@@ -17,13 +15,8 @@ class DataPlatformBuildExecutor {
 
     boolean force = false
 
-    DataPlatformBuildExecutor(File workspace) {
-        this(workspace, DEFAULT_DATA_PLATFORM_DIR)
-    }
-
-    DataPlatformBuildExecutor(File workspace, String dataPlatformDir) {
-        this.workspace = workspace
-        this.dataPlatformDir = dataPlatformDir
+    DataPlatformBuildExecutor() {
+        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
     }
 
     /**
@@ -32,7 +25,7 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor dataPlatform(String dataPlatformPath) {
-        this.dataPlatformDir = dataPlatformPath
+        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation(dataPlatformPath)
         this
     }
 
@@ -112,9 +105,7 @@ class DataPlatformBuildExecutor {
      */
     DataPlatformBuildExecutor execute(boolean withoutTests, boolean force) {
 
-        def dataPlatform = new File(workspace, dataPlatformDir).absolutePath
-
-        def dataPlatformBuilder = new DataPlatformBuilder(dataPlatform, withoutTests)
+        def dataPlatformBuilder = new DataPlatformBuilder(dataPlatformDir.absolutePath, withoutTests)
 
         if (modules.size() == 1 && modules.get(0) == DataPlatformModule.PROJECT) {
             dataPlatformBuilder.buildProject(withoutTests)
