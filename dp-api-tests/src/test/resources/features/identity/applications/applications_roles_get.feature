@@ -119,14 +119,13 @@ Feature: applications_roles_get
     And Total count is "<total>"
 
     Examples: 
-      | limit | cursor | returned | total | filter                                                     | sort        | sort_desc | expected_names                                                       |
-      | 5     | 0      | 5        | 12    | role_name=='Test_Role*'                                    | role_name   | /null     | Test_Role_11, Test_Role_12, Test_Role_13, Test_Role_21, Test_Role_22 |
-      | 5     | 0      | 5        | 12    | role_name=='Test_Role*'                                    | /null       | role_name | Test_Role_36, Test_Role_35, Test_Role_34, Test_Role_33, Test_Role_32 |
-      | 5     | 9      | 3        | 12    | role_name=='Test_Role*'                                    | role_name   | /null     | Test_Role_34, Test_Role_35, Test_Role_36                             |
-      | 5     | 9      | 3        | 12    | role_name=='Test_Role*'                                    | /null       | role_name | Test_Role_13, Test_Role_12, Test_Role_11                             |
-      | 5     | 10     | 2        | 12    | role_name=='Test_Role*'                                    | description | /null     | Test_Role_35, Test_Role_36                                           |
-      | /null | /null  | 1        | 1     | description=='*description 22'                             | /null       | /null     | Test_Role_22                                                         |
-      | /null | /null  | 1        | 1     | role_name=='Test_Role*' and description=='*description 34' | /null       | /null     | Test_Role_34                                                         |
+      | limit | cursor | returned | total | filter                  | sort        | sort_desc | expected_names                                                       |
+      | 5     | 0      | 5        | 12    | role_name=='Test_Role*' | role_name   | /null     | Test_Role_11, Test_Role_12, Test_Role_13, Test_Role_21, Test_Role_22 |
+      | 5     | 0      | 5        | 12    | role_name=='Test_Role*' | /null       | role_name | Test_Role_36, Test_Role_35, Test_Role_34, Test_Role_33, Test_Role_32 |
+      | 5     | 9      | 3        | 12    | role_name=='Test_Role*' | role_name   | /null     | Test_Role_34, Test_Role_35, Test_Role_36                             |
+      | 5     | 9      | 3        | 12    | role_name=='Test_Role*' | /null       | role_name | Test_Role_13, Test_Role_12, Test_Role_11                             |
+      | 5     | 10     | 2        | 12    | role_name=='Test_Role*' | role_name   | /null     | Test_Role_35, Test_Role_36                                           |
+      | /null | /null  | 1        | 1     | role_name=='*Role_34'   | /null       | /null     | Test_Role_34                                                         |
 
   Scenario Outline: Checking error codes for getting list of applications roles
     When List of applications roles is got for application with id "a318fd9a-a05d-42d8-8e84-42e904ace111" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -148,7 +147,7 @@ Feature: applications_roles_get
       | 10          | -1     | /null  | /null       | /null       | 400           | 63          |
       | text        | 0      | /null  | /null       | /null       | 400           | 63          |
       | 10          | text   | /null  | /null       | /null       | 400           | 63          |
-      | 10          | 0      | /null  | description | description | 400           | 63          |
+      | 10          | 0      | /null  | role_name   | role_name   | 400           | 63          |
       | 10          | 0      | /null  | /null       | nonexistent | 400           | 63          |
       | 10          | 0      | /null  | nonexistent | /null       | 400           | 63          |
       | 10          | 0      | code== | /null       | /null       | 400           | 63          |
