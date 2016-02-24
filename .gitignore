@@ -26,3 +26,6 @@ target/
 **/.nb-gradle/
 **/.nb-gradle-properties
 *.pyc
+
+# TSV files from Python fake data generator
+fake-data-generator/Python_load/src/*.tsv

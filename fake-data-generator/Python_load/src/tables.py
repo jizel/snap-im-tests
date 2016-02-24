@@ -73,7 +73,7 @@ TABLES = [
     },
 
     {
-        'table': 'dp.FactTwitterPageStats',
+        'table': 'dp.Fact_twitter_daily',
         'multiply': dates,
         'columns': [
             lambda data: data['property_id'],       # dim_property_id
@@ -88,6 +88,21 @@ TABLES = [
             lambda data: increment(data, 9),        # mentions
             lambda data: increment(data, 10),       # mention_reach
             lambda data: datetime.now(),            # inserted_time_stamp
+        ]
+    },
+
+    {
+        'table': 'dp.Fact_twitter_tweets',
+        'multiply': range(0,100),
+        'columns': [
+            lambda data: data['property_id'],               # dim_property_id
+            lambda data: data['iter'],                      # tweet_id
+            lambda data: datetime.now(),                    # date_time_added
+            lambda data: "tweet %s" % data['property_id'],  # content
+            lambda data: random.randint(0,1000),            # impressions
+            lambda data: random.randint(0,1000),            # engagement
+            lambda data: random.randint(0,1000),            # retweet_count
+            lambda data: random.randint(0,1000),            # favorites
         ]
     },
 
