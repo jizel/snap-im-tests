@@ -105,6 +105,14 @@ public class AnalyticsBaseSteps extends BasicSteps {
     @Step
     public void listOfObjectsAreSortedAccordingToProperty(String property, boolean ascending, Class propertyClassType) {
 
+        if (property == null || property.isEmpty()) {
+            throw new IllegalArgumentException("Property ID must not be a null object.");
+        }
+
+        if (propertyClassType == null) {
+            throw new IllegalArgumentException("Property class type can not be a null object.");
+        }
+
         BiPredicate equalityPredicate = null;
 
         BiPredicate<Double, Double> numberEquality = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
@@ -116,6 +124,10 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
         if (propertyClassType == String.class) {
             equalityPredicate = stringEquality;
+        }
+
+        if (equalityPredicate == null) {
+            throw new IllegalArgumentException(String.format("Unable to resolve equality predicate from property of class type %s.", propertyClassType.getName()));
         }
 
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
