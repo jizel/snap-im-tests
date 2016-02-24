@@ -9,6 +9,7 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.review.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.review.ReviewAnalyticsEnum;
 import travel.snapshot.dp.qa.serenity.review.*;
 
 import java.util.Collections;
@@ -58,14 +59,28 @@ public class ReviewStepsdefs {
     public void get_trip_advisor_with_missing_property_header(String url) throws Throwable {
         reviewSteps.getPropertiesWithDate("/review" + url, "day", null, null, null);
     }
-    
+
     @Then("^Response contains (\\d+) number of review analytics$")
     public void response_contains_count_number_of_analytics(int count) throws Throwable {
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t, hasProperty("aspectsOfBusiness", hasSize(count))), OverallStatisticsDto.class);
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t, hasProperty("ratingScore", hasSize(count))), OverallStatisticsDto.class);
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t, hasProperty("numberOfReviews", hasSize(count))), OverallStatisticsDto.class);
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t, hasProperty("overallBubbleRating", hasSize(count))), OverallStatisticsDto.class);
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t, hasProperty("popularityIndexRank", hasSize(count))), OverallStatisticsDto.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t, hasProperty(ReviewAnalyticsEnum.ASPECTSOFBUSINESS.toString(), hasSize(count))),
+                OverallStatisticsDto.class);
+
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t, hasProperty(ReviewAnalyticsEnum.RATINGSCORE.toString(), hasSize(count))),
+                OverallStatisticsDto.class);
+
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t, hasProperty(ReviewAnalyticsEnum.NUMBEROFREVIEWS.toString(), hasSize(count))),
+                OverallStatisticsDto.class);
+
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t, hasProperty(ReviewAnalyticsEnum.OVERALLBUBBLERATING.toString(), hasSize(count))),
+                OverallStatisticsDto.class);
+
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t, hasProperty(ReviewAnalyticsEnum.POPULARITYINDEXRANK.toString(), hasSize(count))),
+                OverallStatisticsDto.class);
     }
 
     @When("^List of trip advisor locations \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
@@ -123,9 +138,17 @@ public class ReviewStepsdefs {
 
     @Then("^Response contains (\\d+) number of analytics for travelers$")
     public void responseContainsNumberOfAnalyticsForTravelers(int count) throws Throwable {
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("numberOfReviews", hasSize(count)))), TravellersOverallStatisticsDto.class);
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("aspectsOfBusiness", hasSize(count)))), TravellersOverallStatisticsDto.class);
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("overall", hasSize(count)))), TravellersOverallStatisticsDto.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty(ReviewAnalyticsEnum.NUMBEROFREVIEWS.toString(), hasSize(count)))),
+                TravellersOverallStatisticsDto.class);
+
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty(ReviewAnalyticsEnum.ASPECTSOFBUSINESS.toString(), hasSize(count)))),
+                TravellersOverallStatisticsDto.class);
+
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty(ReviewAnalyticsEnum.OVERALL.toString(), hasSize(count)))),
+                TravellersOverallStatisticsDto.class);
     }
 
     @When("^Get trip advisor travellers \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
@@ -135,17 +158,23 @@ public class ReviewStepsdefs {
 
     @Then("^Response contains (\\d+) number of analytics for travelers number of reviews$")
     public void responseContainsCountNumberOfAnalyticsForTravelersNumberOfReviews(int count) throws Throwable {
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("numberOfReviews", hasSize(count)))), TravellersNumberOfReviewsStatsDto.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty(ReviewAnalyticsEnum.NUMBEROFREVIEWS.toString(), hasSize(count)))),
+                TravellersNumberOfReviewsStatsDto.class);
     }
 
     @Then("^Response contains (\\d+) number of analytics for travelers for aspect of business$")
     public void responseContainsCountNumberOfAnalyticsForTravelersForAspectOfBusiness(int count) throws Throwable {
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("aspectsOfBusiness", hasSize(count)))), TravellersAspectsOfBusinessStatsDto.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty(ReviewAnalyticsEnum.ASPECTSOFBUSINESS.toString(), hasSize(count)))),
+                TravellersAspectsOfBusinessStatsDto.class);
     }
 
     @Then("^Response contains (\\d+) number of analytics for travelers overall bubble rating$")
     public void responseContainsCountNumberOfAnalyticsForTravelersOverallBubbleRating(int count) throws Throwable {
-        reviewTravelersSteps.checkAnalyticsReturnedForType(t -> assertThat(t.getData(), everyItem(hasProperty("overall", hasSize(count)))), TravellersOverallBubbleRatingStatsDto.class);
+        reviewTravelersSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty(ReviewAnalyticsEnum.OVERALL.toString(), hasSize(count)))),
+                TravellersOverallBubbleRatingStatsDto.class);
     }
 
     @Then("^Review file \"([^\"]*)\" is equals to previous response for analytics$")
@@ -161,8 +190,8 @@ public class ReviewStepsdefs {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
             //containsInAnyOrder does not work for complex object as TravellersOverallStatisticsDto
-            t.getData().sort((t1,t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1,u2) -> u1.getType().compareTo(u2.getType()));
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
             assertThat(Collections.singletonList(t), containsInAnyOrder(u));
         }, TravellersOverallStatisticsDto.class);
     }
@@ -180,8 +209,8 @@ public class ReviewStepsdefs {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
             //containsInAnyOrder does not work for complex object as TravellersAspectsOfBusinessStatsDto
-            t.getData().sort((t1,t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1,u2) -> u1.getType().compareTo(u2.getType()));
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
         }, TravellersAspectsOfBusinessStatsDto.class);
     }
 
@@ -190,8 +219,8 @@ public class ReviewStepsdefs {
         String path = "/messages/review/travellers" + filename;
         reviewTravelersSteps.checkFileAgainstResponse(path, (t, u) -> {
             //containsInAnyOrder does not work for complex object as TravellersNumberOfReviewsStatsDto
-            t.getData().sort((t1,t2) -> t1.getType().compareTo(t2.getType()));
-            u.getData().sort((u1,u2) -> u1.getType().compareTo(u2.getType()));
+            t.getData().sort((t1, t2) -> t1.getType().compareTo(t2.getType()));
+            u.getData().sort((u1, u2) -> u1.getType().compareTo(u2.getType()));
         }, TravellersNumberOfReviewsStatsDto.class);
     }
 

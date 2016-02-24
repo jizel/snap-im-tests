@@ -121,7 +121,6 @@ Feature: review travelers
       | /travellers/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
-#TODO sorting not working
   Scenario Outline: Checking data corectness for all travellers analitics
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     Then Review travellers file "<json_input_file>" is equals to previous response
