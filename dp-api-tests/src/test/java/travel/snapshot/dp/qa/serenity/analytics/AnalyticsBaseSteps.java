@@ -7,7 +7,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.jayway.restassured.response.Response;
-import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
 import travel.snapshot.dp.qa.helpers.StringUtil;
@@ -93,8 +92,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void responseContainsObjectsAllWithPropertyAndValues(String property, List<String> values) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        List responseList = response.as(List.class);
+        List responseList = getSessionResponse().as(List.class);
 
         for (Object record : responseList) {
             List dataOwners = (List) ((Map) record).get(property);
@@ -130,8 +128,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
             throw new IllegalArgumentException(String.format("Unable to resolve equality predicate from property of class type %s.", propertyClassType.getName()));
         }
 
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        List values = response.body().jsonPath().getList(property, propertyClassType);
+        List values = getSessionResponse().body().jsonPath().getList(property, propertyClassType);
 
         for (int i = 0; i < values.size() - 1; i++) {
             assertTrue("\nValue at index " + i + ": " + values.get(i) + "\nValue at index " + (i + 1) + ": " + values.get(i + 1),
