@@ -34,7 +34,7 @@ Feature: twitter_tweets
       | /analytics/twitter/tweets | /null | /null  | 50    | 99000099-9999-4999-a999-999999999999 | 200           | application/json | retweets    | double |
       | /analytics/twitter/tweets | /null | /null  | 50    | 99000099-9999-4999-a999-999999999999 | 200           | application/json | favorites   | double |
 
-  Scenario Outline: Twitter tweets are sorted descendingly by their attributes
+  Scenario Outline: Twitter tweets are sorted ascendingly by their attributes
     When List of twitter items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>" and sort by "<sort>" ascendingly
     Then Response code is <response_code>
     And Content type is "<content_type>"
