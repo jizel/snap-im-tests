@@ -15,8 +15,6 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
     private static final String BASE_PATH_LOCATIONS = "/review/locations";
 
     public ReviewLocationSteps() {
-
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_LOCATIONS);
     }
@@ -30,8 +28,8 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
         Response response = getSessionResponse();
         LocationDto[] locations = response.as(LocationDto[].class);
         int i = 0;
-        for (LocationDto l : locations) {
-            assertEquals("location on index=" + i + " is not expected", names.get(i), l.getLocationName());
+        for (LocationDto location : locations) {
+            assertEquals("location on index=" + i + " is not expected", names.get(i), location.getLocationName());
             i++;
         }
     }
@@ -45,8 +43,8 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
         Response response = getSessionResponse();
         LocationPropertyDto[] properties = response.as(LocationPropertyDto[].class);
         int i = 0;
-        for (LocationPropertyDto p : properties) {
-            assertEquals("location on index=" + i + " is not expected", ids.get(i), p.getPropertyId());
+        for (LocationPropertyDto locationProperty : properties) {
+            assertEquals("location on index=" + i + " is not expected", ids.get(i), locationProperty.getPropertyId());
             i++;
         }
     }

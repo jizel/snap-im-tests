@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.steps.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
@@ -14,7 +14,6 @@ public class ReviewTravelersSteps extends ReviewSteps {
     private static final String BASE_PATH_LOCATIONS = "/review/analytics/";
 
     public ReviewTravelersSteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_LOCATIONS);
     }

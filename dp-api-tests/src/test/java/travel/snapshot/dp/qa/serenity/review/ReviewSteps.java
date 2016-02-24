@@ -6,6 +6,7 @@ import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -15,7 +16,6 @@ import static org.junit.Assert.assertEquals;
 public class ReviewSteps extends AnalyticsBaseSteps {
 
     public ReviewSteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
     }
 
@@ -40,10 +40,12 @@ public class ReviewSteps extends AnalyticsBaseSteps {
      */
     @Step
     public <T> void checkFileAgainstResponse(String filePath, BiConsumer<T, T> assertStatement, Class<T> type) throws Exception {
+        String data;
+        try(InputStream stream = this.getClass().getResourceAsStream(filePath)) {
+            data = getRequestDataFromFile(stream);
+        }
 
-        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filePath));
         T expectedStatistics = ObjectMappers.OBJECT_MAPPER.readValue(data, type);
-
         T actualStatistics = getSessionResponse().as(type);
 
         assertStatement.accept(expectedStatistics, actualStatistics);

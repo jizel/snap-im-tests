@@ -275,7 +275,6 @@ public class BasicSteps {
 
     /**
      * getting entities over rest api, if limit and cursor is null or empty, it's not added to query string
-     *
      * @param sortDesc @return
      */
     protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc){
@@ -303,9 +302,15 @@ public class BasicSteps {
         return getEntities(url, limit, cursor, null, null, null, preparedParams);
     }
 
+    /**
+     * Method will ignore parsing of date if it is incorrectly hand out to method for purpose of negative tests
+     * @param since correct format 2015-01-01 / today / today -1 month
+     * @param until same as "since"
+     * @param granularity day/week/month
+     * @return Map of query parameters that is passed to getEntitiesForUrlWihDates
+     */
     private Map<String, String> buildQueryParamMapForDates(String since, String until, String granularity) {
         Map<String, String> queryParams = new HashMap<>();
-        //ignoring parsing when fails in order to run negative tests
         try{
             LocalDate sinceDate = StringUtil.parseDate(since);
             if (sinceDate != null) {

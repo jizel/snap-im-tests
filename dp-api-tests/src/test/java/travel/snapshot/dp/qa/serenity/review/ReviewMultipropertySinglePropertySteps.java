@@ -9,7 +9,6 @@ public class ReviewMultipropertySinglePropertySteps extends AnalyticsBaseSteps {
     private static final String BASE_PATH_PROPERTY_SET = "/review/analytics/property/";
 
     public ReviewMultipropertySinglePropertySteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_PROPERTY_SET);
     }

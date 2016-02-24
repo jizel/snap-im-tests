@@ -119,11 +119,11 @@ Feature: review_locaitons
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "<response_code>"
     And Content type is "application/json"
-    And Custom code is "<custome_code>"
+    And Custom code is "<custom_code>"
 
     #todo DP-1117 - response message for property "null" has wrong message - check here after fix
     Examples:
-      | url       | property                             | response_code | custome_code |
+      | url       | property                             | response_code | custom_code |
       | /location | 11111111-1111-4111-a111-111111111111 | 404           | 152          |
       | /location | null                                 | 400           | 63           |
       | /location | /null                                | 400           | 52           |

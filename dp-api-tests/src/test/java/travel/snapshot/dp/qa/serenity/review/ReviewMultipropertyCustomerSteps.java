@@ -11,16 +11,15 @@ public class ReviewMultipropertyCustomerSteps extends AnalyticsBaseSteps {
     private static final String BASE_PATH_CUSTOMER = "/review/analytics/customer/";
 
     public ReviewMultipropertyCustomerSteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_CUSTOMER);
     }
 
     public void getCustomerPropertiesMetric(String metric, String customerCode, String since, String until, String granularity, String limit, String cursor) {
         CustomerSteps customerStep = new CustomerSteps();
-        Customer c = customerStep.getCustomerByCodeInternal(customerCode);
+        Customer customer = customerStep.getCustomerByCodeInternal(customerCode);
 
-        Response customerProperties = getSecondLevelEntitiesForDates(c.getCustomerId(), metric, limit, cursor, since, until, granularity, null, null, null);
+        Response customerProperties = getSecondLevelEntitiesForDates(customer.getCustomerId(), metric, limit, cursor, since, until, granularity, null, null, null);
         setSessionResponse(customerProperties);
     }
 }
