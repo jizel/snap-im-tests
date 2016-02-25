@@ -1,15 +1,21 @@
 {
+  "since": "2015-09-01",
+  "until": "2015-11-30",
+  "granularity": "month",
+  "data_owners": [
+    "tripadvisor"
+  ],
   "popularity_index_rank": [
     {
       "ranking": "76",
       "total_number": "7755"
     },
     {
-      "ranking": "81",
+      "ranking": "82",
       "total_number": "7764"
     },
     {
-      "ranking": "88",
+      "ranking": "89",
       "total_number": "7775"
     }
   ],

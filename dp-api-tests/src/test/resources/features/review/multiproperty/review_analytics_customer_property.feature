@@ -123,7 +123,7 @@ Feature: review_multiproperty_customer_property
       | popularity_index_rank | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | popularity_index_rank | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | popularity_index_rank | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | popularity_index_rank | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | popularity_index_rank | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | popularity_index_rank | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | popularity_index_rank | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | popularity_index_rank | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
@@ -133,7 +133,7 @@ Feature: review_multiproperty_customer_property
       | aspects_of_business   | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | aspects_of_business   | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | aspects_of_business   | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | aspects_of_business   | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | aspects_of_business   | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | aspects_of_business   | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | aspects_of_business   | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | aspects_of_business   | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
@@ -143,7 +143,7 @@ Feature: review_multiproperty_customer_property
       | number_of_reviews     | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | number_of_reviews     | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | number_of_reviews     | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | number_of_reviews     | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | number_of_reviews     | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | number_of_reviews     | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | number_of_reviews     | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | number_of_reviews     | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
@@ -153,7 +153,7 @@ Feature: review_multiproperty_customer_property
       | overall_bubble_rating | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | overall_bubble_rating | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | overall_bubble_rating | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | overall_bubble_rating | c1t           | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | overall_bubble_rating | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | overall_bubble_rating | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | overall_bubble_rating | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | overall_bubble_rating | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |

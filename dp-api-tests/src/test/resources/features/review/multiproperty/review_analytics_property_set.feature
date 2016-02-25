@@ -134,7 +134,7 @@ Feature: review_multiproperty_property_set
       | popularity_index_rank | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | popularity_index_rank | ps1_name          | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | popularity_index_rank | ps1_name          | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | popularity_index_rank | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | popularity_index_rank | ps1_name          | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | popularity_index_rank | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | popularity_index_rank | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | popularity_index_rank | ps1_name          | month       | 11    | today - 40 months | today | today - 12 months | today      |
@@ -144,7 +144,7 @@ Feature: review_multiproperty_property_set
       | aspects_of_business   | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | aspects_of_business   | ps1_name          | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | aspects_of_business   | ps1_name          | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | aspects_of_business   | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | aspects_of_business   | ps1_name          | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | aspects_of_business   | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | aspects_of_business   | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
 
@@ -153,7 +153,7 @@ Feature: review_multiproperty_property_set
       | number_of_reviews     | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | number_of_reviews     | ps1_name          | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | number_of_reviews     | ps1_name          | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | number_of_reviews     | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | number_of_reviews     | ps1_name          | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | number_of_reviews     | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | number_of_reviews     | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | number_of_reviews     | ps1_name          | month       | 11    | today - 40 months | today | today - 12 months | today      |
@@ -163,7 +163,7 @@ Feature: review_multiproperty_property_set
       | overall_bubble_rating | ps1_name          | day         | 366   | today - 40 months | today | today - 365 days  | today      |
       | overall_bubble_rating | ps1_name          | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
       | overall_bubble_rating | ps1_name          | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | overall_bubble_rating | ps1_name          | week        | 51    | today - 40 months | today | today - 12 months | today      |
+      | overall_bubble_rating | ps1_name          | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | overall_bubble_rating | ps1_name          | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | overall_bubble_rating | ps1_name          | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
 

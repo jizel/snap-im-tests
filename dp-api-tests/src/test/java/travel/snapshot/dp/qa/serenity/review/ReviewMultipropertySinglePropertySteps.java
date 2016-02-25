@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.steps.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -9,7 +9,6 @@ public class ReviewMultipropertySinglePropertySteps extends AnalyticsBaseSteps {
     private static final String BASE_PATH_PROPERTY_SET = "/review/analytics/property/";
 
     public ReviewMultipropertySinglePropertySteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_PROPERTY_SET);
     }

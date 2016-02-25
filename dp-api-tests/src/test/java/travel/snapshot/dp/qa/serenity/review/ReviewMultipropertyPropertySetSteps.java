@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.steps.review;
+package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -13,17 +13,16 @@ public class ReviewMultipropertyPropertySetSteps extends AnalyticsBaseSteps {
     private static final String BASE_PATH_PROPERTY_SET = "/review/analytics/property_set/";
 
     public ReviewMultipropertyPropertySetSteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(REVIEW_BASE_URI));
         spec.basePath(BASE_PATH_PROPERTY_SET);
     }
 
     public void getAggregatedStatisticsForPropertySet(String metric, String pSetCode, String customerCode, String since, String until, String granularity, String limit, String cursor) {
         CustomerSteps customerSteps = new CustomerSteps();
-        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        Customer customer = customerSteps.getCustomerByCodeInternal(customerCode);
 
         PropertySetSteps propertySetSteps = new PropertySetSteps();
-        PropertySet propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, c.getCustomerId());
+        PropertySet propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, customer.getCustomerId());
 
         Response aggregatedPropertySet = getSecondLevelEntitiesForDates(propertySet.getPropertySetId(), metric, limit, cursor, since, until, granularity, null, null, null);
         setSessionResponse(aggregatedPropertySet);
