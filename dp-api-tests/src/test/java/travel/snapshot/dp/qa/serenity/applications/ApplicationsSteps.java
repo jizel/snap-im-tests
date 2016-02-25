@@ -7,7 +7,6 @@ import net.thucydides.core.annotations.Step;
 
 import org.apache.http.HttpStatus;
 
-import java.beans.IntrospectionException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,6 @@ import java.util.Map;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Application;
 import travel.snapshot.dp.qa.model.ApplicationVersion;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -48,7 +45,7 @@ public class ApplicationsSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION).to(application);
         Application existingApplication = getApplicationById(application.getApplicationId());
         if (existingApplication != null) {
-            deleteApplication(existingApplication.getApplicationId());
+            deleteEntity(existingApplication.getApplicationId());
         }
         Response response = createEntity(application);
         setSessionResponse(response);
@@ -59,7 +56,7 @@ public class ApplicationsSteps extends BasicSteps {
         application.forEach(t -> {
             Application existingApplication = getApplicationById(t.getApplicationId());
             if (existingApplication != null) {
-                deleteApplication(existingApplication.getApplicationId());
+                deleteEntity(existingApplication.getApplicationId());
             }
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -91,7 +88,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void deleteApplicationWithId(String id) {
-        Response response = deleteApplication(id);
+        Response response = deleteEntity(id);
         setSessionResponse(response);
     }
 
@@ -222,25 +219,23 @@ public class ApplicationsSteps extends BasicSteps {
     public void followingApplicationVersionsAreCreated(String applicationId, ApplicationVersion applicationVersion) {
 
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
-        // ApplicationVersion existingAppVersion =
-        // getApplicationVersionByName(applicationVersion.getApplicationId(),applicationVersion.getVersionName());
-        // if (existingAppVersion != null) {
-        // deleteApplication(existingAppVersion.getVersionId());
-        // }
+        ApplicationVersion existingAppVersion =
+                getApplicationVersionByName(applicationId, applicationVersion.getVersionName());
+        if (existingAppVersion != null) {
+            deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId());
+        }
         Response response = createApplicationVersion(applicationVersion, applicationId);
         setSessionResponse(response);
-
     }
 
     @Step
     public void followingApplicationVersionsExists(String applicationId, List<ApplicationVersion> applicationVersions) {
 
         applicationVersions.forEach(t -> {
-            // ApplicationVersion existingAppVersion =
-            // getApplicationVersionByName(applicationId,t.getVersionName());
-            // if (existingAppVersion != null) {
-            // deleteApplication(existingAppVersion.getVersionId());
-            // }
+            ApplicationVersion existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
+            if (existingAppVersion != null) {
+                deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId());
+            }
             Response createResponse = createApplicationVersion(t, applicationId);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Application version cannot be created");
@@ -256,7 +251,7 @@ public class ApplicationsSteps extends BasicSteps {
             return;
         }
 
-        Response response = deleteApplicationVersion(applicationId, appVersionId);
+        Response response = deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
         setSessionResponse(response);
         Serenity.setSessionVariable(SESSION_APPLICATION_VERSION_ID).to(appVersionId);
     }
@@ -271,7 +266,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void deleteAppVersionWithId(String id, String versionId) {
-        Response response = deleteApplicationVersion(id, versionId);
+        Response response = deleteSecondLevelEntity(id, SECOND_LEVEL_OBJECT_VERSIONS, versionId);
         setSessionResponse(response);
     }
 
@@ -356,8 +351,10 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfApplicationVersionsIsGotWith(String applicationId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, limit, cursor, filter, sort, sortDesc);
+    public void listOfApplicationVersionsIsGotWith(String applicationId, String limit, String cursor, String filter,
+            String sort, String sortDesc) {
+        Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, limit, cursor, filter,
+                sort, sortDesc);
         setSessionResponse(response);
     }
 
@@ -367,17 +364,10 @@ public class ApplicationsSteps extends BasicSteps {
         ApplicationVersion[] appVersions = response.as(ApplicationVersion[].class);
         int i = 0;
         for (ApplicationVersion a : appVersions) {
-            assertEquals("Application version on index=" + i + " is not expected", versionNames.get(i), a.getVersionName());
+            assertEquals("Application version on index=" + i + " is not expected", versionNames.get(i),
+                    a.getVersionName());
             i++;
         }
-    }
-
-    private Response deleteApplication(String id) {
-        return given().spec(spec).when().delete("/{application_id}", id);
-    }
-
-    private Response deleteApplicationVersion(String id, String versionId) {
-        return given().spec(spec).when().delete("/{application_id}/versions/{version_id}", id, versionId);
     }
 
     private Response createApplicationVersion(ApplicationVersion applicationVersion, String applicationId) {
@@ -388,7 +378,7 @@ public class ApplicationsSteps extends BasicSteps {
     public ApplicationVersion getApplicationVersionByName(String applicationId, String versionName) {
         ApplicationVersion[] applicationVersion =
                 getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
-                        "version_name==" + versionName, null, null).as(ApplicationVersion[].class);
+                        "version_name=='" + versionName + "'", null, null).as(ApplicationVersion[].class);
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 
