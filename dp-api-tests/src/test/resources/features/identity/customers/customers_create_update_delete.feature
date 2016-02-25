@@ -269,99 +269,103 @@ Feature: customers_create_update_delete
       | DO      | DO_code2  | DominicanRepublic2@nail.com | 12345678Z            | companyName76  |
       | VE      | VE_code   | Venezuela@nail.com          | V-1234567890         | companyName77  |
       | VE      | VE_code1  | Venezuela1@nail.com         | Z23456789            | companyName78  |
-      | AT      | AT_code   | Austria@mail.com            | U1234567             | companyName79  |
-      | AT      | AT_code1  | Austria1@mail.com           | A12345678            | companyName80  |
-      | AT      | AT_code2  | Austria2@mail.com           | 12345678             | companyName81  |
-      | AT      | AT_code3  | Austria3@mail.com           | U123456789           | companyName82  |
-      | AT      | AT_code4  | Austria4@mail.com           | UABC45678            | companyName83  |
-      | BE      | BE_code   | Belgium@mail.com            | 1123456789           | companyName84  |
-      | BE      | BE_code1  | Belgium1@mail.com           | 0ABC456789           | companyName85  |
-      | BE      | BE_code2  | Belgium2@mail.com           | 012345678            | companyName86  |
-      | BG      | BG_code   | Bulgaria@mail.com           | 12345678             | companyName87  |
-      | BG      | BG_code1  | Bulgaria1@mail.com          | 1234567890           | companyName88  |
-      | BG      | BG_code2  | Bulgaria2@mail.com          | 123ABC789            | companyName89  |
-      | CY      | CY_code   | Cyprus@mail.com             | 1234567X             | companyName90  |
-      | CY      | CY_code1  | Cyprus1@mail.com            | 123456789X           | companyName91  |
-      | CY      | CY_code2  | Cyprus2@mail.com            | 123456789            | companyName92  |
-      | CY      | CY_code3  | Cyprus3@mail.com            | ABC45678X            | companyName93  |
-      | DE      | DE_code   | Germany@mail.com            | 12345678             | companyName94  |
-      | DE      | DE_code1  | Germany1@mail.com           | 1234567891           | companyName95  |
-      | DE      | DE_code2  | Germany2@mail.com           | ABC456789            | companyName96  |
-      | DK      | DK_code   | Denmark@mail.com            | 1234567              | companyName97  |
-      | DK      | DK_code1  | Denmark1@mail.com           | 123456789            | companyName98  |
-      | DK      | DK_code2  | Denmark2@mail.com           | 12  34  56  78       | companyName99  |
-      | EE      | EE_code   | Estonia@mail.com            | 12345678             | companyName100 |
-      | EE      | EE_code1  | Estonia1@mail.com           | 1234567891           | companyName101 |
-      | EE      | EE_code2  | Estonia2@mail.com           | ABC456789            | companyName102 |
-      | ES      | ES_code   | Spain@mail.com              | 123456789            | companyName103 |
-      | ES      | ES_code1  | Spain1@mail.com             | X1234567             | companyName104 |
-      | ES      | ES_code2  | Spain2@mail.com             | 12345678             | companyName105 |
-      | ES      | ES_code3  | Spain3@mail.com             | X12345678X           | companyName106 |
-      | FI      | FI_code   | Finland@mail.com            | 1234567              | companyName107 |
-      | FI      | FI_code1  | Finland1@mail.com           | 912345678            | companyName108 |
-      | FI      | FI_code2  | Finland2@mail.com           | ABC45678             | companyName109 |
-      | FR      | FR_code   | France@mail.com             | 123456789012         | companyName110 |
-      | FR      | FR_code1  | France1@mail.com            | 1234567890           | companyName111 |
-      | FR      | FR_code2  | France2@mail.com            | 1234567XXX1          | companyName112 |
-      | GB      | GB_code   | Uk@mail.com                 | 12 1234 12 123       | companyName113 |
-      | GB      | GB_code1  | Uk1@mail.com                | 123 123 12 123       | companyName114 |
-      | GB      | GB_code2  | Uk2@mail.com                | 123 1234 1 123       | companyName115 |
-      | GB      | GB_code3  | Uk3@mail.com                | 123 1234 12 12       | companyName116 |
-      | GB      | GB_code4  | Uk4@mail.com                | HA59                 | companyName117 |
-      | GB      | GB_code5  | Uk5@mail.com                | H1599                | companyName118 |
-      | GB      | GB_code6  | Uk6@mail.com                | 1A599                | companyName119 |
-      | GB      | GB_code7  | Uk7@mail.com                | GD01                 | companyName120 |
-      | GB      | GB_code8  | Uk8@mail.com                | G1001                | companyName121 |
-      | GB      | GB_code9  | Uk9@mail.com                | 1D001                | companyName122 |
-      | GB      | GB_code10 | Uk10@mail.com               | 12 4567 89           | companyName123 |
-      | GB      | GB_code11 | Uk11@mail.com               | 123 456 89           | companyName124 |
-      | GB      | GB_code12 | Uk12@mail.com               | 123 4567 8           | companyName125 |
-      | GB      | GB_code13 | Uk13@mail.com               | 12345678             | companyName126 |
-      | GB      | GB_code14 | Uk14@mail.com               | 1234567XX            | companyName127 |
-      | HU      | HU_code   | Hungary@mail.com            | 1234567              | companyName128 |
-      | HU      | HU_code1  | Hungary1@mail.com           | 912345678            | companyName129 |
-      | HU      | HU_code2  | Hungary2@mail.com           | ABC45678             | companyName130 |
-      | IT      | IT_code   | Italy@mail.com              | 1234567890           | companyName131 |
-      | IT      | IT_code1  | Italy1@mail.com             | 123456789012         | companyName132 |
-      | IT      | IT_code2  | Italy2@mail.com             | 123XXX78901          | companyName133 |
-      | LT      | LT_code   | Lithuania@mail.com          | 12345678             | companyName134 |
-      | LT      | LT_code1  | Lithuania1@mail.com         | 1234567890123        | companyName135 |
-      | LT      | LT_code2  | Lithuania2@mail.com         | 123XXX789            | companyName136 |
-      | LT      | LT_code3  | Lithuania3@mail.com         | 123456XXX012         | companyName137 |
-      | LU      | LU_code   | Luxembourg@mail.com         | 1234567              | companyName138 |
-      | LU      | LU_code1  | Luxembourg1@mail.com        | 912345678            | companyName139 |
-      | LU      | LU_code2  | Luxembourg2@mail.com        | ABC45678             | companyName140 |
-      | LV      | LV_code   | Latvia@mail.com             | 1234567890           | companyName141 |
-      | LV      | LV_code1  | Latvia1@mail.com            | 123456789012         | companyName142 |
-      | LV      | LV_code2  | Latvia2@mail.com            | 123XXX78901          | companyName143 |
-      | MT      | MT_code   | Malta@mail.com              | 1234567              | companyName144 |
-      | MT      | MT_code1  | Malta1@mail.com             | 912345678            | companyName145 |
-      | MT      | MT_code2  | Malta2@mail.com             | ABC45678             | companyName146 |
-      | NL      | NL_code   | Netherlands@mail.com        | 123456789B0          | companyName147 |
-      | NL      | NL_code1  | Netherlands1@mail.com       | 123456789B012        | companyName148 |
-      | NL      | NL_code2  | Netherlands2@mail.com       | 123456789A01         | companyName149 |
-      | NL      | NL_code3  | Netherlands3@mail.com       | 123456789101         | companyName150 |
-      | PL      | PL_code   | Poland@mail.com             | 123456789            | companyName151 |
-      | PL      | PL_code1  | Poland1@mail.com            | 12345678901          | companyName152 |
-      | PL      | PL_code2  | Poland2@mail.com            | 123XXX789            | companyName153 |
-      | PT      | PT_code   | Portugal@mail.com           | 12345678             | companyName154 |
-      | PT      | PT_code1  | Portugal1@mail.com          | 1234567891           | companyName155 |
-      | PT      | PT_code   | Portugal2@mail.com          | ABC456789            | companyName156 |
-      | RO      | RO_code   | Romania@mail.com            | 1                    | companyName157 |
-      | RO      | RO_code1  | Romania1@mail.com           | 12345678901          | companyName158 |
-      | RO      | RO_code2  | Romania2@mail.com           | 12X                  | companyName159 |
-      | SE      | SE_code   | Sweden@mail.com             | 12345678901          | companyName160 |
-      | SE      | SE_code1  | Sweden1@mail.com            | 1234567890123        | companyName161 |
-      | SE      | SE_code2  | Sweden2@mail.com            | 1234XXX89012         | companyName162 |
-      | SI      | SI_code   | Slovenia@mail.com           | 1234567              | companyName162 |
-      | SI      | SI_code1  | Slovenia1@mail.com          | 912345678            | companyName162 |
-      | SI      | SI_code2  | Slovenia2@mail.com          | ABC45678             | companyName162 |
-      | SK      | SK_code   | Slovakia@mail.com           | 123456789            | companyName162 |
-      | SK      | SK_code1  | Slovakia1@mail.com          | 12345678901          | companyName162 |
-      | SK      | SK_code2  | Slovakia2@mail.com          | 123XXX789            | companyName162 |
-      | HR      | HR_code   | Hungary@mail.com            | 1234567890           | companyName162 |
-      | HR      | HR_code1  | Hungary1@mail.com           | 123456789012         | companyName162 |
-      | HR      | HR_code2  | Hungary2@mail.com           | 123XXX78901          | companyName162 |
+      | AT      | AT_code   | Austria@mail.com            | ATU1234567           | companyName79  |
+      | AT      | AT_code1  | Austria1@mail.com           | ATA12345678          | companyName80  |
+      | AT      | AT_code2  | Austria2@mail.com           | AT12345678           | companyName81  |
+      | AT      | AT_code3  | Austria3@mail.com           | ATU123456789         | companyName82  |
+      | AT      | AT_code4  | Austria4@mail.com           | ATUABC45678          | companyName83  |
+      | BE      | BE_code   | Belgium@mail.com            | BE1123456789         | companyName84  |
+      | BE      | BE_code1  | Belgium1@mail.com           | BE0ABC456789         | companyName85  |
+      | BE      | BE_code2  | Belgium2@mail.com           | BE012345678          | companyName86  |
+      | BE      | BE_code3  | Belgium3@mail.com           | BE8123456789         | companyName861 |
+      | BG      | BG_code   | Bulgaria@mail.com           | BG12345678           | companyName87  |
+      | BG      | BG_code1  | Bulgaria1@mail.com          | BG1234567890         | companyName88  |
+      | BG      | BG_code2  | Bulgaria2@mail.com          | BG123ABC789          | companyName89  |
+      | CY      | CY_code   | Cyprus@mail.com             | CY1234567X           | companyName90  |
+      | CY      | CY_code1  | Cyprus1@mail.com            | CY123456789X         | companyName91  |
+      | CY      | CY_code2  | Cyprus2@mail.com            | CY123456789          | companyName92  |
+      | CY      | CY_code3  | Cyprus3@mail.com            | CYABC45678X          | companyName93  |
+      | CZ      | CZ_code   | CzechR@mail.com             | CZ12345678           | companyName931 |
+      | CZ      | CZ_code1  | CzechR1@mail.com            | CZ12345678           | companyName932 |
+      | CZ      | CZ_code2  | CzechR2@mail.com            | CZ12345678           | companyName933 |
+      | DE      | DE_code   | Germany@mail.com            | DE12345678           | companyName94  |
+      | DE      | DE_code1  | Germany1@mail.com           | DE1234567891         | companyName95  |
+      | DE      | DE_code2  | Germany2@mail.com           | DEABC456789          | companyName96  |
+      | DK      | DK_code   | Denmark@mail.com            | DK1234567            | companyName97  |
+      | DK      | DK_code1  | Denmark1@mail.com           | DK123456789          | companyName98  |
+      | DK      | DK_code2  | Denmark2@mail.com           | DK12  34  56  78     | companyName99  |
+      | EE      | EE_code   | Estonia@mail.com            | EE12345678           | companyName100 |
+      | EE      | EE_code1  | Estonia1@mail.com           | EE1234567891         | companyName101 |
+      | EE      | EE_code2  | Estonia2@mail.com           | EEABC456789          | companyName102 |
+      | ES      | ES_code   | Spain@mail.com              | ES123456789          | companyName103 |
+      | ES      | ES_code1  | Spain1@mail.com             | ESX1234567           | companyName104 |
+      | ES      | ES_code2  | Spain2@mail.com             | ES12345678           | companyName105 |
+      | ES      | ES_code3  | Spain3@mail.com             | ESX12345678X         | companyName106 |
+      | FI      | FI_code   | Finland@mail.com            | FI1234567            | companyName107 |
+      | FI      | FI_code1  | Finland1@mail.com           | FI912345678          | companyName108 |
+      | FI      | FI_code2  | Finland2@mail.com           | FIABC45678           | companyName109 |
+      | FR      | FR_code   | France@mail.com             | FR123456789012       | companyName110 |
+      | FR      | FR_code1  | France1@mail.com            | FR1234567890         | companyName111 |
+      | FR      | FR_code2  | France2@mail.com            | FR1234567XXX1        | companyName112 |
+      | GB      | GB_code   | Uk@mail.com                 | GB12 1234 12 123     | companyName113 |
+      | GB      | GB_code1  | Uk1@mail.com                | GB123 123 12 123     | companyName114 |
+      | GB      | GB_code2  | Uk2@mail.com                | GB123 1234 1 123     | companyName115 |
+      | GB      | GB_code3  | Uk3@mail.com                | GB123 1234 12 12     | companyName116 |
+      | GB      | GB_code4  | Uk4@mail.com                | GBHA59               | companyName117 |
+      | GB      | GB_code5  | Uk5@mail.com                | GBH1599              | companyName118 |
+      | GB      | GB_code6  | Uk6@mail.com                | GB1A599              | companyName119 |
+      | GB      | GB_code7  | Uk7@mail.com                | GBGD01               | companyName120 |
+      | GB      | GB_code8  | Uk8@mail.com                | GBG1001              | companyName121 |
+      | GB      | GB_code9  | Uk9@mail.com                | GB1D001              | companyName122 |
+      | GB      | GB_code10 | Uk10@mail.com               | GB12 4567 89         | companyName123 |
+      | GB      | GB_code11 | Uk11@mail.com               | GB123 456 89         | companyName124 |
+      | GB      | GB_code12 | Uk12@mail.com               | GB123 4567 8         | companyName125 |
+      | GB      | GB_code13 | Uk13@mail.com               | GB12345678           | companyName126 |
+      | GB      | GB_code14 | Uk14@mail.com               | GB1234567XX          | companyName127 |
+      | HU      | HU_code   | Hungary@mail.com            | HU1234567            | companyName128 |
+      | HU      | HU_code1  | Hungary1@mail.com           | HU912345678          | companyName129 |
+      | HU      | HU_code2  | Hungary2@mail.com           | HUABC45678           | companyName130 |
+      | IT      | IT_code   | Italy@mail.com              | IT1234567890         | companyName131 |
+      | IT      | IT_code1  | Italy1@mail.com             | IT123456789012       | companyName132 |
+      | IT      | IT_code2  | Italy2@mail.com             | IT123XXX78901        | companyName133 |
+      | LT      | LT_code   | Lithuania@mail.com          | LT12345678           | companyName134 |
+      | LT      | LT_code1  | Lithuania1@mail.com         | LT1234567890123      | companyName135 |
+      | LT      | LT_code2  | Lithuania2@mail.com         | LT123XXX789          | companyName136 |
+      | LT      | LT_code3  | Lithuania3@mail.com         | LT123456XXX012       | companyName137 |
+      | LU      | LU_code   | Luxembourg@mail.com         | LU1234567            | companyName138 |
+      | LU      | LU_code1  | Luxembourg1@mail.com        | LU912345678          | companyName139 |
+      | LU      | LU_code2  | Luxembourg2@mail.com        | LUABC45678           | companyName140 |
+      | LV      | LV_code   | Latvia@mail.com             | LV1234567890         | companyName141 |
+      | LV      | LV_code1  | Latvia1@mail.com            | LV123456789012       | companyName142 |
+      | LV      | LV_code2  | Latvia2@mail.com            | LV123XXX78901        | companyName143 |
+      | MT      | MT_code   | Malta@mail.com              | MT1234567            | companyName144 |
+      | MT      | MT_code1  | Malta1@mail.com             | MT912345678          | companyName145 |
+      | MT      | MT_code2  | Malta2@mail.com             | MTABC45678           | companyName146 |
+      | NL      | NL_code   | Netherlands@mail.com        | NL123456789B0        | companyName147 |
+      | NL      | NL_code1  | Netherlands1@mail.com       | NL123456789B012      | companyName148 |
+      | NL      | NL_code2  | Netherlands2@mail.com       | NL123456789A01       | companyName149 |
+      | NL      | NL_code3  | Netherlands3@mail.com       | NL123456789101       | companyName150 |
+      | PL      | PL_code   | Poland@mail.com             | PL123456789          | companyName151 |
+      | PL      | PL_code1  | Poland1@mail.com            | PL12345678901        | companyName152 |
+      | PL      | PL_code2  | Poland2@mail.com            | PL123XXX789          | companyName153 |
+      | PT      | PT_code   | Portugal@mail.com           | PT12345678           | companyName154 |
+      | PT      | PT_code1  | Portugal1@mail.com          | PT1234567891         | companyName155 |
+      | PT      | PT_code   | Portugal2@mail.com          | PTABC456789          | companyName156 |
+      | RO      | RO_code   | Romania@mail.com            | RO1                  | companyName157 |
+      | RO      | RO_code1  | Romania1@mail.com           | RO12345678901        | companyName158 |
+      | RO      | RO_code2  | Romania2@mail.com           | RO12X                | companyName159 |
+      | SE      | SE_code   | Sweden@mail.com             | SE12345678901        | companyName160 |
+      | SE      | SE_code1  | Sweden1@mail.com            | SE1234567890123      | companyName161 |
+      | SE      | SE_code2  | Sweden2@mail.com            | SE1234XXX89012       | companyName162 |
+      | SI      | SI_code   | Slovenia@mail.com           | SI1234567            | companyName163 |
+      | SI      | SI_code1  | Slovenia1@mail.com          | SI912345678          | companyName164 |
+      | SI      | SI_code2  | Slovenia2@mail.com          | SIABC45678           | companyName165 |
+      | SK      | SK_code   | Slovakia@mail.com           | SK123456789          | companyName166 |
+      | SK      | SK_code1  | Slovakia1@mail.com          | SK12345678901        | companyName167 |
+      | SK      | SK_code2  | Slovakia2@mail.com          | SK123XXX789          | companyName168 |
+      | HR      | HR_code   | Hungary@mail.com            | HR1234567890         | companyName169 |
+      | HR      | HR_code1  | Hungary1@mail.com           | HR123456789012       | companyName170 |
+      | HR      | HR_code2  | Hungary2@mail.com           | HR123XXX78901        | companyName171 |
 
   Scenario Outline: Validate that customer has valid VAT ID
     When A customer from country "<country>" code "<code>" email "<email>" vatId "<vatId>" company nqma "<companyName>"is created
@@ -437,52 +441,59 @@ Feature: customers_create_update_delete
       | VE      | VE_code1 | Venezuela1@nail.com         | E-123456789          | companyName63  |
       | VE      | VE_code1 | Venezuela1@nail.com         | J-123456789          | companyName64  |
       | VE      | VE_code1 | Venezuela1@nail.com         | G-123456789          | companyName65  |
-      | AT      | AT_code  | Austria@mail.com            | U12345678            | companyName66  |
-      | AT      | AT_code1 | Austria1@mail.com           | U00000000            | companyName67  |
-      | BE      | BE_code  | Belgium@mail.com            | 0987654321           | companyName68  |
-      | BG      | BG_code  | Bulgaria@mail.com           | 123456789            | companyName69  |
-      | BG      | BG_code1 | Bulgaria1@mail.com          | 1234567890           | companyName70  |
-      | CY      | CY_code  | Cyprus@mail.com             | 12345678X            | companyName71  |
-      | DE      | DE_code  | Germany@mail.com            | 123456789            | companyName72  |
-      | DK      | DK_code  | Denmark@mail.com            | 12 34 56 78          | companyName73  |
-      | DK      | DK_code1 | Denmark1@mail.com           | 12345678             | companyName74  |
-      | EE      | EE_code  | Estonia@mail.com            | 123456789            | companyName75  |
-      | EL      | EL_code  | Greece@mail.com             | 123456789            | companyName76  |
-      | ES      | ES_code  | Spain@mail.com              | X12345678            | companyName77  |
-      | ES      | ES_code1 | Spain1@mail.com             | 12345678X            | companyName78  |
-      | ES      | ES_code2 | Spain2@mail.com             | X1234567X            | companyName79  |
-      | FI      | FI_code  | Finland@mail.com            | 12345678             | companyName80  |
-      | FR      | FR_code  | France@mail.com             | 12345678901          | companyName81  |
-      | FR      | FR_code1 | France1@mail.com            | X1234567890          | companyName82  |
-      | FR      | FR_code2 | France2@mail.com            | 1X123456789          | companyName83  |
-      | FR      | FR_code3 | France3@mail.com            | XX123456789          | companyName84  |
-      | GB      | GB_code  | Uk@mail.com                 | 123456789            | companyName85  |
-      | GB      | GB_code1 | Uk1@mail.com                | 123 4567 89          | companyName86  |
-      | GB      | GB_code2 | Uk2@mail.com                | GD001                | companyName87  |
-      | GB      | GB_code3 | Uk3@mail.com                | HA599                | companyName88  |
-      | GB      | GB_code4 | Uk4@mail.com                | 123 1234 12 123      | companyName89  |
-      | HU      | HU_code  | Hungary@mail.com            | 12345678             | companyName90  |
-      | IE      | IE_code  | Ireland@mail.com            | 1234567X             | companyName91  |
-      | IE      | IE_code1 | Ireland1@mail.com           | 1X23456X             | companyName92  |
-      | IT      | IT_code  | Italy@mail.com              | 12345678901          | companyName93  |
-      | LT      | LT_code  | Lithuania@mail.com          | 123456789            | companyName94  |
-      | LT      | LT_code1 | Lithuania1@mail.com         | 123456789012         | companyName95  |
-      | LU      | LU_code  | Luxembourg@mail.com         | 12345678             | companyName96  |
-      | LV      | LV_code  | Latvia@mail.com             | 12345678901          | companyName97  |
-      | MT      | MT_code  | Malta@mail.com              | 12345678             | companyName98  |
-      | NL      | NL_code  | Netherlands@mail.com        | 123456789B01         | companyName99  |
-      | PL      | PL_code  | Poland@mail.com             | 1234567890           | companyName100 |
-      | PT      | PT_code  | Portugal@mail.com           | 123456789            | companyName101 |
-      | RO      | RO_code  | Romania@mail.com            | 12                   | companyName102 |
-      | RO      | RO_code1 | Romania1@mail.com           | 123                  | companyName103 |
-      | RO      | RO_code2 | Romania2@mail.com           | 1234                 | companyName104 |
-      | RO      | RO_code3 | Romania3@mail.com           | 12345                | companyName105 |
-      | RO      | RO_code4 | Romania4@mail.com           | 123456               | companyName106 |
-      | RO      | RO_code5 | Romania5@mail.com           | 1234567              | companyName107 |
-      | RO      | RO_code6 | Romania6@mail.com           | 12345678             | companyName108 |
-      | RO      | RO_code7 | Romania7@mail.com           | 123456789            | companyName109 |
-      | RO      | RO_code8 | Romania8@mail.com           | 1234567890           | companyName110 |
-      | SE      | SE_code  | Sweden@mail.com             | 123456789012         | companyName111 |
-      | SI      | SI_code  | Slovenia@mail.com           | 12345678             | companyName112 |
-      | SK      | SK_code  | Slovakia@mail.com           | 1234567890           | companyName113 |
-      | HR      | HR_code  | Croatia@mail.com            | 12345678901          | companyName114 |
+      | AT      | AT_code  | Austria@mail.com            | ATU12345678          | companyName66  |
+      | AT      | AT_code1 | Austria1@mail.com           | ATU00000000          | companyName67  |
+      | BE      | BE_code  | Belgium@mail.com            | BE1987654321         | companyName68  |
+      | BE      | BE_code1 | Belgium1@mail.com           | BE0987654321         | companyName681 |
+      | BG      | BG_code  | Bulgaria@mail.com           | BG123456789          | companyName69  |
+      | BG      | BG_code1 | Bulgaria1@mail.com          | BG1234567890         | companyName70  |
+      | CY      | CY_code  | Cyprus@mail.com             | CY12345678X          | companyName71  |
+      | CZ      | CZ_code  | CzechR@mail.com             | CZ12345678           | companyName711 |
+      | CZ      | CZ_code1 | CzechR1@mail.com            | CZ123456789          | companyName712 |
+      | CZ      | CZ_code2 | CzechR2@mail.com            | CZ1234567890         | companyName713 |
+      | DE      | DE_code  | Germany@mail.com            | DE123456789          | companyName72  |
+      | DK      | DK_code  | Denmark@mail.com            | DK00000000           | companyName73  |
+      | DK      | DK_code1 | Denmark1@mail.com           | DK12345678           | companyName74  |
+      | EE      | EE_code  | Estonia@mail.com            | EE123456789          | companyName75  |
+      | EL      | EL_code  | Greece@mail.com             | EL123456789          | companyName76  |
+      | ES      | ES_code  | Spain@mail.com              | ESX12345678          | companyName77  |
+      | ES      | ES_code1 | Spain1@mail.com             | ES12345678X          | companyName78  |
+      | ES      | ES_code2 | Spain2@mail.com             | ESX1234567X          | companyName79  |
+      | FI      | FI_code  | Finland@mail.com            | FI12345678           | companyName80  |
+      | FR      | FR_code  | France@mail.com             | FR12345678901        | companyName81  |
+      | FR      | FR_code1 | France1@mail.com            | FRX1234567890        | companyName82  |
+      | FR      | FR_code2 | France2@mail.com            | FR1X123456789        | companyName83  |
+      | FR      | FR_code3 | France3@mail.com            | FRXX123456789        | companyName84  |
+      | FR      | FR_code4 | France4@mail.com            | FRXX 123456789       | companyName841 |
+      | GB      | GB_code  | Uk@mail.com                 | GB123456789          | companyName85  |
+      | GB      | GB_code1 | Uk1@mail.com                | GB123 4567 89        | companyName86  |
+      | GB      | GB_code2 | Uk2@mail.com                | GBGD001              | companyName87  |
+      | GB      | GB_code3 | Uk3@mail.com                | GBHA599              | companyName88  |
+      | GB      | GB_code4 | Uk4@mail.com                | GB123 1234 12 123    | companyName89  |
+      | HU      | HU_code  | Hungary@mail.com            | HU12345678           | companyName90  |
+      | IE      | IE_code  | Ireland@mail.com            | IE1234567X           | companyName91  |
+      | IE      | IE_code1 | Ireland1@mail.com           | IE1X23456X           | companyName92  |
+      | IE      | IE_code2 | Ireland2@mail.com           | IE1+23456X           | companyName921 |
+      | IE      | IE_code3 | Ireland3@mail.com           | IE1*23456X           | companyName921 |
+      | IT      | IT_code  | Italy@mail.com              | IT12345678901        | companyName93  |
+      | LT      | LT_code  | Lithuania@mail.com          | LT123456789          | companyName94  |
+      | LT      | LT_code1 | Lithuania1@mail.com         | LT123456789012       | companyName95  |
+      | LU      | LU_code  | Luxembourg@mail.com         | LU12345678           | companyName96  |
+      | LV      | LV_code  | Latvia@mail.com             | LV12345678901        | companyName97  |
+      | MT      | MT_code  | Malta@mail.com              | MT12345678           | companyName98  |
+      | NL      | NL_code  | Netherlands@mail.com        | NL123456789B01       | companyName99  |
+      | PL      | PL_code  | Poland@mail.com             | PL1234567890         | companyName100 |
+      | PT      | PT_code  | Portugal@mail.com           | PT123456789          | companyName101 |
+      | RO      | RO_code  | Romania@mail.com            | RO12                 | companyName102 |
+      | RO      | RO_code1 | Romania1@mail.com           | RO123                | companyName103 |
+      | RO      | RO_code2 | Romania2@mail.com           | RO1234               | companyName104 |
+      | RO      | RO_code3 | Romania3@mail.com           | RO12345              | companyName105 |
+      | RO      | RO_code4 | Romania4@mail.com           | RO123456             | companyName106 |
+      | RO      | RO_code5 | Romania5@mail.com           | RO1234567            | companyName107 |
+      | RO      | RO_code6 | Romania6@mail.com           | RO12345678           | companyName108 |
+      | RO      | RO_code7 | Romania7@mail.com           | RO123456789          | companyName109 |
+      | RO      | RO_code8 | Romania8@mail.com           | RO1234567890         | companyName110 |
+      | SE      | SE_code  | Sweden@mail.com             | SE123456789012       | companyName111 |
+      | SI      | SI_code  | Slovenia@mail.com           | SI12345678           | companyName112 |
+      | SK      | SK_code  | Slovakia@mail.com           | SK1234567890         | companyName113 |
+      | HR      | HR_code  | Croatia@mail.com            | HR12345678901        | companyName114 |

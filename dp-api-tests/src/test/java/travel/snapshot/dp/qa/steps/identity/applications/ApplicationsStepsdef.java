@@ -12,6 +12,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Application;
+import travel.snapshot.dp.qa.model.ApplicationVersion;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 
@@ -130,6 +131,95 @@ public class ApplicationsStepsdef {
     public void There_are_applications_roles_with_following_names_returned_in_order(List<String> roleNames)
             throws Throwable {
         applicationSteps.roleNamesInResponseInOrder(roleNames);
+    }
+
+    @When("^Application versions are created for application with id \"([^\"]*)\"$")
+    public void Application_versions_are_created_for_application_with_id(String applicationId,
+            List<ApplicationVersion> applicationVersions) {
+        applicationSteps.followingApplicationVersionsAreCreated(applicationId, applicationVersions.get(0));
+    }
+
+    @Given("^The following application versions for application with id \"([^\"]*)\" exists$")
+    public void The_following_application_versions_exists(String applicationId,
+            List<ApplicationVersion> applicationVersions) {
+        applicationSteps.followingApplicationVersionsExists(applicationId, applicationVersions);
+    }
+
+    @Given("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is deleted$")
+    public void application_version_for_application_with_id_is_deleted(String appVersionId, String applicationId) {
+        applicationSteps.applicationVersionIsDeleted(appVersionId, applicationId);
+    }
+
+    @Then("^Application version with same id for application with id \"([^\"]*)\" does not exist$")
+    public void Application_version_with_same_id_does_not_exist(String applicationId) {
+        applicationSteps.applicationVersionIdInSessionDoesntExist(applicationId);
+    }
+
+    @When("^Nonexistent application version for application with id \"([^\"]*)\" is deleted$")
+    public void Nonexistent_application_version_id_is_deleted(String applicationId) {
+        applicationSteps.deleteAppVersionWithId("nonexistent_id", applicationId);
+    }
+
+    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data$")
+    public void Application_version_with_id_for_application_with_id_is_updated_with_data(String appVersionId,
+            String applicationId, List<ApplicationVersion> applicationVersion) throws Throwable {
+        applicationSteps.updateApplicationVersionWithId(appVersionId, applicationId, applicationVersion.get(0));
+    }
+
+    @Then("^Updated application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" has data$")
+    public void Updated_application_version_with_id_for_application_with_id_has_data(String appVersionId,
+            String applicationId, List<ApplicationVersion> applicationVersion) throws Throwable {
+        applicationSteps.applicationVersionWithIdHasData(appVersionId, applicationId, applicationVersion.get(0));
+    }
+
+    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data with invalid etag$")
+    public void Application_version_with_id_for_application_with_id_is_updated_with_data_with_invalid_etag(
+            String appVersionId, String applicationId, List<ApplicationVersion> applicationVersion) throws Throwable {
+        applicationSteps.updateApplicationVersionWithInvalidEtag(appVersionId, applicationId,
+                applicationVersion.get(0));
+    }
+
+    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got$")
+    public void Application_version_with_id_for_application_with_id_is_got(String appVersionId, String applicationId) {
+        applicationSteps.applicationVersionWithIdIsGot(appVersionId, applicationId);
+    }
+
+    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag$")
+    public void Application_version_with_id_for_application_with_id_is_got_with_etag(String appVersionId,
+            String applicationId) {
+        applicationSteps.applicationVersionWithIdIsGotWithEtag(appVersionId, applicationId);
+    }
+
+    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag, updated and got with previous etag$")
+    public void Application_version_with_id_for_application_with_id_is_got_with_not_current_etag(String appVersionId,
+            String applicationId) {
+        applicationSteps.applicationVersionWithIdIsGotWithEtagAfterUpdate(appVersionId, applicationId);
+    }
+
+    @When("^Nonexistent application version id is got for application id \"([^\"]*)\"$")
+    public void Nonexistent_application_version_id_is_got_for_application_id(String applicationId) {
+        applicationSteps.applicationVersionWithIdIsGot("nonexistent", applicationId);
+    }
+
+    @When("^List of application versions is got for application id \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_application_versions_is_got_for_application_id_with_limit_cursor_filter_sort_sortdesc(
+            String applicationId, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        applicationSteps.listOfApplicationVersionsIsGotWith(applicationId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @Then("^There are (\\d+) application versions returned$")
+    public void There_are_application_versions_returned(int count) throws Throwable {
+        applicationSteps.numberOfEntitiesInResponse(ApplicationVersion.class, count);
+    }
+
+    @Then("^There are application version with following names returned in order: (.*)")
+    public void There_are_application_versions_with_following_names_returned_in_order(List<String> versionNames)
+            throws Throwable {
+        applicationSteps.versionNamesInResponseInOrder(versionNames);
     }
 
 }

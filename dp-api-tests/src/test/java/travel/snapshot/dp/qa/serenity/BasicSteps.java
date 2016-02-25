@@ -66,6 +66,7 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
     protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
+    protected static final String SECOND_LEVEL_OBJECT_VERSIONS = "versions";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
