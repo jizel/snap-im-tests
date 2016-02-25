@@ -106,7 +106,7 @@ class DataPlatformBuilder {
      * @param withoutTests
      */
     def buildProject(boolean withoutTests) {
-        logger.info("Building whole Data Platform " + withoutTests ? "without tests" : "")
+        logger.info("Building whole Data Platform " + (withoutTests ? "without tests" : ""))
 
         CommandTool gradleBuild = Spacelift.task("gradle")
                 .parameters("--project-dir", dataPlatformPath)

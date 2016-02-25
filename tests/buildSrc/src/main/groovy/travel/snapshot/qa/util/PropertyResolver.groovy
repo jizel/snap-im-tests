@@ -2,9 +2,12 @@ package travel.snapshot.qa.util
 
 import org.apache.commons.lang3.SystemUtils
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
+import org.gradle.api.Project
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 
+import static travel.snapshot.qa.docker.manager.ConnectionMode.STARTORCONNECTANDLEAVE
+import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORREDEPLOY
 import static travel.snapshot.qa.util.DockerMode.HOST
 import static travel.snapshot.qa.util.DockerMode.MACHINE
 import static travel.snapshot.qa.util.TestExecutionMode.DEVELOPMENT
@@ -14,11 +17,11 @@ class PropertyResolver {
 
     private static final int DEFAULT_VM_MEMORY_SIZE = 3072 // in MB
 
-    private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DeploymentStrategy.DEPLOYORREDEPLOY
+    private static final DeploymentStrategy DEFAULT_DEPLOYMENT_STRATEGY = DEPLOYORREDEPLOY
 
-    private static final ConnectionMode DEFAULT_CONNECTION_MODE = ConnectionMode.STARTORCONNECTANDLEAVE
+    private static final ConnectionMode DEFAULT_CONNECTION_MODE = STARTORCONNECTANDLEAVE
 
-    private static final DockerMode DEFAULT_DOCKER_MODE = DockerMode.MACHINE
+    private static final DockerMode DEFAULT_DOCKER_MODE = MACHINE
 
     private static final TestExecutionMode DEFAULT_EXECUTION_MODE = DEVELOPMENT
 
@@ -64,6 +67,55 @@ class PropertyResolver {
         password
     }
 
+    /**
+     * In case system property is specified, return that one, in case it is not set, return "data-platform".
+     *
+     * "data-platform" is relative path so it will be placed in workspace. In case path is absolute as in case of
+     * value from system property, it will be set absolutely so it will live outside of workspace (where e.g.
+     * your already existing data-platform sources are).
+     *
+     * @return path to data-platform repository, absolute or relative one
+     */
+    static def resolveDataPlatformRepository() {
+        def systemVariable = System.getProperty("dataPlatformRepository")
+
+        if (systemVariable) {
+            return systemVariable
+        }
+
+        "data-platform"
+    }
+
+    static File resolveDataPlatformRepositoryLocation() {
+
+        Project project = new GradleSpaceliftDelegate().project()
+
+        File workspace = project.spacelift.workspace
+        String dataPlatformDirectory = project.spacelift.configuration['dataPlatformRepository'].value
+
+        resolveDataPlatformRepositoryLocation(workspace, dataPlatformDirectory)
+    }
+
+    static File resolveDataPlatformRepositoryLocation(String dataPlatformPath) {
+        File workspace = new GradleSpaceliftDelegate().project().spacelift.workspace
+
+        resolveDataPlatformRepositoryLocation(workspace, dataPlatformPath)
+    }
+
+    static File resolveDataPlatformRepositoryLocation(File workspace, String dataPlatformDirectory) {
+        File dataPlatformProject
+
+        File dataPlatformDir = new File(dataPlatformDirectory)
+
+        if (dataPlatformDir.isAbsolute()) {
+            dataPlatformProject = dataPlatformDir
+        } else {
+            dataPlatformProject = new File(workspace, dataPlatformDirectory)
+        }
+
+        dataPlatformProject
+    }
+
     static def resolveDataPlatformRespositoryCommit(String defaultCommit) {
         System.getProperty("dataPlatformRepositoryCommit", defaultCommit)
     }
@@ -79,7 +131,7 @@ class PropertyResolver {
     static def resolveTomcatSpringConfigDirectoryMount() {
         def mount
 
-        if (PropertyResolver.resolveDockerMode() == HOST.name()) {
+        if (resolveDockerMode() == HOST.name()) {
             if (SystemUtils.IS_OS_UNIX) {
                 mount = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
             } else {
@@ -192,12 +244,14 @@ class PropertyResolver {
      * @return bind record which get propagated to arquillian.xml for Tomcat container
      */
     static def resolveTomcatDeploymentDirectoryBind() {
-        TestExecutionMode testExecutionMode = TestExecutionMode.valueOf(PropertyResolver.resolveTestExecutionMode())
+        TestExecutionMode testExecutionMode = TestExecutionMode.valueOf(resolveTestExecutionMode())
 
         switch (testExecutionMode) {
             case DEVELOPMENT:
+                // this will be expanded to arquillian.xml into 'arquillian.xml.deployments.mount' property
                 return "- ${resolveTomcatDeploymentDirectory()}:/opt/tomcat/webapps"
             case TEST:
+                // returning empty String here means that in arquillian.xml, there will be effectively nothing expanded
                 return ""
             default:
                 throw new IllegalStateException("Unable to get deployment directory bind for " + testExecutionMode.name())
@@ -207,14 +261,12 @@ class PropertyResolver {
     static def resolveTomcatDeploymentDirectory() {
         DockerMode dockerMode = DockerMode.valueOf(resolveDockerMode())
         switch (dockerMode) {
-            case HOST:
-                if (SystemUtils.IS_OS_UNIX) {
-                    return new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/deployments"
-                } else {
-                    return "deployments"
-                }
             case MACHINE:
                 return "/opt/tomcat/webapps"
+            case HOST:
+                throw new IllegalStateException("It is not possible to use deployment feature in connection with HOST Docker mode.")
+            default:
+                throw new IllegalStateException("Unable to resolve deployment directory for Docker mode ${dockerMode}")
         }
     }
 

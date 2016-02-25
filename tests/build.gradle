@@ -12,6 +12,7 @@ import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
+import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
@@ -68,10 +69,12 @@ spacelift {
             // you have to set systemProp.dockerRegistryPassword variable with Docker registry password in gradle.properties
             value PropertyResolver.resolveDockerRegistryPassword()
         }
-
         dataPlatformRepositories {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value { [ "dataPlatformRepository", "dataPlatformQARepository" ] }
+        }
+        dataPlatformRepository {
+            value PropertyResolver.resolveDataPlatformRepository()
         }
         dataPlatformRepositoryCommit {
             value PropertyResolver.resolveDataPlatformRespositoryCommit("origin/master")
@@ -105,14 +108,14 @@ spacelift {
             tests 'platformStop'
         }
         platformInit(from: dataPlatformTest) {
-            tests 'platformStart','platformInit'
+            tests 'platformStart', 'platformInit'
         }
         platformBuild {
             enabledInstallations (dataPlatformRepositories + 'gradle')
             tests 'platformBuild'
         }
         apiTests(from: dataPlatformTest) {
-            tests 'platformStart', 'apiTests', 'platformStop'
+            tests 'platformStart', 'platformInit', 'apiTests', 'platformStop'
         }
     }
 
@@ -146,7 +149,7 @@ spacelift {
         dataPlatformRepository(from: GitBasedInstallation) {
             repository "git@bitbucket.org:bbox/data-platform.git"
             commit dataPlatformRepositoryCommit
-            home "data-platform"
+            home dataPlatformRepository
             skipFetch repositorySkipFetch
         }
         dataPlatformQARepository(from: GitBasedInstallation) {
@@ -171,14 +174,13 @@ spacelift {
         }
         platformBuild(from: DataPlatformTest) {
             execute {
-                new DataPlatformBuildExecutor(workspace).build(DataPlatformModule.PROJECT).execute(true)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute(true)
             }
         }
         platformInit(from: DataPlatformTest) {
             execute {
-                new MariaDBInitializer(workspace, platform)
-                        .init(DataPlatformModules.DATABASE_SCHEMES)
-                        .execute()
+                new MariaDBDropper(platform).drop(DataPlatformModules.DATABASE_SCHEMES).execute()
+                new MariaDBInitializer(platform).init(DataPlatformModules.DATABASE_SCHEMES).execute()
             }
         }
         reportableTest(from: DataPlatformTest) {
@@ -188,15 +190,11 @@ spacelift {
         }
         apiTests(inherits: reportableTest) {
             beforeTest {
-                new DataPlatformBuildExecutor(workspace)
+                new DataPlatformBuildExecutor()
                         .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
                         .execute(forceDataPlatformBuild)
 
-                new MariaDBInitializer(workspace, platform)
-                        .init(DataPlatformModule.IDENTITY)
-                        .execute()
-
-                new TomcatModuleDeployer(workspace, platform)
+                new TomcatModuleDeployer(platform)
                         .deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
                         .execute()
             }
@@ -235,7 +233,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.0.Final'
+        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.2.Final'
         classpath 'travel.snapshot.qa.manager:docker-manager:1.0.3'
     }
 }

@@ -12,6 +12,8 @@ class MariaDBModuleConfiguration implements ModuleDatabaseConfiguration {
 
     String flywayScripts
 
+    def schemesToDrop = []
+
     MariaDBModuleConfiguration(String scheme) {
         this(scheme, null)
     }
@@ -24,5 +26,10 @@ class MariaDBModuleConfiguration implements ModuleDatabaseConfiguration {
     @Override
     ServiceType getServiceType() {
         ServiceType.MARIADB
+    }
+
+    def addDrop(String scheme) {
+        schemesToDrop << scheme
+        this
     }
 }

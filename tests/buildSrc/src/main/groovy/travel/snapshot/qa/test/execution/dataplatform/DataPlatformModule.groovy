@@ -34,7 +34,7 @@ enum DataPlatformModule {
 
     // meta Data Platform modules for initializing database schemes
 
-    SCHEME_DP("SCHEME_DP", "SCHEME_DP", new MariaDBModuleConfiguration("dp", "DB/dp/sql")),
+    SCHEME_DP("SCHEME_DP", "SCHEME_DP", new MariaDBModuleConfiguration("dp", "DB/dp/sql").addDrop("dp_metadata")),
     SCHEME_IDENTITY("SCHEME_IDENTITY", "SCHEME_IDENTITY", new MariaDBModuleConfiguration("identity", "DB/identity/sql"))
 
     String path

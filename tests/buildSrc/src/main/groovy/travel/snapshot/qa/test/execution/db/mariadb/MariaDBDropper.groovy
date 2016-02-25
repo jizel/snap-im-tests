@@ -126,7 +126,14 @@ class MariaDBDropper {
             try {
                 connection = manager.getConnection("") // database is empty, we need just connection to data source
                 statement = connection.createStatement()
+
                 statement.executeUpdate("DROP DATABASE " + configuration.scheme)
+                logger.info("Database scheme ${configuration.scheme} has been dropped.")
+
+                configuration.schemesToDrop.each { additionalSchemeToDrop ->
+                    statement.executeUpdate("DROP DATABASE " + additionalSchemeToDrop)
+                    logger.info("Database scheme ${additionalSchemeToDrop} has been dropped.")
+                }
             } catch (SQLException ex) {
             } finally {
                 if (statement) {
