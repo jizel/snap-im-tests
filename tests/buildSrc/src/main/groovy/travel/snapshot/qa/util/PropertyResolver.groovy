@@ -95,6 +95,16 @@ class PropertyResolver {
         "data-platform"
     }
 
+    static def resolveDataPlatformQARepository() {
+        def systemVariable = System.getProperty("dataPlatformQARepository")
+
+        if (systemVariable) {
+            return systemVariable
+        }
+
+        "dataplatformqa"
+    }
+
     static File resolveDataPlatformRepositoryLocation() {
 
         Project project = new GradleSpaceliftDelegate().project()
@@ -129,8 +139,8 @@ class PropertyResolver {
         System.getProperty("dataPlatformRepositoryCommit", defaultCommit)
     }
 
-    static def resolveDataPlatformQARespositoryCommit(String defaultCommit) {
-        System.getProperty("dataPlatformQARepositoryCommit", defaultCommit)
+    static def resolveDataPlatformRespositoryQACommit(String defaultCommit) {
+        System.getProperty("dataPlatformRepositoryQACommit", defaultCommit)
     }
 
     static def resolveForceDataPlatformBuild() {
@@ -166,8 +176,12 @@ class PropertyResolver {
         configurationSource
     }
 
-    static def resolveRepositoryFetchSkip() {
-        Boolean.parseBoolean(System.getProperty("repositorySkipFetch"))
+    static def resolveDataPlatformRepositoryQACheckoutCommit() {
+        Boolean.parseBoolean(System.getProperty("dataPlatformRepositoryQACheckoutCommit"))
+    }
+
+    static def resolveDataPlatformRepositoryCheckoutCommit() {
+        Boolean.parseBoolean(System.getProperty("dataPlatformRepositoryCheckoutCommit"))
     }
 
     /**
