@@ -9,6 +9,7 @@ import travel.snapshot.qa.installation.DockerService
 import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
+import travel.snapshot.qa.test.execution.APITestsExecution
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
@@ -71,7 +72,7 @@ spacelift {
         }
         dataPlatformRepositories {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
-            value { [ "dataPlatformRepository", "dataPlatformQARepository" ] }
+            value { ["dataPlatformRepository", "dataPlatformQARepository"] }
         }
         dataPlatformRepository {
             value PropertyResolver.resolveDataPlatformRepository()
@@ -96,10 +97,10 @@ spacelift {
 
     profiles {
         dataPlatform {
-            enabledInstallations (dockerInstallations + serviceInstallations)
+            enabledInstallations(dockerInstallations + serviceInstallations)
         }
         dataPlatformTest {
-            enabledInstallations (dockerInstallations + serviceInstallations + dataPlatformRepositories + 'gradle')
+            enabledInstallations(dockerInstallations + serviceInstallations + dataPlatformRepositories + 'gradle')
         }
         platformStart(from: dataPlatform) {
             tests 'platformStart'
@@ -111,7 +112,7 @@ spacelift {
             tests 'platformStart', 'platformInit'
         }
         platformBuild {
-            enabledInstallations (dataPlatformRepositories + 'gradle')
+            enabledInstallations(dataPlatformRepositories + 'gradle')
             tests 'platformBuild'
         }
         apiTests(from: dataPlatformTest) {
@@ -199,18 +200,7 @@ spacelift {
                         .execute()
             }
             execute {
-                Spacelift.task("gradle")
-                        .parameters("--project-dir", new File(workspace, "dataplatformqa/dp-api-tests").absolutePath)
-                        .parameter("-Dapi-tests-config=${PropertyResolver.resolveApiTestsDpProperties()}")
-                        .parameter("-Dtest.single=RunConfigurationTests")
-                        .parameter("test")
-                        .shouldExitWith(0, 1)
-                        .execute().await()
-
-                Spacelift.task("gradle")
-                        .parameters("--project-dir", new File(workspace, "dataplatformqa/dp-api-tests").absolutePath)
-                        .parameter("aggregate")
-                        .execute().await()
+                new APITestsExecution(platform).single("RunConfigurationTests").execute()
             }
         }
     }

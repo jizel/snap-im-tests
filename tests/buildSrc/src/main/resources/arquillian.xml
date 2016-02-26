@@ -6,7 +6,7 @@
 
     <extension qualifier="docker">
 
-        <property name="serverVersion">1.21</property>
+        <property name="serverVersion">1.19</property>
 
         <!--
             This will be automatically expanded when Arquillian Cube gets involved.
