@@ -1,10 +1,17 @@
 package travel.snapshot.qa.util
 
 import org.apache.commons.lang3.SystemUtils
+import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
+import org.arquillian.spacelift.gradle.text.ProcessTemplate
 import org.gradle.api.Project
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.manager.ConnectionMode
+import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
+import travel.snapshot.qa.inspection.InspectionException
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
+import travel.snapshot.qa.util.machine.DockerMachineHelper
 
 import static travel.snapshot.qa.docker.manager.ConnectionMode.STARTORCONNECTANDLEAVE
 import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORREDEPLOY
@@ -14,6 +21,8 @@ import static travel.snapshot.qa.util.TestExecutionMode.DEVELOPMENT
 import static travel.snapshot.qa.util.TestExecutionMode.TEST
 
 class PropertyResolver {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertyResolver)
 
     private static final int DEFAULT_VM_MEMORY_SIZE = 3072 // in MB
 
@@ -202,11 +211,54 @@ class PropertyResolver {
      *
      * @return properties file for DP API tests
      */
-    static def resolveApiTestsDpProperties() {
-        File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
-        File apiTestsConfiguration = new File(rootDir, "configuration/api-tests/dp.properties")
+    static def resolveApiTestsDpProperties(DataPlatformOrchestration orchestration) {
 
-        System.getProperty("dp.properties", apiTestsConfiguration.getAbsolutePath())
+        // in case we want to override template dp file
+        String dpPropertiesSystemProperty = System.getProperty("dp.properties")
+
+        if (dpPropertiesSystemProperty) {
+            logger.info("Going to use ${dpPropertiesSystemProperty} file for API tests")
+            return dpPropertiesSystemProperty
+        }
+
+        File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
+        File templateDpProperties = new File(rootDir, "configuration/api-tests/template_dp.properties")
+
+        Map containerIPMapping = [:]
+
+        String tomcatIP
+        String mariadbIP
+        String activemqIP
+        String mongodbIP
+
+        if (resolveDockerMode() == MACHINE.name()) {
+            try {
+                tomcatIP = mariadbIP = activemqIP = mongodbIP = DockerMachineHelper.getIp(resolveDockerMachine())
+            } catch (InspectionException ex) {
+                throw new InspectionException("Unable to get IP of the container for dp.properties file", ex)
+            }
+        } else {
+            try {
+                tomcatIP = orchestration.inspectIP("tomcat")
+                mariadbIP = orchestration.inspectIP("mariadb")
+                activemqIP = orchestration.inspectIP("activemq")
+                mongodbIP = orchestration.inspectIP("mongodb")
+            } catch (InspectionException ex) {
+                throw new InspectionException("Unable to get IP of the container for dp.properties file", ex)
+            }
+        }
+
+        File output = Spacelift.task(templateDpProperties, ProcessTemplate)
+                .bindings(["tomcat.ip"      : tomcatIP])
+                .bindings(["mariadb.ip"     : mariadbIP])
+                .bindings(["activemq.ip"    : activemqIP])
+                .bindings(["mongodb.ip"     : mongodbIP])
+                .execute().await()
+
+        logger.info("Going to use this dp.properties file for API tests")
+        logger.info(output.text)
+
+        output.absolutePath
     }
 
     /**

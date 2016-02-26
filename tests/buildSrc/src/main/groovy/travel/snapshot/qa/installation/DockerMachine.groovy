@@ -153,10 +153,11 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
 
         DockerInteraction.execute("mkdir -p /home/docker/configuration", 0, 1)
         System.setProperty("arquillian.xml.data.tomcat.config.dir", PropertyResolver.resolveTomcatSpringConfigDirectoryMount())
-        //DockerInteraction.execute("mkdir -p /home/docker/deployments", 0, 1)
 
-        DockerInteraction.execute("mkdir -p ${PropertyResolver.resolveTomcatDeploymentDirectory()}", 0, 1)
-        DockerInteraction.execute("sudo -i chown -R docker:staff ${PropertyResolver.resolveTomcatDeploymentDirectory()}", 0, 1)
+        def tomcatDeploymentsDir = PropertyResolver.resolveTomcatDeploymentDirectory()
+
+        DockerInteraction.execute("mkdir -p ${tomcatDeploymentsDir}", 0, 1)
+        DockerInteraction.execute("sudo -i chown -R docker:staff ${tomcatDeploymentsDir}", 0, 1)
         System.setProperty("arquillian.xml.deployments.mount", PropertyResolver.resolveTomcatDeploymentDirectoryBind())
 
         // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
