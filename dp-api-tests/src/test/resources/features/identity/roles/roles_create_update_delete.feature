@@ -37,6 +37,7 @@ Feature: Roles_create_update_delete
       | json_input_file                                                | method | module   | url             | error_code | custom_code |
       | /messages/identity/roles/create_role_missing_role_name.json    | POST   | identity | /identity/roles | 400        | 53          |
       | /messages/identity/roles/create_role_not_unique_role_name.json | POST   | identity | /identity/roles | 400        | 62          |
+      | /messages/identity/roles/create_role_missing_application.json  | POST   | identity | /identity/roles | 400        | 63          |
 
     #add another validations
 
