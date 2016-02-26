@@ -1,19 +1,15 @@
 package travel.snapshot.qa.test.execution.log
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang3.SystemUtils
 import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.PropertyResolver
-
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 abstract class AbstractServiceLogReporter {
 
     boolean hostMode = (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString())
 
     String dockerMachine = PropertyResolver.resolveDockerMachine()
-
-    static String dateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
     /**
      * Gets logs from container of specified service type to local host
@@ -44,13 +40,37 @@ abstract class AbstractServiceLogReporter {
         File reportDirectory
 
         if (hostMode) {
-            reportDirectory = new File("snapshot/workspace/reports/host/${dateTime}/${container}")
+            reportDirectory = new File("snapshot/workspace/reports/host/${container}")
         } else {
-            reportDirectory = new File("snapshot/workspace/reports/machine/${dockerMachine}/${dateTime}/${container}")
+            reportDirectory = new File("snapshot/workspace/reports/machine/${dockerMachine}/${container}")
         }
 
         FileUtils.deleteQuietly(reportDirectory)
+
         reportDirectory.mkdirs()
-        reportDirectory.absolutePath
+
+        getPlatformSpecificPath(reportDirectory)
+    }
+
+    private def getPlatformSpecificPath(File reportDirectory) {
+        if (SystemUtils.IS_OS_UNIX) {
+            return reportDirectory.absolutePath
+        } else if (SystemUtils.IS_OS_WINDOWS) {
+            return sanitizeWindowsPath(reportDirectory.absolutePath)
+        }
+
+        throw new IllegalStateException("Platfrom not supported.");
+    }
+
+    private def sanitizeWindowsPath(String reportDirectory) {
+        extractPath(reportDirectory)
+    }
+
+    private def extractWindowsDisk(String reportDirectory) {
+        reportDirectory.tokenize(":").get(0).toLowerCase()
+    }
+
+    private def extractPath(String reportDirectory) {
+        reportDirectory.tokenize(":").get(1).replaceAll("\\\\", "/")
     }
 }
