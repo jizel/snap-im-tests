@@ -13,6 +13,7 @@ import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.model.Address;
 import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
@@ -234,6 +235,20 @@ public class PropertiesStepdefs {
         propertySteps.customerDoesNotExistForProperty(customerCode, propertyCode);
     }
 
+    @When("^Property set with name \"([^\"]*)\" for property with code \"([^\"]*)\" is got$")
+    public void Property_set_with_name_for_property_with_code_is_got(String propertySetName, String propertyCode) {
+        propertySteps.propertyPropertySetWithNameIsGot(propertySetName, propertyCode);
+    }
+
+    @When("^List of property sets is got for property with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_property_sets_is_got_for_property_with_id_and_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyId,
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) {
+        propertySteps.listOfPropertiesPropertySetsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
+    }
 
     // TODO reuse existing code
 
