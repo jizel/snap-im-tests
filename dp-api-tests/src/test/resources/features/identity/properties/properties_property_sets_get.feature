@@ -8,7 +8,7 @@ Feature: properties_property_sets_get
     Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | 0b202111-cdaf-439a-8bef-3140f56c657e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
-@important
+
   Scenario: Getting properties property sets
       Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
@@ -19,7 +19,7 @@ Feature: properties_property_sets_get
     And Content type is "application/json"
     And Body contains entity with attribute "property_set_id"
     And Body contains entity with attribute "property_set_name"
-@important
+
   Scenario Outline: Getting list of properties property sets
   Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
@@ -150,7 +150,7 @@ Feature: properties_property_sets_get
       | 20    | 0      | 20       | 54    |
       | 10    | 0      | 10       | 54    |
       | 5     | 10     | 5        | 54    |
-@important
+
      Scenario Outline: Filtering list of properties property sets
   Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |
@@ -193,7 +193,7 @@ Feature: properties_property_sets_get
       | 5     | 2      | 5        | 12    | property_set_name=='list_*'                            | property_set_name |                   | list_ps12_name, list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name   |
       | 5     | 2      | 5        | 12    | property_set_name=='list_*'                            |                   | property_set_name | list_ps7_name, list_ps6_name, list_ps5_name, list_ps4_name, list_ps3_name    |
       | /null | /null  | 1        | 1     | property_set_name==list_ps4_name                       | /null             | /null             | list_ps4_name                                                                |
-@important
+
   Scenario Outline: Checking error codes for getting list of property property sets
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
@@ -218,3 +218,5 @@ Feature: properties_property_sets_get
       | 10          | 0      | /null  | /null             | nonexistent       | 400           | 63          |
       | 10          | 0      | /null  | nonexistent       | /null             | 400           | 63          |
       | 10          | 0      | code== | /null             | /null             | 400           | 63          |
+      
+      
