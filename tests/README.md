@@ -47,10 +47,10 @@ Navigate to `tests` diretory afterwards.
 
 We are using Docker for the isolation of the services Data Plaform is using. There are, as of now, these four services:
 
-* Tomcat 8.0.30
+* Tomcat 8.0.32
 * MariaDB 10.1.11
 * MongoDB 3.2.1
-* ActiveMQ 3.2.1
+* ActiveMQ 5.12.3
 
 Version of Java is 1.8.0.66 and version of underlying operating system is CentOS 7.2.1511.
 
@@ -66,7 +66,7 @@ navigate e.g. to `192.168.99.100:8080/manager` to get Tomcat admin console. You 
 Credentials for Tomcat console are admin:admin, for MySQL root:root, for ActiveMQ admin:admin as well.
 
 When you are running natively (without VirtualBox), your services are not running in virtual machine but 
-directly at your computer. In that case you can inspect IP of the container by executing
+directly at your computer. In that case you can inspect IP of the container by executing:
 
 `docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container id>`
 
@@ -75,26 +75,31 @@ Container ID can be obtained from `docker ps`.
 In case running via `docker-machine`, it is as easy as `docker-machine ip <machine name>.` Name of machine is got from 
 `docker-machine ls`.
 
-When you run in Windows or Mac, you _have to_ run via Docker machine.
+*When you run in Windows or Mac, you _have to_ run via Docker machine.*
 
 ## Preliminaries
 
-Firstly you have to set up Docker installation at your computer. This is done differently when running 
+Firstly, you have to set up Docker installation at your computer. This is done differently when running 
 on Linux, Mac or Windows environment.
 
-Be sure that you are running at version 1.10.1. Download and install Docker from [here](https://github.com/docker/docker/releases/tag/v1.10.1).
-(bit.ly/1U6rHUz) and follow [these steps](https://docs.docker.com/engine/installation/).(bit.ly/1mpoVwk)
+Be sure that you are running at version 1.10.x. Download and install Docker from [here](https://github.com/docker/docker/releases/tag/v1.10.1).
+(bit.ly/1U6rHUz) and follow [these steps](https://docs.docker.com/engine/installation/).(bit.ly/1mpoVwk). In case you are on Windows / Mac, 
+you want [Docker toolbox](https://www.docker.com/products/docker-toolbox). In case you have VirtualBox already installed, it will be upgraded 
+by that installer. In case you are on Linux, the installation of VirtualBox have to be made on your own.
 
 You have to install _docker-machine_ as well from [here](https://github.com/docker/machine/releases/tag/v0.6.0) (bit.ly/1Xw8NX5) 
-and follow [these steps](https://docs.docker.com/machine/install-machine/) (bit.ly/1WqfGYE).
+and follow [these steps](https://docs.docker.com/machine/install-machine/) (bit.ly/1WqfGYE). Docker machine is already provided when you are using 
+Docker toolbox installer.
 
 Having bash completion installed for `docker` and `docker-machine` binaries is very handy as well. This can 
 be found in the documentation and can save you lot of time afterwards.
 
 If you want to use Docker compose, you have to installed it as well from [here](https://github.com/docker/compose/releases/tag/1.6.0) (bit.ly/1omBk4Z)
-and follow [installations steps](https://docs.docker.com/compose/) (bit.ly/1FL2VQ6).
+and follow [installations steps](https://docs.docker.com/compose/) (bit.ly/1FL2VQ6). Docker compose is already provided when you are using Docker toolbox installer.
 
-In the end you should be able to execute `docker` and `docker-machine` and `docker-compose` executables.
+In the end you should be able to execute `docker` and `docker-machine` and `docker-compose` executables. Be sure to check this works on Windonws as well.
+
+_You have to use Git-Bash console, not system's cmd.exe console, in order to be able to use this project._
 
 In case you are at Windows, be sure you have added paths to these binaries (docker.exe and docker-machine.exe) to 
 `PATH` environment variable so you can execute them in Windows terminal without specifing whole path to it.
@@ -109,6 +114,10 @@ Be sure to add the path to binaries in VirtualBox installation (VBoxManage.exe a
 Next you have to set password to Docker registry to your `~/.gradle/gradle.properties` file like this:
 
 `systemProp.dockerRegistryPassword=aqGG86d1Yf3Y`
+
+If you want to use your `data-platform` repository already cloned somewhere else, put this to `gradle.properties` as well:
+
+`systemProp.dataPlatformRepository=</path/to/data-platform>`
 
 In order to be sure that you have installed it right execute it like this:
 
@@ -156,11 +165,12 @@ OpenSSL version: OpenSSL 1.0.1e 11 Feb 2013
 |-- gradlew <-- Unix Gradle wrapper in case your local Gradle installation is not of version 2.9
 |-- gradlew.bat <-- Windows Gradle wrapper in case your local Gradle installation is not of version 2.9
 |-- README.md <-- this file
+|-- CHEATSHEET.md <-- handy reference file containing various questions and answers you could ask
 `-- snapshot <-- working directory where this project caches artifacts and projects
    |-- cache
    |   `-- gradle <-- downloaded Gradle installation
    `-- workspace
-       |-- data-platform <-- default location of cloned Data Platform repository
+       |-- data-platform <-- default location of cloned Data Platform repository when not specified in gradle.properties
        |-- dataplatformqa <-- location of cloned Data Platform QA repository
        |-- gradle <-- extracted Gradle installation for building Data Platform modules
        `-- reports <-- reports of every Docker container service (Tomcat, ActiveMQ, MariaDB, MongoDB) 
@@ -209,6 +219,10 @@ or just
 
 You can omit `--info` switch but you would cut yourself from valuable logging messages which tells you what is 
 exactly going on.
+
+## How do I build whole Data platform?
+
+
 
 ## Snapshot Docker private image repository
 
@@ -465,28 +479,26 @@ MariaDB logs and MongoDB logs will be saved to workspace too. This is what you g
 snapshot/workspace/reports/
 `-- machine
     `-- default
-        `-- 2016-02-16T16:39:51.534
-            |-- activemq
-            |   |-- activemq.log
-            |   `-- audit.log
-            |-- mariadb
-            |   |-- localhost.localdomain.err
-            |   `-- localhost.localdomain.log
-            |-- mongodb
-            |   `-- server.log
-            `-- tomcat
-                `-- logs
-                    |-- catalina.2016-02-16.log
-                    |-- catalina.out
-                    |-- host-manager.2016-02-16.log
-                    |-- localhost.2016-02-16.log
-                    |-- localhost_access_log.2016-02-16.txt
-                    `-- manager.2016-02-16.log
+        |-- activemq
+        |   |-- activemq.log
+        |   `-- audit.log
+        |-- mariadb
+        |   |-- localhost.localdomain.err
+        |   `-- localhost.localdomain.log
+        |-- mongodb
+        |   `-- server.log
+        `-- tomcat
+            `-- logs
+                |-- catalina.2016-02-29.log
+                |-- catalina.out
+                |-- host-manager.2016-02-29.log
+                |-- localhost.2016-02-29.log
+                |-- localhost_access_log.2016-02-29.txt
+                `-- manager.2016-02-29.log
+
 ```
 
-In case your machine is named _myMachine_ instead of _default_, it would be under respective _myMachine_ directory. In 
-case your `dockerMode` is `HOST` instead of `MACHINE`, it would be placed under `reports/host/$time/$container` directory. 
-Logs from some test run are gathered into directory which specifies time they were executed at.
+In case your `dockerMode` is `HOST` instead of `MACHINE`, it would be placed under `reports/host/$container` directory. 
 
 `apiTests` inherits from `reportableTest` so our concrete tests will be reported as well automatically. In general, test
 has these lifecycle closures:
@@ -609,15 +621,9 @@ is the redeployemnt of the wars to already running Tomcat.
 
 For this reason there are so called _Tomcat deployment strategies_. There are three Tomcat deployment strategies:
 
-* `DEPLOYORFAIL`
-
-    deploy or fail - If module is already deployed, whole deployment fails.
-* `DEPLOYORSKIP`
-
-    deploy or skip - If such module is already deployed, that deployment is skipped.
-* `DEPLOYORREDEPLOY`
-
-    deploy or redeploy - If such module is already deployed - it is undeployed and deployed again - otherwise it is just deployed.
+* `DEPLOYORFAIL` - deploy or fail - If module is already deployed, whole deployment fails.
+* `DEPLOYORSKIP` - deploy or skip - If such module is already deployed, that deployment is skipped.
+* `DEPLOYORREDEPLOY` -deploy or redeploy - If such module is already deployed - it is undeployed and deployed again - otherwise it is just deployed.
 
 Default deployment strategy is `DEPLOYORREDEPLOY` so all already deployed modules to be deployed are undeloyed and deployed again.
 You can override this strategy by setting `tomcatDeploymentStrategy` variable with value of strategy you want.
@@ -625,18 +631,11 @@ You can override this strategy by setting `tomcatDeploymentStrategy` variable wi
 When it comes to test reexecution on Docker container level, you have various options as well. These options are dealing with 
 `connectionMode` and are like follows:
 
-* `STARTANDSTOP`
-
-    start and stop - This is default connection mode if not set otherwise. Simply starts and stops all Docker Containers. 
-    If a container is already running, e.g. from previous test run, an exception is thrown and whole test fails.
-* `STARTORCONNECT`
-
-    start or connect - Tries to bypass the creation of a container with the same name 
-    as some already running container and if it is the case it does not stop it at the end. But if container is not already running, 
-    it will be started and stopped at the end of the test execution.
-* `STARTORCONNECTANDLEAVE`
-
-    start or connect and leave - the same as _start or connect_ but it will not be stopped at the end of the execution.
+* `STARTANDSTOP` - start and stop - This is default connection mode if not set otherwise. Simply starts and stops all Docker Containers. 
+If a container is already running, e.g. from previous test run, an exception is thrown and whole test fails.
+* `STARTORCONNECT` - start or connect - Tries to bypass the creation of a container with the same name as some already running container 
+and if it is the case it does not stop it at the end. But if container is not already running, it will be started and stopped at the end of the test execution.
+* `STARTORCONNECTANDLEAVE` - start or connect and leave - the same as _start or connect_ but it will not be stopped at the end of the execution.
 
 Default `connectionMode` is `STARTANDSTOP`.
 
@@ -651,3 +650,19 @@ they have not changed at all so I am saving significant amout of time as well.
 From just said, you see that the execution takes about 1-2-3 minutes when you are deploying and starting everything 
 from scratch and building it as well but it takes couple of seconds to get to test execution in case all is skipped 
 and reused. It is only the matter of what you prefer in some particular case.
+
+## Test execution modes
+
+It is possible to deploy artifacts directly to Docker containers running in Docker machine by remote Tomcat run configuration.
+
+In order to do this, you have to start Gradle script in so called _test execution mode._ There are two modes:
+
+* `TEST` - this execution mode is default. When you use this mode, you will not be able to deploy directly from IDEA.
+* `DEVELOPMENT` - this execution mode enables you to use remote Tomcat run configuration so you can deploy there artifacts 
+directly from IDE. Under the hood, this mode mounts directory `/opt/tomcat/webapps` from Docker machine to `/opt/tomcat/webapps` 
+on Tomcat container so when some wAR is copied from local host `/opt/tomcat/webapps` in Docker machine, it will be seen by Tomcat 
+container which starts to deploy that WAR. If you use this test execution mode, it means that you will not have `/manager` deployment 
+in Tomcat so you will not be able to deploy manually via web console because when you mount these directories, its content will be overlayed 
+by directory in Docker machine which is empty so Tomcat will see it as empty as well - hence no `/manager` will be deployed.
+
+You set this on the command line like this: `-DtestExecutionMode=DEVELOPMENT\TEST`. `TEST` mode is default.
