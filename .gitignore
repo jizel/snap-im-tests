@@ -29,3 +29,5 @@ target/
 
 # TSV files from Python fake data generator
 fake-data-generator/Python_load/src/*.tsv
+
+*.swp

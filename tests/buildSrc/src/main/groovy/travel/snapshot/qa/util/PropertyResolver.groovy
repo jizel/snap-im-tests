@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
 import travel.snapshot.qa.inspection.InspectionException
+import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
+import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 import travel.snapshot.qa.util.machine.DockerMachineHelper
 
@@ -263,10 +267,10 @@ class PropertyResolver {
         }
 
         File output = Spacelift.task(templateDpProperties, ProcessTemplate)
-                .bindings(["tomcat.ip"      : tomcatIP])
-                .bindings(["mariadb.ip"     : mariadbIP])
-                .bindings(["activemq.ip"    : activemqIP])
-                .bindings(["mongodb.ip"     : mongodbIP])
+                .bindings(["tomcat.ip": tomcatIP])
+                .bindings(["mariadb.ip": mariadbIP])
+                .bindings(["activemq.ip": activemqIP])
+                .bindings(["mongodb.ip": mongodbIP])
                 .execute().await()
 
         logger.info("Going to use this dp.properties file for API tests")
@@ -274,6 +278,87 @@ class PropertyResolver {
 
         output.absolutePath
     }
+
+    // Load Tests
+
+    static List<String> resolveLoadTestsInstallations() {
+        List<String> loadTestsInstallations
+
+        if (resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
+            loadTestsInstallations = [
+                    'docker', 'dockerMachine', // Docker specific
+
+                    'tomcat', 'mariadb', 'mongodb', 'activemq', // Docker services
+
+                    // we need data-platform repository because we build modules which
+                    // will be subsequently deployed to Tomcat in Docker,
+                    // load tests are in QA repository itself
+                    'dataPlatformQARepository', 'dataPlatformRepository',
+                    // load tests are located in Maven project so we need Maven installation
+                    'maven'
+            ]
+        } else {
+            // if load tests environment is not DOCKER, it means we are executing them against
+            // environment which has them already deployed so we just execute tests
+            // and we are not building these services on our own
+            loadTestsInstallations << 'dataPlatformQARepository'
+            loadTestsInstallations << 'maven'
+        }
+
+        loadTestsInstallations
+    }
+
+    static List<String> resolveLoadTestsTestExecutions() {
+        List<String> loadTestsTestExecutions
+
+        if (resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
+            loadTestsTestExecutions = [ 'platformStart', 'platformInit', 'loadTestsDeployment', 'loadTests', 'platformStop' ]
+        } else {
+            loadTestsTestExecutions = [ 'loadTests' ]
+        }
+
+        loadTestsTestExecutions
+    }
+
+    static List<LoadTestsSimulation> resolveLoadTestSimulations() {
+
+        List<LoadTestsSimulation> simulations
+
+        try {
+            simulations = LoadTestsSimulations.valueOf(System.getProperty("loadTestSimulations", LoadTestsSimulations.ALL.name()).toUpperCase()).simulations()
+        } catch (Exception ex) {
+            simulations = LoadTestsSimulations.ALL.simulations()
+        }
+
+        simulations
+    }
+
+    static LoadTestEnvironment resolveLoadTestEnvironment() {
+
+        LoadTestEnvironment environment
+
+        try {
+            environment = LoadTestEnvironment.valueOf(System.getProperty("loadTestEnvironment", LoadTestEnvironment.DOCKER.name()).toUpperCase())
+        } catch (Exception ex) {
+            environment = LoadTestEnvironment.DOCKER
+        }
+
+        environment
+    }
+
+    static int resolveLoadTestStartUsers() {
+        Integer.parseInt(System.getProperty("loadTestStartUsers", Integer.toString(LoadTestsConfiguration.DEFAULT_START_USERS)))
+    }
+
+    static int resolveLoadTestEndUsers() {
+        Integer.parseInt(System.getProperty("loadTestEndUsers", Integer.toString(LoadTestsConfiguration.DEFAULT_END_USERS)))
+    }
+
+    static int resolveLoadTestRamp() {
+        Integer.parseInt(System.getProperty("loadTestRamp", Integer.toString(LoadTestsConfiguration.DEFAUT_RAMP)))
+    }
+
+    // Execution modes
 
     /**
      * Return execution mode of Snapshot Data Platform test project.

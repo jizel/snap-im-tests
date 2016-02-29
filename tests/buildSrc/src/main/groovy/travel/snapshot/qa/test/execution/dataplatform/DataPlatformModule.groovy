@@ -15,11 +15,10 @@ enum DataPlatformModule {
 
     CONFIGURATION("ConfigurationModule", "ConfigurationModule/build/libs/ConfigurationModule-1.0.war"),
     IDENTITY("IdentityModule", "IdentityModule/build/libs/IdentityModule-1.0.war", new MariaDBModuleConfiguration("identity", "DB/identity/sql")),
-    OTA_INTEGRATION("OTAIntegration", "OTAIntegration/build/libs/OTAIntegration-1.0.war"),
-    TWITTER("TwitterIntegration", "TwitterIntegration/build/libs/TwitterIntegration-1.0.war"),
+
     RATE_SHOPPER("RateShopper", "RateShopper/build/libs/RateShopper-1.0.war"),
     WEB_PERFORMANCE("WebPerformance", "WebPerformance/build/libs/WebPerformance-1.0.war"),
-    REVIEW("Review", "Review/build/libs/Review-1.0.war"),
+    REVIEW("Review", "Review/build/libs/Review-1.0.war"), // TripAdvisor
 
     // Tomcat service API modules
 
@@ -30,7 +29,7 @@ enum DataPlatformModule {
 
     // Tomcat integrations
 
-    GOOGLE_ANALYTICS_INTEGRATION("GoogleAnalyticsIntegration", "GoogleAnalyticsIntegration/build/libs/GoogleAnalyticsIntegration-1.0.war"),
+    OTA_INTEGRATION("OTAIntegration", "OTAIntegration/build/libs/OTAIntegration-1.0.war"), // downloading of data for Rate Shopper
 
     // meta Data Platform modules for initializing database schemes
 

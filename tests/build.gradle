@@ -1,4 +1,5 @@
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
+import travel.snapshot.qa.installation.MavenInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.installation.DockerMachine
@@ -8,12 +9,17 @@ import travel.snapshot.qa.installation.GitBasedInstallation
 import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
-import travel.snapshot.qa.test.execution.APITestsExecution
+import travel.snapshot.qa.test.execution.api.APITestsExecution
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
+import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
+import travel.snapshot.qa.test.execution.load.LoadTestsExecution
+import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatModuleDeployer
@@ -38,6 +44,14 @@ spacelift {
         serviceInstallations {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value { ['tomcat', 'mariadb', 'mongodb', 'activemq'] }
+        }
+        loadTestsInstallations {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value { PropertyResolver.resolveLoadTestsInstallations() }
+        }
+        loadTestsTestExecutions {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value { PropertyResolver.resolveLoadTestsTestExecutions() }
         }
         dockerImages {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
@@ -104,10 +118,10 @@ spacelift {
 
     profiles {
         dataPlatform {
-            enabledInstallations(dockerInstallations + serviceInstallations)
+            enabledInstallations (dockerInstallations + serviceInstallations)
         }
         dataPlatformTest {
-            enabledInstallations(dockerInstallations + serviceInstallations + dataPlatformRepositories + 'gradle')
+            enabledInstallations (dockerInstallations + serviceInstallations + dataPlatformRepositories + 'gradle')
         }
         platformStart(from: dataPlatform) {
             tests 'platformStart'
@@ -119,11 +133,15 @@ spacelift {
             tests 'platformStart', 'platformInit'
         }
         platformBuild {
-            enabledInstallations(dataPlatformRepositories + 'gradle')
+            enabledInstallations (dataPlatformRepositories + 'gradle')
             tests 'platformBuild'
         }
         apiTests(from: dataPlatformTest) {
             tests 'platformStart', 'platformInit', 'apiTests', 'platformStop'
+        }
+        loadTests {
+            enabledInstallations loadTestsInstallations
+            tests loadTestsTestExecutions
         }
     }
 
@@ -152,6 +170,8 @@ spacelift {
             }
         }
 
+        maven(from: MavenInstallation) {}
+
         gradle(from: GradleInstallation) {}
 
         dataPlatformRepository(from: GitBasedInstallation) {
@@ -169,6 +189,9 @@ spacelift {
     }
 
     tests {
+
+        // Platform lifecycles
+
         platformStart(from: PlatformLifecycle) {
             with platform
             init {
@@ -191,11 +214,17 @@ spacelift {
                 new MariaDBInitializer(platform).init(DataPlatformModules.DATABASE_SCHEMES).execute()
             }
         }
+
+        // reporting
+
         reportableTest(from: DataPlatformTest) {
             report {
                 new DataPlatformLogReporter(platform, serviceInstallations).report()
             }
         }
+
+        // API tests
+
         apiTests(inherits: reportableTest) {
             beforeTest {
                 new DataPlatformBuildExecutor()
@@ -208,6 +237,30 @@ spacelift {
             }
             execute {
                 new APITestsExecution(platform).single("RunConfigurationTests").execute()
+            }
+        }
+
+        // Load tests
+
+        loadTests(inherits: reportableTest) {
+            data {
+                LoadTestsConfiguration.parse()
+            }
+            execute { List<LoadTestsSimulation, LoadTestsConfiguration> data ->
+//                new LoadTestsExecution(platform)
+//                        .simulation(data.get(0))
+//                        .configuration(data.get(1))
+//                        .execute()
+            }
+            afterTest {
+                // save Gatling reports
+            }
+        }
+        loadTestsDeployment {
+            execute {
+                new DataPlatformBuildExecutor().build(LoadTestsModuleParser.parse()).execute(forceDataPlatformBuild)
+
+                new TomcatModuleDeployer(platform).deploy(LoadTestsModuleParser.parse()).execute()
             }
         }
     }
