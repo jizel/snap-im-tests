@@ -43,15 +43,19 @@ Feature: configuration_types
     When Nonexistent configuration type id is deleted
     Then Response code is "204"
 
-
   #error states
   #id is missing
   #x-application is missing
-  Scenario: Updating configuration type description
-    When Configuration type description is updated for identifier "conf_id_1" with description "New description"
+  Scenario Outline: Updating configuration type description
+    When Configuration type description is updated for identifier "conf_id_1" with description "<description>"
     Then Response code is "204"
     And Body is empty
-    And Configuration type with identifier "conf_id_1" has description "New description"
+    And Configuration type with identifier "conf_id_1" has description "<description>"
+
+    Examples:
+      | description         |
+      | updated description |
+      |                     |
 
   Scenario: Updating description of nonexisting configuration type
     Given Configuration type with identifier "nonexisting_id" doesn't exist
@@ -59,19 +63,13 @@ Feature: configuration_types
     Then Response code is "404"
     And Custom code is "152"
 
-  Scenario: Updating description with missing body parameter
-    When Configuration type description is updated for identifier "conf_id_2" with missing description
-    Then Response code is "400"
-    And Custom code is "61"
-
-
   #error states
   #empty body, wrong id, wrong application id
   Scenario: Getting configuration type
     When Configuration type with with identifier "with_items_conf_id_1"  is got
     Then Response code is "200"
     And Content type is "application/json"
-    And There are 2 configurations returned
+    And Body contains configuration type with identifier "with_items_conf_id_1" and description "Description of configuration identifier 1 with items"
 
 
   Scenario: Getting configuration type with nonexisting id
@@ -151,16 +149,16 @@ Feature: configuration_types
     And Link header is '<link_header>'
 
     Examples:
-      | limit | cursor | returned | link_header                                                                                                         |
-      | /null |        | 50       | </configuration?limit=50&cursor=50>; rel="next"                                                           |
-      | /null | /null  | 50       | </configuration?limit=50&cursor=50>; rel="next"                                                           |
-      |       |        | 50       | </configuration?limit=50&cursor=50>; rel="next"                                                           |
-      |       | /null  | 50       | </configuration?limit=50&cursor=50>; rel="next"                                                           |
-      | 15    |        | 15       | </configuration?limit=15&cursor=15>; rel="next"                                                           |
-      |       | 1      | 50       | </configuration?limit=50&cursor=51>; rel="next", </configuration?limit=50&cursor=0>; rel="prev" |
-      | 20    | 0      | 20       | </configuration?limit=20&cursor=20>; rel="next"                                                           |
-      | 10    | 0      | 10       | </configuration?limit=10&cursor=10>; rel="next"                                                           |
-      | 5     | 10     | 5        | </configuration?limit=5&cursor=15>; rel="next", </configuration?limit=5&cursor=5>; rel="prev"   |
+      | limit | cursor | returned | link_header                                                                                      |
+      | /null |        | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
+      | /null | /null  | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
+      |       |        | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
+      |       | /null  | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
+      | 15    |        | 15       | </configurations?limit=15&cursor=15>; rel="next"                                                 |
+      |       | 1      | 50       | </configurations?limit=50&cursor=0>; rel="prev", </configurations?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | </configurations?limit=20&cursor=20>; rel="next"                                                 |
+      | 10    | 0      | 10       | </configurations?limit=10&cursor=10>; rel="next"                                                 |
+      | 5     | 10     | 5        | </configurations?limit=5&cursor=5>; rel="prev", </configurations?limit=5&cursor=15>; rel="next"   |
 
   #given hodne hodnot, aby se dalo testovat
   #test limit, cursor, filter, sort with different values
@@ -192,19 +190,19 @@ Feature: configuration_types
 
   Scenario Outline: Filtering list of configurations types
     Given The following configurations exist for configuration type identifier "conf_id_2"
-      | key                    | value          | type    |
-      | known_key_1            | text value 1   | string  |
-      | known_key_2            | text value 2   | string  |
-      | known_key_3            | text value 3   | string  |
-      | list_key_4             | text value 4   | string  |
-      | list_key_5             | same           | string  |
-      | list_key_6             | same           | string  |
-      | other_key_7            | text value 7   | string  |
-      | other_key_8            | text value 8   | string  |
-      | other_key_9            | text value 9   | string  |
-      | other_key_10           | special        | string  |
-      | other_key_11           | text value 11  | string  |
-      | other_key_12           | text value 12  | string  |
+      | key          | value         | type   |
+      | known_key_1  | text value 1  | string |
+      | known_key_2  | text value 2  | string |
+      | known_key_3  | text value 3  | string |
+      | list_key_4   | text value 4  | string |
+      | list_key_5   | same          | string |
+      | list_key_6   | same          | string |
+      | other_key_7  | text value 7  | string |
+      | other_key_8  | text value 8  | string |
+      | other_key_9  | text value 9  | string |
+      | other_key_10 | special       | string |
+      | other_key_11 | text value 11 | string |
+      | other_key_12 | text value 12 | string |
       #| spec                   | 25             | integer |
 
     When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" for configuration type "conf_id_2"
@@ -214,11 +212,11 @@ Feature: configuration_types
     And There are configurations with following keys returned in order: <expected_keys>
 
     Examples:
-      | limit | cursor | returned | filter                               | sort      | sort_desc | expected_keys                                                     |
-      | 5     | 0      | 5        | key=='other_key*'                    | key       |           | other_key_7, other_key_8, other_key_9, other_key_10, other_key_11 |
-      | 5     | 0      | 5        | key=='other_key*'                    |           | key       | other_key_11, other_key_10, other_key_9, other_key_8, other_key_7 |
-      | 5     | 2      | 3        | key=='other_key*'                    | user_name |           | other_key_9, other_key_10, other_key_11                           |
-      | 5     | 2      | 3        | key=='other_key*'                    |           | user_name | other_key_9, other_key_8, other_key_7                             |
-      | /null | /null  | 1        | key==known_key_3                     | /null     | /null     | known_key_3                                                       |
-      | /null | /null  | 2        | key==list_key_* and value==same      | key       | /null     | list_key_5, list_key_6                                            |
-      | /null | /null  | 1        | value==special                       | /null     | /null     | other_default_10                                                  |
+      | limit | cursor | returned | filter                          | sort      | sort_desc | expected_keys                                                     |
+      | 5     | 0      | 5        | key=='other_key*'               | key       |           | other_key_7, other_key_8, other_key_9, other_key_10, other_key_11 |
+      | 5     | 0      | 5        | key=='other_key*'               |           | key       | other_key_11, other_key_10, other_key_9, other_key_8, other_key_7 |
+      | 5     | 2      | 3        | key=='other_key*'               | user_name |           | other_key_9, other_key_10, other_key_11                           |
+      | 5     | 2      | 3        | key=='other_key*'               |           | user_name | other_key_9, other_key_8, other_key_7                             |
+      | /null | /null  | 1        | key==known_key_3                | /null     | /null     | known_key_3                                                       |
+      | /null | /null  | 2        | key==list_key_* and value==same | key       | /null     | list_key_5, list_key_6                                            |
+      | /null | /null  | 1        | value==special                  | /null     | /null     | other_key_10                                                  |

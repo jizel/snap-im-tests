@@ -1,17 +1,26 @@
 package travel.snapshot.dp.qa.serenity.configuration;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.model.Configuration;
+import travel.snapshot.dp.qa.model.ConfigurationType;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,28 +31,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Configuration;
-import travel.snapshot.dp.qa.model.ConfigurationType;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 /**
  * Created by sedlacek on 10/5/2015.
  */
 public class ConfigurationSteps extends BasicSteps {
 
-
     private static final String SESSION_CONFIGURATION_TYPES = "configuration_types";
     private static final String SESSION_CREATED_CONFIGURATION_TYPE = "created_configuration_type";
     private static final String SESSION_CONFIGURATIONS = "configurations";
-    public static final String CONFIGURATION_BASE_PATH = "/configuration";
+    public static final String CONFIGURATION_BASE_PATH = "/configurations";
 
     public ConfigurationSteps() {
         super();
@@ -54,13 +50,8 @@ public class ConfigurationSteps extends BasicSteps {
         return from(jsonData).getObject("", ConfigurationType.class);
     }
 
-    private Response deleteConfiguration(String key, String identifier) {
-        return given().spec(spec)
-                .when().delete("/{identifier}/{key}", identifier, key);
-    }
-
     private boolean isConfigurationExist(String key, String identifier) {
-        Response response = getConfiguration(key, identifier);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
         int statusCode = response.statusCode();
         if (statusCode == HttpStatus.SC_OK) {
             return true;
@@ -69,11 +60,6 @@ public class ConfigurationSteps extends BasicSteps {
         } else {
             throw new RuntimeException("invalid server status code during getting configuration[identifier=" + identifier + ", key=" + key + "]: " + statusCode);
         }
-    }
-
-    private Response getConfiguration(String key, String identifier) {
-        return given().spec(spec)
-                .when().get("/{identifier}/{key}", identifier, key);
     }
 
     private Response createValueForKey(String identifier, String key, String value, String type) {
@@ -85,7 +71,7 @@ public class ConfigurationSteps extends BasicSteps {
         map.put("type", type);
         return given().spec(spec)
                 .body(map)
-                .when().post("/{id}", identifier);
+                .when().post("/{id}/records", identifier);
     }
 
     private Response updateValueForKey(String identifier, String key, String value, String type, String etag) {
@@ -98,10 +84,13 @@ public class ConfigurationSteps extends BasicSteps {
         if (!StringUtils.isBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        return requestSpecification.body(map).when().post("/{id}/{key}", identifier, key);
+        return requestSpecification.body(map).when().post("/{id}/records/{key}", identifier, key);
     }
 
     private JsonNode stringToJsonField(String type, String value) {
+        if (value == null) {
+            return null;
+        }
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
@@ -127,16 +116,6 @@ public class ConfigurationSteps extends BasicSteps {
             e.printStackTrace();
         }
         return actualObj;
-    }
-
-
-    private Response updateConfigurationType(String identifier, String description) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("description", description);
-        return given().spec(spec)
-                .body(map)
-                .when().post("/{id}/description_update", identifier);
-
     }
 
     private Boolean isConfigurationTypeExist(String identifier) {
@@ -189,7 +168,6 @@ public class ConfigurationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CONFIGURATION_TYPES).to(configurationTypes);
     }
 
-
     @Step
     public void dataIsUsedForCreation(String jsonData, boolean deleteBeforeCreate) {
         ConfigurationType ct = getConfigurationTypeFromString(jsonData);
@@ -230,7 +208,7 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void compareHeaderWithIdentifier(String header, String identifier) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        response.then().header(header, endsWith("/configuration/" + identifier));
+        response.then().header(header, endsWith(CONFIGURATION_BASE_PATH + "/" + identifier));
     }
 
     @Step
@@ -309,7 +287,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationDoesntExistForIdentifier(String key, String identifier) {
-        Response response = getConfiguration(key, identifier);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
@@ -318,7 +296,7 @@ public class ConfigurationSteps extends BasicSteps {
     public void followingConfigurationsExist(List<Configuration> configurations, String identifier) {
         configurations.forEach(c -> {
             if (isConfigurationExist(c.getKey(), identifier)) {
-                deleteConfiguration(c.getKey(), identifier);
+                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, c.getKey());
             }
             Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -328,16 +306,15 @@ public class ConfigurationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CONFIGURATIONS).to(configurations);
     }
 
-
     @Step
     public void getConfigurationWithKeyForIdentifier(String key, String identifier) {
-        Response response = getConfiguration(key, identifier);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
         setSessionResponse(response);
     }
 
     @Step
     public void listOfConfigurationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String identifier) {
-        Response response = getSecondLevelEntities(identifier, "", limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(identifier, SECOND_LEVEL_OBJECT_RECORDS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
 
@@ -349,13 +326,16 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfiguration(String key, String identifier) {
-        Response resp = deleteConfiguration(key, identifier);
+        Response resp = deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
         setSessionResponse(resp);
     }
 
     @Step
     public void updateConfigurationTypeDescription(String identifier, String newDescription) {
-        Response resp = updateConfigurationType(identifier, newDescription);
+        Response tempResponse = getEntity(identifier);
+        Map<String, Object> updateObject = new HashMap<>();
+        updateObject.put("description", newDescription);
+        Response resp = updateEntity(identifier, updateObject, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
@@ -370,7 +350,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void updateConfigurationValue(String identifier, String key, String value, String type) {
-        Response tempResponse = getConfiguration(key, identifier);
+        Response tempResponse = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
 
         Response resp = updateValueForKey(identifier, key, value, type, tempResponse.header(HEADER_ETAG));
         setSessionResponse(resp);
@@ -378,7 +358,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationHasValue(String identifier, String key, String value) {
-        Response response = getConfiguration(key, identifier);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
         response.then().body("value", is(value));
     }
 

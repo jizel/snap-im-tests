@@ -2,11 +2,14 @@ package travel.snapshot.dp.qa.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 
 
 @ApiModel(description = "")
+@XStreamConverter(NullEmptyStringConverter.class)
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2015-10-05T16:16:51.818+03:00")
 public class Configuration {
 

@@ -40,12 +40,18 @@ Feature: configuration
     And Custom code is "<custom_code>"
 
     Examples:
-      | key              | value           | type     | response_code | custom_code |
-      |                  | 11              | integer  | 400           | 61          |
-      | given_test_key_1 | text value2     | string   | 400           | 62          |
-      | test_key_1       |                 | string   | 400           | 61          |
-      | test_date_key_1  | 2015-xxx-11     | date     | 400           | 59          |
-      | test_date_key_1  | 2015-01-01Taaaa | datetime | 400           | 59          |
+      | key                 | value           | type     | response_code | custom_code |
+      | /null               | 11              | integer  | 400           | 53          |
+      |                     | 11              | integer  | 400           | 61          |
+      | given_test_key_1    | text value2     | string   | 400           | 62          |
+      | test_key_1          | /null           | string   | 400           | 53          |
+      | test_key_2          |                 | string   | 400           | 61          |
+      | test_key_3          | /null           | integer  | 400           | 53          |
+      | test_key_4          | /null           | object   | 400           | 53          |
+      | test_key_5          |                 | date     | 400           | 61          |
+      | test_key_6          |                 | datetime | 400           | 61          |
+      | test_date_key_1     | 2015-xxx-11     | date     | 400           | 63          |
+      | test_datetime_key_1 | 2015-01-01Taaaa | datetime | 400           | 63          |
 
   #errors
   #missing application
@@ -184,16 +190,16 @@ Feature: configuration
     And Link header is '<link_header>'
 
     Examples:
-      | limit | cursor | returned | link_header                                                                                                           |
-      | /null |        | 50       | </configuration/conf_id_1/?limit=50&cursor=50>; rel="next"                                                            |
-      | /null | /null  | 50       | </configuration/conf_id_1/?limit=50&cursor=50>; rel="next"                                                            |
-      |       |        | 50       | </configuration/conf_id_1/?limit=50&cursor=50>; rel="next"                                                            |
-      |       | /null  | 50       | </configuration/conf_id_1/?limit=50&cursor=50>; rel="next"                                                            |
-      | 15    |        | 15       | </configuration/conf_id_1/?limit=15&cursor=15>; rel="next"                                                            |
-      |       | 1      | 50       | </configuration/conf_id_1/?limit=50&cursor=51>; rel="next", </configuration/conf_id_1/?limit=50&cursor=0>; rel="prev" |
-      | 20    | 0      | 20       | </configuration/conf_id_1/?limit=20&cursor=20>; rel="next"                                                            |
-      | 10    | 0      | 10       | </configuration/conf_id_1/?limit=10&cursor=10>; rel="next"                                                            |
-      | 5     | 10     | 5        | </configuration/conf_id_1/?limit=5&cursor=15>; rel="next", </configuration/conf_id_1/?limit=5&cursor=5>; rel="prev"   |
+      | limit | cursor | returned | link_header                                                                                                                           |
+      | /null |        | 50       | </configurations/conf_id_1/records?limit=50&cursor=50>; rel="next"                                                                    |
+      | /null | /null  | 50       | </configurations/conf_id_1/records?limit=50&cursor=50>; rel="next"                                                                    |
+      |       |        | 50       | </configurations/conf_id_1/records?limit=50&cursor=50>; rel="next"                                                                    |
+      |       | /null  | 50       | </configurations/conf_id_1/records?limit=50&cursor=50>; rel="next"                                                                    |
+      | 15    |        | 15       | </configurations/conf_id_1/records?limit=15&cursor=15>; rel="next"                                                                    |
+      |       | 1      | 50       | </configurations/conf_id_1/records?limit=50&cursor=0>; rel="prev", </configurations/conf_id_1/records?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | </configurations/conf_id_1/records?limit=20&cursor=20>; rel="next"                                                                    |
+      | 10    | 0      | 10       | </configurations/conf_id_1/records?limit=10&cursor=10>; rel="next"                                                                    |
+      | 5     | 10     | 5        | </configurations/conf_id_1/records?limit=5&cursor=5>; rel="prev", </configurations/conf_id_1/records?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of configurations for configuration type "conf_id_1"
     When List of configurations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" for configuration type "conf_id_1"
@@ -224,11 +230,11 @@ Feature: configuration
 
   Scenario Outline: Filtering list of configurations
     Given The following configuration types exist
-      | identifier       | description                                |
-      | filter_conf_id_1 | Description of configuration identifier 1  |
-      | filter_conf_id_2 | Description of configuration identifier 2  |
-      | id_1_filter      | Description of configuration identifier 3  |
-      | id_2_filter      | spec                                       |
+      | identifier       | description                               |
+      | filter_conf_id_1 | Description of configuration identifier 1 |
+      | filter_conf_id_2 | Description of configuration identifier 2 |
+      | id_1_filter      | Description of configuration identifier 3 |
+      | id_2_filter      | spec                                      |
 
     When List of configuration types is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -237,11 +243,11 @@ Feature: configuration
     And There are following configurations returned in order: <expected_identifiers>
 
     Examples:
-      | limit | cursor | returned | filter                                    | sort        | sort_desc  | expected_identifiers                |
-      | 1     | 0      | 1        | identifier=='filter_conf_id_*'            | identifier  |            | filter_conf_id_1                    |
-      | 5     | 0      | 2        | identifier=='filter_conf_id_*'            |             | identifier | filter_conf_id_2, filter_conf_id_1  |
-      | 5     | 1      | 3        | identifier=='filter_conf_id_*'            | identifier  |            | filter_conf_id_2                    |
-      | 5     | 1      | 3        | identifier=='filter_conf_id_*'            |             | identifier | filter_conf_id_1                    |
-      | /null | /null  | 1        | identifier==id_1_filter                   | /null       | /null      | id_1_filter                         |
-      | /null | /null  | 1        | identifier=='id_*' and description==spec  | identifier  | /null      | id_2_filter                         |
-      | /null | /null  | 1        | description==spec                         | /null       | /null      | id_2_filter                         |
+      | limit | cursor | returned | filter                                   | sort       | sort_desc  | expected_identifiers               |
+      | 1     | 0      | 1        | identifier=='filter_conf_id_*'           | identifier |            | filter_conf_id_1                   |
+      | 5     | 0      | 2        | identifier=='filter_conf_id_*'           |            | identifier | filter_conf_id_2, filter_conf_id_1 |
+      | 5     | 1      | 3        | identifier=='filter_conf_id_*'           | identifier |            | filter_conf_id_2                   |
+      | 5     | 1      | 3        | identifier=='filter_conf_id_*'           |            | identifier | filter_conf_id_1                   |
+      | /null | /null  | 1        | identifier==id_1_filter                  | /null      | /null      | id_1_filter                        |
+      | /null | /null  | 1        | identifier=='id_*' and description==spec | identifier | /null      | id_2_filter                        |
+      | /null | /null  | 1        | description==spec                        | /null      | /null      | id_2_filter                        |
