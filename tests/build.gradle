@@ -1,11 +1,10 @@
-import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
 import org.arquillian.spacelift.gradle.git.GitBasedInstallation
-import org.arquillian.spacelift.gradle.gradle.GradleInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.installation.DockerMachine
 import travel.snapshot.qa.installation.DockerService
+import travel.snapshot.qa.installation.GradleInstallation
 import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
