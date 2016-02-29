@@ -1,10 +1,10 @@
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
-import org.arquillian.spacelift.gradle.git.GitBasedInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.installation.Docker
 import travel.snapshot.qa.installation.DockerMachine
 import travel.snapshot.qa.installation.DockerService
 import travel.snapshot.qa.installation.GradleInstallation
+import travel.snapshot.qa.installation.GitBasedInstallation
 import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
@@ -76,14 +76,22 @@ spacelift {
         dataPlatformRepository {
             value PropertyResolver.resolveDataPlatformRepository()
         }
+        dataPlatformQARepository {
+            value PropertyResolver.resolveDataPlatformQARepository()
+        }
         dataPlatformRepositoryCommit {
-            value PropertyResolver.resolveDataPlatformRespositoryCommit("origin/master")
+            value PropertyResolver.resolveDataPlatformRespositoryCommit("master")
         }
-        dataPlatformQARepositoryCommit {
-            value PropertyResolver.resolveDataPlatformQARespositoryCommit("origin/master")
+        dataPlatformRepositoryQACommit {
+            value PropertyResolver.resolveDataPlatformRespositoryQACommit("master")
         }
-        repositorySkipFetch {
-            value PropertyResolver.resolveRepositoryFetchSkip()
+        dataPlatformRepositoryCheckoutCommit {
+            type Boolean
+            value PropertyResolver.resolveDataPlatformRepositoryCheckoutCommit()
+        }
+        dataPlatformRepositoryQACheckoutCommit {
+            type Boolean
+            value PropertyResolver.resolveDataPlatformRepositoryQACheckoutCommit()
         }
         forceDataPlatformBuild {
             type Boolean
@@ -149,14 +157,14 @@ spacelift {
         dataPlatformRepository(from: GitBasedInstallation) {
             repository "git@bitbucket.org:bbox/data-platform.git"
             commit dataPlatformRepositoryCommit
+            checkoutCommit dataPlatformRepositoryCheckoutCommit
             home dataPlatformRepository
-            skipFetch repositorySkipFetch
         }
         dataPlatformQARepository(from: GitBasedInstallation) {
             repository "git@bitbucket.org:bbox/dataplatformqa.git"
-            commit dataPlatformQARepositoryCommit
-            home "dataplatformqa"
-            skipFetch repositorySkipFetch
+            commit dataPlatformRepositoryQACommit
+            checkoutCommit dataPlatformRepositoryQACheckoutCommit
+            home dataPlatformQARepository
         }
     }
 
