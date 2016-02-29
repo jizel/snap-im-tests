@@ -108,11 +108,12 @@ Feature: review_locaitons
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "200"
     And Content type is "application/json"
-    And Body contains entity with attribute "location_id" value "<value>"
+    And Body contains entity with attribute "location_id" value "<location_id>"
+    And Body contains entity with attribute "location_name" value "<location_name>"
 
     Examples:
-      | url       | property                             | value  |
-      | /location | 99000199-9999-4999-a999-999999999999 | 590001 |
+      | url       | property                             | location_id | location_name |
+      | /location | 99000199-9999-4999-a999-999999999999 | 19          | town19        |
 
 
   Scenario Outline: Getting error code for not existing property id from /location
@@ -124,9 +125,9 @@ Feature: review_locaitons
     #todo DP-1117 - response message for property "null" has wrong message - check here after fix
     Examples:
       | url       | property                             | response_code | custom_code |
-      | /location | 11111111-1111-4111-a111-111111111111 | 404           | 152          |
-      | /location | null                                 | 400           | 63           |
-      | /location | /null                                | 400           | 52           |
+      | /location | 11111111-1111-4111-a111-111111111111 | 404           | 152         |
+      | /location | null                                 | 400           | 63          |
+      | /location | /null                                | 400           | 52          |
 
 
   #/location/<location_id>/properties
