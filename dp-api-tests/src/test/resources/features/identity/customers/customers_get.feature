@@ -171,13 +171,13 @@ Feature: customers_get
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address
       | companyName                           | email                 | code       | salesforceId                | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Filter test Given company 1           | Filter_c1@tenants.biz | Filter_c1t | Filter_salesforceid_given_1 | ATU2200001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 2           | Filter_c2@tenants.biz | Filter_c2t | Filter_salesforceid_given_2 | ATU2200002 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 3           | Filter_c3@tenants.biz | Filter_c3t | Filter_salesforceid_given_3 | ATU2200003 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 4           | Filter_c4@tenants.biz | Filter_c4t | Filter_salesforceid_given_4 | ATU2200004 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 5           | Filter_c5@tenants.biz | Filter_c5t | Filter_salesforceid_given_5 | ATU2200005 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_c6t | Filter_salesforceid_given_6 | ATU2200006 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
-      | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_c7t | Filter_salesforceid_given_7 | ATU2200007 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 1           | Filter_c1@tenants.biz | Filter_c1t | Filter_salesforceid_given_1 | CZ12345671 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 2           | Filter_c2@tenants.biz | Filter_c2t | Filter_salesforceid_given_2 | CZ12345672 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 3           | Filter_c3@tenants.biz | Filter_c3t | Filter_salesforceid_given_3 | CZ12345673 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 4           | Filter_c4@tenants.biz | Filter_c4t | Filter_salesforceid_given_4 | CZ12345674 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 5           | Filter_c5@tenants.biz | Filter_c5t | Filter_salesforceid_given_5 | CZ12345675 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_c6t | Filter_salesforceid_given_6 | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
+      | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_c7t | Filter_salesforceid_given_7 | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
 
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -197,7 +197,7 @@ Feature: customers_get
       | /null | /null  | 2        | 2     | code==Filter_c* and phone==+22222222       | code  | /null     | Filter_c6t, Filter_c7t                                     |
       | /null | /null  | 1        | 1     | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1t                                                 |
       | /null | /null  | 1        | 1     | salesforce_id==Filter_salesforceid_given_2 | /null | /null     | Filter_c2t                                                 |
-      | /null | /null  | 1        | 1     | vat_id==ATU22*003                          | /null | /null     | Filter_c3t                                                 |
+      | /null | /null  | 1        | 1     | vat_id==CZ*73                              | /null | /null     | Filter_c3t                                                 |
       | /null | /null  | 1        | 1     | is_demo_customer==0                        | /null | /null     | Filter_c7t                                                 |
       | /null | /null  | 1        | 1     | website==http://www.snapshot.cz            | /null | /null     | Filter_c6t                                                 |
   #add all fields
