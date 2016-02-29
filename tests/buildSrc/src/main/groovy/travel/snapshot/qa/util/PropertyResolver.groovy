@@ -32,7 +32,7 @@ class PropertyResolver {
 
     private static final DockerMode DEFAULT_DOCKER_MODE = MACHINE
 
-    private static final TestExecutionMode DEFAULT_EXECUTION_MODE = DEVELOPMENT
+    private static final TestExecutionMode DEFAULT_EXECUTION_MODE = TEST
 
     static def resolveDockerMode() {
 

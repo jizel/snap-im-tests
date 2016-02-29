@@ -4,15 +4,20 @@ This serves as a quick reference how to use test project.
 
 ### Give me some examples right of the bat!
 
+`gradle test -PplatformStart --info` - gives you _ a lot_ of informative output about what is going on. You want this to have turned on almost everytime.
+
 `gradle test -PplatformStart` - starts containers in VirtualBox named `default`.
 
 `gradle test -PplatformStop` - stops containers but keeps VirtualBox machine running
 
 `gradle test -PplatformBuild` - clones data-platform repository, checkouts to `origin/master` and builds all modules.
 
-`gradle test -PplatformBuild -DdataPlatformRepositoryCommit=origin/someBranch` - builds data-platform of some branch
+`gradle test -PplatformBuild -DdataPlatformRepositoryCommit=someBranch -DdataPlatformRepositoryCheckoutCommit=true` - builds data-platform of some branch
 
-`gradle test -PplatformBuild -DdataPlatformRepositoryCommit=<SHA COMMIT>` - builds commit of a repository
+`gradle test -PplatformBuild -DdataPlatformRepositoryCommit=<SHA COMMIT> -DdataPlatformRepositoryCheckoutCommit=true` - builds commit of a repository
+
+_It is responsibility of a caller of last two commands to fetch changes from origin. This is not done automatically anymore because it could mess and detach local 
+repository installations with possibly made changes._
 
 `gradle test -PapiTests` - as of now, starts VirtualBox of name `default` or creates such VirtualBox machine when not found, 
 downloads Docker service images when not present on that machine, copies `applicationCommon.properties` from `configuration/tomcat` 
@@ -47,7 +52,8 @@ This deployment strategy is the default one when not specified.
 gradle test -PapiTests \
     -DconnectionMode=STARTORCONNECTANDLEAVE \
     -DtomcatDeploymentStrategy=DEPLOYORREDEPLOY \
-    -DdataPlatformRepositoryCommit=origin/myBranch
+    -DdataPlatformRepositoryCommit=origin/myBranch \
+    -DdataPlatformRepositoryCheckoutCommit=true
 ```
 
 same as above but modules for other branch will be built.
@@ -60,7 +66,7 @@ gradle test -PapiTests \
     -DforceDataPlatformBuild=true
 ```
 
-Same as above but in case wars are already built, it will be rebuilt.
+Same as above but in case wars are already built, it will be rebuilt (done by last property)
 
 ### I want to see a lot of output in the console so I can see what is going on
 
@@ -82,34 +88,29 @@ it when the deployment is errorneous. You basically want to have `--info` turned
 `gradle test -PplatformBuild`
 
 When project is not already downloaded, it is cloned into `snapshot/workspace/data-platform` directory and build aftewards.
-In case you do not specify branch to build, `origin/master` is build.
+In case you do not specify branch to build, `origin/master` is build. If you have already your own working repository outside 
+of testing project, you can point Gradle plugin to use it by putting `systemProp.dataPlatformRepository=</path/to/data-platform>` into `gradle.properties`.
 
 ### How do I specify what branch of Snapshot Data platform to use during tests?
 
-By setting `-DdataPlatformRepositoryCommit=myBranch`. When not set, `origin/master` is used.
+By setting `-DdataPlatformRepositoryCommit=myBranch` and `-DdataPlatformRepositoryCheckoutCommit=true` When not set, `origin/master` is used.
 
-### I want to keep my containers running when I execute tests.
+### I want to keep my containers running when tests are finished.
 
 You have to use so called _connection mode_. There are three options:
 
-* `STARTANDSTOP`
+* `STARTANDSTOP` - start and stop - This is default connection mode if not set otherwise. Simply starts and stops all Docker Containers. 
+If a container is already running, e.g. from previous test run, an exception is thrown and whole test fails.
+* `STARTORCONNECT` - start or connect - Tries to bypass the creation of a container with the same name 
+as some already running container and if it is the case it does not stop it at the end. But if container is not already running, 
+it will be started and stopped at the end of the test execution.
+* `STARTORCONNECTANDLEAVE` - start or connect and leave - the same as _start or connect_ but it will not be stopped at the end of the execution.
 
-    start and stop - This is default connection mode if not set otherwise. Simply starts and stops all Docker Containers. 
-    If a container is already running, e.g. from previous test run, an exception is thrown and whole test fails.
-* `STARTORCONNECT`
-
-    start or connect - Tries to bypass the creation of a container with the same name 
-    as some already running container and if it is the case it does not stop it at the end. But if container is not already running, 
-    it will be started and stopped at the end of the test execution.
-* `STARTORCONNECTANDLEAVE`
-
-    start or connect and leave - the same as _start or connect_ but it will not be stopped at the end of the execution.
-
-Default `connectionMode` is `STARTANDSTOP`.
+Default `connectionMode` is `STARTORCONNECTANDLEAVE`.
 
 It is up to you what connection mode you prefer. I am fan of the last one because it will just keep containers running 
 and they are not started every time again. The starting of 4 containers takes about 15-20 seconds so you can save some 
-time here. On the other hand your containers are not _clean_ so when you need absolutely clean environment, be sure to 
+time there. On the other hand your containers are not _clean_ so when you need absolutely clean environment, be sure to 
 use _start and stop_ connection mode.
 
 You set this by `-DconnectionMode=<selected mode>`
@@ -118,15 +119,9 @@ You set this by `-DconnectionMode=<selected mode>`
 
 Good question. You have three options. It is called `tomcatDeploymentStrategy`.
 
-* `DEPLOYORFAIL`
-
-    deploy or fail - If module is already deployed, whole deployment fails.
-* `DEPLOYORSKIP`
-
-    deploy or skip - If such module is already deployed, that deployment is skipped.
-* `DEPLOYORREDEPLOY`
-
-    deploy or redeploy - If such module is already deployed - it is undeployed and deployed again - otherwise it is just deployed.
+* `DEPLOYORFAIL` - deploy or fail - If module is already deployed, whole deployment fails.
+* `DEPLOYORSKIP` - deploy or skip - If such module is already deployed, that deployment is skipped.
+* `DEPLOYORREDEPLOY` - deploy or redeploy - If such module is already deployed - it is undeployed and deployed again - otherwise it is just deployed.
 
 Default deployment strategy is `DEPLOYORREDEPLOY` so all already deployed modules to be deployed are undeloyed and deployed again.
 You can override this strategy by setting `tomcatDeploymentStrategy` variable with value of strategy you want.
@@ -135,10 +130,7 @@ Example: `-DtomcatDeploymentStrategy=<selected strategy>`
 
 ### What if I am testing from the origin/master branch and that branch was modified in the meanwhile in upstream?
  
-Everytime GitBasedInstallation is resolved, it automatically fetches all changes from upstream repositories. It 
-basically executes `git fetch --all` every time your are totally up-to-date.
-
-In case you do not want to fetch it, you can skip this by specifying `-DrepositorySkipFetch=true`.
+You have to checkout that changes on your own locally and use `-DdataPlatformRepositoryCommit=origin/master` and `-DdataPlatformRepositoryCheckoutCommit=true`
 
 ### Will be modules built again when they are already built?
 
@@ -154,7 +146,7 @@ you have to inspect them.
 
 ``docker inspect --format '{{ .NetworkSettings.IPAddress }}' <container id>``
 
-Credentials for Tomcat manager are admin:admin. MySQL credentials are root:root, ActiveMQ's credentials are admin:admin.
+Credentials for Tomcat manager are admin:admin. MySQL credentials are root:root, ActiveMQ credentials are admin:admin.
 
 ### Do I have to inspect IPs manually?
 
@@ -278,7 +270,7 @@ No, default name of Docker machine is `default` so you can omit it. e.f. `docker
 No, when Docker machine of name `default` is not found at your system, it is automatically created for you so 
 you do not need to do anything at all. By default, it will have 3072 MB or RAM to use and 2 CPUs. This can be overriden 
 by properties on the command line `-DdockerMachineMemorySize=2048 -DdockerMachine=myMachine`. This gives your newly 
-created machine just 2BG of memory and it will be named `myMachine`. The disadvantage is that you will have to 
+created machine just 2GB of memory and it will be named `myMachine`. The disadvantage is that you will have to 
 specify that name everytime because when not used, `default` name is taken into account.
 
 ### Can I run two virtual machines with two sets of containers?
@@ -341,3 +333,8 @@ No. Docker images are downloaded automatically and only images which are missing
 ### Where are Dockerfiles for Docker services?
 
 In "operations" repository. There are also scripts for private Docker registry and Docker compose scripts.
+
+### When I have my Docker machine up and running and I sleep / hibernate my computer, after it is waken up, it is not possible to use it anymore / it is not possible to connect to it.
+
+Go to VirtualBox / Preferencies / Network / Host-only Networks and remove that interface. In order not to have to do this, if you want to sleep your PC - just turn that machine off.
+This is pretty much platform specific. I was not able to spot this problem on Windows machines but it tends to happen on Linux / Mac.
