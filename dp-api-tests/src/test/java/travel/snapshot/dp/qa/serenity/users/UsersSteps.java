@@ -56,7 +56,10 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void followingUserIsCreated(User user) {
-        User existingUser = getUserByUsername(user.getUserName());
+        User existingUser = null;
+        if (user != null && !user.getUserName().isEmpty()) {
+            existingUser = getUserByUsername(user.getUserName());
+        }
         Serenity.setSessionVariable(SESSION_CREATED_USER).to(user);
         if (existingUser != null) {
             deleteEntity(existingUser.getUserId());
