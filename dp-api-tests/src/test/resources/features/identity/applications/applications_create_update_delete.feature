@@ -22,7 +22,7 @@ Feature: applications_create_update_delete
 
     Examples:
       | json_input_file                                                                     | method | module   | url                    | error_code | custom_code |
-      | /messages/identity/applications/create_application_missing_application_name.json    | POST   | identity | /identity/applications | 400        | 61          |
+      | /messages/identity/applications/create_application_missing_application_name.json    | POST   | identity | /identity/applications | 400        | 53          |
       | /messages/identity/applications/create_application_not_unique_application_name.json | POST   | identity | /identity/applications | 400        | 62          |
       | /messages/identity/applications/create_application_not_unique_application_id.json   | POST   | identity | /identity/applications | 400        | 62          |
       | /messages/identity/applications/create_application_wrong_website_value.json         | POST   | identity | /identity/applications | 400        | 59          |

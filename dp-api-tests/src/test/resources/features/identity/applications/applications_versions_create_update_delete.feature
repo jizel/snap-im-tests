@@ -30,8 +30,8 @@ Feature: applications_versions_create_update_delete
 
     Examples:
       | json_input_file                                                             | method | module   | url                                                                  | error_code | custom_code |
-      | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 61          |
-      | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 61          |
+      | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 53          |
+      | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 53          |
       | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 53          |
       | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 62          |
       | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 62          |
