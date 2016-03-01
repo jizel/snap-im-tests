@@ -274,20 +274,20 @@ Feature: customers_create_update_delete
       | AT      | AT_code2  | Austria2@mail.com           | AT12345678           | companyName81  |
       | AT      | AT_code3  | Austria3@mail.com           | ATU123456789         | companyName82  |
       | AT      | AT_code4  | Austria4@mail.com           | ATUABC45678          | companyName83  |
-      | BE      | BE_code   | Belgium@mail.com            | BE1123456789         | companyName84  |
+      | BE      | BE_code   | Belgium@mail.com            | BE11234567890        | companyName84  |
       | BE      | BE_code1  | Belgium1@mail.com           | BE0ABC456789         | companyName85  |
       | BE      | BE_code2  | Belgium2@mail.com           | BE012345678          | companyName86  |
       | BE      | BE_code3  | Belgium3@mail.com           | BE8123456789         | companyName861 |
       | BG      | BG_code   | Bulgaria@mail.com           | BG12345678           | companyName87  |
-      | BG      | BG_code1  | Bulgaria1@mail.com          | BG1234567890         | companyName88  |
+      | BG      | BG_code1  | Bulgaria1@mail.com          | BG12345678901        | companyName88  |
       | BG      | BG_code2  | Bulgaria2@mail.com          | BG123ABC789          | companyName89  |
       | CY      | CY_code   | Cyprus@mail.com             | CY1234567X           | companyName90  |
       | CY      | CY_code1  | Cyprus1@mail.com            | CY123456789X         | companyName91  |
       | CY      | CY_code2  | Cyprus2@mail.com            | CY123456789          | companyName92  |
       | CY      | CY_code3  | Cyprus3@mail.com            | CYABC45678X          | companyName93  |
-      | CZ      | CZ_code   | CzechR@mail.com             | CZ12345678           | companyName931 |
-      | CZ      | CZ_code1  | CzechR1@mail.com            | CZ12345678           | companyName932 |
-      | CZ      | CZ_code2  | CzechR2@mail.com            | CZ12345678           | companyName933 |
+      | CZ      | CZ_code   | CzechR@mail.com             | CZ1234567            | companyName931 |
+      | CZ      | CZ_code1  | CzechR1@mail.com            | CZ12345678901        | companyName932 |
+      | CZ      | CZ_code2  | CzechR2@mail.com            | CZ123456ABC          | companyName933 |
       | DE      | DE_code   | Germany@mail.com            | DE12345678           | companyName94  |
       | DE      | DE_code1  | Germany1@mail.com           | DE1234567891         | companyName95  |
       | DE      | DE_code2  | Germany2@mail.com           | DEABC456789          | companyName96  |
@@ -297,7 +297,7 @@ Feature: customers_create_update_delete
       | EE      | EE_code   | Estonia@mail.com            | EE12345678           | companyName100 |
       | EE      | EE_code1  | Estonia1@mail.com           | EE1234567891         | companyName101 |
       | EE      | EE_code2  | Estonia2@mail.com           | EEABC456789          | companyName102 |
-      | ES      | ES_code   | Spain@mail.com              | ES123456789          | companyName103 |
+      | ES      | ES_code   | Spain@mail.com              | ESxx123456789        | companyName103 |
       | ES      | ES_code1  | Spain1@mail.com             | ESX1234567           | companyName104 |
       | ES      | ES_code2  | Spain2@mail.com             | ES12345678           | companyName105 |
       | ES      | ES_code3  | Spain3@mail.com             | ESX12345678X         | companyName106 |
@@ -455,7 +455,7 @@ Feature: customers_create_update_delete
       | DK      | DK_code  | Denmark@mail.com            | DK00000000           | companyName73  |
       | DK      | DK_code1 | Denmark1@mail.com           | DK12345678           | companyName74  |
       | EE      | EE_code  | Estonia@mail.com            | EE123456789          | companyName75  |
-      | EL      | EL_code  | Greece@mail.com             | EL123456789          | companyName76  |
+      | GR      | EL_code  | Greece@mail.com             | EL123456789          | companyName76  |
       | ES      | ES_code  | Spain@mail.com              | ESX12345678          | companyName77  |
       | ES      | ES_code1 | Spain1@mail.com             | ES12345678X          | companyName78  |
       | ES      | ES_code2 | Spain2@mail.com             | ESX1234567X          | companyName79  |

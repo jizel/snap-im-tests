@@ -460,6 +460,21 @@ public class PropertySteps extends BasicSteps {
         }
     }
 
+    @Step
+    public void propertyPropertySetWithNameIsGot(String propertySetName, String propertyCode) {
+        Property property = getPropertyByCodeInternal(propertyCode);
+
+        Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, LIMIT_TO_ALL,
+                CURSOR_FROM_FIRST, "property_set_name=='" + propertySetName + "'", null, null);
+        setSessionResponse(customerUsersResponse);
+    }
+
+    @Step
+    public void listOfPropertiesPropertySetsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
     public void inactivateNotExistingProperty(String id) {
         Response response = inactivateProperty(id);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
