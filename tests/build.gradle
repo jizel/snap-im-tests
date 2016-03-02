@@ -247,10 +247,10 @@ spacelift {
                 LoadTestsConfiguration.parse()
             }
             execute { List<LoadTestsSimulation, LoadTestsConfiguration> data ->
-//                new LoadTestsExecution(platform)
-//                        .simulation(data.get(0))
-//                        .configuration(data.get(1))
-//                        .execute()
+                new LoadTestsExecution(platform)
+                        .simulation(data.get(0))
+                        .configuration(data.get(1))
+                        .execute()
             }
             afterTest {
                 // save Gatling reports

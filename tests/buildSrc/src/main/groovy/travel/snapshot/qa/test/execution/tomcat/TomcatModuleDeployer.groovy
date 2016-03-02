@@ -116,7 +116,17 @@ class TomcatModuleDeployer {
 
         final DeploymentStrategy deploymentStrategy = parseDeploymentStrategy()
 
-        modules.each { DataPlatformModule module ->
+        // if there are some modules to be deployed, dependencies of that module have to be deployed as well
+        // multiple modules to deploy can depend on the same module, by flatteing these dependencies and filtering
+        // duplicities, we get unique dependencies accross all modules
+        List<DataPlatformModule> dependencyModules = modules.collect { module -> module.dependencies }.flatten().unique()
+
+        List<DataPlatformModule> modulesToDeploy = []
+
+        modulesToDeploy.addAll(modules)
+        modulesToDeploy.addAll(dependencyModules)
+
+        modulesToDeploy.unique().each { module ->
 
             boolean isDeployed = manager.isDeployed(module.getDeploymentContext())
 
