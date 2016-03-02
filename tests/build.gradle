@@ -21,8 +21,8 @@ import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
+import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
-import travel.snapshot.qa.test.execution.tomcat.TomcatModuleDeployer
 import travel.snapshot.qa.util.PropertyResolver
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
@@ -231,7 +231,7 @@ spacelift {
                         .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
                         .execute(forceDataPlatformBuild)
 
-                new TomcatModuleDeployer(platform)
+                new DataPlatformDeployer(platform)
                         .deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
                         .execute()
             }
@@ -260,7 +260,7 @@ spacelift {
             execute {
                 new DataPlatformBuildExecutor().build(LoadTestsModuleParser.parse()).execute(forceDataPlatformBuild)
 
-                new TomcatModuleDeployer(platform).deploy(LoadTestsModuleParser.parse()).execute()
+                new DataPlatformDeployer(platform).deploy(LoadTestsModuleParser.parse()).execute()
             }
         }
     }

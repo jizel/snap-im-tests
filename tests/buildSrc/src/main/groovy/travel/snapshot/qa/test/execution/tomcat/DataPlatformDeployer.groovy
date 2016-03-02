@@ -18,9 +18,9 @@ import travel.snapshot.qa.util.Timer
 /**
  * Deploys modules (wars) to Tomcat instance.
  */
-class TomcatModuleDeployer {
+class DataPlatformDeployer {
 
-    private static final Logger logger = LoggerFactory.getLogger(TomcatModuleDeployer)
+    private static final Logger logger = LoggerFactory.getLogger(DataPlatformDeployer)
 
     private static final String DEFAULT_TOMCAT_CONTAINER =
             DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
@@ -35,12 +35,12 @@ class TomcatModuleDeployer {
 
     private String deploymentStrategy = parseDeploymentStrategy()
 
-    TomcatModuleDeployer(DataPlatformTestOrchestration orchestration) {
+    DataPlatformDeployer(DataPlatformTestOrchestration orchestration) {
         this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
         this.orchestration = orchestration
     }
 
-    TomcatModuleDeployer strategy(DeploymentStrategy deploymentStrategy) {
+    DataPlatformDeployer strategy(DeploymentStrategy deploymentStrategy) {
         this.deploymentStrategy = deploymentStrategy
         this
     }
@@ -51,7 +51,7 @@ class TomcatModuleDeployer {
      * @param module module to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(DataPlatformModule module) {
+    DataPlatformDeployer deploy(DataPlatformModule module) {
         if (module) {
 
             logger.info("Adding {} for deployment.", module.toString())
@@ -67,7 +67,7 @@ class TomcatModuleDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(DataPlatformModule... modules) {
+    DataPlatformDeployer deploy(DataPlatformModule... modules) {
         if (modules) {
             for (DataPlatformModule module : modules) {
                 deploy(module)
@@ -82,7 +82,7 @@ class TomcatModuleDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(List<DataPlatformModule> modules) {
+    DataPlatformDeployer deploy(List<DataPlatformModule> modules) {
         for (DataPlatformModule module : modules) {
             deploy(module)
         }
@@ -95,7 +95,7 @@ class TomcatModuleDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(DataPlatformModules modules) {
+    DataPlatformDeployer deploy(DataPlatformModules modules) {
         this.modules.addAll(modules.modules())
         this
     }
@@ -105,7 +105,7 @@ class TomcatModuleDeployer {
      *
      * @return this
      */
-    TomcatModuleDeployer execute() {
+    DataPlatformDeployer execute() {
         final TomcatDockerManager dockerManager = orchestration.get().getTomcatDockerManager(containerId)
         final TomcatManager manager = dockerManager.getServiceManager()
 
