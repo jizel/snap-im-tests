@@ -1,37 +1,62 @@
 Feature: facebook_posts
   Testing of api for facebook posts with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
 
+  #todo DP-1151
   Scenario Outline: Getting a list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
-    Then Response code is <response_code>
-    And Content type is "<content_type>"
+    Then Response code is 200
+    And Content type is "application/json"
     And There are <count> posts returned
 
-    Examples: 
-      | url                       | limit | cursor | count | property                             | response_code | content_type     |
-      | /analytics/facebook/posts |       |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | /null |        | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts |       | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | /null | /null  | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | 51    |        | 51    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | 51    | /null  | 51    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts |       | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | /null | 1      | 50    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | 20    | 0      | 20    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | 60    | 0      | 60    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/facebook/posts | 5     | 5      | 5     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+    Examples:
+      | url                       | limit | cursor | count | property                             |
+      | /analytics/facebook/posts |       |        | 50    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | /null |        | 50    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts |       | /null  | 50    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | /null | /null  | 50    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 51    |        | 51    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 51    | /null  | 51    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts |       | 1      | 50    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | /null | 1      | 50    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 20    | 0      | 20    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 60    | 0      | 60    | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 5     | 5      | 5     | 99999999-9999-4999-a999-999999999999 |
 
   Scenario Outline: Checking error codes for getting list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
+    Then Response code is 400
+    And Custom code is "63"
+
+    Examples:
+      | url                       | limit | cursor | property                             |
+      | /analytics/facebook/posts | /null | -1     | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts |       | -1     | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 10    | -1     | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | text  | 0      | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | text  | /null  | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | text  |        | 99999999-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 10    | text   | 99999999-9999-4999-a999-999999999999 |
+
+
+  Scenario Outline: Missing property ID
+    When List of facebook items "<url>" for property id "/null" is got with limit "/null" and cursor "/null"
     Then Response code is <response_code>
     And Custom code is "<custom_code>"
 
-    Examples: 
-      | url                       | limit | cursor | response_code | custom_code | property                             |
-      | /analytics/facebook/posts | /null | -1     | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/posts |       | -1     | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/posts | 10    | -1     | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/posts | text  | 0      | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/posts | text  | /null  | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/posts | text  |        | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
-      | /analytics/facebook/posts | 10    | text   | 400           | 63          | 99999999-9999-4999-a999-999999999999 |
+    Examples:
+      | url                       | response_code | custom_code |
+      | /analytics/facebook/posts | 400           | 52          |
+
+
+  Scenario Outline: Checking that data returned are correct (date(UTC) from DB is recalculated to property timezone)
+    #property 99999999 has DB value for posts stored everyday at 2016-12-30T20:22 UTC -> convert -> 2016-12-31T03:22
+    When The following properties exist with random address and billing address
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone     |
+      | 99999999-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Asia/Bangkok |
+    And List of facebook items "<url>" for property id "<property>" is got with limit "1" and cursor "/null"
+    Then Response code is 200
+    And Facebook posts contains datetime "<datetime>" engagement "<engagement>" content "<content>" and reach "<reach>"
+
+    Examples:
+      | url                       | datetime                 | engagement | content      | reach | property                             |
+      | /analytics/facebook/posts | 2017-01-01T03:22:00+0700 | 10950      | Content 1095 | 1095  | 99999999-9999-4999-a999-999999999999 |

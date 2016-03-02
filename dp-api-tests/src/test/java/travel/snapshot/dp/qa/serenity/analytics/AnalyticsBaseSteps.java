@@ -1,23 +1,27 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
+import java.io.InputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -193,5 +197,42 @@ public class AnalyticsBaseSteps extends BasicSteps {
             d = d.plusDays(1);
         }
         responseContainsValues(count);
+    }
+
+    /**
+     * @param assertStatement lambda with assert statement checking the object from session response
+     * @param type            class with type of object receiving from response
+     * @param <T>
+     * @throws Exception
+     */
+    @Step
+    public <T> void checkAnalyticsReturnedForType(Consumer<T> assertStatement, Class<T> type) throws Exception {
+        T traveller = getSessionResponse().as(type);
+        assertStatement.accept(traveller);
+    }
+
+    /**
+     * @param filePath        path to file with expected data
+     * @param assertStatement lambda with assert statement checking reponse against the file data
+     * @param type            type of object loaded from file
+     * @param <T>
+     * @throws Exception
+     */
+    @Step
+    public <T> void checkFileAgainstResponse(String filePath, BiConsumer<T, T> assertStatement, Class<T> type) throws Exception {
+        String data;
+        try (InputStream stream = this.getClass().getResourceAsStream(filePath)) {
+            data = getRequestDataFromFile(stream);
+        }
+
+        T expectedStatistics = ObjectMappers.OBJECT_MAPPER.readValue(data, type);
+        T actualStatistics = getSessionResponse().as(type);
+
+        assertStatement.accept(expectedStatistics, actualStatistics);
+    }
+
+    public void responseContainsDataValues(int count) {
+        Response response = getSessionResponse();
+        response.then().body("data.size()", is(count));
     }
 }

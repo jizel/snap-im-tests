@@ -1,13 +1,17 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
 import cucumber.api.Transform;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.FacebookSteps;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -17,24 +21,36 @@ public class FacebookStepdefs {
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Steps
-    private FacebookSteps steps;
+    private FacebookSteps facebookSteps;
 
     @When("^Get facebook \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
         // Express the Regexp above with the code you wish you had
-        steps.getPropertiesWithDate("/social_media" + url, granularity, propertyId, since, until);
+        facebookSteps.getPropertiesWithDate("/social_media" + url, granularity, propertyId, since, until);
     }
 
     @When("^Get facebook \"([^\"]*)\" with missing property header$")
     public void Get_social_media_with_missing_property_header(String url) throws Throwable {
-        steps.getPropertiesWithDate("/social_media" + url, "day", null, null, null);
+        facebookSteps.getPropertiesWithDate("/social_media" + url, "day", null, null, null);
     }
 
     @When("^List of facebook items \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void List_of_items_is_got_with_limit_and_cursor(String url, String propertyId,
+    public void List_of_items_is_got_with_limit_and_cursor(String url,
+                                                           @Transform(NullEmptyStringConverter.class) String propertyId,
                                                            @Transform(NullEmptyStringConverter.class) String limit,
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
-        steps.getPropertiesWithPaging("/social_media" + url, propertyId, limit, cursor);
+        facebookSteps.getPropertiesWithPaging("/social_media" + url, propertyId, limit, cursor);
     }
 
+    @Then("^Response contains (\\d+) values of facebook data$")
+    public void responseContainsCountValuesOfFacebookData(int count) throws Throwable {
+        facebookSteps.checkAnalyticsReturnedForType(
+                t -> assertThat(t.getData(), everyItem(hasProperty("values", hasSize(count)))),
+                GlobalStatsDto.class);
+    }
+
+    @Then("^Facebook posts contains datetime \"([^\"]*)\" engagement \"([^\"]*)\" content \"([^\"]*)\" and reach \"([^\"]*)\"$")
+    public void facebookPostsContainsDatetimeEngagementContentAndReach(String datetime, int engagement, String content, int reach) throws Throwable {
+        facebookSteps.checkFacebookPostFromResponse(datetime, engagement, content, reach);
+    }
 }
