@@ -19,6 +19,18 @@ Feature: customers_properties_create_update_delete
     Given Relation between property with code "p1_code" and customer with code "c3t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p2_code" and customer with code "c3t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
+    Given The following users exist
+      | userType | userName             | firstName | lastName      | email                                 | timezone      | culture |
+      | snapshot | defaultSnapshotuser  | Default   | SnapshotUser  | defaultSnapshotUser1@snapshot.travel  | Europe/Prague | cs-CZ   |
+
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c2t" exists with isPrimary "true"
+    Given Relation between user with username "defaultSnapshotuser" and customer with code "c3t" exists with isPrimary "true"
+
+    #Get token for snapshot user and set it to session (?access_token={token})
+    Given The password of user "defaultSnapshotuser" is "Password01"
+    Given Get token for user "defaultSnapshotuser" with password "Password01"
+
   Scenario: Adding property to customer with some type valid from date to date
   is failing because create passes just for the first time
 

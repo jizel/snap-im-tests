@@ -1,14 +1,14 @@
 {
-  "company_name": "Given company 1",
-  "code": "ecn1",
+  "company_name": "\u7B05\u7B06\u7B07",
+  "code": "foreign4",
   "phone": "+42012345679",
-  "email": "c1@tenants.biz",
-  "website" : "http://www.snapshot.travel",
+  "email": "foreign4@test.biz",
+  "vat_id": "CZ12345678",
+  "website" : "http://snapshot.travel",
   "is_demo_customer": true,
-
   "address": {
     "address_line1": "string",
-
+    "address_line2": "string",
     "city": "string",
     "zip_code": "string",
     "country": "CZ"
