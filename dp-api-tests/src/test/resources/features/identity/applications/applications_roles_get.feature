@@ -1,6 +1,6 @@
 Feature: applications_roles_get
 
-  Background: 
+  Background:
     Given Database is cleaned
 
   Scenario: Getting applications roles
@@ -81,7 +81,7 @@ Feature: applications_roles_get
     And Link header is '<link_header>'
     And Total count is "<total>"
 
-    Examples: 
+    Examples:
       | limit | cursor | returned | total | link_header                                                                                                                                                                                           |
       | /null |        | 50       | 52    | </identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace111/roles?limit=50&cursor=50>; rel="next"                                                                                                    |
       | /null | /null  | 50       | 52    | </identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace111/roles?limit=50&cursor=50>; rel="next"                                                                                                    |
@@ -118,21 +118,21 @@ Feature: applications_roles_get
     And There are applications roles with following names returned in order: <expected_names>
     And Total count is "<total>"
 
-    Examples: 
-      | limit | cursor | returned | total | filter                  | sort        | sort_desc | expected_names                                                       |
-      | 5     | 0      | 5        | 12    | role_name=='Test_Role*' | role_name   | /null     | Test_Role_11, Test_Role_12, Test_Role_13, Test_Role_21, Test_Role_22 |
-      | 5     | 0      | 5        | 12    | role_name=='Test_Role*' | /null       | role_name | Test_Role_36, Test_Role_35, Test_Role_34, Test_Role_33, Test_Role_32 |
-      | 5     | 9      | 3        | 12    | role_name=='Test_Role*' | role_name   | /null     | Test_Role_34, Test_Role_35, Test_Role_36                             |
-      | 5     | 9      | 3        | 12    | role_name=='Test_Role*' | /null       | role_name | Test_Role_13, Test_Role_12, Test_Role_11                             |
-      | 5     | 10     | 2        | 12    | role_name=='Test_Role*' | role_name   | /null     | Test_Role_35, Test_Role_36                                           |
-      | /null | /null  | 1        | 1     | role_name=='*Role_34'   | /null       | /null     | Test_Role_34                                                         |
+    Examples:
+      | limit | cursor | returned | total | filter                  | sort      | sort_desc | expected_names                                                       |
+      | 5     | 0      | 5        | 12    | role_name=='Test_Role*' | role_name | /null     | Test_Role_11, Test_Role_12, Test_Role_13, Test_Role_21, Test_Role_22 |
+      | 5     | 0      | 5        | 12    | role_name=='Test_Role*' | /null     | role_name | Test_Role_36, Test_Role_35, Test_Role_34, Test_Role_33, Test_Role_32 |
+      | 5     | 9      | 3        | 12    | role_name=='Test_Role*' | role_name | /null     | Test_Role_34, Test_Role_35, Test_Role_36                             |
+      | 5     | 9      | 3        | 12    | role_name=='Test_Role*' | /null     | role_name | Test_Role_13, Test_Role_12, Test_Role_11                             |
+      | 5     | 10     | 2        | 12    | role_name=='Test_Role*' | role_name | /null     | Test_Role_35, Test_Role_36                                           |
+      | /null | /null  | 1        | 1     | role_name=='*Role_34'   | /null     | /null     | Test_Role_34                                                         |
 
   Scenario Outline: Checking error codes for getting list of applications roles
     When List of applications roles is got for application with id "a318fd9a-a05d-42d8-8e84-42e904ace111" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
       | /null       | -1     | /null  | /null       | /null       | 400           | 63          |
       |             | -1     | /null  | /null       | /null       | 400           | 63          |

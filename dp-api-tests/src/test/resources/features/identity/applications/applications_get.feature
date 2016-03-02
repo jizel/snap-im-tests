@@ -1,6 +1,6 @@
 Feature: applications_get
 
-  Background: 
+  Background:
     Given Database is cleaned
 
   Scenario: Getting applications
@@ -103,7 +103,7 @@ Feature: applications_get
     And Link header is '<link_header>'
     And Total count is "<total>"
 
-    Examples: 
+    Examples:
       | limit | cursor | returned | total | link_header                                                                                                     |
       | /null |        | 50       | 52    | </identity/applications?limit=50&cursor=50>; rel="next"                                                         |
       | /null | /null  | 50       | 52    | </identity/applications?limit=50&cursor=50>; rel="next"                                                         |
@@ -120,7 +120,7 @@ Feature: applications_get
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
       | /null       | -1     | /null  | /null       | /null       | 400           | 63          |
       |             | -1     | /null  | /null       | /null       | 400           | 63          |
@@ -160,7 +160,7 @@ Feature: applications_get
     And There are applications with following names returned in order: <expected_names>
     And Total count is "<total>"
 
-    Examples: 
+    Examples:
       | limit | cursor | returned | total | filter                                                                  | sort        | sort_desc   | expected_names                                                                                                                              |
       | 5     | 0      | 5        | 10    | application_name=='Application test*'                                   | description |             | Application test company 1, Application test company 10, Application test company 2, Application test company 3, Application test company 4 |
       | 5     | 0      | 5        | 10    | application_name=='Application test*'                                   |             | description | Application test company 9, Application test company 8, Application test company 7, Application test company 6, Application test company 5  |

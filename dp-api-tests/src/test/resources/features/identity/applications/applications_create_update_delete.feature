@@ -1,6 +1,6 @@
 Feature: applications_create_update_delete
 
-  Background: 
+  Background:
     Given Database is cleaned
 
   Scenario: Create application
@@ -20,7 +20,7 @@ Feature: applications_create_update_delete
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | json_input_file                                                                     | method | module   | url                    | error_code | custom_code |
       | /messages/identity/applications/create_application_missing_application_name.json    | POST   | identity | /identity/applications | 400        | 53          |
       | /messages/identity/applications/create_application_not_unique_application_name.json | POST   | identity | /identity/applications | 400        | 62          |
@@ -54,7 +54,7 @@ Feature: applications_create_update_delete
       | applicationName           | description           | website           |
       | <updated_applicationName> | <updated_description> | <updated_website> |
 
-    Examples: 
+    Examples:
       | updated_applicationName | updated_description | updated_website             |
       | Application test        |                     | http://www.snap.shot.travel |
       | Application test 1      | New description     | http://www.snapshot.travel  |

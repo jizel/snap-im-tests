@@ -62,6 +62,7 @@ public class CustomerStepdefs {
         Address address = new Address();
         Customer customer = new Customer();
         address.setAddressLine1("someAddress");
+        address.setAddressLine2("someAddressLine2");
         address.setCity("someCity");
         address.setZipCode("1234");
         address.setCountry(country);
@@ -80,6 +81,7 @@ public class CustomerStepdefs {
         Address address = new Address();
         Customer customer = new Customer();
         address.setAddressLine1("someAddress");
+        address.setAddressLine2("someAddressLine2");
         address.setCity("someCity");
         address.setZipCode("1234");
         address.setCountry(country);

@@ -1,6 +1,6 @@
 Feature: applications_versions_create_update_delete
 
-  Background: 
+  Background:
     Given Database is cleaned
 
   Scenario: Create applications versions
@@ -28,7 +28,7 @@ Feature: applications_versions_create_update_delete
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
 
-    Examples: 
+    Examples:
       | json_input_file                                                             | method | module   | url                                                                  | error_code | custom_code |
       | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 53          |
       | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 53          |
@@ -72,7 +72,7 @@ Feature: applications_versions_create_update_delete
       | apiManagerId           | versionName           | status           | releaseDate           | description           |
       | <updated_apiManagerId> | <updated_versionName> | <updated_status> | <updated_releaseDate> | <updated_description> |
 
-    Examples: 
+    Examples:
       | updated_apiManagerId | updated_versionName  | updated_status | updated_releaseDate | updated_description |
       | 123-XYZ              | Updated version name | certified      | 2016-02-20          | Updated description |
       | 99999                | New name             | certified      | 2016-02-20          | Updated description |
