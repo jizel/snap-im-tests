@@ -155,10 +155,10 @@ TABLES = [
 
     {
         'table': 'dp.tripadvisor_geo_location',
-        'multiply': [1],
+        'multiply': range(0,1000),
         'columns': [
-            lambda data: data['property_id'],               # location_id
-            lambda data: 'town %d' % data['property_id']    # location_name
+            lambda data: data['iter'],                      # location_id
+            lambda data: 'town %d' % data['iter']           # location_name
         ]
     },
 
@@ -194,7 +194,7 @@ TABLES = [
         'columns': [
             lambda data: data['property_id'],                                                       # dim_property_id
             lambda data: data['iter'],                                                              # dim_date_id 
-            lambda data: random.randint(1, 12),                                                     # dim_channel_id
+            lambda data: random.randint(1, 11),                                                     # dim_channel_id
             lambda data: random.randint(100 * data['property_id'], 100 * data['property_id'] + 99), # dim_source_id
             lambda data: random.randint(1, 250),                                                    # dim_country_id
             lambda data: increment(data, 2),                                                        # users
