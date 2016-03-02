@@ -1,7 +1,5 @@
 package travel.snapshot.dp.qa.steps;
 
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
@@ -45,7 +43,7 @@ public class CommonAnalyticsStepdefs {
         analyticsBaseSteps.responseContainsCorrectValuesFor(granularity, since, until);
     }
 
-    @And("^Response contains (\\d+) values in data enclosure$")
+    @Then("^Response contains (\\d+) values in data enclosure$")
     public void responseContainsValuesInDataEnclosure(int count) throws Throwable {
         analyticsBaseSteps.responseContainsDataValues(count);
     }
