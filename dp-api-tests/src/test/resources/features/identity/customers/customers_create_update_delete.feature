@@ -1,7 +1,7 @@
 Feature: customers_create_update_delete
 
   #TODO add etag things to get/update/create
-  Background: 
+  Background:
     Given Database is cleaned
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
@@ -22,18 +22,30 @@ Feature: customers_create_update_delete
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
+    Examples:
+      | json_input_file                                                         | method | module   | url                 | error_code | custom_code |
+      | /messages/identity/customers/create_customer_missing_company_name.json  | POST   | identity | /identity/customers | 400        | 53          |
+      | /messages/identity/customers/create_customer_not_unique_code_email.json | POST   | identity | /identity/customers | 400        | 62          |
+      | /messages/identity/customers/create_customer_wrong_email_value.json     | POST   | identity | /identity/customers | 400        | 59          |
+      | /messages/identity/customers/create_customer_wrong_field_email.json     | POST   | identity | /identity/customers | 400        | 56          |
+      | /messages/identity/customers/create_customer_wrong_vatid_value.json     | POST   | identity | /identity/customers | 400        | 59          |
+      | /messages/identity/customers/create_customer_wrong_country_value.json   | POST   | identity | /identity/customers | 400        | 59          |
+      | /messages/identity/customers/create_customer_wrong_phone_value.json     | POST   | identity | /identity/customers | 400        | 59          |
+      | /messages/identity/customers/create_customer_wrong_website_value.json   | POST   | identity | /identity/customers | 400        | 59          |
 
-    Examples: 
-      | json_input_file                                                                 | method | module   | url                 | error_code | custom_code |
-      | /messages/identity/customers/create_customer_missing_company_name.json          | POST   | identity | /identity/customers | 400        | 53          |
-      | /messages/identity/customers/create_customer_not_unique_company_name_email.json | POST   | identity | /identity/customers | 400        | 62          |
-      | /messages/identity/customers/create_customer_not_unique_code_email.json         | POST   | identity | /identity/customers | 400        | 62          |
-      | /messages/identity/customers/create_customer_wrong_email_value.json             | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_field_email.json             | POST   | identity | /identity/customers | 400        | 56          |
-      | /messages/identity/customers/create_customer_wrong_vatid_value.json             | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_country_value.json           | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_phone_value.json             | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_website_value.json           | POST   | identity | /identity/customers | 400        | 59          |
+  Scenario Outline: Foreign customers
+    When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
+    Then Response code is 201
+    And Content type is "application/json"
+    And Body contains entity with attribute "company_name" value "<name>"
+    Examples:
+      | json_input_file                                                              | method | module   | url                 | name |
+      | /messages/identity/customers/positive/create_customer_arabic_symbols.json    | POST   | identity | /identity/customers | ݑݒݓ  |
+      | /messages/identity/customers/positive/create_customer_malayalam_symbols.json | POST   | identity | /identity/customers | ണതഥ  |
+      | /messages/identity/customers/positive/create_customer_greek_symbols.json     | POST   | identity | /identity/customers | ᴦᴧᴨ  |
+      | /messages/identity/customers/positive/create_customer_katakana_symbols.json  | POST   | identity | /identity/customers | ラリル  |
+      | /messages/identity/customers/positive/create_customer_ancient_symbols.json   | POST   | identity | /identity/customers | 㐱㐲㐳  |
+      | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
   #add wrong web, null customer code,
   Scenario: Deleting Customer
@@ -59,7 +71,7 @@ Feature: customers_create_update_delete
       | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
 
-    Examples: 
+    Examples:
       | companyName | email | code             | salesforceId         | vatId      | phone         | website        | notes | timezone      |
       | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null | Europe/Prague |
       | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null | /null         |
@@ -112,7 +124,7 @@ Feature: customers_create_update_delete
     And Response code is 201
     And Body contains entity with attribute "address.region" value "<region>"
 
-    Examples: 
+    Examples:
       | country | region         | code       | email           |
       | US      | Alabama        | custcode1  | mail1@mail.com  |
       | US      | Alaska         | custcode2  | mail2@mail.com  |
@@ -172,7 +184,7 @@ Feature: customers_create_update_delete
     And Custom code is "<custom_code>"
     And Body contains entity with attribute "message" value "Region with identifier <region> was not found."
 
-    Examples: 
+    Examples:
       | country | region    | code       | email           | response_code | custom_code |
       | DE      | invalid   | propcode8  | mail8@mail.com  | 400           | 63          |
       | BG      | invalid   | propcode9  | mail9@mail.com  | 400           | 63          |
@@ -189,7 +201,7 @@ Feature: customers_create_update_delete
     And Response code is 400
     And Custom code is 59
 
-    Examples: 
+    Examples:
       | country | code      | email                       | vatId                | companyName    |
       | AL      | AL_code   | albania@mail.com            | K414A4801U           | companyName1   |
       | AL      | AL_code   | albania@mail.com            | K414A4801U           | companyName2   |
@@ -373,7 +385,7 @@ Feature: customers_create_update_delete
     And Response code is 201
     And Body contains entity with attribute "vat_id" value "<vatId>"
 
-    Examples: 
+    Examples:
       | country | code     | email                       | vatId                | companyName    |
       | AL      | AL_code  | albania@mail.com            | K71501003R           | companyName1   |
       | AL      | AL_code  | albania@mail.com            | K91811014B           | companyName2   |

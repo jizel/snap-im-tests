@@ -1,0 +1,18 @@
+{
+  "company_name": "\u0751\u0752\u0753",
+  "code": "foreign1",
+  "phone": "+42012345679",
+  "email": "foreign1@test.biz",
+  "vat_id": "CZ12345678",
+  "website" : "http://snapshot.travel",
+  "is_demo_customer": true,
+  "address": {
+    "address_line1": "string",
+    "address_line2": "string",
+    "city": "string",
+    "zip_code": "string",
+    "country": "CZ"
+  },
+  "notes": "string",
+  "timezone" : "Europe/Prague"
+}
