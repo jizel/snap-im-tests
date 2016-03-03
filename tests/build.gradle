@@ -249,7 +249,7 @@ spacelift {
                         .configuration(data.get(1))
                         .execute()
             }
-            afterTest {
+            afterTest { data ->
                 // save Gatling reports
             }
         }
