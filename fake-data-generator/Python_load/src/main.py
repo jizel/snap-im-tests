@@ -4,13 +4,12 @@
 import csv
 import argparse
 import os
-
-from config import PROPERTY_SIZE, DATE_FROM, DATE_TO
+from config import DATE_FROM, DATE_TO, create_custom_properties
 from tables import TABLES, FILES
 
 
-def main(table_filter, out_path):
-    #check if folder exist, if empty then exit
+def main(table_filter, out_path, prop_size):
+    # check if folder exist, if empty then exit
     if not os.path.exists(out_path):
         os.makedirs(out_path)
 
@@ -25,7 +24,7 @@ def main(table_filter, out_path):
         with open('{path}/{name}.tsv'.format(name=metadata['table'], path=out_path), 'wb') as csvfile:
             writer = csv.writer(csvfile, delimiter='\t')
 
-            for property_id in PROPERTY_SIZE:
+            for property_id in prop_size:
                 last_row = [0] * 20
 
                 for iteration in metadata['multiply']:
@@ -46,11 +45,11 @@ def main(table_filter, out_path):
 
 
 def help():
-    return '''Fake data generator for {size} properties from {from_d} to {to_d}.
+    return '''Fake data generator for custom size of properties (default 1000) from {from_d} to {to_d}.
     Output path attribute is optional parameter for specifying path for output files.
     Tables attribute is optional filter - coma separated e.g. table1,table2.
     By default, data for all tables are generated.'''.format(
-        size=len(PROPERTY_SIZE), from_d=DATE_FROM, to_d=DATE_TO)
+        from_d=DATE_FROM, to_d=DATE_TO)
 
 
 if __name__ == '__main__':
@@ -59,6 +58,8 @@ if __name__ == '__main__':
                         help='''Output path for generated files, output folder has to exist;
                                 examples: Windows: C:/Users/ Linux: /Users/''')
     parser.add_argument('-tables', type=str, help='''Table names, as string delimitered by "," ''')
+    parser.add_argument('-prop_size', type=int, help='Number of properties for witch you want to generate data',
+                        default=1000)
     args = parser.parse_args()
 
     try:
@@ -66,4 +67,4 @@ if __name__ == '__main__':
     except:
         tables = []
 
-    main(tables, args.out_path)
+    main(tables, args.out_path, create_custom_properties(args.prop_size))
