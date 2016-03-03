@@ -194,8 +194,10 @@ spacelift {
 
         platformStart(from: PlatformLifecycle) {
             with platform
-            init {
-                new TomcatConfigurationDeployer(dockerMachine).deploy()
+            init {  new TomcatConfigurationDeployer(dockerMachine).deploy() }
+            execute {
+                new MariaDBDropper(platform).drop(DataPlatformModules.DATABASE_SCHEMES).execute()
+                new MariaDBInitializer(platform).init(DataPlatformModules.DATABASE_SCHEMES).execute()
             }
             teardown false
         }
@@ -203,24 +205,17 @@ spacelift {
             with platform
             setup false
         }
+
+        // Building of Data Platform
+
         platformBuild(from: DataPlatformTest) {
-            execute {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute(true)
-            }
-        }
-        platformInit(from: DataPlatformTest) {
-            execute {
-                new MariaDBDropper(platform).drop(DataPlatformModules.DATABASE_SCHEMES).execute()
-                new MariaDBInitializer(platform).init(DataPlatformModules.DATABASE_SCHEMES).execute()
-            }
+            execute {  new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute(true) }
         }
 
         // reporting
 
         reportableTest(from: DataPlatformTest) {
-            report {
-                new DataPlatformLogReporter(platform, serviceInstallations).report()
-            }
+            report { new DataPlatformLogReporter(platform, serviceInstallations).report() }
         }
 
         // API tests

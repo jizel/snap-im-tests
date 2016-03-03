@@ -45,7 +45,6 @@ enum DataPlatformModules {
         @Override
         List<DataPlatformModule> modules() {
             new Builder()
-                    .add(GOOGLE_ANALYTICS_INTEGRATION)
                     .add(OTA_INTEGRATION)
                     .build()
         }
@@ -57,6 +56,7 @@ enum DataPlatformModules {
             new Builder()
                 .add(SCHEME_DP)
                 .add(SCHEME_IDENTITY)
+                .add(SCHEME_OTA)
                 .build()
         }
     }
