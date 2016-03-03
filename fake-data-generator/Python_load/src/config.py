@@ -3,7 +3,8 @@
 
 import datetime
 
-PROPERTY_SIZE = range(0, 1000)
+def create_custom_properties(number):
+    return range(0, number)
 
 DATE_FROM   = datetime.date(2014, 1, 1)
 DATE_TO     = datetime.date(2016, 2, 1)
