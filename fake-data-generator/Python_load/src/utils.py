@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from config import DATE_FROM, DATE_TO
 from datetime import timedelta
+import datetime
 import random
 
 __all__ = ['increment', 'rating', 'dates']
@@ -11,8 +10,12 @@ increment   = lambda data, pos: data['row'][pos] + random.randint(5, 40)
 rating      = lambda: random.choice([ x * 0.5 for x in range(1, 11)])
 
 dates = []
-date  = DATE_FROM
 
-while date <= DATE_TO:
-    dates.append(date.strftime('%Y%m%d'))
-    date += timedelta(days=1)
+def dates_calculation(date_from, date_to):
+    date_from = datetime.date(date_from, 1, 1)
+    date_to = datetime.date(date_to, 12, 31)
+    date = date_from
+
+    while date <= date_to:
+        dates.append(date.strftime('%Y%m%d'))
+        date += timedelta(days=1)
