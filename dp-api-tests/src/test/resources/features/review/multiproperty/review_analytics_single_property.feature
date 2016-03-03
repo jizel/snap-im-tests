@@ -91,9 +91,9 @@ Feature: review_multiproperty_single_property
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | day         | 1     | today             | today | today             | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 13 days   | today | today - 13 days   |today      |
-      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 3     | today - 27 days   | today | today - 27 days   |today      |
-      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 51    | today - 363 days  | today | today - 363 days  |today      |
+      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
+      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
+      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | month       | 11    | today - 40 months | today | today - 12 months | today      |

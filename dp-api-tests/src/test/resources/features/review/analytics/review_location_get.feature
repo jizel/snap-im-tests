@@ -1,7 +1,5 @@
 Feature: review_locaitons
   Testing of api for review locations with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
-  #TODO DP-922 when cursor is empty it will return http400
-  #TODO DP-928 sorting issues
 
   Background:
     Given Database is cleaned
@@ -53,31 +51,30 @@ Feature: review_locaitons
   Scenario Outline: Checking error codes for getting list of locations
     When List of locations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "400"
-    And Custom code is "63"
+    And Custom code is "<custom_code>"
 
     Examples:
-      | limit       | cursor | filter      | sort          | sort_desc     |
+      | limit       | cursor | filter      | sort          | sort_desc     | custom_code |
       #limit and cursor
-      | /null       | -1     | /null       | /null         | /null         |
-      |             | -1     | /null       | /null         | /null         |
-      | /null       | text   | /null       | /null         | /null         |
-      |             | text   | /null       | /null         | /null         |
-      | -1          |        | /null       | /null         | /null         |
-      | -1          | /null  | /null       | /null         | /null         |
-      | 201         | /null  | /null       | /null         | /null         |
-      | 21474836470 | /null  | /null       | /null         | /null         |
-      | text        |        | /null       | /null         | /null         |
-      | text        | /null  | /null       | /null         | /null         |
-      | 10          | -1     | /null       | /null         | /null         |
-      | text        | 0      | /null       | /null         | /null         |
-      | 10          | text   | /null       | /null         | /null         |
+      |             | -1     | /null       | /null         | /null         | 63          |
+      |             | -1     | /null       | /null         | /null         | 63          |
+      |             | text   | /null       | /null         | /null         | 63          |
+      |             | text   | /null       | /null         | /null         | 63          |
+      | -1          |        | /null       | /null         | /null         | 63          |
+      | -1          |        | /null       | /null         | /null         | 63          |
+      | 201         |        | /null       | /null         | /null         | 63          |
+      | 21474836470 |        | /null       | /null         | /null         | 63          |
+      | text        |        | /null       | /null         | /null         | 63          |
+      | text        | /null  | /null       | /null         | /null         | 63          |
+      | 10          | -1     | /null       | /null         | /null         | 63          |
+      | text        | 0      | /null       | /null         | /null         | 63          |
+      | 10          | text   | /null       | /null         | /null         | 63          |
       #filtering and sorting
-      #not implemented ?
-      | 10          | 0      | /null       | location_name | location_name |
-      | 10          | 0      | /null       | /null         | nonexistent   |
-      | 10          | 0      | /null       | nonexistent   | /null         |
-      | 10          | 0      | not_here==  | /null         | /null         |
-      | 10          | 0      | random==CZ* | /null         | /null         |
+      | 10          | 0      | /null       | location_name | location_name | 64          |
+      | 10          | 0      | /null       | /null         | nonexistent   | 63          |
+      | 10          | 0      | /null       | nonexistent   | /null         | 63          |
+      | 10          | 0      | not_here==  | /null         | /null         | 63          |
+      | 10          | 0      | random==CZ* | /null         | /null         | 63          |
 
   #TODO DP-935 - X-Total-Count header is missing
   Scenario Outline: Filtering list of locations
@@ -88,22 +85,20 @@ Feature: review_locaitons
     And There are locations with following name returned in order: "<expected_names>"
   #And Total count is "<total>" #header "X-Total-Count" not implemented
 
-  #TODO delete /null values from sort/sort_desc empty parameter should be ignored (first 4 rows) - dominik havent decided yet
-  #TODO location_id cannot be used as filtering parameter (dominik hasn't answeared me yet)
     Examples:
       | limit | cursor | returned | total | filter                                        | sort          | sort_desc     | expected_names                                                                      |
-      | 5     | 0      | 5        | 6     | location_name=='filter_town*'                 | location_name | /null         | filter_town1000, filter_town1001, filter_town1002, filter_town1003, filter_town1004 |
-      | 5     | 0      | 5        | 6     | location_name=='filter_town*'                 | /null         | location_name | filter_town1005, filter_town1004, filter_town1003, filter_town1002, filter_town1001 |
-      | 5     | 2      | 4        | 6     | location_name=='filter_town*'                 | location_name | /null         | filter_town1002, filter_town1003, filter_town1004, filter_town1005                  |
-      | 5     | 2      | 4        | 6     | location_name=='filter_town*'                 | /null         | location_name | filter_town1003, filter_town1002, filter_town1001, filter_town1000                  |
-      | /null | /null  | 1        | 1     | location_name==filter_town1005                | /null         | /null         | filter_town1005                                                                     |
-      | /null | /null  | 1        | 1     | location_name==filter_town*,location_id==1005 | /null         | /null         | filter_town1005                                                                     |
-      | /null | /null  | 1        | 1     | location_id==1001                             | /null         | /null         | filter_town1001                                                                     |
+      | 5     | 0      | 5        | 6     | location_name=='filter_town*'                 | location_name |               | filter_town1000, filter_town1001, filter_town1002, filter_town1003, filter_town1004 |
+      | 5     | 0      | 5        | 6     | location_name=='filter_town*'                 |               | location_name | filter_town1005, filter_town1004, filter_town1003, filter_town1002, filter_town1001 |
+      | 5     | 2      | 4        | 6     | location_name=='filter_town*'                 | location_name |               | filter_town1002, filter_town1003, filter_town1004, filter_town1005                  |
+      | 5     | 2      | 4        | 6     | location_name=='filter_town*'                 |               | location_name | filter_town1003, filter_town1002, filter_town1001, filter_town1000                  |
+      | /null | /null  | 1        | 1     | location_name==filter_town1005                |               |               | filter_town1005                                                                     |
+      | /null | /null  | 1        | 1     | location_name==filter_town*;location_id==1005 |               |               | filter_town1005                                                                     |
+      | /null | /null  | 1        | 1     | location_id==1001                             |               |               | filter_town1001                                                                     |
 
 
   #/location/<property>
   #---------------------------------------------------------------------------------------------------------------------
-  #TODO bug DP-1116
+
   Scenario Outline: Getting location id for correct property id
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "200"
@@ -160,7 +155,6 @@ Feature: review_locaitons
     Examples:
       | limit       | cursor | filter      | sort        | sort_desc   | custom_code |
       #limit and cursor
-      | 0           | /null  | /null       | /null       | /null       | 63          |
       | /null       | -1     | /null       | /null       | /null       | 63          |
       |             | -1     | /null       | /null       | /null       | 63          |
       | /null       | text   | /null       | /null       | /null       | 63          |
@@ -175,7 +169,7 @@ Feature: review_locaitons
       | text        | 0      | /null       | /null       | /null       | 63          |
       | 10          | text   | /null       | /null       | /null       | 63          |
       #filtering and sorting
-      | 10          | 0      | /null       | property_id | property_id | 63          |
+      | 10          | 0      | /null       | property_id | property_id | 64          |
       | 10          | 0      | /null       | /null       | nonexistent | 63          |
       | 10          | 0      | /null       | nonexistent | /null       | 63          |
       | 10          | 0      | not_here==  | /null       | /null       | 63          |
@@ -190,11 +184,10 @@ Feature: review_locaitons
     And There are properties for location id are returned in order: "<expected_ids>"
     #And Total count is "<total>" #header "X-Total-Count" not implemented
 
-    #TODO delete /null values from sort/sort_desc empty parameter should be ignored (first 4 rows) - dominik havent decided yet
     Examples:
       | limit | cursor | returned | total | filter                                            | sort        | sort_desc   | expected_ids                                                               |
-      | 5     | 0      | 2        | 6     | property_id==99000*                               | property_id | /null       | 99000099-9999-4999-a999-999999999999, 99000799-9999-4999-a999-999999999999 |
-      | 5     | 0      | 2        | 6     | property_id==99000*                               | /null       | property_id | 99000799-9999-4999-a999-999999999999, 99000099-9999-4999-a999-999999999999 |
-      | 5     | 1      | 1        | 6     | property_id==99002*                               | property_id | /null       | 99002599-9999-4999-a999-999999999999                                       |
-      | 5     | 1      | 1        | 6     | property_id==99002*                               | /null       | property_id | 99002099-9999-4999-a999-999999999999                                       |
-      | /null | /null  | 1        | 1     | property_id==99000099-9999-4999-a999-999999999999 | /null       | /null       | 99000099-9999-4999-a999-999999999999                                       |
+      | 5     | 0      | 2        | 6     | property_id==99000*                               | property_id |             | 99000099-9999-4999-a999-999999999999, 99000799-9999-4999-a999-999999999999 |
+      | 5     | 0      | 2        | 6     | property_id==99000*                               |             | property_id | 99000799-9999-4999-a999-999999999999, 99000099-9999-4999-a999-999999999999 |
+      | 5     | 1      | 1        | 6     | property_id==99002*                               | property_id |             | 99002599-9999-4999-a999-999999999999                                       |
+      | 5     | 1      | 1        | 6     | property_id==99002*                               |             | property_id | 99002099-9999-4999-a999-999999999999                                       |
+      | /null | /null  | 1        | 1     | property_id==99000099-9999-4999-a999-999999999999 |             |             | 99000099-9999-4999-a999-999999999999                                       |

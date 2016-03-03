@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import cucumber.api.java.en.Then;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by sedlacek on 9/18/2015.
