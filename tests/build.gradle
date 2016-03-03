@@ -26,6 +26,8 @@ import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.PropertyResolver
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
+import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.PROJECT
+import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules.DATABASE_SCHEMES
 
 apply plugin: 'org.arquillian.spacelift'
 
@@ -196,8 +198,8 @@ spacelift {
             with platform
             init {  new TomcatConfigurationDeployer(dockerMachine).deploy() }
             execute {
-                new MariaDBDropper(platform).drop(DataPlatformModules.DATABASE_SCHEMES).execute()
-                new MariaDBInitializer(platform).init(DataPlatformModules.DATABASE_SCHEMES).execute()
+                new MariaDBDropper(platform).drop(DATABASE_SCHEMES).execute()
+                new MariaDBInitializer(platform).init(DATABASE_SCHEMES).execute()
             }
             teardown false
         }
@@ -209,7 +211,7 @@ spacelift {
         // Building of Data Platform
 
         platformBuild(from: DataPlatformTest) {
-            execute {  new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute(true) }
+            execute {  new DataPlatformBuildExecutor().build(PROJECT).execute(true) }
         }
 
         // reporting
