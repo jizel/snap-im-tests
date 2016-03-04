@@ -1,4 +1,4 @@
-Feature: properties_get
+Feature: Properties get
 
   Background:
     Given Database is cleaned
@@ -6,7 +6,7 @@ Feature: properties_get
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
-
+  @Smoke
   Scenario: Getting property
     When Property with code "p1_code" exists
     Then Response code is "200"

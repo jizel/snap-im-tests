@@ -1,4 +1,4 @@
-Feature: properties_validation
+Feature: Properties validation
 
   Background:
     Given Database is cleaned
@@ -23,12 +23,14 @@ Feature: properties_validation
 
   # --- happy path ---
 
+  @Smoke
   Scenario: Object creation - correct values
     When create "property" object with correct field values
     Then Response code is "201"
     And location header is set and points to the same object
     And returned "property" object matches
 
+  @Smoke
   Scenario: Object update - correct values
     When update "property" object with correct field values
     Then Response code is "204"

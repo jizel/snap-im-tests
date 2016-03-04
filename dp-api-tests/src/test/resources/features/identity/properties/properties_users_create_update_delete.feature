@@ -1,4 +1,4 @@
-Feature: properties_users_create_update_delete
+Feature: Properties users create update delete
 
   Background:
     Given Database is cleaned
@@ -18,18 +18,16 @@ Feature: properties_users_create_update_delete
     Given Relation between user with username "default1" and property with code "p1_code" exists
     Given Relation between user with username "default2" and property with code "p1_code" exists
 
-
+  @Smoke
   Scenario: Adding user to property
-
     When User with username "default3" is added to property with code "p2_code"
     Then Response code is "204"
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
-
+  @Smoke
   Scenario: Removing user from property
-#failing because of not working filtering for property users
     When User with username "default2" is removed from property with code "p1_code"
     Then Response code is "204"
     And Body is empty

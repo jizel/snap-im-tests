@@ -1,4 +1,4 @@
-Feature: properties_property_sets_get
+Feature: Properties property sets get
 
   Background: 
     Given Database is cleaned
@@ -9,6 +9,7 @@ Feature: properties_property_sets_get
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | 0b202111-cdaf-439a-8bef-3140f56c657e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
+  @Smoke
   Scenario: Getting properties property sets
       Given The following property sets exist for customer with code "c1t"
       | propertySetName | propertySetDescription | propertySetType |

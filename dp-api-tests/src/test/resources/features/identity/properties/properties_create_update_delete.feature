@@ -1,4 +1,4 @@
-Feature: properties_create_update_delete
+Feature: Properties create update delete
 
   #TODO add etag things to get/update/create
   Background: 
@@ -7,6 +7,7 @@ Feature: properties_create_update_delete
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
+  @Smoke
   Scenario: Creating property without parent with random address
     When Property is created with random address and billing address
       | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      |
@@ -17,6 +18,7 @@ Feature: properties_create_update_delete
     And Body contains property with attribute "email" value "pn1@tenants.biz"
     And "Location" header is set and contains the same property
 
+  @Smoke
   Scenario: Deleting Property
     When Property with code "p1_code" is deleted
     Then Response code is "204"
@@ -27,6 +29,7 @@ Feature: properties_create_update_delete
     When Nonexistent property id is deleted
     Then Response code is "204"
 
+  @Smoke
   Scenario: Property is activated
     When Property with code "p1_code" is activated
     Then Response code is "204"
