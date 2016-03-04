@@ -1,4 +1,4 @@
-Feature: property_sets_users_create_update_delete
+Feature: Property sets users create update delete
 
   Background:
     Given Database is cleaned
@@ -24,18 +24,16 @@ Feature: property_sets_users_create_update_delete
 
     Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
 
-
+  @Smoke
   Scenario: Adding user to property set
-
     When User with username "default3" is added to property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"
 
   #TODO validate just one primary user, notexistent user, already present user
   #validate different type of users
 
-
+  @Smoke
   Scenario: Removing user from property set
-#failing because of not working filtering for property_set users
     Given Relation between user with username "default2" and property set with name "ps1_name" for customer with code "c1t" exists
     When User with username "default2" is removed from property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"

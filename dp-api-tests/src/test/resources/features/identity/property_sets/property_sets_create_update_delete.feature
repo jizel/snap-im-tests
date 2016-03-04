@@ -1,4 +1,4 @@
-Feature: property_sets_create_update_delete
+Feature: Property sets create update delete
 
   #TODO add etag things to get/update/create
   #TODO check adding propery set for customer id not existent
@@ -21,12 +21,11 @@ Feature: property_sets_create_update_delete
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
+  @Smoke
   Scenario: Creating property set for customer with code "c1t"
-
     When Property set is created for customer with code "c1t"
       | propertySetName  | propertySetDescription | propertySetType |
       | ps1_created_name | ps1_description        | branch          |
-
     Then Response code is "201"
     And Body contains entity with attribute "property_set_name" value "ps1_created_name"
     And Body contains entity with attribute "property_set_type" value "branch"
@@ -35,6 +34,7 @@ Feature: property_sets_create_update_delete
 
     #error codes
 
+  @Smoke
   Scenario: Deleting Property set
     When Property set with name "ps1_name" for customer with code "c1t" is deleted
     Then Response code is "204"

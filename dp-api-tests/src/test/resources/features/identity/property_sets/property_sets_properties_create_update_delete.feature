@@ -1,4 +1,4 @@
-Feature: property_sets_properties_create_update_delete
+Feature: Property sets properties create update delete
 
   Background:
     Given Database is cleaned
@@ -24,17 +24,16 @@ Feature: property_sets_properties_create_update_delete
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
     #need to be fixed - classcastexception
 
+  @Smoke
   Scenario: Adding property to property set
-
     When Property with code "p2_code" is added to property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"
 
   #TODO validate just one primary property, notexistent property, already present property
   #validate different type of propertys
 
-
+  @Smoke
   Scenario: Removing property from property set
-#failing because of not working filtering for property propertys
     When Property with code "p2_code" is removed from property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"
     And Body is empty
