@@ -63,9 +63,8 @@ def create_custom_properties(number):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='', usage=help())
 
-    parser.add_argument('-out_path', type=str, default='',
-                        help='''Output path for generated files, output folder has to exist;
-                                examples: Windows: C:/Users/ Linux: /Users/''')
+    parser.add_argument('-out_path', type=str, default=os.getcwd(),
+                        help='''Output path for generated files; examples: Windows: C:/Users/ Linux: /Users/''')
 
     parser.add_argument('-tables', type=str, help='''Table names, as string delimitered by "," ''')
     parser.add_argument('-prop_size', type=int, help='Number of properties for witch you want to generate data', default=1000)
