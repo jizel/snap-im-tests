@@ -87,7 +87,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void bodyContainsPropertyWith(String atributeName, String value) {
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        Response response = getSessionResponse();
         response.then().body(atributeName, is(parseRawType(value)));
     }
 

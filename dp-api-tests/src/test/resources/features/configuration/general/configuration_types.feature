@@ -12,9 +12,7 @@ Feature: configuration_types
       | with_items_conf_id_1 | Description of configuration identifier 1 with items |
       | with_items_conf_id_2 | Description of configuration identifier 2 with items |
 
-  Scenario: Creating Configuration Type
-  POST /configuration/configurations
-
+  Scenario: Creating Configuration Type POST /configuration/configurations
     When Configuration type is created
       | identifier        | description                                       |
       | created_conf_id_1 | Description of created configuration identifier 1 |

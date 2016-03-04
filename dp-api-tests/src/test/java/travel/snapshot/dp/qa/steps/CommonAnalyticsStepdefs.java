@@ -42,4 +42,9 @@ public class CommonAnalyticsStepdefs {
     public void Response_contains_correct_number_of_values_for_granularity_between_and(String granularity, String since, String until) throws Throwable {
         analyticsBaseSteps.responseContainsCorrectValuesFor(granularity, since, until);
     }
+
+    @Then("^Response contains (\\d+) values in data enclosure$")
+    public void responseContainsValuesInDataEnclosure(int count) throws Throwable {
+        analyticsBaseSteps.responseContainsDataValues(count);
+    }
 }

@@ -42,7 +42,6 @@ public class ConfigurationSteps extends BasicSteps {
     public static final String CONFIGURATION_BASE_PATH = "/configurations";
 
     public ConfigurationSteps() {
-        super();
         spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI)).basePath(CONFIGURATION_BASE_PATH);
     }
 
