@@ -1,4 +1,4 @@
-Feature: Roles_create_update_delete
+Feature: Roles create update delete
 
   Background:
     Given Database is cleaned
@@ -15,9 +15,8 @@ Feature: Roles_create_update_delete
       | applicationId                        | roleName          |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Updated role name |
 
-
+  @Smoke
   Scenario: Creating role
-
     When Role is created
       | applicationId                        | roleName            | roleDescription        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
@@ -41,19 +40,16 @@ Feature: Roles_create_update_delete
 
     #add another validations
 
-
+  @Smoke
   Scenario: Deleting role
-
     When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
     Then Response code is "204"
     And Body is empty
     And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
-
   Scenario: Checking error code for deleting role
     When Nonexistent role id is deleted
     Then Response code is "204"
-
 
   Scenario Outline: Updating role
     When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
