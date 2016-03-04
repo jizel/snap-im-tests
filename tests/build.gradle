@@ -90,8 +90,14 @@ spacelift {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value { ["dataPlatformRepository", "dataPlatformQARepository"] }
         }
+        dataPlatformRepositoryUrl {
+            value PropertyResolver.resolveDataPlatformRepositoryUrl()
+        }
         dataPlatformRepository {
             value PropertyResolver.resolveDataPlatformRepository()
+        }
+        dataPlatformQARepositoryUrl {
+            value PropertyResolver.resolveDataPlatformQARepositoryUrl()
         }
         dataPlatformQARepository {
             value PropertyResolver.resolveDataPlatformQARepository()
@@ -175,13 +181,13 @@ spacelift {
         gradle(from: GradleInstallation) {}
 
         dataPlatformRepository(from: GitBasedInstallation) {
-            repository "git@bitbucket.org:bbox/data-platform.git"
+            repository dataPlatformRepositoryUrl
             commit dataPlatformRepositoryCommit
             checkoutCommit dataPlatformRepositoryCheckoutCommit
             home dataPlatformRepository
         }
         dataPlatformQARepository(from: GitBasedInstallation) {
-            repository "git@bitbucket.org:bbox/dataplatformqa.git"
+            repository dataPlatformQARepositoryUrl
             commit dataPlatformRepositoryQACommit
             checkoutCommit dataPlatformRepositoryQACheckoutCommit
             home dataPlatformQARepository

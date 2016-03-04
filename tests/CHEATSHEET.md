@@ -16,6 +16,10 @@ This serves as a quick reference how to use test project.
 
 `gradle test -PplatformBuild -DdataPlatformRepositoryCommit=<SHA COMMIT> -DdataPlatformRepositoryCheckoutCommit=true` - builds commit of a repository
 
+It is possible to clone repositories from other URLs. By default, it is `git@bitbucket.org:bbox/data-platform.git` for DP and `git@bitbucket.org:bbox/dataplatformqa.git` for QA repository.
+
+This can be changed by setting `dataPlatformRepositoryUrl` or `dataPlatformQARepositoryUrl` on the command line.
+
 _It is responsibility of a caller of last two commands to fetch changes from origin. This is not done automatically anymore because it could mess and detach local 
 repository installations with possibly made changes._
 

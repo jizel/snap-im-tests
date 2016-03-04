@@ -38,6 +38,10 @@ class PropertyResolver {
 
     private static final TestExecutionMode DEFAULT_EXECUTION_MODE = TEST
 
+    private static final String DATA_PLATFORM_REPOSITORY_URL = "git@bitbucket.org:bbox/data-platform.git"
+
+    private static final String DATA_PLATFORM_QA_REPOSITORY_URL = "git@bitbucket.org:bbox/dataplatformqa.git"
+
     static def resolveDockerMode() {
 
         DockerMode resolvedDockerMode
@@ -78,6 +82,14 @@ class PropertyResolver {
         }
 
         password
+    }
+
+    static def resolveDataPlatformRepositoryUrl() {
+        System.getProperty("dataPlatformRepositoryUrl", DATA_PLATFORM_REPOSITORY_URL)
+    }
+
+    static def resolveDataPlatformQARepositoryUrl() {
+        System.getProperty("dataPlatformQARepositoryUrl", DATA_PLATFORM_QA_REPOSITORY_URL)
     }
 
     /**
