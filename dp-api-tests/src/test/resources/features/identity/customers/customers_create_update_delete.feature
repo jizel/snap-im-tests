@@ -1,4 +1,4 @@
-Feature: customers_create_update_delete
+Feature: Customers create update delete
 
   #TODO add etag things to get/update/create
   Background:
@@ -8,6 +8,7 @@ Feature: customers_create_update_delete
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given All users are removed for customers with codes: c1t, c2t
 
+  @Smoke
   Scenario: Creating Customer without parent with random address
     When Customer is created with random address
       | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
@@ -48,6 +49,7 @@ Feature: customers_create_update_delete
       | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
   #add wrong web, null customer code,
+  @Smoke
   Scenario: Deleting Customer
     When Customer with code "c1t" is deleted
     Then Response code is "204"
@@ -104,6 +106,8 @@ Feature: customers_create_update_delete
   #id doesn't exist
   #too long string in attribute
   #invalid value in attribute
+
+  @Smoke
   Scenario: Customer is activated
     When Customer with code "c1t" is activated
     Then Response code is "204"

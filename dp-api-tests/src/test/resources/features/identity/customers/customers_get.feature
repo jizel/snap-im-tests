@@ -1,4 +1,4 @@
-Feature: customers_get
+Feature: Customers get
 
   Background:
     Given Database is cleaned
@@ -8,7 +8,7 @@ Feature: customers_get
 #      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 |CZ10000002 || +420123456789|http://www.snapshot.travel|
 #      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 |CZ10000003 || +420123456789|http://www.snapshot.travel|
 
-
+  @Smoke
   Scenario: Getting customer
     When Customer with code "c1t" is got
     Then Response code is "200"

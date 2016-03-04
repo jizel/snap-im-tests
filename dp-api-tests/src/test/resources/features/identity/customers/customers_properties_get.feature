@@ -1,4 +1,4 @@
-Feature: customers_properties_get
+Feature: Customers properties get
 
   Background:
     Given Database is cleaned
@@ -33,6 +33,7 @@ Feature: customers_properties_get
     Given The password of user "defaultSnapshotuser" is "Password01"
     Given Get token for user "defaultSnapshotuser" with password "Password01"
 
+  @Smoke
   Scenario: Getting customerProperty
     When Property with code "p1_code" from customer with code "c1t" is got with type "anchor"
     Then Response code is "200"
@@ -64,7 +65,6 @@ Feature: customers_properties_get
     When Nonexistent customerPropety id is got for customer with code "c1t"
     Then Response code is "404"
     And Custom code is "152"
-
 
   Scenario Outline: Getting list of customerProperties
   not working now

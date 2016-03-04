@@ -1,4 +1,4 @@
-Feature: customers_property_sets
+Feature: Customers property sets
 
   Background:
     Given Database is cleaned

@@ -1,4 +1,4 @@
-Feature: customers_users_create_update_delete
+Feature: Customers users create update delete
 
   Background:
     Given Database is cleaned
@@ -6,7 +6,6 @@ Feature: customers_users_create_update_delete
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
       | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-
 
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |
@@ -19,18 +18,16 @@ Feature: customers_users_create_update_delete
     Given Relation between user with username "default1" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "default2" and customer with code "c1t" exists with isPrimary "false"
 
-
+  @Smoke
   Scenario: Adding user to customer with isPrimary set
-
     When User with username "default3" is added to customer with code "c2t" with isPrimary "true"
     Then Response code is "204"
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
-
+  @Smoke
   Scenario: Removing user from customer
-#failing because of not working filtering for customer users
     When User with username "default2" is removed from customer with code "c1t"
     Then Response code is "204"
     And Body is empty

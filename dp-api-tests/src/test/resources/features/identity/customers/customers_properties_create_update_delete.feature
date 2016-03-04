@@ -1,4 +1,4 @@
-Feature: customers_properties_create_update_delete
+Feature: Customers properties create update delete
 
   Background:
     Given Database is cleaned
@@ -31,6 +31,7 @@ Feature: customers_properties_create_update_delete
     Given The password of user "defaultSnapshotuser" is "Password01"
     Given Get token for user "defaultSnapshotuser" with password "Password01"
 
+  @Smoke
   Scenario: Adding property to customer with some type valid from date to date
   is failing because create passes just for the first time
 
@@ -74,6 +75,7 @@ Feature: customers_properties_create_update_delete
   # update with error fields, bad values, missing fields
   # update nonexistent field
 
+  @Smoke
   Scenario: Updating customerProperty with etag
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
@@ -92,6 +94,7 @@ Feature: customers_properties_create_update_delete
     Then Response code is "412"
     And Custom code is "57"
 
+  @Smoke
   Scenario: Delete customer should remove all related property relation
     Given Relation between property with code "p3_code" and customer with code "c3t" exists with type "anchor" from "2016-01-01" to "2016-01-15"
     Given Customer with code "c3t" is deleted
