@@ -1,8 +1,9 @@
-Feature: applications_versions_get
+Feature: Applications versions get
 
   Background:
     Given Database is cleaned
 
+  @Smoke
   Scenario: Getting application versions
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |

@@ -1,8 +1,9 @@
-Feature: applications_versions_create_update_delete
+Feature: Applications versions create update delete
 
   Background:
     Given Database is cleaned
 
+  @Smoke
   Scenario: Create applications versions
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
@@ -36,6 +37,7 @@ Feature: applications_versions_create_update_delete
       | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 62          |
       | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/versions | 400        | 62          |
 
+  @Smoke
   Scenario: Deleting application version
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
