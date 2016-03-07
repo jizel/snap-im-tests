@@ -1,8 +1,9 @@
-Feature: applications_create_update_delete
+Feature: Applications create update delete
 
   Background:
     Given Database is cleaned
 
+  @Smoke
   Scenario: Create application
     When Application is created
       | applicationName            | description               | website                    | applicationId                        |
@@ -27,6 +28,7 @@ Feature: applications_create_update_delete
       | /messages/identity/applications/create_application_not_unique_application_id.json   | POST   | identity | /identity/applications | 400        | 62          |
       | /messages/identity/applications/create_application_wrong_website_value.json         | POST   | identity | /identity/applications | 400        | 59          |
 
+  @Smoke
   Scenario: Deleting application
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |

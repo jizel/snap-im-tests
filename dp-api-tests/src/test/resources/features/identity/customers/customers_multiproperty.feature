@@ -1,4 +1,4 @@
-Feature: customers_multiproperty
+Feature: Customers multiproperty
 
   Background: Initial data to DB
     Given Database is cleaned

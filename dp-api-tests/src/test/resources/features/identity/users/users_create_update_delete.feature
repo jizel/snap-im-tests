@@ -1,6 +1,6 @@
-Feature: users_create_update_delete
+Feature: Users create update delete
 
-  Background: 
+  Background:
     Given Database is cleaned
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |
@@ -22,7 +22,8 @@ Feature: users_create_update_delete
     And "Location" header is set and contains the same user
     And Etag header is present
 
-    Examples: 
+
+    Examples:
       | userType | userName | firstName | lastName | email                           | timezone      | culture |
       | customer | snp      | Snap      | Shot     | snp@snapshot.travel             | Europe/Prague | cs-CZ   |
       | customer | snp1     | Snap1     | Shot1    | dummy_mail+32@gmail.com         | Europe/Prague | cs-CZ   |
@@ -47,23 +48,24 @@ Feature: users_create_update_delete
     Then Response code is "400"
     And Custom code is "<custom_code>"
 
-    Examples: 
-      | userType | userName | firstName | lastName | email                          | timezone      | culture | custom_code |
-      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.                  | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snpsnapshot.travel             | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel            | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel         | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | 'snp@snpsnapshot.travel'       | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel         | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel         | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel         | Europe/Prague | cs-CZ   | 59          |
-      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel         | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      |           | Shot     | snp@snpsnapshot.travel         | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      |          | snp@snpsnapshot.travel         | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     |                                | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel         |               | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel         | Europe/Prague |         | 61          |
-  
+    Examples:
+      | userType | userName | firstName | lastName | email                    | timezone      | culture | custom_code |
+      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.            | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snpsnapshot.travel       | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel      | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel   | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | 'snp@snpsnapshot.travel' | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
+      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel   | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      |           | Shot     | snp@snpsnapshot.travel   | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      |          | snp@snpsnapshot.travel   | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     |                          | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel   |               | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel   | Europe/Prague |         | 61          |
+
+  @Smoke
   Scenario: Deleting user
     When User with userName "default1" is deleted
     Then Response code is "204"
@@ -86,7 +88,7 @@ Feature: users_create_update_delete
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
 
-    Examples: 
+    Examples:
       | userType | firstName | lastName | email                 | timezone         | culture | comment  |
       | partner  | FNUp1     | LNUp1    | EMUp1@snapshot.travel | Europe/Prague    | cs-CZ   | VIP user |
       | guest    | FNUp2     | LNUp2    | EMUp2@snapshot.travel | America/New_York | en-US   | /null    |
@@ -98,6 +100,7 @@ Feature: users_create_update_delete
     Then Response code is "412"
     And Custom code is "57"
 
+  @Smoke
   Scenario: User is activated
     When User with id "default1" is activated
     Then Response code is "204"

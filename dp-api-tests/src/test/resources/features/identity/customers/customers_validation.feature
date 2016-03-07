@@ -1,4 +1,4 @@
-Feature: customers_validation
+Feature: Customers validation
 
   Background:
     Given Database is cleaned
@@ -26,12 +26,14 @@ Feature: customers_validation
 
   # --- happy path ---
 
+  @Smoke
   Scenario: Object creation - correct values
     When create "customer" object with correct field values
     Then Response code is "201"
     And location header is set and points to the same object
     And returned "customer" object matches
 
+  @Smoke
   Scenario: Object update - correct values
     When update "customer" object with correct field values
     Then Response code is "204"

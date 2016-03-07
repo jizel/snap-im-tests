@@ -1,8 +1,9 @@
-Feature: applications_get
+Feature: Applications get
 
   Background:
     Given Database is cleaned
 
+  @Smoke
   Scenario: Getting applications
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |

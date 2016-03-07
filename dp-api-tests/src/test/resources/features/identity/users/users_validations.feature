@@ -1,4 +1,4 @@
-Feature: users_validation
+Feature: Users validations
 
   Background:
     Given Database is cleaned
@@ -21,12 +21,14 @@ Feature: users_validation
 
   # --- happy path ---
 
+  @Smoke
   Scenario: Object creation - correct values
     When create "user" object with correct field values
     Then Response code is "201"
     And location header is set and points to the same object
     And returned "user" object matches
 
+  @Smoke
   Scenario: Object update - correct values
     When update "user" object with correct field values
     Then Response code is "204"

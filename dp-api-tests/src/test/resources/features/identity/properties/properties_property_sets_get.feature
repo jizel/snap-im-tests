@@ -1,4 +1,4 @@
-Feature: properties_property_sets_get
+Feature: Properties property sets get
 
   Background: 
     Given Database is cleaned

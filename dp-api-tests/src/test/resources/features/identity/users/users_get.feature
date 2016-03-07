@@ -1,4 +1,4 @@
-Feature: Users_get
+Feature: Users get
 
   Background:
     Given Database is cleaned
@@ -11,6 +11,7 @@ Feature: Users_get
 
     Given The password of user "default3" is "Password01"
 
+  @Smoke
   Scenario: Getting user
     When User with username "default1" is got
     Then Response code is "200"

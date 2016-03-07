@@ -1,4 +1,4 @@
-Feature: users_roles_create_update_delete
+Feature: Users roles create update delete
 
   Background:
     Given Database is cleaned
@@ -32,6 +32,7 @@ Feature: users_roles_create_update_delete
     Given Relation between role with name "user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "default1" exists with relationship_type "customer" and entity with code "c1t"
     Given Relation between role with name "user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "default1" exists with relationship_type "property" and entity with code "p1_code"
 
+  @Smoke
   Scenario Outline: Adding role to user
 
     When Role with name "<role_name>" for application id "<application_id>" is added to user with username "<username>" with relationship_type "<relationship_type>" and entity with code "<entity_code>"
@@ -74,15 +75,15 @@ Feature: users_roles_create_update_delete
       | customer | filter_user_roles_rel_name | Uwe       | Filter   | filter_uwe@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
 
     Given The following roles exist
-      | applicationId | roleName               | roleDescription        |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_1 | optional description 1 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_2 | optional description 2 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_3 | optional description 3 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_4 | optional description 4 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_5 | optional description 5 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | filter_user_role_rel_6 | optional description 6 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | other_user_role_rel_2  | optional description 2 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123           | other_user_role_rel_3  | optional description 3 |
+      | applicationId                        | roleName               | roleDescription        |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | filter_user_role_rel_1 | optional description 1 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | filter_user_role_rel_2 | optional description 2 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | filter_user_role_rel_3 | optional description 3 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | filter_user_role_rel_4 | optional description 4 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | filter_user_role_rel_5 | optional description 5 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | filter_user_role_rel_6 | optional description 6 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | other_user_role_rel_2  | optional description 2 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | other_user_role_rel_3  | optional description 3 |
 
 
     Given Relation between role with name "filter_user_role_rel_1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" and user with username "filter_user_roles_rel_name" exists with relationship_type "customer" and entity with code "c1t"

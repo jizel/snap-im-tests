@@ -1,8 +1,9 @@
-Feature: applications_roles_get
+Feature: Applications roles get
 
   Background:
     Given Database is cleaned
 
+  @Smoke
   Scenario: Getting applications roles
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
