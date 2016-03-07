@@ -116,27 +116,41 @@ class PropertyResolver {
         File workspace = project.spacelift.workspace
         String dataPlatformDirectory = project.spacelift.configuration['dataPlatformRepository'].value
 
-        resolveDataPlatformRepositoryLocation(workspace, dataPlatformDirectory)
+        resolveLocation(workspace, dataPlatformDirectory)
     }
 
-    static File resolveDataPlatformRepositoryLocation(String dataPlatformPath) {
+    static File resolveDataPlatformQARepositoryLocation() {
+
+        Project project = new GradleSpaceliftDelegate().project()
+
+        File workspace = project.spacelift.workspace
+        String dataPlatformQADirectory = project.spacelift.configuration['dataPlatformQARepository'].value
+
+        resolveLocation(workspace, dataPlatformQADirectory)
+    }
+
+    static File resolveLocation(String directory) {
         File workspace = new GradleSpaceliftDelegate().project().spacelift.workspace
 
-        resolveDataPlatformRepositoryLocation(workspace, dataPlatformPath)
+        resolveLocation(workspace, directory)
     }
 
-    static File resolveDataPlatformRepositoryLocation(File workspace, String dataPlatformDirectory) {
-        File dataPlatformProject
+    static File resolveLocation(File workspace, String directory) {
+        File resolvedDirectory
 
-        File dataPlatformDir = new File(dataPlatformDirectory)
+        File directoryFile = new File(directory)
 
-        if (dataPlatformDir.isAbsolute()) {
-            dataPlatformProject = dataPlatformDir
+        if (directoryFile.isAbsolute()) {
+            resolvedDirectory = directoryFile
         } else {
-            dataPlatformProject = new File(workspace, dataPlatformDirectory)
+            resolvedDirectory = new File(workspace, directory)
         }
 
-        dataPlatformProject
+        resolvedDirectory
+    }
+
+    static def resolveTsvLoadScriptTemplate() {
+
     }
 
     static def resolveDataPlatformRespositoryCommit(String defaultCommit) {
@@ -274,6 +288,20 @@ class PropertyResolver {
                 .execute().await()
 
         logger.info("Going to use this dp.properties file for API tests")
+        logger.info(output.text)
+
+        output.absolutePath
+    }
+
+    static def resolveTsvLoadScript() {
+
+        File tsvTemplate = new File(resolveDataPlatformQARepositoryLocation(), "fake-tsv-data/template_load.sql")
+
+        File output = Spacelift.task(tsvTemplate, ProcessTemplate)
+                .bindings(["path": resolveDataPlatformQARepositoryLocation().absolutePath])
+                .execute().await()
+
+        logger.info("Going to use this load.sql file for TSV import.")
         logger.info(output.text)
 
         output.absolutePath

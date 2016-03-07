@@ -15,6 +15,7 @@ import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
+import travel.snapshot.qa.test.execution.db.tsv.TsvImporter
 import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
@@ -131,15 +132,12 @@ spacelift {
         platformStop(from: dataPlatform) {
             tests 'platformStop'
         }
-        platformInit(from: dataPlatformTest) {
-            tests 'platformStart', 'platformInit'
-        }
         platformBuild {
             enabledInstallations (dataPlatformRepositories + 'gradle')
             tests 'platformBuild'
         }
         apiTests(from: dataPlatformTest) {
-            tests 'platformStart', 'platformInit', 'apiTests', 'platformStop'
+            tests 'platformStart', 'apiTests', 'platformStop'
         }
         loadTests {
             enabledInstallations loadTestsInstallations
@@ -200,6 +198,7 @@ spacelift {
             execute {
                 new MariaDBDropper(platform).drop(DATABASE_SCHEMES).execute()
                 new MariaDBInitializer(platform).init(DATABASE_SCHEMES).execute()
+                new TsvImporter(platform).execute()
             }
             teardown false
         }
