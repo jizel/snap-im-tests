@@ -1,5 +1,6 @@
 package travel.snapshot.qa.test.execution.load
 
+import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.util.PropertyResolver
 
 class LoadTestsConfiguration {
@@ -11,8 +12,6 @@ class LoadTestsConfiguration {
     static final int DEFAUT_RAMP = 120
 
     private LoadTestEnvironment environment
-
-    private LoadTestsSimulation simulation
 
     private int startUsers = DEFAULT_START_USERS
 
@@ -37,12 +36,12 @@ class LoadTestsConfiguration {
         configuration
     }
 
-    static List<List<LoadTestsSimulation, LoadTestsConfiguration>> parse() {
+    static List<List<?>> parse(DataPlatformTestOrchestration orchestration) {
 
         List<LoadTestsSimulation> simulations = PropertyResolver.resolveLoadTestSimulations()
         LoadTestsConfiguration configuration = parseLoadTestsConfiguration()
 
-        List<List<LoadTestsSimulation, LoadTestsConfiguration>> configurations = []
+        List<List<?>> configurations = []
 
         for (LoadTestsSimulation simulation : simulations) {
             configurations << [simulation, configuration]
@@ -53,11 +52,6 @@ class LoadTestsConfiguration {
 
     LoadTestsConfiguration environment(LoadTestEnvironment environment) {
         this.environment = environment
-        this
-    }
-
-    LoadTestsConfiguration simulation(LoadTestsSimulation simulation) {
-        this.simulation = simulation
         this
     }
 
@@ -80,10 +74,6 @@ class LoadTestsConfiguration {
         environment
     }
 
-    LoadTestsSimulation getSimulation() {
-        simulation
-    }
-
     int getStartUsers() {
         startUsers
     }
@@ -96,8 +86,12 @@ class LoadTestsConfiguration {
         ramp
     }
 
+    String getHost() {
+        host
+    }
+
     @Override
     String toString() {
-        "environment: ${environment}, simulation: ${simulation}, startUsers: ${startUsers}, endUsers: ${endUsers}, ramp: ${ramp}"
+        "environment: ${environment}, startUsers: ${startUsers}, endUsers: ${endUsers}, ramp: ${ramp}"
     }
 }

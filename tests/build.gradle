@@ -12,7 +12,6 @@ import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.api.APITestsExecution
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
-import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.db.tsv.TsvImporter
@@ -20,7 +19,6 @@ import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
-import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
@@ -204,7 +202,6 @@ spacelift {
             execute {
                 new MariaDBDropper(platform).drop(DATABASE_SCHEMES).execute()
                 new MariaDBInitializer(platform).init(DATABASE_SCHEMES).execute()
-                new TsvImporter(platform).execute()
             }
             teardown false
         }
@@ -228,6 +225,12 @@ spacelift {
         // API tests
 
         apiTests(inherits: reportableTest) {
+            beforeSuite {
+
+                // TODO skip importing when already imported from the previous run
+
+                new TsvImporter(platform).execute()
+            }
             beforeTest {
                 new DataPlatformBuildExecutor()
                         .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
@@ -246,23 +249,24 @@ spacelift {
 
         loadTests(inherits: reportableTest) {
             data {
-                LoadTestsConfiguration.parse()
+                LoadTestsConfiguration.parse(platform)
             }
-            execute { List<LoadTestsSimulation, LoadTestsConfiguration> data ->
+            execute { List data ->
                 new LoadTestsExecution(platform)
-                        .simulation(data.get(0))
-                        .configuration(data.get(1))
+                        .simulation((LoadTestsSimulation) data.get(0))
+                        .configuration((LoadTestsConfiguration) data.get(1))
                         .execute()
-            }
-            afterTest { data ->
-                // save Gatling reports
             }
         }
         loadTestsDeployment {
             execute {
-                new DataPlatformBuildExecutor().build(LoadTestsModuleParser.parse()).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor()
+                        .build(LoadTestsModuleParser.parse())
+                        .execute(forceDataPlatformBuild)
 
-                new DataPlatformDeployer(platform).deploy(LoadTestsModuleParser.parse()).execute()
+                new DataPlatformDeployer(platform)
+                        .deploy(LoadTestsModuleParser.parse())
+                        .execute()
             }
         }
     }

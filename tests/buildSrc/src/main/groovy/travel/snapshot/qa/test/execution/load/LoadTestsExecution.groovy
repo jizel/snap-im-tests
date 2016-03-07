@@ -6,6 +6,8 @@ import org.arquillian.spacelift.gradle.maven.MavenExecutor
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.DataPlatformTestOrchestration
+import travel.snapshot.qa.docker.ServiceType
+import travel.snapshot.qa.util.PropertyResolver
 
 class LoadTestsExecution {
 
@@ -44,23 +46,43 @@ class LoadTestsExecution {
             throw new IllegalStateException("Load test simulation was not set.")
         }
 
-        logger.info("Load test configuration to be used: {}, Load test simulation to be used: {}", configuration, simulation)
-
-        Spacelift.task(MavenExecutor).pom(projectPom)
+        MavenExecutor mavenExecutor = Spacelift.task(MavenExecutor).pom(projectPom)
                 .goal("clean")
                 .goal("test")
                 .goal("gatling:execute")
+                .property("gatling.failOnError=false")
+                .property("gatling.resultsFolder=${getResultsDir(simulation)}")
+                .property("gatling.debugPort=8001")
+                .property("gatling.simulationClass=${simulation}")
                 .property("environment=${configuration.environment}")
-                .property("gatling.simulation=${simulation}")
                 .property("startUsers=${configuration.startUsers}")
                 .property("endUsers=${configuration.endUsers}")
                 .property("ramp=${configuration.ramp}")
-                .execute()
-                .await()
+
+        String host = PropertyResolver.resolveLoadTestHost()
+
+        if (host) {
+            mavenExecutor.property("host=${host}")
+        }
+
+        if (!host && PropertyResolver.resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
+            // this happens when we are running against Docker AND we have not set 'loadTestHost' property
+            // in such case we will resolve Tomcat container IP, both for HOST and MACHINE cases
+            mavenExecutor.property("host=${PropertyResolver.resolveContainerIP(ServiceType.TOMCAT.name().toLowerCase(), orchestration.get())}")
+        }
+
+        mavenExecutor.execute().await()
     }
 
     private def getProjectDir() {
         new File(workspace, "dataplatformqa/load_tests").absolutePath
+    }
+
+    private def getResultsDir(LoadTestsSimulation simulation) {
+
+        def reportDirName = simulation.toString().split("\\.").last()
+
+        new File(workspace, "reports/load_tests/${reportDirName}").absolutePath
     }
 
     private def getProjectPom() {

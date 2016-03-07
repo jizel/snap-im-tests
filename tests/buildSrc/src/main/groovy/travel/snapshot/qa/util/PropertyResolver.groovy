@@ -161,10 +161,6 @@ class PropertyResolver {
         resolvedDirectory
     }
 
-    static def resolveTsvLoadScriptTemplate() {
-
-    }
-
     static def resolveDataPlatformRespositoryCommit(String defaultCommit) {
         System.getProperty("dataPlatformRepositoryCommit", defaultCommit)
     }
@@ -305,6 +301,14 @@ class PropertyResolver {
         output.absolutePath
     }
 
+    static def resolveContainerIP(String containerId, DataPlatformOrchestration orchestration) {
+        if (resolveDockerMode() == DockerMode.MACHINE) {
+            return DockerMachineHelper.getIp(resolveDockerMachine())
+        }
+
+        orchestration.inspectIP(containerId)
+    }
+
     static def resolveTsvLoadScript() {
 
         File tsvTemplate = new File(resolveDataPlatformQARepositoryLocation(), "fake-tsv-data/template_load.sql")
@@ -313,8 +317,8 @@ class PropertyResolver {
                 .bindings(["path": resolveDataPlatformQARepositoryLocation().absolutePath])
                 .execute().await()
 
-        logger.info("Going to use this load.sql file for TSV import.")
-        logger.info(output.text)
+        logger.debug("Going to use this load.sql file for TSV import.")
+        logger.debug(output.text)
 
         output.absolutePath
     }
@@ -352,7 +356,7 @@ class PropertyResolver {
         List<String> loadTestsTestExecutions
 
         if (resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
-            loadTestsTestExecutions = [ 'platformStart', 'platformInit', 'loadTestsDeployment', 'loadTests', 'platformStop' ]
+            loadTestsTestExecutions = [ 'platformStart', 'loadTestsDeployment', 'loadTests', 'platformStop' ]
         } else {
             loadTestsTestExecutions = [ 'loadTests' ]
         }
@@ -396,6 +400,10 @@ class PropertyResolver {
 
     static int resolveLoadTestRamp() {
         Integer.parseInt(System.getProperty("loadTestRamp", Integer.toString(LoadTestsConfiguration.DEFAUT_RAMP)))
+    }
+
+    static String resolveLoadTestHost() {
+        System.getProperty("loadTestHost")
     }
 
     // Execution modes
