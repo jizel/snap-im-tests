@@ -204,3 +204,4 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
         }.isEmpty()
     }
 }
+
