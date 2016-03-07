@@ -25,7 +25,7 @@ public class MongoDBDockerManager extends DockerServiceManager<MongoDBManager> {
     @Override
     public Cube start(final String containerId) {
         final Task<MongoDBManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), MongoDBStartCheckTask.class);
-        return super.start(checkingTask, containerId, serviceManager.getConfiguration().getStartupTimeoutInSeconds(), 10);
+        return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveMongoDBConnectionTimeout(serviceManager.getConfiguration()), 10);
     }
 
     @Override
