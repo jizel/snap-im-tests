@@ -421,6 +421,7 @@ public class BasicSteps {
         return Serenity.<T>sessionVariableCalled(key);
     }
 
+    @Step
     public <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Throwable {
         Response response = getSessionResponse();
         List<T> objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));

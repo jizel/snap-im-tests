@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
+import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
@@ -15,6 +16,7 @@ public class ReviewMultipropertyCustomerSteps extends AnalyticsBaseSteps {
         spec.basePath(BASE_PATH_CUSTOMER);
     }
 
+    @Step
     public void getCustomerPropertiesMetric(String metric, String customerCode, String since, String until, String granularity, String limit, String cursor) {
         CustomerSteps customerStep = new CustomerSteps();
         Customer customer = customerStep.getCustomerByCodeInternal(customerCode);

@@ -1,4 +1,4 @@
-Feature: review
+Feature: Review
   Testing of api for review modul alias trip_advisor with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
   data in db are mostly increasing some of the data also includes nulls
 
@@ -82,7 +82,7 @@ Feature: review
       | /analytics/rating_score | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/rating_score | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
-
+  @Smoke
   Scenario Outline: Get specific analytics data from API for a given granularity of more complex endpoints
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
@@ -105,7 +105,7 @@ Feature: review
       | /analytics/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
-
+  @Smoke
   Scenario Outline: Checking data corectness for analitics for analytics
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     And Response code is "200"

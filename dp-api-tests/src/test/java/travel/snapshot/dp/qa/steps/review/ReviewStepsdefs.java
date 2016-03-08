@@ -263,10 +263,9 @@ public class ReviewStepsdefs {
         reviewTravelersSteps.getDataForSpecificTraveler(url, traveler, granularity, propertyId, since, until);
     }
 
-
     @Then("^Response contains correct granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")
     public void responseContainsCorrectGranularityBetweenAnd(String granularity, String since, String until) throws Throwable {
-        reviewSteps.responseContainsCorrectValuesFor(granularity, since, until);
+        reviewSteps.responseContainsCorrectDateRangeFor(granularity, since, until);
     }
 
     @When("^Get review \"([^\"]*)\" data with \"([^\"]*)\" granularity with since \"([^\"]*)\" until \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")

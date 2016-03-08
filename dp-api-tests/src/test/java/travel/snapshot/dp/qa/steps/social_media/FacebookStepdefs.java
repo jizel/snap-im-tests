@@ -42,8 +42,8 @@ public class FacebookStepdefs {
         facebookSteps.getPropertiesWithPaging("/social_media" + url, propertyId, limit, cursor);
     }
 
-    @Then("^Response contains (\\d+) values of facebook data$")
-    public void responseContainsCountValuesOfFacebookData(int count) throws Throwable {
+    @Then("^Response contains (\\d+) amount of values for global stats dto$")
+    public void responseContainsCountValuesOfGlobaStatsDto(int count) throws Throwable {
         facebookSteps.checkAnalyticsReturnedForType(
                 t -> assertThat(t.getData(), everyItem(hasProperty("values", hasSize(count)))),
                 GlobalStatsDto.class);
