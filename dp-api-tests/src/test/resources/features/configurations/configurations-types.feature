@@ -1,4 +1,4 @@
-Feature: configuration_types
+Feature: Configurations types create update delete
 
   #TODO add etag things to get/update/create
 
@@ -12,7 +12,8 @@ Feature: configuration_types
       | with_items_conf_id_1 | Description of configuration identifier 1 with items |
       | with_items_conf_id_2 | Description of configuration identifier 2 with items |
 
-  Scenario: Creating Configuration Type POST /configuration/configurations
+  @Smoke
+  Scenario: Creating Configuration Type
     When Configuration type is created
       | identifier        | description                                       |
       | created_conf_id_1 | Description of created configuration identifier 1 |
@@ -31,6 +32,7 @@ Feature: configuration_types
       | { "description":"identifier is missing"}                           | POST   | 400        | 53          |
       | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 400        | 62          |
 
+  @Smoke
   Scenario: Deleting Configuration Type
     When Configuration type with identifier "conf_id_1" is deleted
     Then Response code is "204"
@@ -53,7 +55,6 @@ Feature: configuration_types
     Examples:
       | description         |
       | updated description |
-      |                     |
 
   Scenario: Updating description of nonexisting configuration type
     Given Configuration type with identifier "nonexisting_id" doesn't exist
@@ -63,12 +64,12 @@ Feature: configuration_types
 
   #error states
   #empty body, wrong id, wrong application id
+  @Smoke
   Scenario: Getting configuration type
     When Configuration type with with identifier "with_items_conf_id_1"  is got
     Then Response code is "200"
     And Content type is "application/json"
     And Body contains configuration type with identifier "with_items_conf_id_1" and description "Description of configuration identifier 1 with items"
-
 
   Scenario: Getting configuration type with nonexisting id
     When Configuration type with with identifier "nonexisting_id"  is got
@@ -147,15 +148,15 @@ Feature: configuration_types
     And Link header is '<link_header>'
 
     Examples:
-      | limit | cursor | returned | link_header                                                                                      |
-      | /null |        | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
-      | /null | /null  | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
-      |       |        | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
-      |       | /null  | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                 |
-      | 15    |        | 15       | </configurations?limit=15&cursor=15>; rel="next"                                                 |
+      | limit | cursor | returned | link_header                                                                                       |
+      | /null |        | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                  |
+      | /null | /null  | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                  |
+      |       |        | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                  |
+      |       | /null  | 50       | </configurations?limit=50&cursor=50>; rel="next"                                                  |
+      | 15    |        | 15       | </configurations?limit=15&cursor=15>; rel="next"                                                  |
       |       | 1      | 50       | </configurations?limit=50&cursor=0>; rel="prev", </configurations?limit=50&cursor=51>; rel="next" |
-      | 20    | 0      | 20       | </configurations?limit=20&cursor=20>; rel="next"                                                 |
-      | 10    | 0      | 10       | </configurations?limit=10&cursor=10>; rel="next"                                                 |
+      | 20    | 0      | 20       | </configurations?limit=20&cursor=20>; rel="next"                                                  |
+      | 10    | 0      | 10       | </configurations?limit=10&cursor=10>; rel="next"                                                  |
       | 5     | 10     | 5        | </configurations?limit=5&cursor=5>; rel="prev", </configurations?limit=5&cursor=15>; rel="next"   |
 
   #given hodne hodnot, aby se dalo testovat
@@ -217,4 +218,4 @@ Feature: configuration_types
       | 5     | 2      | 3        | key=='other_key*'               |           | user_name | other_key_9, other_key_8, other_key_7                             |
       | /null | /null  | 1        | key==known_key_3                | /null     | /null     | known_key_3                                                       |
       | /null | /null  | 2        | key==list_key_* and value==same | key       | /null     | list_key_5, list_key_6                                            |
-      | /null | /null  | 1        | value==special                  | /null     | /null     | other_key_10                                                  |
+      | /null | /null  | 1        | value==special                  | /null     | /null     | other_key_10                                                      |

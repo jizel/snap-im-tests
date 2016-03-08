@@ -1,4 +1,4 @@
-Feature: configuration
+Feature: Configurations create update delete
 
   #TODO add etag things to get/update/create
 
@@ -57,6 +57,7 @@ Feature: configuration
   #missing application
   #no key, empty key, wrong value
   #create already created
+  @Smoke
   Scenario: delete configuration key:value
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key              | value      | type   |
