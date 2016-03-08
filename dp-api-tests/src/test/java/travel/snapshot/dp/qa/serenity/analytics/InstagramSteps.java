@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
+import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.api.analytics.model.MetricDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -26,6 +27,7 @@ public class InstagramSteps extends AnalyticsBaseSteps {
      *
      * @param expected list of values that each is unique
      */
+    @Step
     public void checkListofValuesFromResponse(List<Integer> expected) {
         Response response = getSessionResponse();
         GlobalStatsDto actual = response.body().as(GlobalStatsDto.class);

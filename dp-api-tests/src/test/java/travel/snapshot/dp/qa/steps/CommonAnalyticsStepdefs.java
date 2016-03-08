@@ -42,7 +42,7 @@ public class CommonAnalyticsStepdefs {
 
     @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")
     public void Response_contains_correct_number_of_values_for_granularity_between_and(String granularity, String since, String until) throws Throwable {
-        analyticsBaseSteps.responseContainsCorrectValuesFor(granularity, since, until);
+        analyticsBaseSteps.responseContainsCorrectDateRangeFor(granularity, since, until);
     }
 
     @Then("^Response contains (\\d+) values in data enclosure$")

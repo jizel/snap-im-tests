@@ -1,4 +1,4 @@
-Feature: review_multiproperty_customer_property
+Feature: Review multiproperty customer property
   #TODO add paging tests - currently paging is only prepared but not implemented
   #TODO request with invalid access token ?
 
@@ -158,7 +158,7 @@ Feature: review_multiproperty_customer_property
       | overall_bubble_rating | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
       | overall_bubble_rating | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
 
-
+  @Smoke
   Scenario Outline: Checking data corectness for popularity_index_rank
     When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"

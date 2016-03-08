@@ -1,4 +1,4 @@
-Feature: review_locaitons
+Feature: Review locaitons
   Testing of api for review locations with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
 
   Background:
@@ -99,6 +99,7 @@ Feature: review_locaitons
   #/location/<property>
   #---------------------------------------------------------------------------------------------------------------------
 
+  @Smoke
   Scenario Outline: Getting location id for correct property id
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "200"

@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
+import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.api.review.model.LocationDto;
 import travel.snapshot.dp.api.review.model.LocationPropertyDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -19,11 +20,13 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
         spec.basePath(BASE_PATH_LOCATIONS);
     }
 
+    @Step
     public void listOfLocationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
 
+    @Step
     public void locationNamesAreInResponseInOrder(List<String> names) {
         Response response = getSessionResponse();
         LocationDto[] locations = response.as(LocationDto[].class);
@@ -34,11 +37,13 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
         }
     }
 
+    @Step
     public void listOfLocationPropertiesIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String id) {
         Response response = getSecondLevelEntities(id, "properties", limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
 
+    @Step
     public void locationPropertiesAreInResponseInOrder(List<String> ids) {
         Response response = getSessionResponse();
         LocationPropertyDto[] properties = response.as(LocationPropertyDto[].class);

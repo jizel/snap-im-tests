@@ -93,9 +93,4 @@ public class SocialMediaStepdefs {
     public void responseUntilIsForGranularity(String value, String granularity) throws Throwable {
         steps.dateFieldIs("until", value, granularity);
     }
-
-    @Then("^The metric count list is <count>$")
-    public void theMetricCountListIsCount() throws Throwable {
-
-    }
 }

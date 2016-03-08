@@ -1,4 +1,4 @@
-Feature: review_multiproperty_property_set
+Feature: Review multiproperty property set
   GET /review/analytics/property_set/{property_set_id}/popularity_index_rank
   Returns popularity index rank statistics for the given time period aggregated for the specified property set.
   #TODO add paging tests - currently paging is only prepared but not implemented
@@ -180,6 +180,7 @@ Feature: review_multiproperty_property_set
       | popularity_index_rank | /multiproperty/customer/popularity_index_week.json  | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
       | popularity_index_rank | /multiproperty/customer/popularity_index_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 
+  @Smoke
   Scenario Outline: Checking data corectness for aspects_of_business
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"

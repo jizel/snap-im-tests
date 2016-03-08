@@ -167,7 +167,8 @@ public class AnalyticsBaseSteps extends BasicSteps {
         assertEquals(expectedDate, actualDate);
     }
 
-    public void responseContainsCorrectValuesFor(String granularity, String since, String until) {
+    @Step
+    public void responseContainsCorrectDateRangeFor(String granularity, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
 

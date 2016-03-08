@@ -1,4 +1,4 @@
-Feature: review_multiproperty_single_property
+Feature: Review multiproperty single property
   GET /review/analytics/property/{property_id}/popularity_index_rank
   Returns popularity index rank statistics for the given time period for the specified property.
   #TODO add paging tests - currently paging is only prepared but not implemented
@@ -164,6 +164,7 @@ Feature: review_multiproperty_single_property
       | number_of_reviews | /multiproperty/property/number_of_reviews_week.json  | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | number_of_reviews | /multiproperty/property/number_of_reviews_month.json | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
+  @Smoke
   Scenario Outline: Checking data corectness for overall_bubble_rating
     When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
     Then Response code is "200"
