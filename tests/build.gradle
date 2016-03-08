@@ -59,8 +59,8 @@ spacelift {
             value {
                 [
                         "docker.snapshot.travel:5000/snapshot/tomcat:8.0.32",
-                        "docker.snapshot.travel:5000/snapshot/mariadb:10.1.11",
-                        "docker.snapshot.travel:5000/snapshot/mongodb:3.2.1",
+                        "docker.snapshot.travel:5000/snapshot/mariadb:10.1.12",
+                        "docker.snapshot.travel:5000/snapshot/mongodb:3.2.3",
                         "docker.snapshot.travel:5000/snapshot/activemq:5.12.3"
                 ]
             }
