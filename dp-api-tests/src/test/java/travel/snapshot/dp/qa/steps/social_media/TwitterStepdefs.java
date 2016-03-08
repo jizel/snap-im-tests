@@ -1,8 +1,6 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
@@ -60,13 +58,19 @@ public class TwitterStepdefs {
         steps.responseContainsObjectsAllWithPropertyAndValues("data_owners", Arrays.asList(new String[]{owner}));
     }
 
-    @And("^Records are sorted ascendingly by \"([^\"]*)\" of type \"([^\"]*)\"$")
+    @Then("^Records are sorted ascendingly by \"([^\"]*)\" of type \"([^\"]*)\"$")
     public void recordsAreSortedAscendinglyByOfType(String property, @Transform(ClassStringConverter.class) Class<?> type) throws Throwable {
         steps.listOfObjectsAreSortedAccordingToProperty(property, true, type);
     }
 
-    @And("^Records are sorted descendingly by \"([^\"]*)\" of type \"([^\"]*)\"$")
+    @Then("^Records are sorted descendingly by \"([^\"]*)\" of type \"([^\"]*)\"$")
     public void recordsAreSortedDecendinglyByOfType(String property, @Transform(ClassStringConverter.class) Class<?> type) throws Throwable {
         steps.listOfObjectsAreSortedAccordingToProperty(property, false, type);
     }
+
+    @Then("^There are (\\d+) Twitter posts returned$")
+    public void There_are_count_posts_returned(int count) throws Throwable {
+        steps.numberOfTwitterPostsinResponse(count);
+    }
+
 }

@@ -96,7 +96,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void responseContainsObjectsAllWithPropertyAndValues(String property, List<String> values) {
-        List responseList = getSessionResponse().as(List.class);
+        List responseList = getSessionResponse().jsonPath().get("resultList");
 
         for (Object record : responseList) {
             List dataOwners = (List) ((Map) record).get(property);
@@ -106,10 +106,16 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void listOfObjectsAreSortedAccordingToProperty(String property, boolean ascending, Class propertyClassType) {
-
         if (property == null || property.isEmpty()) {
             throw new IllegalArgumentException("Property ID must not be a null object.");
         }
+        List values = getSessionResponse().body().jsonPath().getList(property, propertyClassType);
+
+        listOfObjectsAreSortedAccordingToProperty(values, ascending, propertyClassType);
+    }
+
+    @Step
+    public void listOfObjectsAreSortedAccordingToProperty(List values, boolean ascending, Class propertyClassType) {
 
         if (propertyClassType == null) {
             throw new IllegalArgumentException("Property class type can not be a null object.");
@@ -131,8 +137,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
         if (equalityPredicate == null) {
             throw new IllegalArgumentException(String.format("Unable to resolve equality predicate from property of class type %s.", propertyClassType.getName()));
         }
-
-        List values = getSessionResponse().body().jsonPath().getList(property, propertyClassType);
 
         for (int i = 0; i < values.size() - 1; i++) {
             assertTrue("\nValue at index " + i + ": " + values.get(i) + "\nValue at index " + (i + 1) + ": " + values.get(i + 1),

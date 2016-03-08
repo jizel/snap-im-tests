@@ -1,405 +1,306 @@
-Feature: twitter_metrics
+Feature: Twitter metrics
+  Testing of api for twitter with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
 
-  #Testing of api for twitter with mock data in db - testing property id is "99999999-9999-4999-a999-999999999999"
-  #data in db are increasing for all metrics, inserted to db according to following pattern:
   Scenario Outline: Get twitter analytics data from API for a given wrong granularity
-    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <responce_code>
-    And Custom code is "<custom_code>"
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "today" until "today"
+    Then Response code is 400
+    And Content type is "application/json"
+    And Custom code is "63"
 
-    Examples: 
-      | url                                 | granularity | responce_code | custom_code | property                             | since      | until      | content_type     |
-      | /analytics/twitter                  | dd          | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/number_of_tweets | mm          | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/engagement       | yy          | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/followers        | 1dd         | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/impressions      | m1n         | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/reach            | 444         | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/retweets         | 6655665     | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/retweet_reach    | MONTH1      | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/mentions         | DAY3        | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
-      | /analytics/twitter/mention_reach    | WEEKs1      | 400           | 63          | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json |
+    Examples:
+      | url                                 | granularity | property                             |
+      | /analytics/twitter                  | dd          | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | mm          | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | yy          | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | 1dd         | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | m1n         | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | 444         | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | 6655665     | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | MONTH1      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | DAY3        | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | WEEKs1      | 99000099-9999-4999-a999-999999999999 |
 
+    #todo numbers
+  @Smoke
   Scenario Outline: Validate that metrics have valid value in the db
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <responce_code>
+    Then Response code is 200
+    And Content type is "application/json"
     And The metric count is <count>
+    And Body contains entity with attribute "granularity" value "<granularity>"
 
-    Examples: 
-      | url                                 | granularity | count | since      | until      | property                             | responce_code | content_type     |
-      | /analytics/twitter/number_of_tweets | day         | 801   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         | 701   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         | 7010  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         | 2103  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | day         | 3505  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | day         | 1402  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | day         | 701   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | day         | 1001  | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | day         | 751   | 2015-12-03 | 2015-12-03 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | week        | 811   | 2015-12-05 | 2015-12-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | week        | 711   | 2015-12-06 | 2015-12-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | week        | 7110  | 2015-12-06 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | week        | 2133  | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | week        | 3555  | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | week        | 1422  | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | week        | 711   | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | week        | 1011  | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | week        | 761   | 2015-12-07 | 2015-12-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | month       | 798   | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | month       | 698   | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | month       | 6980  | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | month       | 2094  | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | month       | 3490  | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | month       | 1396  | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | month       | 698   | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | month       | 998   | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | month       | 748   | 2015-11-01 | 2015-12-08 | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+    Examples:
+      | url                                 | granularity | count | since      | until      | property                             |
+      | /analytics/twitter/number_of_tweets | day         | 7697  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | day         | 7745  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | day         | 7462  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | day         | 7506  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | day         | 7167  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | day         | 7521  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | day         | 7394  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | day         | 7487  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | day         | 7741  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/number_of_tweets | week        | 7924  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | week        | 7944  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | week        | 7668  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | week        | 7719  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | week        | 7359  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | week        | 7782  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | week        | 7627  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | 7737  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | week        | 7958  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/number_of_tweets | month       | 7623  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | month       | 7674  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | month       | 7387  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | month       | 7411  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | month       | 7073  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | month       | 7451  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | month       | 7301  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | month       | 7431  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | 7672  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+
+  @Smoke
+  Scenario Outline: Validate that metrics have valid value in the db for all metrics
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains "<count>" values of global stats dto
+
+    Examples:
+      | url                | granularity | count                                                | since      | until      | property                             |
+      | /analytics/twitter | day         | 7167, 7394, 7462, 7487, 7506, 7521, 7697, 7741, 7745 | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | week        | 7359, 7627, 7668, 7719, 7737, 7782, 7924, 7944, 7958 | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | month       | 7073, 7301, 7387, 7411, 7431, 7451, 7623, 7672, 7674 | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity for overall twitter metrics
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is <responce_code>
-    And Content type is "<content_type>"
-    And Data is owned by "<data_owner>"
-    And Body contains entity with attribute "since" value "<real_since>"
-    And Body contains entity with attribute "until" value "<real_until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "twitter"
     And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
     And Response contains <count> values for all metrics
 
-    Examples: 
-      | url                | granularity | count | since      | until      | real_since | real_until | property                             | responce_code | content_type     | data_owner |
-      | /analytics/twitter | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | day         | 17    | 2015-11-07 | 2015-11-23 | 2015-11-07 | 2015-11-23 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | day         | 185    | 2015-06-06 | 2015-12-07 | 2015-06-06 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | week        | 45    | 2015-01-07 | 2015-11-30 | 2015-01-19 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
+    Examples:
+      | url                | granularity | count | since             | until | real_since        | real_until | property                             |
+      | /analytics/twitter | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
 
   Scenario Outline: Get specific analytics data from API for a given granularity for particular twitter metric
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is <responce_code>
-    And Content type is "<content_type>"
-    And Data is owned by "<data_owner>"
-    And Body contains entity with attribute "since" value "<real_since>"
-    And Body contains entity with attribute "until" value "<real_until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "twitter"
     And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
     And Response contains <count> values
 
-    Examples: 
-      | url                                 | granularity | count | since      | until      | real_since | real_until | property                             | responce_code | content_type     | data_owner |
-      | /analytics/twitter/number_of_tweets | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | day         | 1     | 2015-12-07 | 2015-12-07 | 2015-12-07 | 2015-12-07 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | day         | 11    | 2015-11-03 | 2015-11-13 | 2015-11-03 | 2015-11-13 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | day         | 365   | 2014-01-01 | 2016-01-14 | today | 2016-01-14 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | week        | 1     | 2015-11-08 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | week        | 1     | 2015-11-09 | 2015-11-16 | 2015-11-09 | 2015-11-15 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | week        | 3     | 2015-11-07 | 2015-11-30 | 2015-11-09 | 2015-11-29 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | week        | 51    | 2014-01-01 | 2016-01-14 | 2015-01-19 | 2016-01-10 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | month       | 1     | 2015-11-01 | 2015-11-30 | 2015-11-01 | 2015-11-30 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | month       | 1     | 2015-02-01 | 2015-03-23 | 2015-02-01 | 2015-02-28 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/number_of_tweets | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/engagement       | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/followers        | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/impressions      | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/reach            | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweets         | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/retweet_reach    | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mentions         | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
-      | /analytics/twitter/mention_reach    | month       | 11    | 2014-01-01 | 2016-01-14 | 2015-02-01 | 2015-12-31 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | twitter    |
+    Examples:
+      | url                                 | granularity | count | since             | until | real_since        | real_until | property                             |
+      | /analytics/twitter/number_of_tweets | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/number_of_tweets | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/engagement       | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/followers        | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/impressions      | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/reach            | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/retweets         | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/retweet_reach    | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/mentions         | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/mention_reach    | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Getting non-existent analytics data
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is <response_code>
+    Then Response code is 404
     And Body is empty
 
-    Examples: 
-      | url                            | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/twitter/not_present | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
+    Examples:
+      | url                            | granularity | property                             | since      | until      |
+      | /analytics/twitter/not_present | day         | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
 
   Scenario Outline: Getting miss mached non-existent analytics data
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is <response_code>
+    Then Response code is 404
     And Body is empty
 
-    Examples: 
-      | url                      | granularity | property                             | since      | until      | content_type     | response_code | custom_code |
-      | /analytics/twitter/posts | day         | 99999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | application/json | 404           | 151         |
+    Examples:
+      | url                      | granularity | property                             | since      | until      |
+      | /analytics/twitter/posts | day         | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
 
   Scenario Outline: Checking error codes for analytics data
     When Get twitter "<url>" with missing property header
-    Then Response code is <response_code>
-    And Custom code is "<custom_code>"
+    Then Response code is 400
+    And Custom code is "52"
 
-    Examples: 
-      | url                                 | response_code | custom_code |
-      | /analytics/twitter                  | 400           | 52          |
-      | /analytics/twitter/number_of_tweets | 400           | 52          |
-      | /analytics/twitter/engagement       | 400           | 52          |
-      | /analytics/twitter/followers        | 400           | 52          |
-      | /analytics/twitter/impressions      | 400           | 52          |
-      | /analytics/twitter/reach            | 400           | 52          |
-      | /analytics/twitter/retweets         | 400           | 52          |
-      | /analytics/twitter/retweet_reach    | 400           | 52          |
+    Examples:
+      | url                                 |
+      | /analytics/twitter                  |
+      | /analytics/twitter/number_of_tweets |
+      | /analytics/twitter/engagement       |
+      | /analytics/twitter/followers        |
+      | /analytics/twitter/impressions      |
+      | /analytics/twitter/reach            |
+      | /analytics/twitter/retweets         |
+      | /analytics/twitter/retweet_reach    |
+      | /analytics/twitter/mentions         |
+      | /analytics/twitter/mention_reach    |
 
   Scenario Outline: Get analytics data from API with missing parameters
-    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is <responce_code>
-    And Content type is "<content_type>"
-    And Response contains <count> values
+    When Get twitter "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Body contains entity with attribute "granularity" value "<expected_granularity>"
 
-    Examples: 
-      | url                                 | granularity | since           | until      | count | property                             | responce_code | content_type     |
-      | /analytics/twitter/number_of_tweets |             | 2015-12-03      | 2015-12-03 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         |                 | 2015-12-03 | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         | today - 30 days |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            |             |                 |            | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         |             | 2015-11-09      | 2015-11-22 | 14    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    |             | 2015-12-02      | 2015-12-02 | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+    Examples:
+      | url                                 | granularity | expected_granularity | since           | until      |
+      | /analytics/twitter/number_of_tweets |             | day                  | 2015-12-03      | 2015-12-03 |
+      | /analytics/twitter/engagement       | week        | week                 | 2015-12-03      |            |
+      | /analytics/twitter/followers        | month       | month                |                 | today      |
+      | /analytics/twitter/impressions      | day         | day                  | today - 1 month |            |
+
 
   Scenario Outline: Get analytics data from API from 1800s
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <responce_code>
-    And Body contains entity with attribute "since" value "<real_since>"
-    And Body contains entity with attribute "until" value "<real_until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains 0 values
 
-    Examples: 
-      | url                                 | granularity | since      | until      | property                             | responce_code | content_type     | real_since | real_until |
-      | /analytics/twitter                  | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/number_of_tweets | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/engagement       | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/followers        | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/impressions      | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/reach            | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/retweets         | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter/retweet_reach    | month       | 1888-09-01 | 1890-10-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | 2015-02-01 | 1890-09-30 |
-      | /analytics/twitter                  | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/number_of_tweets | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/engagement       | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/followers        | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/impressions      | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/reach            | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/retweets         | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
-      | /analytics/twitter/retweet_reach    | day         | 1888-09-01 | 1888-09-01 | 99999999-9999-4999-a999-999999999999 | 200           | application/json | today | 1888-09-01 |
+    Examples:
+      | url                                 | granularity | since      | until      | property                             |
+      | /analytics/twitter/number_of_tweets | month       | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | day         | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | week        | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | month       | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | day         | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | week        | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | month       | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
 
-  Scenario Outline: Checking default parameter values
-    Empty column in examples section means default value will be used for this parameter.
-    if text is empty, returns null
-    if text is date in ISO format (2015-02-01), it returns this date
-    text can contain keywords: 'today' and operations '+-n days', '+-n weeks', '+-n months' which will add or substract
-    particular number of days/weeks/months from first part of expression
-
+  Scenario Outline: Get analytics data from API from 1800s
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <responce_code>
-    And Response granularity is "<expected_granularity>"
-    And Response since is "<expected_since>"
-    And Response until is "<expected_until>"
-    And Response contains <count> values
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains 0 values in data enclosure
 
-    Examples: 
-      | url                                 | granularity | since          | until             | expected_granularity | expected_since    | expected_until | count | property                             | responce_code | content_type     |
-      | /analytics/twitter/number_of_tweets |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/number_of_tweets | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         |             |                |                   | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | day         |                | today             | day                  | today - 30 days   | today          | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | day         | today          |                   | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | week        |                | today             | week                 | today - 13 weeks  | today          | 13    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | week        | today          |                   | week                 | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | month       |                | today             | month                | today - 6 months  | today          | 6     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | month       | today          |                   | month                | today             | today          | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | day         | today          | today - 100 days  | day                  | today - 90 days   | today          | 91    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | week        | today          | today - 30 weeks  | week                 | today - 26 weeks  | today          | 26    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | month       | today          | today - 40 months | month                | today - 36 months | today          | 36    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 1     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+    Examples:
+      | url                | granularity | since      | until      | property                             |
+      | /analytics/twitter | month       | 1888-09-01 | 1890-10-01 | 99000099-9999-4999-a999-999999999999 |
 
-  Scenario Outline: Checking number of values in response for various granularities
+  Scenario Outline: Get analytics data with wrong time interval
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Content type is "<content_type>"
-    And Response code is <responce_code>
-    And Response contains <count> values
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains 0 values
 
-    Examples: 
-      | url                                 | granularity | since           | until | count | property                             | responce_code | content_type     |
-      | /analytics/twitter/number_of_tweets | day         | today - 1 day   | today | 2     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/engagement       | day         | today - 6 days  | today | 7     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/followers        | day         | today - 7 days  | today | 8     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/impressions      | day         | today - 8 days  | today | 9     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/reach            | day         | today - 29 days | today | 30    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweets         | day         | today - 30 days | today | 31    | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/retweet_reach    | week        | today           | today | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mentions         | week        | today           | today | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
-      | /analytics/twitter/mention_reach    | week        | today           | today | 0     | 99999999-9999-4999-a999-999999999999 | 200           | application/json |
+    Examples:
+      | url                                 | granularity | since | until            | property                             |
+      | /analytics/twitter/number_of_tweets | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | week        | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | month       | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | week        | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | month       | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+
+  Scenario Outline: Get analytics data with wrong time interval
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains 0 values in data enclosure
+
+    Examples:
+      | url                | granularity | since | until            | property                             |
+      | /analytics/twitter | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |

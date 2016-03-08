@@ -5,6 +5,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.api.socialmedia.model.TwitterPost;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.SocialMediaSteps;
 
@@ -81,7 +82,7 @@ public class SocialMediaStepdefs {
 
     @Then("^There are (\\d+) posts returned$")
     public void There_are_count_posts_returned(int count) throws Throwable {
-        steps.numberOfEntitiesInResponse(Map.class, count);
+        steps.numberOfEntitiesInResponse(TwitterPost.class, count);
     }
 
     @Then("^Response since is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
