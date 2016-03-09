@@ -25,7 +25,7 @@ public class ActiveMQDockerManager extends DockerServiceManager<ActiveMQManager>
     @Override
     public Cube start(String containerId) {
         final Task<ActiveMQManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), ActiveMQStartedCheckTask.class);
-        return super.start(checkingTask, containerId, serviceManager.getConfiguration().getStartupTimeoutInSeconds(), 5);
+        return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveActiveMQConnectionTimeout(serviceManager.getConfiguration()), 5);
     }
 
     @Override

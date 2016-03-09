@@ -25,10 +25,10 @@ public class TomcatDockerManager extends DockerServiceManager<TomcatManager> {
 
         if (super.checkingTask == null) {
             final Task<TomcatManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), TomcatStartedCheckTask.class);
-            return super.start(checkingTask, containerId, serviceManager.getConfiguration().getStartupTimeoutInSeconds(), 5);
+            return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveTomcatConnectionTimeout(serviceManager.getConfiguration()), 5);
         }
 
-        return super.start(containerId, serviceManager.getConfiguration().getStartupTimeoutInSeconds(), 5);
+        return super.start(containerId, ConnectionTimeoutResolver.resolveTomcatConnectionTimeout(serviceManager.getConfiguration()), 5);
     }
 
     @Override

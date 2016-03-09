@@ -13,15 +13,19 @@ import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.container.DockerIPLogger
 
+import static java.lang.Boolean.TRUE
+
 class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> implements Test {
 
-    DeferredValue<Boolean> setup = DeferredValue.of(Boolean).from(Boolean.TRUE)
+    DeferredValue<Boolean> setup = DeferredValue.of(Boolean).from(TRUE)
 
-    DeferredValue<Boolean> teardown = DeferredValue.of(Boolean).from(Boolean.TRUE)
+    DeferredValue<Boolean> teardown = DeferredValue.of(Boolean).from(TRUE)
 
     DeferredValue<DataPlatformTestOrchestration> with = DeferredValue.of(DataPlatformTestOrchestration)
 
     DeferredValue<Void> init = DeferredValue.of(Void)
+
+    DeferredValue<Void> execute = DeferredValue.of(Void)
 
     PlatformLifecycle(String name, Object parent) {
         super(name, parent)
@@ -74,6 +78,8 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
             handleException(e, logger)
             throw e
         }
+
+        execute.resolve()
     }
 
     private def orchestrationTeardown(Logger logger) {
@@ -198,3 +204,4 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
         }.isEmpty()
     }
 }
+

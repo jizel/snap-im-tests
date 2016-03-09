@@ -25,7 +25,7 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor dataPlatform(String dataPlatformPath) {
-        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation(dataPlatformPath)
+        this.dataPlatformDir = PropertyResolver.resolveLocation(dataPlatformPath)
         this
     }
 

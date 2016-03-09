@@ -155,7 +155,7 @@ class DataPlatformBuilder {
     }
 
     /**
-     * Gets modules which are not already built.
+     * Gets modules which are not already built with their (possibly also unbuilt) dependencies.
      *
      * @param modules modules to filter
      * @return unbuilt modules
@@ -165,12 +165,19 @@ class DataPlatformBuilder {
         def unbuilt = []
 
         for (DataPlatformModule module : modules) {
+
+            for (DataPlatformModule dependency : module.dependencies) {
+                if (!isWarPresent(dataPlatformPath, dependency)) {
+                    unbuilt << dependency
+                }
+            }
+
             if (!isWarPresent(dataPlatformPath, module)) {
                 unbuilt << module
             }
         }
 
-        unbuilt
+        unbuilt.unique()
     }
 
     /**

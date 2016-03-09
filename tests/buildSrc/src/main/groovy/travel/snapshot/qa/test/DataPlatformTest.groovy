@@ -11,7 +11,7 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
 
     DeferredValue<List> dataProvider = DeferredValue.of(List)
 
-    DeferredValue<List<String>> data = DeferredValue.of(List).from([null])
+    DeferredValue<List<?>> data = DeferredValue.of(List).from([null])
 
     // this will be resolved as the first execution in beforeSuite closure
     DeferredValue<Void> init = DeferredValue.of(Void)
@@ -74,7 +74,7 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
             // iterate through beforeTest, execute and afterTest based on data provider
             dataProvider.resolve().each { data ->
 
-                String dataString = data ? " (${data})" : ""
+                Object dataString = data ? " (${data})" : ""
 
                 try {
                     logger.info(":test:${name} before test execution${dataString}")

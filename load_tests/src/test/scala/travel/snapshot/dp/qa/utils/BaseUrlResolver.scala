@@ -7,6 +7,7 @@ object LoadTestEnvironment extends Enumeration {
   val PRODUCTION = Value("production")
   val DEVELOPMENT = Value("development")
   val TESTING = Value("testing")
+  val DOCKER = Value("docker")
 }
 
 object LoadTestContext extends Enumeration {
@@ -59,6 +60,13 @@ trait SystemPropertiesGatherer {
     System.getProperty("protocol", "https"),
     System.getProperty("host", "de.api.snapshot.technology"),
     System.getProperty("port", "443"),
+    resolveScenario
+  )
+
+  val dockerMachineEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "http"),
+    System.getProperty("host", "192.168.99.100"),
+    System.getProperty("port", "8080"),
     resolveScenario
   )
 
@@ -121,6 +129,14 @@ object ProductionUrlResolver extends SystemPropertiesGatherer {
   }
 }
 
+object DockerUrlResolver extends SystemPropertiesGatherer {
+
+  def apply(): String = {
+    val (protocol, host, port, scenario) = dockerMachineEnvironmentProperties
+    s"$protocol://$host:$port/${scenario.localContext}"
+  }
+}
+
 object BaseUrlResolver {
 
   def apply(): String = {
@@ -129,6 +145,7 @@ object BaseUrlResolver {
       case LoadTestEnvironment.DEVELOPMENT => DevelopmentUrlResolver()
       case LoadTestEnvironment.TESTING => TestingUrlResolver()
       case LoadTestEnvironment.PRODUCTION => ProductionUrlResolver()
+      case LoadTestEnvironment.DOCKER => DockerUrlResolver()
     }
   }
 }

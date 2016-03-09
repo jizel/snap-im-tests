@@ -25,7 +25,7 @@ public class MariaDBDockerManager extends DockerServiceManager<MariaDBManager> {
     @Override
     public Cube start(final String containerId) {
         final Task<MariaDBManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), MariaDBStartedCheckTask.class);
-        return super.start(checkingTask, containerId, serviceManager.getConfiguration().getStartupTimeoutInSeconds(), 5);
+        return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveMariaDBConnectionTimeout(serviceManager.getConfiguration()), 5);
     }
 
     @Override

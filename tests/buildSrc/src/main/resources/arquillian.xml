@@ -6,7 +6,7 @@
 
     <extension qualifier="docker">
 
-        <property name="serverVersion">1.19</property>
+        <property name="serverVersion">1.22</property>
 
         <!--
             This will be automatically expanded when Arquillian Cube gets involved.
@@ -80,7 +80,7 @@
                     iterations: 15
                 portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
             mariadb:
-                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.11
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.12
                 exposedPorts: [3306/tcp]
                 env: [GENERAL_LOG_FILE=/var/lib/mysql/localhost.localdomain.log, LOG_ERROR=/var/lib/mysql/localhost.localdomain.err]
                 await:
@@ -90,7 +90,7 @@
                     iterations: 15
                 portBindings: [3306/tcp]
             mongodb:
-                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.1
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.3
                 exposedPorts: [27017/tcp]
                 env: [LOG_PATH=/var/log/mongodb/server.log]
                 await:

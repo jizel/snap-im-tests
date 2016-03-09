@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
 import travel.snapshot.qa.inspection.InspectionException
+import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
+import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 import travel.snapshot.qa.util.machine.DockerMachineHelper
 
@@ -33,6 +37,10 @@ class PropertyResolver {
     private static final DockerMode DEFAULT_DOCKER_MODE = MACHINE
 
     private static final TestExecutionMode DEFAULT_EXECUTION_MODE = TEST
+
+    private static final String DATA_PLATFORM_REPOSITORY_URL = "git@bitbucket.org:bbox/data-platform.git"
+
+    private static final String DATA_PLATFORM_QA_REPOSITORY_URL = "git@bitbucket.org:bbox/dataplatformqa.git"
 
     static def resolveDockerMode() {
 
@@ -76,6 +84,14 @@ class PropertyResolver {
         password
     }
 
+    static def resolveDataPlatformRepositoryUrl() {
+        System.getProperty("dataPlatformRepositoryUrl", DATA_PLATFORM_REPOSITORY_URL)
+    }
+
+    static def resolveDataPlatformQARepositoryUrl() {
+        System.getProperty("dataPlatformQARepositoryUrl", DATA_PLATFORM_QA_REPOSITORY_URL)
+    }
+
     /**
      * In case system property is specified, return that one, in case it is not set, return "data-platform".
      *
@@ -112,27 +128,37 @@ class PropertyResolver {
         File workspace = project.spacelift.workspace
         String dataPlatformDirectory = project.spacelift.configuration['dataPlatformRepository'].value
 
-        resolveDataPlatformRepositoryLocation(workspace, dataPlatformDirectory)
+        resolveLocation(workspace, dataPlatformDirectory)
     }
 
-    static File resolveDataPlatformRepositoryLocation(String dataPlatformPath) {
+    static File resolveDataPlatformQARepositoryLocation() {
+
+        Project project = new GradleSpaceliftDelegate().project()
+
+        File workspace = project.spacelift.workspace
+        String dataPlatformQADirectory = project.spacelift.configuration['dataPlatformQARepository'].value
+
+        resolveLocation(workspace, dataPlatformQADirectory)
+    }
+
+    static File resolveLocation(String directory) {
         File workspace = new GradleSpaceliftDelegate().project().spacelift.workspace
 
-        resolveDataPlatformRepositoryLocation(workspace, dataPlatformPath)
+        resolveLocation(workspace, directory)
     }
 
-    static File resolveDataPlatformRepositoryLocation(File workspace, String dataPlatformDirectory) {
-        File dataPlatformProject
+    static File resolveLocation(File workspace, String directory) {
+        File resolvedDirectory
 
-        File dataPlatformDir = new File(dataPlatformDirectory)
+        File directoryFile = new File(directory)
 
-        if (dataPlatformDir.isAbsolute()) {
-            dataPlatformProject = dataPlatformDir
+        if (directoryFile.isAbsolute()) {
+            resolvedDirectory = directoryFile
         } else {
-            dataPlatformProject = new File(workspace, dataPlatformDirectory)
+            resolvedDirectory = new File(workspace, directory)
         }
 
-        dataPlatformProject
+        resolvedDirectory
     }
 
     static def resolveDataPlatformRespositoryCommit(String defaultCommit) {
@@ -263,10 +289,10 @@ class PropertyResolver {
         }
 
         File output = Spacelift.task(templateDpProperties, ProcessTemplate)
-                .bindings(["tomcat.ip"      : tomcatIP])
-                .bindings(["mariadb.ip"     : mariadbIP])
-                .bindings(["activemq.ip"    : activemqIP])
-                .bindings(["mongodb.ip"     : mongodbIP])
+                .bindings(["tomcat.ip": tomcatIP])
+                .bindings(["mariadb.ip": mariadbIP])
+                .bindings(["activemq.ip": activemqIP])
+                .bindings(["mongodb.ip": mongodbIP])
                 .execute().await()
 
         logger.info("Going to use this dp.properties file for API tests")
@@ -274,6 +300,113 @@ class PropertyResolver {
 
         output.absolutePath
     }
+
+    static def resolveContainerIP(String containerId, DataPlatformOrchestration orchestration) {
+        if (resolveDockerMode() == DockerMode.MACHINE) {
+            return DockerMachineHelper.getIp(resolveDockerMachine())
+        }
+
+        orchestration.inspectIP(containerId)
+    }
+
+    static def resolveTsvLoadScript() {
+
+        File tsvTemplate = new File(resolveDataPlatformQARepositoryLocation(), "fake-tsv-data/template_load.sql")
+
+        File output = Spacelift.task(tsvTemplate, ProcessTemplate)
+                .bindings(["path": resolveDataPlatformQARepositoryLocation().absolutePath])
+                .execute().await()
+
+        logger.debug("Going to use this load.sql file for TSV import.")
+        logger.debug(output.text)
+
+        output.absolutePath
+    }
+
+    // Load Tests
+
+    static List<String> resolveLoadTestsInstallations() {
+        List<String> loadTestsInstallations
+
+        if (resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
+            loadTestsInstallations = [
+                    'docker', 'dockerMachine', // Docker specific
+
+                    'tomcat', 'mariadb', 'mongodb', 'activemq', // Docker services
+
+                    // we need data-platform repository because we build modules which
+                    // will be subsequently deployed to Tomcat in Docker,
+                    // load tests are in QA repository itself
+                    'dataPlatformQARepository', 'dataPlatformRepository',
+                    // load tests are located in Maven project so we need Maven installation
+                    'maven'
+            ]
+        } else {
+            // if load tests environment is not DOCKER, it means we are executing them against
+            // environment which has them already deployed so we just execute tests
+            // and we are not building these services on our own
+            loadTestsInstallations << 'dataPlatformQARepository'
+            loadTestsInstallations << 'maven'
+        }
+
+        loadTestsInstallations
+    }
+
+    static List<String> resolveLoadTestsTestExecutions() {
+        List<String> loadTestsTestExecutions
+
+        if (resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
+            loadTestsTestExecutions = [ 'platformStart', 'loadTestsDeployment', 'loadTests', 'platformStop' ]
+        } else {
+            loadTestsTestExecutions = [ 'loadTests' ]
+        }
+
+        loadTestsTestExecutions
+    }
+
+    static List<LoadTestsSimulation> resolveLoadTestSimulations() {
+
+        List<LoadTestsSimulation> simulations
+
+        try {
+            simulations = LoadTestsSimulations.valueOf(System.getProperty("loadTestSimulations", LoadTestsSimulations.ALL.name()).toUpperCase()).simulations()
+        } catch (Exception ex) {
+            simulations = LoadTestsSimulations.ALL.simulations()
+        }
+
+        simulations
+    }
+
+    static LoadTestEnvironment resolveLoadTestEnvironment() {
+
+        LoadTestEnvironment environment
+
+        try {
+            environment = LoadTestEnvironment.valueOf(System.getProperty("loadTestEnvironment", LoadTestEnvironment.DOCKER.name()).toUpperCase())
+        } catch (Exception ex) {
+            environment = LoadTestEnvironment.DOCKER
+        }
+
+        environment
+    }
+
+    static int resolveLoadTestStartUsers() {
+        Integer.parseInt(System.getProperty("loadTestStartUsers", Integer.toString(LoadTestsConfiguration.DEFAULT_START_USERS)))
+    }
+
+    static int resolveLoadTestEndUsers() {
+        Integer.parseInt(System.getProperty("loadTestEndUsers", Integer.toString(LoadTestsConfiguration.DEFAULT_END_USERS)))
+    }
+
+    static int resolveLoadTestRamp() {
+        Integer.parseInt(System.getProperty("loadTestRamp", Integer.toString(LoadTestsConfiguration.DEFAUT_RAMP)))
+    }
+
+    static String resolveLoadTestHost() {
+        System.getProperty("loadTestHost")
+    }
+
+    // Execution modes
 
     /**
      * Return execution mode of Snapshot Data Platform test project.

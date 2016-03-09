@@ -18,9 +18,9 @@ import travel.snapshot.qa.util.Timer
 /**
  * Deploys modules (wars) to Tomcat instance.
  */
-class TomcatModuleDeployer {
+class DataPlatformDeployer {
 
-    private static final Logger logger = LoggerFactory.getLogger(TomcatModuleDeployer)
+    private static final Logger logger = LoggerFactory.getLogger(DataPlatformDeployer)
 
     private static final String DEFAULT_TOMCAT_CONTAINER =
             DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
@@ -35,12 +35,12 @@ class TomcatModuleDeployer {
 
     private String deploymentStrategy = parseDeploymentStrategy()
 
-    TomcatModuleDeployer(DataPlatformTestOrchestration orchestration) {
+    DataPlatformDeployer(DataPlatformTestOrchestration orchestration) {
         this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
         this.orchestration = orchestration
     }
 
-    TomcatModuleDeployer strategy(DeploymentStrategy deploymentStrategy) {
+    DataPlatformDeployer strategy(DeploymentStrategy deploymentStrategy) {
         this.deploymentStrategy = deploymentStrategy
         this
     }
@@ -51,7 +51,7 @@ class TomcatModuleDeployer {
      * @param module module to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(DataPlatformModule module) {
+    DataPlatformDeployer deploy(DataPlatformModule module) {
         if (module) {
 
             logger.info("Adding {} for deployment.", module.toString())
@@ -67,7 +67,7 @@ class TomcatModuleDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(DataPlatformModule... modules) {
+    DataPlatformDeployer deploy(DataPlatformModule... modules) {
         if (modules) {
             for (DataPlatformModule module : modules) {
                 deploy(module)
@@ -82,7 +82,7 @@ class TomcatModuleDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(List<DataPlatformModule> modules) {
+    DataPlatformDeployer deploy(List<DataPlatformModule> modules) {
         for (DataPlatformModule module : modules) {
             deploy(module)
         }
@@ -95,7 +95,7 @@ class TomcatModuleDeployer {
      * @param modules modules to deploy
      * @return this
      */
-    TomcatModuleDeployer deploy(DataPlatformModules modules) {
+    DataPlatformDeployer deploy(DataPlatformModules modules) {
         this.modules.addAll(modules.modules())
         this
     }
@@ -105,7 +105,7 @@ class TomcatModuleDeployer {
      *
      * @return this
      */
-    TomcatModuleDeployer execute() {
+    DataPlatformDeployer execute() {
         final TomcatDockerManager dockerManager = orchestration.get().getTomcatDockerManager(containerId)
         final TomcatManager manager = dockerManager.getServiceManager()
 
@@ -116,7 +116,17 @@ class TomcatModuleDeployer {
 
         final DeploymentStrategy deploymentStrategy = parseDeploymentStrategy()
 
-        modules.each { DataPlatformModule module ->
+        // if there are some modules to be deployed, dependencies of that module have to be deployed as well
+        // multiple modules to deploy can depend on the same module, by flatteing these dependencies and filtering
+        // duplicities, we get unique dependencies accross all modules
+        List<DataPlatformModule> dependencyModules = modules.collect { module -> module.dependencies }.flatten().unique()
+
+        List<DataPlatformModule> modulesToDeploy = []
+
+        modulesToDeploy.addAll(modules)
+        modulesToDeploy.addAll(dependencyModules)
+
+        modulesToDeploy.unique().each { module ->
 
             boolean isDeployed = manager.isDeployed(module.getDeploymentContext())
 

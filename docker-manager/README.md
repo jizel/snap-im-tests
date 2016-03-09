@@ -119,6 +119,22 @@ By default, `docker.mode` has value `host` and `docker.machine` has value `defau
 Be sure that you have Tomcat instance installed locally and `CATALINA_HOME` and `CATALINA_BASE` are set correctly and 
 you can login in there with `admin:admin` and there are only two deployments - manager and manager-host.
 
+## Connection timeouts
+
+By default, there are connection timeouts set for each service via respective configuration object. In case you need to 
+override this value, you have to set it as a system property - in that case, timeout value of system property will override 
+the one set via configuration object. System properties are of these names:
+
+* `docker.tomcat.connection.timeout`
+* `docker.mariadb.connection.timeout`
+* `docker.mongodb.connection.timeout`
+* `docker.activemq.connection.timeout`
+
+This functionality is handy in case you are dealing with tests running in e.g. at Bamboo or in CI environment. It is quite 
+common these environments are slow in terms of service startup time so it may be the case that a service would not be started 
+in a default timout period hence whole test execution would fail. This allows you to set the timeout property as you wish hence 
+the possibility of the service staring timeout is smaller.
+
 ## ActiveMQ manager
 
 [ActiveMQManager](src/main/java/travel/snapshot/qa/manager/activemq/api/ActiveMQManager.java) gives you the possibility 
