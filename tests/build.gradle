@@ -222,32 +222,44 @@ spacelift {
             report { new DataPlatformLogReporter(platform, serviceInstallations).report() }
         }
 
+        ////////////////////
+        //
         // API tests
+        //
+        ////////////////////
 
         apiTests(inherits: reportableTest) {
             beforeSuite {
-
-                // TODO skip importing when already imported from the previous run
-
                 new TsvImporter(platform).execute()
-            }
-            beforeTest {
-                new DataPlatformBuildExecutor()
-                        .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
-                        .execute(forceDataPlatformBuild)
-
-                new DataPlatformDeployer(platform)
-                        .deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
-                        .execute()
-            }
-            execute {
-                new APITestsExecution(platform).single("RunConfigurationTests").execute()
             }
         }
 
-        // Load tests
+        apiTestsWebPerformance(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.WEB_PERFORMANCE).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.WEB_PERFORMANCE).execute()
+            }
+            execute { new APITestsExecution(platform).single("RunWebPerformanceTests").execute() }
+        }
+
+        ////////////////////
+        //
+        // LOAD TESTS
+        //
+        ////////////////////
 
         loadTests(inherits: reportableTest) {
+
+            // Simulations to run are set by one of these:
+            //
+            // -DloadTestSimulations=all|configuration|identity|web_performance|rate_shopper|social|tripadvisor
+            //
+            // Load test environment is set by one of these:
+            //
+            // -DloadTestEnvironment=local|production|development|testing|docker
+            //
+            // Default is 'all' simulations against 'docker' environment
+
             data {
                 LoadTestsConfiguration.parse(platform)
             }
@@ -258,7 +270,12 @@ spacelift {
                         .execute()
             }
         }
+
         loadTestsDeployment {
+
+            // Modules are deployed only in case load test environment is 'docker'. In other cases,
+            // we expect that modules are already deployed in a target load test environment.
+
             execute {
                 new DataPlatformBuildExecutor()
                         .build(LoadTestsModuleParser.parse())
