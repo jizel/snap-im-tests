@@ -70,7 +70,7 @@ public class TwitterStepdefs {
 
     @Then("^There are (\\d+) Twitter posts returned$")
     public void There_are_count_posts_returned(int count) throws Throwable {
-        steps.numberOfTwitterPostsinResponse(count);
+        steps.numberOfTwitterPostsInResponse(count);
     }
 
 }

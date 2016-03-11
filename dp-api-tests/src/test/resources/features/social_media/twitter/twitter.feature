@@ -19,8 +19,7 @@ Feature: Twitter metrics
       | /analytics/twitter/retweet_reach    | MONTH1      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/mentions         | DAY3        | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/mention_reach    | WEEKs1      | 99000099-9999-4999-a999-999999999999 |
-
-    #todo numbers
+    
   @Smoke
   Scenario Outline: Validate that metrics have valid value in the db
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"

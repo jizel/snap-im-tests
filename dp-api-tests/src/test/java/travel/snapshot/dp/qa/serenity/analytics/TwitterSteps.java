@@ -30,7 +30,7 @@ public class TwitterSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void numberOfTwitterPostsinResponse(int count) {
+    public void numberOfTwitterPostsInResponse(int count) {
         List responseList = getSessionResponse().jsonPath().get("resultList");
         assertEquals("There should be " + count + " entities got", count, responseList.size());
     }
