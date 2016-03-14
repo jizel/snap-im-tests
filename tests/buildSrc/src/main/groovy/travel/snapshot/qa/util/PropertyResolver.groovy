@@ -2,9 +2,7 @@ package travel.snapshot.qa.util
 
 import org.apache.commons.lang3.SystemUtils
 import org.arquillian.spacelift.Spacelift
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.text.ProcessTemplate
-import org.gradle.api.Project
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.manager.ConnectionMode
@@ -122,29 +120,21 @@ class PropertyResolver {
     }
 
     static File resolveDataPlatformRepositoryLocation() {
-
-        Project project = new GradleSpaceliftDelegate().project()
-
-        File workspace = project.spacelift.workspace
-        String dataPlatformDirectory = project.spacelift.configuration['dataPlatformRepository'].value
+        File workspace = ProjectHelper.workspace
+        String dataPlatformDirectory = ProjectHelper.spacelift.configuration['dataPlatformRepository'].value
 
         resolveLocation(workspace, dataPlatformDirectory)
     }
 
     static File resolveDataPlatformQARepositoryLocation() {
-
-        Project project = new GradleSpaceliftDelegate().project()
-
-        File workspace = project.spacelift.workspace
-        String dataPlatformQADirectory = project.spacelift.configuration['dataPlatformQARepository'].value
+        File workspace = ProjectHelper.workspace
+        String dataPlatformQADirectory = ProjectHelper.spacelift.configuration['dataPlatformQARepository'].value
 
         resolveLocation(workspace, dataPlatformQADirectory)
     }
 
     static File resolveLocation(String directory) {
-        File workspace = new GradleSpaceliftDelegate().project().spacelift.workspace
-
-        resolveLocation(workspace, directory)
+        resolveLocation(ProjectHelper.workspace, directory)
     }
 
     static File resolveLocation(File workspace, String directory) {
@@ -178,7 +168,7 @@ class PropertyResolver {
 
         if (resolveDockerMode() == HOST.name()) {
             if (SystemUtils.IS_OS_UNIX) {
-                mount = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
+                mount = ProjectHelper.project.rootDir.absolutePath + "/configuration"
             } else {
                 mount = "configuration"
             }
@@ -194,7 +184,7 @@ class PropertyResolver {
         def configurationSource
 
         if (SystemUtils.IS_OS_UNIX) {
-            configurationSource = new GradleSpaceliftDelegate().project().rootDir.absolutePath + "/configuration"
+            configurationSource = ProjectHelper.project.rootDir.absolutePath + "/configuration"
         } else {
             configurationSource = "configuration"
         }
@@ -261,7 +251,7 @@ class PropertyResolver {
             return dpPropertiesSystemProperty
         }
 
-        File rootDir = (File) new GradleSpaceliftDelegate().project().rootDir
+        File rootDir = (File) ProjectHelper.project.rootDir
         File templateDpProperties = new File(rootDir, "configuration/api-tests/template_dp.properties")
 
         Map containerIPMapping = [:]

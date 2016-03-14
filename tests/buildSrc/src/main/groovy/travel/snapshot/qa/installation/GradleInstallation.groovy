@@ -17,6 +17,7 @@ import org.arquillian.spacelift.task.archive.UnzipTool
 import org.arquillian.spacelift.task.net.DownloadTool
 import org.arquillian.spacelift.task.os.CommandTool
 import org.slf4j.Logger
+import travel.snapshot.qa.util.ProjectHelper
 
 @CompileStatic
 class GradleInstallation extends BaseContainerizableObject<GradleInstallation> implements Installation {
@@ -112,7 +113,7 @@ class GradleInstallation extends BaseContainerizableObject<GradleInstallation> i
         logger.info(":install:${name} Extracting installation from ${getFileName()}")
         Spacelift.task(getFsPath(), UnzipTool).toDir(((File) getHome()).parentFile.canonicalFile).execute().await()
 
-        new GradleSpaceliftDelegate().project().getAnt().invokeMethod("chmod", [dir: "${getHome()}/bin", perm: "a+x", includes: "*"])
+        ProjectHelper.project.getAnt().invokeMethod("chmod", [dir: "${getHome()}/bin", perm: "a+x", includes: "*"])
     }
 
     @Override

@@ -1,6 +1,5 @@
 package travel.snapshot.qa.test.execution.tomcat
 
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.DockerServiceFactory

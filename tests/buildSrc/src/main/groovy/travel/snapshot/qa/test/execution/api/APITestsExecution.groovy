@@ -1,22 +1,19 @@
 package travel.snapshot.qa.test.execution.api
 
 import org.arquillian.spacelift.Spacelift
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.task.os.CommandTool
 import travel.snapshot.qa.DataPlatformTestOrchestration
+import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 
 class APITestsExecution {
 
     private final DataPlatformTestOrchestration testOrchestration
 
-    private final File workspace
-
     private String single
 
     APITestsExecution(final DataPlatformTestOrchestration testOrchestration) {
         this.testOrchestration = testOrchestration
-        this.workspace = new GradleSpaceliftDelegate().project().spacelift.workspace
     }
 
     APITestsExecution single(String single) {
@@ -40,7 +37,7 @@ class APITestsExecution {
     }
 
     private def getProjectDir() {
-        new File(workspace, "dataplatformqa/dp-api-tests").absolutePath
+        new File(ProjectHelper.workspace, "dataplatformqa/dp-api-tests").absolutePath
     }
 
     private def getApiTestsProperties() {

@@ -18,7 +18,7 @@ enum DataPlatformModule {
 
     RATE_SHOPPER("RateShopper", "RateShopper/build/libs/RateShopper-1.0.war"),
     WEB_PERFORMANCE("WebPerformance", "WebPerformance/build/libs/WebPerformance-1.0.war"), // Google Analytics
-    REVIEW("Review", "Review/build/libs/Review-1.0.war"), // TripAdvisor
+    REVIEW("Review", "Review/build/libs/Review-1.0.war", [ IDENTITY ]), // TripAdvisor
 
     // Tomcat service API modules
 

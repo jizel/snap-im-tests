@@ -32,10 +32,10 @@ enum LoadTestsSimulation {
 
     // Social
 
-    SOCIAL_COMMON("travel.snapshot.dp.qa.social.common.AllAnalyticsSimulation", [ IDENTITY, SOCIAL_MEDIA_API ]),
-    FACEBOOK("travel.snapshot.dp.qa.social.facebook.FacebookSimulation", [ IDENTITY, FACEBOOK_SERVICE_API ]),
-    INSTAGRAM("travel.snapshot.dp.qa.social.instagram.InstagramSimulation", [ IDENTITY, INSTAGRAM_SERVICE_API ]),
-    TWITTER("travel.snapshot.dp.qa.social.twitter.TwitterSimulation", [ IDENTITY, TWITTER_SERVICE_API ]),
+    SOCIAL_COMMON("travel.snapshot.dp.qa.social.common.AllAnalyticsSimulation", [ SOCIAL_MEDIA_API ]),
+    FACEBOOK("travel.snapshot.dp.qa.social.facebook.FacebookSimulation", [ FACEBOOK_SERVICE_API ]),
+    INSTAGRAM("travel.snapshot.dp.qa.social.instagram.InstagramSimulation", [ INSTAGRAM_SERVICE_API ]),
+    TWITTER("travel.snapshot.dp.qa.social.twitter.TwitterSimulation", [ TWITTER_SERVICE_API ]),
 
     // TripAdvisor
 
