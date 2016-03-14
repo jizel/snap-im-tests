@@ -18,15 +18,10 @@ Feature: Roles get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-
-    # existence
     And Body contains entity with attribute "role_id"
-    # exact value
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
     And Body contains entity with attribute "role_description" value "optional description 1"
     And Body contains entity with attribute "role_name" value "Role name 1"
-
-    # non-existence
     And Body doesn't contain entity with attribute "non_existent"
 
 
@@ -46,8 +41,6 @@ Feature: Roles get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-
-    # exact value
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
     And Body contains entity with attribute "role_description" value "updated because of etag"
     And Body contains entity with attribute "role_name" value "Role name 1"
@@ -144,6 +137,7 @@ Feature: Roles get
 
     Examples:
       | description                 | limit | cursor | filter      | sort      | sort_desc | response_code | custom_code |
+
       #limit and cursor
       | negative cursor, null limit | /null | -1     | /null       | /null     | /null     | 400           | 63          |
       | --empty string limit        |       | -1     | /null       | /null     | /null     | 400           | 63          |
@@ -156,6 +150,7 @@ Feature: Roles get
       |                             | 10    | -1     | /null       | /null     | /null     | 400           | 63          |
       |                             | text  | 0      | /null       | /null     | /null     | 400           | 63          |
       |                             | 10    | text   | /null       | /null     | /null     | 400           | 63          |
+
       #filtering and sorting
       | both sort and sort_desc     | 10    | 0      | /null       | role_name | role_name | 400           | 64          |
       #|| 10    | 0      | /null    | company_name |              | 400           | 63          |

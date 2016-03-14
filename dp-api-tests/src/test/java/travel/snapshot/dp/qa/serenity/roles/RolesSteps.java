@@ -157,11 +157,17 @@ public class RolesSteps extends BasicSteps {
         if (StringUtils.isNotBlank(updatedRole.getRoleDescription())) {
             role.put("role_description", updatedRole.getRoleDescription());
         }
+
         if (StringUtils.isNotBlank(updatedRole.getRoleName())) {
             if (!name.equals(updatedRole.getRoleName())) { //update only if changed
                 role.put("role_name", updatedRole.getRoleName());
             }
         }
+
+        if (StringUtils.isNotBlank(updatedRole.getApplicationId())) {
+            role.put("application_id", updatedRole.getApplicationId());
+        }
+
 
         Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader(HEADER_ETAG));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
