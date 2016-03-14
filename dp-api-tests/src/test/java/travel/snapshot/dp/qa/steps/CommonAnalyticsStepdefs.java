@@ -1,14 +1,9 @@
 package travel.snapshot.dp.qa.steps;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
 import cucumber.api.java.en.Then;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
-
-import java.util.ArrayList;
-
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -49,4 +44,5 @@ public class CommonAnalyticsStepdefs {
     public void responseContainsValuesInDataEnclosure(int count) throws Throwable {
         analyticsBaseSteps.responseContainsDataValues(count);
     }
+
 }

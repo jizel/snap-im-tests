@@ -15,6 +15,8 @@ public class ClassStringConverter extends Transformer<Class<?>> {
                 return Long.class;
             case "string":
                 return String.class;
+            case "boolean":
+                return Boolean.class;
             default:
                 throw new IllegalArgumentException(String.format("Unable to convert %s to respective class.", value));
         }

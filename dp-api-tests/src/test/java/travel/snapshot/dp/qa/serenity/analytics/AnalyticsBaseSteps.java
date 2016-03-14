@@ -232,6 +232,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
         assertStatement.accept(expectedStatistics, actualStatistics);
     }
 
+    @Step
     public void responseContainsDataValues(int count) {
         Response response = getSessionResponse();
         response.then().body("data.size()", is(count));

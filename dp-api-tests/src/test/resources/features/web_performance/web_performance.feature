@@ -164,8 +164,8 @@ Feature: web_performance
     # Double comments represents invalid input data which return responses which does not make sense
 
     Examples:
-      | url                         | granularity | since          | until             | expected_granularity | expected_since    | expected_until | property                             | response_code |
-      | /analytics/visits           |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
+      | url                         | granularity | since      | until      | expected_granularity | expected_since | expected_until | property                             | response_code |
+      | /analytics/visits           |             | 2015-12-03 | 2015-12-03 | day                  | 2015-12-03     | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
       #| /analytics/visits           | day         |                | today             | day                  | today - 30 days   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
       #| /analytics/visits           | day         | today          |                   | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
       #| /analytics/visits           | week        |                | today             | week                 | today - 14 weeks  | today          | 99000099-9999-4999-a999-999999999999 | 200           |
@@ -178,7 +178,7 @@ Feature: web_performance
       ##| /analytics/visits           | month       | today          | today - 40 months | month                | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
       ##| /analytics/visits           | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/visits_unique    |             |                |                   | day                  | today - 31 days   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
-      | /analytics/visits_unique    |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
+      | /analytics/visits_unique    |             | 2015-12-03 | 2015-12-03 | day                  | 2015-12-03     | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/visits_unique    | day         |                | today             | day                  | today - 1 month   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/visits_unique    | day         | today          |                   | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/visits_unique    | week        |                | today             | week                 | today - 13 weeks  | today          | 99000099-9999-4999-a999-999999999999 | 200           |
@@ -190,7 +190,7 @@ Feature: web_performance
 ##      | /analytics/visits_unique    | month       | today          | today - 40 months | month                | today - 36 months | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 ##      | /analytics/visits_unique    | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/revenue          |             |                |                   | day                  | today - 1 month   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
-      | /analytics/revenue          |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
+      | /analytics/revenue          |             | 2015-12-03 | 2015-12-03 | day                  | 2015-12-03     | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/revenue          | day         |                | today             | day                  | today - 1 month   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/revenue          | day         | today          |                   | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/revenue          | week        |                | today             | week                 | today - 13 weeks  | today          | 99000099-9999-4999-a999-999999999999 | 200           |
@@ -202,7 +202,7 @@ Feature: web_performance
 ##      | /analytics/revenue          | month       | today          | today - 40 months | month                | today - 36 months | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 ##      | /analytics/revenue          | day         | today + 2 days | today + 3 days    | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/conversion_rates |             |                |                   | day                  | today - 1 month   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
-      | /analytics/conversion_rates |             | 2015-12-03     | 2015-12-03        | day                  | 2015-12-03        | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
+      | /analytics/conversion_rates |             | 2015-12-03 | 2015-12-03 | day                  | 2015-12-03     | 2015-12-03     | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/conversion_rates | day         |                | today             | day                  | today - 1 month   | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/conversion_rates | day         | today          |                   | day                  | today             | today          | 99000099-9999-4999-a999-999999999999 | 200           |
 #      | /analytics/conversion_rates | week        |                | today             | week                 | today - 13 weeks  | today          | 99000099-9999-4999-a999-999999999999 | 200           |
@@ -308,3 +308,19 @@ Feature: web_performance
       | /analytics/referrals                  | /null | 26    | 200           | application/json | 99000099-9999-4999-a999-999999999999 |
       | /analytics/referrals                  | 26    | 26    | 200           | application/json | 99000099-9999-4999-a999-999999999999 |
 #      | /analytics/referrals                  | 24    | 24    | 200           | application/json | 99000099-9999-4999-a999-999999999999 |
+
+  Scenario Outline: Testing holes in Fact_web_performance tables
+    When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Response contains <count> values
+    And Value number "<value_number>" of value type "<value_type>" has value "<value>"
+
+    # there are holes in 2016-02-02 and 2016-02-07
+
+    Examples:
+      | url               | count | granularity | since      | until      | value_number | value_type | value |
+      | /analytics/visits | 14    | day         | 2016-02-01 | 2016-02-14 | 2            | string     | /null |
+      | /analytics/visits | 14    | day         | 2016-02-01 | 2016-02-14 | 7            | string     | /null |
+      # in week granularity, as 2016-02-07 is null and it is sunday, the last value in that week will be returned - saturday 2016-02-06
+      | /analytics/visits | 2     | week        | 2016-02-01 | 2016-02-14 | 1            | double     | 8852  |

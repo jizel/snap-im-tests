@@ -1,22 +1,21 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -82,5 +81,32 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
         Response response = getSessionResponse();
         String country = response.body().jsonPath().get(path);
         assertTrue(country.matches("^[A-Z][A-Z]$"));
+    }
+
+    @Step
+    public void valueRecordIsOfValue(int valueNumber, Class valueType, String value) {
+
+        List values = getSessionResponse().body().jsonPath().getList("values", valueType);
+
+        if (value == null) {
+            assertNull(values.get(valueNumber - 1));
+            return;
+        }
+
+        Object expectedValue = null;
+
+        if (valueType == Integer.class) {
+            expectedValue = Integer.parseInt(value);
+        } else if (valueType == Double.class) {
+            expectedValue = Double.parseDouble(value);
+        } else if (valueType == Long.class) {
+            expectedValue = Long.parseLong(value);
+        } else if (valueType == String.class) {
+            expectedValue = value;
+        } else if (valueType == Boolean.class) {
+            expectedValue = Boolean.parseBoolean(value);
+        }
+
+        assertEquals(expectedValue, values.get(valueNumber - 1));
     }
 }
