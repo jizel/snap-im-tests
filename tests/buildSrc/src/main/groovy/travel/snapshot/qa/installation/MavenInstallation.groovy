@@ -15,9 +15,9 @@ import org.arquillian.spacelift.task.TaskRegistry
 import org.arquillian.spacelift.task.archive.UnzipTool
 import org.arquillian.spacelift.task.net.DownloadTool
 import org.arquillian.spacelift.task.os.CommandTool
-import org.gradle.api.Project
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import travel.snapshot.qa.util.ProjectHelper
 
 import java.text.MessageFormat
 
@@ -157,7 +157,7 @@ class MavenInstallation extends BaseContainerizableObject<MavenInstallation> imp
         logger.info(":install:${name} Extracting installation from ${getFileName()}")
         Spacelift.task(getFsPath(), UnzipTool).toDir(((File) getHome()).parentFile.canonicalFile).execute().await()
 
-        new GradleSpaceliftDelegate().project().getAnt().invokeMethod("chmod", [dir: "${getHome()}/bin", perm: "a+x", includes: "*"])
+        ProjectHelper.project.getAnt().invokeMethod("chmod", [dir: "${getHome()}/bin", perm: "a+x", includes: "*"])
     }
 
     @Override
@@ -192,7 +192,7 @@ class MavenInstallation extends BaseContainerizableObject<MavenInstallation> imp
 
         if (isEnabledSnapshotServer()) {
             log.info("Snapshot Nexus Staging server will be added.")
-            def properties = new GradleSpaceliftDelegate().project().properties
+            def properties = ProjectHelper.project.properties
             createSettings.server("nexus-snapshot", properties.get("nexusUser"), properties.get("nexusPassword"))
         }
 
@@ -325,8 +325,7 @@ class MavenInstallation extends BaseContainerizableObject<MavenInstallation> imp
 
         SettingsXmlUpdater() {
 
-            def project = new GradleSpaceliftDelegate().project()
-            def ant = project.ant
+            def ant = ProjectHelper.project.ant
 
             // ensure there is a settings.xml file
             if (!getSettingsXml().exists()) {

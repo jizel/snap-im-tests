@@ -4,11 +4,11 @@ import com.github.dockerjava.api.InternalServerErrorException
 import org.arquillian.cube.spi.CubeControlException
 import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.Test
 import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.manager.ConnectionMode
+import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.container.DockerIPLogger
@@ -57,7 +57,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
             return
         }
 
-        if (!isInteractingWithDocker()) {
+        if (!ProjectHelper.dockerUsed) {
             logger.info("Orchestration setup will be skipped because there is not any docker-like installation selected.")
             return
         }
@@ -88,7 +88,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
             return
         }
 
-        if (!isInteractingWithDocker()) {
+        if (!ProjectHelper.dockerUsed) {
             logger.info("Orchestration teardowns will be skipped because there is not any docker-like installation selected.")
             return
         }
@@ -101,10 +101,10 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
         boolean shouldStop = false
 
-        if (isPlatformStopProfileSelected()) {
+        if (ProjectHelper.isProfileSelected('platformStop')) {
             shouldStop = true
             logger.info("platformStop profile has been selected. Going to shutdown the platform.")
-        } else if (isPlatformStopTestSelected()) {
+        } else if (ProjectHelper.isTestSelected('platformStop')) {
             // for STARTANDSTOP we will just stop them
             // for STARTORCONNECT if we could not connect to them we started them so in that case we will stop them
             // for STARTORCONNECTANDLEAVE we are not stopping them
@@ -150,7 +150,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
             orchestration.initDockerManagers()
 
-            new GradleSpaceliftDelegate().project().spacelift.configuration['serviceInstallations'].value.each { installation ->
+            ProjectHelper.spacelift.configuration['serviceInstallations'].value.each { installation ->
                 try {
                     DockerContainer.removeContainer(installation)
                     // TODO this does not work properly with Cube 1.0.0.Alpha7 and Docker 1.10.1
@@ -166,12 +166,6 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
         }
     }
 
-    private def isInteractingWithDocker() {
-        !new GradleSpaceliftDelegate().project().selectedInstallations.findAll {
-            it['name'].startsWith("docker")
-        }.isEmpty()
-    }
-
     private handleException(CubeControlException ex, Logger logger) {
         Throwable cause = ex.getCause()
         if (cause instanceof InternalServerErrorException) {
@@ -179,7 +173,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
             def m = cause.getMessage() =~ /.* address already in use$/
 
             if (m) {
-                List<String> containers = new GradleSpaceliftDelegate().project().spacelift.configuration['serviceInstallations'].value
+                List<String> containers = ProjectHelper.spacelift.configuration['serviceInstallations'].value
                 DockerContainer.removeContainers("Created", containers)
                 DockerContainer.removeContainers("Running", containers)
 
@@ -192,16 +186,6 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
             throw ex
         }
-    }
-
-    private boolean isPlatformStopProfileSelected() {
-        new GradleSpaceliftDelegate().project().selectedProfile['name'] == "platformStop"
-    }
-
-    private boolean isPlatformStopTestSelected() {
-        ! new GradleSpaceliftDelegate().project().selectedTests.findAll { test ->
-            test['name'] == "platformStop"
-        }.isEmpty()
     }
 }
 

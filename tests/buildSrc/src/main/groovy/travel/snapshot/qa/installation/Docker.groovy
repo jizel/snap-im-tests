@@ -3,13 +3,13 @@ package travel.snapshot.qa.installation
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.Installation
 import org.arquillian.spacelift.task.TaskRegistry
 import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.DockerToolsRegister
+import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.image.DockerImagesDowloader
@@ -31,15 +31,15 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
     DeferredValue<Void> postActions = DeferredValue.of(Void)
 
     DeferredValue<String> dockerRegistryPassword = DeferredValue.of(String).from({
-        new GradleSpaceliftDelegate().project().spacelift.configuration['dockerRegistryPassword'].value
+        ProjectHelper.spacelift.configuration['dockerRegistryPassword'].value
     })
 
     DeferredValue<List> images = DeferredValue.of(List).from({
-        new GradleSpaceliftDelegate().project().spacelift.configuration['dockerImages'].value
+        ProjectHelper.spacelift.configuration['dockerImages'].value
     })
 
     DeferredValue<List> containers = DeferredValue.of(List).from({
-        new GradleSpaceliftDelegate().project().spacelift.configuration['serviceInstallations'].value
+        ProjectHelper.spacelift.configuration['serviceInstallations'].value
     })
 
     Docker(String name, Object parent) {
@@ -114,9 +114,7 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
 
         // there is not need to download images when we just want to stop containers
 
-        def selectedProfile = new GradleSpaceliftDelegate().project().selectedProfile['name']
-
-        if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && selectedProfile != "platformStop") {
+        if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && ProjectHelper.isProfileSelected("platformStop")) {
 
             // registering tools in registerTools method in this class is too late for us
             // tools are registered after the installation has completed

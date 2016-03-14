@@ -1,21 +1,15 @@
 package travel.snapshot.qa.test.execution.load
 
 import org.arquillian.spacelift.Spacelift
-import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.maven.MavenExecutor
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.ServiceType
+import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 
 class LoadTestsExecution {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoadTestsExecution)
-
     private final DataPlatformTestOrchestration orchestration
-
-    private final File workspace
 
     private LoadTestsConfiguration configuration
 
@@ -23,7 +17,6 @@ class LoadTestsExecution {
 
     LoadTestsExecution(DataPlatformTestOrchestration orchestration) {
         this.orchestration = orchestration
-        this.workspace = new GradleSpaceliftDelegate().project().spacelift.workspace
     }
 
     LoadTestsExecution configuration(LoadTestsConfiguration configuration) {
@@ -75,14 +68,14 @@ class LoadTestsExecution {
     }
 
     private def getProjectDir() {
-        new File(workspace, "dataplatformqa/load_tests").absolutePath
+        new File(ProjectHelper.workspace, "dataplatformqa/load_tests").absolutePath
     }
 
     private def getResultsDir(LoadTestsSimulation simulation) {
 
         def reportDirName = simulation.toString().split("\\.").last()
 
-        new File(workspace, "reports/load_tests/${reportDirName}").absolutePath
+        new File(ProjectHelper.workspace, "reports/load_tests/${reportDirName}").absolutePath
     }
 
     private def getProjectPom() {

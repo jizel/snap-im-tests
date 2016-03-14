@@ -22,6 +22,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
+import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
@@ -143,6 +144,9 @@ spacelift {
         apiTests(from: dataPlatformTest) {
             tests 'platformStart', 'apiTests', 'platformStop'
         }
+        apiTestsWebPerformance(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsWebPerformance', 'platformStop'
+        }
         loadTests {
             enabledInstallations loadTestsInstallations
             tests loadTestsTestExecutions
@@ -219,7 +223,11 @@ spacelift {
         // reporting
 
         reportableTest(from: DataPlatformTest) {
-            report { new DataPlatformLogReporter(platform, serviceInstallations).report() }
+            report {
+                if (ProjectHelper.dockerUsed) {
+                    new DataPlatformLogReporter(platform, serviceInstallations).report()
+                }
+            }
         }
 
         ////////////////////

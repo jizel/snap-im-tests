@@ -4,6 +4,7 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.ServiceCubePair
 import travel.snapshot.qa.docker.ServiceType
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
+import travel.snapshot.qa.util.PropertyResolver
 
 class DataPlatformLogReporter {
 
