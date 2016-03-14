@@ -46,6 +46,11 @@ public class WebPerformanceStepdefs {
         steps.getPropertiesWithPaging("/web_performance" + url, propertyId, limit, cursor);
     }
 
+    @When("^List of web performance \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\"$")
+    public void list_of_web_performance_for_property_id_is_got_with_limit(String url, String propertyId, @Transform(NullEmptyStringConverter.class) String limit) throws Throwable {
+        steps.getPropertiesWithPaging("/web_performance" + url, propertyId, limit, null);
+    }
+
     @Then("^Values are sorted by \"([^\"]*)\" in \"([^\"]*)\"$")
     public void values_are_sorted_by_in(String metric, String direction) throws Throwable {
         steps.referralsAreSorted(metric, direction.equals("ascending") ? true : false);
