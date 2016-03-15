@@ -31,7 +31,7 @@ class APITestsExecution {
             tool.parameter("-Dtest.single=${single}")
         }
 
-        tool.parameter("test").shouldExitWith(0, 1).execute().await()
+        tool.parameter("clean").parameter("test").shouldExitWith(0, 1).execute().await()
 
         Spacelift.task("gradle").parameters("--project-dir", projectDir, "aggregate").execute().await()
     }
