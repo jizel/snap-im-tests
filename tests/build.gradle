@@ -12,6 +12,7 @@ import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.api.APITestsExecution
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBDropper
 import travel.snapshot.qa.test.execution.db.mariadb.MariaDBInitializer
 import travel.snapshot.qa.test.execution.db.tsv.TsvImporter
@@ -20,6 +21,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
+import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.ProjectHelper
@@ -147,6 +149,12 @@ spacelift {
         apiTestsWebPerformance(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsWebPerformance', 'platformStop'
         }
+        apiTestsConfiguration(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsConfiguration', 'platformStop'
+        }
+        apiTestsSmoke(from : dataPlatformTest) {
+            tests 'platformStart', 'apiTestsSmoke', 'platformStop'
+        }
         loadTests {
             enabledInstallations loadTestsInstallations
             tests loadTestsTestExecutions
@@ -227,6 +235,9 @@ spacelift {
                 if (ProjectHelper.dockerUsed) {
                     new DataPlatformLogReporter(platform, serviceInstallations).report()
                 }
+                if (ProjectHelper.apiTestRunning) {
+                    ApiTestGuiReporter.report()
+                }
             }
         }
 
@@ -248,6 +259,22 @@ spacelift {
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.WEB_PERFORMANCE).execute()
             }
             execute { new APITestsExecution(platform).single("RunWebPerformanceTests").execute() }
+        }
+
+        apiTestsConfiguration(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION).execute()
+            }
+            execute { new APITestsExecution(platform).single("RunConfigurationTests").execute() }
+        }
+
+        apiTestsSmoke(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
+            }
+            execute { new APITestsExecution(platform).single("RunSmokeTests").execute() }
         }
 
         ////////////////////
@@ -314,7 +341,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.2.Final'
+        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.4.Final'
         classpath 'travel.snapshot.qa.manager:docker-manager:1.0.4'
     }
 }

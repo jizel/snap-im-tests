@@ -7,7 +7,19 @@ import org.gradle.api.Project
 final class ProjectHelper {
 
     static boolean isLoadTestRunning() {
-        isProfileSelected("loadTests")
+        !project.selectedTests.findAll { test -> test['name'] == "loadTests" }.isEmpty()
+    }
+
+    static boolean isApiTestRunning() {
+        !project.selectedTests.findAll { test -> test['name'].startsWith("apiTests") }.isEmpty()
+    }
+
+    static String getApiTestsProjectDir() {
+        new File(workspace, "dataplatformqa/dp-api-tests").absolutePath
+    }
+
+    static String getApiTestsResultsDir() {
+        new File(workspace, "reports/api_tests/").absolutePath
     }
 
     static boolean isDockerUsed() {
@@ -31,6 +43,6 @@ final class ProjectHelper {
     }
 
     static File getWorkspace() {
-        spacelift.workspace
+        (File) spacelift.workspace
     }
 }

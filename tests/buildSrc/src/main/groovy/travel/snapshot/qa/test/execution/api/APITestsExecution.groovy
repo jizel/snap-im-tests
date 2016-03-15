@@ -8,12 +8,12 @@ import travel.snapshot.qa.util.PropertyResolver
 
 class APITestsExecution {
 
-    private final DataPlatformTestOrchestration testOrchestration
-
     private String single
 
+    private String apiTestsDpProperties
+
     APITestsExecution(final DataPlatformTestOrchestration testOrchestration) {
-        this.testOrchestration = testOrchestration
+        this.apiTestsDpProperties = PropertyResolver.resolveApiTestsDpProperties(testOrchestration.get())
     }
 
     APITestsExecution single(String single) {
@@ -23,24 +23,15 @@ class APITestsExecution {
 
     def execute() {
 
-        CommandTool tool = Spacelift.task("gradle")
-                .parameters("--project-dir", projectDir)
-                .parameter("-Dapi-tests-config=${apiTestsProperties}")
+        CommandTool apiTestsExecution = Spacelift.task("gradle")
+                .parameters("--project-dir", ProjectHelper.apiTestsProjectDir)
+                .parameter("-Dapi-tests-config=${apiTestsDpProperties}")
+                .parameter("-Dserenity.outputDirectory=${ProjectHelper.apiTestsResultsDir}")
 
         if (single) {
-            tool.parameter("-Dtest.single=${single}")
+            apiTestsExecution.parameter("-Dtest.single=${single}")
         }
 
-        tool.parameter("clean").parameter("test").shouldExitWith(0, 1).execute().await()
-
-        Spacelift.task("gradle").parameters("--project-dir", projectDir, "aggregate").execute().await()
-    }
-
-    private def getProjectDir() {
-        new File(ProjectHelper.workspace, "dataplatformqa/dp-api-tests").absolutePath
-    }
-
-    private def getApiTestsProperties() {
-        PropertyResolver.resolveApiTestsDpProperties(testOrchestration.get())
+        apiTestsExecution.parameters("clean", "test", "aggregate").shouldExitWith(0, 1).execute().await()
     }
 }

@@ -158,6 +158,8 @@ class MavenInstallation extends BaseContainerizableObject<MavenInstallation> imp
         Spacelift.task(getFsPath(), UnzipTool).toDir(((File) getHome()).parentFile.canonicalFile).execute().await()
 
         ProjectHelper.project.getAnt().invokeMethod("chmod", [dir: "${getHome()}/bin", perm: "a+x", includes: "*"])
+
+        postActions.resolve()
     }
 
     @Override

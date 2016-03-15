@@ -49,6 +49,18 @@ enum DataPlatformModules {
                     .build()
         }
     },
+    SMOKE {
+        @Override
+        List<DataPlatformModule> modules() {
+            new Builder()
+                    .add(IDENTITY)
+                    .add(CONFIGURATION)
+                    .add(FACEBOOK_SERVICE_API)
+                    .add(REVIEW)
+                    .add(WEB_PERFORMANCE)
+                    .build()
+        }
+    },
     DATABASE_SCHEMES {
 
         @Override

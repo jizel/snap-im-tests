@@ -241,7 +241,7 @@ class PropertyResolver {
      *
      * @return properties file for DP API tests
      */
-    static def resolveApiTestsDpProperties(DataPlatformOrchestration orchestration) {
+    static String resolveApiTestsDpProperties(DataPlatformOrchestration orchestration) {
 
         // in case we want to override template dp file
         String dpPropertiesSystemProperty = System.getProperty("dp.properties")
@@ -459,4 +459,7 @@ class PropertyResolver {
         }
     }
 
+    static boolean isRunningWithGui() {
+        Boolean.parseBoolean(System.getProperty("testRunningWithGui"))
+    }
 }
