@@ -10,6 +10,14 @@ final class ProjectHelper {
         isProfileSelected("loadTests")
     }
 
+    static String getApiTestsProjectDir() {
+        new File(workspace, "dataplatformqa/dp-api-tests").absolutePath
+    }
+
+    static String getApiTestsResultsDir() {
+        new File(workspace, "reports/api_tests/").absolutePath
+    }
+
     static boolean isDockerUsed() {
         !project.selectedInstallations.collect { installation -> installation.name.startsWith('docker') }.isEmpty()
     }
@@ -31,6 +39,6 @@ final class ProjectHelper {
     }
 
     static File getWorkspace() {
-        spacelift.workspace
+        (File) spacelift.workspace
     }
 }

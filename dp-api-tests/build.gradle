@@ -35,6 +35,7 @@ apply plugin: 'groovy'
 version = '1.0-SNAPSHOT'
 
 test {
+    systemProperties['serenity.outputDirectory'] = System.getProperty("serenity.outputDirectory")
     systemProperties['api-tests-config'] = System.getProperty("api-tests-config")
     testLogging {
         showStandardStreams = true
