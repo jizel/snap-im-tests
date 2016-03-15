@@ -114,7 +114,7 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
 
         // there is not need to download images when we just want to stop containers
 
-        if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && ProjectHelper.isProfileSelected("platformStop")) {
+        if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && !ProjectHelper.isProfileSelected("platformStop")) {
 
             // registering tools in registerTools method in this class is too late for us
             // tools are registered after the installation has completed
