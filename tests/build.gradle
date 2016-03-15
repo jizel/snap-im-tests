@@ -21,6 +21,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
+import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.ProjectHelper
@@ -233,6 +234,9 @@ spacelift {
             report {
                 if (ProjectHelper.dockerUsed) {
                     new DataPlatformLogReporter(platform, serviceInstallations).report()
+                }
+                if (ProjectHelper.apiTestRunning) {
+                    ApiTestGuiReporter.report()
                 }
             }
         }

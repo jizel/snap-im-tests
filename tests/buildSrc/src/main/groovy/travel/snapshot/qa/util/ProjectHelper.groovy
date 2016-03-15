@@ -7,7 +7,11 @@ import org.gradle.api.Project
 final class ProjectHelper {
 
     static boolean isLoadTestRunning() {
-        isProfileSelected("loadTests")
+        !project.selectedTests.findAll { test -> test['name'] == "loadTests" }.isEmpty()
+    }
+
+    static boolean isApiTestRunning() {
+        !project.selectedTests.findAll { test -> test['name'].startsWith("apiTests") }.isEmpty()
     }
 
     static String getApiTestsProjectDir() {
