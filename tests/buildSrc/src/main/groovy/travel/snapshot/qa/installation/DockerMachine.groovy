@@ -15,9 +15,11 @@ import travel.snapshot.qa.util.image.DockerImagesDowloader
 import travel.snapshot.qa.util.interaction.DockerInteraction
 import travel.snapshot.qa.util.machine.DockerMachineHelper
 
+import static java.lang.Boolean.FALSE
+
 class DockerMachine extends BaseContainerizableObject<DockerMachine> implements Installation {
 
-    DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from({ false })
+    DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from(FALSE)
 
     DeferredValue<String> product = DeferredValue.of(String).from(getProduct())
 
@@ -82,7 +84,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
 
     @Override
     boolean isInstalled() {
-        false
+        isInstalled.resolve()
     }
 
     @Override
@@ -122,7 +124,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         // here we will download images into Docker machine instead locally
         // there is not need to download images to VM when we just want to stop containers
 
-        if (ProjectHelper.isProfileSelected("platformStop")) {
+        if (!ProjectHelper.isProfileSelected("platformStop")) {
             DockerImagesDowloader.download(images.resolve(), dockerRegistryPassword.resolve())
             DockerContainer.removeContainers(containers.resolve())
         }
@@ -160,11 +162,14 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
 
         // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
         System.setProperty("arquillian.xml.java.rmi.server.hostname", dockerMachineIp)
+
+        // post action closure for custom actions after Docker installation is done
+
+        postActions.resolve()
     }
 
     @Override
     void registerTools(TaskRegistry registry) {
-
     }
 
     @Override

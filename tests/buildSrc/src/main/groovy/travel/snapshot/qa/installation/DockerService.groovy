@@ -7,11 +7,13 @@ import org.arquillian.spacelift.task.TaskRegistry
 import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 
+import static java.lang.Boolean.FALSE
+
 class DockerService extends BaseContainerizableObject<DockerService> implements Installation {
 
     DeferredValue<DataPlatformTestOrchestration> setup = DeferredValue.of(DataPlatformTestOrchestration)
 
-    DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from({ false })
+    DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from(FALSE)
 
     DeferredValue<String> product = DeferredValue.of(String).from(getProduct())
 
@@ -55,7 +57,7 @@ class DockerService extends BaseContainerizableObject<DockerService> implements 
 
     @Override
     boolean isInstalled() {
-        false
+        isInstalled.resolve()
     }
 
     @Override

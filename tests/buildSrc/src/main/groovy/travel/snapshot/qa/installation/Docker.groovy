@@ -1,6 +1,5 @@
 package travel.snapshot.qa.installation
 
-import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
 import org.arquillian.spacelift.gradle.Installation
@@ -14,11 +13,13 @@ import travel.snapshot.qa.util.PropertyResolver
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.image.DockerImagesDowloader
 
+import static java.lang.Boolean.FALSE
+
 class Docker extends BaseContainerizableObject<Docker> implements Installation {
 
     DeferredValue<DataPlatformTestOrchestration> setup = DeferredValue.of(DataPlatformTestOrchestration)
 
-    DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from({ false })
+    DeferredValue<Boolean> isInstalled = DeferredValue.of(Boolean).from(FALSE)
 
     DeferredValue<String> product = DeferredValue.of(String).from(getProduct())
 
@@ -78,7 +79,7 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
 
     @Override
     boolean isInstalled() {
-        false
+        isInstalled.resolve()
     }
 
     @Override
@@ -115,22 +116,20 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
         // there is not need to download images when we just want to stop containers
 
         if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && !ProjectHelper.isProfileSelected("platformStop")) {
-
-            // registering tools in registerTools method in this class is too late for us
-            // tools are registered after the installation has completed
-
-            new DockerToolsRegister().register(Spacelift.registry())
-
             DockerImagesDowloader.download(images.resolve(), dockerRegistryPassword.resolve())
-
             DockerContainer.removeContainers(containers.resolve())
         }
 
         setup.resolve()
+
+        // post action closure for custom actions after Docker installation is done
+
+        postActions.resolve()
     }
 
     @Override
     void registerTools(TaskRegistry registry) {
+        // this is executed before install method
         new DockerToolsRegister().register(registry)
     }
 
