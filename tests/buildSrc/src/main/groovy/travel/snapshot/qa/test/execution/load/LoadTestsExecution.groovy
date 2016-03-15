@@ -40,7 +40,9 @@ class LoadTestsExecution {
             throw new IllegalStateException("Load test simulation was not set.")
         }
 
-        MavenExecutor mavenExecutor = Spacelift.task(MavenExecutor).pom(projectPom)
+        MavenExecutor mavenExecutor = Spacelift.task(MavenExecutor)
+                .workingDir(projectDir)
+                .pom(projectPom)
                 .goal("clean")
                 .goal("test")
                 .goal("gatling:execute")

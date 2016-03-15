@@ -258,7 +258,10 @@ class PropertyResolver {
                     // load tests are in QA repository itself
                     'dataPlatformQARepository', 'dataPlatformRepository',
                     // load tests are located in Maven project so we need Maven installation
-                    'maven'
+                    'maven',
+                    // in case we are running against Docker, we have to build modules to run tests against by
+                    // gradle installation in the first place
+                    'gradle'
             ]
         } else {
             // if load tests environment is not DOCKER, it means we are executing them against
