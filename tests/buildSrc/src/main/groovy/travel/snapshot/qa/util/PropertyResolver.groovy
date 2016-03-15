@@ -6,13 +6,13 @@ import org.arquillian.spacelift.gradle.text.ProcessTemplate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.manager.ConnectionMode
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
 import travel.snapshot.qa.inspection.InspectionException
 import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
 import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
+import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.machine.DockerMachineHelper
 
 import static travel.snapshot.qa.docker.manager.ConnectionMode.STARTORCONNECTANDLEAVE
@@ -234,89 +234,18 @@ class PropertyResolver {
         deploymentStrategy.name()
     }
 
-    /**
-     * Returns properties file for DP API tests. When not set, 'dp.properties' is default.
-     *
-     * This will be set in apiTests Spacelift gradle task as a property.
-     *
-     * @return properties file for DP API tests
-     */
-    static String resolveApiTestsDpProperties(DataPlatformOrchestration orchestration) {
-
-        // in case we want to override template dp file
-        String dpPropertiesSystemProperty = System.getProperty("dp.properties")
-
-        if (dpPropertiesSystemProperty) {
-            logger.info("Going to use ${dpPropertiesSystemProperty} file for API tests")
-            return dpPropertiesSystemProperty
-        }
-
-        File rootDir = (File) ProjectHelper.project.rootDir
-        File templateDpProperties = new File(rootDir, "configuration/api-tests/template_dp.properties")
-
-        Map containerIPMapping = [:]
-
-        String tomcatIP
-        String mariadbIP
-        String activemqIP
-        String mongodbIP
-
-        if (resolveDockerMode() == MACHINE.name()) {
-            try {
-                tomcatIP = mariadbIP = activemqIP = mongodbIP = DockerMachineHelper.getIp(resolveDockerMachine())
-            } catch (InspectionException ex) {
-                throw new InspectionException("Unable to get IP of the container for dp.properties file", ex)
-            }
-        } else {
-            try {
-                tomcatIP = orchestration.inspectIP("tomcat")
-                mariadbIP = orchestration.inspectIP("mariadb")
-                activemqIP = orchestration.inspectIP("activemq")
-                mongodbIP = orchestration.inspectIP("mongodb")
-            } catch (InspectionException ex) {
-                throw new InspectionException("Unable to get IP of the container for dp.properties file", ex)
-            }
-        }
-
-        File output = Spacelift.task(templateDpProperties, ProcessTemplate)
-                .bindings(["tomcat.ip": tomcatIP])
-                .bindings(["mariadb.ip": mariadbIP])
-                .bindings(["activemq.ip": activemqIP])
-                .bindings(["mongodb.ip": mongodbIP])
-                .execute().await()
-
-        logger.info("Going to use this dp.properties file for API tests")
-        logger.info(output.text)
-
-        output.absolutePath
-    }
-
-    static def resolveContainerIP(String containerId, DataPlatformOrchestration orchestration) {
-        if (resolveDockerMode() == DockerMode.MACHINE) {
+    static def resolveContainerIP(String containerId) {
+        if (resolveDockerMode() == MACHINE.toString()) {
             return DockerMachineHelper.getIp(resolveDockerMachine())
         }
 
-        orchestration.inspectIP(containerId)
-    }
-
-    static def resolveTsvLoadScript() {
-
-        File tsvTemplate = new File(resolveDataPlatformQARepositoryLocation(), "fake-tsv-data/template_load.sql")
-
-        File output = Spacelift.task(tsvTemplate, ProcessTemplate)
-                .bindings(["path": resolveDataPlatformQARepositoryLocation().absolutePath])
-                .execute().await()
-
-        logger.debug("Going to use this load.sql file for TSV import.")
-        logger.debug(output.text)
-
-        output.absolutePath
+        DockerContainer.inspectIP(containerId)
     }
 
     // Load Tests
 
     static List<String> resolveLoadTestsInstallations() {
-        List<String> loadTestsInstallations
+        List<String> loadTestsInstallations = []
 
         if (resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
             loadTestsInstallations = [
@@ -329,7 +258,10 @@ class PropertyResolver {
                     // load tests are in QA repository itself
                     'dataPlatformQARepository', 'dataPlatformRepository',
                     // load tests are located in Maven project so we need Maven installation
-                    'maven'
+                    'maven',
+                    // in case we are running against Docker, we have to build modules to run tests against by
+                    // gradle installation in the first place
+                    'gradle'
             ]
         } else {
             // if load tests environment is not DOCKER, it means we are executing them against
