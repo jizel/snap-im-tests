@@ -59,4 +59,8 @@ class DockerContainer {
     static List<String> listWithImages() {
         Spacelift.task("docker").parameters("ps", "--format", "{{.Names}} {{.Image}}").execute().await().output()
     }
+
+    static String inspectIP(String containerId) {
+        Spacelift.task("docker").parameters("inspect", "--format", "{{ .NetworkSettings.IPAddress }}", containerId).execute().await().output().get(0)
+    }
 }

@@ -152,7 +152,7 @@ spacelift {
         apiTestsConfiguration(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsConfiguration', 'platformStop'
         }
-        apiTestsSmoke(from : dataPlatformTest) {
+        apiTestsSmoke(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsSmoke', 'platformStop'
         }
         loadTests {
@@ -258,7 +258,7 @@ spacelift {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.WEB_PERFORMANCE).execute(forceDataPlatformBuild)
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.WEB_PERFORMANCE).execute()
             }
-            execute { new APITestsExecution(platform).single("RunWebPerformanceTests").execute() }
+            execute { new APITestsExecution("RunWebPerformanceTests").execute() }
         }
 
         apiTestsConfiguration(inherits: apiTests) {
@@ -266,7 +266,7 @@ spacelift {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute(forceDataPlatformBuild)
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION).execute()
             }
-            execute { new APITestsExecution(platform).single("RunConfigurationTests").execute() }
+            execute { new APITestsExecution("RunConfigurationTests").execute() }
         }
 
         apiTestsSmoke(inherits: apiTests) {
@@ -274,7 +274,9 @@ spacelift {
                 new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute(forceDataPlatformBuild)
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
             }
-            execute { new APITestsExecution(platform).single("RunSmokeTests").execute() }
+            execute {
+                new APITestsExecution("RunSmokeTests").execute()
+            }
         }
 
         ////////////////////
@@ -299,10 +301,7 @@ spacelift {
                 LoadTestsConfiguration.parse(platform)
             }
             execute { List data ->
-                new LoadTestsExecution(platform)
-                        .simulation((LoadTestsSimulation) data.get(0))
-                        .configuration((LoadTestsConfiguration) data.get(1))
-                        .execute()
+                new LoadTestsExecution((LoadTestsSimulation) data.get(0), (LoadTestsConfiguration) data.get(1)).execute()
             }
         }
 

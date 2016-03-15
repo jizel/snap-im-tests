@@ -2,7 +2,6 @@ package travel.snapshot.qa.test.execution.db.tsv
 
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
-import travel.snapshot.qa.util.PropertyResolver
 
 class TsvImporter {
 
@@ -16,6 +15,6 @@ class TsvImporter {
         orchestration
                 .mariaDBDockerManager
                 .serviceManager
-                .executeScript PropertyResolver.resolveTsvLoadScript()
+                .executeScript TsvLoadScriptResolver.resolve()
     }
 }

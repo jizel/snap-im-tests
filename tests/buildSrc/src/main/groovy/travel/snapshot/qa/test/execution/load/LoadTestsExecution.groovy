@@ -2,21 +2,22 @@ package travel.snapshot.qa.test.execution.load
 
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.maven.MavenExecutor
-import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.ServiceType
 import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 
 class LoadTestsExecution {
 
-    private final DataPlatformTestOrchestration orchestration
-
     private LoadTestsConfiguration configuration
 
     private LoadTestsSimulation simulation
 
-    LoadTestsExecution(DataPlatformTestOrchestration orchestration) {
-        this.orchestration = orchestration
+    LoadTestsExecution() {
+    }
+
+    LoadTestsExecution(LoadTestsSimulation simulation, LoadTestsConfiguration configuration) {
+        this.simulation = simulation
+        this.configuration = configuration
     }
 
     LoadTestsExecution configuration(LoadTestsConfiguration configuration) {
@@ -61,7 +62,7 @@ class LoadTestsExecution {
         if (!host && PropertyResolver.resolveLoadTestEnvironment() == LoadTestEnvironment.DOCKER) {
             // this happens when we are running against Docker AND we have not set 'loadTestHost' property
             // in such case we will resolve Tomcat container IP, both for HOST and MACHINE cases
-            mavenExecutor.property("host=${PropertyResolver.resolveContainerIP(ServiceType.TOMCAT.name().toLowerCase(), orchestration.get())}")
+            mavenExecutor.property("host=${PropertyResolver.resolveContainerIP(ServiceType.TOMCAT.name().toLowerCase())}")
         }
 
         mavenExecutor.execute().await()
