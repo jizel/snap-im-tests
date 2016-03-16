@@ -101,7 +101,7 @@ public class BasicSteps {
                             not(isOneOf(PropertiesHelper.getListOfInt(CONFIGURATION_RESPONSE_HTTP_LOG_STATUS)))));
         }
 
-        builder.setContentType(ContentType.JSON);
+        builder.setContentType("application/json; charset=UTF-8");
         spec = builder.build();
     }
 
