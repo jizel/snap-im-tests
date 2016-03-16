@@ -54,7 +54,6 @@ Feature: Users create update delete
       | customer | snp      | Snap      | Shot     | snpsnapshot.travel       | Europe/Prague | cs-CZ   | 59          |
       | customer | snp      | Snap      | Shot     | @snpsnapshot.travel      | Europe/Prague | cs-CZ   | 59          |
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel   | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | 'snp@snpsnapshot.travel' | Europe/Prague | cs-CZ   | 59          |
       | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
       | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
       | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
