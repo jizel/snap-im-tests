@@ -20,11 +20,11 @@ import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
-import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
+import travel.snapshot.qa.test.execution.log.ContainerLogReporter
 import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
+import travel.snapshot.qa.test.execution.report.LoadTestGuiReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
-import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
@@ -146,18 +146,59 @@ spacelift {
         apiTests(from: dataPlatformTest) {
             tests 'platformStart', 'apiTests', 'platformStop'
         }
-        apiTestsWebPerformance(from: dataPlatformTest) {
-            tests 'platformStart', 'apiTestsWebPerformance', 'platformStop'
+
+        review(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsReview', 'platformStop'
         }
-        apiTestsConfiguration(from: dataPlatformTest) {
+
+        social_media(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsSocialMedia', 'platformStop'
+        }
+
+        facebook(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsFacebook', 'platformStop'
+        }
+
+        instagram(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsInstagram', 'platformStop'
+        }
+
+        twitter(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsTwitter', 'platformStop'
+        }
+
+        identity(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsIdentity', 'platformStop'
+        }
+
+        configuration(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsConfiguration', 'platformStop'
         }
-        apiTestsSmoke(from: dataPlatformTest) {
+
+        authorization(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsAuthorization', 'platformStop'
+        }
+
+        web_performance(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsWebPerformance', 'platformStop'
+        }
+
+        rate_shopper(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsRateShopper', 'platformStop'
+        }
+
+        eventing(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsEventing', 'platformStop'
+        }
+
+        smoke(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsSmoke', 'platformStop'
         }
-        apiTestsAll(from: dataPlatformTest) {
+
+        all(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsAll', 'platformStop'
         }
+
         loadTests {
             enabledInstallations loadTestsInstallations
             tests loadTestsTestExecutions
@@ -235,18 +276,15 @@ spacelift {
 
         reportableTest(from: DataPlatformTest) {
             report {
-                if (ProjectHelper.dockerUsed) {
-                    new DataPlatformLogReporter(platform, serviceInstallations).report()
-                }
-                if (ProjectHelper.apiTestRunning) {
-                    ApiTestGuiReporter.report()
-                }
+                new ContainerLogReporter(platform, serviceInstallations).report()
+
+                ApiTestGuiReporter.report()
             }
         }
 
         ////////////////////
         //
-        // API tests
+        // API TESTS
         //
         ////////////////////
 
@@ -254,6 +292,62 @@ spacelift {
             beforeSuite {
                 new TsvImporter(platform).execute()
             }
+        }
+
+        apiTestsReview(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.REVIEW).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.REVIEW).execute()
+            }
+            execute { new APITestsExecution("RunReview*").execute() }
+        }
+
+        apiTestsSocialMedia(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.SOCIAL_MEDIA_API).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.SOCIAL_MEDIA_API).execute()
+            }
+            execute { new APITestsExecution("RunSocialMediaCommonTests").execute() }
+        }
+
+        apiTestsFacebook(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.FACEBOOK_SERVICE_API).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.FACEBOOK_SERVICE_API).execute()
+            }
+            execute { new APITestsExecution("RunSocialMediaFacebookTests").execute() }
+        }
+
+        apiTestsInstagram(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.INSTAGRAM_SERVICE_API).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.INSTAGRAM_SERVICE_API).execute()
+            }
+            execute { new APITestsExecution("RunSocialMediaInstagramTests").execute() }
+        }
+
+        apiTestsTwitter(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.TWITTER_SERVICE_API).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.TWITTER_SERVICE_API).execute()
+            }
+            execute { new APITestsExecution("RunSocialMediaTwitterTests").execute() }
+        }
+
+        apiTestsIdentity(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.IDENTITY).execute()
+            }
+            execute { new APITestsExecution("RunIdentity*").execute() }
+        }
+
+        apiTestsConfiguration(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION).execute()
+            }
+            execute { new APITestsExecution("RunConfigurationTests").execute() }
         }
 
         apiTestsWebPerformance(inherits: apiTests) {
@@ -264,13 +358,29 @@ spacelift {
             execute { new APITestsExecution("RunWebPerformanceTests").execute() }
         }
 
-        apiTestsConfiguration(inherits: apiTests) {
+        apiTestsRateShopper(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute(forceDataPlatformBuild)
-                new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION).execute()
+                new DataPlatformBuildExecutor().build(DataPlatformModule.RATE_SHOPPER).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.RATE_SHOPPER).execute()
             }
-            execute { new APITestsExecution("RunConfigurationTests").execute() }
+            execute { new APITestsExecution("RunRateShopperTests").execute() }
         }
+
+        apiTestsEventing(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute()
+            }
+            execute { new APITestsExecution("RunEventingCrudTests").execute() }
+        }
+
+//        apiTestsAuthorization(inherits: apiTests) {
+//            beforeTest {
+//                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute(forceDataPlatformBuild)
+//                new DataPlatformDeployer(platform).deploy(DataPlatformModule.IDENTITY).execute()
+//            }
+//            execute { new APITestsExecution("RunAuthorizationTests").execute() }
+//        }
 
         apiTestsSmoke(inherits: apiTests) {
             beforeTest {
@@ -316,6 +426,9 @@ spacelift {
             execute { List data ->
                 new LoadTestsExecution((LoadTestsSimulation) data.get(0), (LoadTestsConfiguration) data.get(1)).execute()
             }
+            afterTest { List data ->
+                LoadTestGuiReporter.report((LoadTestsSimulation) data.get(0))
+            }
         }
 
         loadTestsDeployment {
@@ -353,7 +466,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.4.Final'
+        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
         classpath 'travel.snapshot.qa.manager:docker-manager:1.0.4'
     }
 }

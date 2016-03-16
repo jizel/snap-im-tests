@@ -337,6 +337,7 @@ class MavenInstallation extends BaseContainerizableObject<MavenInstallation> imp
                 if (!defaultFile.exists()) {
                     log.warn("No settings.xml file found in ${defaultFile.getAbsolutePath()}, using fallback template")
                     defaultFile = File.createTempFile("settings.xml", "-spacelift");
+                    defaultFile.deleteOnExit()
                     this.getClass().getResource("/settings.xml-template").withInputStream { ris ->
                         defaultFile.withOutputStream { fos -> fos << ris }
                     }
