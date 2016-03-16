@@ -39,17 +39,30 @@ Feature: facebook
       | /analytics/facebook/reach           | day         | 7710  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/followers       | day         | 7517  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/number_of_posts | week        | 7709  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | week        | 7664  | 2015-12-06 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | week        | 7745  | 2015-12-06 | 2015-12-13 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | week        | 8033  | 2015-12-07 | 2015-12-13 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | week        | 7905  | 2015-12-07 | 2015-12-13 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | week        | 7773  | 2015-12-07 | 2015-12-13 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | week        | 7664  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | week        | 7745  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | week        | 8033  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | week        | 7905  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | week        | 7773  | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/number_of_posts | month       | 7411  | 2015-10-30 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | month       | 7358  | 2015-10-31 | 2015-12-01 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | month       | 7481  | 2015-11-01 | 2015-12-01 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | month       | 7751  | 2015-11-01 | 2015-11-30 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | month       | 7358  | 2015-10-30 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | month       | 7481  | 2015-10-30 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | month       | 7751  | 2015-10-30 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/reach           | month       | 7635  | 2015-10-30 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | month       | 7441  | 2015-10-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | month       | 7441  | 2015-10-30 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
+
+  @Smoke
+  Scenario Outline: Validate that metrics have valid value in the db for all metrics
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains "<count>" values of global stats dto
+
+    Examples:
+      | url                 | granularity | count                              | since      | until      | property                             |
+      | /analytics/facebook | day         | 7488, 7397, 7548, 7829, 7710, 7517 | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook | week        | 7709, 7664, 7745, 8033, 7905, 7773 | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook | month       | 7411, 7358, 7481, 7751, 7635, 7441 | 2015-10-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity and check it`s count
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -242,7 +255,7 @@ Feature: facebook
     And Response contains 0 values in data enclosure
 
     Examples:
-      | url                  | granularity | since | until            | property                             |
-      | /analytics/facebook/ | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+      | url                 | granularity | since | until            | property                             |
+      | /analytics/facebook | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
 
 
