@@ -20,11 +20,11 @@ import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
-import travel.snapshot.qa.test.execution.log.DataPlatformLogReporter
+import travel.snapshot.qa.test.execution.log.ContainerLogReporter
 import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
+import travel.snapshot.qa.test.execution.report.LoadTestGuiReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
-import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.PropertyResolver
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
@@ -276,12 +276,9 @@ spacelift {
 
         reportableTest(from: DataPlatformTest) {
             report {
-                if (ProjectHelper.dockerUsed) {
-                    new DataPlatformLogReporter(platform, serviceInstallations).report()
-                }
-                if (ProjectHelper.apiTestRunning) {
-                    ApiTestGuiReporter.report()
-                }
+                new ContainerLogReporter(platform, serviceInstallations).report()
+
+                ApiTestGuiReporter.report()
             }
         }
 
@@ -428,6 +425,9 @@ spacelift {
             }
             execute { List data ->
                 new LoadTestsExecution((LoadTestsSimulation) data.get(0), (LoadTestsConfiguration) data.get(1)).execute()
+            }
+            afterTest { List data ->
+                LoadTestGuiReporter.report((LoadTestsSimulation) data.get(0))
             }
         }
 

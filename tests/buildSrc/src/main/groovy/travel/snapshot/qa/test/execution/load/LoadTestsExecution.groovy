@@ -41,13 +41,13 @@ class LoadTestsExecution {
         }
 
         MavenExecutor mavenExecutor = Spacelift.task(MavenExecutor)
-                .workingDir(projectDir)
+                .workingDir(ProjectHelper.loadTestsProjectDir)
                 .pom(projectPom)
                 .goal("clean")
                 .goal("test")
                 .goal("gatling:execute")
                 .property("gatling.failOnError=false")
-                .property("gatling.resultsFolder=${getResultsDir(simulation)}")
+                .property("gatling.resultsFolder=${ProjectHelper.getLoadTestsResultsDir(simulation)}")
                 .property("gatling.debugPort=8001")
                 .property("gatling.simulationClass=${simulation}")
                 .property("environment=${configuration.environment}")
@@ -70,18 +70,7 @@ class LoadTestsExecution {
         mavenExecutor.execute().await()
     }
 
-    private def getProjectDir() {
-        new File(ProjectHelper.workspace, "dataplatformqa/load_tests").absolutePath
-    }
-
-    private def getResultsDir(LoadTestsSimulation simulation) {
-
-        def reportDirName = simulation.toString().split("\\.").last()
-
-        new File(ProjectHelper.workspace, "reports/load_tests/${reportDirName}").absolutePath
-    }
-
     private def getProjectPom() {
-        new File(getProjectDir(), "pom.xml").absolutePath
+        new File(ProjectHelper.loadTestsProjectDir, "pom.xml").absolutePath
     }
 }

@@ -4,22 +4,22 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.ServiceCubePair
 import travel.snapshot.qa.docker.ServiceType
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.ProjectHelper
 
-class DataPlatformLogReporter {
+class ContainerLogReporter {
 
     private DataPlatformTestOrchestration testOrchestration
 
     private List<String> services = []
 
-    DataPlatformLogReporter(DataPlatformTestOrchestration testOrchestration, List<String> services) {
+    ContainerLogReporter(DataPlatformTestOrchestration testOrchestration, List<String> services) {
         this.testOrchestration = testOrchestration
         this.services = services
     }
 
     def report() {
 
-        if (!testOrchestration || !testOrchestration.get() || !services || services.isEmpty()) {
+        if (!ProjectHelper.dockerUsed || !testOrchestration || !testOrchestration.get() || !services || services.isEmpty()) {
             return
         }
 

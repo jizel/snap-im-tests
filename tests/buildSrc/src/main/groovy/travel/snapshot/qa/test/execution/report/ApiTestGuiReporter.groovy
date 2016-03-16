@@ -11,7 +11,7 @@ import travel.snapshot.qa.util.PropertyResolver
 class ApiTestGuiReporter {
 
     static def report() {
-        if (PropertyResolver.runningWithGui) {
+        if (ProjectHelper.apiTestRunning && PropertyResolver.runningWithGui) {
             Spacelift.task(CommandTool)
                     .programName("google-chrome")
                     .parameter(new File(ProjectHelper.apiTestsResultsDir, "index.html").absolutePath)

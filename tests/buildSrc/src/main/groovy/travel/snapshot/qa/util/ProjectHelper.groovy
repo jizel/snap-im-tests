@@ -3,6 +3,7 @@ package travel.snapshot.qa.util
 import org.arquillian.spacelift.gradle.GradleSpaceliftDelegate
 import org.arquillian.spacelift.gradle.SpaceliftExtension
 import org.gradle.api.Project
+import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 
 final class ProjectHelper {
 
@@ -20,6 +21,17 @@ final class ProjectHelper {
 
     static String getApiTestsResultsDir() {
         new File(workspace, "reports/api_tests/").absolutePath
+    }
+
+    static String getLoadTestsProjectDir() {
+        new File(workspace, "dataplatformqa/load_tests").absolutePath
+    }
+
+    static String getLoadTestsResultsDir(LoadTestsSimulation simulation) {
+
+        def reportDirName = simulation.toString().split("\\.").last()
+
+        new File(workspace, "reports/load_tests/${reportDirName}").absolutePath
     }
 
     static boolean isDockerUsed() {
