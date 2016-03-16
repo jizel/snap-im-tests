@@ -53,11 +53,8 @@ enum DataPlatformModules {
         @Override
         List<DataPlatformModule> modules() {
             new Builder()
-                    .add(IDENTITY)
-                    .add(CONFIGURATION)
-                    .add(FACEBOOK_SERVICE_API)
-                    .add(REVIEW)
-                    .add(WEB_PERFORMANCE)
+                    .addAll(TOMCAT_MODULES.modules())
+                    .addAll(TOMCAT_SERVICE_API_MODULES.modules())
                     .build()
         }
     },

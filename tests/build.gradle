@@ -155,6 +155,9 @@ spacelift {
         apiTestsSmoke(from: dataPlatformTest) {
             tests 'platformStart', 'apiTestsSmoke', 'platformStop'
         }
+        apiTestsAll(from: dataPlatformTest) {
+            tests 'platformStart', 'apiTestsAll', 'platformStop'
+        }
         loadTests {
             enabledInstallations loadTestsInstallations
             tests loadTestsTestExecutions
@@ -276,6 +279,16 @@ spacelift {
             }
             execute {
                 new APITestsExecution("RunSmokeTests").execute()
+            }
+        }
+
+        apiTestsAll(inherits: apiTests) {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute(forceDataPlatformBuild)
+                new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
+            }
+            execute {
+                new APITestsExecution().execute()
             }
         }
 
