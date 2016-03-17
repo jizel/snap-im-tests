@@ -1,5 +1,6 @@
 package travel.snapshot.qa.test.execution.db.tsv
 
+import org.apache.commons.lang3.SystemUtils
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.text.ProcessTemplate
 import org.slf4j.Logger
@@ -12,17 +13,33 @@ class TsvLoadScriptResolver {
 
     static def resolve() {
 
-        File qaRepository = PropertyResolver.resolveDataPlatformQARepositoryLocation()
+        String qaRepositoryLocation = PropertyResolver.resolveDataPlatformQARepositoryLocation().absolutePath
 
-        File tsvTemplate = new File(qaRepository, "fake-tsv-data/template_load.sql")
+        String qaRepositoryTemplate = getPlatformSpecificDir(qaRepositoryLocation)
+
+        File tsvTemplate = new File(qaRepositoryLocation, "fake-tsv-data/template_load.sql")
+
+        logger.info("Going to expand TSV template file {} with {}.", tsvTemplate.absolutePath, qaRepositoryTemplate)
 
         File output = Spacelift.task(tsvTemplate, ProcessTemplate)
-                .bindings(["path": qaRepository.absolutePath])
-                .execute().await()
+                .bindings(["path": qaRepositoryTemplate])
+                .execute()
+                .await()
 
         logger.debug("Going to use this load.sql file for TSV import.")
         logger.debug(output.text)
 
         output.absolutePath
+    }
+
+    private static String getPlatformSpecificDir(String dir) {
+
+        if (SystemUtils.IS_OS_UNIX) {
+            return dir;
+        } else if (SystemUtils.IS_OS_WINDOWS) {
+            return dir.replaceAll("\\\\", "/")
+        } else {
+            throw new IllegalStateException("Unsupported platform.")
+        }
     }
 }
