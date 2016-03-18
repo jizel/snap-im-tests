@@ -4,6 +4,7 @@ import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
 import org.arquillian.spacelift.gradle.Test
 import org.slf4j.Logger
+import travel.snapshot.qa.util.PropertyResolver
 
 class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> implements Test {
 
@@ -87,8 +88,12 @@ class DataPlatformTest extends BaseContainerizableObject<DataPlatformTest> imple
 
                 // in case anything in this try block fails, we will still run the `after test` in the finally block
                 try {
-                    logger.invokeMethod("lifecycle", ":test:${name}${dataString}")
-                    execute.resolveWith(this, data)
+                    if (PropertyResolver.skipTestExecution()) {
+                        logger.info("Execution of ${name} will be skipped.")
+                    } else {
+                        logger.invokeMethod("lifecycle", ":test:${name}${dataString}")
+                        execute.resolveWith(this, data)
+                    }
                 }
                 catch (Exception e) {
                     logger.error(":test:${name} failed execute phase: ${e.getMessage()}")

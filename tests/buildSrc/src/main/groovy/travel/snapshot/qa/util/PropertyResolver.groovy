@@ -394,4 +394,8 @@ class PropertyResolver {
     static boolean isRunningWithGui() {
         Boolean.parseBoolean(System.getProperty("testRunningWithGui"))
     }
+
+    static boolean skipTestExecution() {
+        Boolean.parseBoolean(System.getProperty("skipTestExecution"))
+    }
 }

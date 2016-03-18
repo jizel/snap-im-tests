@@ -8,13 +8,13 @@ import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 final class ProjectHelper {
 
     static boolean isLoadTestRunning() {
-        !project.selectedTests.findAll { test -> test['name'] == "loadTests" }.isEmpty()
+        !project.selectedTests.findAll { test -> test['name'] == "loadTests" }.isEmpty() && !PropertyResolver.skipTestExecution()
     }
 
     static boolean isApiTestRunning() {
         !project.selectedTests.findAll { test ->
             test['name'].startsWith("apiTests") && test['name'] != "apiTests"
-        }.isEmpty()
+        }.isEmpty() && !PropertyResolver.skipTestExecution()
     }
 
     static String getApiTestsProjectDir() {
