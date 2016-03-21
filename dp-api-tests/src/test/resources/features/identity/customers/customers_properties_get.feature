@@ -193,6 +193,8 @@ Feature: Customers properties get
       | 10    | 0      | type==   | /null | /null     | 400           | 63          |
       | 10    | 0      | vat==CZ* | /null | /null     | 400           | 63          |
 
+   #TODO: Tests, that you can use right keywords for sort/sort_desc ()
+
   Scenario Outline: Filtering list of customer properties
     Given The following customers exist with random address
       | companyName                      | email               | code            | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    | timezone          |
