@@ -66,8 +66,7 @@ same as above but modules for other branch will be built.
 gradle test -PapiTests \
     -DconnectionMode=STARTORCONNECTANDLEAVE \
     -DtomcatDeploymentStrategy=DEPLOYORREDEPLOY \
-    -DdataPlatformRepositoryCommit=origin/myBranch \
-    -DforceDataPlatformBuild=true
+    -DdataPlatformRepositoryCommit=origin/myBranch
 ```
 
 Same as above but in case wars are already built, it will be rebuilt (done by last property)
@@ -138,8 +137,7 @@ You have to checkout that changes on your own locally and use `-DdataPlatformRep
 
 ### Will be modules built again when they are already built?
 
-No. Every module to be built will be skipped when its war file already exists. In case you want to force this, 
-you have to set this switch `-DforceDataPlatformBuild=true`.
+Yes, Gradle builds it. If no changes are made, build is effectively skipped.
 
 ### I have started containers and I want to setup my environment e.g. in IDE to connect to them and use them.
  

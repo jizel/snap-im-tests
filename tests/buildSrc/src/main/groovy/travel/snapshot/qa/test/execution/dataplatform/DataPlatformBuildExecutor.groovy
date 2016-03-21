@@ -13,8 +13,6 @@ class DataPlatformBuildExecutor {
 
     boolean withoutTests = true
 
-    boolean force = false
-
     DataPlatformBuildExecutor() {
         this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
     }
@@ -69,7 +67,11 @@ class DataPlatformBuildExecutor {
     DataPlatformBuildExecutor build(DataPlatformModule... modules) {
         if (modules) {
             for (DataPlatformModule module : modules) {
-                this.modules << module
+                if (module) {
+                    if (!this.modules.contains(module)) {
+                        this.modules << module
+                    }
+                }
             }
         }
         this
@@ -81,18 +83,7 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor execute() {
-        execute(force)
-        this
-    }
-
-    /**
-     * Builds all added modules.
-     *
-     * @param force if set to true, even already built modules will be build again
-     * @return this
-     */
-    DataPlatformBuildExecutor execute(boolean force) {
-        execute(withoutTests, force)
+        execute(withoutTests)
         this
     }
 
@@ -103,7 +94,7 @@ class DataPlatformBuildExecutor {
      * @param force true if even built modules should be built again
      * @return this
      */
-    DataPlatformBuildExecutor execute(boolean withoutTests, boolean force) {
+    DataPlatformBuildExecutor execute(boolean withoutTests) {
 
         def dataPlatformBuilder = new DataPlatformBuilder(dataPlatformDir.absolutePath, withoutTests)
 
@@ -112,11 +103,19 @@ class DataPlatformBuildExecutor {
             return this
         }
 
-        if (force) {
-            dataPlatformBuilder.forceBuild(modules)
-        } else {
-            dataPlatformBuilder.build(modules)
-        }
+        // from the test point of view, we have to build modules which are runtime prerequisities in Tomcat context
+        // for example, Review, in runtime, depends on Identity module. We have to be sure that this module is
+        // built and deployed along with Review module itself. If Review module was built and depoyed alone,
+        // tests would fail because Review module depends internally on it.
+
+        List<DataPlatformModule> dependencyModules = modules.collect { module -> module.dependencies }.flatten().unique()
+
+        List<DataPlatformModule> modulesToBuild = []
+
+        modulesToBuild.addAll(modules)
+        modulesToBuild.addAll(dependencyModules)
+
+        dataPlatformBuilder.build(modulesToBuild.unique())
 
         this
     }

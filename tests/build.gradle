@@ -117,10 +117,6 @@ spacelift {
             type Boolean
             value PropertyResolver.resolveDataPlatformRepositoryQACheckoutCommit()
         }
-        forceDataPlatformBuild {
-            type Boolean
-            value PropertyResolver.resolveForceDataPlatformBuild()
-        }
         tomcatDeploymentStrategy {
             value PropertyResolver.resolveTomcatDeploymentStrategy()
         }
@@ -269,7 +265,7 @@ spacelift {
         // Building of Data Platform
 
         platformBuild(from: DataPlatformTest) {
-            execute {  new DataPlatformBuildExecutor().build(PROJECT).execute(true) }
+            execute {  new DataPlatformBuildExecutor().build(PROJECT).execute() }
         }
 
         // reporting
@@ -296,7 +292,7 @@ spacelift {
 
         apiTestsReview(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.REVIEW).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.REVIEW).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.REVIEW).execute()
             }
             execute { new APITestsExecution("RunReview*").execute() }
@@ -304,7 +300,7 @@ spacelift {
 
         apiTestsSocialMedia(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.SOCIAL_MEDIA_API).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.SOCIAL_MEDIA_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.SOCIAL_MEDIA_API).execute()
             }
             execute { new APITestsExecution("RunSocialMediaCommonTests").execute() }
@@ -312,7 +308,7 @@ spacelift {
 
         apiTestsFacebook(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.FACEBOOK_SERVICE_API).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.FACEBOOK_SERVICE_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.FACEBOOK_SERVICE_API).execute()
             }
             execute { new APITestsExecution("RunSocialMediaFacebookTests").execute() }
@@ -320,7 +316,7 @@ spacelift {
 
         apiTestsInstagram(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.INSTAGRAM_SERVICE_API).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.INSTAGRAM_SERVICE_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.INSTAGRAM_SERVICE_API).execute()
             }
             execute { new APITestsExecution("RunSocialMediaInstagramTests").execute() }
@@ -328,7 +324,7 @@ spacelift {
 
         apiTestsTwitter(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.TWITTER_SERVICE_API).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.TWITTER_SERVICE_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.TWITTER_SERVICE_API).execute()
             }
             execute { new APITestsExecution("RunSocialMediaTwitterTests").execute() }
@@ -336,7 +332,7 @@ spacelift {
 
         apiTestsIdentity(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.IDENTITY).execute()
             }
             execute { new APITestsExecution("RunIdentity*").execute() }
@@ -344,7 +340,7 @@ spacelift {
 
         apiTestsConfiguration(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION).execute()
             }
             execute { new APITestsExecution("RunConfigurationTests").execute() }
@@ -352,7 +348,7 @@ spacelift {
 
         apiTestsWebPerformance(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.WEB_PERFORMANCE).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.WEB_PERFORMANCE).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.WEB_PERFORMANCE).execute()
             }
             execute { new APITestsExecution("RunWebPerformanceTests").execute() }
@@ -360,7 +356,7 @@ spacelift {
 
         apiTestsRateShopper(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.RATE_SHOPPER).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.RATE_SHOPPER).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.RATE_SHOPPER).execute()
             }
             execute { new APITestsExecution("RunRateShopperTests").execute() }
@@ -368,7 +364,7 @@ spacelift {
 
         apiTestsEventing(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute()
             }
             execute { new APITestsExecution("RunEventingCrudTests").execute() }
@@ -376,7 +372,7 @@ spacelift {
 
 //        apiTestsAuthorization(inherits: apiTests) {
 //            beforeTest {
-//                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute(forceDataPlatformBuild)
+//                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute()
 //                new DataPlatformDeployer(platform).deploy(DataPlatformModule.IDENTITY).execute()
 //            }
 //            execute { new APITestsExecution("RunAuthorizationTests").execute() }
@@ -384,7 +380,7 @@ spacelift {
 
         apiTestsSmoke(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
             }
             execute {
@@ -394,7 +390,7 @@ spacelift {
 
         apiTestsAll(inherits: apiTests) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute(forceDataPlatformBuild)
+                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
             }
             execute {
@@ -439,7 +435,7 @@ spacelift {
             execute {
                 new DataPlatformBuildExecutor()
                         .build(LoadTestsModuleParser.parse())
-                        .execute(forceDataPlatformBuild)
+                        .execute()
 
                 new DataPlatformDeployer(platform)
                         .deploy(LoadTestsModuleParser.parse())

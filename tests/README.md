@@ -438,7 +438,7 @@ spacelift {
 
         new DataPlatformBuildExecutor(workspace)
           .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
-          .execute(forceDataPlatformBuild)
+          .execute()
 
         new MariaDBInitializer(workspace, platform)
           .init(DataPlatformModule.IDENTITY)
@@ -548,7 +548,7 @@ started container where Tomcat instance is running. This is done like this:
 ```
 new DataPlatformBuildExecutor(workspace)
     .build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY)
-    .execute(forceDataPlatformBuild)
+    .execute()
 ```
 
 `DataPlatformBuildExecutor` builds modules which get evenutally deployed to Tomcat. In this case we are building 
@@ -556,28 +556,21 @@ new DataPlatformBuildExecutor(workspace)
 to build wars from sources which are located in a directory where Data Platform repository was cloned and checked out to 
 some branch - as you remember, we have specified `GitBasedInstallation` for it.
 
-Build executor is smart about what to build and what not. When `forceDataPlatformBuild` resolves to `false` (this is just 
-configuration property which can be overriden on the command line when executing tests), wars which are already built - 
-they are located in `build/libs` directory in Data Platform repository - _are not built again_ so this makes deployment 
-and test execution _way more faster_. On the other hand if you want to force the building, even wars are already present 
-(but e.g. your sources could change in the meanwhile), call `execute` method with `true` argument.
-
 Building of modules is done by Gradle which has been installed by our `gradle` installation. Build executor builds 
-only specified modules and nothing more. Gradle is smart enough to automatically build modules which module under 
-build is depending on.
+only specified modules and modules which respective module depends on in runtime when deployed in Tomcat.
 
 You could build whole Data Platform project by using build executor in this way:
 
 ```
 new DataPlatformBuildExecutor(workspace)
-    .build(DataPlatformModules.ALL).execute(forceDataPlatformBuild)
+    .build(DataPlatformModules.ALL).execute()
 ```
 
 or you could build only modules which are intended to be deployed to Tomcat like this:
 
 ```
 new DataPlatformBuildExecutor(workspace)
-    .build(DataPlatformModules.TOMCAT_MODULES).execute(forceDataPlatformBuild)
+    .build(DataPlatformModules.TOMCAT_MODULES).execute()
 ```
 
 Check [DataPlatformModules](buildSrc/src/main/groovy/travel/snapshot/qa/test/execution/dataplatform/DataPlatformModules.groovy) for further information.
