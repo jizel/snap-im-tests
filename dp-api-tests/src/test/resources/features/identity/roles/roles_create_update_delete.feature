@@ -15,6 +15,7 @@ Feature: Roles create update delete
       | applicationId                        | roleName          |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Updated role name |
 
+
   @Smoke
   Scenario: Creating role
     When Role is created
@@ -26,19 +27,20 @@ Feature: Roles create update delete
     And "Location" header is set and contains the same role
     And Etag header is present
 
-  Scenario Outline: Checking error codes for creating role
 
+  Scenario Outline: Checking error codes for creating role
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
-
     Examples:
-      | json_input_file                                                | method | module   | url             | error_code | custom_code |
-      | /messages/identity/roles/create_role_missing_role_name.json    | POST   | identity | /identity/roles | 400        | 53          |
-      | /messages/identity/roles/create_role_not_unique_role_name.json | POST   | identity | /identity/roles | 400        | 62          |
-      | /messages/identity/roles/create_role_missing_application.json  | POST   | identity | /identity/roles | 400        | 63          |
+      | json_input_file                                                    | method | module   | url             | error_code | custom_code |
+      | /messages/identity/roles/create_role_missing_application_id.json   | POST   | identity | /identity/roles | 400        | 53          |
+      | /messages/identity/roles/create_role_missing_role_name.json        | POST   | identity | /identity/roles | 400        | 53          |
+      | /messages/identity/roles/create_role_not_existing_application.json | POST   | identity | /identity/roles | 400        | 63          |
+      | /messages/identity/roles/create_role_not_recognized_field.json     | POST   | identity | /identity/roles | 400        | 56          |
+      | /messages/identity/roles/create_role_not_unique_role_name.json     | POST   | identity | /identity/roles | 400        | 62          |
+      | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/roles | 400        | 51          |
 
-    #add another validations
 
   @Smoke
   Scenario: Deleting role
@@ -47,9 +49,11 @@ Feature: Roles create update delete
     And Body is empty
     And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
+
   Scenario: Checking error code for deleting role
     When Nonexistent role id is deleted
     Then Response code is "204"
+
 
   Scenario Outline: Updating role
     When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
@@ -61,15 +65,12 @@ Feature: Roles create update delete
     And Updated role with name "<updated_roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" has data
       | applicationId   | roleName           | roleDescription   |
       | <applicationId> | <updated_roleName> | <roleDescription> |
-
     Examples:
       | applicationId | roleName    | updated_roleName  | roleDescription                |
       |               | Role name 1 | Updated role name |                                |
       |               | Role name 1 | Updated role name | Updated optional description   |
       |               | Role name 1 | Role name 1       | Updated optional description 1 |
 
-
-  #TODO update with error fields, bad values, missing fields, not unique fields
 
   Scenario: Updating role with outdated etag
     When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data if updated before
@@ -78,4 +79,14 @@ Feature: Roles create update delete
     Then Response code is "412"
     And Custom code is "57"
 
-  #error codes
+
+  Scenario Outline: Updating with invalid data
+    When Role with name "<roleName>" for application id "<applicationId>" is updated with data
+      | applicationId           | roleName           | roleDescription           |
+      | <updated_applicationId> | <updated_roleName> | <updated_roleDescription> |
+    Then Response code is "<responseCode>"
+    And Custom code is "<customCode>"
+    Examples:
+      | applicationId                        | updated_applicationId | roleName    | updated_roleName | updated_roleDescription | responseCode | customCode |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                         | 400          | 62         |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                         | 400          | 63         |

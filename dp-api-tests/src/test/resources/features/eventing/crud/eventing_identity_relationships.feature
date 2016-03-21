@@ -1,4 +1,4 @@
-Feature: Eventing_identity_module_relationships
+Feature: Eventing identity module relationships
 
   Background:
     Given Database is cleaned

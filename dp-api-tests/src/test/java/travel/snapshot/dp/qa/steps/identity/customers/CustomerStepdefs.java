@@ -4,6 +4,7 @@ import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import cucumber.api.Transform;
@@ -19,9 +20,9 @@ import travel.snapshot.dp.qa.model.PropertySetArray;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
-import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -386,5 +387,15 @@ public class CustomerStepdefs {
         customerSteps.allCustomersAreActive();
     }
 
-
+    @When("^Update customer with code \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
+    public void updateCustomerWithCodeFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
+        Customer c = new Customer();
+        for (Field f : Customer.class.getDeclaredFields()) {
+            if (f.getName().equalsIgnoreCase(updatedField)) {
+                f.setAccessible(true);
+                f.set(c, updatedValue);
+            }
+        }
+        customerSteps.updateCustomerWithCode(customerCode, c);
+    }
 }

@@ -1,4 +1,4 @@
-Feature: Eventing_configuration_module
+Feature: Eventing configuration module
 
   Scenario: Eventing configurationType created
 

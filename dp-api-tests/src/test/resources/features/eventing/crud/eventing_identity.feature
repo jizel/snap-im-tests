@@ -1,4 +1,4 @@
-Feature: Eventing_identity_module
+Feature: Eventing identity module
 
   Background:
     Given Database is cleaned

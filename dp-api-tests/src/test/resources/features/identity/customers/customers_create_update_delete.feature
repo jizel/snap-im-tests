@@ -34,7 +34,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_phone_value.json     | POST   | identity | /identity/customers | 400        | 59          |
       | /messages/identity/customers/create_customer_wrong_website_value.json   | POST   | identity | /identity/customers | 400        | 59          |
 
-  Scenario Outline: Foreign customers
+  Scenario Outline: Create foreign customers
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is 201
     And Content type is "application/json"
