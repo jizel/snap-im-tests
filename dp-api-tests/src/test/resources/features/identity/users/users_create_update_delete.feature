@@ -41,7 +41,7 @@ Feature: Users create update delete
       | customer | snp4     | Snap4     | Shot4    | dummy.mail+32@gmail.com         | Europe/Prague | cs-CZ   |
       | customer | snp7     | Snap7     | Shot7    | dummy-test.1_mail+32@gmail.com  | Europe/Prague | cs-CZ   |
 
-  Scenario Outline: Creating users with wrong email
+  Scenario Outline: Creating users with wrong fields
     When User is created
       | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
       | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
@@ -49,20 +49,29 @@ Feature: Users create update delete
     And Custom code is "<custom_code>"
 
     Examples:
-      | userType | userName | firstName | lastName | email                    | timezone      | culture | custom_code |
-      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.            | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snpsnapshot.travel       | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel      | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel   | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel   | Europe/Prague | cs-CZ   | 59          |
-      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel   | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      |           | Shot     | snp@snpsnapshot.travel   | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      |          | snp@snpsnapshot.travel   | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     |                          | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel   |               | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel   | Europe/Prague |         | 61          |
+      | userType | userName | firstName | lastName | email                  | timezone      | culture | custom_code |
+      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snpsnapshot.travel     | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel    | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel | Europe/Prague | cs-CZ   | 59          |
+      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel | Europe/Prague | cs-CZ   | 59          |
+      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      |           | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      |          | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     |                        | Europe/Prague | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs-CZ   | 61          |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         | 61          |
+      | wrong    | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
+
+  Scenario Outline: Checking error codes for creating user with invalid json
+    When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
+    Then Response code is "<error_code>"
+    And Custom code is "<custom_code>"
+    Examples:
+      | json_input_file                                             | method | module   | url             | error_code | custom_code |
+      | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 400        | 63          |
 
   @Smoke
   Scenario: Deleting user
