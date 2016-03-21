@@ -95,7 +95,7 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
         // This is set here so when Arquillian gets involved with arquillian.xml file, they will be
         // expanded in 'serverUri' property
 
-        System.setProperty("arquillian.xml.docker.scheme", "http")
+        System.setProperty("arquillian.xml.docker.scheme", "tcp")
         System.setProperty("arquillian.xml.docker.host", "localhost")
         System.setProperty("arquillian.xml.docker.port", "2375")
 

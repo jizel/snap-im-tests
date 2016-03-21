@@ -1,6 +1,6 @@
 package travel.snapshot.qa.test
 
-import com.github.dockerjava.api.InternalServerErrorException
+import com.github.dockerjava.api.exception.InternalServerErrorException
 import org.arquillian.cube.spi.CubeControlException
 import org.arquillian.spacelift.gradle.BaseContainerizableObject
 import org.arquillian.spacelift.gradle.DeferredValue
@@ -146,17 +146,13 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
             // to STARTANDSTOP because that is the only mode which will stop running containers
             // when already started
 
-            //System.setProperty("arquillian.xml.connection.mode", ConnectionMode.STARTANDSTOP.name())
+            System.setProperty("arquillian.xml.connection.mode", ConnectionMode.STARTANDSTOP.name())
 
             orchestration.initDockerManagers()
 
             ProjectHelper.spacelift.configuration['serviceInstallations'].value.each { installation ->
                 try {
-                    DockerContainer.removeContainer(installation)
-                    // TODO this does not work properly with Cube 1.0.0.Alpha7 and Docker 1.10.1
-                    // it works with Docker 1.9.1 and it works with current Cube 1.0.0.Final-SNAPSHOT
-                    // once Cube 1.0.0.Final is released, it will be done correctly
-                    //orchestration.dockerManager.stop(installation)
+                    orchestration.get().dockerManager.stop(installation)
                 } catch (Exception ex) {
                     logger.warn("Unable to remove container: {}", ex.getMessage())
                 }
