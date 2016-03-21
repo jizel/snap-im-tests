@@ -20,7 +20,7 @@ import org.mockito.Spy;
 import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.docker.manager.ConnectionMode;
 import travel.snapshot.qa.docker.manager.DockerContainerLifecycleDecider;
-import travel.snapshot.qa.docker.manager.DockerManagerCubeRegistry;
+import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
 
 @Category(UnitTest.class)
 public class DockerContainerLifecycleDeciderTestCase {
@@ -31,7 +31,7 @@ public class DockerContainerLifecycleDeciderTestCase {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Mock
-    private DockerManagerCubeRegistry registry;
+    private DockerLocalCubeRegistry registry;
 
     @Mock
     private Manager manager;

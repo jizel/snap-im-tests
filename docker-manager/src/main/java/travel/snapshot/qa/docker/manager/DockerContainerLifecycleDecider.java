@@ -5,6 +5,7 @@ import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.jboss.arquillian.core.spi.Manager;
 import org.jboss.arquillian.core.spi.Validate;
+import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
 
 import java.util.Optional;
 
@@ -14,11 +15,11 @@ import java.util.Optional;
  */
 public class DockerContainerLifecycleDecider {
 
-    private DockerManagerCubeRegistry registry;
+    private DockerLocalCubeRegistry registry;
 
     private Manager manager;
 
-    public DockerContainerLifecycleDecider init(final DockerManagerCubeRegistry registry, final Manager manager) {
+    public DockerContainerLifecycleDecider init(final DockerLocalCubeRegistry registry, final Manager manager) {
 
         Validate.notNull(manager, "Manager must not be a null object.");
         Validate.notNull(registry, "Registry must not be a null object.");

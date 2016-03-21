@@ -13,6 +13,7 @@ import org.jboss.arquillian.core.spi.ManagerBuilder;
 import org.jboss.arquillian.core.spi.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
 
 /**
  * Wraps Arquillian Cube core services into a separate helper class. We do not depend on Arquillian runner - its core
@@ -35,7 +36,7 @@ public final class DockerManager {
 
     private Manager manager;
 
-    private final DockerManagerCubeRegistry cubeRegistry = new DockerManagerCubeRegistry();
+    private final DockerLocalCubeRegistry cubeRegistry = new DockerLocalCubeRegistry();
 
     private static boolean isManagerStarted;
 
@@ -182,12 +183,9 @@ public final class DockerManager {
     }
 
     /**
-     * Checks if containers are already started or not. If they are stared before test
-     * execution, it means that there are not any cubes in internal Cube registry because
-     * if there would be any cubes, it means we have started them so they were not
-     * started beforehand.
-     *
-     * @return
+     * Checks if containers are already started or not. If they are stared before test execution, it means that there
+     * are not any cubes in internal Cube registry because if there would be any cubes, it means we have started them so
+     * they were not started beforehand.
      */
     public boolean containersAlreadyStarted() {
         return cubeRegistry.getCubes().isEmpty();
