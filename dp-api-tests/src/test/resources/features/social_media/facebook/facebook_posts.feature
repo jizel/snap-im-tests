@@ -1,7 +1,6 @@
 Feature: facebook posts
   Testing of api for facebook posts with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
-
-  #todo DP-1151
+  
   Scenario Outline: Getting a list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is 200
