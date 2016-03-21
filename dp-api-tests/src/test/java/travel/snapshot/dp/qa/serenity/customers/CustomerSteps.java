@@ -65,9 +65,6 @@ public class CustomerSteps extends BasicSteps {
                 fail("Customer cannot be created " + createResponse.getBody().asString());
             }
 
-            if (t.getIsActive() != null && t.getIsActive() != 0) {
-                activateCustomer(t.getCode());
-            }
         });
         Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
     }
@@ -269,11 +266,8 @@ public class CustomerSteps extends BasicSteps {
         if (activeFlag) {
             assertNotNull("Customer should be returned", customer);
             assertEquals("Customer should have code=" + code, code, customer.getCode());
-            assertEquals("is_active parameter should be set to 0", Integer.valueOf(1), customer.getIsActive());
         } else {
-            assertNotNull("Customer should be returned", customer);
-            assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), customer.getIsActive());
-
+            assertNull("Customer should NOT be returned, only active customer are returned", customer);
         }
     }
 
