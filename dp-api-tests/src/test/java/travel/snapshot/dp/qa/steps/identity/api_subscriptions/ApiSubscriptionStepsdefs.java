@@ -71,4 +71,9 @@ public class ApiSubscriptionStepsdefs {
     public void apiSubscriptionWithIdIsNotAmongAllApiSubscriptions(String apiSubscriptionId) throws Throwable {
         apiSteps.apiSubscriptionInListOfAll(apiSubscriptionId, false);
     }
+
+    @When("^Api subscription with id \"([^\"]*)\" is deleted$")
+    public void apiSubscriptionWithIdIsDeleted(String apiSubscriptionId) throws Throwable {
+        apiSteps.deleteApiSubscription(apiSubscriptionId);
+    }
 }
