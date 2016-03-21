@@ -32,7 +32,6 @@ Feature: Users get
     Then Response code is "304"
     And Body is empty
 
-   #Failing scenario till DP-1090 will be solved
   Scenario: Get token for deleted user
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |
@@ -47,12 +46,12 @@ Feature: Users get
     Then Response code is "<response_code>"
 
     Examples:
-      | username  |  password           | response_code |
-      | default3  |  Password01         | 200           |
-      | default3  |  NonValidPassword   | 401           |
-      | default4  |                     | 401           |
-      |           |  NonExistingUser    | 401           |
-      |           |                     | 401           |
+      | username | password         | response_code |
+      | default3 | Password01       | 200           |
+      | default3 | NonValidPassword | 401           |
+      | default4 |                  | 401           |
+      |          | NonExistingUser  | 401           |
+      |          |                  | 401           |
 
   Scenario: Getting user with not current etag
   User is got, etag is saved to tmp, then user culture is updated to "sk" so etag should change and is got again with previous etag
@@ -182,13 +181,22 @@ Feature: Users get
       | 10    | 0      | /null       | company_name | company_name | 400           | 64          |
       | 10    | 0      | /null       | /null        | nonexistent  | 400           | 63          |
       | 10    | 0      | /null       | nonexistent  | /null        | 400           | 63          |
-      #| 10    | 0      | /null    | company_name |              | 400           | 63          |
-      #| 10    | 0      | /null    |              | company_name | 400           | 63          |
-      #| 10    | 0      | /null    | /null        |              | 400           | 63          |
-      #| 10    | 0      | /null    |              | /null        | 400           | 63          |
-      #| 10    | 0      | /null    |              |              | 400           | 63          |
+      | 10    | 0      | /null       | company_name |              | 400           | 63          |
+      | 10    | 0      | /null       |              | company_name | 400           | 63          |
       | 10    | 0      | user_name== | /null        | /null        | 400           | 63          |
       | 10    | 0      | aaa==CZ*    | /null        | /null        | 400           | 63          |
+
+  Scenario Outline: Checking that empty parameters will be ignored and request will be returned
+    When List of users is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    Then Response code is "200"
+
+    Examples:
+      | limit | cursor | filter | sort  | sort_desc |
+      |       | /null  | /null  | /null | /null     |
+      | /null |        | /null  | /null | /null     |
+      | /null | /null  |        | /null | /null     |
+      | /null | /null  | /null  |       | /null     |
+      | /null | /null  | /null  | /null |           |
 
   Scenario Outline: Filtering list of users
     Given The following users exist
