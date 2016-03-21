@@ -1,0 +1,10 @@
+{
+  "user_type": "wrong_user_type",
+  "user_name": "qa_test",
+  "first_name": "Qa",
+  "last_name": "Test",
+  "phone": "+123456789",
+  "email": "qa@test.com",
+  "timezone": "America/New_York",
+  "culture": "en-US"
+}
