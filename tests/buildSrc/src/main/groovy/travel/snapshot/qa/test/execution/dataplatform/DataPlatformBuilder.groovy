@@ -6,7 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * Builds modules in Data platform, optionally with or without tests and only these which are not already built.
+ * Builds modules in Data platform.
  */
 class DataPlatformBuilder {
 
@@ -36,27 +36,7 @@ class DataPlatformBuilder {
     }
 
     /**
-     * Builds all modules, even there is their wars built
-     *
-     * @param dataPlatformModules modules to build
-     */
-    def forceBuild(DataPlatformModules dataPlatformModules) {
-        build(dataPlatformModules.modules())
-    }
-
-    /**
-     * Builds all modules, even there is their wars built
-     *
-     * @param dataPlatformModules modules to build
-     */
-    def forceBuild(List<DataPlatformModule> dataPlatformModules) {
-        for (DataPlatformModule module : dataPlatformModules) {
-            build(module, withoutTests)
-        }
-    }
-
-    /**
-     * Builds specified modules when not already built.
+     * Builds specified modules.
      *
      * @param dataPlatformModules modules to build
      */
@@ -65,16 +45,23 @@ class DataPlatformBuilder {
     }
 
     /**
-     * Builds specified modules when not already built
+     * Builds specified modules.
      *
      * @param dataPlatformModules modules to build
      */
     def build(List<DataPlatformModule> dataPlatformModules) {
-        def unbuiltModules = getUnbuilt(dataPlatformModules)
-
-        for (DataPlatformModule unbuiltModule : unbuiltModules) {
-            build(unbuiltModule, withoutTests)
+        for (DataPlatformModule dataPlatformModule : dataPlatformModules) {
+            build(dataPlatformModule, withoutTests)
         }
+    }
+
+    /**
+     * Builds a module without tests.
+     *
+     * @param module module to build
+     */
+    def build(DataPlatformModule module) {
+        build(module, true)
     }
 
     /**
@@ -119,114 +106,5 @@ class DataPlatformBuilder {
         gradleBuild.execute().await()
 
         logger.info("Building of whole Data Platform has finished")
-    }
-
-    /**
-     * Builds a module without tests.
-     *
-     * @param module module to build
-     */
-    def build(DataPlatformModule module) {
-        build(module, true)
-    }
-
-    /**
-     * Checks if all modules are built or not
-     *
-     * @param modules modules to check
-     * @return true if all modules are built, false otherwise
-     */
-    boolean areBuilt(DataPlatformModules modules) {
-        getUnbuilt(modules.modules())
-    }
-
-    /**
-     * Checks if all modules are built or not
-     *
-     * @param modules list of modules to check
-     * @return true if all modules are built, false otherwise
-     */
-    boolean areBuilt(List<DataPlatformModule> modules) {
-        getUnbuilt(modules).isEmpty()
-    }
-
-    boolean isBuilt(DataPlatformModule module) {
-        isWarPresent(dataPlatformPath, module.war)
-    }
-
-    /**
-     * Gets modules which are not already built with their (possibly also unbuilt) dependencies.
-     *
-     * @param modules modules to filter
-     * @return unbuilt modules
-     */
-    List<DataPlatformModule> getUnbuilt(List<DataPlatformModule> modules) {
-
-        def unbuilt = []
-
-        for (DataPlatformModule module : modules) {
-
-            for (DataPlatformModule dependency : module.dependencies) {
-                if (!isWarPresent(dataPlatformPath, dependency)) {
-                    unbuilt << dependency
-                }
-            }
-
-            if (!isWarPresent(dataPlatformPath, module)) {
-                unbuilt << module
-            }
-        }
-
-        unbuilt.unique()
-    }
-
-    /**
-     * Gets modules which are not already built.
-     *
-     * @param modules modules to filter
-     * @return unbuilt modules
-     */
-    List<DataPlatformModule> getUnbuilt(DataPlatformModules modules) {
-        getUnbuilt(modules.modules())
-    }
-
-    /**
-     * Gets modules which are already built.
-     *
-     * @param modules modules to filter
-     * @return built modules
-     */
-    List<DataPlatformModule> getBuilt(List<DataPlatformModule> modules) {
-
-        def built = []
-
-        for (DataPlatformModule module : modules) {
-            if (isWarPresent(dataPlatformPath, module)) {
-                built << module
-            }
-        }
-
-        built
-    }
-
-    /**
-     * Gets modules which are not already built.
-     *
-     * @param modules modules to filter
-     * @return unbuilt modules
-     */
-    List<DataPlatformModule> getBuilt(DataPlatformModules modules) {
-        getBuilt(modules.modules())
-    }
-
-    /**
-     * Checks if some module is already built or not
-     *
-     * @param dataPlatformPath path to data platform repository
-     * @param module module to check the existency of its war file
-     * @return true if war file exists, false otherwise
-     */
-    private boolean isWarPresent(String dataPlatformPath, DataPlatformModule module) {
-        new File(dataPlatformPath, module.war).exists()
     }
 }

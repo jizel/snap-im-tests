@@ -1,12 +1,9 @@
 package travel.snapshot.qa.util
 
 import org.apache.commons.lang3.SystemUtils
-import org.arquillian.spacelift.Spacelift
-import org.arquillian.spacelift.gradle.text.ProcessTemplate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.manager.ConnectionMode
-import travel.snapshot.qa.inspection.InspectionException
 import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
 import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
@@ -157,10 +154,6 @@ class PropertyResolver {
 
     static def resolveDataPlatformRespositoryQACommit(String defaultCommit) {
         System.getProperty("dataPlatformRepositoryQACommit", defaultCommit)
-    }
-
-    static def resolveForceDataPlatformBuild() {
-        Boolean.parseBoolean(System.getProperty("forceDataPlatformBuild"))
     }
 
     static def resolveTomcatSpringConfigDirectoryMount() {
