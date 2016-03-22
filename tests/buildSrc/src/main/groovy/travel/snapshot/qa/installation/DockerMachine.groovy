@@ -141,7 +141,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         // This is set here so when Arquillian gets involved with arquillian.xml file, they will be
         // expanded in 'serverUri' property
 
-        System.setProperty("arquillian.xml.docker.scheme", "https")
+        System.setProperty("arquillian.xml.docker.scheme", "tcp")
         System.setProperty("arquillian.xml.docker.host", "dockerHost")
         System.setProperty("arquillian.xml.docker.port", "2376")
 

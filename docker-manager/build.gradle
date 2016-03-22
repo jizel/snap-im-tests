@@ -8,9 +8,9 @@ group 'travel.snapshot.qa.manager'
 def versions = [
         // core
         spacelift : "1.0.0.Alpha9",
-        cube      : "1.0.0.Alpha7",
-        arquillian: "1.1.8.Final",
-        shrinkwrap: "2.1.0",
+        cube      : "1.0.0.Alpha10",
+        arquillian: "1.1.11.Final",
+        shrinkwrap: "2.2.2",
 
         // helpers
         httpclient: "4.5.1",

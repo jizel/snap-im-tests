@@ -15,7 +15,7 @@
 
     <extension qualifier="docker">
         <property name="serverVersion">1.22</property>
-        <property name="serverUri">http://localhost:2375</property>
+        <property name="serverUri">tcp://localhost:2375</property>
         <property name="dockerRegistry">https://docker.snapshot.travel:5000/v2/</property>
         <property name="username">snapshot_docker</property>
         <property name="password">aqGG86d1Yf3Y</property>
@@ -47,7 +47,7 @@
                     iterations: 15
                 portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
             mariadb:
-                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.11
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.12
                 exposedPorts: [3306/tcp]
                 await:
                     strategy: polling
@@ -56,7 +56,7 @@
                     iterations: 15
                 portBindings: [3306/tcp]
             mongodb:
-                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.1
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.3
                 exposedPorts: [27017/tcp]
                 await:
                     strategy: polling
@@ -65,7 +65,7 @@
                     iterations: 15
                 portBindings: [27017/tcp]
             mongodb_2:
-                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.1
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.3
                 exposedPorts: [27018/tcp]
                 await:
                     strategy: polling
