@@ -4,14 +4,21 @@ import com.jayway.restassured.response.Response;
 
 import org.apache.http.HttpStatus;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionDto;
+import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 /**
@@ -36,14 +43,20 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
 
-    public void followingApiSubscriptionExist(List<ApiSubscriptionDto> apis) {
-        apis.forEach(t -> {
+    public void followingApiSubscriptionExist(List<ApiSubscriptionDto> apiSubscriptionList) {
+        apiSubscriptionList.forEach(t -> {
             Response createResponce = createEntity(t);
             if (createResponce.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("App Subscription cannot be create");
+                fail("App Subscription cannot be created");
             }
         });
     }
+
+    public void followingApiSubscriptionIsCreated(ApiSubscriptionDto apiSubscription) {
+        Response createdResponse = createEntity(apiSubscription);
+        setSessionResponse(createdResponse);
+    }
+
 
     public void apiWithIdIsGotWithEtag(String apiSubscriptionId) {
         Response temp = getEntity(apiSubscriptionId);
@@ -68,14 +81,19 @@ public class ApiSubscriptionSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void activateApiSubscription(String apiSubscriptionId) {
-        Response responce = given().spec(spec).when().post("/{id}/active", apiSubscriptionId);
-        setSessionResponse(responce);
-    }
+    public void setActivateFieldApiSubscription(String apiSubscriptionId, Boolean active) {
+        ApiSubscriptionDto apiSubscription = getEntity(apiSubscriptionId).as(ApiSubscriptionDto.class);
 
-    public void deactivateApiSubscription(String apiSubscriptionId) {
-        Response responce = given().spec(spec).when().post("/{id}/inactive", apiSubscriptionId);
-        setSessionResponse(responce);
+        if (active) {
+            apiSubscription.setIsActive(1);
+        } else {
+            apiSubscription.setIsActive(0);
+        }
+
+        List<ApiSubscriptionUpdateDto> listToSend = new ArrayList<ApiSubscriptionUpdateDto>();
+        listToSend.add(apiSubscription);
+
+        updateApiSubscription(apiSubscriptionId, listToSend);
     }
 
     public void apiSubscriptionInListOfAll(String apiSubscriptionId, Boolean presence) {
@@ -96,5 +114,28 @@ public class ApiSubscriptionSteps extends BasicSteps {
     public void deleteApiSubscription(String apiSubscriptionId) {
         Response responce = deleteEntity(apiSubscriptionId);
         setSessionResponse(responce);
+    }
+
+    public void updateApiSubscription(String apiSubscriptionId, List<ApiSubscriptionUpdateDto> updateData) {
+        Response apiSub = getEntity(apiSubscriptionId);
+        Map<String, Object> mapToUpdate = new HashMap<>();
+
+        if (updateData.get(0).getApiVersion() != null) {
+            mapToUpdate.put("api_version", updateData.get(0).getApiVersion());
+        }
+
+        if (updateData.get(0).getApplicationVersionId() != null) {
+            mapToUpdate.put("application_version_id", updateData.get(0).getApplicationVersionId());
+        }
+
+        mapToUpdate.put("is_active", updateData.get(0).getIsActive());
+
+        Response resp = updateEntity(apiSubscriptionId, mapToUpdate, apiSub.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
+    }
+
+    public void apiSubscriptionActivity(String apiSubscriptionId, boolean activity) {
+        ApiSubscriptionDto api = getEntity(apiSubscriptionId).as(ApiSubscriptionDto.class);
+        assertNotEquals(activity, api.getIsActive());
     }
 }
