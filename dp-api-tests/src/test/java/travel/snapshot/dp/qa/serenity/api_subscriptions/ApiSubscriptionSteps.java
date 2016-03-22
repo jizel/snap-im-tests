@@ -138,4 +138,9 @@ public class ApiSubscriptionSteps extends BasicSteps {
         ApiSubscriptionDto api = getEntity(apiSubscriptionId).as(ApiSubscriptionDto.class);
         assertNotEquals(activity, api.getIsActive());
     }
+
+    public void listApiSubscriptiosIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
 }

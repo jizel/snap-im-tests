@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import cucumber.api.PendingException;
+import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionDto;
 import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionUpdateDto;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.api_subscriptions.ApiSubscriptionSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -97,5 +99,21 @@ public class ApiSubscriptionStepsdefs {
     @Then("^Api subscription with id \"([^\"]*)\" is not active$")
     public void apiSubscriptionWithIdIsNotActive(String apiSubscriptionId) throws Throwable {
         apiSteps.apiSubscriptionActivity(apiSubscriptionId, false);
+    }
+
+    @When("^List of api subscriptions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void listOfApiSubscriptionsIsGotWithLimitAndCursorAndFilterAndSortAndSort_desc(
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc){
+        apiSteps.listApiSubscriptiosIsGot(limit, cursor, filter, sort, sortDesc);
+    }
+
+
+    @And("^There are \"([^\"]*)\" api subscriptions returned$")
+    public void thereAreApiSubscriptionsReturned(Integer numberOfApiSubscriptions) throws Throwable {
+        apiSteps.numberOfEntitiesInResponse(ApiSubscriptionDto.class, numberOfApiSubscriptions);
     }
 }

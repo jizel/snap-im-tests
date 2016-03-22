@@ -1,4 +1,4 @@
-Feature: Customers validation
+Feature: Api subscriptions validation
 
   Background:
     Given Database is cleaned
