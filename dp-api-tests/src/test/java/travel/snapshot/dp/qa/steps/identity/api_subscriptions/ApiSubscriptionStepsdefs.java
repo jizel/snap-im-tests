@@ -4,8 +4,11 @@ import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -119,5 +122,21 @@ public class ApiSubscriptionStepsdefs {
     @Then("^There are api subscriptions with following codes returned in order: \"([^\"]*)\"$")
     public void thereAreApiSubscriptionsWithFollowingCodesReturnedInOrder(List<String> order) throws Throwable {
         apiSteps.responceSortIs(order);
+    }
+
+    @When("^Update api subscription with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
+    public void updateApiSubscriptionWithCodeFieldItsValue(String apiSubscriptionId, String updatedField, String value) throws Throwable {
+        ApiSubscriptionUpdateDto api = new ApiSubscriptionUpdateDto();
+        for (Field f : ApiSubscriptionUpdateDto.class.getDeclaredFields()) {
+            if (f.getName().equalsIgnoreCase(updatedField)) {
+                f.setAccessible(true);
+                if (updatedField.equalsIgnoreCase("isActive")) {
+                    f.setInt(api, Integer.parseInt(value));
+                } else {
+                    f.set(api, value);
+                }
+            }
+        }
+        apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionUpdateDto>(){{add(api);}});
     }
 }

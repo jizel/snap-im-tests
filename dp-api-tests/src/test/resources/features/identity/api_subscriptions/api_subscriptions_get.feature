@@ -20,7 +20,7 @@ Feature: Api subscription get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "application_version_id" value "a318fd9a-a05d-42d8-8e84-22e904ace111"
-    And Body contains entity with attribute "api_version" value "b1111d9a-a05d-42d8-8e84-42e904ace999"
+    And Body contains entity with attribute "api_version" value "someString"
     And Body contains entity with attribute "api_subscription_id" value "187b49db-673c-44e5-ab40-345ce5e89c37"
 
 
@@ -106,24 +106,25 @@ Feature: Api subscription get
     And Custom code is <customCode>
 
     Examples:
-      | limit | cursor | filter      | sort        | sort_desc   | customCode | note                                                                                                                                                                                                        |
-      | -1    | /null  | /null       | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
-      | text  | /null  | /null       | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
-      | 9999  | /null  | /null       | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
-      | 0     | /null  | /null       | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
-      | /null | -1     | /null       | /null       | /null       | 63         | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
-      | /null | text   | /null       | /null       | /null       | 63         | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
-      | /null | /null  | -1          | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=-1                                                                                               |
-      | /null | /null  | ==          | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter===                                                                                               |
-      | /null | /null  | code==      | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=code==                                                                                           |
-      | /null | /null  | is_active== | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=is_active==                                                                                      |
-      | /null | /null  | /null       | -1          | /null       | 63         | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
-      | /null | /null  | /null       | 0           | /null       | 63         | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
-      | /null | /null  | /null       | nonExistent | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: 'nonExistent'"    |
-      | /null | /null  | /null       | /null       | -1          | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort_desc' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: '-1          |
-      | /null | /null  | /null       | /null       | 0           | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort_desc' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: '0           |
-      | /null | /null  | /null       | /null       | nonExistent | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort_desc' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: 'nonExistent |
-      | /null | /null  | /null       | is_active   | is_active   | 64         | # The query parameter 'sort_desc' is not allowed. 'sort' and 'sort_desc' parameters shouldn't be both in one request!                                                                                       |
+      | limit | cursor | filter           | sort        | sort_desc   | customCode | note                                                                                                                                                                                                        |
+      | -1    | /null  | /null            | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
+      | text  | /null  | /null            | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
+      | 9999  | /null  | /null            | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
+      | 0     | /null  | /null            | /null       | /null       | 63         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
+      | /null | -1     | /null            | /null       | /null       | 63         | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
+      | /null | text   | /null            | /null       | /null       | 63         | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
+      | /null | /null  | -1               | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=-1                                                                                               |
+      | /null | /null  | ==               | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter===                                                                                               |
+      | /null | /null  | code==           | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=code==                                                                                           |
+      | /null | /null  | is_active==      | /null       | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=is_active==                                                                                      |
+      | /null | /null  | is_active=='NOT' | /null       | /null       | 63         | # The value is invalid. Cannot cast 'NOT' to type int                                                                                      |
+      | /null | /null  | /null            | -1          | /null       | 63         | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
+      | /null | /null  | /null            | 0           | /null       | 63         | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
+      | /null | /null  | /null            | nonExistent | /null       | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: 'nonExistent'"    |
+      | /null | /null  | /null            | /null       | -1          | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort_desc' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: '-1          |
+      | /null | /null  | /null            | /null       | 0           | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort_desc' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: '0           |
+      | /null | /null  | /null            | /null       | nonExistent | 63         | # The value is invalid. Param 'arg0' The query parameter 'sort_desc' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: 'nonExistent |
+      | /null | /null  | /null            | is_active   | is_active   | 64         | # The query parameter 'sort_desc' is not allowed. 'sort' and 'sort_desc' parameters shouldn't be both in one request!                                                                                       |
 
 
   Scenario Outline: Filtering list of api subscriptions
@@ -132,7 +133,7 @@ Feature: Api subscription get
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | 2016-02-01  | Versions description 1 |
       | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2   | inactive | 2016-02-02  | Versions description 2 |
       | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3   | inactive | 2016-02-03  | Versions description 3 |
-      | ac39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4   | inactive | 2016-02-04  | Versions description 4 |
+      | bc39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4   | inactive | 2016-02-04  | Versions description 4 |
       | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5   | inactive | 2016-02-05  | Versions description 5 |
 
     Given The following api subscriptions exist
@@ -140,7 +141,7 @@ Feature: Api subscription get
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | filter_api_1        |
       | 598cfe31-9583-4c0b-86a0-82e9bf662849 | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | filter_api_2        |
       | 87eb138c-23c1-43d8-bc88-d6fbbd7e4359 | 1820d135-4f75-4c64-a570-a89e8236229b | filter_api_3        |
-      | e2c258a3-a3e0-4895-82ee-5170934c5555 | ac39d04c-bb58-4955-a7ab-c216e5444a54 | second_filter_api_4 |
+      | e2c258a3-a3e0-4895-82ee-5170934c5555 | bc39d04c-bb58-4955-a7ab-c216e5444a54 | second_filter_api_4 |
       | c432f76f-8fdd-4229-b8eb-e9007024b385 | 315404f9-3ac8-4b75-8b54-1ea15702d046 | second_filter_api_5 |
 
     When List of api subscriptions is got with limit "/null" and cursor "/null" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -149,31 +150,30 @@ Feature: Api subscription get
     And There are "<returned>" api subscriptions returned
     And There are api subscriptions with following codes returned in order: "<order>"
     Examples:
-      | filter                                             | sort                | sort_desc           | returned | order                                                                                          |
-      | api_version=='filter*'                             | /null               | /null               | 3        |                                                                                                |
-      | api_version=='second*'                             | /null               | /null               | 2        |                                                                                                |
-      | api_version=='second*'                             | api_version         | /null               | 2        | second_filter_api_4, second_filter_api_5                                                       |
-      | api_version=='second*'                             | is_active           | /null               | 2        | second_filter_api_5, second_filter_api_4                                                       |
-      | api_version=='second*'                             | api_subscription_id | /null               | 2        | second_filter_api_5, second_filter_api_4                                                       |
-     # | api_version=='second*'                             | application_version_id | /null                  | 2        | second_filter_api_5, second_filter_api_4 |
-      | api_version=='second*'                             | /null               | api_version         | 2        | second_filter_api_5, second_filter_api_4                                                       |
-      | api_version=='*filter*'                            | /null               | /null               | 5        |                                                                                                |
-      | api_version=='filter*' or api_version=='second*'   | /null               | /null               | 5        |                                                                                                |
-      | api_version=='*filter*' and api_version=='second*' | /null               | /null               | 2        |                                                                                                |
-      #| application_version_id=='NonExisting'              | /null                  | /null                  | 0        |                                          |
-      #| application_version_id=='a*'                       | /null                  | /null                  | 2        |                                          |
-      | is_active=='1'                                     | /null               | /null               | 0        |                                                                                                |
-      #| is_active=='nonExistingInActiveField'              | /null                  | /null                  | 0        |                                          |
-      | is_active=='1'                                     | is_active           | /null               | 0        |                                                                                                |
-      | api_subscription_id=='5*'                          | /null               | /null               | 2        | filter_api_2, filter_api_1                                                                     |
-      | api_subscription_id=='7*'                          | /null               | /null               | 0        |                                                                                                |
-      | api_subscription_id=='*'                           | is_active           | /null               | 6        |                                                                                                |
-      | /null                                              | /null               | is_active           | 6        | someString, filter_api_2, filter_api_1, filter_api_3, second_filter_api_5, second_filter_api_4 |
-      | /null                                              |                     | is_active           | 6        | someString, filter_api_2, filter_api_1, filter_api_3, second_filter_api_5, second_filter_api_4 |
-      | /null                                              | /null               | api_version         | 6        | someString, second_filter_api_5, second_filter_api_4, filter_api_3, filter_api_2, filter_api_1 |
-      | /null                                              |                     | api_version         | 6        | someString, second_filter_api_5, second_filter_api_4, filter_api_3, filter_api_2, filter_api_1 |
-      | /null                                              | /null               | api_subscription_id | 6        | second_filter_api_4, second_filter_api_5, filter_api_3, filter_api_1, filter_api_2, someString |
-      | /null                                              |                     | api_subscription_id | 6        | second_filter_api_4, second_filter_api_5, filter_api_3, filter_api_1, filter_api_2, someString |
-     # | /null                                              | /null               | application_version_id | 6        |                                          |
-     # | /null                                              |                     | application_version_id | 6        |                                          |
-      |                                                    |                     |                     | 6        |                                                                                                |
+      | filter                                             | sort                   | sort_desc              | returned | order                                                                                          |
+      | api_version=='filter*'                             | /null                  | /null                  | 3        |                                                                                                |
+      | api_version=='second*'                             | /null                  | /null                  | 2        |                                                                                                |
+      | api_version=='second*'                             | api_version            | /null                  | 2        | second_filter_api_4, second_filter_api_5                                                       |
+      | api_version=='second*'                             | is_active              | /null                  | 2        | second_filter_api_5, second_filter_api_4                                                       |
+      | api_version=='second*'                             | api_subscription_id    | /null                  | 2        | second_filter_api_5, second_filter_api_4                                                       |
+      | api_version=='second*'                             | application_version_id | /null                  | 2        | second_filter_api_5, second_filter_api_4                                                       |
+      | api_version=='second*'                             | /null                  | api_version            | 2        | second_filter_api_5, second_filter_api_4                                                       |
+      | api_version=='*filter*'                            | /null                  | /null                  | 5        |                                                                                                |
+      | api_version=='filter*' or api_version=='second*'   | /null                  | /null                  | 5        |                                                                                                |
+      | api_version=='*filter*' and api_version=='second*' | /null                  | /null                  | 2        |                                                                                                |
+      | application_version_id=='NonExisting'              | /null                  | /null                  | 0        |                                                                                                |
+      | application_version_id=='b*'                       | /null                  | /null                  | 2        |                                                                                                |
+      | is_active=='1'                                     | /null                  | /null                  | 0        |                                                                                                |
+      | is_active=='1'                                     | is_active              | /null                  | 0        |                                                                                                |
+      | api_subscription_id=='5*'                          | /null                  | /null                  | 2        | filter_api_2, filter_api_1                                                                     |
+      | api_subscription_id=='7*'                          | /null                  | /null                  | 0        |                                                                                                |
+      | api_subscription_id=='*'                           | is_active              | /null                  | 6        |                                                                                                |
+      | /null                                              | /null                  | is_active              | 6        | someString, filter_api_2, filter_api_1, filter_api_3, second_filter_api_5, second_filter_api_4 |
+      | /null                                              |                        | is_active              | 6        | someString, filter_api_2, filter_api_1, filter_api_3, second_filter_api_5, second_filter_api_4 |
+      | /null                                              | /null                  | api_version            | 6        | someString, second_filter_api_5, second_filter_api_4, filter_api_3, filter_api_2, filter_api_1 |
+      | /null                                              |                        | api_version            | 6        | someString, second_filter_api_5, second_filter_api_4, filter_api_3, filter_api_2, filter_api_1 |
+      | /null                                              | /null                  | api_subscription_id    | 6        | second_filter_api_4, second_filter_api_5, filter_api_3, filter_api_1, filter_api_2, someString |
+      | /null                                              |                        | api_subscription_id    | 6        | second_filter_api_4, second_filter_api_5, filter_api_3, filter_api_1, filter_api_2, someString |
+      | /null                                              | /null                  | application_version_id | 6        |                                                                                                |
+      | /null                                              |                        | application_version_id | 6        |                                                                                                |
+      |                                                    |                        |                        | 6        |                                                                                                |
