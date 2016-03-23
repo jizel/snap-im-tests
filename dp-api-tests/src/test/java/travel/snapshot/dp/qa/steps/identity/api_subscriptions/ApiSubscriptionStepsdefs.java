@@ -6,9 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -43,8 +41,9 @@ public class ApiSubscriptionStepsdefs {
 
     @Given("^The following api subscriptions is created$")
     public void theFollowingApiSubscriptionsIsCreated(List<ApiSubscriptionDto> listApiSubscriptions) throws Throwable {
-       apiSteps.followingApiSubscriptionIsCreated(listApiSubscriptions.get(0));
+        apiSteps.followingApiSubscriptionIsCreated(listApiSubscriptions.get(0));
     }
+
 
     @When("^Api subscription with id \"([^\"]*)\" is got$")
     public void apiSubscriptionWithIdIsGot(String apiSubscriptionId) throws Throwable {
@@ -76,10 +75,21 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.deleteApiSubscription(apiSubscriptionId);
     }
 
+    @When("^List of api subscriptions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void listOfApiSubscriptionsIsGotWithLimitAndCursorAndFilterAndSortAndSort_desc(
+            @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) {
+        apiSteps.listApiSubscriptiosIsGot(limit, cursor, filter, sort, sortDesc);
+    }
+
     @When("^Api subscription with id \"([^\"]*)\" is updated with following data$")
     public void apiSubscriptionWithIdIsUpdatedWithFollowingData(String apiSubscriptionId, List<ApiSubscriptionUpdateDto> updateData) throws Throwable {
         apiSteps.updateApiSubscription(apiSubscriptionId, updateData);
     }
+
 
     @Then("^Api subscription with id \"([^\"]*)\" is among all api subscriptions$")
     public void apiSubscriptionWithIdIsAmongAllApiSubscriptions(String apiSubscriptionId) throws Throwable {
@@ -101,19 +111,13 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.apiSubscriptionActivity(apiSubscriptionId, false);
     }
 
-    @When("^List of api subscriptions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void listOfApiSubscriptionsIsGotWithLimitAndCursorAndFilterAndSortAndSort_desc(
-            @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc){
-        apiSteps.listApiSubscriptiosIsGot(limit, cursor, filter, sort, sortDesc);
-    }
-
-
-    @And("^There are \"([^\"]*)\" api subscriptions returned$")
+    @Then("^There are \"([^\"]*)\" api subscriptions returned$")
     public void thereAreApiSubscriptionsReturned(Integer numberOfApiSubscriptions) throws Throwable {
         apiSteps.numberOfEntitiesInResponse(ApiSubscriptionDto.class, numberOfApiSubscriptions);
+    }
+
+    @Then("^There are api subscriptions with following codes returned in order: \"([^\"]*)\"$")
+    public void thereAreApiSubscriptionsWithFollowingCodesReturnedInOrder(List<String> order) throws Throwable {
+        apiSteps.responceSortIs(order);
     }
 }

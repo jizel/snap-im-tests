@@ -4,7 +4,6 @@ import com.jayway.restassured.response.Response;
 
 import org.apache.http.HttpStatus;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,9 +15,8 @@ import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionUpdateD
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 /**
@@ -38,10 +36,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
     public void apiWithIdIsGot(String apiCode) {
         Response response = getEntity(apiCode, null);
         setSessionResponse(response);
-
-
     }
-
 
     public void followingApiSubscriptionExist(List<ApiSubscriptionDto> apiSubscriptionList) {
         apiSubscriptionList.forEach(t -> {
@@ -56,7 +51,6 @@ public class ApiSubscriptionSteps extends BasicSteps {
         Response createdResponse = createEntity(apiSubscription);
         setSessionResponse(createdResponse);
     }
-
 
     public void apiWithIdIsGotWithEtag(String apiSubscriptionId) {
         Response temp = getEntity(apiSubscriptionId);
@@ -142,5 +136,18 @@ public class ApiSubscriptionSteps extends BasicSteps {
     public void listApiSubscriptiosIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
+    }
+
+    public void responceSortIs(List<String> order) {
+        if (order.isEmpty()) {
+            return;
+        }
+
+        ApiSubscriptionDto[] apiSubscriptios = getSessionResponse().as(ApiSubscriptionDto[].class);
+        int i = 0;
+        for (ApiSubscriptionDto api : apiSubscriptios) {
+            assertEquals(api.getApiVersion(), order.get(i));
+            i++;
+        }
     }
 }
