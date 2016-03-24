@@ -127,15 +127,14 @@ public class ApiSubscriptionStepsdefs {
     @When("^Update api subscription with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
     public void updateApiSubscriptionWithCodeFieldItsValue(String apiSubscriptionId, String updatedField, String value) throws Throwable {
         ApiSubscriptionUpdateDto api = new ApiSubscriptionUpdateDto();
-        for (Field f : ApiSubscriptionUpdateDto.class.getDeclaredFields()) {
-            if (f.getName().equalsIgnoreCase(updatedField)) {
-                f.setAccessible(true);
-                if (updatedField.equalsIgnoreCase("isActive")) {
-                    api.setIsActive(Integer.parseInt(value));
-                } else {
-                    f.set(api, value);
-                }
-            }
+        if (updatedField.equalsIgnoreCase("isActive")) {
+            api.setIsActive(Integer.parseInt(value));
+        }
+        if (updatedField.equalsIgnoreCase("apiVersion")) {
+            api.setApiVersion(value);
+        }
+        if (updatedField.equalsIgnoreCase("applicationVersionId")) {
+            api.setApplicationVersionId(value);
         }
         apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionUpdateDto>(){{add(api);}});
     }
