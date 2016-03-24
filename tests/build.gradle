@@ -140,7 +140,7 @@ spacelift {
             tests 'platformBuild'
         }
         apiTests(from: dataPlatformTest) {
-            tests 'platformStart', 'apiTests', 'platformStop'
+            tests 'platformStart', 'apiTestsBase', 'platformStop'
         }
 
         review(from: dataPlatformTest) {
@@ -284,13 +284,13 @@ spacelift {
         //
         ////////////////////
 
-        apiTests(inherits: reportableTest) {
+        apiTestsBase(inherits: reportableTest) {
             beforeSuite {
                 new TsvImporter(platform).execute()
             }
         }
 
-        apiTestsReview(inherits: apiTests) {
+        apiTestsReview(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.REVIEW).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.REVIEW).execute()
@@ -298,7 +298,7 @@ spacelift {
             execute { new APITestsExecution("RunReview*").execute() }
         }
 
-        apiTestsSocialMedia(inherits: apiTests) {
+        apiTestsSocialMedia(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.SOCIAL_MEDIA_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.SOCIAL_MEDIA_API).execute()
@@ -306,7 +306,7 @@ spacelift {
             execute { new APITestsExecution("RunSocialMediaCommonTests").execute() }
         }
 
-        apiTestsFacebook(inherits: apiTests) {
+        apiTestsFacebook(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.FACEBOOK_SERVICE_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.FACEBOOK_SERVICE_API).execute()
@@ -314,7 +314,7 @@ spacelift {
             execute { new APITestsExecution("RunSocialMediaFacebookTests").execute() }
         }
 
-        apiTestsInstagram(inherits: apiTests) {
+        apiTestsInstagram(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.INSTAGRAM_SERVICE_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.INSTAGRAM_SERVICE_API).execute()
@@ -322,7 +322,7 @@ spacelift {
             execute { new APITestsExecution("RunSocialMediaInstagramTests").execute() }
         }
 
-        apiTestsTwitter(inherits: apiTests) {
+        apiTestsTwitter(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.TWITTER_SERVICE_API).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.TWITTER_SERVICE_API).execute()
@@ -330,7 +330,7 @@ spacelift {
             execute { new APITestsExecution("RunSocialMediaTwitterTests").execute() }
         }
 
-        apiTestsIdentity(inherits: apiTests) {
+        apiTestsIdentity(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.IDENTITY).execute()
@@ -338,7 +338,7 @@ spacelift {
             execute { new APITestsExecution("RunIdentity*").execute() }
         }
 
-        apiTestsConfiguration(inherits: apiTests) {
+        apiTestsConfiguration(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION).execute()
@@ -346,7 +346,7 @@ spacelift {
             execute { new APITestsExecution("RunConfigurationTests").execute() }
         }
 
-        apiTestsWebPerformance(inherits: apiTests) {
+        apiTestsWebPerformance(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.WEB_PERFORMANCE).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.WEB_PERFORMANCE).execute()
@@ -354,7 +354,7 @@ spacelift {
             execute { new APITestsExecution("RunWebPerformanceTests").execute() }
         }
 
-        apiTestsRateShopper(inherits: apiTests) {
+        apiTestsRateShopper(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.RATE_SHOPPER).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.RATE_SHOPPER).execute()
@@ -362,7 +362,7 @@ spacelift {
             execute { new APITestsExecution("RunRateShopperTests").execute() }
         }
 
-        apiTestsEventing(inherits: apiTests) {
+        apiTestsEventing(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModule.CONFIGURATION, DataPlatformModule.IDENTITY).execute()
@@ -370,7 +370,7 @@ spacelift {
             execute { new APITestsExecution("RunEventingCrudTests").execute() }
         }
 
-//        apiTestsAuthorization(inherits: apiTests) {
+//        apiTestsAuthorization(inherits: apiTestsBase) {
 //            beforeTest {
 //                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute()
 //                new DataPlatformDeployer(platform).deploy(DataPlatformModule.IDENTITY).execute()
@@ -378,7 +378,7 @@ spacelift {
 //            execute { new APITestsExecution("RunAuthorizationTests").execute() }
 //        }
 
-        apiTestsSmoke(inherits: apiTests) {
+        apiTestsSmoke(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
@@ -388,7 +388,7 @@ spacelift {
             }
         }
 
-        apiTestsAll(inherits: apiTests) {
+        apiTestsAll(inherits: apiTestsBase) {
             beforeTest {
                 new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
