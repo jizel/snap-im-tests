@@ -13,7 +13,7 @@ final class ProjectHelper {
 
     static boolean isApiTestRunning() {
         !project.selectedTests.findAll { test ->
-            test['name'].startsWith("apiTests") && test['name'] != "apiTests"
+            test['name'].startsWith("apiTests") && test['name'] != "apiTestsBase"
         }.isEmpty() && !PropertyResolver.skipTestExecution()
     }
 
