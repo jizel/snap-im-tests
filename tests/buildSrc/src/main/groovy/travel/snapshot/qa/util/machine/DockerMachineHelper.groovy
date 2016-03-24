@@ -4,7 +4,7 @@ import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.process.ProcessResult
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 class DockerMachineHelper {
 
@@ -79,7 +79,7 @@ class DockerMachineHelper {
         Spacelift.task("docker-machine")
                 .parameter("create")
                 .parameter("--driver=virtualbox")
-                .parameter("--virtualbox-memory=${PropertyResolver.resolveDockerMachineMemorySize()}")
+                .parameter("--virtualbox-memory=${Properties.Docker.machineMemorySize}")
                 .parameter("--virtualbox-cpu-count=2")
                 .parameter(machineName)
                 .execute()

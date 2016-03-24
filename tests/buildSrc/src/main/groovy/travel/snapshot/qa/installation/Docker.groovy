@@ -9,7 +9,7 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.DockerToolsRegister
 import travel.snapshot.qa.util.ProjectHelper
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.image.DockerImagesDowloader
 
@@ -99,13 +99,13 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
         System.setProperty("arquillian.xml.docker.host", "localhost")
         System.setProperty("arquillian.xml.docker.port", "2375")
 
-        System.setProperty("arquillian.xml.docker.machine", PropertyResolver.resolveDockerMachine())
-        System.setProperty("arquillian.xml.connection.mode", PropertyResolver.resolveConnectionMode())
-        System.setProperty("arquillian.xml.docker.registry.password", PropertyResolver.resolveDockerRegistryPassword())
+        System.setProperty("arquillian.xml.docker.machine", Properties.Docker.machineName)
+        System.setProperty("arquillian.xml.connection.mode", Properties.Docker.connectionMode)
+        System.setProperty("arquillian.xml.docker.registry.password", Properties.Docker.registryPassword)
 
         // in case we do not use VM, config directory will be automatically mounted to respective container transparently
-        System.setProperty("arquillian.xml.data.tomcat.config.dir", PropertyResolver.resolveTomcatSpringConfigDirectoryMount())
-        System.setProperty("arquillian.xml.deployments.mount", PropertyResolver.resolveTomcatDeploymentDirectoryBind())
+        System.setProperty("arquillian.xml.data.tomcat.config.dir", Properties.Tomcat.springConfigDirectoryMount)
+        System.setProperty("arquillian.xml.deployments.mount", Properties.Tomcat.deploymentDirectoryBind)
 
         // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
         System.setProperty("arquillian.xml.java.rmi.server.hostname", "")
@@ -115,7 +115,7 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
 
         // there is not need to download images when we just want to stop containers
 
-        if (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString() && !ProjectHelper.isProfileSelected("platformStop")) {
+        if (Properties.Docker.mode == DockerMode.HOST.toString() && !ProjectHelper.isProfileSelected("platformStop")) {
             DockerImagesDowloader.download(images.resolve(), dockerRegistryPassword.resolve())
             DockerContainer.removeContainers(containers.resolve())
         }

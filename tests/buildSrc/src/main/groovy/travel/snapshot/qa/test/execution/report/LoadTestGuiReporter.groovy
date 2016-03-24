@@ -4,12 +4,12 @@ import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.task.os.CommandTool
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.util.ProjectHelper
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 class LoadTestGuiReporter {
 
     static def report(LoadTestsSimulation simulation) {
-        if (ProjectHelper.loadTestRunning && PropertyResolver.runningWithGui) {
+        if (ProjectHelper.loadTestRunning && Properties.Execution.runningWithGui) {
 
             Spacelift.task(CommandTool)
                     .programName("google-chrome")

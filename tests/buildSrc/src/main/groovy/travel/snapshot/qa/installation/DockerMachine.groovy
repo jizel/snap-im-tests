@@ -9,7 +9,7 @@ import org.slf4j.Logger
 import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.DockerToolsRegister
 import travel.snapshot.qa.util.ProjectHelper
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.image.DockerImagesDowloader
 import travel.snapshot.qa.util.interaction.DockerInteraction
@@ -90,7 +90,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
     @Override
     void install(Logger logger) {
 
-        if (PropertyResolver.resolveDockerMode() != DockerMode.MACHINE.toString()) {
+        if (Properties.Docker.mode != DockerMode.MACHINE.toString()) {
             logger.info(":install:${name} Skipping, did not meet preconditions.")
             return
         }
@@ -153,13 +153,13 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         // need to be sure that it exists
 
         DockerInteraction.execute("mkdir -p /home/docker/configuration", 0, 1)
-        System.setProperty("arquillian.xml.data.tomcat.config.dir", PropertyResolver.resolveTomcatSpringConfigDirectoryMount())
+        System.setProperty("arquillian.xml.data.tomcat.config.dir", Properties.Tomcat.springConfigDirectoryMount)
 
-        def tomcatDeploymentsDir = PropertyResolver.resolveTomcatDeploymentDirectory()
+        def tomcatDeploymentsDir = Properties.Tomcat.deploymentDirectory
 
         DockerInteraction.execute("mkdir -p ${tomcatDeploymentsDir}", 0, 1)
         DockerInteraction.execute("sudo -i chown -R docker:staff ${tomcatDeploymentsDir}", 0, 1)
-        System.setProperty("arquillian.xml.deployments.mount", PropertyResolver.resolveTomcatDeploymentDirectoryBind())
+        System.setProperty("arquillian.xml.deployments.mount", Properties.Tomcat.deploymentDirectoryBind)
 
         // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
         System.setProperty("arquillian.xml.java.rmi.server.hostname", dockerMachineIp)
@@ -175,6 +175,6 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
 
     @Override
     DockerMachine clone(String name) {
-        new Docker(name, this)
+        new DockerMachine(name, this)
     }
 }

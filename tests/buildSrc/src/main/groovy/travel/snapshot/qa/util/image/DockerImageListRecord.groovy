@@ -42,6 +42,6 @@ class DockerImageListRecord {
 
     @Override
     String toString() {
-        String.format("%s %s %s", repository, tag, imageId)
+        String.format("repository: %s, tag: %s, imageId: %s", repository, tag, imageId)
     }
 }

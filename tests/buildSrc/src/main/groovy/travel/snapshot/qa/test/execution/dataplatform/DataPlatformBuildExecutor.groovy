@@ -1,6 +1,6 @@
 package travel.snapshot.qa.test.execution.dataplatform
 
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 /**
  * Encapsulates module builing
@@ -14,7 +14,7 @@ class DataPlatformBuildExecutor {
     boolean withoutTests = true
 
     DataPlatformBuildExecutor() {
-        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
+        this.dataPlatformDir = Properties.Location.dataPlatformRepository
     }
 
     /**
@@ -23,7 +23,7 @@ class DataPlatformBuildExecutor {
      * @return this
      */
     DataPlatformBuildExecutor dataPlatform(String dataPlatformPath) {
-        this.dataPlatformDir = PropertyResolver.resolveLocation(dataPlatformPath)
+        this.dataPlatformDir = Properties.Location.resolveLocation(dataPlatformPath)
         this
     }
 

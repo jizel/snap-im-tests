@@ -3,13 +3,9 @@ package travel.snapshot.qa.test.execution.log
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.SystemUtils
 import travel.snapshot.qa.util.DockerMode
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 abstract class AbstractServiceLogReporter {
-
-    boolean hostMode = (PropertyResolver.resolveDockerMode() == DockerMode.HOST.toString())
-
-    String dockerMachine = PropertyResolver.resolveDockerMachine()
 
     /**
      * Gets logs from container of specified service type to local host
@@ -39,10 +35,10 @@ abstract class AbstractServiceLogReporter {
 
         File reportDirectory
 
-        if (hostMode) {
+        if (Properties.Docker.mode == DockerMode.HOST.toString()) {
             reportDirectory = new File("snapshot/workspace/reports/host/${container}")
         } else {
-            reportDirectory = new File("snapshot/workspace/reports/machine/${dockerMachine}/${container}")
+            reportDirectory = new File("snapshot/workspace/reports/machine/${Properties.Docker.machineName}/${container}")
         }
 
         FileUtils.deleteQuietly(reportDirectory)

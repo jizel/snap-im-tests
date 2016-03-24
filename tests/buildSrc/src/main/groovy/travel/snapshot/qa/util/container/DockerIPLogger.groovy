@@ -4,7 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
 import travel.snapshot.qa.util.DockerMode
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.machine.DockerMachineHelper
 
 class DockerIPLogger {
@@ -20,8 +20,8 @@ class DockerIPLogger {
 
         logger.info("========================================")
 
-        if (PropertyResolver.resolveDockerMode() == DockerMode.MACHINE.toString()) {
-            def dockerMachineIp = DockerMachineHelper.getIp(PropertyResolver.resolveDockerMachine())
+        if (Properties.Docker.mode == DockerMode.MACHINE.toString()) {
+            def dockerMachineIp = DockerMachineHelper.getIp(Properties.Docker.machineName)
             logger.info("You are running in MACHINE mode, IP address of the Docker machine is {}.", dockerMachineIp)
         }
 

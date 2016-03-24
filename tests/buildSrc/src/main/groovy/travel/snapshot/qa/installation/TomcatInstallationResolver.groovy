@@ -4,7 +4,7 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.connection.ConnectionCheck
 import travel.snapshot.qa.connection.ConnectionCheckExecutor.TCPConnectionCheckTask
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.TestExecutionMode
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.tomcat
@@ -21,7 +21,7 @@ class TomcatInstallationResolver {
 
     def resolve() {
 
-        TestExecutionMode executionMode = TestExecutionMode.valueOf(PropertyResolver.resolveTestExecutionMode())
+        TestExecutionMode executionMode = TestExecutionMode.valueOf(Properties.Test.executionMode)
 
         switch (executionMode) {
             case DEVELOPMENT:

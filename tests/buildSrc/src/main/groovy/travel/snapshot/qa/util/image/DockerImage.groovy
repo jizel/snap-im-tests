@@ -42,8 +42,8 @@ class DockerImage {
 
             for (DockerImageListRecord downloadedImage : downloadedImages) {
 
-                String imageRepository = DockerImage.getRepository(image)
-                String imageTag = DockerImage.getTag(image)
+                String imageRepository = getRepository(image)
+                String imageTag = getTag(image)
 
                 if (imageRepository == downloadedImage.repository && imageTag == downloadedImage.tag) {
                     isMissing = false
@@ -80,8 +80,8 @@ class DockerImage {
     }
 
     static def valueOf(String image) {
-        def name
-        def tag
+        String name = null
+        String tag = null
 
         // <repositoryurl>:<port>/<organization_namespace>/<image_name>:<tag>
         String[] parts = image.split("/")

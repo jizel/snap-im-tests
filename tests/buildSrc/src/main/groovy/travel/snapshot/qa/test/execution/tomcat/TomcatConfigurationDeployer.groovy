@@ -4,7 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.DockerServiceFactory
 import travel.snapshot.qa.util.DockerMode
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.interaction.DockerInteraction
 
 /**
@@ -29,13 +29,11 @@ class TomcatConfigurationDeployer {
 
     def deploy() {
 
-        if (PropertyResolver.resolveDockerMode() != DockerMode.MACHINE.name()) {
+        if (Properties.Docker.mode != DockerMode.MACHINE.name()) {
             return
         }
 
-        String tomcatConfigurationDir = PropertyResolver.resolveTomcatSpringConfigDirectorySource()
-
-        String from = tomcatConfigurationDir + "/${containerId}"
+        String from = Properties.Tomcat.springConfigDirectorySource + "/${containerId}"
         String to = dockerMachine + ":/home/docker/configuration"
 
         logger.info("Copying Tomcat Spring configuration directory from {} to {}.", from, to)
