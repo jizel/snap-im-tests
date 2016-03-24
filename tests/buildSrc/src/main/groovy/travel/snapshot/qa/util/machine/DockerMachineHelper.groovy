@@ -2,9 +2,15 @@ package travel.snapshot.qa.util.machine
 
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.process.ProcessResult
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import travel.snapshot.qa.util.PropertyResolver
 
 class DockerMachineHelper {
+
+    private static final Logger logger = LoggerFactory.getLogger(DockerMachineHelper)
+
+    static final String DEFAULT_VIRTUALBOX_INTERFACE_IP = "192.168.99.1"
 
     /**
      * Checks if given machine is running or not
@@ -27,6 +33,9 @@ class DockerMachineHelper {
      * @return result of the execution
      */
     static ProcessResult start(String machine) {
+
+        logger.info("Starting Docker machine {}.", machine)
+
         Spacelift.task("docker-machine").parameters("start", machine).execute().await()
     }
 
@@ -37,6 +46,9 @@ class DockerMachineHelper {
      * @return result of the execution
      */
     static ProcessResult stop(String machine) {
+
+        logger.info("Stopping Docker machine {}.", machine)
+
         Spacelift.task("docker-machine").parameters("stop", machine).execute().await()
     }
 
@@ -47,6 +59,9 @@ class DockerMachineHelper {
      * @return result of the execution
      */
     static ProcessResult restart(String machine) {
+
+        logger.info("Restarting Docker machine {}.", machine)
+
         Spacelift.task("docker-machine").parameters("restart", machine).execute().await()
     }
 
@@ -59,6 +74,8 @@ class DockerMachineHelper {
      */
     static ProcessResult create(String machineName) {
 
+        logger.info("Creating Docker machine {}.", machineName)
+
         Spacelift.task("docker-machine")
                 .parameter("create")
                 .parameter("--driver=virtualbox")
@@ -67,6 +84,20 @@ class DockerMachineHelper {
                 .parameter(machineName)
                 .execute()
                 .await()
+    }
+
+    /**
+     * Removes host only interfaces of VirtualBox. Interfaces to remove are parsed firstly from 'VboxManage list -l hostonlyifs'
+     */
+    static def removeHostOnlyInterfaces() {
+        List<String> result = Spacelift.task("VBoxManage").parameters("list", "-l", "hostonlyifs").execute().await().output()
+
+        Map<String, String> hostOnlyIfsToRemove = parseHostOnlyInterfacesToRemove(result)
+
+        hostOnlyIfsToRemove.each { name, ip ->
+            logger.info("Removing host only interface {} of IP {}.", name, ip)
+            removeHostOnlyInterface(name)
+        }
     }
 
     /**
@@ -156,5 +187,63 @@ class DockerMachineHelper {
         }
 
         environmentProperties
+    }
+
+    /**
+     * Removes host only interface by VBoxManage command
+     *
+     * @param hostOnlyInterface host interface to remove, e.g "vboxnet0".
+     * @return
+     */
+    static ProcessResult removeHostOnlyInterface(String hostOnlyInterface) {
+        Spacelift.task("VBoxManage").parameters("hostonlyif", "remove", hostOnlyInterface).execute().await()
+    }
+
+    private static Map<String, String> parseHostOnlyInterfacesToRemove(List<String> output) {
+
+        // Example output which gets parsed
+
+        //    Name:            vboxnet0
+        //    GUID:            786f6276-656e-4074-8000-0a0027000000
+        //    DHCP:            Disabled
+        //    IPAddress:       192.168.99.1
+        //    NetworkMask:     255.255.255.0
+        //    IPV6Address:
+        //    IPV6NetworkMaskPrefixLength: 0
+        //    HardwareAddress: 0a:00:27:00:00:00
+        //    MediumType:      Ethernet
+        //    Status:          Down
+        //    VBoxNetworkName: HostInterfaceNetworking-vboxnet0
+
+        Map<String, String> hostOnlyInterfaces = [:]
+
+        String name = null
+        String ipAddress = null
+
+        for (String line : output) {
+            if (line.startsWith("Name:")) {
+                name = line.substring(line.lastIndexOf(" ") + 1)
+            }
+
+            if (line.startsWith("IPAddress:")) {
+                ipAddress = line.substring(line.lastIndexOf(" ") + 1)
+            }
+
+            if (name && ipAddress) {
+                hostOnlyInterfaces.put(name, ipAddress)
+                name = null
+                ipAddress = null
+            }
+        }
+
+        Map<String, String> hostOnlyInterfacesToDelete = [:]
+
+        for (Map.Entry<String, String> entry : hostOnlyInterfaces) {
+            if (entry.value.equals(DEFAULT_VIRTUALBOX_INTERFACE_IP)) {
+                hostOnlyInterfacesToDelete.put(entry.key, entry.value)
+            }
+        }
+
+        hostOnlyInterfacesToDelete
     }
 }

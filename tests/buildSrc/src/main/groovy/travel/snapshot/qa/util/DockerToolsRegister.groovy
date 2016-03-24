@@ -63,6 +63,21 @@ class DockerToolsRegister {
                 ["docker-machine"]
             }
         })
+
+        registry.register(VBoxManageTool, new TaskFactory() {
+
+            @Override
+            Task create() {
+                Task task = new VBoxManageTool()
+                task.executionService = Spacelift.service()
+                task
+            }
+
+            @Override
+            Collection<String> aliases() {
+                ["VBoxManage"]
+            }
+        })
     }
 
     class DockerTool extends CommandTool {
@@ -116,6 +131,26 @@ class DockerToolsRegister {
         @Override
         String toString() {
             "DockerMachineTool (${commandBuilder})"
+        }
+    }
+
+    class VBoxManageTool extends CommandTool {
+
+        VBoxManageTool() {
+            super()
+
+            this.commandBuilder = new CommandBuilder("VBoxManage")
+
+            this.interaction = new ProcessInteractionBuilder()
+                    .outputPrefix("VBoxManage: ")
+                    .when("(?s).*")
+                    .printToOut()
+                    .build()
+        }
+
+        @Override
+        String toString() {
+            "VBoxManage (${commandBuilder})"
         }
     }
 }
