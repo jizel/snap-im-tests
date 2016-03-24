@@ -5,7 +5,7 @@ import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.text.ProcessTemplate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 class TsvLoadScriptResolver {
 
@@ -13,7 +13,7 @@ class TsvLoadScriptResolver {
 
     static def resolve() {
 
-        String qaRepositoryLocation = PropertyResolver.resolveDataPlatformQARepositoryLocation().absolutePath
+        String qaRepositoryLocation = Properties.Location.dataPlatformQARepository.absolutePath
 
         String qaRepositoryTemplate = getPlatformSpecificDir(qaRepositoryLocation)
 

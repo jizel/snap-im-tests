@@ -9,7 +9,7 @@ import org.slf4j.Logger
 import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.manager.ConnectionMode
 import travel.snapshot.qa.util.ProjectHelper
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.container.DockerIPLogger
 
@@ -95,7 +95,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
         def orchestration = with.resolve()
 
-        def connectionMode = ConnectionMode.valueOf(PropertyResolver.resolveConnectionMode())
+        def connectionMode = ConnectionMode.valueOf(Properties.Docker.connectionMode)
 
         boolean containersAlreadyStarted = orchestration.get().getDockerManager().containersAlreadyStarted()
 

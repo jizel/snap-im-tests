@@ -6,11 +6,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.inspection.InspectionException
 import travel.snapshot.qa.util.ProjectHelper
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 import static travel.snapshot.qa.util.DockerMode.MACHINE
-import static travel.snapshot.qa.util.PropertyResolver.resolveContainerIP
-import static travel.snapshot.qa.util.PropertyResolver.resolveDockerMachine
 import static travel.snapshot.qa.util.machine.DockerMachineHelper.getIp
 
 class ApiTestsPropertiesResolver {
@@ -43,18 +41,18 @@ class ApiTestsPropertiesResolver {
         String activemqIP
         String mongodbIP
 
-        if (PropertyResolver.resolveDockerMode() == MACHINE.name()) {
+        if (Properties.Docker.mode == MACHINE.name()) {
             try {
-                tomcatIP = mariadbIP = activemqIP = mongodbIP = getIp(resolveDockerMachine())
+                tomcatIP = mariadbIP = activemqIP = mongodbIP = getIp(Properties.Docker.machineName)
             } catch (InspectionException ex) {
                 throw new InspectionException("Unable to get IP of the container for dp.properties file", ex)
             }
         } else {
             try {
-                tomcatIP = resolveContainerIP("tomcat")
-                mariadbIP = resolveContainerIP("mariadb")
-                activemqIP = resolveContainerIP("activemq")
-                mongodbIP = resolveContainerIP("mongodb")
+                tomcatIP = Properties.Docker.getIp("tomcat")
+                mariadbIP = Properties.Docker.getIp("mariadb")
+                activemqIP = Properties.Docker.getIp("activemq")
+                mongodbIP = Properties.Docker.getIp("mongodb")
             } catch (InspectionException ex) {
                 throw new InspectionException("Unable to get IP of the container for dp.properties file", ex)
             }

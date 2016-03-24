@@ -25,7 +25,7 @@ import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
 import travel.snapshot.qa.test.execution.report.LoadTestGuiReporter
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
 import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.PROJECT
@@ -41,6 +41,9 @@ spacelift {
     final DataPlatformTestOrchestration platform = new DataPlatformTestOrchestration()
 
     configuration {
+
+        // Installations
+
         dockerInstallations {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value { ['docker', 'dockerMachine'] }
@@ -51,12 +54,15 @@ spacelift {
         }
         loadTestsInstallations {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
-            value { PropertyResolver.resolveLoadTestsInstallations() }
+            value { Properties.LoadTest.installations }
         }
         loadTestsTestExecutions {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
-            value { PropertyResolver.resolveLoadTestsTestExecutions() }
+            value { Properties.LoadTest.testExecutions }
         }
+
+        // Docker
+
         dockerImages {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value {
@@ -69,56 +75,78 @@ spacelift {
             }
         }
         dockerMachine {
-            value PropertyResolver.resolveDockerMachine()
+            value Properties.Docker.machineName
         }
         dockerMachineMemorySize {
-            value PropertyResolver.resolveDockerMachineMemorySize()
+            value Properties.Docker.machineMemorySize
         }
         dockerMode {
-            value PropertyResolver.resolveDockerMode()
+            value Properties.Docker.mode
         }
         connectionMode {
-            value PropertyResolver.resolveConnectionMode()
+            value Properties.Docker.connectionMode
         }
         testExecutionMode {
-            value PropertyResolver.resolveTestExecutionMode()
+            value Properties.Test.executionMode
         }
         dockerRegistryPassword {
             // you have to set systemProp.dockerRegistryPassword variable with Docker registry password in gradle.properties
-            value PropertyResolver.resolveDockerRegistryPassword()
+            value Properties.Docker.registryPassword
         }
         dataPlatformRepositories {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
             value { ["dataPlatformRepository", "dataPlatformQARepository"] }
         }
+        tomcatDeploymentStrategy {
+            value Properties.Tomcat.deploymentStrategy
+        }
+
+        // DataPlatform
+
         dataPlatformRepositoryUrl {
-            value PropertyResolver.resolveDataPlatformRepositoryUrl()
+            value Properties.DP.repositoryUrl
         }
         dataPlatformRepository {
-            value PropertyResolver.resolveDataPlatformRepository()
-        }
-        dataPlatformQARepositoryUrl {
-            value PropertyResolver.resolveDataPlatformQARepositoryUrl()
-        }
-        dataPlatformQARepository {
-            value PropertyResolver.resolveDataPlatformQARepository()
+            value Properties.DP.repository
         }
         dataPlatformRepositoryCommit {
-            value PropertyResolver.resolveDataPlatformRespositoryCommit("master")
-        }
-        dataPlatformRepositoryQACommit {
-            value PropertyResolver.resolveDataPlatformRespositoryQACommit("master")
+            value Properties.DP.getRepositoryCommit("master")
         }
         dataPlatformRepositoryCheckoutCommit {
             type Boolean
-            value PropertyResolver.resolveDataPlatformRepositoryCheckoutCommit()
+            value Properties.DP.repositoryCheckoutCommit
+        }
+
+        // DataPlatform QA
+
+        dataPlatformQARepositoryUrl {
+            value Properties.QA.repositoryUrl
+        }
+        dataPlatformQARepository {
+            value Properties.QA.repository
+        }
+        dataPlatformRepositoryQACommit {
+            value Properties.QA.getRepositoryCommit("master")
         }
         dataPlatformRepositoryQACheckoutCommit {
             type Boolean
-            value PropertyResolver.resolveDataPlatformRepositoryQACheckoutCommit()
+            value Properties.QA.repositoryCheckoutCommit
         }
-        tomcatDeploymentStrategy {
-            value PropertyResolver.resolveTomcatDeploymentStrategy()
+
+        // DataPlatform API
+
+        dataPlatformRepositoryApiUrl {
+            value Properties.API.repositoryUrl
+        }
+        dataPlatformApiRepository {
+            value Properties.API.repository
+        }
+        dataPlatformRepositoryApiCommit {
+            value Properties.API.getRepositoryCommit("origin/1.7.0")
+        }
+        dataPlatformRepositoryApiCheckoutCommit {
+            type Boolean
+            value Properties.API.repositoryCheckoutCommit
         }
     }
 
@@ -241,6 +269,12 @@ spacelift {
             commit dataPlatformRepositoryQACommit
             checkoutCommit dataPlatformRepositoryQACheckoutCommit
             home dataPlatformQARepository
+        }
+        dataPlatformApiRepository(from: GitBasedInstallation) {
+            repository dataPlatformRepositoryApiUrl
+            commit dataPlatformRepositoryApiCommit
+            checkoutCommit dataPlatformRepositoryApiCheckoutCommit
+            home dataPlatformApiRepository
         }
     }
 

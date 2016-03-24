@@ -1,9 +1,11 @@
 package travel.snapshot.qa.util.interaction
 
 import org.arquillian.spacelift.Spacelift
+import org.arquillian.spacelift.process.ProcessResult
 import org.arquillian.spacelift.task.os.CommandTool
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import travel.snapshot.qa.util.Properties
 
 class DockerInteraction {
 
@@ -47,7 +49,7 @@ class DockerInteraction {
      * @param to remote destination on Docker machine where file or directory will be saved
      * @param recursively true to turn on '-r' flag on scp command, false otherwise
      */
-    static def copy(String from, String to, boolean recursively) {
+    static ProcessResult copy(String from, String to, boolean recursively) {
         CommandTool scp = Spacelift.task("docker-machine").parameter("scp")
 
         if (recursively) {
@@ -65,21 +67,28 @@ class DockerInteraction {
      * @param from local file or whole directory to copy to a Docker machine
      * @param to remote destination on Docker machine where file or directory will be saved
      */
-    static def copy(String from, String to) {
+    static ProcessResult copy(String from, String to) {
         copy(from, to, false)
     }
 
     /**
-     * Executes command on a machine of name 'default'
+     * Executes command on a default Docker machine
      *
      * @param command command to execute
      */
-    static def execute(String command) {
-        execute("default", command, null)
+    static ProcessResult execute(String command) {
+        execute(Properties.Docker.DEFAULT_DOCKER_MACHINE_NAME, command, null)
     }
 
-    static def execute(String command, Integer... exitCodes) {
-        execute("default", command, exitCodes)
+    /**
+     * Executes command on a default Docker machine
+     *
+     * @param command command to execute
+     * @param exitCodes exit codes which are accepted as exit codes of the command
+     * @return
+     */
+    static ProcessResult execute(String command, Integer... exitCodes) {
+        execute(Properties.Docker.DEFAULT_DOCKER_MACHINE_NAME, command, exitCodes)
     }
 
     /**
@@ -88,9 +97,9 @@ class DockerInteraction {
      * @param machineName name of machine to execute command agains
      * @param command command to execute
      */
-    static def execute(String machineName, String command, Integer... exitCodes) {
+    static ProcessResult execute(String machineName, String command, Integer... exitCodes) {
 
-        logger.debug("executing '{}' on '{}'", command, machineName)
+        logger.debug("Executing command '{}' on Docker machine '{}'", command, machineName)
 
         def shouldExitWith = []
 
@@ -104,6 +113,7 @@ class DockerInteraction {
                 .parameter(machineName)
                 .splitToParameters(command)
                 .shouldExitWith(shouldExitWith.toArray(new Integer[shouldExitWith.size()]))
-                .execute().await()
+                .execute()
+                .await()
     }
 }

@@ -9,7 +9,7 @@ import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 /**
  * Initializes MariaDB container with Flyway scripts.
@@ -30,7 +30,7 @@ class MariaDBInitializer {
     private String containerId = DEFAULT_MARIADB_CONTAINER
 
     MariaDBInitializer(DataPlatformTestOrchestration orchestration) {
-        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
+        this.dataPlatformDir = Properties.Location.dataPlatformRepository
         this.orchestration = orchestration
     }
 

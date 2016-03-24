@@ -12,8 +12,12 @@ import travel.snapshot.qa.manager.tomcat.TomcatManager
 import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.Timer
+
+import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORFAIL
+import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORREDEPLOY
+import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORSKIP
 
 /**
  * Deploys modules (wars) to Tomcat instance.
@@ -33,10 +37,10 @@ class DataPlatformDeployer {
 
     private String containerId = DEFAULT_TOMCAT_CONTAINER
 
-    private String deploymentStrategy = parseDeploymentStrategy()
+    private DeploymentStrategy deploymentStrategy = DeploymentStrategy.valueOf(Properties.Tomcat.deploymentStrategy)
 
     DataPlatformDeployer(DataPlatformTestOrchestration orchestration) {
-        this.dataPlatformDir = PropertyResolver.resolveDataPlatformRepositoryLocation()
+        this.dataPlatformDir = Properties.Location.dataPlatformRepository
         this.orchestration = orchestration
     }
 
@@ -114,8 +118,6 @@ class DataPlatformDeployer {
                     String.format("Unable to perform module deployment, managers for container %s are null.", containerId))
         }
 
-        final DeploymentStrategy deploymentStrategy = parseDeploymentStrategy()
-
         // if there are some modules to be deployed, dependencies of that module have to be deployed as well
         // multiple modules to deploy can depend on the same module, by flatteing these dependencies and filtering
         // duplicities, we get unique dependencies accross all modules
@@ -131,7 +133,7 @@ class DataPlatformDeployer {
             boolean isDeployed = manager.isDeployed(module.getDeploymentContext())
 
             switch (deploymentStrategy) {
-                case DeploymentStrategy.DEPLOYORFAIL:
+                case DEPLOYORFAIL:
                     if (isDeployed) {
                         logger.info(String.format("Deployment of %s is already deployed and you have set " +
                                 "'deploy or fail' deployment strategy.", module.getDeploymentContext()))
@@ -139,7 +141,7 @@ class DataPlatformDeployer {
                     }
                     deployModule(module, manager)
                     break
-                case DeploymentStrategy.DEPLOYORREDEPLOY:
+                case DEPLOYORREDEPLOY:
                     if (isDeployed) {
                         logger.info(String.format("Deployment of %s is already deployed and you have set " +
                                 "'deploy or redeploy' deployment strategy. This deployment is going to be undeployed and " +
@@ -148,7 +150,7 @@ class DataPlatformDeployer {
                     }
                     deployModule(module, manager)
                     break
-                case DeploymentStrategy.DEPLOYORSKIP:
+                case DEPLOYORSKIP:
                     if (isDeployed) {
                         logger.info(String.format("Deployment of %s is already deployed and you have set " +
                                 "'deploy or skip' deployment strategy. This deployment is going to be skipped.",
@@ -214,9 +216,5 @@ class DataPlatformDeployer {
         loggerExecution.terminate()
 
         logger.info("Undeploying of {} module finished in {} seconds.", module.getDeploymentContext(), timer.delta())
-    }
-
-    private DeploymentStrategy parseDeploymentStrategy() {
-        DeploymentStrategy.valueOf(PropertyResolver.resolveTomcatDeploymentStrategy())
     }
 }

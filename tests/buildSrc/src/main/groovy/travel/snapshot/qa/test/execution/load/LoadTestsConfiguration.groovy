@@ -1,7 +1,7 @@
 package travel.snapshot.qa.test.execution.load
 
 import travel.snapshot.qa.DataPlatformTestOrchestration
-import travel.snapshot.qa.util.PropertyResolver
+import travel.snapshot.qa.util.Properties
 
 class LoadTestsConfiguration {
 
@@ -21,29 +21,22 @@ class LoadTestsConfiguration {
 
     static LoadTestsConfiguration parseLoadTestsConfiguration() {
 
-        LoadTestEnvironment environment = PropertyResolver.resolveLoadTestEnvironment()
-
-        int startUsers = PropertyResolver.resolveLoadTestStartUsers()
-        int endUsers = PropertyResolver.resolveLoadTestEndUsers()
-        int ramp = PropertyResolver.resolveLoadTestRamp()
-
         LoadTestsConfiguration configuration = new LoadTestsConfiguration()
-                .environment(environment)
-                .startUsers(startUsers)
-                .endUsers(endUsers)
-                .ramp(ramp)
+                .environment(Properties.LoadTest.environment)
+                .startUsers(Properties.LoadTest.startUsers)
+                .endUsers(Properties.LoadTest.endUsers)
+                .ramp(Properties.LoadTest.ramp)
 
         configuration
     }
 
     static List<List<?>> parse(DataPlatformTestOrchestration orchestration) {
 
-        List<LoadTestsSimulation> simulations = PropertyResolver.resolveLoadTestSimulations()
         LoadTestsConfiguration configuration = parseLoadTestsConfiguration()
 
         List<List<?>> configurations = []
 
-        for (LoadTestsSimulation simulation : simulations) {
+        for (LoadTestsSimulation simulation : Properties.LoadTest.simulations) {
             configurations << [simulation, configuration]
         }
 
