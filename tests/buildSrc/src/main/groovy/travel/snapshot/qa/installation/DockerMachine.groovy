@@ -108,6 +108,7 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         if (!DockerMachineHelper.isRunning(dockerMachine)) {
             if (DockerMachineHelper.isTimeouted(dockerMachine)) {
                 DockerMachineHelper.stop(dockerMachine)
+                DockerMachineHelper.removeHostOnlyInterfaces()
             }
             DockerMachineHelper.start(dockerMachine)
         }
