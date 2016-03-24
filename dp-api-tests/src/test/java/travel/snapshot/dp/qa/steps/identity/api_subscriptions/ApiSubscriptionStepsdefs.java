@@ -131,7 +131,7 @@ public class ApiSubscriptionStepsdefs {
             if (f.getName().equalsIgnoreCase(updatedField)) {
                 f.setAccessible(true);
                 if (updatedField.equalsIgnoreCase("isActive")) {
-                    f.setInt(api, Integer.parseInt(value));
+                    api.setIsActive(Integer.parseInt(value));
                 } else {
                     f.set(api, value);
                 }
