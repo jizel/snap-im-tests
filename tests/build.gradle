@@ -414,7 +414,8 @@ spacelift {
 
         apiTestsSmoke(inherits: apiTestsBase) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute()
+                // it is just faster to build whole project when executing smoke tests then build all modules one by one
+                new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
             }
             execute {
