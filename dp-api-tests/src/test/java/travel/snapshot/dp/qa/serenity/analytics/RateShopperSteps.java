@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
@@ -26,71 +28,44 @@ public class RateShopperSteps extends AnalyticsBaseSteps {
         spec.baseUri(PropertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
     }
 
-    //GET Requests
-
     public void emptyGetRequest(String url) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(given(spec).get(url));
     }
 
     @Step
     public void getPropertyRateData(String property_id, String since, String until, String fetched) {
-        LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(until);
-
-        RequestSpecification requestSpecification = given().spec(spec);
-
-        if (sinceDate != null) {
-            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
-        }
-
-        if (untilDate != null) {
-            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
-        }
+        Map<String, String> queryParams = new HashMap<>();
 
         if (StringUtils.isNotBlank(fetched)) {
-            requestSpecification.parameter("fetch_datetime", fetched);
+            queryParams.put("fetch_datetime", fetched);
         }
 
-        Response response = requestSpecification.get("/rate_shopper/analytics/property/{id}", property_id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        Response response = getEntitiesForUrlWihDates("/rate_shopper/analytics/property/"+property_id, null, null, since, until, null, queryParams);
+        setSessionResponse(response);
     }
 
     @Step
-    public void getMarketRateData(String property_id, String since, String until) {
-        LocalDate sinceDate = StringUtil.parseDate(since);
-        LocalDate untilDate = StringUtil.parseDate(since);
+    public void getMarketRateData(String propertyId, String since, String until) {
+        Map<String, String> queryParams = new HashMap<>();
 
-        RequestSpecification requestSpecification = given().spec(spec)
-                .param("property_id", property_id);
+        queryParams.put("property_id", propertyId);
 
-        if (since != null && !"".equals(since)) {
-            requestSpecification.parameter("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
-        }
-
-        if (until != null && !"".equals(until)) {
-            requestSpecification.parameter("until", untilDate.format(DateTimeFormatter.ISO_DATE));
-        }
-
-        Response response = requestSpecification.when().get("/rate_shopper/analytics/market");
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        Response response = getEntitiesForUrlWihDates("/rate_shopper/analytics/market", null, null, since, until, null, queryParams);
+        setSessionResponse(response);
     }
 
     @Step
     public void getProperties(String propertyId, String limit, String cursor, String fetchDateTime) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .parameter("property_id", propertyId);
+        Map<String, String> queryParams = new HashMap<>();
 
-        if (cursor != null) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null) {
-            requestSpecification.parameter("limit", limit);
-        }
+        queryParams.put("property_id", propertyId);
+
         if (fetchDateTime != null) {
-            requestSpecification.parameter("fetch_datetime", fetchDateTime);
+            queryParams.put("fetch_datetime", fetchDateTime);
         }
-        Response response = requestSpecification.when().get("/rate_shopper/analytics/market/properties");
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+
+        Response response = getEntitiesForUrlWihDates("/rate_shopper/analytics/market/properties", limit, cursor, null, null, null, queryParams);
+        setSessionResponse(response);
     }
 
     // Response validation

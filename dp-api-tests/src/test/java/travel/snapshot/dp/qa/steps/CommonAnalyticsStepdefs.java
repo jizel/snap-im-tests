@@ -1,8 +1,10 @@
 package travel.snapshot.dp.qa.steps;
 
+import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
 /**
@@ -45,4 +47,8 @@ public class CommonAnalyticsStepdefs {
         analyticsBaseSteps.responseContainsDataValues(count);
     }
 
+    @Then("^Body contains entity with attribute \"([^\"]*)\" and size \"([^\"]*)\"$")
+    public void bodyContainsEntityWithAttributeAndSize(String attributeName, int size) throws Throwable {
+        analyticsBaseSteps.bodyContainsEntityWithSize(attributeName, size);
+    }
 }
