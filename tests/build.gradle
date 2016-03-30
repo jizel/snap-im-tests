@@ -10,6 +10,7 @@ import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.api.APITestsExecution
+import travel.snapshot.qa.test.execution.dataplatform.DataPlatformApiBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformBuildExecutor
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
@@ -23,6 +24,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.log.ContainerLogReporter
 import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
 import travel.snapshot.qa.test.execution.report.LoadTestGuiReporter
+import travel.snapshot.qa.test.execution.threescale.ThreeScaleUploadExecutor
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.Properties
@@ -142,7 +144,7 @@ spacelift {
             value Properties.API.repository
         }
         dataPlatformRepositoryApiCommit {
-            value Properties.API.getRepositoryCommit("origin/1.7.0")
+            value Properties.API.getRepositoryCommit("origin/master")
         }
         dataPlatformRepositoryApiCheckoutCommit {
             type Boolean
@@ -226,6 +228,11 @@ spacelift {
         loadTests {
             enabledInstallations loadTestsInstallations
             tests loadTestsTestExecutions
+        }
+
+        threeScaleJsonUpload {
+            enabledInstallations 'dataPlatformApiRepository', 'maven'
+            tests 'threeScaleJsonUploadExecution'
         }
     }
 
@@ -475,6 +482,15 @@ spacelift {
                 new DataPlatformDeployer(platform)
                         .deploy(LoadTestsModuleParser.parse())
                         .execute()
+            }
+        }
+
+        // 3scale JSON upload
+
+        threeScaleJsonUploadExecution {
+            execute {
+                new DataPlatformApiBuildExecutor().execute()
+                new ThreeScaleUploadExecutor().execute()
             }
         }
     }

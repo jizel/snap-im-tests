@@ -6,6 +6,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
 import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
+import travel.snapshot.qa.test.execution.threescale.ThreeScaleApiEnvironment
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 import travel.snapshot.qa.util.container.DockerContainer
 import travel.snapshot.qa.util.machine.DockerMachineHelper
@@ -56,7 +57,7 @@ class Properties {
             System.getProperty("dataPlatformRepositoryApiCommit", defaultCommit)
         }
 
-        static String getRepositoryCheckoutCommit() {
+        static Boolean getRepositoryCheckoutCommit() {
             Boolean.parseBoolean(System.getProperty("dataPlatformRepositoryApiCheckoutCommit"))
         }
     }
@@ -189,6 +190,13 @@ class Properties {
             String dataPlatformQADirectory = ProjectHelper.spacelift.configuration['dataPlatformQARepository'].value
 
             resolveLocation(workspace, dataPlatformQADirectory)
+        }
+
+        static File getDataPlatformAPIRepository() {
+            File workspace = ProjectHelper.workspace
+            String dataPlatformAPIDirectory = ProjectHelper.spacelift.configuration['dataPlatformApiRepository'].value
+
+            resolveLocation(workspace, dataPlatformAPIDirectory)
         }
     }
 
@@ -403,6 +411,24 @@ class Properties {
 
         static boolean isSkipTestExecution() {
             Boolean.parseBoolean(System.getProperty("skipTestExecution"))
+        }
+    }
+
+    static class ThreeScale {
+
+        static String getProviderKey() {
+            String providerKey = System.getProperty("threeScaleProviderKey")
+
+            if (!providerKey || providerKey.isEmpty()) {
+                throw new IllegalArgumentException("You have to provide 'threeScaleProviderKey' system property with " +
+                        "3scale provider key to be able to upload JSON swagger files there.")
+            }
+
+            providerKey
+        }
+
+        static ThreeScaleApiEnvironment getEnvironment() {
+            ThreeScaleApiEnvironment.valueOf(System.getProperty("threeScaleEnvironment", ThreeScaleApiEnvironment.DEV.name()).toUpperCase())
         }
     }
 }
