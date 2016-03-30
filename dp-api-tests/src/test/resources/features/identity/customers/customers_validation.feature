@@ -67,7 +67,7 @@ Feature: Customers validation
       | /email           | 400          | 59         |
       | /phone           | 400          | 59         |
       | /timezone        | 400          | 59         |
-      | /address/country | 400          | 59         |
+      | /address/country | 400          | 63         |
 
   Scenario: Object creation - missing values
     When create "customer" objects each with one missing field
@@ -90,39 +90,77 @@ Feature: Customers validation
       | /website         | 400          | 59         |
       | /email           | 400          | 59         |
       | /phone           | 400          | 59         |
-      | /address/country | 400          | 59         |
+      | /address/country | 400          | 63         |
 
   Scenario Outline: Object update - customer - invalid values
-    When Update customer with code "<customer>", field "<updated_field>", its value "<value>"
+    When Update customer with code "validation1", field "<updated_field>", its value "<value>"
     Then Response code is 400
     And Custom code is "<custom_code>"
     Examples:
-      | customer    | updated_field | custom_code | value            |
-      | validation1 | timezone      | 59          | invalid_timezone |
-      | validation1 | timezone      | 59          | UTC+01:00        |
-      | validation1 | phone         | 59          | invalid_phone    |
-      | validation1 | phone         | 59          | 123              |
-      | validation1 | email         | 59          | invalid_email    |
-      | validation1 | email         | 59          | @invalid_email   |
-      | validation1 | vatId         | 59          | invalid_vatId    |
-      | validation1 | vatId         | 59          | @\/*             |
-      | validation1 | website       | 59          | invalid_web      |
-      | validation1 | website       | 59          | www.snapshot.com |
+      | updated_field | custom_code | value            |
+      | timezone      | 59          | invalid_timezone |
+      | timezone      | 59          | UTC+01:00        |
+      | phone         | 59          | invalid_phone    |
+      | phone         | 59          | 123              |
+      | email         | 59          | invalid_email    |
+      | email         | 59          | @invalid_email   |
+      | vatId         | 59          | invalid_vatId    |
+      | vatId         | 59          | @\/*             |
+      | website       | 59          | invalid_web      |
+      | website       | 59          | www.snapshot.com |
+
+  Scenario Outline: Object update - customer's address - invalid values
+    When Update customer with code "validation1", address field "<address_field>", its value "<value>"
+    Then Response code is 400
+    And Custom code is "<custom_code>"
+    Examples:
+      | address_field | value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | custom_code |
+      | country       | XX                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | 63          |
+      | country       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
+      | city          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
+      | city          | 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901                                                                                                                                                                                                         | 63          |
+      | zipCode       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
+      | zipCode       | 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901                                                                                                                                                                                                                                                                                                                                                                                                                 | 63          |
+      | region        | 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901                                                                                                                                                                                                                                                                                                                                                                                                                 | 63          |
+      | addressLine2  | 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901 | 63          |
+      | addressLine1  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
+      | addressLine1  | 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901 | 63          |
+
+  Scenario Outline: Object update - customer's address - valid values
+    When Update customer with code "validation1", address field "<address_field>", its value "<value>"
+    Then Response code is 204
+    And Body is empty
+    And Etag header is present
+    Examples:
+      | address_field | value                       |
+      | country       | CZ                          |
+      | country       | US                          |
+      | country       | EG                          |
+      | country       | CN                          |
+      | city          | Prague                      |
+      | city          | NewYork1                    |
+      | city          | 上海市                         |
+      | zipCode       | 60200                       |
+      | zipCode       | ThisIsAnAwesomeValidZipCode |
+      | region        |                             |
+      | region        | Texas                       |
+      | region        | South Carolina              |
+      | addressLine2  |                             |
+      | addressLine2  | AddressLineNumberTwo        |
+      | addressLine2  | 1                           |
+      | addressLine1  | 1                           |
+      | addressLine1  | AddressLineNumberOne        |
+      | addressLine1  | 无锡市 99/1A-BC                |
 
   Scenario Outline: Object update - customer - valid values
-    When Update customer with code "<customer>", field "<updated_field>", its value "<value>"
+    When Update customer with code "validation1", field "<updated_field>", its value "<value>"
     Then Response code is 204
     And  Body is empty
     Examples:
-      | customer    | updated_field | value                 |
-      | validation1 | timezone      | Pacific/Fiji          |
-      | validation1 | timezone      | GMT                   |
-      | validation1 | phone         | +42098765432          |
-      | validation1 | email         | valid@snapshot.travel |
-      | validation1 | vatId         | CZ98765432            |
-      | validation1 | website       | http://snapshot.com   |
-
-
-#   TODO when field lengths are stabilized
-#
-#   Scenario: Object creation - long values
+      | updated_field | value                 |
+      | timezone      | Pacific/Fiji          |
+      | timezone      | GMT                   |
+      | phone         | +42098765432          |
+      | email         | valid@snapshot.travel |
+      | vatId         | CZ98765432            |
+      | website       | http://snapshot.com   |

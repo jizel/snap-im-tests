@@ -394,8 +394,23 @@ public class CustomerStepdefs {
             if (f.getName().equalsIgnoreCase(updatedField)) {
                 f.setAccessible(true);
                 f.set(c, updatedValue);
+                break;
             }
         }
         customerSteps.updateCustomerWithCode(customerCode, c);
+    }
+
+    @When("^Update customer with code \"([^\"]*)\", address field \"([^\"]*)\", its value \"([^\"]*)\"$")
+    public void updateCustomerWithCodeAddressFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
+        Address updatedAddress = new Address();
+        for (Field f : Address.class.getDeclaredFields()) {
+            if (f.getName().equalsIgnoreCase(updatedField)) {
+                f.setAccessible(true);
+                f.set(updatedAddress, updatedValue);
+                break;
+            }
+        }
+
+        customerSteps.updateCustomerAddress(customerCode, updatedAddress);
     }
 }
