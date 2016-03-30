@@ -143,14 +143,19 @@ Feature: Customers validation
       | zipCode       | 60200                       |
       | zipCode       | ThisIsAnAwesomeValidZipCode |
       | region        |                             |
-      | region        | Texas                       |
-      | region        | South Carolina              |
       | addressLine2  |                             |
       | addressLine2  | AddressLineNumberTwo        |
       | addressLine2  | 1                           |
       | addressLine1  | 1                           |
       | addressLine1  | AddressLineNumberOne        |
       | addressLine1  | 无锡市 99/1A-BC                |
+
+    Scenario: Object update - US customer's region
+      When Update customer with code "validation1", address field "country", its value "US"
+      When Update customer with code "validation1", address field "region", its value "Texas"
+      Then Response code is 204
+      And Body is empty
+      And Etag header is present
 
   Scenario Outline: Object update - customer - valid values
     When Update customer with code "validation1", field "<updated_field>", its value "<value>"
