@@ -90,7 +90,7 @@
                     iterations: 15
                 portBindings: [3306/tcp]
             mongodb:
-                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.3
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.4
                 exposedPorts: [27017/tcp]
                 env: [LOG_PATH=/var/log/mongodb/server.log]
                 await:
