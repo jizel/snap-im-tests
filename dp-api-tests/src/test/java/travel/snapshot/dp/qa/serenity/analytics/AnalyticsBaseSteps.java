@@ -69,6 +69,16 @@ public class AnalyticsBaseSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
+    public void getPropertiesWithPagingAndDate(String url, String propertyId, String limit, String cursor, String granularity, String since, String until) {
+        Map<String, String> queryParams = new HashMap<>();
+        if (StringUtils.isNotBlank(propertyId)) {
+            queryParams.put("property", propertyId);
+        }
+
+        Response response = getEntitiesForUrlWihDates(url, limit, cursor, since, until, granularity, queryParams);
+        setSessionResponse(response);
+    }
+
     //Response Validation
     @Step
     public void responseContainsValues(int count) {
@@ -123,7 +133,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
         BiPredicate equalityPredicate = null;
 
-        BiPredicate<Double, Double> numberEquality = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
+        BiPredicate<? extends Number, ? extends Number> numberEquality = ascending ? (a, b) -> a.longValue() <= b.longValue() : (a, b) -> a.longValue() >= b.longValue();
         BiPredicate<String, String> stringEquality = ascending ? (a, b) -> a.compareTo(b) <= 0 : (a, b) -> a.compareTo(b) >= 0;
 
         if (propertyClassType == Double.class || propertyClassType == Long.class || propertyClassType == Integer.class) {
@@ -141,18 +151,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
         for (int i = 0; i < values.size() - 1; i++) {
             assertTrue("\nValue at index " + i + ": " + values.get(i) + "\nValue at index " + (i + 1) + ": " + values.get(i + 1),
                     equalityPredicate.test(values.get(i), values.get(i + 1)));
-        }
-    }
-
-    @Step
-    public void referralsAreSorted(String metric, boolean ascending) {
-        BiPredicate<Double, Double> direction = ascending ? (a, b) -> a <= b : (a, b) -> a >= b;
-        Response response = getSessionResponse();
-        List<Double> values = response.body().jsonPath().getList("values." + metric, double.class);
-        for (int i = 0; i < values.size() - 1; i++) {
-            assertTrue("\nValue at index " + i + ": " + values.get(i) + "\n"
-                            + "Value at index " + (i + 1) + ": " + values.get(i + 1),
-                    direction.test(values.get(i), values.get(i + 1)));
         }
     }
 
