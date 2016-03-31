@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionDto;
-import travel.snapshot.dp.api.identity.subscription.model.ApiSubscriptionUpdateDto;
+import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.ApiSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
