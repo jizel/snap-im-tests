@@ -58,7 +58,8 @@ Feature: Rate shopper
 
 # GET /rate_shopper/analytics/property/{id}
 
-   @issue DP-1262
+  @issue DP-1262
+
   Scenario Outline: Checking error codes for analytics data
     When Sending an empty request to "<url>"
     Then Response code is "404"
@@ -66,8 +67,8 @@ Feature: Rate shopper
     And Custom code is "152"
 
     Examples:
-      | url                                        |
-      | /rate_shopper/analytics/property/invalid   |
+      | url                                      |
+      | /rate_shopper/analytics/property/invalid |
 
   Scenario Outline: Checking correct currency parameter returned for property
     Given Database is cleaned

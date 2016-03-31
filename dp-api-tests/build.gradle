@@ -57,7 +57,7 @@ dependencies {
     compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: '1.9.0-SNAPSHOT'
     compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: '1.9.0-SNAPSHOT'
     compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: '1.9.0-SNAPSHOT'
-    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: '1.6.0'
+    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: '1.7.0-SNAPSHOT'
     compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: '1.9.0-SNAPSHOT'
     
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.6'
