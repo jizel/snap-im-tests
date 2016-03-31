@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.steps.web_performance;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
@@ -10,7 +9,7 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.ClassStringConverter;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.Converters;
 import travel.snapshot.dp.qa.serenity.analytics.WebPerformanceSteps;
 
 /**
@@ -44,14 +43,20 @@ public class WebPerformanceStepdefs {
 
     @When("^List of web performance \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
     public void list_of_web_performance_for_property_id_is_got_with_limit_and_cursor(String url, String propertyId,
-                                                                                     @Transform(NullEmptyStringConverter.class) String limit,
-                                                                                     @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
+                                                                                     @Transform(Converters.NullEmptyStringConverter.class) String limit,
+                                                                                     @Transform(Converters.NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getPropertiesWithPaging("/web_performance" + url, propertyId, limit, cursor);
     }
 
-    @When("^List of web performance \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\"$")
-    public void list_of_web_performance_for_property_id_is_got_with_limit(String url, String propertyId, @Transform(NullEmptyStringConverter.class) String limit) throws Throwable {
-        steps.getPropertiesWithPaging("/web_performance" + url, propertyId, limit, null);
+    @When("^List of web performance \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and granularity \"([^\"]*)\" and since \"([^\"]*)\" and until \"([^\"]*)\"$")
+    public void list_of_web_performance_for_property_id_is_got_with_limit_and_granularity_and_since_and_until(String url,
+                                                                                          String propertyId,
+                                                                                          @Transform(Converters.NullEmptyStringConverter.class) String limit,
+                                                                                          @Transform(Converters.NullEmptyStringConverter.class) String cursor,
+                                                                                          String granularity,
+                                                                                          String since,
+                                                                                          String until) throws Throwable {
+        steps.getPropertiesWithPagingAndDate("/web_performance" + url, propertyId, limit, cursor, granularity, since, until);
     }
 
     @Then("^Values are sorted by \"([^\"]*)\" in \"([^\"]*)\"$")
@@ -69,11 +74,12 @@ public class WebPerformanceStepdefs {
         steps.isoFormatChecker(jsonString);
     }
 
-    @And("^Value number \"([^\"]*)\" of value type \"([^\"]*)\" has value \"([^\"]*)\"$")
-    public void valueNumberOfValueTypeHasValue(String valueNumber,
+    @And("^Value number \"([^\"]*)\" of value type \"([^\"]*)\" has value \"([^\"]*)\" and is incomplete \"([^\"]*)\"$")
+    public void valueNumberOfValueTypeHasValueAndIsIncomplete (String valueNumber,
                                                @Transform(ClassStringConverter.class) Class valueType,
-                                               @Transform(NullEmptyStringConverter.class) String value) throws Throwable {
-        steps.valueRecordIsOfValue(Integer.parseInt(valueNumber), valueType, value);
+                                               @Transform(Converters.NullEmptyStringConverter.class) String value,
+                                               @Transform(Converters.BooleanStringConverter.class) Boolean incomplete) throws Throwable {
+        steps.valueRecordIsOfValue(Integer.parseInt(valueNumber), valueType, value, incomplete);
     }
 }
 

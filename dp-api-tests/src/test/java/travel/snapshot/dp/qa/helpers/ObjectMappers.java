@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import travel.snapshot.dp.api.analytics.model.MetricName;
 
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ public final class ObjectMappers {
 
     private static ObjectMapper createObjectMapper() {
         SimpleModule module = new SimpleModule();
+
         module.setDeserializerModifier(new BeanDeserializerModifier() {
             @Override
             public JsonDeserializer<Enum> modifyEnumDeserializer(DeserializationConfig config,
@@ -43,6 +45,9 @@ public final class ObjectMappers {
                 jgen.writeString(value.name().toLowerCase());
             }
         });
+
+        module.addDeserializer(MetricName.class, new MetricNameDeserializer());
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(module);

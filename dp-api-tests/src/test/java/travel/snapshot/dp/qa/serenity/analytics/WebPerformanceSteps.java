@@ -10,18 +10,28 @@ import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.api.analytics.model.RecordDto;
+import travel.snapshot.dp.api.analytics.model.SingleStatsDto;
+import travel.snapshot.dp.api.webperformance.model.PeriodAverageStatsDto;
+import travel.snapshot.dp.api.webperformance.model.ReferralStatsDto;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
+import travel.snapshot.dp.qa.model.LegacyReferralStatsDto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by sedlacek on 10/5/2015.
  */
 public class WebPerformanceSteps extends AnalyticsBaseSteps {
 
+    private static final Logger logger = LoggerFactory.getLogger(WebPerformanceSteps.class);
 
     public WebPerformanceSteps() {
         super();
@@ -84,29 +94,58 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void valueRecordIsOfValue(int valueNumber, Class valueType, String value) {
+    public void valueRecordIsOfValue(int valueNumber, Class valueType, String value, boolean incomplete) throws Exception {
 
-        List values = getSessionResponse().body().jsonPath().getList("values", valueType);
+        Object object = ObjectMappers.OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), valueType);
+
+        RecordDto recordDto = null;
+
+        if (object instanceof PeriodAverageStatsDto) {
+            recordDto = (RecordDto) ((PeriodAverageStatsDto) object).getValues().get(valueNumber - 1);
+        } else if (object instanceof SingleStatsDto) {
+            recordDto = (RecordDto) ((SingleStatsDto) object).getValues().get(valueNumber - 1);
+        } else {
+            throw new IllegalStateException("Unsupported type.");
+        }
+
+        if (incomplete) {
+            assertTrue(recordDto.getDataIncomplete() == null || recordDto.getDataIncomplete());
+        }
 
         if (value == null) {
-            assertNull(values.get(valueNumber - 1));
-            return;
+            assertNull(recordDto.getValue());
+        } else {
+            Double d = Double.valueOf(recordDto.getValue().toString());
+            String s = d.longValue() == d ? "" + d.longValue() : "" + d;
+
+            if (s.contains(".")) {
+                s = s.split("\\.")[0];
+            }
+
+            assertEquals(Integer.parseInt(value), Integer.parseInt(s));
         }
+    }
 
-        Object expectedValue = null;
+    @Step
+    public void referralsAreSorted(String metric, boolean ascending) throws Exception {
 
-        if (valueType == Integer.class) {
-            expectedValue = Integer.parseInt(value);
-        } else if (valueType == Double.class) {
-            expectedValue = Double.parseDouble(value);
-        } else if (valueType == Long.class) {
-            expectedValue = Long.parseLong(value);
-        } else if (valueType == String.class) {
-            expectedValue = value;
-        } else if (valueType == Boolean.class) {
-            expectedValue = Boolean.parseBoolean(value);
-        }
+        ReferralStatsDto referralStatsDto = ObjectMappers.OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), LegacyReferralStatsDto.class);
 
-        assertEquals(expectedValue, values.get(valueNumber - 1));
+        List values = referralStatsDto.getValues().stream().map(recordDto -> {
+            switch (metric) {
+                case "revenue":
+                    return recordDto.getValue().getRevenue();
+                case "visits":
+                    return recordDto.getValue().getVisits();
+                case "visits_unique":
+                    return recordDto.getValue().getUniqueVisits();
+                case "site":
+                    return recordDto.getValue().getSite();
+                default:
+                    throw new IllegalArgumentException("");
+            }
+        }).collect(Collectors.toList());
+
+        listOfObjectsAreSortedAccordingToProperty(values, ascending, values.get(0).getClass());
     }
 }
