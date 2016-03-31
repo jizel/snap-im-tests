@@ -67,7 +67,6 @@ public class ApiSubscriptionSteps extends BasicSteps {
         }
 
         ApiSubscriptionDto apiToCreate = new ApiSubscriptionDto();
-        String s = selected.getApplicationVersionId();
         apiToCreate.setApplicationVersionId(selected.getApplicationVersionId());
         apiToCreate.setApiVersion(selected.getApiVersion());
 
