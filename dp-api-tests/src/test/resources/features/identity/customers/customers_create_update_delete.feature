@@ -30,7 +30,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_email_value.json     | POST   | identity | /identity/customers | 400        | 59          |
       | /messages/identity/customers/create_customer_wrong_field_email.json     | POST   | identity | /identity/customers | 400        | 56          |
       | /messages/identity/customers/create_customer_wrong_vatid_value.json     | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_country_value.json   | POST   | identity | /identity/customers | 400        | 59          |
+      | /messages/identity/customers/create_customer_wrong_country_value.json   | POST   | identity | /identity/customers | 400        | 63          |
       | /messages/identity/customers/create_customer_wrong_phone_value.json     | POST   | identity | /identity/customers | 400        | 59          |
       | /messages/identity/customers/create_customer_wrong_website_value.json   | POST   | identity | /identity/customers | 400        | 59          |
 

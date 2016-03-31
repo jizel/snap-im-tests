@@ -63,7 +63,7 @@ Feature: Customers properties create update delete
       | from after to date   | p2_code       | c2t           | anchor      | 2015-01-01 | 2014-12-31 | 400        | 63          |
       | wrong date format    | p2_code       | c2t           | anchor      | 2015-01-   | 2100-01-01 | 400        | 59          |
       | wrong date format    | p2_code       | c2t           | anchor      | 2015-01-01 | asdfasdf   | 400        | 59          |
-      | wrong type           | p2_code       | c2t           | nonexistent | 2015-01-01 | 2100-01-01 | 400        | 59          |
+      | wrong type           | p2_code       | c2t           | nonexistent | 2015-01-01 | 2100-01-01 | 400        | 63          |
       | duplicate entry      | p1_code       | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 62          |
       | notexistent property | nonexistent   | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 63          |
 
@@ -114,7 +114,7 @@ Feature: Customers properties create update delete
       | valid_from | invalid    | 400         | 59          |
       | valid_to   | 2014-12-31 | 400         | 63          |
       | valid_to   | invalid    | 400         | 59          |
-      | type       | invalid    | 400         | 59          |
+      | type       | invalid    | 400         | 63          |
 
   #error codes
 

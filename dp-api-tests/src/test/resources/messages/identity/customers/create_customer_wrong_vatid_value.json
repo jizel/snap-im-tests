@@ -13,7 +13,7 @@
 
     "city": "string",
     "zip_code": "string",
-    "country": "Czech"
+    "country": "CZ"
   },
   "notes": "string",
   "timezone" : "Europe/Prague"

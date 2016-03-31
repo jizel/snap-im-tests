@@ -3,9 +3,9 @@ Feature: Property sets properties create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone          |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Bratislava |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel |Europe/Bratislava |
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
     Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name, ps2_name
     Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
@@ -38,6 +38,18 @@ Feature: Property sets properties create update delete
     Then Response code is "204"
     And Body is empty
     And Property with code "p2_code" isn't there for property set with name "ps1_name" for customer with code "c1t"
+
+  @Smoke
+  Scenario: Removing propertySet with valid properties
+    Given The following property sets exist for customer with code "c1t"
+      | propertySetName | propertySetDescription | propertySetType |
+      | toDelete        | td1_description        | branch          |
+    Given Relation between property with code "p1_code" and property set with name "toDelete" for customer with code "c1t" exists
+    Given Relation between property with code "p2_code" and property set with name "toDelete" for customer with code "c1t" exists
+    When Property set with name "toDelete" for customer with code "c1t" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Property set with same id doesn't exist
 
 
   Scenario: Checking error code for removing property from property set

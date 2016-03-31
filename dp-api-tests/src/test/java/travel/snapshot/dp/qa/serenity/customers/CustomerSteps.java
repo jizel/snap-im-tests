@@ -245,12 +245,31 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void updateCustomerWithCode(String code, Customer updatedCustomer) throws Throwable {
         Customer original = getCustomerByCodeInternal(code);
-        Response tempResponse = getEntity(original.getCustomerId(), null);
+        if (original == null) {
+            fail("Customer with code " + code + " not found");
+        }
 
+        Response tempResponse = getEntity(original.getCustomerId(), null);
         Map<String, Object> customerData = retrieveData(Customer.class, updatedCustomer);
 
         Response response = updateEntity(original.getCustomerId(), customerData, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
+    }
+
+    @Step
+    public void updateCustomerAddress(String customerCode, Address updatedAddress) throws Throwable {
+        Customer originalCustomer = getCustomerByCodeInternal(customerCode);
+        if (originalCustomer == null) {
+            fail("Customer with code " + customerCode + " not found");
+        }
+
+        Response temp = getEntity(originalCustomer.getCustomerId());
+        Map<String, Object> addressData = new HashMap<String, Object>();
+        addressData.put("address", retrieveData(Address.class, updatedAddress));
+
+        Response response = updateEntity(originalCustomer.getCustomerId(), addressData, temp.getHeader(HEADER_ETAG));
+        setSessionResponse(response);
+
     }
 
     @Step
