@@ -31,14 +31,14 @@ public class RateShopperStepdefs {
     }
 
     @When("^Getting BAR values for a given market for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void getting_market_rate_data_for_since_until(String property_id,
+    public void getting_market_rate_data_for_since_until(@Transform(NullEmptyStringConverter.class) String property_id,
                                                          @Transform(NullEmptyStringConverter.class) String since,
                                                          @Transform(NullEmptyStringConverter.class) String until) {
         steps.getMarketRateData(property_id, since, until);
     }
 
     @When("^List of properties for market of \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void List_of_items_is_got_with_limit_and_cursor(String propertyId,
+    public void List_of_items_is_got_with_limit_and_cursor(@Transform(NullEmptyStringConverter.class) String propertyId,
                                                            @Transform(NullEmptyStringConverter.class) String limit,
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getProperties(propertyId, limit, cursor, null);

@@ -1,19 +1,19 @@
 Feature: Rate shopper
 
-  #todo fail - property id is not validated
-  Scenario Outline: Checking error codes for analytics data
-    When Sending an empty request to "<url>"
-    Then Response code is "404"
+# GET /rate_shopper/analytics/market
+
+  Scenario Outline: Checking error codes for missing parameters
+    When Getting BAR values for a given market for "<propertyId>" since "<since>" until "<until>"
+    Then Response code is "400"
     And Content type is "application/json"
-    And Custom code is "152"
+    And Custom code is "52"
 
     Examples:
-      | url                                        |
-      | /rate_shopper/analytics/property/invalid   |
-      | /rate_shopper/analytics/market/            |
-      | /rate_shopper/analytics/market/properties/ |
+      | propertyId                           | since | until |
+      | /null                                | today | today |
+      | 98000099-9999-4999-a999-999999999999 | /null | today |
+      | 98000099-9999-4999-a999-999999999999 | today | /null |
 
-# GET /rate_shopper/analytics/market
   Scenario Outline: Checking correct currency parameter returned for market
     Given Database is cleaned
     And The following properties exist with random address and billing address
@@ -57,6 +57,17 @@ Feature: Rate shopper
 
 
 # GET /rate_shopper/analytics/property/{id}
+
+   @issue DP-1262
+  Scenario Outline: Checking error codes for analytics data
+    When Sending an empty request to "<url>"
+    Then Response code is "404"
+    And Content type is "application/json"
+    And Custom code is "152"
+
+    Examples:
+      | url                                        |
+      | /rate_shopper/analytics/property/invalid   |
 
   Scenario Outline: Checking correct currency parameter returned for property
     Given Database is cleaned
@@ -106,6 +117,17 @@ Feature: Rate shopper
     And Content type is "application/json"
 
 # GET /rate_shopper/analytics/market/properties
+
+  Scenario Outline: Checking error codes for missing parameters /market/properties
+    When List of properties for market of "<propertyId>" is got with limit "/null" and cursor "/null"
+    Then Response code is "<ReturnCode>"
+    And Content type is "application/json"
+    And Custom code is "<CustomCode>"
+
+    Examples:
+      | propertyId                           | CustomCode | ReturnCode |
+      | /null                                | 52         | 400        |
+      | 98000099-9999-4999-a999-999999999999 | 152        | 404        |
 
   Scenario Outline: Getting a list of items
     Given Database is cleaned
