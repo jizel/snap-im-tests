@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.serenity.analytics;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.core.IsNull;
 import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -18,6 +19,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
@@ -238,5 +240,11 @@ public class AnalyticsBaseSteps extends BasicSteps {
     public void responseContainsDataValues(int count) {
         Response response = getSessionResponse();
         response.then().body("data.size()", is(count));
+    }
+
+    @Step
+    public void bodyContainsEntityWithSize(String attributeName, int size) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, hasSize(size));
     }
 }

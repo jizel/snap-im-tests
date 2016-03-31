@@ -4,10 +4,13 @@ from datetime import timedelta
 import datetime
 import random
 
-__all__ = ['increment', 'rating', 'dates']
+__all__ = ['increment', 'rating', 'dates', 'currency']
 
 increment   = lambda data, pos: data['row'][pos] + random.randint(5, 40)
 rating      = lambda: random.choice([ x * 0.5 for x in range(1, 11)])
+currency = ['EUR', 'GBP', 'CHF']
+
+thousand_range = range(1000)
 
 dates = []
 

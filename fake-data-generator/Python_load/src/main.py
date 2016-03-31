@@ -6,6 +6,7 @@ import argparse
 import os
 
 import sys
+from random import randint
 
 import utils
 from tables import TABLES, FILES
@@ -30,22 +31,28 @@ def main(table_filter, out_path, prop_size):
             for property_id in prop_size:
                 last_row = [0] * 20
 
-                for iteration in metadata['multiply']:
-                    data = {
-                        'property_id': property_id,
-                        'iter': iteration,
-                        'row': last_row
-                    }
+                if metadata['special']:
+                    fill_table(last_row, metadata, property_id, writer)
+                    break
 
-                    last_row = [column(data) for column in metadata['columns']]
-                    writer.writerow(last_row)
+                fill_table(last_row, metadata, property_id, writer)
 
-        print "LOAD DATA LOCAL INFILE '%(table)s.tsv' INTO TABLE %(table)s FIELDS TERMINATED BY '\\t';" % {
-            'table': metadata['table']}
+        print "LOAD DATA LOCAL INFILE '{table}s.tsv' INTO TABLE {table}s FIELDS TERMINATED BY '\\t';".format(table = metadata['table'])
 
-    for sql_file in FILES:
-        print "\. %s;" % sql_file
+    for sql_file in FILES:        print "\. %s;" % sql_file
 
+
+def fill_table(last_row, metadata, property_id, writer):
+    for iteration in metadata['multiply']:
+        data = {
+            'property_id': property_id,
+            'iter': iteration,
+            'row': last_row,
+            'currency': utils.currency[randint(0, 2)]
+        }
+
+        last_row = [column(data) for column in metadata['columns']]
+        writer.writerow(last_row)
 
 def help():
     return '''Fake data generator for custom size of properties (default 1000) for custom date (default 2014-01-01 to 2016-12-31).
