@@ -231,7 +231,7 @@ spacelift {
         }
 
         threeScaleJsonUpload {
-            enabledInstallations 'dataPlatformApiRepository', 'maven'
+            enabledInstallations 'maven'
             tests 'threeScaleJsonUploadExecution'
         }
     }
