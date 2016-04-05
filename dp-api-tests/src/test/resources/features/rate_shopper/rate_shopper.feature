@@ -57,9 +57,8 @@ Feature: Rate shopper
 
 
 # GET /rate_shopper/analytics/property/{id}
-
-  @issue DP-1262
-
+  
+  #@issue DP-1262
   Scenario Outline: Checking error codes for analytics data
     When Sending an empty request to "<url>"
     Then Response code is "404"
