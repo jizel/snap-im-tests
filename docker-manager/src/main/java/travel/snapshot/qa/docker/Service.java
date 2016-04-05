@@ -1,8 +1,8 @@
 package travel.snapshot.qa.docker;
 
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
-import travel.snapshot.qa.manager.api.Configuration;
 import travel.snapshot.qa.manager.api.ServiceManager;
+import travel.snapshot.qa.manager.api.configuration.Configuration;
 
 /**
  * Presents a view to any Docker service which is backed by particular service manager implementation and its respective

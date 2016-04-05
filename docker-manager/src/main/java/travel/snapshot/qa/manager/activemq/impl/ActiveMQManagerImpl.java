@@ -1,8 +1,8 @@
 package travel.snapshot.qa.manager.activemq.impl;
 
-import org.jboss.arquillian.core.spi.Validate;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
+import travel.snapshot.qa.manager.api.configuration.Validate;
 
 import java.io.Serializable;
 

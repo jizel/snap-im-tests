@@ -1,4 +1,4 @@
-package travel.snapshot.qa.manager.tomcat.api;
+package travel.snapshot.qa.manager.api.container;
 
 public class ContainerManagerException extends RuntimeException {
 

@@ -3,7 +3,7 @@ package travel.snapshot.qa.inspection;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
-import travel.snapshot.qa.manager.tomcat.configuration.Validate;
+import travel.snapshot.qa.manager.api.configuration.Validate;
 
 import java.util.Map;
 import java.util.stream.Collectors;

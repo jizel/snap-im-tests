@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.TomcatTest;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter;
 import travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper;

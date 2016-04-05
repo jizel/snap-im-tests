@@ -7,7 +7,7 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarArchive;
 import travel.snapshot.qa.connection.ConnectionCheck;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.manager.api.ServiceManager;
-import travel.snapshot.qa.manager.tomcat.configuration.Validate;
+import travel.snapshot.qa.manager.api.configuration.Validate;
 
 import java.io.File;
 import java.io.IOException;

@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import travel.snapshot.qa.category.UnitTest;
-import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
-import travel.snapshot.qa.manager.api.ConfigurationException;
+import travel.snapshot.qa.manager.api.configuration.AbstractConfigurationBuilder;
+import travel.snapshot.qa.manager.api.configuration.ConfigurationException;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 
 @Category(UnitTest.class)

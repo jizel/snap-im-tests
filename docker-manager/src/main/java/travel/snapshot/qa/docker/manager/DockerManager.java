@@ -38,7 +38,7 @@ public final class DockerManager {
 
     private final DockerLocalCubeRegistry cubeRegistry = new DockerLocalCubeRegistry();
 
-    private static boolean isManagerStarted;
+    private boolean isManagerStarted;
 
     /**
      * Returned DockerManager object has already Arquillian Core Manager started.

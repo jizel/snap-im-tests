@@ -1,7 +1,7 @@
 package travel.snapshot.qa.manager.mongodb.configuration;
 
-import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
-import travel.snapshot.qa.manager.api.Configuration;
+import travel.snapshot.qa.manager.api.configuration.AbstractConfigurationBuilder;
+import travel.snapshot.qa.manager.api.configuration.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;

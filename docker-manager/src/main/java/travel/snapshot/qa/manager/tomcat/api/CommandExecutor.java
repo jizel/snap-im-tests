@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.tomcat.api;
 
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 
 /**

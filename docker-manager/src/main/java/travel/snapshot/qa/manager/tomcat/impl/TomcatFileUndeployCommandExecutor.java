@@ -1,10 +1,10 @@
 package travel.snapshot.qa.manager.tomcat.impl;
 
 import org.apache.http.client.methods.HttpGet;
-import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException;
+import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerConfigurationException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.api.ContainerManagerCommand;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.command.deployment.TomcatFileUndeployCommand;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
