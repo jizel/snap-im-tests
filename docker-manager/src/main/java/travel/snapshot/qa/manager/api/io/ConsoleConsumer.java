@@ -39,7 +39,7 @@ public class ConsoleConsumer implements Runnable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // intentionally empty
         }
     }
 }

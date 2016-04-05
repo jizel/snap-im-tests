@@ -3,6 +3,8 @@ package travel.snapshot.qa.manager.jboss.check;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.process.ProcessResult;
 import org.arquillian.spacelift.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossCLI;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossCLI.NotExecutableScriptException;
@@ -14,11 +16,13 @@ import java.io.FileNotFoundException;
  */
 public class StandaloneStartedCheckTask extends Task<JBossManagerConfiguration, Boolean> {
 
+    private static final Logger logger = LoggerFactory.getLogger(StandaloneStartedCheckTask.class);
+
     @Override
     protected Boolean process(JBossManagerConfiguration configuration) throws Exception {
 
         if (configuration == null) {
-            throw new IllegalStateException("configuration is a null object");
+            throw new IllegalStateException("Configuration is a null object");
         }
 
         configuration.validate();
@@ -51,6 +55,8 @@ public class StandaloneStartedCheckTask extends Task<JBossManagerConfiguration, 
         for (String output : processResult.output()) {
 
             output = output.toLowerCase();
+
+            logger.debug(output);
 
             if (output.contains("result") && output.contains("running")) {
                 running = true;

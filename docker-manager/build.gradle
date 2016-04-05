@@ -132,6 +132,7 @@ test {
 
         includeCategories 'travel.snapshot.qa.category.UnitTest'
         includeCategories 'travel.snapshot.qa.category.TomcatTest'
+        includeCategories 'travel.snapshot.qa.category.JBossTest'
     }
 
     systemProperties = [

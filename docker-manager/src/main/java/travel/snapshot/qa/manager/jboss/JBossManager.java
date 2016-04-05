@@ -38,6 +38,10 @@ public class JBossManager implements JBossContainerManager {
     @Override
     public void start() throws ContainerManagerException {
 
+        if (isRunning()) {
+            throw new ContainerManagerException("JBoss container is already running.");
+        }
+
         try {
             Command command = new JBossCommandBuilder().build(configuration);
 
