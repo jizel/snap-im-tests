@@ -1,6 +1,12 @@
 package travel.snapshot.qa.manager.jboss;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.arquillian.spacelift.Spacelift;
+import org.jboss.as.arquillian.container.domain.Domain;
+import org.jboss.as.controller.client.helpers.domain.ServerIdentity;
+import org.jboss.as.controller.client.helpers.domain.ServerStatus;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,38 +15,75 @@ import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.JBossTest;
 import travel.snapshot.qa.manager.jboss.configuration.ContainerType;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
-import travel.snapshot.qa.manager.jboss.spacelift.JBossStarter;
+import travel.snapshot.qa.manager.jboss.spacelift.JBossDomainStarter;
+import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
-import travel.snapshot.qa.manager.jboss.util.TestUtils;
+
+import java.util.List;
+import java.util.Map;
 
 @Category(JBossTest.class)
 public class JBossLifecycleTestCase {
 
-    private String JBOSS_HOME = TestUtils.getJBossHome();
+    private String JBOSS_HOME = JBossManagerConfiguration.Util.getJBossHome();
 
-    private ContainerType containerType = TestUtils.getContainerType();
+    private ContainerType containerType = JBossManagerConfiguration.Util.getContainerType();
+
+    private JBossManagerConfiguration configuration = new JBossManagerConfiguration().setJBossHome(JBOSS_HOME).setContainerType(containerType);
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void startAndStopJBossContainerStandalone() {
+        JBossStandaloneManager standaloneManager = Spacelift.task(configuration, JBossStandaloneStarter.class).execute().await();
 
-        Spacelift.task(JBossStarter.class)
-                .configuration(new JBossManagerConfiguration().setJBossHome(JBOSS_HOME).setContainerType(containerType))
-                .then(JBossStopper.class)
-                .execute()
-                .await();
+        assertTrue("Server is not running!", standaloneManager.isRunning());
+        assertTrue("Server is not in running state!", standaloneManager.getManagementClient().isServerInRunningState());
+
+        Spacelift.task(standaloneManager, JBossStopper.class).execute().await();
     }
 
     @Test
     public void startAndStopJBossContainerDomain() {
+        JBossDomainManager domainManager = Spacelift.task(configuration, JBossDomainStarter.class).execute().await();
 
-        Spacelift.task(JBossStarter.class)
-                .configuration(new JBossManagerConfiguration().setJBossHome(JBOSS_HOME).setContainerType(containerType).domain())
-                .then(JBossStopper.class)
-                .execute()
-                .await();
+        assertTrue("Domain is not running!", domainManager.isRunning());
+        assertTrue("Domain is not in running state!", domainManager.getManagementClient().isDomainInRunningState());
+
+        Map<ServerIdentity, ServerStatus> serverStatusMap = domainManager.getServerStatuses();
+        List<Domain.Server> domainServers = domainManager.getServers();
+
+        System.out.println(serverStatusMap);
+        System.out.println(domainServers);
+
+        domainManager.getManagementClient().stopServerGroup("main-server-group");
+
+        // ensure there are 2 stopped servers when stopping main-server-group
+
+        assertEquals(2, domainManager.getServers(ServerStatus.STOPPED).size());
+
+        domainManager.getManagementClient().startServerGroup("main-server-group");
+
+        // ensure there are 2 started servers when we start stopped server group again
+
+        assertEquals(2, domainManager.getServers(ServerStatus.STARTED).size());
+
+        // stop server group again and get stopped servers
+        domainManager.getManagementClient().stopServerGroup("main-server-group");
+        List<Domain.Server> stoppedServers = domainManager.getServers(ServerStatus.STOPPED);
+        assertEquals(2, stoppedServers.size());
+
+        // start previously stopped servers one by one
+
+        domainManager.getManagementClient().startServer(stoppedServers.get(0));
+        domainManager.getManagementClient().startServer(stoppedServers.get(1));
+
+        // ensure these servers are started
+
+        assertEquals(2, domainManager.getServers(ServerStatus.STARTED).size());
+
+        Spacelift.task(domainManager, JBossStopper.class).execute().await();
     }
 
     @Test
@@ -49,8 +92,6 @@ public class JBossLifecycleTestCase {
 
         expectedException.expect(Exception.class);
 
-        Spacelift.task(JBossStarter.class).then(JBossStopper.class).execute().await();
+        Spacelift.task(JBossStandaloneStarter.class).then(JBossStopper.class).execute().await();
     }
-
-
 }

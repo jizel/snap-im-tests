@@ -4,9 +4,12 @@ import travel.snapshot.qa.manager.api.container.ContainerManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 /**
- * Manages container lifecycle and deployments.
+ * Manages container lifecycle and deployments of JBoss container, either in standalone or domain mode.
  */
-public interface JBossContainerManager extends ContainerManager {
+public interface JBossContainerManager extends ContainerManager<JBossManagerConfiguration> {
 
-    JBossManagerConfiguration getConfiguration();
+    /**
+     * @return deployer for underlying container to deploy artefacts either for standalon or domain containers
+     */
+    JBossContainerDeployer getDeployer();
 }

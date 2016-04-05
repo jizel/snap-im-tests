@@ -13,7 +13,8 @@ public class JBossManagerConfiguration implements Configuration {
 
     private static final String[] DEFAULT_DOMAIN_SERVERS = new String[]{
             "server-one",
-            "server-two"
+            "server-two",
+            "server-three"
     };
 
     private File javaHome = null;
@@ -50,11 +51,23 @@ public class JBossManagerConfiguration implements Configuration {
 
     private String serverGroup = System.getProperty("server.group", "main-server-group");
 
-    private long domainStartTimeout = 60; // seconds
+    private long domainStartTimeout = 120; // seconds
 
     private List<String> domainServers = Arrays.asList(DEFAULT_DOMAIN_SERVERS);
 
     private String domainMasterHostName = "master";
+
+    // Controller
+
+    private String controller = "127.0.0.1";
+
+    private boolean remote = false;
+
+    private String managementProtocol = "http-remoting";
+
+    private String managementAddress = "127.0.0.1";
+
+    private int managementPort = 9990;
 
     public JBossManagerConfiguration() {
         // get either from system property or env variable
@@ -382,6 +395,15 @@ public class JBossManagerConfiguration implements Configuration {
         return domainMasterHostName;
     }
 
+    public JBossManagerConfiguration controller(String controller) {
+        this.controller = controller;
+        return this;
+    }
+
+    public String getController() {
+        return controller;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -393,5 +415,78 @@ public class JBossManagerConfiguration implements Configuration {
                 .append("module dir\t").append(getJBossModuleDir()).append("\n");
 
         return sb.toString();
+    }
+
+    public JBossManagerConfiguration setManagementProtocol(String managementProtocol) {
+        this.managementProtocol = managementProtocol;
+        return this;
+    }
+
+
+    public String getManagementProtocol() {
+        return managementProtocol;
+    }
+
+    public JBossManagerConfiguration setManagementAddress(String managementAddress) {
+        this.managementAddress = managementAddress;
+        return this;
+    }
+
+    public String getManagementAddress() {
+        return managementAddress;
+    }
+
+    public JBossManagerConfiguration setManagementPort(int managementPort) {
+        this.managementPort = managementPort;
+        return this;
+    }
+
+    public int getManagementPort() {
+        return managementPort;
+    }
+
+    public boolean isRemote() {
+        return remote;
+    }
+
+    public JBossManagerConfiguration remote() {
+        remote = true;
+        return this;
+    }
+
+    public static class Util {
+
+        // default extracted container to target is JBoss AS 7
+        private static final ContainerType defaultContainerType = ContainerType.WILDFLY;
+
+        public static String getJBossHome() {
+
+            String home = System.getProperty("jboss.home");
+
+            if (home == null) {
+                home = System.getenv("JBOSS_HOME");
+            }
+
+            return home;
+        }
+
+        public static ContainerType getContainerType() {
+
+            String containerTypeName = System.getProperty("jboss.container.type");
+
+            if (containerTypeName == null) {
+                return defaultContainerType;
+            }
+
+            ContainerType containerType;
+
+            try {
+                containerType = Enum.valueOf(ContainerType.class, containerTypeName);
+            } catch (IllegalArgumentException ex) {
+                containerType = defaultContainerType;
+            }
+
+            return containerType;
+        }
     }
 }

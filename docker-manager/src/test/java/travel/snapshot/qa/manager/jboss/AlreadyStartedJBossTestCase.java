@@ -13,15 +13,15 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.JBossTest;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
+import travel.snapshot.qa.manager.jboss.api.JBossContainerManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
-import travel.snapshot.qa.manager.jboss.spacelift.JBossStarter;
+import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
-import travel.snapshot.qa.manager.jboss.util.TestUtils;
 
 @Category(JBossTest.class)
 public class AlreadyStartedJBossTestCase {
 
-    private static JBossManager manager;
+    private static JBossContainerManager manager;
 
     private static JBossManagerConfiguration configuration;
 
@@ -31,9 +31,11 @@ public class AlreadyStartedJBossTestCase {
     @BeforeClass
     public static void startContainer() {
 
-        configuration = new JBossManagerConfiguration().setContainerType(TestUtils.getContainerType()).setJBossHome(TestUtils.getJBossHome());
+        configuration = new JBossManagerConfiguration()
+                .setContainerType(JBossManagerConfiguration.Util.getContainerType())
+                .setJBossHome(JBossManagerConfiguration.Util.getJBossHome());
 
-        manager = Spacelift.task(configuration, JBossStarter.class).execute().await();
+        manager = Spacelift.task(configuration, JBossStandaloneStarter.class).execute().await();
     }
 
     @AfterClass
@@ -47,6 +49,6 @@ public class AlreadyStartedJBossTestCase {
         expectedException.expect(ExecutionException.class);
         expectedException.expectCause(is(instanceOf(ContainerManagerException.class)));
 
-        Spacelift.task(configuration, JBossStarter.class).execute().await();
+        Spacelift.task(configuration, JBossStandaloneStarter.class).execute().await();
     }
 }

@@ -1,8 +1,7 @@
-package travel.snapshot.qa.manager.jboss;
+package travel.snapshot.qa.manager.jboss.configuration;
 
 import org.arquillian.spacelift.process.Command;
 import org.arquillian.spacelift.process.CommandBuilder;
-import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 import java.io.File;
 

@@ -1,43 +1,71 @@
 package travel.snapshot.qa.manager.jboss;
 
-import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.arquillian.spacelift.process.Command;
+import org.arquillian.spacelift.task.Task;
+import org.jboss.as.controller.client.ModelControllerClient;
+import org.jboss.shrinkwrap.api.Archive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.api.configuration.Validate;
+import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.api.io.ConsoleConsumer;
 import travel.snapshot.qa.manager.api.io.ContainerProcessDestroyer;
 import travel.snapshot.qa.manager.api.io.ContainerShutdownThread;
+import travel.snapshot.qa.manager.jboss.api.JBossContainerDeployer;
 import travel.snapshot.qa.manager.jboss.api.JBossContainerManager;
-import travel.snapshot.qa.manager.jboss.check.JBossStartChecker;
+import travel.snapshot.qa.manager.jboss.check.JBossStartedCondition;
+import travel.snapshot.qa.manager.jboss.configuration.JBossCommandBuilder;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
-public class JBossManager implements JBossContainerManager {
+abstract class AbstractJBossContainerManager<T extends Object, U extends ModelControllerClient> implements JBossContainerManager, JBossContainerDeployer {
 
-    private static final Logger logger = LoggerFactory.getLogger(JBossManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractJBossContainerManager.class);
+
+    private final JBossManagerConfiguration configuration;
 
     private Thread shutdownThread;
 
     private Process process;
 
-    private final JBossManagerConfiguration configuration;
-
-    public JBossManager() {
-        this(new JBossManagerConfiguration());
+    AbstractJBossContainerManager(final JBossManagerConfiguration configuration) {
+        Validate.notNull(configuration, "Provided configuration is a null object!");
+        this.configuration = configuration;
     }
 
-    public JBossManager(JBossManagerConfiguration configuration) {
-        Validate.notNull(configuration, "Provided configuration to JBossManager is a null object!");
-        this.configuration = configuration;
+    public abstract T getManagementClient();
+
+    public abstract U getModelControllerClient();
+
+    abstract void closeManagementClient(T managementClient);
+
+    abstract Task<T, Boolean> getStartingTask();
+
+    @Override
+    public JBossManagerConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public String deploy(String archiveFilePath) throws ContainerDeploymentException {
+        return getDeployer().deploy(archiveFilePath);
+    }
+
+    @Override
+    public String deploy(Archive<?> deployment) throws ContainerDeploymentException {
+        return getDeployer().deploy(deployment);
+    }
+
+    @Override
+    public void undeploy(String runtimeName) throws ContainerDeploymentException {
+        getDeployer().undeploy(runtimeName);
     }
 
     @Override
     public void start() throws ContainerManagerException {
-
         if (isRunning()) {
             throw new ContainerManagerException("JBoss container is already running.");
         }
@@ -49,6 +77,7 @@ public class JBossManager implements JBossContainerManager {
 
             ProcessBuilder processBuilder = new ProcessBuilder(command.getFullCommand());
             processBuilder.redirectErrorStream(true);
+
 
             process = processBuilder.start();
 
@@ -62,9 +91,9 @@ public class JBossManager implements JBossContainerManager {
             // otherwise we would start the container but it would be never killed upon JVM termination
             Runtime.getRuntime().addShutdownHook(shutdownThread);
 
-            Spacelift.task(configuration, JBossStartChecker.class)
+            getStartingTask()
                     .execute()
-                    .until(new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS), JBossStartChecker.jbossStartedCondition);
+                    .until(new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS), new JBossStartedCondition());
 
         } catch (Exception e) {
             throw new ContainerManagerException("Could not start JBoss container: ", e);
@@ -74,15 +103,6 @@ public class JBossManager implements JBossContainerManager {
     @Override
     public void stop() throws ContainerManagerException {
         new ContainerProcessDestroyer(process).shutdownThread(shutdownThread).destroy();
-    }
-
-    @Override
-    public boolean isRunning() throws ContainerManagerException {
-        return Spacelift.task(configuration, JBossStartChecker.class).execute().await();
-    }
-
-    @Override
-    public JBossManagerConfiguration getConfiguration() {
-        return configuration;
+        closeManagementClient(getManagementClient());
     }
 }

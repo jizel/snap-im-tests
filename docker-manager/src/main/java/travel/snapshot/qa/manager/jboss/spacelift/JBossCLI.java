@@ -6,6 +6,7 @@ import org.arquillian.spacelift.process.CommandBuilder;
 import org.arquillian.spacelift.process.ProcessResult;
 import org.arquillian.spacelift.task.Task;
 import org.arquillian.spacelift.task.os.CommandTool;
+import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -121,6 +122,8 @@ public class JBossCLI extends Task<Object, ProcessResult> {
         }
 
         jbossCliTool.shouldExitWith(exitCodes.toArray(new Integer[exitCodes.size()]));
+
+        environment.putIfAbsent("JBOSS_HOME", JBossManagerConfiguration.Util.getJBossHome());
 
         return jbossCliTool.execute().await();
     }

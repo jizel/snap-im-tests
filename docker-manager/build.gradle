@@ -10,6 +10,7 @@ def versions = [
         spacelift : "1.0.0.Alpha9",
         cube      : "1.0.0.Alpha10",
         arquillian: "1.1.11.Final",
+        arquillian_wildfly: "2.0.0.Final",
         shrinkwrap: "2.2.2",
 
         // helpers
@@ -82,6 +83,10 @@ dependencies {
         //  Sisu Plexus depends on Guava 10 while Gradle API requires Guava 11
         exclude group: "com.google.guava", module: "guava"
     }
+
+    // Wildfly
+    compile "org.wildfly.arquillian:wildfly-arquillian-common:${versions.arquillian_wildfly}"
+    compile "org.wildfly.arquillian:wildfly-arquillian-common-domain:${versions.arquillian_wildfly}"
 
     // Other
     compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"
