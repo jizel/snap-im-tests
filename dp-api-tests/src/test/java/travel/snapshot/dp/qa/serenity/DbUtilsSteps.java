@@ -21,7 +21,7 @@ public class DbUtilsSteps {
     static final String DELETE_USER = "delete  from User";
     static final String DELETE_ADDRESS = "delete  from Address";
     static final String DELETE_ROLE = "delete  from Role";
-    static final String DELETE_API_SUBSCRIPTIONS = "delete  from Api_subscription";
+    static final String DELETE_API_SUBSCRIPTIONS = "delete  from Api_Subscription";
     static final String DELETE_APPLICATION = "delete from Application";
     static final String DELETE_APPLICATION_VERSIONS = "delete from Version";
     private DbHelper dbHelper = new DbHelper();
