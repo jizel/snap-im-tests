@@ -18,7 +18,7 @@ final class ProjectHelper {
     }
 
     static String getApiTestsProjectDir() {
-        new File(workspace, "dataplatformqa/dp-api-tests").absolutePath
+        new File(Properties.QA.repository, "dp-api-tests").absolutePath
     }
 
     static String getApiTestsResultsDir() {
@@ -26,7 +26,7 @@ final class ProjectHelper {
     }
 
     static String getLoadTestsProjectDir() {
-        new File(workspace, "dataplatformqa/load_tests").absolutePath
+        new File(Properties.QA.repository, "load_tests").absolutePath
     }
 
     static String getLoadTestsResultsDir(LoadTestsSimulation simulation) {
