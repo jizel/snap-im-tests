@@ -29,7 +29,7 @@ class Properties {
         }
 
         static String getRepository() {
-            System.getProperty("dataPlatformRepository", "data-platform")
+            Location.resolveLocation(System.getProperty("dataPlatformRepository", "data-platform")).absolutePath
         }
 
         static String getRepositoryCommit(String defaultCommit) {
@@ -50,7 +50,7 @@ class Properties {
         }
 
         static String getRepository() {
-            System.getProperty("dataPlatformApiRepository", "dataplatformapi")
+            Location.resolveLocation(System.getProperty("dataPlatformApiRepository", "dataplatformapi")).absolutePath
         }
 
         static String getRepositoryCommit(String defaultCommit) {
@@ -71,7 +71,7 @@ class Properties {
         }
 
         static String getRepository() {
-            System.getProperty("dataPlatformQARepository", "dataplatformqa")
+            Location.resolveLocation(System.getProperty("dataPlatformQARepository", "dataplatformqa")).absolutePath
         }
 
         static String getRepositoryCommit(String defaultCommit) {
@@ -179,24 +179,15 @@ class Properties {
         }
 
         static File getDataPlatformRepository() {
-            File workspace = ProjectHelper.workspace
-            String dataPlatformDirectory = ProjectHelper.spacelift.configuration['dataPlatformRepository'].value
-
-            resolveLocation(workspace, dataPlatformDirectory)
+            resolveLocation(ProjectHelper.workspace, Properties.DP.repository)
         }
 
         static File getDataPlatformQARepository() {
-            File workspace = ProjectHelper.workspace
-            String dataPlatformQADirectory = ProjectHelper.spacelift.configuration['dataPlatformQARepository'].value
-
-            resolveLocation(workspace, dataPlatformQADirectory)
+            resolveLocation(ProjectHelper.workspace, Properties.QA.repository)
         }
 
         static File getDataPlatformAPIRepository() {
-            File workspace = ProjectHelper.workspace
-            String dataPlatformAPIDirectory = ProjectHelper.spacelift.configuration['dataPlatformApiRepository'].value
-
-            resolveLocation(workspace, dataPlatformAPIDirectory)
+            resolveLocation(ProjectHelper.workspace, Properties.API.repository)
         }
     }
 

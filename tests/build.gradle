@@ -432,8 +432,8 @@ spacelift {
 
         apiTestsAll(inherits: apiTestsBase) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModules.SMOKE.modules()).execute()
-                new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
+                new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute()
+                new DataPlatformDeployer(platform).deploy(DataPlatformModules.ALL.modules()).execute()
             }
             execute {
                 new APITestsExecution().execute()
