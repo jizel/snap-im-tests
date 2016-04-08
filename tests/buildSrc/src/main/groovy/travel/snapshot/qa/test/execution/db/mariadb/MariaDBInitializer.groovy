@@ -123,9 +123,13 @@ class MariaDBInitializer {
 
             String dataSource = manager.getConfiguration().getDataSource()
             String scheme = configuration.scheme
-            String scripts = "filesystem:" + new File(dataPlatformDir, configuration.flywayScripts).absolutePath
 
-            manager.flyway(dataSource, scheme, scripts).migrate()
+            if (configuration.flywayScripts) {
+                String scripts = "filesystem:" + new File(dataPlatformDir, configuration.flywayScripts).absolutePath
+                manager.flyway(dataSource, scheme, scripts).migrate()
+            } else {
+                manager.flyway(dataSource, scheme).baseline()
+            }
         }
 
         this
