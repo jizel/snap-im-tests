@@ -8,6 +8,7 @@ enum ThreeScaleDataPlatformApiModule {
     IDENTITY_PROPERTY_SET_API("Identity Property Set API", "identity-api/property-set-api/target/swagger/identity-property-set-api/swagger.json", ThreeScaleModuleID.IDENTITY_PROPERTY_SET_API),
     IDENTITY_ROLE_API("Identity Role API", "identity-api/role-api/target/swagger/identity-role-api/swagger.json", ThreeScaleModuleID.IDENTITY_ROLE_API),
     IDENTITY_SUBSCRIPTION_API("Identity Subscription API", "identity-api/subscription-api/target/swagger/identity-subscription-api/swagger.json", ThreeScaleModuleID.IDENTITY_SUBSCRIPTION_API),
+    IDENTITY_COMMERCIAL_SUBSCRIPTION_API("Identity Commercial Subscription API", "identity-api/commercial-subscription-api/target/swagger/identity-commercial-subscription-api/swagger.json", ThreeScaleModuleID.IDENTITY_COMMERCIAL_SUBSCRIPTION_API),
     IDENTITY_USER_API("Identity User API", "identity-api/user-api/target/swagger/identity-user-api/swagger.json", ThreeScaleModuleID.IDENTITY_USER_API),
     CONFIGURATION_API("Configuration API", "configuration-api/target/swagger/configuration-api/swagger.json", ThreeScaleModuleID.CONFIGURATION_API),
     RATE_SHOPPER_API("Rate Shopper API", "rate-shopper-api/target/swagger/rate-shopper-api/swagger.json", ThreeScaleModuleID.RATE_SHOPPER_API),
