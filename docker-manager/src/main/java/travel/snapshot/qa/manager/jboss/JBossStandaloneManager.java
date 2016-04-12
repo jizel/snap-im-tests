@@ -13,7 +13,7 @@ import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.impl.JBossStandaloneDeployer;
 import travel.snapshot.qa.manager.jboss.impl.ManagementClientFactory;
 
-public class JBossStandaloneManager extends AbstractJBossContainerManager<ManagementClient, ModelControllerClient> {
+public class JBossStandaloneManager extends AbstractJBossManager<ManagementClient, ModelControllerClient> {
 
     private static final Logger logger = LoggerFactory.getLogger(JBossStandaloneManager.class);
 
@@ -52,7 +52,7 @@ public class JBossStandaloneManager extends AbstractJBossContainerManager<Manage
     }
 
     @Override
-    void closeManagementClient(ManagementClient managementClient) {
+    public void closeManagementClient(ManagementClient managementClient) {
         try {
             IoUtils.safeClose(managementClient);
         } catch (final Exception ex) {

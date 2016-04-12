@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
+import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
@@ -29,6 +30,10 @@ public class ConnectionTimeoutResolver {
 
     private static final String ACTIVEMQ_CONNECTION_TIMEOUT_PROPERTY = "docker.activemq.connection.timeout";
 
+    private static final String JBOSS_STANDALONE_CONNECTION_TIMEOUT_PROPERTY = "docker.jboss.standalone.connection.timeout";
+
+    private static final String JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY = "docker.jboss.domain.connection.timeout";
+
     public static long resolveTomcatConnectionTimeout(TomcatManagerConfiguration configuration) {
         return resolveTimeout(configuration.getStartupTimeoutInSeconds(), TOMCAT_CONNECTION_TIMEOUT_PROPERTY, ServiceType.TOMCAT.name());
     }
@@ -43,6 +48,14 @@ public class ConnectionTimeoutResolver {
 
     public static long resolveActiveMQConnectionTimeout(ActiveMQManagerConfiguration configuration) {
         return resolveTimeout(configuration.getStartupTimeoutInSeconds(), ACTIVEMQ_CONNECTION_TIMEOUT_PROPERTY, ServiceType.ACTIVEMQ.name());
+    }
+
+    public static long resolveJBossStandaloneConnectionTimeout(JBossManagerConfiguration configuration) {
+        return resolveTimeout(configuration.getStartupTimeoutInSeconds(), JBOSS_STANDALONE_CONNECTION_TIMEOUT_PROPERTY, ServiceType.JBOSS_STANDALONE.name());
+    }
+
+    public static long resolveJBossDomainConnectionTimeout(JBossManagerConfiguration configuration) {
+        return resolveTimeout(configuration.getStartupTimeoutInSeconds(), JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY, ServiceType.JBOSS_DOMAIN.name());
     }
 
     private static long resolveTimeout(long setTimeout, String timeoutProperty, String service) {

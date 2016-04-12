@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JBossDomainManager extends AbstractJBossContainerManager<ManagementClient, DomainClient> {
+public class JBossDomainManager extends AbstractJBossManager<ManagementClient, DomainClient> {
 
     private static final Logger logger = LoggerFactory.getLogger(JBossDomainManager.class);
 
@@ -85,7 +85,7 @@ public class JBossDomainManager extends AbstractJBossContainerManager<Management
     }
 
     @Override
-    void closeManagementClient(ManagementClient managementClient) {
+    public void closeManagementClient(ManagementClient managementClient) {
         try {
             managementClient.close();
         } catch (final Exception ex) {

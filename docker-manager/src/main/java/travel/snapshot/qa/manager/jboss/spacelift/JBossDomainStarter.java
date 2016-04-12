@@ -17,7 +17,7 @@ public class JBossDomainStarter extends JBossStarter<JBossDomainManager> {
 
         JBossDomainManager jbossManager = new JBossDomainManager(this.configuration);
 
-        logger.info("Starting JBoss container located at {} in {} domain mode.", this.configuration.getJBossHome());
+        logger.info("Starting JBoss container located at {} in domain mode.", this.configuration.getJBossHome());
 
         jbossManager.start();
 

@@ -10,7 +10,7 @@ import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguratio
 /**
  * Manages container lifecycle and deployments.
  */
-public interface TomcatContainerManager extends ContainerManager {
+public interface TomcatContainerManager extends ContainerManager<TomcatManagerConfiguration> {
 
     /**
      * Deploys archive to a container. Archive is represented by its path.

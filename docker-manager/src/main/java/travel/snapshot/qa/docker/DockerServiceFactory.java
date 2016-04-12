@@ -2,12 +2,17 @@ package travel.snapshot.qa.docker;
 
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
+import travel.snapshot.qa.docker.manager.impl.JBossDomainDockerManager;
+import travel.snapshot.qa.docker.manager.impl.JBossStandaloneDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;
+import travel.snapshot.qa.manager.jboss.JBossDomainManager;
+import travel.snapshot.qa.manager.jboss.JBossStandaloneManager;
+import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
@@ -40,6 +45,14 @@ public class DockerServiceFactory {
 
     public static ActiveMQService activemq() {
         return new ActiveMQService();
+    }
+
+    public static JBossStandaloneService jbossStandalone() {
+        return new JBossStandaloneService();
+    }
+
+    public static JBossDomainService jbossDomainService() {
+        return new JBossDomainService();
     }
 
     /**
@@ -160,6 +173,62 @@ public class DockerServiceFactory {
         @Override
         public DockerServiceManager<ActiveMQManager> init() {
             return init(new ActiveMQManagerConfiguration.Builder().build());
+        }
+    }
+
+    public static final class JBossStandaloneService implements Service<JBossStandaloneManager, JBossManagerConfiguration> {
+
+        public static final String DEFAULT_ACTIVEMQ_CONTAINER_ID = "jboss";
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration, String containerId) {
+            return new JBossStandaloneDockerManager(new JBossStandaloneManager(configuration)).setContainerId(containerId);
+        }
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init(String containerId) {
+            // TODO
+            return null;
+        }
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration) {
+            // TODO
+            return null;
+        }
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init() {
+            // TODO
+            return null;
+        }
+    }
+
+    public static final class JBossDomainService implements Service<JBossDomainManager, JBossManagerConfiguration> {
+
+        public static final String DEFAULT_ACTIVEMQ_CONTAINER_ID = "jboss_domain";
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration, String containerId) {
+            return new JBossDomainDockerManager(new JBossDomainManager(configuration)).setContainerId(containerId);
+        }
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init(String containerId) {
+            // TODO
+            return null;
+        }
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration) {
+            // TODO
+            return null;
+        }
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init() {
+            // TODO
+            return null;
         }
     }
 }

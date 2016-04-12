@@ -21,9 +21,9 @@ import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
-abstract class AbstractJBossContainerManager<T extends Object, U extends ModelControllerClient> implements JBossContainerManager, JBossContainerDeployer {
+abstract class AbstractJBossManager<T extends Object, U extends ModelControllerClient> implements JBossContainerManager, JBossContainerDeployer {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractJBossContainerManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractJBossManager.class);
 
     private final JBossManagerConfiguration configuration;
 
@@ -31,7 +31,7 @@ abstract class AbstractJBossContainerManager<T extends Object, U extends ModelCo
 
     private Process process;
 
-    AbstractJBossContainerManager(final JBossManagerConfiguration configuration) {
+    AbstractJBossManager(final JBossManagerConfiguration configuration) {
         Validate.notNull(configuration, "Provided configuration is a null object!");
         this.configuration = configuration;
     }
@@ -40,7 +40,7 @@ abstract class AbstractJBossContainerManager<T extends Object, U extends ModelCo
 
     public abstract U getModelControllerClient();
 
-    abstract void closeManagementClient(T managementClient);
+    public abstract void closeManagementClient(T managementClient);
 
     abstract Task<T, Boolean> getStartingTask();
 

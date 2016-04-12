@@ -15,7 +15,7 @@ public class JBossStandaloneStarter extends JBossStarter<JBossStandaloneManager>
 
         JBossStandaloneManager jbossManager = new JBossStandaloneManager(this.configuration);
 
-        logger.info("Starting JBoss container located at {} in {} standalone mode.", this.configuration.getJBossHome());
+        logger.info("Starting JBoss container located at {} in standalone mode.", this.configuration.getJBossHome());
 
         jbossManager.start();
 

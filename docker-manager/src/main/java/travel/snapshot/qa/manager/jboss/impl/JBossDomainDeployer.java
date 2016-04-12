@@ -1,7 +1,6 @@
 package travel.snapshot.qa.manager.jboss.impl;
 
 import org.jboss.arquillian.container.spi.client.container.DeploymentException;
-import org.jboss.as.arquillian.container.domain.ArchiveDeployer;
 import org.jboss.as.controller.client.helpers.domain.DomainClient;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -53,7 +52,7 @@ public class JBossDomainDeployer implements JBossContainerDeployer {
         try {
 
             String runtimeName = deployer.deploy(archive, getServerGroups(configuration));
-            logger.info("Deployment {} has been undeployed.", runtimeName);
+            logger.info("Deployment {} has been deployed.", runtimeName);
             return runtimeName;
         } catch (DeploymentException ex) {
             throw new ContainerDeploymentException(ex);

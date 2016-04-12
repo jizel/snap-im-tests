@@ -14,7 +14,6 @@ import travel.snapshot.qa.category.JBossTest;
 import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
 
 @Category(JBossTest.class)
-@Ignore
 public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
 
     @Rule
@@ -44,7 +43,6 @@ public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
     }
 
     @Test
-    @Ignore
     public void testFileDeploymentAndUndeployment() {
         String runtimeName = domainManager.getDeployer().deploy(testingArchive.getAbsolutePath());
         assertNotNull(runtimeName);
@@ -52,7 +50,6 @@ public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
     }
 
     @Test
-    @Ignore
     public void testAlreadyDeployedArchive() {
 
         expectedException.expect(ContainerDeploymentException.class);
