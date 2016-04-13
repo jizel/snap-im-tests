@@ -10,10 +10,9 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.Address;
-import travel.snapshot.dp.qa.model.Property;
-import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
@@ -33,7 +32,7 @@ public class PropertiesStepdefs {
     // --- given ---
 
     @Given("^The following properties exist with random address and billing address$")
-    public void The_following_properties_exist(List<Property> properties) throws Throwable {
+    public void The_following_properties_exist(List<PropertyDto> properties) throws Throwable {
         propertySteps.followingPropertiesExist(properties);
     }
 
@@ -80,14 +79,14 @@ public class PropertiesStepdefs {
     }
 
     @When("^Property is created with random address and billing address$")
-    public void property_is_created(List<Property> properties) throws Throwable {
+    public void property_is_created(List<PropertyDto> properties) throws Throwable {
         propertySteps.followingPropertyIsCreated(properties.get(0));
     }
 
     @When("^A property from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
     public void property_from_country_region_code_email_is_created(String country, String region, String code, String email) {
-        Address address = new Address();
-        Property property = new Property();
+        AddressDto address = new AddressDto();
+        PropertyDto property = new PropertyDto();
         address.setAddressLine1("someAddress");
         address.setCity("someCity");
         address.setZipCode("1234");
@@ -169,7 +168,7 @@ public class PropertiesStepdefs {
 
     @Then("^There are (\\d+) properties returned$")
     public void There_are_properties_returned(int count) throws Throwable {
-        propertySteps.numberOfEntitiesInResponse(Property.class, count);
+        propertySteps.numberOfEntitiesInResponse(PropertyDto.class, count);
     }
 
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")

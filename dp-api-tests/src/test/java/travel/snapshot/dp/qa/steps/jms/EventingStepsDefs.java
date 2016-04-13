@@ -4,8 +4,8 @@ import net.thucydides.core.annotations.Steps;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.Property;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.model.User;
@@ -102,7 +102,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for customer with code \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_customer_with_code(String customerCode) throws Throwable {
-        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         steps.notificationContainsId(c.getCustomerId());
     }
 
@@ -113,7 +113,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for customer in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_customer_in_session_on_key(String sessionKey) throws Throwable {
-        Customer c = steps.getSessionVariable(sessionKey);
+        CustomerDto c = steps.getSessionVariable(sessionKey);
         steps.notificationContainsId(c.getCustomerId());
     }
 
@@ -124,7 +124,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for property with code \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_property_with_code(String propertyCode) throws Throwable {
-        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
         steps.notificationContainsId(p.getPropertyId());
     }
 
@@ -142,14 +142,14 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
-        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         PropertySet ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         steps.notificationContainsId(ps.getPropertySetId());
     }
 
     @Then("^Notification in session parent id stands for customer with code \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_customer_with_code(String customerCode) throws Throwable {
-        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         steps.notificationContainsParentId(c.getCustomerId());
     }
 
@@ -173,7 +173,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
-        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         PropertySet ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         steps.notificationContainsParentId(ps.getPropertySetId());
 
@@ -181,13 +181,13 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session parent id stands for property with code \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_property_with_code(String propertyCode) throws Throwable {
-        Property p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
         steps.notificationContainsParentId(p.getPropertyId());
     }
 
     @Given("^Property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
     public void Property_set_with_name_for_customer_with_code_is_stored_in_session_under_key(String propertySetName, String customerCode, String sessionKey) throws Throwable {
-        Customer c = customerSteps.getCustomerByCodeInternal(customerCode);
+        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         steps.setSessionVariable(sessionKey, propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId()));
     }
 
@@ -204,7 +204,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for property in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_property_in_session_on_key(String sessionKey) throws Throwable {
-        Property p = steps.getSessionVariable(sessionKey);
+        PropertyDto p = steps.getSessionVariable(sessionKey);
         steps.notificationContainsId(p.getPropertyId());
     }
 

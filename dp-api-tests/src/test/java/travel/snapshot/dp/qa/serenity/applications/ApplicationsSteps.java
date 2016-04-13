@@ -12,8 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Application;
 import travel.snapshot.dp.qa.model.ApplicationVersion;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -40,10 +41,10 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationIsCreated(Application application) {
+    public void followingApplicationIsCreated(ApplicationDto application) {
 
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION).to(application);
-        Application existingApplication = getApplicationById(application.getApplicationId());
+        ApplicationDto existingApplication = getApplicationById(application.getApplicationId());
         if (existingApplication != null) {
             deleteEntity(existingApplication.getApplicationId());
         }
@@ -52,9 +53,9 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationsExist(List<Application> application) {
+    public void followingApplicationsExist(List<ApplicationDto> application) {
         application.forEach(t -> {
-            Application existingApplication = getApplicationById(t.getApplicationId());
+            ApplicationDto existingApplication = getApplicationById(t.getApplicationId());
             if (existingApplication != null) {
                 deleteEntity(existingApplication.getApplicationId());
             }
@@ -68,7 +69,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationWithIdIsDeleted(String applicationId) {
-        Application app = getApplicationById(applicationId);
+        ApplicationDto app = getApplicationById(applicationId);
         if (app == null) {
             return;
         }
@@ -93,11 +94,11 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationWithId(String applicationId, Application applicationUpdates) throws Throwable {
-        Application original = getApplicationById(applicationId);
+    public void updateApplicationWithId(String applicationId, ApplicationDto applicationUpdates) throws Throwable {
+        ApplicationDto original = getApplicationById(applicationId);
         Response tempResponse = getEntity(original.getApplicationId(), null);
 
-        Map<String, Object> applicationData = retrieveData(Application.class, applicationUpdates);
+        Map<String, Object> applicationData = retrieveData(ApplicationDto.class, applicationUpdates);
 
         Response response =
                 updateEntity(original.getApplicationId(), applicationData, tempResponse.getHeader(HEADER_ETAG));
@@ -105,19 +106,19 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationWithIdIfUpdatedBefore(String applicationId, Application application) throws Throwable {
-        Application original = getApplicationById(applicationId);
+    public void updateApplicationWithIdIfUpdatedBefore(String applicationId, ApplicationDto application) throws Throwable {
+        ApplicationDto original = getApplicationById(applicationId);
 
-        Map<String, Object> customerData = retrieveData(Application.class, application);
+        Map<String, Object> customerData = retrieveData(ApplicationDto.class, application);
 
         Response response = updateEntity(original.getApplicationId(), customerData, "fake-etag");
         setSessionResponse(response);
     }
 
     @Step
-    public void applicationWithIdHasData(String applicationId, Application applicationData) throws Throwable {
-        Map<String, Object> originalData = retrieveData(Application.class, getApplicationById(applicationId));
-        Map<String, Object> expectedData = retrieveData(Application.class, applicationData);
+    public void applicationWithIdHasData(String applicationId, ApplicationDto applicationData) throws Throwable {
+        Map<String, Object> originalData = retrieveData(ApplicationDto.class, getApplicationById(applicationId));
+        Map<String, Object> expectedData = retrieveData(ApplicationDto.class, applicationData);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -171,19 +172,19 @@ public class ApplicationsSteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
-    public Application getApplicationById(String applicationId) {
-        Application[] applications =
+    public ApplicationDto getApplicationById(String applicationId) {
+        ApplicationDto[] applications =
                 getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_id==" + applicationId, null, null)
-                        .as(Application[].class);
+                        .as(ApplicationDto[].class);
         return Arrays.asList(applications).stream().findFirst().orElse(null);
     }
 
     @Step
     public void namesInResponseInOrder(List<String> applications) {
         Response response = getSessionResponse();
-        Application[] apps = response.as(Application[].class);
+        ApplicationDto[] apps = response.as(ApplicationDto[].class);
         int i = 0;
-        for (Application a : apps) {
+        for (ApplicationDto a : apps) {
             assertEquals("Application on index=" + i + " is not expected", applications.get(i), a.getApplicationName());
             i++;
         }
@@ -216,10 +217,10 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationVersionsAreCreated(String applicationId, ApplicationVersion applicationVersion) {
+    public void followingApplicationVersionsAreCreated(String applicationId, VersionDto applicationVersion) {
 
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
-        ApplicationVersion existingAppVersion =
+        VersionDto existingAppVersion =
                 getApplicationVersionByName(applicationId, applicationVersion.getVersionName());
         if (existingAppVersion != null) {
             deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId());
@@ -229,10 +230,10 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationVersionsExists(String applicationId, List<ApplicationVersion> applicationVersions) {
+    public void followingApplicationVersionsExists(String applicationId, List<VersionDto> applicationVersions) {
 
         applicationVersions.forEach(t -> {
-            ApplicationVersion existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
+            VersionDto existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
             if (existingAppVersion != null) {
                 deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId());
             }
@@ -370,15 +371,30 @@ public class ApplicationsSteps extends BasicSteps {
         }
     }
 
-    private Response createApplicationVersion(ApplicationVersion applicationVersion, String applicationId) {
+    @Step
+    public void getCommSubscriptionForApplicationId(String applicationId) {
+        Response appCommSubscriptionResponse = getSecondLevelEntities(applicationId, "", LIMIT_TO_ALL,
+                CURSOR_FROM_FIRST, null, null, null);
+        setSessionResponse(appCommSubscriptionResponse);
+    }
+
+    @Step
+    public void listOfApplicationCommSubscriptionsIsGotWith(String applicationId, String limit, String cursor, String filter,
+            String sort, String sortDesc) {
+        Response response = getSecondLevelEntities(applicationId, "", limit, cursor, filter,
+                sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    private Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
 
         return given().spec(spec).body(applicationVersion).when().post("/{id}/versions", applicationId);
     }
 
-    public ApplicationVersion getApplicationVersionByName(String applicationId, String versionName) {
-        ApplicationVersion[] applicationVersion =
+    public VersionDto getApplicationVersionByName(String applicationId, String versionName) {
+        VersionDto[] applicationVersion =
                 getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
-                        "version_name=='" + versionName + "'", null, null).as(ApplicationVersion[].class);
+                        "name=='" + versionName + "'", null, null).as(VersionDto[].class);
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 
