@@ -23,14 +23,14 @@ public class ModelControllerClientBuilder {
 
             ModelControllerClient modelControllerClient;
 
-            Authentication.username = configuration.getUser();
-            Authentication.password = configuration.getPassword();
+            Authentication.username = configuration.getAuthentication().getUsername();
+            Authentication.password = configuration.getAuthentication().getPassword();
 
             try {
                 modelControllerClient = ModelControllerClient.Factory.create(
-                        configuration.getManagementProtocol(),
-                        configuration.getManagementAddress(),
-                        configuration.getManagementPort(),
+                        configuration.getManagement().getManagementProtocol(),
+                        configuration.getManagement().getManagementAddress(),
+                        configuration.getManagement().getManagementPort(),
                         Authentication.getCallbackHandler());
             } catch (UnknownHostException ex) {
                 Authentication.username = EMPTY_STRING;
@@ -53,14 +53,14 @@ public class ModelControllerClientBuilder {
         public ModelControllerClient build() {
             ModelControllerClient modelControllerClient;
 
-            org.jboss.as.arquillian.container.domain.Authentication.username = configuration.getUser();
-            org.jboss.as.arquillian.container.domain.Authentication.password = configuration.getPassword();
+            org.jboss.as.arquillian.container.domain.Authentication.username = configuration.getAuthentication().getUsername();
+            org.jboss.as.arquillian.container.domain.Authentication.password = configuration.getAuthentication().getPassword();
 
             try {
 
                 modelControllerClient = ModelControllerClient.Factory.create(
-                        configuration.getManagementAddress(),
-                        configuration.getManagementPort(),
+                        configuration.getManagement().getManagementAddress(),
+                        configuration.getManagement().getManagementPort(),
                         org.jboss.as.arquillian.container.domain.Authentication.getCallbackHandler());
             } catch (UnknownHostException ex) {
                 org.jboss.as.arquillian.container.domain.Authentication.username = EMPTY_STRING;

@@ -13,11 +13,13 @@ public class JBossDomainStarter extends JBossStarter<JBossDomainManager> {
     protected JBossDomainManager process(JBossManagerConfiguration configuration) throws Exception {
         setConfiguration(configuration);
 
-        this.configuration.domain();
+        if (!this.configuration.isDomain()) {
+            throw new IllegalStateException("You have to use domain configuration.");
+        }
 
         JBossDomainManager jbossManager = new JBossDomainManager(this.configuration);
 
-        logger.info("Starting JBoss container located at {} in domain mode.", this.configuration.getJBossHome());
+        logger.info("Starting JBoss container located at {} in domain mode.", this.configuration.getJVM().getJBossHome());
 
         jbossManager.start();
 

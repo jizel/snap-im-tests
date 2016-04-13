@@ -20,7 +20,7 @@ public class JBossCommandBuilder {
 
     private Command buildStandaloneCommand(JBossManagerConfiguration configuration) {
 
-        final CommandBuilder cb = new CommandBuilder(configuration.getJavaBin());
+        final CommandBuilder cb = new CommandBuilder(configuration.getJVM().getJavaBin());
 
         cb.parameter("-D[Standalone]");
         cb.parameters(configuration.getJavaOpts());
@@ -31,11 +31,11 @@ public class JBossCommandBuilder {
             cb.parameter("-Djboss.bundles.dir=" + configuration.getJBossModuleDir() + "/bundles");
         }
 
-        cb.parameters("-jar", configuration.getJBossHome() + "/jboss-modules.jar");
+        cb.parameters("-jar", configuration.getJVM().getJBossHome() + "/jboss-modules.jar");
         cb.parameters("-mp", configuration.getJBossModuleDir());
         cb.parameters("-jaxpmodule", "javax.xml.jaxp-provider");
         cb.parameters("org.jboss.as.standalone");
-        cb.parameter("-Djboss.home.dir=" + configuration.getJBossHome());
+        cb.parameter("-Djboss.home.dir=" + configuration.getJVM().getJBossHome());
         cb.parameter("-Djboss.server.base.dir=" + configuration.getJBossBaseDir());
         cb.parameters(configuration.getServerJavaOpts());
 
@@ -44,7 +44,7 @@ public class JBossCommandBuilder {
 
     private Command buildDomainCommand(JBossManagerConfiguration configuration) {
 
-        final CommandBuilder cb = new CommandBuilder(configuration.getJavaBin());
+        final CommandBuilder cb = new CommandBuilder(configuration.getJVM().getJavaBin());
 
         cb.parameter("-D[Process Controller]");
         cb.parameters(configuration.getProcessControllerJavaOpts());
@@ -56,14 +56,14 @@ public class JBossCommandBuilder {
         }
 
         cb.parameter("-jar")
-                .parameter(configuration.getJBossHome() + "/jboss-modules.jar");
+                .parameter(configuration.getJVM().getJBossHome() + "/jboss-modules.jar");
         cb.parameter("-mp")
                 .parameter(configuration.getJBossModuleDir());
         cb.parameter("org.jboss.as.process-controller");
         cb.parameter("-jboss-home")
-                .parameter(configuration.getJBossHome());
+                .parameter(configuration.getJVM().getJBossHome());
         cb.parameter("-jvm")
-                .parameter(configuration.getJavaBin());
+                .parameter(configuration.getJVM().getJavaBin());
         cb.parameter("-mp")
                 .parameter(configuration.getJBossModuleDir());
         cb.parameter("--");
@@ -71,7 +71,7 @@ public class JBossCommandBuilder {
         cb.parameter("-Dlogging.configuration=file:" + configuration.getJBossConfigDir() + "/logging.properties");
         cb.parameters(configuration.getHostControllerJavaOpts());
         cb.parameter("--");
-        cb.parameters("-default-jvm", configuration.getJavaBin());
+        cb.parameters("-default-jvm", configuration.getJVM().getJavaBin());
 
         return cb.build();
     }
@@ -81,7 +81,7 @@ public class JBossCommandBuilder {
             throw new IllegalArgumentException("Configuration set to JBossCommandBuilder is null.");
         }
 
-        if (configuration.getJBossHome() == null) {
+        if (configuration.getJVM().getJBossHome() == null) {
             throw new IllegalStateException("JBOSS_HOME is set to null for JBossCommandBuilder");
         }
     }

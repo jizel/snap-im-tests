@@ -22,9 +22,9 @@ class ManagementClientBuilder {
         public ManagementClient build() {
             try {
                 return new ManagementClient(modelControllerClient,
-                        configuration.getManagementAddress(),
-                        configuration.getManagementPort(),
-                        configuration.getManagementProtocol());
+                        configuration.getManagement().getManagementAddress(),
+                        configuration.getManagement().getManagementPort(),
+                        configuration.getManagement().getManagementProtocol());
             } catch (Exception ex) {
                 throw new ContainerManagerException("Unable to build management client. ", ex);
             }

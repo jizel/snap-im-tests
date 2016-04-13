@@ -8,7 +8,7 @@ import org.arquillian.spacelift.task.os.CommandTool;
 
 import java.util.List;
 
-public class JavaServerOptionCapabilityCheck extends Task<JBossManagerConfiguration, Boolean> {
+public class JavaServerOptionCapabilityCheck extends Task<JVM, Boolean> {
 
     private static final String[] JAVA_VENDORS = {
             "HotSpot",
@@ -17,10 +17,10 @@ public class JavaServerOptionCapabilityCheck extends Task<JBossManagerConfigurat
     };
 
     @Override
-    protected Boolean process(JBossManagerConfiguration configuration) throws Exception {
+    protected Boolean process(JVM jvm) throws Exception {
 
         List<String> javaVersionOutput = Spacelift.task(CommandTool.class)
-                .command(new CommandBuilder(configuration.getJavaBin()).build())
+                .command(new CommandBuilder(jvm.getJavaBin()).build())
                 .parameter("-version")
                 .execute()
                 .await()

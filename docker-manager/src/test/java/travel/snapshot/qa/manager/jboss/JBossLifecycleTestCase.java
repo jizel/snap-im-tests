@@ -13,8 +13,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.JBossTest;
-import travel.snapshot.qa.manager.jboss.configuration.ContainerType;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
+import travel.snapshot.qa.manager.jboss.configuration.JVM;
+import travel.snapshot.qa.manager.jboss.configuration.Util;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossDomainStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
@@ -25,11 +26,16 @@ import java.util.Map;
 @Category(JBossTest.class)
 public class JBossLifecycleTestCase {
 
-    private String JBOSS_HOME = JBossManagerConfiguration.Util.getJBossHome();
+    private static JBossManagerConfiguration configuration = new JBossManagerConfiguration.Builder()
+            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+            .setContainerType(Util.getContainerType())
+            .build();
 
-    private ContainerType containerType = JBossManagerConfiguration.Util.getContainerType();
-
-    private JBossManagerConfiguration configuration = new JBossManagerConfiguration().setJBossHome(JBOSS_HOME).setContainerType(containerType);
+    private static JBossManagerConfiguration domainConfiguration = new JBossManagerConfiguration.Builder()
+            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+            .setContainerType(Util.getContainerType())
+            .domain()
+            .build();
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -46,10 +52,10 @@ public class JBossLifecycleTestCase {
 
     @Test
     public void startAndStopJBossContainerDomain() {
-        JBossDomainManager domainManager = Spacelift.task(configuration, JBossDomainStarter.class).execute().await();
+        JBossDomainManager domainManager = Spacelift.task(domainConfiguration, JBossDomainStarter.class).execute().await();
 
-        assertTrue("Domain is not running!", domainManager.isRunning());
-        assertTrue("Domain is not in running state!", domainManager.getManagementClient().isDomainInRunningState());
+        assertTrue("Configuration is not running!", domainManager.isRunning());
+        assertTrue("Configuration is not in running state!", domainManager.getManagementClient().isDomainInRunningState());
 
         Map<ServerIdentity, ServerStatus> serverStatusMap = domainManager.getServerStatuses();
         List<Domain.Server> domainServers = domainManager.getServers();

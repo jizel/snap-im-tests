@@ -72,7 +72,7 @@ public class JBossDomainDeployer implements JBossContainerDeployer {
     private Set<String> getServerGroups(JBossManagerConfiguration configuration) {
 
         if (this.serverGroups.isEmpty()) {
-            this.serverGroups.add(configuration.getServerGroup());
+            this.serverGroups.add(configuration.getConfiguration().getServerGroup());
         }
 
         return this.serverGroups;

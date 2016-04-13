@@ -22,7 +22,7 @@ public class JBossStandaloneManager extends AbstractJBossManager<ManagementClien
     private final JBossStandaloneDeployer deployer;
 
     public JBossStandaloneManager() {
-        this(new JBossManagerConfiguration());
+        this(new JBossManagerConfiguration.Builder().build());
     }
 
     public JBossStandaloneManager(JBossManagerConfiguration configuration) throws ContainerManagerException {

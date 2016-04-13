@@ -176,9 +176,13 @@ public class DockerServiceFactory {
         }
     }
 
+    /**
+     * Represents Docker service with running JBoss container in standalone mode. When not explicitly specified, the
+     * name of the container to start will be "jboss".
+     */
     public static final class JBossStandaloneService implements Service<JBossStandaloneManager, JBossManagerConfiguration> {
 
-        public static final String DEFAULT_ACTIVEMQ_CONTAINER_ID = "jboss";
+        public static final String DEFAULT_JBOSS_STANDALONE_CONTAINER_ID = "jboss";
 
         @Override
         public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration, String containerId) {
@@ -187,26 +191,27 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<JBossStandaloneManager> init(String containerId) {
-            // TODO
-            return null;
+            return init(new JBossManagerConfiguration.Builder().build(), containerId);
         }
 
         @Override
         public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration) {
-            // TODO
-            return null;
+            return init(configuration, DEFAULT_JBOSS_STANDALONE_CONTAINER_ID);
         }
 
         @Override
         public DockerServiceManager<JBossStandaloneManager> init() {
-            // TODO
-            return null;
+            return init(new JBossManagerConfiguration.Builder().build());
         }
     }
 
+    /**
+     * Represents Docker service with running JBoss container in domain mode. When not explicitly specified, the name of
+     * the container to start will be "jboss_domain".
+     */
     public static final class JBossDomainService implements Service<JBossDomainManager, JBossManagerConfiguration> {
 
-        public static final String DEFAULT_ACTIVEMQ_CONTAINER_ID = "jboss_domain";
+        public static final String DEFAULT_JBOSS_DOMAIN_CONTAINER_ID = "jboss_domain";
 
         @Override
         public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration, String containerId) {
@@ -215,20 +220,17 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<JBossDomainManager> init(String containerId) {
-            // TODO
-            return null;
+            return init(new JBossManagerConfiguration.Builder().build(), containerId);
         }
 
         @Override
         public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration) {
-            // TODO
-            return null;
+            return init(configuration, DEFAULT_JBOSS_DOMAIN_CONTAINER_ID);
         }
 
         @Override
         public DockerServiceManager<JBossDomainManager> init() {
-            // TODO
-            return null;
+            return init(new JBossManagerConfiguration.Builder().build());
         }
     }
 }

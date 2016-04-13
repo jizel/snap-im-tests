@@ -15,8 +15,8 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * This was taken from upstream ArchiveDeployer because it does not remove deployments, just deletes them and they
- * are left "unassigned" so it is not possible to do redeploy.
+ * This was taken from upstream ArchiveDeployer because it does not remove deployments, just deletes them and they are
+ * left "unassigned" so it is not possible to do redeploy.
  */
 public class ArchiveDeployer extends org.jboss.as.arquillian.container.domain.ArchiveDeployer {
 

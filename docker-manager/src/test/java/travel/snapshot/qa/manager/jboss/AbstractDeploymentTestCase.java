@@ -6,7 +6,10 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import travel.snapshot.qa.manager.jboss.configuration.ContainerType;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
+import travel.snapshot.qa.manager.jboss.configuration.JVM;
+import travel.snapshot.qa.manager.jboss.configuration.Util;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossDomainStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
@@ -21,6 +24,10 @@ public abstract class AbstractDeploymentTestCase {
     {
         testingArchive.deleteOnExit();
     }
+
+    private static JVM jvm = new JVM.Builder().setJBossHome(Util.getJBossHome()).build();
+
+    private static ContainerType containerType = Util.getContainerType();
 
     private static JBossManagerConfiguration configuration;
 
@@ -37,14 +44,16 @@ public abstract class AbstractDeploymentTestCase {
     protected static final File testingArchive = new File(DEPLOYMENT_NAME);
 
     public static void setup() throws Exception {
-        configuration = new JBossManagerConfiguration()
-                .setContainerType(JBossManagerConfiguration.Util.getContainerType())
-                .setJBossHome(JBossManagerConfiguration.Util.getJBossHome());
+        configuration = new JBossManagerConfiguration.Builder()
+                .setContainerType(containerType)
+                .setJVM(jvm)
+                .build();
 
-        domainConfiguration = new JBossManagerConfiguration()
-                .setContainerType(JBossManagerConfiguration.Util.getContainerType())
-                .setJBossHome(JBossManagerConfiguration.Util.getJBossHome())
-                .domain();
+        domainConfiguration = new JBossManagerConfiguration.Builder()
+                .setContainerType(containerType)
+                .domain()
+                .setJVM(jvm)
+                .build();
 
         createArchive();
     }

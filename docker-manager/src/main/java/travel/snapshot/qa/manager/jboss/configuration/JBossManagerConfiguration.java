@@ -1,108 +1,49 @@
 package travel.snapshot.qa.manager.jboss.configuration;
 
-import travel.snapshot.qa.manager.api.configuration.Configuration;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class JBossManagerConfiguration implements Configuration {
+public final class JBossManagerConfiguration implements travel.snapshot.qa.manager.api.configuration.Configuration {
 
-    private static final String[] DEFAULT_DOMAIN_SERVERS = new String[]{
-            "server-one",
-            "server-two",
-            "server-three"
-    };
+    private final JVM jvm;
 
-    private File javaHome = null;
+    private final Configuration configuration;
 
-    private File jbossHome = null;
+    private final Authentication authentication;
 
-    private List<String> javaOpts = new ArrayList<>();
+    private final Management management;
 
-    private List<String> processControllerJavaOpts = new ArrayList<>();
+    private final boolean isDomain;
 
-    private List<String> hostControllerJavaOpts = new ArrayList<>();
+    private final boolean remote;
 
-    private List<String> serverJavaOpts = new ArrayList<>();
+    private final ContainerType containerType;
 
-    private int startupTimeoutInSeconds = 120;
+    private final int startupTimeoutInSeconds;
 
-    private boolean outputToConsole = true;
+    private final boolean outputToConsole;
 
-    private String user;
+    private final List<String> processControllerJavaOpts;
 
-    private String password;
+    private final List<String> hostControllerJavaOpts;
 
-    private ContainerType containerType = ContainerType.WILDFLY;
+    private final List<String> serverJavaOpts;
 
-    private String domainConfig = "domain.xml";
-
-    private String hostConfig = "host.xml";
-
-    private String standaloneConfig = "standalone.xml";
-
-    // domain specific
-
-    private boolean domain;
-
-    private String serverGroup = System.getProperty("server.group", "main-server-group");
-
-    private long domainStartTimeout = 120; // seconds
-
-    private List<String> domainServers = Arrays.asList(DEFAULT_DOMAIN_SERVERS);
-
-    private String domainMasterHostName = "master";
-
-    // Controller
-
-    private String controller = "127.0.0.1";
-
-    private boolean remote = false;
-
-    private String managementProtocol = "http-remoting";
-
-    private String managementAddress = "127.0.0.1";
-
-    private int managementPort = 9990;
-
-    public JBossManagerConfiguration() {
-        // get either from system property or env variable
-        String javaHome = System.getProperty("java.home");
-        if (javaHome == null || javaHome.length() == 0) {
-            javaHome = System.getenv("JAVA_HOME");
-        }
-        if (javaHome != null) {
-            this.javaHome = new File(javaHome);
-        }
-
-        // get either from system property or env variable
-        String jbossHome = System.getProperty("jboss.home");
-        if (jbossHome == null || jbossHome.length() == 0) {
-            jbossHome = System.getenv("JBOSS_HOME");
-        }
-
-        if (jbossHome != null) {
-            this.jbossHome = new File(jbossHome);
-        }
-
-    }
-
-    /**
-     * @throws IllegalStateException if {@code jbossHome} or {@code javaHome} are not valid directories
-     */
-    public void validate() throws IllegalStateException {
-
-        if (jbossHome != null) {
-            if (!jbossHome.exists() || !jbossHome.isDirectory()) {
-                throw new IllegalStateException("jbossHome '" + getJBossHome() + "' must exist!");
-            }
-        } else {
-            throw new IllegalStateException("Could not determine the value of JBoss home directory.");
-        }
+    private JBossManagerConfiguration(Builder builder) {
+        this.jvm = builder.jvm;
+        this.configuration = builder.configuration;
+        this.authentication = builder.authentication;
+        this.management = builder.management;
+        this.isDomain = builder.isDomain;
+        this.remote = builder.remote;
+        this.containerType = builder.containerType;
+        this.startupTimeoutInSeconds = builder.startupTimeoutInSeconds;
+        this.outputToConsole = builder.outputToConsole;
+        this.processControllerJavaOpts = builder.processControllerJavaOpts;
+        this.hostControllerJavaOpts = builder.hostControllerJavaOpts;
+        this.serverJavaOpts = builder.serverJavaOpts;
 
         if (!new File(getJBossBaseDir()).exists()) {
             throw new IllegalStateException("Could not determine the value of JBoss base directory.");
@@ -111,61 +52,37 @@ public class JBossManagerConfiguration implements Configuration {
         if (!new File(getJBossConfigDir()).exists()) {
             throw new IllegalStateException("Could not determine the value of JBoss configuration directory.");
         }
-
-        if (javaHome != null) {
-            if (!javaHome.exists() || !javaHome.isDirectory()) {
-                throw new IllegalStateException("javaHome '" + javaHome.getAbsolutePath() + "' must exist!");
-            }
-        } else {
-            throw new IllegalStateException("Could not determine the value of Java home directory.");
-        }
     }
 
-    public String getJavaHome() {
-        try {
-            return javaHome.getCanonicalPath();
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to get canonical path of " + javaHome, e);
-        }
+    public JVM getJVM() {
+        return jvm;
     }
 
-    public JBossManagerConfiguration setJavaHome(String javaHome) {
-        if (javaHome != null && new File(javaHome).isDirectory()) {
-            this.javaHome = new File(javaHome);
-        }
-        return this;
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
-    public String getJavaBin() {
-        if (getJavaHome() != null) {
-            return getJavaHome() + File.separatorChar + "bin" + File.separatorChar + "java";
-        } else {
-            return "java";
-        }
+    public Authentication getAuthentication() {
+        return authentication;
     }
 
-    public String getJBossHome() {
-        try {
-            return jbossHome.getCanonicalPath();
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to get canonical path of " + jbossHome, e);
-        }
+    public Management getManagement() {
+        return management;
     }
 
-    public JBossManagerConfiguration setJBossHome(String jbossHome) {
-        if (jbossHome != null && new File(jbossHome).isDirectory()) {
-            this.jbossHome = new File(jbossHome);
-        }
-        return this;
+    public boolean isDomain() {
+        return isDomain;
     }
 
-    // helpers
+    public boolean isRemote() {
+        return remote;
+    }
 
     public String getJBossBaseDir() {
         if (isDomain()) {
-            return getJBossHome() + "/domain";
+            return jvm.getJBossHome() + "/domain";
         } else {
-            return getJBossHome() + "/standalone";
+            return jvm.getJBossHome() + "/standalone";
         }
     }
 
@@ -178,41 +95,15 @@ public class JBossManagerConfiguration implements Configuration {
     }
 
     public String getJBossModuleDir() {
-        return getJBossHome() + "/modules";
+        return jvm.getJBossHome() + "/modules";
     }
 
     public List<String> getJavaOpts() {
-        if (javaOpts.size() == 0 && containerType != null) {
+        if (jvm.getJavaOpts().size() == 0 && containerType != null) {
             return containerType.javaOptions(this);
         }
 
-        return javaOpts;
-
-    }
-
-    public JBossManagerConfiguration setJavaOpts(String... javaOpts) {
-        this.javaOpts.addAll(Arrays.asList(javaOpts));
-        return this;
-    }
-
-    public int getStartupTimeoutInSeconds() {
-        return startupTimeoutInSeconds;
-    }
-
-    public JBossManagerConfiguration setStartupTimeoutInSeconds(int startupTimeoutInSeconds) {
-        if (startupTimeoutInSeconds > 0) {
-            this.startupTimeoutInSeconds = startupTimeoutInSeconds;
-        }
-        return this;
-    }
-
-    public JBossManagerConfiguration setOutputToConsole(boolean outputToConsole) {
-        this.outputToConsole = outputToConsole;
-        return this;
-    }
-
-    public boolean isOutputToConsole() {
-        return outputToConsole;
+        return jvm.getJavaOpts();
     }
 
     public List<String> getProcessControllerJavaOpts() {
@@ -220,11 +111,6 @@ public class JBossManagerConfiguration implements Configuration {
             return containerType.javaOptions(this);
         }
         return processControllerJavaOpts;
-    }
-
-    public JBossManagerConfiguration setProcessControllerJavaOpts(String... processControllerJavaOpts) {
-        this.processControllerJavaOpts.addAll(Arrays.asList(processControllerJavaOpts));
-        return this;
     }
 
     public List<String> getHostControllerJavaOpts() {
@@ -235,258 +121,122 @@ public class JBossManagerConfiguration implements Configuration {
         return hostControllerJavaOpts;
     }
 
-    public JBossManagerConfiguration setHostControllerJavaOpts(String... hostControllerJavaOpts) {
-        this.hostControllerJavaOpts.addAll(Arrays.asList(hostControllerJavaOpts));
-        return this;
-    }
-
     public List<String> getServerJavaOpts() {
         return serverJavaOpts;
     }
 
-    public JBossManagerConfiguration setServerJavaOpts(String... serverJavaOpts) {
-        this.serverJavaOpts.addAll(Arrays.asList(serverJavaOpts));
-        return this;
+    public int getStartupTimeoutInSeconds() {
+        return startupTimeoutInSeconds;
     }
 
-    public JBossManagerConfiguration setUser(String user) {
-        if (user != null) {
-            this.user = user;
-        }
-        return this;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public JBossManagerConfiguration setPassword(String password) {
-        if (password != null) {
-            this.password = password;
-        }
-        return this;
-    }
-
-    public String getPassword() {
-        return password;
+    public boolean isOutputToConsole() {
+        return outputToConsole;
     }
 
     public ContainerType getContainerType() {
         return containerType;
     }
 
-    public JBossManagerConfiguration setContainerType(ContainerType containerType) {
-        if (containerType != null) {
+    public static final class Builder {
+
+        private JVM jvm = new JVM.Builder().build();
+
+        private Configuration configuration = new Configuration.Builder().build();
+
+        public Authentication authentication = new Authentication.Builder().build();
+
+        public Management management = new Management.Builder().build();
+
+        private boolean isDomain = false;
+
+        private boolean remote = false;
+
+        private boolean outputToConsole = true;
+
+        private ContainerType containerType = ContainerType.WILDFLY;
+
+        private int startupTimeoutInSeconds = 120;
+
+        private List<String> processControllerJavaOpts = new ArrayList<>();
+
+        private List<String> hostControllerJavaOpts = new ArrayList<>();
+
+        private List<String> serverJavaOpts = new ArrayList<>();
+
+        public Builder domain() {
+            isDomain = true;
+            return this;
+        }
+
+        public Builder remote() {
+            remote = true;
+            return this;
+        }
+
+        public Builder setJVM(JVM jvm) {
+            this.jvm = jvm;
+            return this;
+        }
+
+        public Builder setConfiguration(Configuration configuration) {
+            this.configuration = configuration;
+            return this;
+        }
+
+        public Builder setAuthentication(Authentication authentication) {
+            this.authentication = authentication;
+            return this;
+        }
+
+        public Builder setManagement(Management management) {
+            this.management = management;
+            return this;
+        }
+
+        public Builder setContainerType(ContainerType containerType) {
             this.containerType = containerType;
-        }
-        return this;
-    }
-
-    public JBossManagerConfiguration setContainerType(String containerType) throws IllegalArgumentException {
-        this.containerType = ContainerType.valueOf(containerType);
-        return this;
-    }
-
-    // configs
-
-    public String getDomainConfig() {
-        return domainConfig;
-    }
-
-    public JBossManagerConfiguration setDomainConfig(String domainConfig) {
-        if (domainConfig != null && domainConfig.length() != 0) {
-            this.domainConfig = domainConfig;
-        }
-        return this;
-    }
-
-    public String getHostConfig() {
-        return hostConfig;
-    }
-
-    public JBossManagerConfiguration setHostConfig(String hostConfig) {
-        if (hostConfig != null && hostConfig.length() != 0) {
-            this.hostConfig = hostConfig;
-        }
-        return this;
-    }
-
-    public String getStandaloneConfig() {
-        return standaloneConfig;
-    }
-
-    public JBossManagerConfiguration setStandaloneConfig(String standaloneConfig) {
-        if (standaloneConfig != null && standaloneConfig.length() != 0) {
-            this.standaloneConfig = standaloneConfig;
-        }
-        return this;
-    }
-
-    // domain specific
-
-    public boolean isDomain() {
-        return domain;
-    }
-
-    public JBossManagerConfiguration domain() {
-        domain = true;
-        return this;
-    }
-
-    public String getServerGroup() {
-        return serverGroup;
-    }
-
-    public JBossManagerConfiguration setServerGroup(String serverGroup) {
-        if (serverGroup != null && serverGroup.length() != 0) {
-            this.serverGroup = serverGroup;
+            return this;
         }
 
-        return this;
-    }
-
-    public JBossManagerConfiguration setDomainStartTimeout(long domainStartTimeout) {
-        if (domainStartTimeout > 0) {
-            this.domainStartTimeout = domainStartTimeout;
-        }
-        return this;
-    }
-
-    public long getDomainStartTimeout() {
-        return domainStartTimeout;
-    }
-
-    public JBossManagerConfiguration setDomainServers(String domainServer, String... domainServers) {
-        if (domainServer != null && domainServer.length() != 0) {
-            this.domainServers.clear();
-            this.domainServers.add(domainServer);
+        public Builder setContainerType(String containerType) throws IllegalArgumentException {
+            this.containerType = ContainerType.valueOf(containerType);
+            return this;
         }
 
-        for (String domainServerArg : domainServers) {
-            if (domainServer != null && domainServer.length() != 0) {
-                this.domainServers.add(domainServerArg);
+        /**
+         * @param startupTimeoutInSeconds timeout in seconds until start is considered unsuccessful, this value is
+         *                                ignored when lower or equal to 0.
+         * @return this
+         */
+        public Builder setStartupTimeoutInSeconds(int startupTimeoutInSeconds) {
+            if (startupTimeoutInSeconds > 0) {
+                this.startupTimeoutInSeconds = startupTimeoutInSeconds;
             }
+            return this;
         }
 
-        return this;
-    }
-
-    public JBossManagerConfiguration setDomainServers(List<String> domainServers) {
-        if (domainServers != null) {
-            this.domainServers.clear();
-            this.domainServers.addAll(domainServers.stream().filter(domainServer -> domainServer != null && domainServer.length() != 0)
-                    .collect(Collectors.toList()));
-        }
-        return this;
-    }
-
-    public List<String> getDomainServers() {
-        return domainServers;
-    }
-
-    public JBossManagerConfiguration setDomainMasterHostName(String domainMasterHostName) {
-        if (domainMasterHostName != null) {
-            this.domainMasterHostName = domainMasterHostName;
-        }
-        return this;
-    }
-
-    public String getDomainMasterHostName() {
-        return domainMasterHostName;
-    }
-
-    public JBossManagerConfiguration controller(String controller) {
-        this.controller = controller;
-        return this;
-    }
-
-    public String getController() {
-        return controller;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("jboss dir\t").append(getJBossHome()).append("\n")
-                .append("base dir\t").append(getJBossBaseDir()).append("\n")
-                .append("config dir\t").append(getJBossConfigDir()).append("\n")
-                .append("log dir\t\t").append(getJBossLogDir()).append("\n")
-                .append("module dir\t").append(getJBossModuleDir()).append("\n");
-
-        return sb.toString();
-    }
-
-    public JBossManagerConfiguration setManagementProtocol(String managementProtocol) {
-        this.managementProtocol = managementProtocol;
-        return this;
-    }
-
-
-    public String getManagementProtocol() {
-        return managementProtocol;
-    }
-
-    public JBossManagerConfiguration setManagementAddress(String managementAddress) {
-        this.managementAddress = managementAddress;
-        return this;
-    }
-
-    public String getManagementAddress() {
-        return managementAddress;
-    }
-
-    public JBossManagerConfiguration setManagementPort(int managementPort) {
-        this.managementPort = managementPort;
-        return this;
-    }
-
-    public int getManagementPort() {
-        return managementPort;
-    }
-
-    public boolean isRemote() {
-        return remote;
-    }
-
-    public JBossManagerConfiguration remote() {
-        remote = true;
-        return this;
-    }
-
-    public static class Util {
-
-        // default extracted container to target is JBoss AS 7
-        private static final ContainerType defaultContainerType = ContainerType.WILDFLY;
-
-        public static String getJBossHome() {
-
-            String home = System.getProperty("jboss.home");
-
-            if (home == null) {
-                home = System.getenv("JBOSS_HOME");
-            }
-
-            return home;
+        public Builder setOutputToConsole(boolean outputToConsole) {
+            this.outputToConsole = outputToConsole;
+            return this;
         }
 
-        public static ContainerType getContainerType() {
+        public Builder setProcessControllerJavaOpts(String... processControllerJavaOpts) {
+            this.processControllerJavaOpts.addAll(Arrays.asList(processControllerJavaOpts));
+            return this;
+        }
 
-            String containerTypeName = System.getProperty("jboss.container.type");
+        public Builder setHostControllerJavaOpts(String... hostControllerJavaOpts) {
+            this.hostControllerJavaOpts.addAll(Arrays.asList(hostControllerJavaOpts));
+            return this;
+        }
 
-            if (containerTypeName == null) {
-                return defaultContainerType;
-            }
+        public Builder setServerJavaOpts(String... serverJavaOpts) {
+            this.serverJavaOpts.addAll(Arrays.asList(serverJavaOpts));
+            return this;
+        }
 
-            ContainerType containerType;
-
-            try {
-                containerType = Enum.valueOf(ContainerType.class, containerTypeName);
-            } catch (IllegalArgumentException ex) {
-                containerType = defaultContainerType;
-            }
-
-            return containerType;
+        public JBossManagerConfiguration build() {
+            return new JBossManagerConfiguration(this);
         }
     }
 }

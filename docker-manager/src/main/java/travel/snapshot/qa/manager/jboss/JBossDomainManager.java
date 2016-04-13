@@ -29,7 +29,7 @@ public class JBossDomainManager extends AbstractJBossManager<ManagementClient, D
     private final JBossDomainDeployer deployer;
 
     public JBossDomainManager() {
-        this(new JBossManagerConfiguration());
+        this(new JBossManagerConfiguration.Builder().build());
     }
 
     public JBossDomainManager(final JBossManagerConfiguration configuration) {

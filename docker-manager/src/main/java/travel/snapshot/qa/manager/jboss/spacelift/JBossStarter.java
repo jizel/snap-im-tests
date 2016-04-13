@@ -14,7 +14,7 @@ public abstract class JBossStarter<T> extends Task<JBossManagerConfiguration, T>
     protected JBossManagerConfiguration configuration;
 
     public JBossStarter() {
-        configuration = new JBossManagerConfiguration();
+        configuration = new JBossManagerConfiguration.Builder().build();
     }
 
     public JBossStarter<T> configuration(JBossManagerConfiguration configuration) {

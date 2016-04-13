@@ -16,7 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JBossCLI extends Task<Object, ProcessResult> {
+/**
+ * This script needs to have jboss-cli.sh (or its Windows equivalent) present on the system and it has to be executable.
+ * This basically means that in order to use this class, there has to be local installation of the application server on
+ * the host this class is invoked from.
+ */
+public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
 
     private final Map<String, String> environment = new HashMap<>();
 
@@ -26,7 +31,9 @@ public class JBossCLI extends Task<Object, ProcessResult> {
 
     private File file;
 
-    private String controller;
+    private String controllerHost = "127.0.0.1";
+
+    private int controllerPort = 9990;
 
     private boolean connect = false;
 
@@ -68,8 +75,13 @@ public class JBossCLI extends Task<Object, ProcessResult> {
         return this;
     }
 
-    public JBossCLI controller(String controller) {
-        this.controller = controller;
+    public JBossCLI controllerHost(String controllerHost) {
+        this.controllerHost = controllerHost;
+        return this;
+    }
+
+    public JBossCLI controllerPort(int controllerPort) {
+        this.controllerPort = controllerPort;
         return this;
     }
 
@@ -88,14 +100,16 @@ public class JBossCLI extends Task<Object, ProcessResult> {
         return this;
     }
 
+    private String getController() {
+        return controllerHost + ":" + controllerPort;
+    }
+
     @Override
-    protected ProcessResult process(Object input) throws Exception {
+    protected ProcessResult process(JBossManagerConfiguration configuration) throws Exception {
 
         final CommandTool jbossCliTool = getJBossCliTool();
 
-        if (controller != null) {
-            jbossCliTool.parameter("--controller=" + controller);
-        }
+        jbossCliTool.parameter("--controller=" + getController());
 
         if (connect) {
             jbossCliTool.parameter("--connect");
@@ -123,7 +137,7 @@ public class JBossCLI extends Task<Object, ProcessResult> {
 
         jbossCliTool.shouldExitWith(exitCodes.toArray(new Integer[exitCodes.size()]));
 
-        environment.putIfAbsent("JBOSS_HOME", JBossManagerConfiguration.Util.getJBossHome());
+        environment.putIfAbsent("JBOSS_HOME", configuration.getJVM().getJBossHome());
 
         return jbossCliTool.execute().await();
     }

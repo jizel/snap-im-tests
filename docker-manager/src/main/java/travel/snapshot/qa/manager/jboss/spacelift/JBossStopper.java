@@ -18,7 +18,7 @@ public class JBossStopper extends Task<JBossContainerManager, Void> {
 
         Validate.notNull(manager, "Container manager you want to stop container with is a null object!");
 
-        logger.info("Stopping JBoss container located at {}.", manager.getConfiguration().getJBossHome());
+        logger.info("Stopping JBoss container located at {}.", manager.getConfiguration().getJVM().getJBossHome());
 
         manager.stop();
 
