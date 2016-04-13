@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyPropertySet;
 import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.model.PropertyUser;
@@ -47,7 +47,7 @@ public class PropertySetSteps extends BasicSteps {
     // --- steps ---
 
     @Step
-    public void followingPropertySetsExistForCustomer(List<PropertySet> propertySets, Customer customer) {
+    public void followingPropertySetsExistForCustomer(List<PropertySet> propertySets, CustomerDto customer) {
         propertySets.forEach(t -> {
             // remove duplicates
             PropertySet existingPropertySet = getPropertySetByNameForCustomer(t.getPropertySetName(), customer.getCustomerId());
@@ -135,7 +135,7 @@ public class PropertySetSteps extends BasicSteps {
     
     */
 
-    public void deleteAllPropertySetsForCustomer(List<Customer> customers) {
+    public void deleteAllPropertySetsForCustomer(List<CustomerDto> customers) {
         customers.forEach(c -> {
             String filter = "customer_id==" + c.getCustomerId();
             Response entities = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null);
@@ -164,7 +164,7 @@ public class PropertySetSteps extends BasicSteps {
         }
     }
 
-    public void followingPropertySetIsCreatedForCustomer(Customer c, PropertySet propertySet) {
+    public void followingPropertySetIsCreatedForCustomer(CustomerDto c, PropertySet propertySet) {
         PropertySet existingPropertySet = getPropertySetByNameForCustomer(propertySet.getPropertySetName(), c.getCustomerId());
         if (existingPropertySet != null) {
             deleteEntity(existingPropertySet.getPropertySetId());
@@ -176,7 +176,7 @@ public class PropertySetSteps extends BasicSteps {
         setSessionResponse(createResponse);
     }
 
-    public void propertySetWithNameForCustomerIsDeleted(Customer c, String propertySetName) {
+    public void propertySetWithNameForCustomerIsDeleted(CustomerDto c, String propertySetName) {
         PropertySet existingPropertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         if (existingPropertySet == null) {
             return;
@@ -199,7 +199,7 @@ public class PropertySetSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, Customer c) {
+    public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, CustomerDto c) {
         propertySetNames.forEach(n -> {
             String filter = String.format("property_set_name==%s and customer_id==%s", n, c.getCustomerId());
             PropertySet[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySet[].class);
@@ -217,7 +217,7 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenUserAndPropertySetForCustomer(User u, String propertySetName, Customer c) {
+    public void relationExistsBetweenUserAndPropertySetForCustomer(User u, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
         PropertyUser existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
@@ -247,33 +247,33 @@ public class PropertySetSteps extends BasicSteps {
         return Arrays.asList(propertySetUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
     }
 
-    public void userIsAddedToPropertySetForCustomer(User u, String propertySetName, Customer c) {
+    public void userIsAddedToPropertySetForCustomer(User u, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
         Response response = addUserToPropertySet(u.getUserId(), propertySet.getPropertySetId());
         setSessionResponse(response);
     }
 
-    public void userIsRemovedFromPropertySetForCustomer(User u, String propertySetName, Customer c) {
+    public void userIsRemovedFromPropertySetForCustomer(User u, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
         Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
         setSessionResponse(deleteResponse);
     }
 
-    public void userDoesntExistForPropertySetForCustomer(User u, String propertySetName, Customer c) {
+    public void userDoesntExistForPropertySetForCustomer(User u, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         PropertyUser existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
         assertNull("User should not be present in propertyset", existingPropertySetUser);
     }
 
-    public void listOfPropertiesIsGotWith(String propertySetName, Customer customer, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public void listOfPropertiesIsGotWith(String propertySetName, CustomerDto customer, String limit, String cursor, String filter, String sort, String sortDesc) {
         PropertySet p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
         Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
 
-    public void listOfUsersIsGotWith(String propertySetName, Customer customer, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public void listOfUsersIsGotWith(String propertySetName, CustomerDto customer, String limit, String cursor, String filter, String sort, String sortDesc) {
         PropertySet p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
         Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
@@ -299,7 +299,7 @@ public class PropertySetSteps extends BasicSteps {
         }
     }
 
-    public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, Customer customer) {
+    public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, CustomerDto customer) {
         propertySetNames.forEach(psn -> {
             String filter = String.format("property_set_name==%s and customer_id==%s", psn, customer.getCustomerId());
             PropertySet[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySet[].class);
@@ -316,7 +316,7 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenPropertyAndPropertySetForCustomer(Property p, String propertySetName, Customer c) {
+    public void relationExistsBetweenPropertyAndPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
         PropertyPropertySet existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
@@ -346,20 +346,20 @@ public class PropertySetSteps extends BasicSteps {
         return Arrays.asList(propertySetPropertiesResponse.as(PropertyPropertySet[].class)).stream().findFirst().orElse(null);
     }
 
-    public void propertiesDoesntExistForPropertySetForCustomer(Property p, String propertySetName, Customer c) {
+    public void propertiesDoesntExistForPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         PropertyPropertySet existingPropertySetProperty = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
         assertNull("Property should not be present in propertyset", existingPropertySetProperty);
     }
 
-    public void propertyIsAddedToPropertySetForCustomer(Property p, String propertySetName, Customer c) {
+    public void propertyIsAddedToPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
         Response response = addPropertyToPropertySet(p.getPropertyId(), propertySet.getPropertySetId());
         setSessionResponse(response);
     }
 
-    public void propertyIsRemovedFromPropertySetForCustomer(Property p, String propertySetName, Customer c) {
+    public void propertyIsRemovedFromPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySet propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
         Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());

@@ -14,14 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.DateUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Address;
-import travel.snapshot.dp.qa.model.Customer;
 import travel.snapshot.dp.qa.model.CustomerProperty;
 import travel.snapshot.dp.qa.model.CustomerUser;
-import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -53,10 +53,10 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void followingCustomersExist(List<Customer> customers) {
+    public void followingCustomersExist(List<CustomerDto> customers) {
         customers.forEach(t -> {
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
-            Customer existingCustomer = getCustomerByCodeInternal(t.getCode());
+            CustomerDto existingCustomer = getCustomerByCodeInternal(t.getCode());
             if (existingCustomer != null) {
                 deleteEntity(existingCustomer.getCustomerId());
             }
@@ -71,7 +71,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void fileIsUsedForCreation(String filename) {
-        Customer customer = getCustomerFromFile(this.getClass().getResourceAsStream(filename));
+        CustomerDto customer = getCustomerFromFile(this.getClass().getResourceAsStream(filename));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
         Response response = createEntity(customer);
         setSessionResponse(response);
@@ -79,10 +79,10 @@ public class CustomerSteps extends BasicSteps {
 
 
     @Step
-    public void followingCustomerIsCreated(Customer customer) {
+    public void followingCustomerIsCreated(CustomerDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        Customer existingCustomer = getCustomerByCodeInternal(customer.getCode());
+        CustomerDto existingCustomer = getCustomerByCodeInternal(customer.getCode());
         if (existingCustomer != null) {
             deleteEntity(existingCustomer.getCustomerId());
         }
@@ -91,10 +91,10 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void followingCustomerIsCreatedWithAddress(Customer customer, Address address) {
+    public void followingCustomerIsCreatedWithAddress(CustomerDto customer, AddressDto address) {
         customer.setAddress(address);
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        Customer existingCustomer = getCustomerByCodeInternal(customer.getCode());
+        CustomerDto existingCustomer = getCustomerByCodeInternal(customer.getCode());
         if (existingCustomer != null) {
             deleteEntity(existingCustomer.getCustomerId());
         }
@@ -104,13 +104,13 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void compareCustomerOnHeaderWithStored(String headerName) {
-        Customer originalCustomer = Serenity.sessionVariableCalled(SESSION_CREATED_CUSTOMER);
+        CustomerDto originalCustomer = Serenity.sessionVariableCalled(SESSION_CREATED_CUSTOMER);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String customerLocation = response.header(headerName).replaceFirst(BASE_PATH_CUSTOMERS, "");
         given().spec(spec).get(customerLocation).then()
                 .body("salesforce_id", is(originalCustomer.getSalesforceId()))
-                .body("company_name", is(originalCustomer.getCompanyName()))
-                .body("code", is(originalCustomer.getCode()))
+                .body("name", is(originalCustomer.getCompanyName()))
+                .body("customer_code", is(originalCustomer.getCode()))
                 .body("email", is(originalCustomer.getEmail()))
                 .body("vat_id", is(originalCustomer.getVatId()));
     }
@@ -129,8 +129,8 @@ public class CustomerSteps extends BasicSteps {
 
     }
 
-    private Customer getCustomerFromFile(InputStream inputStream) {
-        return from(inputStream).getObject("", Customer.class);
+    private CustomerDto getCustomerFromFile(InputStream inputStream) {
+        return from(inputStream).getObject("", CustomerDto.class);
     }
 
     private Response activateCustomer(String id) {
@@ -190,8 +190,8 @@ public class CustomerSteps extends BasicSteps {
                 .when().post("/{customerId}/users", customerId);
     }
 
-    public Customer getCustomerByCodeInternal(String code) {
-        Customer[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "code==" + code, null, null).as(Customer[].class);
+    public CustomerDto getCustomerByCodeInternal(String code) {
+        CustomerDto[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_code==" + code, null, null).as(CustomerDto[].class);
         return Arrays.asList(customers).stream().findFirst().orElse(null);
     }
 
@@ -204,7 +204,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithCodeIsGot(String code) {
-        Customer customerFromList = getCustomerByCodeInternal(code);
+        CustomerDto customerFromList = getCustomerByCodeInternal(code);
 
         Response response = getEntity(customerFromList.getCustomerId(), null);
         setSessionResponse(response);
@@ -218,7 +218,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithCodeIsDeleted(String code) {
-        Customer c = getCustomerByCodeInternal(code);
+        CustomerDto c = getCustomerByCodeInternal(code);
         if (c == null) {
             return;
         }
@@ -243,29 +243,29 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithCode(String code, Customer updatedCustomer) throws Throwable {
-        Customer original = getCustomerByCodeInternal(code);
+    public void updateCustomerWithCode(String code, CustomerDto updatedCustomer) throws Throwable {
+        CustomerDto original = getCustomerByCodeInternal(code);
         if (original == null) {
             fail("Customer with code " + code + " not found");
         }
 
         Response tempResponse = getEntity(original.getCustomerId(), null);
-        Map<String, Object> customerData = retrieveData(Customer.class, updatedCustomer);
+        Map<String, Object> customerData = retrieveData(CustomerDto.class, updatedCustomer);
 
         Response response = updateEntity(original.getCustomerId(), customerData, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
     @Step
-    public void updateCustomerAddress(String customerCode, Address updatedAddress) throws Throwable {
-        Customer originalCustomer = getCustomerByCodeInternal(customerCode);
+    public void updateCustomerAddress(String customerCode, AddressDto updatedAddress) throws Throwable {
+        CustomerDto originalCustomer = getCustomerByCodeInternal(customerCode);
         if (originalCustomer == null) {
             fail("Customer with code " + customerCode + " not found");
         }
 
         Response temp = getEntity(originalCustomer.getCustomerId());
         Map<String, Object> addressData = new HashMap<String, Object>();
-        addressData.put("address", retrieveData(Address.class, updatedAddress));
+        addressData.put("address", retrieveData(AddressDto.class, updatedAddress));
 
         Response response = updateEntity(originalCustomer.getCustomerId(), addressData, temp.getHeader(HEADER_ETAG));
         setSessionResponse(response);
@@ -274,14 +274,14 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void activateCustomerWithCode(String code) {
-        Customer customer = getCustomerByCodeInternal(code);
+        CustomerDto customer = getCustomerByCodeInternal(code);
         Response response = activateCustomer(customer.getCustomerId());
         setSessionResponse(response);
     }
 
     @Step
     public void isActiveSetTo(boolean activeFlag, String code) {
-        Customer customer = getCustomerByCodeInternal(code);
+        CustomerDto customer = getCustomerByCodeInternal(code);
         if (activeFlag) {
             assertNotNull("Customer should be returned", customer);
             assertEquals("Customer should have code=" + code, code, customer.getCode());
@@ -292,7 +292,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void inactivateCustomerWithCode(String code) {
-        Customer customer = getCustomerByCodeInternal(code);
+        CustomerDto customer = getCustomerByCodeInternal(code);
         Response response = inactivateCustomer(customer.getCustomerId());
         setSessionResponse(response);
     }
@@ -300,7 +300,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void customerWithCodeIsGotWithEtag(String code) {
         //TODO implement actual customer search
-        Customer customerFromList = getCustomerByCodeInternal(code);
+        CustomerDto customerFromList = getCustomerByCodeInternal(code);
 
         Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
 
@@ -310,7 +310,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithCodeIsGotWithEtagAfterUpdate(String code) {
-        Customer customerFromList = getCustomerByCodeInternal(code);
+        CustomerDto customerFromList = getCustomerByCodeInternal(code);
 
         Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
 
@@ -327,18 +327,18 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
-    public void updateCustomerWithCodeIfUpdatedBefore(String code, Customer updatedCustomer) throws Throwable {
-        Customer original = getCustomerByCodeInternal(code);
+    public void updateCustomerWithCodeIfUpdatedBefore(String code, CustomerDto updatedCustomer) throws Throwable {
+        CustomerDto original = getCustomerByCodeInternal(code);
 
-        Map<String, Object> customerData = retrieveData(Customer.class, updatedCustomer);
+        Map<String, Object> customerData = retrieveData(CustomerDto.class, updatedCustomer);
 
         Response response = updateEntity(original.getCustomerId(), customerData, "fake-etag");
         setSessionResponse(response);
     }
 
-    public void customerWithCodeHasData(String code, Customer data) throws Throwable {
-        Map<String, Object> originalData = retrieveData(Customer.class, getCustomerByCodeInternal(code));
-        Map<String, Object> expectedData = retrieveData(Customer.class, data);
+    public void customerWithCodeHasData(String code, CustomerDto data) throws Throwable {
+        Map<String, Object> originalData = retrieveData(CustomerDto.class, getCustomerByCodeInternal(code));
+        Map<String, Object> expectedData = retrieveData(CustomerDto.class, data);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -353,9 +353,9 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void codesAreInResponseInOrder(List<String> codes) {
         Response response = getSessionResponse();
-        Customer[] customers = response.as(Customer[].class);
+        CustomerDto[] customers = response.as(CustomerDto[].class);
         int i = 0;
-        for (Customer c : customers) {
+        for (CustomerDto c : customers) {
             assertEquals("Customer on index=" + i + " is not expected", codes.get(i), c.getCode());
             i++;
         }
@@ -363,7 +363,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerCode, String type, String dateFrom, String dateTo) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         Response response = addPropertyToCustomerWithTypeFromTo(propertyId, c.getCustomerId(), type, dateFrom, dateTo);
 
@@ -374,8 +374,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(Property p, String customerCode, String type, String validFrom, String validTo) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(PropertyDto p, String customerCode, String type, String validFrom, String validTo) {
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         //TODO FIX temporary turned off checking of already created relationship
         /*setAccessTokenParamFromSession();
@@ -402,8 +402,8 @@ public class CustomerSteps extends BasicSteps {
         //}
     }
 
-    public void propertyIsUpdateForCustomerWithType(Property p, String customerCode, String type, String fieldName, String value) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+    public void propertyIsUpdateForCustomerWithType(PropertyDto p, String customerCode, String type, String fieldName, String value) {
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
@@ -416,8 +416,8 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(updateResponse);
     }
 
-    public void propertyIsUpdateForCustomerWithTypeWithInvalidEtag(Property p, String customerCode, String type, String fieldName, String value) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+    public void propertyIsUpdateForCustomerWithTypeWithInvalidEtag(PropertyDto p, String customerCode, String type, String fieldName, String value) {
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         Map<String, Object> data = new HashMap<>();
@@ -429,7 +429,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void relationExistsBetweenUserAndCustomerWithPrimary(User user, String customerCode, String isPrimary) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         CustomerUser existingCustomerUser = getUserForCustomer(c.getCustomerId(), user.getUserName());
         if (existingCustomerUser != null) {
@@ -451,16 +451,16 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void propertyIsgotForCustomerWithType(Property p, String customerCode, String type) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+    public void propertyIsgotForCustomerWithType(PropertyDto p, String customerCode, String type) {
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         setAccessTokenParamFromSession();
         CustomerProperty tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
         Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
         setSessionResponse(response);
     }
 
-    public void propertyIsgotForCustomerWithTypeWithEtag(Property p, String customerCode, String type) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+    public void propertyIsgotForCustomerWithTypeWithEtag(PropertyDto p, String customerCode, String type) {
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         CustomerProperty tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
 
         Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
@@ -469,8 +469,8 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(Property p, String customerCode, String type) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+    public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(PropertyDto p, String customerCode, String type) {
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         CustomerProperty tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
 
         Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
@@ -486,14 +486,14 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void getCustomerPropertyWithId(String customerCode, String relationshipId) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, relationshipId, null);
         setSessionResponse(response);
     }
 
     @Step
     public void listOfCustomerPropertiesIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         setAccessTokenParamFromSession();
         Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
@@ -501,7 +501,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void listOfCustomerPropertySetsIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         setAccessTokenParamFromSession();
         Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
@@ -514,7 +514,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void userIsAddedToCustomerWithIsPrimary(User u, String customerCode, String isPrimary) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         Response response = addUserToCustomerWithIsPrimary(u.getUserId(), c.getCustomerId(), isPrimary);
         setSessionResponse(response);
@@ -522,7 +522,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void userIsDeletedFromCustomer(User u, String customerCode) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
 
         Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
         setSessionResponse(deleteResponse);
@@ -530,20 +530,35 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void userDoesntExistForCustomer(User u, String customerCode) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         CustomerUser userForCustomer = getUserForCustomer(c.getCustomerId(), u.getUserName());
         assertNull("User should not be present in customer", userForCustomer);
     }
 
-    public List<Customer> getCustomersForCodes(List<String> customerCodes) {
+    @Step
+    public void getCommSubscriptionForCustomerId(String customerId) {
+        Response appCommSubscriptionResponse = getSecondLevelEntities(customerId,
+                "", LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+        setSessionResponse(appCommSubscriptionResponse);
+    }
+
+    @Step
+    public void listOfCustomerCommSubscriptionsIsGotWith(String customerId, String limit, String cursor, String filter,
+                                                         String sort, String sortDesc) {
+        Response response = getSecondLevelEntities(customerId, "", limit,
+                cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    public List<CustomerDto> getCustomersForCodes(List<String> customerCodes) {
         String filter = "code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
-        Customer[] customers = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(Customer[].class);
+        CustomerDto[] customers = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(CustomerDto[].class);
         return Arrays.asList(customers);
     }
 
     public void removeAllUsersFromCustomers(List<String> codes) {
         codes.forEach(c -> {
-            Customer customer = getCustomerByCodeInternal(c);
+            CustomerDto customer = getCustomerByCodeInternal(c);
             if (customer != null) {
                 Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
                 CustomerUser[] customerUsers = customerUsersResponse.as(CustomerUser[].class);
@@ -558,7 +573,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void listOfUsersIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
@@ -574,7 +589,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void fieldNameHasValueForPropertyForCustomerAndType(String fieldName, String value, String propertyId, String customerCode, String type) {
-        Customer c = getCustomerByCodeInternal(customerCode);
+        CustomerDto c = getCustomerByCodeInternal(customerCode);
         CustomerProperty cp = getCustomerPropertyForCustomerWithType(c.getCustomerId(), propertyId, type);
 
         switch (fieldName) {

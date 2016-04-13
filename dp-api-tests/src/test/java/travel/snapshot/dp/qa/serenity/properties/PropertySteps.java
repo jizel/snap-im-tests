@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Address;
-import travel.snapshot.dp.qa.model.Customer;
-import travel.snapshot.dp.qa.model.Property;
 import travel.snapshot.dp.qa.model.PropertyUser;
 import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -50,10 +50,10 @@ public class PropertySteps extends BasicSteps {
     // --- steps ---
 
     @Step
-    public void followingPropertiesExist(List<Property> properties) {
+    public void followingPropertiesExist(List<PropertyDto> properties) {
         properties.forEach(t -> {
             // remove duplicates
-            Property existingProperty = getPropertyByCodeInternal(t.getPropertyCode());
+            PropertyDto existingProperty = getPropertyByCodeInternal(t.getPropertyCode());
             if (existingProperty != null) {
                 deleteProperty(existingProperty.getPropertyId());
             }
@@ -78,7 +78,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void getPropertyByCode(String code) {
-        Property customerFromList = getPropertyByCodeInternal(code);
+        PropertyDto customerFromList = getPropertyByCodeInternal(code);
         Response resp = getProperty(customerFromList.getPropertyId(), null);
 
         // store to session
@@ -93,7 +93,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void getPropertyByCodeUsingEtag(String code) {
-        Property propertyFromList = getPropertyByCodeInternal(code);
+        PropertyDto propertyFromList = getPropertyByCodeInternal(code);
         if (propertyFromList == null) {
             fail("No matching property with code: [" + code + "] found.");
         }
@@ -110,7 +110,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void getPropertyWithCodeUsingEtagAfterUpdate(String code) {
-        Property propertyFromList = getPropertyByCodeInternal(code);
+        PropertyDto propertyFromList = getPropertyByCodeInternal(code);
         if (propertyFromList == null) {
             fail("No matching property with code: [" + code + "] found.");
         }
@@ -143,10 +143,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void followingPropertyIsCreated(Property property) {
+    public void followingPropertyIsCreated(PropertyDto property) {
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
         Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
-        Property existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
+        PropertyDto existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
         if (existingProperty != null) {
             deleteProperty(existingProperty.getPropertyId());
         }
@@ -155,10 +155,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void followingPropertyIsCreatedWithAddress(Property property, Address address) {
+    public void followingPropertyIsCreatedWithAddress(PropertyDto property, AddressDto address) {
         property.setAddress(address);
         Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
-        Property existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
+        PropertyDto existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
         if (existingProperty != null) {
             deleteProperty(existingProperty.getPropertyId());
         }
@@ -168,7 +168,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void comparePropertyOnHeaderWithStored(String headerName) {
-        Property originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY);
+        PropertyDto originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY);
         Response response = getSessionResponse();
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTIES, "");
         given().spec(spec).get(propertyLocation).then()
@@ -181,7 +181,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyWithCode(String code) {
-        Property p = getPropertyByCodeInternal(code);
+        PropertyDto p = getPropertyByCodeInternal(code);
         if (p == null) {
             return;
         }
@@ -218,7 +218,7 @@ public class PropertySteps extends BasicSteps {
      * @param t property
      * @return server response
      */
-    private Response createProperty(Property t) {
+    private Response createProperty(PropertyDto t) {
         return given().spec(spec)
                 .body(t)
                 .when().post();
@@ -295,8 +295,8 @@ public class PropertySteps extends BasicSteps {
      * @param code property code
      * @return Requested property or {@code null} if no such property exists in the list
      */
-    public Property getPropertyByCodeInternal(String code) {
-        Property[] properties = getEntities("1", "0", "property_code==" + code, null, null).as(Property[].class);
+    public PropertyDto getPropertyByCodeInternal(String code) {
+        PropertyDto[] properties = getEntities("1", "0", "property_code==" + code, null, null).as(PropertyDto[].class);
         return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
 
@@ -328,7 +328,7 @@ public class PropertySteps extends BasicSteps {
 
     public void removeAllUsersFromPropertiesWithCodes(List<String> propertyCodes) {
         propertyCodes.forEach(c -> {
-            Property property = getPropertyByCodeInternal(c);
+            PropertyDto property = getPropertyByCodeInternal(c);
             Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
             PropertyUser[] propertyUsers = customerUsersResponse.as(PropertyUser[].class);
             for (PropertyUser pu : propertyUsers) {
@@ -341,7 +341,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void relationExistsBetweenUserAndProperty(User user, String propertyCode) {
-        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
 
         PropertyUser existingPropertyUser = getUserForProperty(p.getPropertyId(), user.getUserName());
         if (existingPropertyUser != null) {
@@ -371,31 +371,31 @@ public class PropertySteps extends BasicSteps {
         return Arrays.asList(customerUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
     }
 
-    private Customer getCustomerForProperty(String propertyId, String customerCode) {
+    private CustomerDto getCustomerForProperty(String propertyId, String customerCode) {
         Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "code==" + customerCode, null, null);
-        return Arrays.asList(customerResponse.as(Customer[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(customerResponse.as(CustomerDto[].class)).stream().findFirst().orElse(null);
     }
 
     public void customerDoesNotExistForProperty(String customerCode, String propertyCode) {
-        Property p = getPropertyByCodeInternal(propertyCode);
-        Customer cust = getCustomerForProperty(p.getPropertyId(), customerCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
+        CustomerDto cust = getCustomerForProperty(p.getPropertyId(), customerCode);
         assertNull("Customer should not be link with property", cust);
     }
 
     public void userIsAddedToProperty(User u, String propertyCode) {
-        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
         Response response = addUserToProperty(u.getUserId(), p.getPropertyId());
         setSessionResponse(response);
     }
 
     public void userIsDeletedFromProperty(User u, String propertyCode) {
-        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
         Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
         setSessionResponse(deleteResponse);
     }
 
     public void userDoesntExistForProperty(User u, String propertyCode) {
-        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
         PropertyUser userForProperty = getUserForProperty(p.getPropertyId(), u.getUserName());
         assertNull("User should not be present in property", userForProperty);
     }
@@ -411,7 +411,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void listOfUsersIsGotWith(String propertyCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
         Response response = getSecondLevelEntities(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
@@ -424,14 +424,14 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void activatePropertyWithCode(String code) {
-        Property property = getPropertyByCodeInternal(code);
+        PropertyDto property = getPropertyByCodeInternal(code);
         Response response = activateProperty(property.getPropertyId());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
     @Step
     public void inactivatePropertyWithCode(String code) {
-        Property property = getPropertyByCodeInternal(code);
+        PropertyDto property = getPropertyByCodeInternal(code);
         Response response = inactivateProperty(property.getPropertyId());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
@@ -448,7 +448,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void isActiveSetTo(boolean activeFlag, String code) {
-        Property property = getPropertyByCodeInternal(code);
+        PropertyDto property = getPropertyByCodeInternal(code);
 
         if (activeFlag) {
             assertNotNull("Property should be returned", property);
@@ -462,7 +462,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void propertyPropertySetWithNameIsGot(String propertySetName, String propertyCode) {
-        Property property = getPropertyByCodeInternal(propertyCode);
+        PropertyDto property = getPropertyByCodeInternal(propertyCode);
 
         Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, "property_set_name=='" + propertySetName + "'", null, null);
@@ -486,7 +486,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void listOfCustomersIsGotWith(String propertyCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Property p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto p = getPropertyByCodeInternal(propertyCode);
         Response response = getSecondLevelEntities(p.getPropertyId(), SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
@@ -494,8 +494,8 @@ public class PropertySteps extends BasicSteps {
     public void allCustomersAreCustomersOfProperty(String propertyCode) {
         String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
         Response response = getSessionResponse();
-        Customer[] customers = response.as(Customer[].class);
-        for (Customer c : customers) {
+        CustomerDto[] customers = response.as(CustomerDto[].class);
+        for (CustomerDto c : customers) {
             given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getCustomerId() + "/properties").
                     then().body("property_id", hasItem(propertyID));
         }

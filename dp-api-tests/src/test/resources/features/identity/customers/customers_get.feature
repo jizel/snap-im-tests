@@ -14,8 +14,8 @@ Feature: Customers get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-    And Body contains entity with attribute "code" value "c1t"
-    And Body contains entity with attribute "company_name" value "Given company 1"
+    And Body contains entity with attribute "customer_code" value "c1t"
+    And Body contains entity with attribute "name" value "Given company 1"
     And Body contains entity with attribute "email" value "c1@tenants.biz"
     And Body contains entity with attribute "vat_id" value "CZ10000001"
 
@@ -31,8 +31,8 @@ Feature: Customers get
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
-    And Body contains entity with attribute "code" value "c1t"
-    And Body contains entity with attribute "company_name" value "Given company 1"
+    And Body contains entity with attribute "customer_code" value "c1t"
+    And Body contains entity with attribute "name" value "Given company 1"
     And Body contains entity with attribute "email" value "c1@tenants.biz"
     And Body contains entity with attribute "vat_id" value "CZ99999999"
 
@@ -108,9 +108,9 @@ Feature: Customers get
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
+    And Total count is "<total>"
     And There are <returned> customers returned
     And Link header is '<link_header>'
-    And Total count is "<total>"
 
     Examples:
       | limit | cursor | returned | total | link_header                                                                                               |
@@ -132,28 +132,28 @@ Feature: Customers get
     And Custom code is "<custom_code>"
 
     Examples:
-      | limit       | cursor | filter   | sort         | sort_desc    | response_code | custom_code |
+      | limit       | cursor | filter   | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
-      | /null       | -1     | /null    | /null        | /null        | 400           | 63          |
-      |             | -1     | /null    | /null        | /null        | 400           | 63          |
-      | /null       | text   | /null    | /null        | /null        | 400           | 63          |
-      |             | text   | /null    | /null        | /null        | 400           | 63          |
-      | -1          |        | /null    | /null        | /null        | 400           | 63          |
-      | -1          | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 201         | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 21474836470 | /null  | /null    | /null        | /null        | 400           | 63          |
-      | text        |        | /null    | /null        | /null        | 400           | 63          |
-      | text        | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 10          | -1     | /null    | /null        | /null        | 400           | 63          |
-      | text        | 0      | /null    | /null        | /null        | 400           | 63          |
-      | 10          | text   | /null    | /null        | /null        | 400           | 63          |
+      | /null       | -1     | /null    | /null       | /null       | 400           | 63          |
+      |             | -1     | /null    | /null       | /null       | 400           | 63          |
+      | /null       | text   | /null    | /null       | /null       | 400           | 63          |
+      |             | text   | /null    | /null       | /null       | 400           | 63          |
+      | -1          |        | /null    | /null       | /null       | 400           | 63          |
+      | -1          | /null  | /null    | /null       | /null       | 400           | 63          |
+      | 201         | /null  | /null    | /null       | /null       | 400           | 63          |
+      | 21474836470 | /null  | /null    | /null       | /null       | 400           | 63          |
+      | text        |        | /null    | /null       | /null       | 400           | 63          |
+      | text        | /null  | /null    | /null       | /null       | 400           | 63          |
+      | 10          | -1     | /null    | /null       | /null       | 400           | 63          |
+      | text        | 0      | /null    | /null       | /null       | 400           | 63          |
+      | 10          | text   | /null    | /null       | /null       | 400           | 63          |
 
       #filtering and sorting
-      | 10          | 0      | /null    | company_name | company_name | 400           | 64          |
-      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 63          |
-      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 63          |
-      | 10          | 0      | code==   | /null        | /null        | 400           | 63          |
-      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+      | 10          | 0      | /null    | name        | name        | 400           | 64          |
+      | 10          | 0      | /null    | /null       | nonexistent | 400           | 63          |
+      | 10          | 0      | /null    | nonexistent | /null       | 400           | 63          |
+      | 10          | 0      | code==   | /null       | /null       | 400           | 63          |
+      | 10          | 0      | vat==CZ* | /null       | /null       | 400           | 63          |
 
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address
@@ -174,19 +174,19 @@ Feature: Customers get
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                                     | sort  | sort_desc | expected_codes                                             |
-      | 5     | 0      | 5        | 5     | company_name=='Filter test*'               | code  |           | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
-      | 5     | 0      | 5        | 5     | company_name=='Filter test*'               |       | code      | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
-      | 5     | 2      | 3        | 5     | company_name=='Filter test*'               | code  |           | Filter_c3t, Filter_c4t, Filter_c5t                         |
-      | 5     | 2      | 3        | 5     | company_name=='Filter test*'               |       | code      | Filter_c3t, Filter_c2t, Filter_c1t                         |
-      | 5     | 3      | 2        | 5     | company_name=='Filter test*'               | code  |           | Filter_c4t, Filter_c5t                                     |
-      | /null | /null  | 1        | 1     | code==Filter_c7t                           | /null | /null     | Filter_c7t                                                 |
-      | /null | /null  | 2        | 2     | code==Filter_c* and phone==+22222222       | code  | /null     | Filter_c6t, Filter_c7t                                     |
-      | /null | /null  | 1        | 1     | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1t                                                 |
-      | /null | /null  | 1        | 1     | salesforce_id==Filter_salesforceid_given_2 | /null | /null     | Filter_c2t                                                 |
-      | /null | /null  | 1        | 1     | vat_id==CZ*73                              | /null | /null     | Filter_c3t                                                 |
-      | /null | /null  | 1        | 1     | is_demo_customer==0                        | /null | /null     | Filter_c7t                                                 |
-      | /null | /null  | 1        | 1     | website==http://www.snapshot.cz            | /null | /null     | Filter_c6t                                                 |
+      | limit | cursor | returned | total | filter                                        | sort          | sort_desc     | expected_codes                                             |
+      | 5     | 0      | 5        | 5     | name=='Filter test*'                          | customer_code |               | Filter_c1t, Filter_c2t, Filter_c3t, Filter_c4t, Filter_c5t |
+      | 5     | 0      | 5        | 5     | name=='Filter test*'                          |               | customer_code | Filter_c5t, Filter_c4t, Filter_c3t, Filter_c2t, Filter_c1t |
+      | 5     | 2      | 3        | 5     | name=='Filter test*'                          | customer_code |               | Filter_c3t, Filter_c4t, Filter_c5t                         |
+      | 5     | 2      | 3        | 5     | name=='Filter test*'                          |               | customer_code | Filter_c3t, Filter_c2t, Filter_c1t                         |
+      | 5     | 3      | 2        | 5     | name=='Filter test*'                          | customer_code |               | Filter_c4t, Filter_c5t                                     |
+      | /null | /null  | 1        | 1     | customer_code==Filter_c7t                     | /null         | /null         | Filter_c7t                                                 |
+      | /null | /null  | 2        | 2     | customer_code==Filter_c* and phone==+22222222 | customer_code | /null         | Filter_c6t, Filter_c7t                                     |
+      | /null | /null  | 1        | 1     | email==Filter_c1@tenants.biz                  | /null         | /null         | Filter_c1t                                                 |
+      | /null | /null  | 1        | 1     | salesforce_id==Filter_salesforceid_given_2    | /null         | /null         | Filter_c2t                                                 |
+      | /null | /null  | 1        | 1     | vat_id==CZ*73                                 | /null         | /null         | Filter_c3t                                                 |
+      | /null | /null  | 1        | 1     | is_demo_customer==0                           | /null         | /null         | Filter_c7t                                                 |
+      | /null | /null  | 1        | 1     | website==http://www.snapshot.cz               | /null         | /null         | Filter_c6t                                                 |
   #add all fields
 
     #TODO add test for wrong parameters in url

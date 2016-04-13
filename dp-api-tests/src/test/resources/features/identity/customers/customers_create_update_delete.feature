@@ -14,9 +14,9 @@ Feature: Customers create update delete
       | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
-    And Body contains entity with attribute "company_name" value "Creation test company"
+    And Body contains entity with attribute "name" value "Creation test company"
     And Body contains entity with attribute "email" value "s1@tenants.biz"
-    And Body contains entity with attribute "code" value "s1t"
+    And Body contains entity with attribute "customer_code" value "s1t"
     And "Location" header is set and contains the same customer
 
   Scenario Outline: Checking error codes for creating customer

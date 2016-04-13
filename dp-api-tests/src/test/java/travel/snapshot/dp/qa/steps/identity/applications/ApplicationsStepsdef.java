@@ -10,8 +10,10 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.Application;
 import travel.snapshot.dp.qa.model.ApplicationVersion;
 import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
@@ -24,12 +26,12 @@ public class ApplicationsStepsdef {
     private ApplicationsSteps applicationSteps;
 
     @When("^Application is created$")
-    public void Application_is_created(List<Application> applications) {
+    public void Application_is_created(List<ApplicationDto> applications) {
         applicationSteps.followingApplicationIsCreated(applications.get(0));
     }
 
     @Given("^The following applications exist$")
-    public void The_following_applications_exist(List<Application> applications) throws Throwable {
+    public void The_following_applications_exist(List<ApplicationDto> applications) throws Throwable {
         applicationSteps.followingApplicationsExist(applications);
     }
 
@@ -49,20 +51,20 @@ public class ApplicationsStepsdef {
     }
 
     @When("^Application with id \"([^\"]*)\" is updated with data$")
-    public void Application_With_Id_Is_Updated_With_Data(String applicationId, List<Application> applications)
+    public void Application_With_Id_Is_Updated_With_Data(String applicationId, List<ApplicationDto> applications)
             throws Throwable {
         applicationSteps.updateApplicationWithId(applicationId, applications.get(0));
     }
 
     @Then("^Updated application with id \"([^\"]*)\" has data$")
-    public void Updated_Application_With_Id_Has_Data(String applicationId, List<Application> applicationData)
+    public void Updated_Application_With_Id_Has_Data(String applicationId, List<ApplicationDto> applicationData)
             throws Throwable {
         applicationSteps.applicationWithIdHasData(applicationId, applicationData.get(0));
     }
 
     @When("^Application with id \"([^\"]*)\" is updated with data if updated before$")
     public void Application_with_id_is_updated_with_data_if_updated_before(String applicationId,
-            List<Application> applicationData) throws Throwable {
+            List<ApplicationDto> applicationData) throws Throwable {
         applicationSteps.updateApplicationWithIdIfUpdatedBefore(applicationId, applicationData.get(0));
     }
 
@@ -93,7 +95,7 @@ public class ApplicationsStepsdef {
 
     @Then("^There are (\\d+) applications returned$")
     public void There_are_applications_returned(int count) throws Throwable {
-        applicationSteps.numberOfEntitiesInResponse(Application.class, count);
+        applicationSteps.numberOfEntitiesInResponse(ApplicationDto.class, count);
     }
 
     @When("^Application with id \"([^\"]*)\" is got for etag, updated and got with previous etag$")
@@ -135,13 +137,13 @@ public class ApplicationsStepsdef {
 
     @When("^Application versions are created for application with id \"([^\"]*)\"$")
     public void Application_versions_are_created_for_application_with_id(String applicationId,
-            List<ApplicationVersion> applicationVersions) {
+            List<VersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsAreCreated(applicationId, applicationVersions.get(0));
     }
 
     @Given("^The following application versions for application with id \"([^\"]*)\" exists$")
     public void The_following_application_versions_exists(String applicationId,
-            List<ApplicationVersion> applicationVersions) {
+            List<VersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsExists(applicationId, applicationVersions);
     }
 
@@ -222,4 +224,24 @@ public class ApplicationsStepsdef {
         applicationSteps.versionNamesInResponseInOrder(versionNames);
     }
 
+    @When("Applications commercial subscriptions for application id \"([^\"]*)\" is got")
+    public void Applications_commercial_subscriptions_for_application_id_is_got(String applicationId) {
+        applicationSteps.getCommSubscriptionForApplicationId(applicationId);
+    }
+
+    @When("^List of application commercial subscriptions is got for application with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_application_commercial_subscriptions_is_got_for_application_id_with_limit_cursor_filter_sort_sortdesc(
+            String applicationId, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        applicationSteps.listOfApplicationCommSubscriptionsIsGotWith(applicationId, limit, cursor, filter, sort,
+                sortDesc);
+    }
+
+    @Then("There are (\\d+) applications commercial subscriptions returned")
+    public void There_are_applications_commercial_subscriptions_returned(int count) throws Throwable {
+        applicationSteps.numberOfEntitiesInResponse(CommercialSubscriptionDto.class, count);
+    }
 }
