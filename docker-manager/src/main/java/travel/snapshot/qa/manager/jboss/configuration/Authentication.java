@@ -21,9 +21,9 @@ public final class Authentication {
 
     public static class Builder {
 
-        private String username;
+        private String username = "admin";
 
-        private String password;
+        private String password = "admin";
 
         public Builder setUsername(String username) {
             this.username = username;

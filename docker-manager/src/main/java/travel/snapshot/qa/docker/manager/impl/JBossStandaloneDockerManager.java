@@ -22,7 +22,7 @@ public class JBossStandaloneDockerManager extends DockerServiceManager<JBossStan
     }
 
     @Override
-    public JBossDomainDockerManager stop(String containerId) {
+    public JBossStandaloneDockerManager stop(String containerId) {
         serviceManager.closeManagementClient(serviceManager.getManagementClient());
         return super.stop(containerId);
     }

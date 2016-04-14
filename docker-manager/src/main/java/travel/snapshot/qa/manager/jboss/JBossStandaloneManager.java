@@ -25,7 +25,7 @@ public class JBossStandaloneManager extends AbstractJBossManager<ManagementClien
         this(new JBossManagerConfiguration.Builder().build());
     }
 
-    public JBossStandaloneManager(JBossManagerConfiguration configuration) throws ContainerManagerException {
+    public JBossStandaloneManager(final JBossManagerConfiguration configuration) throws ContainerManagerException {
         super(configuration);
         this.managementClient = new ManagementClientFactory.Standalone(configuration).build();
         this.deployer = new JBossStandaloneDeployer(managementClient);

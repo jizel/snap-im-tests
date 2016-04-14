@@ -72,6 +72,9 @@ dependencies {
     compile "org.arquillian.cube:arquillian-cube-docker:${versions.cube}"
     compile "org.jboss.arquillian.core:arquillian-core-impl-base:${versions.arquillian}"
     compile "org.jboss.arquillian.config:arquillian-config-impl-base:${versions.arquillian}"
+    compile ("org.jboss.arquillian.container:arquillian-container-spi:${versions.arquillian}") {
+        exclude group: "org.jboss.arquillian.config", module: "arquillian-config-impl-base"
+    }
 
     // ShrinkWrap
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${versions.shrinkwrap}"
@@ -85,8 +88,24 @@ dependencies {
     }
 
     // Wildfly
-    compile "org.wildfly.arquillian:wildfly-arquillian-common:${versions.arquillian_wildfly}"
-    compile "org.wildfly.arquillian:wildfly-arquillian-common-domain:${versions.arquillian_wildfly}"
+    compile("org.wildfly.arquillian:wildfly-arquillian-common:${versions.arquillian_wildfly}") {
+        exclude group: "org.wildfly.arquillian", module: "wildfly-arquillian-testenricher-msc"
+        exclude group: "org.jboss.arquillian.container", module: "arquillian-container-test-impl-base"
+        exclude group: "org.jboss.arquillian.protocol", module: "arquillian-protocol-servlet"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-cdi"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-ejb"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-initialcontext"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-resource"
+    }
+    compile("org.wildfly.arquillian:wildfly-arquillian-common-domain:${versions.arquillian_wildfly}") {
+        exclude group: "org.wildfly.arquillian", module: "wildfly-arquillian-testenricher-msc"
+        exclude group: "org.jboss.arquillian.container", module: "arquillian-container-test-impl-base"
+        exclude group: "org.jboss.arquillian.protocol", module: "arquillian-protocol-servlet"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-cdi"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-ejb"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-initialcontext"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-resource"
+    }
 
     // Other
     compile "org.apache.httpcomponents:httpclient:${versions.httpclient}"

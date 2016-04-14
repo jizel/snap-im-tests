@@ -44,6 +44,26 @@
                     sleepPollingTime: 5 s
                     iterations: 15
                 portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+            wildfly:
+                image: docker.snapshot.travel:5000/snapshot/wildfly:10.0.0
+                exposedPorts: [8080/tcp,9990/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [8080/tcp,9990/tcp]
+                env: [JBOSS_MODE=standalone]
+            wildfly_domain:
+                image: docker.snapshot.travel:5000/snapshot/wildfly:10.0.0
+                exposedPorts: [8080/tcp,9990/tcp,9999/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [8080/tcp,9990/tcp,9999/tcp]
+                env: [JBOSS_MODE=domain]
             mariadb:
                 image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.13
                 exposedPorts: [3306/tcp]
