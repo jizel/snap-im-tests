@@ -56,8 +56,8 @@ public class MultipleServiceContainersTestCase {
 
     @Test
     public void multipleContainersTest() {
-        final MongoDBDockerManager manager1 = ORCHESTRATION.getMongoDockerManager(DEFAULT_MONGODB_CONTAINER_ID);
-        final MongoDBDockerManager manager2 = ORCHESTRATION.getMongoDockerManager(SECOND_MONGODB_CONTAINER_ID);
+        final MongoDBDockerManager manager1 = ORCHESTRATION.getDockerServiceManager(MongoDBDockerManager.class, DEFAULT_MONGODB_CONTAINER_ID);
+        final MongoDBDockerManager manager2 = ORCHESTRATION.getDockerServiceManager(MongoDBDockerManager.class, SECOND_MONGODB_CONTAINER_ID);
 
         Assert.assertNotNull(manager1);
         Assert.assertNotNull(manager2);
