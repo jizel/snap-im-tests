@@ -8,11 +8,11 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleViewDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.CustomerUser;
-import travel.snapshot.dp.qa.model.Role;
-import travel.snapshot.dp.qa.model.User;
-import travel.snapshot.dp.qa.model.UserRole;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
@@ -34,12 +34,12 @@ public class UserStepdefs {
     private PropertySteps propertySteps;
 
     @Given("^The following users exist$")
-    public void The_following_roles_exist(List<User> users) throws Throwable {
+    public void The_following_roles_exist(List<UserDto> users) throws Throwable {
         usersSteps.followingUsersExist(users);
     }
 
     @When("^User is created$")
-    public void User_is_created(List<User> users) throws Throwable {
+    public void User_is_created(List<UserDto> users) throws Throwable {
         usersSteps.followingUserIsCreated(users.get(0));
     }
 
@@ -69,17 +69,17 @@ public class UserStepdefs {
     }
 
     @When("^User with userName \"([^\"]*)\" is updated with data$")
-    public void User_with_user_name_updated_with_data(String userName, List<User> users) throws Throwable {
+    public void User_with_user_name_updated_with_data(String userName, List<UserDto> users) throws Throwable {
         usersSteps.updateUserWithUserName(userName, users.get(0));
     }
 
     @Then("^Updated user with userName \"([^\"]*)\" has data$")
-    public void Updated_user_with_user_name_has_data(String userName, List<User> users) throws Throwable {
+    public void Updated_user_with_user_name_has_data(String userName, List<UserDto> users) throws Throwable {
         usersSteps.userWithUserNameHasData(userName, users.get(0));
     }
 
     @When("^User with userName \"([^\"]*)\" is updated with data if updated before$")
-    public void User_with_user_name_is_updated_with_data_if_updated_before(String userName, List<User> users) throws Throwable {
+    public void User_with_user_name_is_updated_with_data_if_updated_before(String userName, List<UserDto> users) throws Throwable {
         usersSteps.updateUserWithUserNameIfUpdatedBefore(userName, users.get(0));
     }
 
@@ -114,12 +114,12 @@ public class UserStepdefs {
 
     @Then("^There are (\\d+) users returned$")
     public void There_are_returned_users_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(User.class, count);
+        usersSteps.numberOfEntitiesInResponse(UserDto.class, count);
     }
 
     @Then("^There are (\\d+) customerUsers returned$")
     public void There_are_returned_customerUsers_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(CustomerUser.class, count);
+        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipDto.class, count);
     }
 
     @Then("^There are users with following usernames returned in order: (.*)$")
@@ -130,7 +130,7 @@ public class UserStepdefs {
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_added_to_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleIsAddedToUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
@@ -155,28 +155,28 @@ public class UserStepdefs {
     @Given("^Relation between role with name \"([^\"]*)\" for application id \"([^\"]*)\" and user with username \"([^\"]*)\" exists with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Relation_between_role_with_name_for_application_i_and_user_with_username_exists_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
     @Then("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is not there for user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_not_there_for_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleDoesntExistForUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
     @When("^Nonexistent role is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Nonexistent_role_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        Role r = new Role();
+        RoleDto r = new RoleDto();
         r.setRoleId(BasicStepDefs.NONEXISTENT_ID);
         usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
@@ -195,7 +195,7 @@ public class UserStepdefs {
 
     @Then("^There are (\\d+) user roles returned$")
     public void There_are_returned_user_roles_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(UserRole.class, count);
+        usersSteps.numberOfEntitiesInResponse(RoleViewDto.class, count);
     }
 
     @Then("^There are user roles with following role names returned in order: (.*)$")

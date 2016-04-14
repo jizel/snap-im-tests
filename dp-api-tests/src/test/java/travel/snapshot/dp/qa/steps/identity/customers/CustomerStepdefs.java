@@ -14,11 +14,11 @@ import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.CustomerProperty;
-import travel.snapshot.dp.qa.model.PropertySetArray;
-import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
@@ -111,7 +111,7 @@ public class CustomerStepdefs {
     @Given("^Relation between user with username \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
     public void Relation_between_user_with_username_and_customer_with_code_exists_with_isPrimary(String username,
                                                                                                  String customerCode, String isPrimary) throws Throwable {
-        User user = usersSteps.getUserByUsername(username);
+        UserDto user = usersSteps.getUserByUsername(username);
         customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerCode, isPrimary);
     }
 
@@ -235,14 +235,14 @@ public class CustomerStepdefs {
     @When("^User with username \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
     public void User_with_username_is_added_to_customer_with_code_with_isPrimary(String username, String customerCode,
                                                                                  String isPrimary) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         customerSteps.userIsAddedToCustomerWithIsPrimary(u, customerCode, isPrimary);
     }
 
     @When("^User with username \"([^\"]*)\" is removed from customer with code \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_customer_with_code(String username, String customerCode)
             throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         customerSteps.userIsDeletedFromCustomer(u, customerCode);
     }
 
@@ -283,19 +283,19 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customerProperties returned$")
     public void There_are_returned_customerProperties_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(CustomerProperty.class, count);
+        customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, count);
     }
 
     @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerCode)
             throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         customerSteps.userDoesntExistForCustomer(u, customerCode);
     }
 
     @When("^Nonexistent user is removed from customer with code \"([^\"]*)\"$")
     public void Nonexistent_user_is_removed_from_customer_with_code(String customerId) throws Throwable {
-        User user = new User();
+        UserDto user = new UserDto();
         user.setUserId("nonexistent");
         customerSteps.userIsDeletedFromCustomer(user, customerId);
     }
@@ -335,7 +335,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customer property sets returned$")
     public void There_are_returned_customer_property_sets_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(PropertySetArray.class, count);
+        customerSteps.numberOfEntitiesInResponse(PropertySetDto.class, count);
 
     }
 

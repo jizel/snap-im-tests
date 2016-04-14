@@ -19,7 +19,6 @@ import travel.snapshot.dp.api.webperformance.model.ReferralStatsDto;
 import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
-import travel.snapshot.dp.qa.model.LegacyReferralStatsDto;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -129,7 +128,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
     @Step
     public void referralsAreSorted(String metric, boolean ascending) throws Exception {
 
-        ReferralStatsDto referralStatsDto = ObjectMappers.OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), LegacyReferralStatsDto.class);
+        ReferralStatsDto referralStatsDto = ObjectMappers.OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), ReferralStatsDto.class);
 
         List values = referralStatsDto.getValues().stream().map(recordDto -> {
             switch (metric) {

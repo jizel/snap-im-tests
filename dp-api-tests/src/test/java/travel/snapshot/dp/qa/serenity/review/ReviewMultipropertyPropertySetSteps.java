@@ -4,8 +4,8 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.PropertySet;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -25,7 +25,7 @@ public class ReviewMultipropertyPropertySetSteps extends AnalyticsBaseSteps {
         CustomerDto customer = customerSteps.getCustomerByCodeInternal(customerCode);
 
         PropertySetSteps propertySetSteps = new PropertySetSteps();
-        PropertySet propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, customer.getCustomerId());
+        PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, customer.getCustomerId());
 
         Response aggregatedPropertySet = getSecondLevelEntitiesForDates(propertySet.getPropertySetId(), metric, limit, cursor, since, until, granularity, null, null, null);
         setSessionResponse(aggregatedPropertySet);

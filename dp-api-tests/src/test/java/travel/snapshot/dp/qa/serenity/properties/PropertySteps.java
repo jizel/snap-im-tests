@@ -17,10 +17,10 @@ import java.util.Map;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserViewDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.PropertyUser;
-import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -330,8 +330,8 @@ public class PropertySteps extends BasicSteps {
         propertyCodes.forEach(c -> {
             PropertyDto property = getPropertyByCodeInternal(c);
             Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
-            PropertyUser[] propertyUsers = customerUsersResponse.as(PropertyUser[].class);
-            for (PropertyUser pu : propertyUsers) {
+            UserViewDto[] propertyUsers = customerUsersResponse.as(UserViewDto[].class);
+            for (UserViewDto pu : propertyUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
@@ -340,10 +340,10 @@ public class PropertySteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenUserAndProperty(User user, String propertyCode) {
+    public void relationExistsBetweenUserAndProperty(UserDto user, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
 
-        PropertyUser existingPropertyUser = getUserForProperty(p.getPropertyId(), user.getUserName());
+        UserViewDto existingPropertyUser = getUserForProperty(p.getPropertyId(), user.getUserName());
         if (existingPropertyUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
@@ -366,9 +366,9 @@ public class PropertySteps extends BasicSteps {
                 .when().post("/{propertyId}/users", propertyId);
     }
 
-    private PropertyUser getUserForProperty(String propertyId, String code) {
+    private UserViewDto getUserForProperty(String propertyId, String code) {
         Response customerUserResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + code, null, null);
-        return Arrays.asList(customerUserResponse.as(PropertyUser[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(customerUserResponse.as(UserViewDto[].class)).stream().findFirst().orElse(null);
     }
 
     private CustomerDto getCustomerForProperty(String propertyId, String customerCode) {
@@ -382,29 +382,29 @@ public class PropertySteps extends BasicSteps {
         assertNull("Customer should not be link with property", cust);
     }
 
-    public void userIsAddedToProperty(User u, String propertyCode) {
+    public void userIsAddedToProperty(UserDto u, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
         Response response = addUserToProperty(u.getUserId(), p.getPropertyId());
         setSessionResponse(response);
     }
 
-    public void userIsDeletedFromProperty(User u, String propertyCode) {
+    public void userIsDeletedFromProperty(UserDto u, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
         Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
         setSessionResponse(deleteResponse);
     }
 
-    public void userDoesntExistForProperty(User u, String propertyCode) {
+    public void userDoesntExistForProperty(UserDto u, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        PropertyUser userForProperty = getUserForProperty(p.getPropertyId(), u.getUserName());
+        UserViewDto userForProperty = getUserForProperty(p.getPropertyId(), u.getUserName());
         assertNull("User should not be present in property", userForProperty);
     }
 
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
-        PropertyUser[] propertiesUsers = response.as(PropertyUser[].class);
+        UserViewDto[] propertiesUsers = response.as(UserViewDto[].class);
         int i = 0;
-        for (PropertyUser pu : propertiesUsers) {
+        for (UserViewDto pu : propertiesUsers) {
             assertEquals("Propertyuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
             i++;
         }

@@ -17,9 +17,10 @@ import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+
+import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
+import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Configuration;
-import travel.snapshot.dp.qa.model.ConfigurationType;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
@@ -45,8 +46,8 @@ public class ConfigurationSteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI)).basePath(CONFIGURATION_BASE_PATH);
     }
 
-    private ConfigurationType getConfigurationTypeFromString(String jsonData) {
-        return from(jsonData).getObject("", ConfigurationType.class);
+    private ConfigurationTypeDto getConfigurationTypeFromString(String jsonData) {
+        return from(jsonData).getObject("", ConfigurationTypeDto.class);
     }
 
     private boolean isConfigurationExist(String key, String identifier) {
@@ -145,7 +146,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void followingConfigurationTypesExist(List<ConfigurationType> configurationTypes, Integer count) {
+    public void followingConfigurationTypesExist(List<ConfigurationTypeDto> configurationTypes, Integer count) {
         configurationTypes.forEach(t -> {
 
             if (isConfigurationTypeExist(t.getIdentifier())) {
@@ -169,7 +170,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void dataIsUsedForCreation(String jsonData, boolean deleteBeforeCreate) {
-        ConfigurationType ct = getConfigurationTypeFromString(jsonData);
+        ConfigurationTypeDto ct = getConfigurationTypeFromString(jsonData);
 
         if (deleteBeforeCreate && isConfigurationTypeExist(ct.getIdentifier())) {
             deleteEntity(ct.getIdentifier());
@@ -181,7 +182,7 @@ public class ConfigurationSteps extends BasicSteps {
 
 
     @Step
-    public void followingConfigurationTypeIsCreated(ConfigurationType configurationType) {
+    public void followingConfigurationTypeIsCreated(ConfigurationTypeDto configurationType) {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
@@ -217,8 +218,8 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void followingConfigurationIsCreated(Configuration c, String identifier) {
-        Response response = createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
+    public void followingConfigurationIsCreated(ConfigurationRecordDto c, String identifier) {
+        Response response = createValueForKey(identifier, c.getKey(), c.getValue().toString(), c.getType().toString());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
@@ -292,12 +293,12 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void followingConfigurationsExist(List<Configuration> configurations, String identifier) {
+    public void followingConfigurationsExist(List<ConfigurationRecordDto> configurations, String identifier) {
         configurations.forEach(c -> {
             if (isConfigurationExist(c.getKey(), identifier)) {
                 deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, c.getKey());
             }
-            Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue(), c.getType());
+            Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue().toString(), c.getType().toString());
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Configuration cannot be created");
             }
@@ -342,7 +343,7 @@ public class ConfigurationSteps extends BasicSteps {
     public void configurationTypeHasDescription(String identifier, String description) {
         String filter = String.format("identifier==%s", identifier);
         Response response = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null);
-        ConfigurationType ct = Arrays.asList(response.as(ConfigurationType[].class)).get(0);
+        ConfigurationTypeDto ct = Arrays.asList(response.as(ConfigurationTypeDto[].class)).get(0);
 
         assertEquals(description, ct.getDescription());
     }
@@ -363,10 +364,10 @@ public class ConfigurationSteps extends BasicSteps {
 
     public void keysAreInResponseInOrder(List<String> keys) {
         Response response = getSessionResponse();
-        Configuration[] configs = response.as(Configuration[].class);
+        ConfigurationRecordDto[] configs = response.as(ConfigurationRecordDto[].class);
 
         int i = 0;
-        for (Configuration u : configs) {
+        for (ConfigurationRecordDto u : configs) {
             assertEquals("Config on index=" + i + " is not expected", keys.get(i), u.getKey());
             i++;
         }
@@ -374,10 +375,10 @@ public class ConfigurationSteps extends BasicSteps {
 
     public void typesAreInResponseInOrder(List<String> configs) {
         Response response = getSessionResponse();
-        ConfigurationType[] responseConfigs = response.as(ConfigurationType[].class);
+        ConfigurationTypeDto[] responseConfigs = response.as(ConfigurationTypeDto[].class);
 
         int i = 0;
-        for (ConfigurationType c : responseConfigs) {
+        for (ConfigurationTypeDto c : responseConfigs) {
             assertEquals("Config on index=" + i + " is not expected", configs.get(i), c.getIdentifier());
             i++;
         }

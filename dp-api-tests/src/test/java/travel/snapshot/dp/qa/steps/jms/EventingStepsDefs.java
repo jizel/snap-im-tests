@@ -6,9 +6,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.qa.model.PropertySet;
-import travel.snapshot.dp.qa.model.Role;
-import travel.snapshot.dp.qa.model.User;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -130,20 +130,20 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for user with username \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_user_with_username(String username) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         steps.notificationContainsId(u.getUserId());
     }
 
     @Then("^Notification in session id stands for role with name \"([^\"]*)\" for application id  \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName, String applicationId) throws Throwable {
-        Role r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         steps.notificationContainsId(r.getRoleId());
     }
 
     @Then("^Notification in session id stands for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        PropertySet ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+        PropertySetDto ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         steps.notificationContainsId(ps.getPropertySetId());
     }
 
@@ -160,21 +160,21 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for role in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_in_session_on_key(String sessionKey) throws Throwable {
-        Role r = steps.getSessionVariable(sessionKey);
+        RoleDto r = steps.getSessionVariable(sessionKey);
         steps.notificationContainsId(r.getRoleId());
     }
 
 
     @Then("^Notification in session parent id stands for user with username \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_user_with_username(String username) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         steps.notificationContainsParentId(u.getUserId());
     }
 
     @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        PropertySet ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+        PropertySetDto ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
         steps.notificationContainsParentId(ps.getPropertySetId());
 
     }
@@ -193,7 +193,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for property set in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_property_set_in_session_on_key(String sessionKey) throws Throwable {
-        PropertySet ps = steps.getSessionVariable(sessionKey);
+        PropertySetDto ps = steps.getSessionVariable(sessionKey);
         steps.notificationContainsId(ps.getPropertySetId());
     }
 
@@ -215,7 +215,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for user in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_user_in_session_on_key(String sessionKey) throws Throwable {
-        User u = steps.getSessionVariable(sessionKey);
+        UserDto u = steps.getSessionVariable(sessionKey);
         steps.notificationContainsId(u.getUserId());
     }
 }

@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleViewDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Role;
-import travel.snapshot.dp.qa.model.User;
-import travel.snapshot.dp.qa.model.UserRole;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -41,9 +41,9 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void followingUsersExist(List<User> users) {
+    public void followingUsersExist(List<UserDto> users) {
         users.forEach(u -> {
-            User existingUser = getUserByUsername(u.getUserName());
+            UserDto existingUser = getUserByUsername(u.getUserName());
             if (existingUser != null) {
                 deleteEntity(existingUser.getUserId());
             }
@@ -55,8 +55,8 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void followingUserIsCreated(User user) {
-        User existingUser = null;
+    public void followingUserIsCreated(UserDto user) {
+        UserDto existingUser = null;
         if (user != null && !user.getUserName().isEmpty()) {
             existingUser = getUserByUsername(user.getUserName());
         }
@@ -79,7 +79,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void compareUserOnHeaderWithStored(String headerName) {
-        User originalUser = getSessionVariable(SESSION_CREATED_USER);
+        UserDto originalUser = getSessionVariable(SESSION_CREATED_USER);
         Response response = getSessionResponse();
         String customerLocation = response.header(headerName).replaceFirst(USERS_PATH, "");
         given().spec(spec).get(customerLocation).then()
@@ -101,7 +101,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void deleteUserWithUserName(String userName) {
-        User u = getUserByUsername(userName);
+        UserDto u = getUserByUsername(userName);
         if (u == null) {
             return;
         }
@@ -121,20 +121,20 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void updateUserWithUserName(String userName, User updatedUser) throws Throwable {
-        User original = getUserByUsername(userName);
+    public void updateUserWithUserName(String userName, UserDto updatedUser) throws Throwable {
+        UserDto original = getUserByUsername(userName);
         Response originalResponse = getEntity(original.getUserId());
 
-        Map<String, Object> userData = retrieveData(User.class, updatedUser);
+        Map<String, Object> userData = retrieveData(UserDto.class, updatedUser);
 
         Response response = updateEntity(original.getUserId(), userData, originalResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
     @Step
-    public void userWithUserNameHasData(String userName, User user) throws Throwable {
-        Map<String, Object> originalData = retrieveData(User.class, getUserByUsername(userName));
-        Map<String, Object> expectedData = retrieveData(User.class, user);
+    public void userWithUserNameHasData(String userName, UserDto user) throws Throwable {
+        Map<String, Object> originalData = retrieveData(UserDto.class, getUserByUsername(userName));
+        Map<String, Object> expectedData = retrieveData(UserDto.class, user);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -147,37 +147,37 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void updateUserWithUserNameIfUpdatedBefore(String userName, User updatedUser) throws Throwable {
-        User original = getUserByUsername(userName);
+    public void updateUserWithUserNameIfUpdatedBefore(String userName, UserDto updatedUser) throws Throwable {
+        UserDto original = getUserByUsername(userName);
 
-        Map<String, Object> userData = retrieveData(User.class, updatedUser);
+        Map<String, Object> userData = retrieveData(UserDto.class, updatedUser);
 
         Response response = updateEntity(original.getUserId(), userData, "fake-etag");
         setSessionResponse(response);
     }
 
-    public User getUserByUsername(String username) {
-        User[] users = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null).as(User[].class);
+    public UserDto getUserByUsername(String username) {
+        UserDto[] users = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null).as(UserDto[].class);
         return Arrays.asList(users).stream().findFirst().orElse(null);
     }
 
 
     @Step
     public void userWithUsernameIsGot(String username) {
-        User user = getUserByUsername(username);
+        UserDto user = getUserByUsername(username);
         Response response = getEntity(user.getUserId(), null);
         setSessionResponse(response);
     }
 
     public void userWithUsernameIsGotWithEtag(String username) {
-        User user = getUserByUsername(username);
+        UserDto user = getUserByUsername(username);
         Response tempResponse = getEntity(user.getUserId(), null);
         Response response = getEntity(user.getUserId(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
     public void userWithUsernameIsGotWithEtagAfterUpdate(String username) {
-        User user = getUserByUsername(username);
+        UserDto user = getUserByUsername(username);
         Response tempResponse = getEntity(user.getUserId(), null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
@@ -205,27 +205,27 @@ public class UsersSteps extends BasicSteps {
 
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
-        User[] users = response.as(User[].class);
+        UserDto[] users = response.as(UserDto[].class);
         int i = 0;
-        for (User u : users) {
+        for (UserDto u : users) {
             assertEquals("User on index=" + i + " is not expected", usernames.get(i), u.getUserName());
             i++;
         }
 
     }
 
-    public void roleIsAddedToUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
-        User u = getUserByUsername(username);
+    public void roleIsAddedToUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
+        UserDto u = getUserByUsername(username);
 
         Response response = addRoleToUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         setSessionResponse(response);
     }
 
 
-    public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
-        User u = getUserByUsername(username);
+    public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
+        UserDto u = getUserByUsername(username);
 
-        UserRole existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        RoleViewDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         if (existingUserRole != null) {
 
             Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
@@ -257,28 +257,28 @@ public class UsersSteps extends BasicSteps {
                 .when().post("/{userId}/roles", userId);
     }
 
-    private UserRole getRoleForUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
+    private RoleViewDto getRoleForUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
         Response userRolesResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
-        return Arrays.asList(userRolesResponse.as(UserRole[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(userRolesResponse.as(RoleViewDto[].class)).stream().findFirst().orElse(null);
     }
 
-    public void roleIsDeletedFromUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
-        User u = getUserByUsername(username);
+    public void roleIsDeletedFromUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
+        UserDto u = getUserByUsername(username);
         Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         setSessionResponse(deleteResponse);
     }
 
-    public void roleDoesntExistForUserWithRelationshipTypeEntity(Role r, String username, String relationshipType, String entityId) {
-        User u = getUserByUsername(username);
-        UserRole existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+    public void roleDoesntExistForUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
+        UserDto u = getUserByUsername(username);
+        RoleViewDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         assertNull("Role should not be present for User", existingUserRole);
     }
 
     public void listOfRolesIsGotForRelationshipTypeEntityWIth(String username, String relationshipType, String entityId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        User u = getUserByUsername(username);
+        UserDto u = getUserByUsername(username);
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
@@ -288,16 +288,16 @@ public class UsersSteps extends BasicSteps {
 
     public void rolenamesAreInResponseInOrder(List<String> rolenames) {
         Response response = getSessionResponse();
-        UserRole[] userRoles = response.as(UserRole[].class);
+        RoleViewDto[] userRoles = response.as(RoleViewDto[].class);
         int i = 0;
-        for (UserRole ur : userRoles) {
+        for (RoleViewDto ur : userRoles) {
             assertEquals("UserRole on index=" + i + " is not expected", rolenames.get(i), ur.getRoleName());
             i++;
         }
     }
     
     public void setUserPasswordByUsername(String username, String password) {
-        User u = getUserByUsername(username);
+        UserDto u = getUserByUsername(username);
         setUserPassword(u.getUserId(), password);
     }
     
@@ -307,7 +307,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void activateUserWithName(String username) {
-        User user = getUserByUsername(username);
+        UserDto user = getUserByUsername(username);
         String id = user.getUserId();
         Response response = activateUser(id);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
@@ -315,7 +315,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void inactivateUserWithName(String username) {
-        User user = getUserByUsername(username);
+        UserDto user = getUserByUsername(username);
         String id = user.getUserId();
         Response response = inactivateUser(id);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
@@ -343,7 +343,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void isActiveSetTo(boolean activeFlag, String name) {
-        User user = getUserByUsername(name);
+        UserDto user = getUserByUsername(name);
 
         if (activeFlag) {
             assertNotNull("user should be returned", user);
