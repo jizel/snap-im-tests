@@ -13,6 +13,7 @@ import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;
 import travel.snapshot.qa.manager.jboss.JBossDomainManager;
 import travel.snapshot.qa.manager.jboss.JBossStandaloneManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
+import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
@@ -51,7 +52,7 @@ public class DockerServiceFactory {
         return new JBossStandaloneService();
     }
 
-    public static JBossDomainService jbossDomainService() {
+    public static JBossDomainService jbossDomain() {
         return new JBossDomainService();
     }
 
@@ -122,27 +123,27 @@ public class DockerServiceFactory {
      * Represents Docker service with running MariaDB container. When not explicitly specified, the name of the
      * container to start will be "mariadb".
      */
-    public static final class MariaDBService implements Service<MongoDBManager, MariaDBManagerConfiguration> {
+    public static final class MariaDBService implements Service<MariaDBManager, MariaDBManagerConfiguration> {
 
         public static final String DEFAULT_MARIADB_CONTAINER_ID = "mariadb";
 
         @Override
-        public DockerServiceManager<MongoDBManager> init(MariaDBManagerConfiguration configuration, String containerId) {
+        public DockerServiceManager<MariaDBManager> init(MariaDBManagerConfiguration configuration, String containerId) {
             return new MariaDBDockerManager(new MariaDBManagerImpl(configuration)).setContainerId(containerId);
         }
 
         @Override
-        public DockerServiceManager<MongoDBManager> init(String containerId) {
+        public DockerServiceManager<MariaDBManager> init(String containerId) {
             return new MariaDBDockerManager(new MariaDBManagerImpl(new MariaDBManagerConfiguration.Builder().build())).setContainerId(containerId);
         }
 
         @Override
-        public DockerServiceManager<MongoDBManager> init(MariaDBManagerConfiguration configuration) {
+        public DockerServiceManager<MariaDBManager> init(MariaDBManagerConfiguration configuration) {
             return init(configuration, DEFAULT_MARIADB_CONTAINER_ID);
         }
 
         @Override
-        public DockerServiceManager<MongoDBManager> init() {
+        public DockerServiceManager<MariaDBManager> init() {
             return init(new MariaDBManagerConfiguration.Builder().build());
         }
     }

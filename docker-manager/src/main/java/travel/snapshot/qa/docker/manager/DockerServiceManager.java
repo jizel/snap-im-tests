@@ -34,6 +34,8 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
 
     protected Task<?, Boolean> checkingTask;
 
+    protected LifecycleHookExecutor<T> lifecycleHookExecutor = new LifecycleHookExecutor<>();
+
     public DockerServiceManager(final T serviceManager) {
         Validate.notNull(serviceManager, "Service manager can not be a null object!");
         this.serviceManager = serviceManager;
@@ -104,11 +106,15 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
             throw new IllegalStateException(String.format("Unable to start already started container '%s'", containerId));
         }
 
+        lifecycleHookExecutor.executeBeforeStartHooks(serviceManager);
+
         dockerContainer = dockerManager.start(containerId);
 
         new ConnectionCheck.Builder(checkingTask).timeout(timeout).reexecutionInterval(reexecutionInterval).build().execute();
 
         started = true;
+
+        lifecycleHookExecutor.executeAfterStartHooks(serviceManager);
 
         return dockerContainer;
     }
@@ -157,9 +163,13 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
             throw new IllegalStateException(String.format("Unable to stop non running container '%s'", containerId));
         }
 
+        lifecycleHookExecutor.executeBeforeStopHooks(serviceManager);
+
         dockerManager.stop(containerId);
 
         started = false;
+
+        lifecycleHookExecutor.executeAfterStopHooks(serviceManager);
 
         return (T) this;
     }
@@ -183,6 +193,13 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      */
     public T getServiceManager() {
         return serviceManager;
+    }
+
+    /**
+     * @return lifecycle hook executor for adding hooks before / after containers start / stop
+     */
+    public LifecycleHookExecutor<T> getLifecycleHookExecutor() {
+        return lifecycleHookExecutor;
     }
 
     /**
