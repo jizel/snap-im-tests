@@ -110,7 +110,7 @@ class MariaDBInitializer {
      */
     MariaDBInitializer execute() {
 
-        final MariaDBDockerManager dockerManager = orchestration.get().getMariaDBDockerManager(containerId)
+        final MariaDBDockerManager dockerManager = orchestration.get().getDockerServiceManager(MariaDBDockerManager, containerId)
         final MariaDBManager manager = dockerManager.getServiceManager()
 
         if (!dockerManager || !manager) {

@@ -101,7 +101,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
         boolean shouldStop = false
 
-        if (ProjectHelper.isProfileSelected('platformStop')) {
+        if (ProjectHelper.isStoppingPlatform()) {
             shouldStop = true
             logger.info("platformStop profile has been selected. Going to shutdown the platform.")
         } else if (ProjectHelper.isTestSelected('platformStop')) {
@@ -150,7 +150,7 @@ class PlatformLifecycle extends BaseContainerizableObject<PlatformLifecycle> imp
 
             orchestration.initDockerManagers()
 
-            ProjectHelper.spacelift.configuration['serviceInstallations'].value.each { installation ->
+            Properties.Docker.Installation.resolveContainerInstallations().each { installation ->
                 try {
                     orchestration.get().dockerManager.stop(installation)
                 } catch (Exception ex) {

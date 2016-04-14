@@ -30,6 +30,7 @@ class TomcatConfigurationDeployer {
     def deploy() {
 
         if (Properties.Docker.mode != DockerMode.MACHINE.name()) {
+            logger.info("Docker mode is not set to MACHINE, skipping")
             return
         }
 
