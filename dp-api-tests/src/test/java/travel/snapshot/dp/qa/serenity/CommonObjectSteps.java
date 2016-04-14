@@ -5,8 +5,6 @@ import com.google.common.collect.Lists;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jayway.restassured.response.Response;
@@ -30,7 +28,6 @@ import java.util.stream.Collectors;
 import travel.snapshot.dp.qa.helpers.FieldType;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.helpers.ObjectField;
-import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.ResponseEntry;
 

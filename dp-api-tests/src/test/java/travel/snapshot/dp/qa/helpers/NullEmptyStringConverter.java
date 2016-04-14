@@ -12,8 +12,7 @@ public class NullEmptyStringConverter extends Transformer<String> {
     public String transform(String value) {
         if (NULL_KEYWORD.equals(value)) {
             return null;
-        }
-        else if (INCOMPLETE.equals(value)) {
+        } else if (INCOMPLETE.equals(value)) {
             return INCOMPLETE;
         } else {
             return value;

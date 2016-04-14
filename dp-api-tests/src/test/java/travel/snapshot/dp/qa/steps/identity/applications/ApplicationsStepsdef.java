@@ -63,7 +63,7 @@ public class ApplicationsStepsdef {
 
     @When("^Application with id \"([^\"]*)\" is updated with data if updated before$")
     public void Application_with_id_is_updated_with_data_if_updated_before(String applicationId,
-            List<ApplicationDto> applicationData) throws Throwable {
+                                                                           List<ApplicationDto> applicationData) throws Throwable {
         applicationSteps.updateApplicationWithIdIfUpdatedBefore(applicationId, applicationData.get(0));
     }
 
@@ -136,13 +136,13 @@ public class ApplicationsStepsdef {
 
     @When("^Application versions are created for application with id \"([^\"]*)\"$")
     public void Application_versions_are_created_for_application_with_id(String applicationId,
-            List<VersionDto> applicationVersions) {
+                                                                         List<VersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsAreCreated(applicationId, applicationVersions.get(0));
     }
 
     @Given("^The following application versions for application with id \"([^\"]*)\" exists$")
     public void The_following_application_versions_exists(String applicationId,
-            List<VersionDto> applicationVersions) {
+                                                          List<VersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsExists(applicationId, applicationVersions);
     }
 
@@ -163,13 +163,13 @@ public class ApplicationsStepsdef {
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data(String appVersionId,
-            String applicationId, List<VersionDto> applicationVersion) throws Throwable {
+                                                                                         String applicationId, List<VersionDto> applicationVersion) throws Throwable {
         applicationSteps.updateApplicationVersionWithId(appVersionId, applicationId, applicationVersion.get(0));
     }
 
     @Then("^Updated application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" has data$")
     public void Updated_application_version_with_id_for_application_with_id_has_data(String appVersionId,
-            String applicationId, List<VersionDto> applicationVersion) throws Throwable {
+                                                                                     String applicationId, List<VersionDto> applicationVersion) throws Throwable {
         applicationSteps.applicationVersionWithIdHasData(appVersionId, applicationId, applicationVersion.get(0));
     }
 
@@ -187,13 +187,13 @@ public class ApplicationsStepsdef {
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag$")
     public void Application_version_with_id_for_application_with_id_is_got_with_etag(String appVersionId,
-            String applicationId) {
+                                                                                     String applicationId) {
         applicationSteps.applicationVersionWithIdIsGotWithEtag(appVersionId, applicationId);
     }
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag, updated and got with previous etag$")
     public void Application_version_with_id_for_application_with_id_is_got_with_not_current_etag(String appVersionId,
-            String applicationId) {
+                                                                                                 String applicationId) {
         applicationSteps.applicationVersionWithIdIsGotWithEtagAfterUpdate(appVersionId, applicationId);
     }
 

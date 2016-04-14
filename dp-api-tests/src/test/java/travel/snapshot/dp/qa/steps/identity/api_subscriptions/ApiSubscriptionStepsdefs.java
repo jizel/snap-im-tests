@@ -4,11 +4,9 @@ import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -136,6 +134,8 @@ public class ApiSubscriptionStepsdefs {
         if (updatedField.equalsIgnoreCase("applicationVersionId")) {
             api.setApplicationVersionId(value);
         }
-        apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionUpdateDto>(){{add(api);}});
+        apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionUpdateDto>() {{
+            add(api);
+        }});
     }
 }

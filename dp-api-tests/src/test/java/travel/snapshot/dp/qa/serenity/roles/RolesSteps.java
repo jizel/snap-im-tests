@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 

@@ -1,12 +1,10 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
+
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.core.IsNull;
-import travel.snapshot.dp.qa.helpers.ObjectMappers;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
 import java.time.DayOfWeek;
@@ -17,6 +15,10 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
+import travel.snapshot.dp.qa.helpers.StringUtil;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
@@ -205,10 +207,9 @@ public class AnalyticsBaseSteps extends BasicSteps {
     }
 
     /**
-     * @param assertStatement lambda with assert statement checking the object from session response
+     * @param assertStatement lambda with assert statement checking the object from session
+     *                        response
      * @param type            class with type of object receiving from response
-     * @param <T>
-     * @throws Exception
      */
     @Step
     public <T> void checkAnalyticsReturnedForType(Consumer<T> assertStatement, Class<T> type) throws Exception {
@@ -220,8 +221,6 @@ public class AnalyticsBaseSteps extends BasicSteps {
      * @param filePath        path to file with expected data
      * @param assertStatement lambda with assert statement checking reponse against the file data
      * @param type            type of object loaded from file
-     * @param <T>
-     * @throws Exception
      */
     @Step
     public <T> void checkFileAgainstResponse(String filePath, BiConsumer<T, T> assertStatement, Class<T> type) throws Exception {

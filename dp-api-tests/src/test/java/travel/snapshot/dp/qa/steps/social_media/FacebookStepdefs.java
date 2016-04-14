@@ -1,15 +1,19 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
+import net.thucydides.core.annotations.Steps;
+
+import org.slf4j.LoggerFactory;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import net.thucydides.core.annotations.Steps;
-import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.FacebookSteps;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 

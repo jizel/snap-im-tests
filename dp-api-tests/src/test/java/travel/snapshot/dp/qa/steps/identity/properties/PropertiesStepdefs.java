@@ -241,11 +241,11 @@ public class PropertiesStepdefs {
 
     @When("^List of property sets is got for property with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_property_sets_is_got_for_property_with_id_and_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyId,
-            @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) {
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String sortDesc) {
         propertySteps.listOfPropertiesPropertySetsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
     }
 

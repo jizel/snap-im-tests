@@ -1,15 +1,18 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;

@@ -1,10 +1,10 @@
 package travel.snapshot.dp.qa.steps;
 
-import cucumber.api.Transform;
-import cucumber.api.java.en.Then;
 import net.thucydides.core.annotations.Steps;
+
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+
+import cucumber.api.java.en.Then;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
 /**

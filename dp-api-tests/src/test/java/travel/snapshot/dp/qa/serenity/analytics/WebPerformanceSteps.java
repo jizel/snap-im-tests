@@ -1,17 +1,20 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import travel.snapshot.dp.api.analytics.model.RecordDto;
 import travel.snapshot.dp.api.analytics.model.SingleStatsDto;
 import travel.snapshot.dp.api.webperformance.model.PeriodAverageStatsDto;
@@ -20,10 +23,10 @@ import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
