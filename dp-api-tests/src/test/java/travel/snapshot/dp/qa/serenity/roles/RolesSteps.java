@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -40,9 +40,9 @@ public class RolesSteps extends BasicSteps {
     }
 
     @Step
-    public void followingRolesExist(List<Role> roles) {
+    public void followingRolesExist(List<RoleDto> roles) {
         roles.forEach(r -> {
-            Role existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
+            RoleDto existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
             if (existingRole != null) {
                 deleteRole(existingRole.getRoleId());
             }
@@ -55,8 +55,8 @@ public class RolesSteps extends BasicSteps {
     }
 
     @Step
-    public void followingRoleIsCreated(Role role) {
-        Role existingRole = getRoleByNameForApplicationInternal(role.getRoleName(), role.getApplicationId());
+    public void followingRoleIsCreated(RoleDto role) {
+        RoleDto existingRole = getRoleByNameForApplicationInternal(role.getRoleName(), role.getApplicationId());
         setSessionVariable(SESSION_CREATED_ROLE, role);
         if (existingRole != null) {
             deleteRole(existingRole.getRoleId());
@@ -65,7 +65,7 @@ public class RolesSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
-    private Response createRole(Role r) {
+    private Response createRole(RoleDto r) {
         return given().spec(spec)
                 .body(r)
                 .when().post();
@@ -94,9 +94,9 @@ public class RolesSteps extends BasicSteps {
         return requestSpecification.when().get("/{id}", id);
     }
 
-    public Role getRoleByNameForApplicationInternal(String name, String applicationId) {
+    public RoleDto getRoleByNameForApplicationInternal(String name, String applicationId) {
         String filter = String.format("role_name=='%s' and application_id=='%s'", name, applicationId);
-        Role[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(Role[].class);
+        RoleDto[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(RoleDto[].class);
         return Arrays.asList(roles).stream().findFirst().orElse(null);
     }
 
@@ -110,7 +110,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void getRoleWithNameForApplicationId(String name, String applicationId) {
         //TODO implement actual customer search
-        Role roleByName = getRoleByNameForApplicationInternal(name, applicationId);
+        RoleDto roleByName = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response resp = getRole(roleByName.getRoleId(), null);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
@@ -124,7 +124,7 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void deleteRoleWithNameForApplication(String name, String applicationId) {
-        Role r = getRoleByNameForApplicationInternal(name, applicationId);
+        RoleDto r = getRoleByNameForApplicationInternal(name, applicationId);
         if (r == null) {
             return;
         }
@@ -149,13 +149,13 @@ public class RolesSteps extends BasicSteps {
     }
 
     @Step
-    public void updateRoleWithNameForApplicationId(String name, String applicationId, Role updatedRole) {
-        Role original = getRoleByNameForApplicationInternal(name, applicationId);
+    public void updateRoleWithNameForApplicationId(String name, String applicationId, RoleDto updatedRole) {
+        RoleDto original = getRoleByNameForApplicationInternal(name, applicationId);
         Response tempResponse = getRole(original.getRoleId(), null);
 
         Map<String, Object> role = new HashMap<>();
-        if (StringUtils.isNotBlank(updatedRole.getRoleDescription())) {
-            role.put("role_description", updatedRole.getRoleDescription());
+        if (StringUtils.isNotBlank(updatedRole.getDescription())) {
+            role.put("role_description", updatedRole.getDescription());
         }
 
         if (StringUtils.isNotBlank(updatedRole.getRoleName())) {
@@ -176,7 +176,7 @@ public class RolesSteps extends BasicSteps {
     @Step
     public void getRoleWithNameForApplicationIdUsingEtag(String name, String applicationId) {
         //TODO implement actual customer search
-        Role roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
+        RoleDto roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response tempResponse = getRole(roleFromList.getRoleId(), null);
 
@@ -186,7 +186,7 @@ public class RolesSteps extends BasicSteps {
 
     @Step
     public void getRoleWithNameForApplicationIdUsingEtagAfterUpdate(String name, String applicationId) {
-        Role roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
+        RoleDto roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response tempResponse = getRole(roleFromList.getRoleId(), null);
 
@@ -203,8 +203,8 @@ public class RolesSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);//store to session
     }
 
-    public void updateRoleWithNameForApplicationIdIfUpdatedBefore(String name, String applicationId, Role updatedRole) {
-        Role original = getRoleByNameForApplicationInternal(name, applicationId);
+    public void updateRoleWithNameForApplicationIdIfUpdatedBefore(String name, String applicationId, RoleDto updatedRole) {
+        RoleDto original = getRoleByNameForApplicationInternal(name, applicationId);
         Response tempResponse = getRole(original.getRoleId(), null);
 
 
@@ -218,19 +218,19 @@ public class RolesSteps extends BasicSteps {
         }
 
         Map<String, Object> role = new HashMap<>();
-        if (updatedRole.getRoleDescription() != null && !"".equals(updatedRole.getRoleDescription())) {
-            role.put("role_description", updatedRole.getRoleDescription());
+        if (updatedRole.getDescription() != null && !"".equals(updatedRole.getDescription())) {
+            role.put("role_description", updatedRole.getDescription());
         }
 
         Response response = updateRole(original.getRoleId(), role, tempResponse.getHeader(HEADER_ETAG));
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 
-    public void roleWithNameForApplicationIdHasData(String name, String applicationId, Role data) {
-        Role roleByName = getRoleByNameForApplicationInternal(name, applicationId);
+    public void roleWithNameForApplicationIdHasData(String name, String applicationId, RoleDto data) {
+        RoleDto roleByName = getRoleByNameForApplicationInternal(name, applicationId);
 
-        if (StringUtils.isNotBlank(data.getRoleDescription())) {
-            assertEquals(data.getRoleDescription(), roleByName.getRoleDescription());
+        if (StringUtils.isNotBlank(data.getDescription())) {
+            assertEquals(data.getDescription(), roleByName.getDescription());
         }
         if (StringUtils.isNotBlank(data.getRoleName())) {
             assertEquals(data.getRoleName(), roleByName.getRoleName());
@@ -238,9 +238,9 @@ public class RolesSteps extends BasicSteps {
     }
 
     @Step
-    public void deleteRoles(List<Role> roles) {
+    public void deleteRoles(List<RoleDto> roles) {
         roles.forEach(r -> {
-            Role existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
+            RoleDto existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
             if (existingRole != null) {
                 deleteRole(existingRole.getRoleId());
             }
@@ -249,21 +249,21 @@ public class RolesSteps extends BasicSteps {
 
     public void roleNamesAreInResponseInOrder(List<String> names) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        Role[] roles = response.as(Role[].class);
+        RoleDto[] roles = response.as(RoleDto[].class);
         int i = 0;
-        for (Role r : roles) {
+        for (RoleDto r : roles) {
             assertEquals("Role on index=" + i + " is not expected", names.get(i), r.getRoleName());
             i++;
         }
     }
 
     public void compareRoleOnHeaderWithStored(String headerName) {
-        Role originalRole = Serenity.sessionVariableCalled(SESSION_CREATED_ROLE);
+        RoleDto originalRole = Serenity.sessionVariableCalled(SESSION_CREATED_ROLE);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String roleLocation = response.header(headerName).replaceFirst(ROLES_PATH, "");
         given().spec(spec).get(roleLocation).then()
                 .body("application_id", is(originalRole.getApplicationId()))
-                .body("role_description", is(originalRole.getRoleDescription()))
+                .body("role_description", is(originalRole.getDescription()))
                 .body("role_name", is(originalRole.getRoleName()));
     }
 }

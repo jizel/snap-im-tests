@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
-import travel.snapshot.dp.api.analytics.model.DefaultMetricName;
-import travel.snapshot.dp.api.analytics.model.MetricName;
 
 import java.io.IOException;
+
+import travel.snapshot.dp.api.analytics.model.DefaultMetricName;
+import travel.snapshot.dp.api.analytics.model.MetricName;
 
 public class MetricNameDeserializer extends StdScalarDeserializer<MetricName> {
 

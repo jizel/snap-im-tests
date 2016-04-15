@@ -1,14 +1,16 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
+
 import net.thucydides.core.annotations.Step;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.api.analytics.model.MetricDto;
 import travel.snapshot.dp.api.analytics.model.RecordDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,10 +36,10 @@ public class InstagramSteps extends AnalyticsBaseSteps {
         GlobalStatsDto actual = response.body().as(GlobalStatsDto.class);
 
         ArrayList<Integer> actualList = new ArrayList<Integer>();
-        for(MetricDto metric : actual.getData()){
+        for (MetricDto metric : actual.getData()) {
             List<RecordDto<? extends Number>> actualValues = metric.getValues();
 
-            if (actualValues.size() == 1){
+            if (actualValues.size() == 1) {
                 actualList.add(Integer.valueOf(actualValues.get(0).toString()));
             }
         }

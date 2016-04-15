@@ -10,9 +10,9 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
+import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.Configuration;
-import travel.snapshot.dp.qa.model.ConfigurationType;
 import travel.snapshot.dp.qa.serenity.configuration.ConfigurationSteps;
 
 /**
@@ -31,12 +31,12 @@ public class GeneralConfigurationStepdefs {
     }
 
     @Given("^The following configuration types exist$")
-    public void The_following_configuration_types_exist(List<ConfigurationType> configurationTypes) throws Throwable {
+    public void The_following_configuration_types_exist(List<ConfigurationTypeDto> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypesExist(configurationTypes, 0);
     }
 
     @When("^Configuration type is created$")
-    public void Configuration_type_is_created(List<ConfigurationType> configurationTypes) throws Throwable {
+    public void Configuration_type_is_created(List<ConfigurationTypeDto> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypeIsCreated(configurationTypes.get(0));
     }
 
@@ -69,7 +69,7 @@ public class GeneralConfigurationStepdefs {
 
     @Then("^There are (\\d+) configuration types returned$")
     public void There_are_configuration_types_returned(int count) throws Throwable {
-        configurationSteps.numberOfEntitiesInResponse(ConfigurationType.class, count);
+        configurationSteps.numberOfEntitiesInResponse(ConfigurationTypeDto.class, count);
     }
 
     @Then("^Body contains configuration type with identifier \"([^\"]*)\" and description \"([^\"]*)\"$")
@@ -83,7 +83,7 @@ public class GeneralConfigurationStepdefs {
     }
 
     @Given("^The following configuration types exist with (\\d+) random text items$")
-    public void The_following_configuration_types_exist_with_random_text_items(int count, List<ConfigurationType> configurationTypes) throws Throwable {
+    public void The_following_configuration_types_exist_with_random_text_items(int count, List<ConfigurationTypeDto> configurationTypes) throws Throwable {
         configurationSteps.followingConfigurationTypesExist(configurationTypes, count);
     }
 
@@ -94,7 +94,7 @@ public class GeneralConfigurationStepdefs {
     }
 
     @Given("^The following configurations exist for configuration type identifier \"([^\"]*)\"$")
-    public void The_following_configuration_exist_for_configration_type_identifier(String identifier, List<Configuration> configurations) throws Throwable {
+    public void The_following_configuration_exist_for_configration_type_identifier(String identifier, List<ConfigurationRecordDto> configurations) throws Throwable {
         configurationSteps.followingConfigurationsExist(configurations, identifier);
     }
 
@@ -115,7 +115,7 @@ public class GeneralConfigurationStepdefs {
 
     @Then("^There are (\\d+) configurations returned$")
     public void There_are_configurations_returned(int count) throws Throwable {
-        configurationSteps.numberOfEntitiesInResponse(Configuration.class, count);
+        configurationSteps.numberOfEntitiesInResponse(ConfigurationRecordDto.class, count);
     }
 
 
@@ -135,32 +135,32 @@ public class GeneralConfigurationStepdefs {
     }
 
     @When("^Configuration is created for configuration type \"([^\"]*)\"$")
-    public void Configuration_is_created_for_configuration_type(String identifier, List<Configuration> configurations) throws Throwable {
+    public void Configuration_is_created_for_configuration_type(String identifier, List<ConfigurationRecordDto> configurations) throws Throwable {
         configurationSteps.followingConfigurationIsCreated(configurations.get(0), identifier);
     }
 
     @Then("^Body contains configuration$")
-    public void Body_contains_configuration(List<Configuration> configurations) throws Throwable {
-        Configuration c = configurations.get(0);
-        configurationSteps.bodyContainsConfiguration(c.getKey(), c.getValue(), c.getType());
+    public void Body_contains_configuration(List<ConfigurationRecordDto> configurations) throws Throwable {
+        ConfigurationRecordDto c = configurations.get(0);
+        configurationSteps.bodyContainsConfiguration(c.getKey(), c.getValue().toString(), c.getType().toString());
     }
 
     @Then("^Body contains configurationValue$")
-    public void Body_contains_configurationValue(List<Configuration> configurations) throws Throwable {
-        Configuration c = configurations.get(0);
-        configurationSteps.bodyContainsConfiguration(null, c.getValue(), c.getType());
+    public void Body_contains_configurationValue(List<ConfigurationRecordDto> configurations) throws Throwable {
+        ConfigurationRecordDto c = configurations.get(0);
+        configurationSteps.bodyContainsConfiguration(null, c.getValue().toString(), c.getType().toString());
     }
 
     @When("^Configuration with from identifier \"([^\"]*)\" is updated$")
-    public void Configuration_with_from_identifier_is_updated(String identifier, List<Configuration> configurations) throws Throwable {
-        Configuration c = configurations.get(0);
-        configurationSteps.updateConfigurationValue(identifier, c.getKey(), c.getValue(), c.getType());
+    public void Configuration_with_from_identifier_is_updated(String identifier, List<ConfigurationRecordDto> configurations) throws Throwable {
+        ConfigurationRecordDto c = configurations.get(0);
+        configurationSteps.updateConfigurationValue(identifier, c.getKey(), c.getValue().toString(), c.getType().toString());
     }
 
     @Then("^Configuration from identifier \"([^\"]*)\" has following$")
-    public void Configuration_from_identifier_has_following(String identifier, List<Configuration> configurations) throws Throwable {
-        Configuration c = configurations.get(0);
-        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue());
+    public void Configuration_from_identifier_has_following(String identifier, List<ConfigurationRecordDto> configurations) throws Throwable {
+        ConfigurationRecordDto c = configurations.get(0);
+        configurationSteps.configurationHasValue(identifier, c.getKey(), c.getValue().toString());
     }
 
     @When("^Configuration type description is updated for identifier \"([^\"]*)\" with missing description$")

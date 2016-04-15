@@ -13,10 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.model.ApplicationVersion;
-import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -199,7 +198,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void listOfApplicationsRolesIsGotWith(String applicationId, String limit, String cursor, String filter,
-            String sort, String sortDesc) {
+                                                 String sort, String sortDesc) {
         Response response =
                 getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
@@ -208,9 +207,9 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void roleNamesInResponseInOrder(List<String> roleNames) {
         Response response = getSessionResponse();
-        Role[] roles = response.as(Role[].class);
+        RoleDto[] roles = response.as(RoleDto[].class);
         int i = 0;
-        for (Role r : roles) {
+        for (RoleDto r : roles) {
             assertEquals("Application role on index=" + i + " is not expected", roleNames.get(i), r.getRoleName());
             i++;
         }
@@ -247,7 +246,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationVersionIsDeleted(String appVersionId, String applicationId) {
-        ApplicationVersion appVersion = getApplicationVersionById(applicationId, appVersionId);
+        VersionDto appVersion = getApplicationVersionById(applicationId, appVersionId);
         if (appVersion == null) {
             return;
         }
@@ -273,12 +272,12 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void updateApplicationVersionWithId(String appVersionId, String applicationId,
-            ApplicationVersion applicationVersionUpdates) throws Throwable {
-        ApplicationVersion original = getApplicationVersionById(applicationId, appVersionId);
+                                               VersionDto applicationVersionUpdates) throws Throwable {
+        VersionDto original = getApplicationVersionById(applicationId, appVersionId);
         Response tempResponse =
                 getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, original.getVersionId(), null);
 
-        Map<String, Object> applicationVersionData = retrieveData(ApplicationVersion.class, applicationVersionUpdates);
+        Map<String, Object> applicationVersionData = retrieveData(VersionDto.class, applicationVersionUpdates);
 
         Response response = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
                 original.getVersionId(), applicationVersionData, tempResponse.getHeader(HEADER_ETAG));
@@ -287,10 +286,10 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationVersionWithIdHasData(String appVersionId, String applicationId,
-            ApplicationVersion applicationVersion) throws Throwable {
+                                                VersionDto applicationVersion) throws Throwable {
         Map<String, Object> originalData =
-                retrieveData(ApplicationVersion.class, getApplicationVersionById(applicationId, appVersionId));
-        Map<String, Object> expectedData = retrieveData(ApplicationVersion.class, applicationVersion);
+                retrieveData(VersionDto.class, getApplicationVersionById(applicationId, appVersionId));
+        Map<String, Object> expectedData = retrieveData(VersionDto.class, applicationVersion);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -305,9 +304,9 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void updateApplicationVersionWithInvalidEtag(String appVersionId, String applicationId,
-            ApplicationVersion applicationVersion) throws Throwable {
+                                                        VersionDto applicationVersion) throws Throwable {
 
-        Map<String, Object> applicationVersionData = retrieveData(ApplicationVersion.class, applicationVersion);
+        Map<String, Object> applicationVersionData = retrieveData(VersionDto.class, applicationVersion);
 
         Response updateResponse = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
                 applicationVersionData, "invalid");
@@ -353,7 +352,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void listOfApplicationVersionsIsGotWith(String applicationId, String limit, String cursor, String filter,
-            String sort, String sortDesc) {
+                                                   String sort, String sortDesc) {
         Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, limit, cursor, filter,
                 sort, sortDesc);
         setSessionResponse(response);
@@ -362,9 +361,9 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void versionNamesInResponseInOrder(List<String> versionNames) {
         Response response = getSessionResponse();
-        ApplicationVersion[] appVersions = response.as(ApplicationVersion[].class);
+        VersionDto[] appVersions = response.as(VersionDto[].class);
         int i = 0;
-        for (ApplicationVersion a : appVersions) {
+        for (VersionDto a : appVersions) {
             assertEquals("Application version on index=" + i + " is not expected", versionNames.get(i),
                     a.getVersionName());
             i++;
@@ -380,7 +379,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void listOfApplicationCommSubscriptionsIsGotWith(String applicationId, String limit, String cursor, String filter,
-            String sort, String sortDesc) {
+                                                            String sort, String sortDesc) {
         Response response = getSecondLevelEntities(applicationId, "", limit, cursor, filter,
                 sort, sortDesc);
         setSessionResponse(response);
@@ -398,9 +397,9 @@ public class ApplicationsSteps extends BasicSteps {
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 
-    public ApplicationVersion getApplicationVersionById(String applicationId, String versionId) {
-        ApplicationVersion[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
-                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "version_id==" + versionId, null, null).as(ApplicationVersion[].class);
+    public VersionDto getApplicationVersionById(String applicationId, String versionId) {
+        VersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
+                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "version_id==" + versionId, null, null).as(VersionDto[].class);
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 

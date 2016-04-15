@@ -1,11 +1,13 @@
 package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
+
 import net.thucydides.core.annotations.Step;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 
 
 public class ReviewTravelersSteps extends ReviewSteps {

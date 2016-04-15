@@ -14,9 +14,10 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import travel.snapshot.dp.api.analytics.model.MetricName;
 
 import java.io.IOException;
+
+import travel.snapshot.dp.api.analytics.model.MetricName;
 
 public final class ObjectMappers {
     public static final ObjectMapper OBJECT_MAPPER = createObjectMapper();

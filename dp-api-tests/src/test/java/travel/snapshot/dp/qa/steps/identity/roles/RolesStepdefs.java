@@ -10,8 +10,8 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
 
 /**
@@ -26,12 +26,12 @@ public class RolesStepdefs {
 
 
     @Given("^The following roles exist$")
-    public void The_following_roles_exist(List<Role> roles) throws Throwable {
+    public void The_following_roles_exist(List<RoleDto> roles) throws Throwable {
         rolesSteps.followingRolesExist(roles);
     }
 
     @When("^Role is created$")
-    public void Role_is_created(List<Role> roles) throws Throwable {
+    public void Role_is_created(List<RoleDto> roles) throws Throwable {
         rolesSteps.followingRoleIsCreated(roles.get(0));
     }
 
@@ -51,13 +51,13 @@ public class RolesStepdefs {
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data$")
-    public void role_with_name_for_application_id_is_updated_with_data(String roleName, String applicationId, List<Role> roles) throws Throwable {
+    public void role_with_name_for_application_id_is_updated_with_data(String roleName, String applicationId, List<RoleDto> roles) throws Throwable {
         rolesSteps.updateRoleWithNameForApplicationId(roleName, applicationId, roles.get(0));
     }
 
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data if updated before$")
-    public void Role_with_name_for_application_id_is_updated_with_data_if_updated_before(String name, String applicationId, List<Role> roles) throws Throwable {
+    public void Role_with_name_for_application_id_is_updated_with_data_if_updated_before(String name, String applicationId, List<RoleDto> roles) throws Throwable {
         rolesSteps.updateRoleWithNameForApplicationIdIfUpdatedBefore(name, applicationId, roles.get(0));
     }
 
@@ -67,13 +67,13 @@ public class RolesStepdefs {
     }
 
     @Then("^Updated role with name \"([^\"]*)\" for application id \"([^\"]*)\" has data$")
-    public void Updated_role_with_name_for_application_id_has_data(String roleName, String applicationId, List<Role> roles) throws Throwable {
+    public void Updated_role_with_name_for_application_id_has_data(String roleName, String applicationId, List<RoleDto> roles) throws Throwable {
         rolesSteps.roleWithNameForApplicationIdHasData(roleName, applicationId, roles.get(0));
     }
 
     @Then("^There are (\\d+) roles returned$")
     public void There_are_roles_returned(int count) throws Throwable {
-        rolesSteps.numberOfEntitiesInResponse(Role.class, count);
+        rolesSteps.numberOfEntitiesInResponse(RoleDto.class, count);
     }
 
     @When("^Nonexistent role id got$")
@@ -97,7 +97,7 @@ public class RolesStepdefs {
     }
 
     @Given("^The following roles don't exist$")
-    public void The_following_roles_don_t_exist(List<Role> roles) throws Throwable {
+    public void The_following_roles_don_t_exist(List<RoleDto> roles) throws Throwable {
         rolesSteps.deleteRoles(roles);
     }
 

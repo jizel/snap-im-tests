@@ -10,10 +10,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertyViewDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.PropertyPropertySet;
-import travel.snapshot.dp.qa.model.PropertySet;
-import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -37,7 +37,7 @@ public class PropertySetsStepdefs {
     private PropertySteps propertySteps;
 
     @Given("^The following property sets exist for customer with code \"([^\"]*)\"$")
-    public void The_following_property_set_exist_for_customer_with_code(String customerCode, List<PropertySet> propertySets) throws Throwable {
+    public void The_following_property_set_exist_for_customer_with_code(String customerCode, List<PropertySetDto> propertySets) throws Throwable {
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.followingPropertySetsExistForCustomer(propertySets, c);
     }
@@ -56,7 +56,7 @@ public class PropertySetsStepdefs {
 
     @Given("^Relation between user with username \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" exists$")
     public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String customerCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(u, propertySetName, c);
     }
@@ -85,7 +85,7 @@ public class PropertySetsStepdefs {
     }
 
     @When("^Property set is created for customer with code \"([^\"]*)\"$")
-    public void Property_set_is_created_for_customer_with_code(String customerCode, List<PropertySet> propertySets) throws Throwable {
+    public void Property_set_is_created_for_customer_with_code(String customerCode, List<PropertySetDto> propertySets) throws Throwable {
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.followingPropertySetIsCreatedForCustomer(c, propertySets.get(0));
     }
@@ -108,21 +108,21 @@ public class PropertySetsStepdefs {
 
     @When("^User with username \"([^\"]*)\" is added to property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.userIsAddedToPropertySetForCustomer(u, propertySetName, c);
     }
 
     @When("^User with username \"([^\"]*)\" is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.userIsRemovedFromPropertySetForCustomer(u, propertySetName, c);
     }
 
     @When("^Nonexistent user is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void Nonexistent_user_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
-        User user = new User();
+        UserDto user = new UserDto();
         user.setUserId("nonexistent");
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.userIsRemovedFromPropertySetForCustomer(user, propertySetName, c);
@@ -174,7 +174,7 @@ public class PropertySetsStepdefs {
 
     @Then("^There are (\\d+) property sets returned$")
     public void There_are_returned_property_sets_returned(int count) throws Throwable {
-        propertySetSteps.numberOfEntitiesInResponse(PropertySet.class, count);
+        propertySetSteps.numberOfEntitiesInResponse(PropertySetDto.class, count);
     }
 
     @Then("^Property set with same id doesn't exist$")
@@ -189,7 +189,7 @@ public class PropertySetsStepdefs {
 
     @Then("^User with username \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
         propertySetSteps.userDoesntExistForPropertySetForCustomer(u, propertySetName, c);
     }
@@ -218,6 +218,6 @@ public class PropertySetsStepdefs {
 
     @Then("^There are (\\d+) property set properties  returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
-        propertySetSteps.numberOfEntitiesInResponse(PropertyPropertySet.class, count);
+        propertySetSteps.numberOfEntitiesInResponse(PropertyViewDto.class, count);
     }
 }

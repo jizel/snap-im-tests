@@ -12,10 +12,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.ApplicationVersion;
-import travel.snapshot.dp.qa.model.Role;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 
 public class ApplicationsStepsdef {
@@ -64,7 +63,7 @@ public class ApplicationsStepsdef {
 
     @When("^Application with id \"([^\"]*)\" is updated with data if updated before$")
     public void Application_with_id_is_updated_with_data_if_updated_before(String applicationId,
-            List<ApplicationDto> applicationData) throws Throwable {
+                                                                           List<ApplicationDto> applicationData) throws Throwable {
         applicationSteps.updateApplicationWithIdIfUpdatedBefore(applicationId, applicationData.get(0));
     }
 
@@ -126,7 +125,7 @@ public class ApplicationsStepsdef {
 
     @Then("^There are (\\d+) applications roles returned$")
     public void There_are_applications_roles_returned(int count) throws Throwable {
-        applicationSteps.numberOfEntitiesInResponse(Role.class, count);
+        applicationSteps.numberOfEntitiesInResponse(RoleDto.class, count);
     }
 
     @Then("^There are applications roles with following names returned in order: (.*)")
@@ -137,13 +136,13 @@ public class ApplicationsStepsdef {
 
     @When("^Application versions are created for application with id \"([^\"]*)\"$")
     public void Application_versions_are_created_for_application_with_id(String applicationId,
-            List<VersionDto> applicationVersions) {
+                                                                         List<VersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsAreCreated(applicationId, applicationVersions.get(0));
     }
 
     @Given("^The following application versions for application with id \"([^\"]*)\" exists$")
     public void The_following_application_versions_exists(String applicationId,
-            List<VersionDto> applicationVersions) {
+                                                          List<VersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsExists(applicationId, applicationVersions);
     }
 
@@ -164,19 +163,19 @@ public class ApplicationsStepsdef {
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data(String appVersionId,
-            String applicationId, List<ApplicationVersion> applicationVersion) throws Throwable {
+                                                                                         String applicationId, List<VersionDto> applicationVersion) throws Throwable {
         applicationSteps.updateApplicationVersionWithId(appVersionId, applicationId, applicationVersion.get(0));
     }
 
     @Then("^Updated application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" has data$")
     public void Updated_application_version_with_id_for_application_with_id_has_data(String appVersionId,
-            String applicationId, List<ApplicationVersion> applicationVersion) throws Throwable {
+                                                                                     String applicationId, List<VersionDto> applicationVersion) throws Throwable {
         applicationSteps.applicationVersionWithIdHasData(appVersionId, applicationId, applicationVersion.get(0));
     }
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data with invalid etag$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data_with_invalid_etag(
-            String appVersionId, String applicationId, List<ApplicationVersion> applicationVersion) throws Throwable {
+            String appVersionId, String applicationId, List<VersionDto> applicationVersion) throws Throwable {
         applicationSteps.updateApplicationVersionWithInvalidEtag(appVersionId, applicationId,
                 applicationVersion.get(0));
     }
@@ -188,13 +187,13 @@ public class ApplicationsStepsdef {
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag$")
     public void Application_version_with_id_for_application_with_id_is_got_with_etag(String appVersionId,
-            String applicationId) {
+                                                                                     String applicationId) {
         applicationSteps.applicationVersionWithIdIsGotWithEtag(appVersionId, applicationId);
     }
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag, updated and got with previous etag$")
     public void Application_version_with_id_for_application_with_id_is_got_with_not_current_etag(String appVersionId,
-            String applicationId) {
+                                                                                                 String applicationId) {
         applicationSteps.applicationVersionWithIdIsGotWithEtagAfterUpdate(appVersionId, applicationId);
     }
 
@@ -215,7 +214,7 @@ public class ApplicationsStepsdef {
 
     @Then("^There are (\\d+) application versions returned$")
     public void There_are_application_versions_returned(int count) throws Throwable {
-        applicationSteps.numberOfEntitiesInResponse(ApplicationVersion.class, count);
+        applicationSteps.numberOfEntitiesInResponse(VersionDto.class, count);
     }
 
     @Then("^There are application version with following names returned in order: (.*)")

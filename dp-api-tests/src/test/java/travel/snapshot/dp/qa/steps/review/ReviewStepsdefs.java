@@ -1,21 +1,42 @@
 package travel.snapshot.dp.qa.steps.review;
 
 
-import cucumber.api.Transform;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.api.review.model.*;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.helpers.review.ReviewAnalyticsEnum;
-import travel.snapshot.dp.qa.serenity.review.*;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
+import cucumber.api.Transform;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.review.model.AspectsOfBusinessStatsDto;
+import travel.snapshot.dp.api.review.model.LocationDto;
+import travel.snapshot.dp.api.review.model.LocationPropertyDto;
+import travel.snapshot.dp.api.review.model.NumberOfReviewsStatsDto;
+import travel.snapshot.dp.api.review.model.OverallBubbleRatingStatsDto;
+import travel.snapshot.dp.api.review.model.OverallStatisticsDto;
+import travel.snapshot.dp.api.review.model.PopularityIndexRankStatsDto;
+import travel.snapshot.dp.api.review.model.RatingScoreStatsDto;
+import travel.snapshot.dp.api.review.model.TravellersAspectsOfBusinessStatsDto;
+import travel.snapshot.dp.api.review.model.TravellersNumberOfReviewsStatsDto;
+import travel.snapshot.dp.api.review.model.TravellersOverallBubbleRatingStatsDto;
+import travel.snapshot.dp.api.review.model.TravellersOverallStatisticsDto;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.review.ReviewAnalyticsEnum;
+import travel.snapshot.dp.qa.serenity.review.ReviewLocationSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyPropertySetSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertySinglePropertySteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewSteps;
+import travel.snapshot.dp.qa.serenity.review.ReviewTravelersSteps;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 

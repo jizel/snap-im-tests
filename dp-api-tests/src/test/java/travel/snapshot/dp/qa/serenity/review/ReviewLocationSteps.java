@@ -1,13 +1,15 @@
 package travel.snapshot.dp.qa.serenity.review;
 
 import com.jayway.restassured.response.Response;
+
 import net.thucydides.core.annotations.Step;
+
+import java.util.List;
+
 import travel.snapshot.dp.api.review.model.LocationDto;
 import travel.snapshot.dp.api.review.model.LocationPropertyDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 

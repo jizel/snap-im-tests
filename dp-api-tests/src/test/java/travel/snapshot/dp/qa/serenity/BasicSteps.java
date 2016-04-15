@@ -8,15 +8,14 @@ import com.jayway.restassured.config.ObjectMapperConfig;
 import com.jayway.restassured.config.RestAssuredConfig;
 import com.jayway.restassured.filter.log.LogDetail;
 import com.jayway.restassured.filter.log.ResponseLoggingFilter;
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -33,8 +32,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
+
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
@@ -44,6 +52,9 @@ import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
  */
 public class BasicSteps {
 
+    public static final String HEADER_IF_MATCH = "If-Match";
+    public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
+    public static final String OAUTH_PARAMETER_NAME = "access_token";
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
@@ -68,14 +79,10 @@ public class BasicSteps {
     protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     protected static final String SECOND_LEVEL_OBJECT_VERSIONS = "versions";
+    protected static final String HEADER_ETAG = "ETag";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
-    protected static final String HEADER_ETAG = "ETag";
-    public static final String HEADER_IF_MATCH = "If-Match";
-    public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
-    public static final String OAUTH_PARAMETER_NAME = "access_token";
-
     protected RequestSpecification spec = null;
 
     public BasicSteps() {
@@ -144,8 +151,8 @@ public class BasicSteps {
     }
 
     /**
-     * This method is used instead of bodyContainsCollectionWith() when the collection contains values of type Double.
-     * Only the integer part of the value is validated.
+     * This method is used instead of bodyContainsCollectionWith() when the collection contains
+     * values of type Double. Only the integer part of the value is validated.
      */
     public void integerPartOfValueIs(String path, int value) {
         Response response = getSessionResponse();
@@ -276,27 +283,29 @@ public class BasicSteps {
     }
 
     /**
-     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query string
+     * getting entities over rest api, if limit and cursor is null or empty, it's not added to query
+     * string
+     *
      * @param sortDesc @return
      */
-    protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc){
+    protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc) {
         return getEntities(null, limit, cursor, filter, sort, sortDesc, null);
     }
 
     protected Response getEntities(String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
-        if(url == null){
+        if (url == null) {
             url = "";
         }
 
-        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc,queryParams);
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
 
         return requestSpecification.when().get(url);
     }
 
-    protected Response getEntitiesForUrlWihDates(String url, String limit, String cursor, String since, String until, String granularity, Map<String, String> queryParams){
+    protected Response getEntitiesForUrlWihDates(String url, String limit, String cursor, String since, String until, String granularity, Map<String, String> queryParams) {
         Map<String, String> preparedParams = buildQueryParamMapForDates(since, until, granularity);
         if (queryParams != null) {
             preparedParams.putAll(queryParams);
@@ -305,29 +314,31 @@ public class BasicSteps {
     }
 
     /**
-     * Method will ignore parsing of date if it is incorrectly hand out to method for purpose of negative tests
-     * @param since correct format 2015-01-01 / today / today -1 month
-     * @param until same as "since"
+     * Method will ignore parsing of date if it is incorrectly hand out to method for purpose of
+     * negative tests
+     *
+     * @param since       correct format 2015-01-01 / today / today -1 month
+     * @param until       same as "since"
      * @param granularity day/week/month
      * @return Map of query parameters that is passed to getEntitiesForUrlWihDates
      */
     private Map<String, String> buildQueryParamMapForDates(String since, String until, String granularity) {
         Map<String, String> queryParams = new HashMap<>();
-        try{
+        try {
             LocalDate sinceDate = StringUtil.parseDate(since);
             if (sinceDate != null) {
                 queryParams.put("since", sinceDate.format(DateTimeFormatter.ISO_DATE));
             }
-        }catch(DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             queryParams.put("since", since);
         }
 
-        try{
+        try {
             LocalDate untilDate = StringUtil.parseDate(until);
             if (untilDate != null) {
                 queryParams.put("until", untilDate.format(DateTimeFormatter.ISO_DATE));
             }
-        }catch(DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             queryParams.put("until", until);
         }
 
@@ -364,7 +375,7 @@ public class BasicSteps {
     protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
-        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc,queryParams);
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
 
         return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
@@ -397,20 +408,20 @@ public class BasicSteps {
 
     // --- session access ---
 
-    protected void setSessionResponse(Response response) {
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-
     protected Response getSessionResponse() {
         return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
     }
 
-    public void setSessionResponseMap(Map<String, Response> responses) {
-        Serenity.setSessionVariable(SESSION_RESPONSE_MAP).to(responses);
+    protected void setSessionResponse(Response response) {
+        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
     public Map<String, Response> getSessionResponseMap() {
         return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);
+    }
+
+    public void setSessionResponseMap(Map<String, Response> responses) {
+        Serenity.setSessionVariable(SESSION_RESPONSE_MAP).to(responses);
     }
 
     public void setSessionVariable(String key, Object value) {

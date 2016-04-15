@@ -171,11 +171,11 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
     /**
      * This method trims dates to start/end of week/month depending on parameter and granularity
-     * week - since must be monday, until must be sunday
-     * month - since must be first of month, until must be last of month
+     * week - since must be monday, until must be sunday month - since must be first of month, until
+     * must be last of month
      *
-     * @param fieldName - since/until
-     * @param value - 20150101/today
+     * @param fieldName   - since/until
+     * @param value       - 20150101/today
      * @param granularity - granularity for date interval, day/week/month
      */
     public void dateFieldIs(String fieldName, String value, String granularity) {

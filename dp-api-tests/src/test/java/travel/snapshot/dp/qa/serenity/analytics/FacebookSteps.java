@@ -1,8 +1,11 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
 import com.jayway.restassured.response.Response;
+
 import junit.framework.Assert;
+
 import net.thucydides.core.annotations.Step;
+
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 
 import static groovy.util.GroovyTestCase.assertEquals;
@@ -18,13 +21,8 @@ public class FacebookSteps extends AnalyticsBaseSteps {
     }
 
     /**
-     * Method is design that it will check only first facebook post for correct data, for moving to another ones you can use cursor in request
-     *
-     * @param datetimeExpected
-     * @param engagementExpected
-     * @param contentExpected
-     * @param reachExpected
-     * @throws Exception
+     * Method is design that it will check only first facebook post for correct data, for moving to
+     * another ones you can use cursor in request
      */
     @Step
     public void checkFacebookPostFromResponse(String datetimeExpected, int engagementExpected, String contentExpected, int reachExpected) throws Exception {

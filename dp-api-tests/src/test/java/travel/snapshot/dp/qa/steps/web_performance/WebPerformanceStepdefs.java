@@ -1,11 +1,11 @@
 package travel.snapshot.dp.qa.steps.web_performance;
 
-import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.qa.helpers.ClassStringConverter;
@@ -50,12 +50,12 @@ public class WebPerformanceStepdefs {
 
     @When("^List of web performance \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and granularity \"([^\"]*)\" and since \"([^\"]*)\" and until \"([^\"]*)\"$")
     public void list_of_web_performance_for_property_id_is_got_with_limit_and_granularity_and_since_and_until(String url,
-                                                                                          String propertyId,
-                                                                                          @Transform(Converters.NullEmptyStringConverter.class) String limit,
-                                                                                          @Transform(Converters.NullEmptyStringConverter.class) String cursor,
-                                                                                          String granularity,
-                                                                                          String since,
-                                                                                          String until) throws Throwable {
+                                                                                                              String propertyId,
+                                                                                                              @Transform(Converters.NullEmptyStringConverter.class) String limit,
+                                                                                                              @Transform(Converters.NullEmptyStringConverter.class) String cursor,
+                                                                                                              String granularity,
+                                                                                                              String since,
+                                                                                                              String until) throws Throwable {
         steps.getPropertiesWithPagingAndDate("/web_performance" + url, propertyId, limit, cursor, granularity, since, until);
     }
 
@@ -75,10 +75,10 @@ public class WebPerformanceStepdefs {
     }
 
     @And("^Value number \"([^\"]*)\" of value type \"([^\"]*)\" has value \"([^\"]*)\" and is incomplete \"([^\"]*)\"$")
-    public void valueNumberOfValueTypeHasValueAndIsIncomplete (String valueNumber,
-                                               @Transform(ClassStringConverter.class) Class valueType,
-                                               @Transform(Converters.NullEmptyStringConverter.class) String value,
-                                               @Transform(Converters.BooleanStringConverter.class) Boolean incomplete) throws Throwable {
+    public void valueNumberOfValueTypeHasValueAndIsIncomplete(String valueNumber,
+                                                              @Transform(ClassStringConverter.class) Class valueType,
+                                                              @Transform(Converters.NullEmptyStringConverter.class) String value,
+                                                              @Transform(Converters.BooleanStringConverter.class) Boolean incomplete) throws Throwable {
         steps.valueRecordIsOfValue(Integer.parseInt(valueNumber), valueType, value, incomplete);
     }
 }

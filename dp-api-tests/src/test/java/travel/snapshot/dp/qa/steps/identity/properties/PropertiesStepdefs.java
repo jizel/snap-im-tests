@@ -12,8 +12,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.model.User;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
@@ -43,7 +43,7 @@ public class PropertiesStepdefs {
 
     @Given("^Relation between user with username \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
     public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         propertySteps.relationExistsBetweenUserAndProperty(u, propertyCode);
     }
 
@@ -112,19 +112,19 @@ public class PropertiesStepdefs {
 
     @When("^User with username \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
     public void User_with_username_is_added_to_property_with_code(String username, String propertyCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         propertySteps.userIsAddedToProperty(u, propertyCode);
     }
 
     @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_property_with_code(String username, String propertyCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         propertySteps.userIsDeletedFromProperty(u, propertyCode);
     }
 
     @When("^Nonexistent user is removed from property with code \"([^\"]*)\"$")
     public void Nonexistent_user_is_removed_from_property_with_code(String propertyCode) throws Throwable {
-        User user = new User();
+        UserDto user = new UserDto();
         user.setUserId("nonexistent");
         propertySteps.userIsDeletedFromProperty(user, propertyCode);
     }
@@ -185,7 +185,7 @@ public class PropertiesStepdefs {
 
     @Then("^User with username \"([^\"]*)\" isn't there for property with code \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_property_with_code(String username, String propertyCode) throws Throwable {
-        User u = usersSteps.getUserByUsername(username);
+        UserDto u = usersSteps.getUserByUsername(username);
         propertySteps.userDoesntExistForProperty(u, propertyCode);
     }
 
@@ -241,11 +241,11 @@ public class PropertiesStepdefs {
 
     @When("^List of property sets is got for property with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_property_sets_is_got_for_property_with_id_and_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyId,
-            @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) {
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                                         @Transform(NullEmptyStringConverter.class) String sortDesc) {
         propertySteps.listOfPropertiesPropertySetsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
