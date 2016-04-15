@@ -23,7 +23,7 @@
         <property name="definitionFormat">CUBE</property>
         <property name="dockerContainers">
             tomcat:
-                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.32
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.33
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
                 await:
                     strategy: polling
@@ -36,9 +36,9 @@
                     - mongodb:mongodb
                     - activemq:activemq
                 binds:
-                    - ${tomcat.mount.dir}:/data/tomcat/config:ro
+                    - ${tomcat.mount.dir}:/data/tomcat/configuration:ro
             tomcat_tests:
-                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.32
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.33
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
                 await:
                     strategy: polling
@@ -46,8 +46,27 @@
                     sleepPollingTime: 5 s
                     iterations: 15
                 portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+            wildfly:
+                image: docker.snapshot.travel:5000/snapshot/wildfly:10.0.0
+                exposedPorts: [8080/tcp,9990/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [8080/tcp,9990/tcp]
+            wildfly_domain:
+                image: docker.snapshot.travel:5000/snapshot/wildfly:10.0.0
+                exposedPorts: [8080/tcp,9990/tcp,9999/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [8080/tcp,9990/tcp,9999/tcp]
+                env: [JBOSS_MODE=domain]
             mariadb:
-                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.12
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.13
                 exposedPorts: [3306/tcp]
                 await:
                     strategy: polling
@@ -56,7 +75,7 @@
                     iterations: 15
                 portBindings: [3306/tcp]
             mongodb:
-                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.3
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.4
                 exposedPorts: [27017/tcp]
                 await:
                     strategy: polling
@@ -65,7 +84,7 @@
                     iterations: 15
                 portBindings: [27017/tcp]
             mongodb_2:
-                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.3
+                image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.4
                 exposedPorts: [27018/tcp]
                 await:
                     strategy: polling

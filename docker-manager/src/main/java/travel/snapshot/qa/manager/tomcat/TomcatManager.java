@@ -7,14 +7,17 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.manager.api.BasicWaitingCondition;
-import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManager;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
+import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
+import travel.snapshot.qa.manager.api.io.ConsoleConsumer;
+import travel.snapshot.qa.manager.api.io.ContainerProcessDestroyer;
+import travel.snapshot.qa.manager.api.io.ContainerShutdownThread;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentFilter;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecord;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecordsBuilderException;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentState;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
+import travel.snapshot.qa.manager.tomcat.api.TomcatContainerManager;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseBody;
 import travel.snapshot.qa.manager.tomcat.check.TomcatStartedCheckTask;
@@ -34,11 +37,6 @@ import travel.snapshot.qa.manager.tomcat.impl.TomcatCommandExecutor;
 import travel.snapshot.qa.manager.tomcat.impl.TomcatFileDeployCommandExecutor;
 import travel.snapshot.qa.manager.tomcat.impl.TomcatFileUndeployCommandExecutor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -49,11 +47,11 @@ import java.util.concurrent.TimeUnit;
  * @see travel.snapshot.qa.manager.tomcat.spacelift.TomcatStarter
  * @see travel.snapshot.qa.manager.tomcat.spacelift.TomcatStopper
  */
-public class TomcatManager implements ContainerManager {
+public class TomcatManager implements TomcatContainerManager {
 
     private static final Logger logger = LoggerFactory.getLogger(TomcatManager.class);
 
-    private Thread shutdownThread;
+    private ContainerShutdownThread shutdownThread;
 
     private Process process;
 
@@ -92,23 +90,13 @@ public class TomcatManager implements ContainerManager {
 
             process = processBuilder.start();
 
-            ConsoleConsumer consoleConsumer = new ConsoleConsumer(process, configuration);
+            ConsoleConsumer consoleConsumer = new ConsoleConsumer(process, logger).setOutputToConsole(configuration.isOutputToConsole());
             Thread consoleThread = new Thread(consoleConsumer);
             consoleThread.start();
 
-            shutdownThread = new Thread(() -> {
+            shutdownThread = new ContainerShutdownThread(process);
 
-                if (process != null) {
-                    process.destroy();
-                    try {
-                        process.waitFor();
-                    } catch (final InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-
-            // it is important to have this shutdown hook adding before the next check
+            // it is important to have this shutdown hook added before the next check
             // otherwise we would start the container but it would be never killed upon JVM termination
             Runtime.getRuntime().addShutdownHook(shutdownThread);
 
@@ -123,20 +111,7 @@ public class TomcatManager implements ContainerManager {
 
     @Override
     public void stop() throws ContainerManagerException {
-        if (shutdownThread != null) {
-            Runtime.getRuntime().removeShutdownHook(shutdownThread);
-            shutdownThread = null;
-        }
-
-        try {
-            if (process != null) {
-                process.destroy();
-                process.waitFor();
-                process = null;
-            }
-        } catch (Exception ex) {
-            throw new ContainerManagerException("Could not stop Tomcat container.", ex);
-        }
+        new ContainerProcessDestroyer(process).shutdownThread(shutdownThread).destroy();
     }
 
     @Override
@@ -250,45 +225,6 @@ public class TomcatManager implements ContainerManager {
     @Override
     public TomcatManagerConfiguration getConfiguration() {
         return configuration;
-    }
-
-    private static class ConsoleConsumer implements Runnable {
-
-        private final Process process;
-
-        private final TomcatManagerConfiguration configuration;
-
-        public ConsoleConsumer(final Process process, final TomcatManagerConfiguration configuration) {
-            this.process = process;
-            this.configuration = configuration;
-        }
-
-        @Override
-        public void run() {
-            final InputStream stream = process.getInputStream();
-
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-
-            final boolean writeOutput = configuration.isOutputToConsole();
-
-            String line;
-
-            try {
-                while ((line = reader.readLine()) != null) {
-                    if (writeOutput) {
-                        logger.info(line);
-                    }
-                }
-            } catch (IOException e) {
-                // intentionally empty
-            } finally {
-                try {
-                    reader.close();
-                } catch (IOException ex) {
-                    // intentionally empty
-                }
-            }
-        }
     }
 
     private boolean canListDeployments() {

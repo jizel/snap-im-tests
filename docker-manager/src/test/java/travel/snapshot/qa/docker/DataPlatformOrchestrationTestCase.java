@@ -26,6 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
+import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
+import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
+import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
+import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
@@ -72,10 +76,10 @@ public class DataPlatformOrchestrationTestCase {
     @Test
     public void test() {
 
-        MariaDBManager mariaDBManager = ORCHESTRATION.getMariaDBDockerManager().getServiceManager();
-        ActiveMQManager activeMQManager = ORCHESTRATION.getActiveMQDockerManager().getServiceManager();
-        MongoDBManager mongoDBManager = ORCHESTRATION.getMongoDockerManager().getServiceManager();
-        TomcatManager tomcatManager = ORCHESTRATION.getTomcatDockerManager().getServiceManager();
+        MariaDBManager mariaDBManager = ORCHESTRATION.getDockerServiceManager(MariaDBDockerManager.class, DEFAULT_MARIADB_CONTAINER_ID).getServiceManager();
+        ActiveMQManager activeMQManager = ORCHESTRATION.getDockerServiceManager(ActiveMQDockerManager.class, DEFAULT_ACTIVEMQ_CONTAINER_ID).getServiceManager();
+        MongoDBManager mongoDBManager = ORCHESTRATION.getDockerServiceManager(MongoDBDockerManager.class, DEFAULT_MONGODB_CONTAINER_ID).getServiceManager();
+        TomcatManager tomcatManager = ORCHESTRATION.getDockerServiceManager(TomcatDockerManager.class, DEFAULT_TOMCAT_CONTAINER_ID).getServiceManager();
 
         // MariaDB
 
@@ -173,7 +177,7 @@ public class DataPlatformOrchestrationTestCase {
         final File destinationDir = testFolder.newFolder("configDirByAPI");
         final File sourceDir = new File("/data/tomcat/config");
 
-        ORCHESTRATION.getTomcatDockerManager().fetch(sourceDir, destinationDir);
+        ORCHESTRATION.getDockerServiceManager(TomcatDockerManager.class, DEFAULT_TOMCAT_CONTAINER_ID).fetch(sourceDir, destinationDir);
 
         Assert.assertTrue("Archive should contain test.properties file!", new File(destinationDir, "config/test.properties").exists());
     }

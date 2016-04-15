@@ -3,7 +3,7 @@ package travel.snapshot.qa.manager.tomcat.check;
 import org.arquillian.spacelift.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.command.TomcatListCommand;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 import travel.snapshot.qa.manager.tomcat.impl.TomcatCommandExecutor;

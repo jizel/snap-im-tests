@@ -10,6 +10,7 @@ def versions = [
         spacelift : "1.0.0.Alpha9",
         cube      : "1.0.0.Alpha10",
         arquillian: "1.1.11.Final",
+        arquillian_wildfly: "2.0.0.Final",
         shrinkwrap: "2.2.2",
 
         // helpers
@@ -71,6 +72,9 @@ dependencies {
     compile "org.arquillian.cube:arquillian-cube-docker:${versions.cube}"
     compile "org.jboss.arquillian.core:arquillian-core-impl-base:${versions.arquillian}"
     compile "org.jboss.arquillian.config:arquillian-config-impl-base:${versions.arquillian}"
+    compile ("org.jboss.arquillian.container:arquillian-container-spi:${versions.arquillian}") {
+        exclude group: "org.jboss.arquillian.config", module: "arquillian-config-impl-base"
+    }
 
     // ShrinkWrap
     compile "org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-api:${versions.shrinkwrap}"
@@ -81,6 +85,26 @@ dependencies {
     compile("org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-impl-maven-archive:${versions.shrinkwrap}") {
         //  Sisu Plexus depends on Guava 10 while Gradle API requires Guava 11
         exclude group: "com.google.guava", module: "guava"
+    }
+
+    // Wildfly
+    compile("org.wildfly.arquillian:wildfly-arquillian-common:${versions.arquillian_wildfly}") {
+        exclude group: "org.wildfly.arquillian", module: "wildfly-arquillian-testenricher-msc"
+        exclude group: "org.jboss.arquillian.container", module: "arquillian-container-test-impl-base"
+        exclude group: "org.jboss.arquillian.protocol", module: "arquillian-protocol-servlet"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-cdi"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-ejb"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-initialcontext"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-resource"
+    }
+    compile("org.wildfly.arquillian:wildfly-arquillian-common-domain:${versions.arquillian_wildfly}") {
+        exclude group: "org.wildfly.arquillian", module: "wildfly-arquillian-testenricher-msc"
+        exclude group: "org.jboss.arquillian.container", module: "arquillian-container-test-impl-base"
+        exclude group: "org.jboss.arquillian.protocol", module: "arquillian-protocol-servlet"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-cdi"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-ejb"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-initialcontext"
+        exclude group: "org.jboss.arquillian.testenricher", module: "arquillian-testenricher-resource"
     }
 
     // Other
@@ -132,6 +156,7 @@ test {
 
         includeCategories 'travel.snapshot.qa.category.UnitTest'
         includeCategories 'travel.snapshot.qa.category.TomcatTest'
+        includeCategories 'travel.snapshot.qa.category.JBossTest'
     }
 
     systemProperties = [

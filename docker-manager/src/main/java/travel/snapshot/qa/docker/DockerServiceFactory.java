@@ -2,12 +2,18 @@ package travel.snapshot.qa.docker;
 
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
+import travel.snapshot.qa.docker.manager.impl.JBossDomainDockerManager;
+import travel.snapshot.qa.docker.manager.impl.JBossStandaloneDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;
+import travel.snapshot.qa.manager.jboss.JBossDomainManager;
+import travel.snapshot.qa.manager.jboss.JBossStandaloneManager;
+import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
+import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
@@ -40,6 +46,14 @@ public class DockerServiceFactory {
 
     public static ActiveMQService activemq() {
         return new ActiveMQService();
+    }
+
+    public static JBossStandaloneService jbossStandalone() {
+        return new JBossStandaloneService();
+    }
+
+    public static JBossDomainService jbossDomain() {
+        return new JBossDomainService();
     }
 
     /**
@@ -109,27 +123,27 @@ public class DockerServiceFactory {
      * Represents Docker service with running MariaDB container. When not explicitly specified, the name of the
      * container to start will be "mariadb".
      */
-    public static final class MariaDBService implements Service<MongoDBManager, MariaDBManagerConfiguration> {
+    public static final class MariaDBService implements Service<MariaDBManager, MariaDBManagerConfiguration> {
 
         public static final String DEFAULT_MARIADB_CONTAINER_ID = "mariadb";
 
         @Override
-        public DockerServiceManager<MongoDBManager> init(MariaDBManagerConfiguration configuration, String containerId) {
+        public DockerServiceManager<MariaDBManager> init(MariaDBManagerConfiguration configuration, String containerId) {
             return new MariaDBDockerManager(new MariaDBManagerImpl(configuration)).setContainerId(containerId);
         }
 
         @Override
-        public DockerServiceManager<MongoDBManager> init(String containerId) {
+        public DockerServiceManager<MariaDBManager> init(String containerId) {
             return new MariaDBDockerManager(new MariaDBManagerImpl(new MariaDBManagerConfiguration.Builder().build())).setContainerId(containerId);
         }
 
         @Override
-        public DockerServiceManager<MongoDBManager> init(MariaDBManagerConfiguration configuration) {
+        public DockerServiceManager<MariaDBManager> init(MariaDBManagerConfiguration configuration) {
             return init(configuration, DEFAULT_MARIADB_CONTAINER_ID);
         }
 
         @Override
-        public DockerServiceManager<MongoDBManager> init() {
+        public DockerServiceManager<MariaDBManager> init() {
             return init(new MariaDBManagerConfiguration.Builder().build());
         }
     }
@@ -160,6 +174,64 @@ public class DockerServiceFactory {
         @Override
         public DockerServiceManager<ActiveMQManager> init() {
             return init(new ActiveMQManagerConfiguration.Builder().build());
+        }
+    }
+
+    /**
+     * Represents Docker service with running JBoss container in standalone mode. When not explicitly specified, the
+     * name of the container to start will be "jboss".
+     */
+    public static final class JBossStandaloneService implements Service<JBossStandaloneManager, JBossManagerConfiguration> {
+
+        public static final String DEFAULT_JBOSS_STANDALONE_CONTAINER_ID = "jboss";
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration, String containerId) {
+            return new JBossStandaloneDockerManager(new JBossStandaloneManager(configuration)).setContainerId(containerId);
+        }
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init(String containerId) {
+            return init(new JBossManagerConfiguration.Builder().build(), containerId);
+        }
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration) {
+            return init(configuration, DEFAULT_JBOSS_STANDALONE_CONTAINER_ID);
+        }
+
+        @Override
+        public DockerServiceManager<JBossStandaloneManager> init() {
+            return init(new JBossManagerConfiguration.Builder().build());
+        }
+    }
+
+    /**
+     * Represents Docker service with running JBoss container in domain mode. When not explicitly specified, the name of
+     * the container to start will be "jboss_domain".
+     */
+    public static final class JBossDomainService implements Service<JBossDomainManager, JBossManagerConfiguration> {
+
+        public static final String DEFAULT_JBOSS_DOMAIN_CONTAINER_ID = "jboss_domain";
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration, String containerId) {
+            return new JBossDomainDockerManager(new JBossDomainManager(configuration)).setContainerId(containerId);
+        }
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init(String containerId) {
+            return init(new JBossManagerConfiguration.Builder().build(), containerId);
+        }
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration) {
+            return init(configuration, DEFAULT_JBOSS_DOMAIN_CONTAINER_ID);
+        }
+
+        @Override
+        public DockerServiceManager<JBossDomainManager> init() {
+            return init(new JBossManagerConfiguration.Builder().build());
         }
     }
 }

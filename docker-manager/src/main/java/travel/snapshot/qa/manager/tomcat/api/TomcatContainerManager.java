@@ -1,31 +1,16 @@
 package travel.snapshot.qa.manager.tomcat.api;
 
 import org.jboss.shrinkwrap.api.Archive;
-import travel.snapshot.qa.manager.api.ServiceManager;
+import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
+import travel.snapshot.qa.manager.api.container.ContainerManager;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
 
 /**
  * Manages container lifecycle and deployments.
  */
-public interface ContainerManager extends ServiceManager {
-
-    /**
-     * Starts a container.
-     */
-    void start() throws ContainerManagerException;
-
-    /**
-     * Stops a container.
-     */
-    void stop() throws ContainerManagerException;
-
-    /**
-     * Checks if container is running.
-     *
-     * @return true if container is running, false otherwise.
-     */
-    boolean isRunning() throws ContainerManagerException;
+public interface TomcatContainerManager extends ContainerManager<TomcatManagerConfiguration> {
 
     /**
      * Deploys archive to a container. Archive is represented by its path.

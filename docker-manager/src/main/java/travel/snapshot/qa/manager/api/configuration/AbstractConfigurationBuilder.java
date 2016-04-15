@@ -1,4 +1,4 @@
-package travel.snapshot.qa.manager.api;
+package travel.snapshot.qa.manager.api.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

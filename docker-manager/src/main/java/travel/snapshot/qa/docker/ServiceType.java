@@ -7,5 +7,7 @@ public enum ServiceType {
     MARIADB,
     MONGODB,
     TOMCAT,
-    ACTIVEMQ;
+    ACTIVEMQ,
+    JBOSS_STANDALONE,
+    JBOSS_DOMAIN;
 }

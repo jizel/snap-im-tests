@@ -16,13 +16,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.qa.manager.api.configuration.Validate;
+import travel.snapshot.qa.manager.api.container.ContainerManagerConfigurationException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.api.CommandExecutor;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerException;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseParser;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
-import travel.snapshot.qa.manager.tomcat.configuration.Validate;
 
 import java.io.BufferedReader;
 import java.io.File;

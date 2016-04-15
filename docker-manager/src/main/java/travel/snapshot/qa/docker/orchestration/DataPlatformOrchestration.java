@@ -2,15 +2,10 @@ package travel.snapshot.qa.docker.orchestration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.qa.docker.DockerServiceFactory;
 import travel.snapshot.qa.docker.ServiceCubePair;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
-import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
-import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
-import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
-import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.inspection.Inspection;
 import travel.snapshot.qa.inspection.InspectionException;
 import travel.snapshot.qa.manager.api.ServiceManager;
@@ -118,86 +113,6 @@ public class DataPlatformOrchestration {
     }
 
     /**
-     * Gets Tomcat Docker manager for container with default Tomcat container ID.
-     *
-     * @return Docker manager for Tomcat
-     */
-    public TomcatDockerManager getTomcatDockerManager() {
-        return getTomcatDockerManager(DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID);
-    }
-
-    /**
-     * Gets Tomcat Docker manager for container with specified container ID. This is handy when you started multiple
-     * Tomcat containers and you want specific Tomcat manager just for that container.
-     *
-     * @param containerId ID of container where Tomcat is running
-     * @return Docker manager for Tomcat for specified container ID
-     */
-    public TomcatDockerManager getTomcatDockerManager(String containerId) {
-        return (TomcatDockerManager) getDockerServiceManager(ServiceType.TOMCAT, containerId);
-    }
-
-    /**
-     * Gets Mongo Docker manager for container with default Mongo container ID.
-     *
-     * @return Docker manager for Mongo
-     */
-    public MongoDBDockerManager getMongoDockerManager() {
-        return getMongoDockerManager(DockerServiceFactory.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID);
-    }
-
-    /**
-     * Gets Mongo Docker manager for container with specified container ID. This is handy when you started multiple
-     * Mongo containers and you want specific Mongo manager just for that container.
-     *
-     * @param containerId ID of container where Mongo is running
-     * @return Docker manager for Mongo for specified container ID
-     */
-    public MongoDBDockerManager getMongoDockerManager(String containerId) {
-        return (MongoDBDockerManager) getDockerServiceManager(ServiceType.MONGODB, containerId);
-    }
-
-    /**
-     * Gets MariaDB Docker manager for container with default MariaDB container ID.
-     *
-     * @return Docker manager for MariaDB
-     */
-    public MariaDBDockerManager getMariaDBDockerManager() {
-        return getMariaDBDockerManager(DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID);
-    }
-
-    /**
-     * Gets MariaDB manager for container with specified container ID. This is handy when you started multiple MariaDB
-     * containers and you want specific MariaDB manager just for that container.
-     *
-     * @param containerId ID of container where MariaDB is running
-     * @return Docker manager for MariaDB for specified container ID
-     */
-    public MariaDBDockerManager getMariaDBDockerManager(String containerId) {
-        return (MariaDBDockerManager) getDockerServiceManager(ServiceType.MARIADB, containerId);
-    }
-
-    /**
-     * Gets ActiveMQ Docker manager for container with default ActiveMQ container ID.
-     *
-     * @return Docker manager for ActiveMQ
-     */
-    public ActiveMQDockerManager getActiveMQDockerManager() {
-        return getActiveMQDockerManager(DockerServiceFactory.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID);
-    }
-
-    /**
-     * Gets ActiveMQ manager for container with specified container ID. This is handy when you start multiple ActiveMQ
-     * containers and you want specific ActiveMQ manager just for that container.
-     *
-     * @param containerId ID of container where ActiveMQ is running
-     * @return Docker manager for ActiveMQ
-     */
-    public ActiveMQDockerManager getActiveMQDockerManager(String containerId) {
-        return (ActiveMQDockerManager) getDockerServiceManager(ServiceType.ACTIVEMQ, containerId);
-    }
-
-    /**
      * Adds Docker service managers sto this orchestration.
      *
      * @param dockerServiceManagers Docker service manages to add to this orchestration
@@ -247,6 +162,12 @@ public class DataPlatformOrchestration {
         return dockerServiceManagers.stream().filter(serviceManager ->
                 serviceManager.provides() == serviceType && serviceManager.getDockerContainer().getId().equals(containerId))
                 .findFirst().orElse(null);
+    }
+
+    public <T extends DockerServiceManager<? extends ServiceManager>> T getDockerServiceManager(final Class<T> clazz, final String containerId) {
+        return (T) dockerServiceManagers.stream()
+                .filter(serviceManager -> serviceManager.getClass() == clazz && serviceManager.getDockerContainer().getId().equals(containerId))
+                .findFirst().get();
     }
 
     /**

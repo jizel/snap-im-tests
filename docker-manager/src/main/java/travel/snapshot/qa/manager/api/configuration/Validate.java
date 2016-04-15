@@ -1,6 +1,6 @@
-package travel.snapshot.qa.manager.tomcat.configuration;
+package travel.snapshot.qa.manager.api.configuration;
 
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
+import travel.snapshot.qa.manager.api.container.ContainerManagerConfigurationException;
 
 import java.io.File;
 import java.io.IOException;

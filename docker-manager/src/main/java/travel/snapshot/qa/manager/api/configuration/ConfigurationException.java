@@ -1,4 +1,4 @@
-package travel.snapshot.qa.manager.api;
+package travel.snapshot.qa.manager.api.configuration;
 
 public class ConfigurationException extends RuntimeException {
 

@@ -92,4 +92,31 @@ public class MariaDBDockerTestCase {
 
         Assert.assertFalse("Container has stopped but service is still running.", mariaDBDockerManager.serviceRunning());
     }
+
+    @Test
+    public void lifecycleHookTest() {
+
+        final BooleanHolder booleanHolder = new BooleanHolder();
+
+        mariaDBDockerManager.getLifecycleHookExecutor().addAfterStartHook(serviceManager -> booleanHolder.called());
+
+        final Cube startedMariaDBContainer = mariaDBDockerManager.start(DEFAULT_MARIADB_CONTAINER_ID);
+
+        Assert.assertTrue(booleanHolder.isCalled());
+
+        mariaDBDockerManager.stop(startedMariaDBContainer);
+    }
+
+    private static final class BooleanHolder {
+
+        boolean called = false;
+
+        public void called() {
+            called = true;
+        }
+
+        public boolean isCalled() {
+            return called;
+        }
+    }
 }

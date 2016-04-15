@@ -1,8 +1,9 @@
 package travel.snapshot.qa.manager.tomcat.configuration;
 
-import travel.snapshot.qa.manager.api.AbstractConfigurationBuilder;
-import travel.snapshot.qa.manager.api.Configuration;
-import travel.snapshot.qa.manager.tomcat.api.ContainerManagerConfigurationException;
+import travel.snapshot.qa.manager.api.configuration.AbstractConfigurationBuilder;
+import travel.snapshot.qa.manager.api.configuration.Configuration;
+import travel.snapshot.qa.manager.api.configuration.Validate;
+import travel.snapshot.qa.manager.api.container.ContainerManagerConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
