@@ -45,6 +45,11 @@ class ContainerLogReporter {
             case ServiceType.MONGODB:
                 new MongoDBServiceLogReporter().report(containers)
                 break
+            case ServiceType.JBOSS_DOMAIN:
+                // TODO
+            case ServiceType.JBOSS_STANDALONE:
+                // TODO
+                break
             default:
                 throw new IllegalStateException(String.format("Unable to resolve reporting for service type %s.", serviceType.name()))
         }
