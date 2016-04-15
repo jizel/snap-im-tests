@@ -150,11 +150,54 @@ class Properties {
         }
 
         static String getIp(String containerId) {
-            if (mode == MACHINE.toString()) {
+            if (Properties.Docker.getMode() == MACHINE.name()) {
                 return DockerMachineHelper.getIp(machineName)
             }
 
             DockerContainer.inspectIP(containerId)
+        }
+
+        static String getMachineIp(String machineName) {
+            DockerMachineHelper.getIp(machineName)
+        }
+
+        static String getMachineIp() {
+            getMachineIp(machineName)
+        }
+
+        static class Installation {
+
+            static final String DOCKER_INSTALLATION = "docker"
+
+            static final String DOCKER_MACHINE_INSTALLATION = "dockerMachine"
+
+            static final List<String> DATA_PLATFORM_INSTALLATIONS = [ 'tomcat', 'mariadb', 'mongodb', 'activemq' ]
+
+            // mariadbkey is needed for keycloak container to store its data and for identity module
+            // tomcat container is needed as a runtime for identity module
+            // activemq is needed when identity module sends messages about whats going on
+            // keycloak is Wildfly server witk Keycloak installation itself
+            static final List<String> KEYCLOAK_PLATFORM_INSTALLATIONS = [ 'mariadbkey', 'activemq', 'tomcatkey', 'keycloak' ]
+
+            static List<String> resolveDockerInstallations() {
+                List<String> installations = []
+
+                installations << DOCKER_INSTALLATION
+
+                if (Properties.Docker.getMode() == MACHINE.name()) {
+                    installations << DOCKER_MACHINE_INSTALLATION
+                }
+
+                installations
+            }
+
+            static List<String> resolveContainerInstallations() {
+                if (!ProjectHelper.profile.startsWith("keycloak")) {
+                    return DATA_PLATFORM_INSTALLATIONS
+                } else {
+                    return KEYCLOAK_PLATFORM_INSTALLATIONS
+                }
+            }
         }
     }
 
@@ -313,21 +356,17 @@ class Properties {
             List<String> loadTestsInstallations = []
 
             if (environment == LoadTestEnvironment.DOCKER) {
-                loadTestsInstallations = [
-                        'docker', 'dockerMachine', // Docker specific
+                // Docker specific
+                loadTestsInstallations.addAll(Properties.Docker.Installation.resolveDockerInstallations())
 
-                        'tomcat', 'mariadb', 'mongodb', 'activemq', // Docker services
+                // we need data-platform repository because we build modules which
+                // will be subsequently deployed to Tomcat in Docker,
+                // load tests are in QA repository itself
+                loadTestsInstallations.addAll(Properties.Docker.Installation.DATA_PLATFORM_INSTALLATIONS)
 
-                        // we need data-platform repository because we build modules which
-                        // will be subsequently deployed to Tomcat in Docker,
-                        // load tests are in QA repository itself
-                        'dataPlatformQARepository', 'dataPlatformRepository',
-                        // load tests are located in Maven project so we need Maven installation
-                        'maven',
-                        // in case we are running against Docker, we have to build modules to run tests against by
-                        // gradle installation in the first place
-                        'gradle'
-                ]
+                // in case we are running against Docker, we have to build modules to run tests against by
+                // gradle installation in the first place
+                loadTestsInstallations.addAll(['dataPlatformQARepository', 'dataPlatformRepository', 'maven', 'gradle'])
             } else {
                 // if load tests environment is not DOCKER, it means we are executing them against
                 // environment which has them already deployed so we just execute tests
@@ -343,9 +382,9 @@ class Properties {
             List<String> loadTestsTestExecutions
 
             if (environment == LoadTestEnvironment.DOCKER) {
-                loadTestsTestExecutions = [ 'platformStart', 'loadTestsDeployment', 'loadTests', 'platformStop' ]
+                loadTestsTestExecutions = ['platformStart', 'loadTestsDeployment', 'loadTests', 'platformStop']
             } else {
-                loadTestsTestExecutions = [ 'loadTests' ]
+                loadTestsTestExecutions = ['loadTests']
             }
 
             loadTestsTestExecutions

@@ -5,6 +5,8 @@ import org.arquillian.spacelift.gradle.SpaceliftExtension
 import org.gradle.api.Project
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 
+import static travel.snapshot.qa.util.Properties.Docker.Installation.DOCKER_INSTALLATION
+
 final class ProjectHelper {
 
     static boolean isLoadTestRunning() {
@@ -37,7 +39,15 @@ final class ProjectHelper {
     }
 
     static boolean isDockerUsed() {
-        !project.selectedInstallations.collect { installation -> installation.name.startsWith('docker') }.isEmpty()
+        !project.selectedInstallations.collect { installation -> installation.name.startsWith(DOCKER_INSTALLATION) }.isEmpty()
+    }
+
+    static String isStoppingPlatform() {
+        profile.toLowerCase().endsWith("platformstop")
+    }
+
+    static String getProfile() {
+        project.selectedProfile['name']
     }
 
     static boolean isProfileSelected(String profileName) {

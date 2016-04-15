@@ -7,6 +7,8 @@ import travel.snapshot.qa.installation.DockerService
 import travel.snapshot.qa.installation.GradleInstallation
 import travel.snapshot.qa.installation.GitBasedInstallation
 import travel.snapshot.qa.installation.TomcatInstallationResolver
+import travel.snapshot.qa.installation.service.JBossStandaloneService
+import travel.snapshot.qa.installation.service.MariaDBKeycloakService
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.api.APITestsExecution
@@ -30,6 +32,7 @@ import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.Properties
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
+
 import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.PROJECT
 import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules.DATABASE_SCHEMES
 
@@ -48,11 +51,15 @@ spacelift {
 
         dockerInstallations {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
-            value { ['docker', 'dockerMachine'] }
+            value { Properties.Docker.Installation.resolveDockerInstallations() }
         }
         serviceInstallations {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
-            value { ['tomcat', 'mariadb', 'mongodb', 'activemq'] }
+            value { Properties.Docker.Installation.DATA_PLATFORM_INSTALLATIONS }
+        }
+        keycloakServiceInstallations {
+            converter BuiltinConfigurationItemConverters.getConverter(String[])
+            value { Properties.Docker.Installation.KEYCLOAK_PLATFORM_INSTALLATIONS }
         }
         loadTestsInstallations {
             converter BuiltinConfigurationItemConverters.getConverter(String[])
@@ -72,7 +79,8 @@ spacelift {
                         "docker.snapshot.travel:5000/snapshot/tomcat:8.0.33",
                         "docker.snapshot.travel:5000/snapshot/mariadb:10.1.13",
                         "docker.snapshot.travel:5000/snapshot/mongodb:3.2.4",
-                        "docker.snapshot.travel:5000/snapshot/activemq:5.12.3"
+                        "docker.snapshot.travel:5000/snapshot/activemq:5.12.3",
+                        "docker.snapshot.travel:5000/snapshot/keycloak:1.9.1"
                 ]
             }
         }
@@ -234,6 +242,17 @@ spacelift {
             enabledInstallations 'maven'
             tests 'threeScaleJsonUploadExecution'
         }
+
+        keycloakPlatformStart(from: dataPlatformTest) {
+            // gradle is needed when building identity module from dataPlatformRepository installation
+            enabledInstallations (dockerInstallations + keycloakServiceInstallations + "dataPlatformRepository" + "gradle")
+            tests 'keycloakPlatformStart', 'keycloakTest'
+        }
+        keycloakPlatformStop(from: dataPlatformTest) {
+            // gradle is needed when building identity module from dataPlatformRepository installation
+            enabledInstallations (dockerInstallations + keycloakServiceInstallations + "dataPlatformRepository" + "gradle")
+            tests 'platformStop'
+        }
     }
 
     installations {
@@ -258,6 +277,21 @@ spacelift {
         activemq(from: DockerService) {
             setup {
                 platform.with(activemq().init())
+            }
+        }
+        mariadbkey(from: DockerService) {
+            setup {
+                platform.with(MariaDBKeycloakService.init("mariadbkey"))
+            }
+        }
+        tomcatkey(from: DockerService) {
+            setup {
+                platform.with(tomcat().init("tomcatkey"))
+            }
+        }
+        keycloak(from: DockerService) {
+            setup {
+                platform.with(JBossStandaloneService.init("keycloak"))
             }
         }
 
@@ -291,7 +325,7 @@ spacelift {
 
         platformStart(from: PlatformLifecycle) {
             with platform
-            init {  new TomcatConfigurationDeployer(dockerMachine).deploy() }
+            init {  new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy() }
             execute {
                 new MariaDBDropper(platform).drop(DATABASE_SCHEMES).execute()
                 new MariaDBInitializer(platform).init(DATABASE_SCHEMES).execute()
@@ -301,6 +335,14 @@ spacelift {
         platformStop(from: PlatformLifecycle) {
             with platform
             setup false
+        }
+        keycloakPlatformStart(from: PlatformLifecycle) {
+            with platform
+            init {  new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy() }
+            execute {
+                new MariaDBDropper(platform).drop(DATABASE_SCHEMES).container("mariadbkey").execute()
+                new MariaDBInitializer(platform).init(DATABASE_SCHEMES).container("mariadbkey").execute()
+            }
         }
 
         // Building of Data Platform
@@ -493,6 +535,18 @@ spacelift {
                 new ThreeScaleUploadExecutor().execute()
             }
         }
+
+        // Keycloak setup
+
+        keycloakTest {
+            beforeTest {
+                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute()
+                new DataPlatformDeployer(platform).container("tomcatkey").deploy(DataPlatformModule.IDENTITY).execute()
+            }
+            execute {
+                println "keycloak test"
+            }
+        }
     }
 }
 
@@ -514,7 +568,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.5'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.6'
     }
 }
 

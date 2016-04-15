@@ -56,6 +56,7 @@
                 image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.33
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
                 env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                hostName: tomcat
                 await:
                     strategy: polling
                     type: ping
@@ -73,6 +74,7 @@
                 image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.33
                 exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
                 env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                hostName: tomcat
                 await:
                     strategy: polling
                     type: ping
@@ -83,16 +85,60 @@
                 image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.13
                 exposedPorts: [3306/tcp]
                 env: [GENERAL_LOG_FILE=/var/lib/mysql/localhost.localdomain.log, LOG_ERROR=/var/lib/mysql/localhost.localdomain.err]
+                hostName: mariadb
                 await:
                     strategy: polling
                     type: ping
                     sleepPollingTime: 5 s
                     iterations: 15
                 portBindings: [3306/tcp]
+            mariadbkey:
+                image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.13
+                exposedPorts: [3306/tcp]
+                env: [GENERAL_LOG_FILE=/var/lib/mysql/localhost.localdomain.log, LOG_ERROR=/var/lib/mysql/localhost.localdomain.err]
+                hostName: mariadb
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [3306/tcp]
+            tomcatkey:
+                image: docker.snapshot.travel:5000/snapshot/tomcat:8.0.33
+                exposedPorts: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                hostName: tomcat
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [1099/tcp,8000/tcp,8080/tcp,8009/tcp]
+                links:
+                    - mariadbkey:mariadbkey
+                    - activemq:activemq
+                binds:
+                    - ${arquillian.xml.data.tomcat.config.dir}/tomcat:/data/tomcat/config
+                    ${arquillian.xml.deployments.mount}
+            keycloak:
+                image: docker.snapshot.travel:5000/snapshot/keycloak:1.9.1
+                exposedPorts: [8080/tcp,9990/tcp]
+                env: [MYSQL_KEYCLOAK_ADDRESS=mariadb]
+                hostName: keycloak
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [8090->8080/tcp,9990/tcp]
+                links:
+                    - mariadbkey:mariadbkey
+                    - tomcatkey:tomcatkey
             mongodb:
                 image: docker.snapshot.travel:5000/snapshot/mongodb:3.2.4
                 exposedPorts: [27017/tcp]
                 env: [LOG_PATH=/var/log/mongodb/server.log]
+                hostName: mongodb
                 await:
                     strategy: polling
                     type: ping
@@ -103,6 +149,7 @@
                 image: docker.snapshot.travel:5000/snapshot/activemq:5.12.3
                 exposedPorts: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
                 env: [JAVA_RMI_SERVER_HOSTNAME=${arquillian.xml.java.rmi.server.hostname}]
+                hostName: activemq
                 await:
                     strategy: polling
                     type: ping

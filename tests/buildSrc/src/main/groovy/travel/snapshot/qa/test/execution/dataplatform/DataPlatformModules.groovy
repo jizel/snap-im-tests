@@ -66,7 +66,6 @@ enum DataPlatformModules {
                 .add(SCHEME_DP)
                 .add(SCHEME_IDENTITY)
                 .add(SCHEME_OTA)
-                .add(SCHEME_KEYCLOAK)
                 .build()
         }
     }

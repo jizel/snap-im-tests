@@ -4,6 +4,7 @@ import org.arquillian.spacelift.task.Task
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.docker.DockerServiceFactory
+import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
 
 /**
@@ -27,7 +28,10 @@ class TomcatContainerLogger extends Task<DataPlatformOrchestration, Void> {
 
     @Override
     protected Void process(DataPlatformOrchestration orchestration) throws Exception {
-        orchestration.getTomcatDockerManager(container).getDockerContainer().copyLog(container, true, true, true, false, 0, logOutputStream)
+        orchestration.getDockerServiceManager(TomcatDockerManager, container)
+                .dockerManager
+                .clientExecutor
+                .copyLog(container, true, true, true, false, 0, logOutputStream)
     }
 
     LogOutputStream getLogOutputStream() {

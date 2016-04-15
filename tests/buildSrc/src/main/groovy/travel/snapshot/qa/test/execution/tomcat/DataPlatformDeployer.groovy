@@ -9,7 +9,7 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.docker.DockerServiceFactory
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager
 import travel.snapshot.qa.manager.tomcat.TomcatManager
-import travel.snapshot.qa.manager.tomcat.api.ContainerDeploymentException
+import travel.snapshot.qa.manager.api.container.ContainerDeploymentException
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.util.Properties
@@ -46,6 +46,11 @@ class DataPlatformDeployer {
 
     DataPlatformDeployer strategy(DeploymentStrategy deploymentStrategy) {
         this.deploymentStrategy = deploymentStrategy
+        this
+    }
+
+    DataPlatformDeployer container(String containerId) {
+        this.containerId = containerId
         this
     }
 
@@ -110,7 +115,7 @@ class DataPlatformDeployer {
      * @return this
      */
     DataPlatformDeployer execute() {
-        final TomcatDockerManager dockerManager = orchestration.get().getTomcatDockerManager(containerId)
+        final TomcatDockerManager dockerManager = orchestration.get().getDockerServiceManager(TomcatDockerManager, containerId)
         final TomcatManager manager = dockerManager.getServiceManager()
 
         if (!dockerManager || !manager) {
