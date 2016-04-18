@@ -78,7 +78,7 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_RECORDS = "records";
     protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
-    protected static final String SECOND_LEVEL_OBJECT_VERSIONS = "versions";
+    protected static final String SECOND_LEVEL_OBJECT_VERSIONS = "application_versions";
     protected static final String HEADER_ETAG = "ETag";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";

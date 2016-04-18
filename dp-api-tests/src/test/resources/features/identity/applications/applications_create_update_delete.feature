@@ -9,7 +9,7 @@ Feature: Applications create update delete
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
-    And Body contains entity with attribute "application_name" value "Application test company 1"
+    And Body contains entity with attribute "name" value "Application test company 1"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
 

@@ -88,7 +88,7 @@ public class ApiSubscriptionStepsdefs {
 
     @When("^Api subscription with id \"([^\"]*)\" is updated with following data$")
     public void apiSubscriptionWithIdIsUpdatedWithFollowingData(String apiSubscriptionId, List<ApiSubscriptionDto> updateData) throws Throwable {
-        apiSteps.updateApiSubscription(apiSubscriptionId, updateData);
+        apiSteps.updateApiSubscription(apiSubscriptionId, updateData.get(0));
     }
 
 
@@ -134,8 +134,6 @@ public class ApiSubscriptionStepsdefs {
         if (updatedField.equalsIgnoreCase("applicationVersionId")) {
             api.setApplicationVersionId(value);
         }
-        apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionDto>() {{
-            add(api);
-        }});
+        apiSteps.updateApiSubscription(apiSubscriptionId, api);
     }
 }

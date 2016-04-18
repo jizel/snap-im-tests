@@ -57,9 +57,8 @@ dependencies {
     compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: '1.13.0'
     compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: '1.13.0'
     compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: '1.13.0'
-    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: '1.7.0-SNAPSHOT'
     compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: '1.13.0'
-    
+
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.6'
 
     testCompile 'org.apache.activemq:activemq-client:5.12.1'

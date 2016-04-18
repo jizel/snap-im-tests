@@ -6,9 +6,9 @@ Feature: Api subscriptions validation
       | applicationId                        | applicationName            | description               | website                    |
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel |
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | releaseDate | description            |
-      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | 2016-02-01  | Versions description 1 |
-      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | 2016-02-01  | Versions description 2 |
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
+      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | apiVersion       |
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | validation_api_1 |
