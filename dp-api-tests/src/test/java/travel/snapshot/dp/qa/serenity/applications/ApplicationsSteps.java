@@ -387,7 +387,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     private Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
 
-        return given().spec(spec).body(applicationVersion).when().post("/{id}/versions", applicationId);
+        return given().spec(spec).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
     }
 
     public VersionDto getApplicationVersionByName(String applicationId, String versionName) {
