@@ -68,7 +68,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
 
         ApiSubscriptionDto apiToCreate = new ApiSubscriptionDto();
         apiToCreate.setApplicationVersionId(selected.getApplicationVersionId());
-        apiToCreate.setApiVersion(selected.getApiVersion());
+        apiToCreate.setApplicationVersionId(selected.getApplicationVersionId());
 
         Response response = createEntity(apiToCreate);
         setSessionResponse(response);
@@ -83,7 +83,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
             apiSubscription.setIsActive(0);
         }
 
-        List<ApiSubscriptionUpdateDto> listToSend = new ArrayList<ApiSubscriptionUpdateDto>();
+        List<ApiSubscriptionDto> listToSend = new ArrayList<ApiSubscriptionDto>();
         listToSend.add(apiSubscription);
 
         updateApiSubscription(apiSubscriptionId, listToSend);
@@ -109,12 +109,12 @@ public class ApiSubscriptionSteps extends BasicSteps {
         setSessionResponse(responce);
     }
 
-    public void updateApiSubscription(String apiSubscriptionId, List<ApiSubscriptionUpdateDto> updateData) {
+    public void updateApiSubscription(String apiSubscriptionId, List<ApiSubscriptionDto> updateData) {
         Response apiSub = getEntity(apiSubscriptionId);
         Map<String, Object> mapToUpdate = new HashMap<>();
 
-        if (updateData.get(0).getApiVersion() != null) {
-            mapToUpdate.put("api_version", updateData.get(0).getApiVersion());
+        if (updateData.get(0).getApplicationVersionId() != null) {
+            mapToUpdate.put("api_version", updateData.get(0).getApplicationVersionId());
         }
 
         if (updateData.get(0).getApplicationVersionId() != null) {
@@ -145,7 +145,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
         ApiSubscriptionDto[] apiSubscriptios = getSessionResponse().as(ApiSubscriptionDto[].class);
         int i = 0;
         for (ApiSubscriptionDto api : apiSubscriptios) {
-            assertEquals(api.getApiVersion(), order.get(i));
+            assertEquals(api.getApplicationVersionId(), order.get(i));
             i++;
         }
     }

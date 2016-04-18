@@ -87,7 +87,7 @@ public class ApiSubscriptionStepsdefs {
     }
 
     @When("^Api subscription with id \"([^\"]*)\" is updated with following data$")
-    public void apiSubscriptionWithIdIsUpdatedWithFollowingData(String apiSubscriptionId, List<ApiSubscriptionUpdateDto> updateData) throws Throwable {
+    public void apiSubscriptionWithIdIsUpdatedWithFollowingData(String apiSubscriptionId, List<ApiSubscriptionDto> updateData) throws Throwable {
         apiSteps.updateApiSubscription(apiSubscriptionId, updateData);
     }
 
@@ -124,17 +124,17 @@ public class ApiSubscriptionStepsdefs {
 
     @When("^Update api subscription with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
     public void updateApiSubscriptionWithCodeFieldItsValue(String apiSubscriptionId, String updatedField, String value) throws Throwable {
-        ApiSubscriptionUpdateDto api = new ApiSubscriptionUpdateDto();
+        ApiSubscriptionDto api = new ApiSubscriptionDto();
         if (updatedField.equalsIgnoreCase("isActive")) {
             api.setIsActive(Integer.parseInt(value));
         }
         if (updatedField.equalsIgnoreCase("apiVersion")) {
-            api.setApiVersion(value);
+            api.setApplicationVersionId(value);
         }
         if (updatedField.equalsIgnoreCase("applicationVersionId")) {
             api.setApplicationVersionId(value);
         }
-        apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionUpdateDto>() {{
+        apiSteps.updateApiSubscription(apiSubscriptionId, new ArrayList<ApiSubscriptionDto>() {{
             add(api);
         }});
     }
