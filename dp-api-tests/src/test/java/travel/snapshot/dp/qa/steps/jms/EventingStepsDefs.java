@@ -13,7 +13,7 @@ import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
-import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
+import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 /**
@@ -35,7 +35,7 @@ public class EventingStepsDefs {
     private UsersSteps usersSteps;
 
     @Steps
-    private RolesSteps rolesSteps;
+    private RoleBaseSteps roleBaseSteps;
 
     @Steps
     private PropertySetSteps propertySetSteps;
@@ -136,7 +136,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for role with name \"([^\"]*)\" for application id  \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName, String applicationId) throws Throwable {
-        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         steps.notificationContainsId(r.getRoleId());
     }
 
@@ -155,7 +155,7 @@ public class EventingStepsDefs {
 
     @Given("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
     public void Role_with_name_is_stored_in_session_under_key(String roleName, String applicationId, String sessionKey) throws Throwable {
-        steps.setSessionVariable(sessionKey, rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId));
+        steps.setSessionVariable(sessionKey, roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId));
     }
 
     @Then("^Notification in session id stands for role in session on key \"([^\"]*)\"$")

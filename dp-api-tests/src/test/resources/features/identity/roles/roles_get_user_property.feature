@@ -1,13 +1,16 @@
-Feature: Roles get
+Feature: Roles get user property
 
   Background:
+    Given Switch for user property role tests
+
     Given Database is cleaned
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The following roles exist
-      | applicationId                        | roleName    | roleDescription        |
+
+    Given The following user customer roles exist
+      | applicationId                        | roleName    | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
@@ -54,7 +57,7 @@ Feature: Roles get
 
   Scenario Outline: Getting list of roles
     Given The following roles exist
-      | applicationId                        | roleName          | roleDescription         |
+      | applicationId                        | roleName          | description         |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 1  | optional description 1  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 2  | optional description 2  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 3  | optional description 3  |
@@ -119,15 +122,15 @@ Feature: Roles get
 
     Examples:
       | description   | limit | cursor | returned | total | link_header                                                                                       |
-      | default limit | /null |        | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | default limit |       | /null  | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | default limit | /null | /null  | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | default limit |       |        | 50       | 57    | </identity/roles?limit=50&cursor=50>; rel="next"                                                  |
-      | limit at 15   | 15    |        | 15       | 57    | </identity/roles?limit=15&cursor=15>; rel="next"                                                  |
-      | offset by 1   |       | 1      | 50       | 57    | </identity/roles?limit=50&cursor=51>; rel="next", </identity/roles?limit=50&cursor=0>; rel="prev" |
-      | limit by 20   | 20    | 0      | 20       | 57    | </identity/roles?limit=20&cursor=20>; rel="next"                                                  |
-      | limit by 10   | 10    | 0      | 10       | 57    | </identity/roles?limit=10&cursor=10>; rel="next"                                                  |
-      | l:5 o:5       | 5     | 10     | 5        | 57    | </identity/roles?limit=5&cursor=15>; rel="next", </identity/roles?limit=5&cursor=5>; rel="prev"   |
+      | default limit | /null |        | 50       | 57    | </identity/user_property_roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit |       | /null  | 50       | 57    | </identity/user_property_roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit | /null | /null  | 50       | 57    | </identity/user_property_roles?limit=50&cursor=50>; rel="next"                                                  |
+      | default limit |       |        | 50       | 57    | </identity/user_property_roles?limit=50&cursor=50>; rel="next"                                                  |
+      | limit at 15   | 15    |        | 15       | 57    | </identity/user_property_roles?limit=15&cursor=15>; rel="next"                                                  |
+      | offset by 1   |       | 1      | 50       | 57    | </identity/user_property_roles?limit=50&cursor=51>; rel="next", </identity/user_property_roles?limit=50&cursor=0>; rel="prev" |
+      | limit by 20   | 20    | 0      | 20       | 57    | </identity/user_property_roles?limit=20&cursor=20>; rel="next"                                                  |
+      | limit by 10   | 10    | 0      | 10       | 57    | </identity/user_property_roles?limit=10&cursor=10>; rel="next"                                                  |
+      | l:5 o:5       | 5     | 10     | 5        | 57    | </identity/user_property_roles?limit=5&cursor=15>; rel="next", </identity/user_property_roles?limit=5&cursor=5>; rel="prev"   |
 
 
   Scenario Outline: Checking error codes for lists of roles
@@ -165,7 +168,7 @@ Feature: Roles get
 
   Scenario Outline: Filtering list of roles
     Given The following roles exist
-      | applicationId                        | roleName           | roleDescription         |
+      | applicationId                        | roleName           | description         |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 1 | optional description 1  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 2 | optional description 2  |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 3 | different description 3 |

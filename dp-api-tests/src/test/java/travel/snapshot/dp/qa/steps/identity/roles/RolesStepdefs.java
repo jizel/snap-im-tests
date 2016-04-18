@@ -5,91 +5,112 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
+
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
+import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
+import travel.snapshot.dp.qa.serenity.roles.RolesUserCustomerSteps;
+import travel.snapshot.dp.qa.serenity.roles.RolesUserPropertySetSteps;
+import travel.snapshot.dp.qa.serenity.roles.RolesUserPropertySteps;
 
 import java.util.List;
+
 
 public class RolesStepdefs {
 
     @Steps
-    private RolesSteps rolesSteps;
+    private RoleBaseSteps roleBaseSteps;
+
+    @Given("^Switch for user customer role tests$")
+    public void switchForUserCustomerRoleTests() throws Throwable {
+        roleBaseSteps = new RolesUserCustomerSteps();
+    }
+
+    @Given("^Switch for user property role tests$")
+    public void switchForUserPropertyRoleTests() throws Throwable {
+        roleBaseSteps = new RolesUserPropertySteps();
+    }
+
+    @Given("^Switch for user property set role tests$")
+    public void switchForUserPropertySetRoleTests() throws Throwable {
+        roleBaseSteps = new RolesUserPropertySetSteps();
+    }
 
     @Given("^The following roles exist$")
     public void The_following_roles_exist(List<RoleDto> roles) throws Throwable {
-        rolesSteps.followingRolesExist(roles);
+        roleBaseSteps.followingRolesExist(roles);
     }
 
     @When("^Role is created$")
     public void Role_is_created(List<RoleDto> roles) throws Throwable {
-        rolesSteps.followingRoleIsCreated(roles.get(0));
+        roleBaseSteps.followingRoleIsCreated(roles.get(0));
     }
 
     @Then("^\"([^\"]*)\" header is set and contains the same role$")
     public void header_is_set_and_contains_the_same_role(String header) throws Throwable {
-        rolesSteps.compareRoleOnHeaderWithStored(header);
+        roleBaseSteps.compareRoleOnHeaderWithStored(header, roleBaseSteps.getBasePath());
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is deleted$")
     public void role_with_name_for_application_id_is_deleted(String roleName, String applicationId) throws Throwable {
-        rolesSteps.deleteRoleWithNameForApplication(roleName, applicationId);
+        roleBaseSteps.deleteRoleWithNameForApplication(roleName, applicationId);
     }
 
     @When("^Nonexistent role id is deleted$")
     public void Nonexistent_role_id_is_deleted() throws Throwable {
-        rolesSteps.deleteRoleWithId("nonexistent");
+        roleBaseSteps.deleteRoleWithId("nonexistent");
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data$")
     public void role_with_name_for_application_id_is_updated_with_data(String roleName, String applicationId, List<RoleDto> roles) throws Throwable {
-        rolesSteps.updateRoleWithNameForApplicationId(roleName, applicationId, roles.get(0));
+        roleBaseSteps.updateRoleWithNameForApplicationId(roleName, applicationId, roles.get(0));
     }
 
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data if updated before$")
     public void Role_with_name_for_application_id_is_updated_with_data_if_updated_before(String name, String applicationId, List<RoleDto> roles) throws Throwable {
-        rolesSteps.updateRoleWithNameForApplicationIdIfUpdatedBefore(name, applicationId, roles.get(0));
+        roleBaseSteps.updateRoleWithNameForApplicationIdIfUpdatedBefore(name, applicationId, roles.get(0));
     }
 
     @Then("^Role with same id doesn't exist for application id \"([^\"]*)\"$")
     public void Role_with_same_id_doesn_t_exist_for_application_id(String applicationId) throws Throwable {
-        rolesSteps.roleIdInSessionDoesntExist();
+        roleBaseSteps.roleIdInSessionDoesntExist();
     }
 
     @Then("^Updated role with name \"([^\"]*)\" for application id \"([^\"]*)\" has data$")
     public void Updated_role_with_name_for_application_id_has_data(String roleName, String applicationId, List<RoleDto> roles) throws Throwable {
-        rolesSteps.roleWithNameForApplicationIdHasData(roleName, applicationId, roles.get(0));
+        roleBaseSteps.roleWithNameForApplicationIdHasData(roleName, applicationId, roles.get(0));
     }
 
     @Then("^There are (\\d+) roles returned$")
     public void There_are_roles_returned(int count) throws Throwable {
-        rolesSteps.numberOfEntitiesInResponse(RoleDto.class, count);
+        roleBaseSteps.numberOfEntitiesInResponse(RoleDto.class, count);
     }
 
     @When("^Nonexistent role id got$")
     public void Nonexistent_role_id_got() throws Throwable {
-        rolesSteps.getRoleWithId("nonexistent");
+        roleBaseSteps.getRoleWithId("nonexistent");
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got$")
     public void Role_with_name_for_application_id_is_got(String roleName, String applicationId) throws Throwable {
-        rolesSteps.getRoleWithNameForApplicationId(roleName, applicationId);
+        roleBaseSteps.getRoleWithNameForApplicationId(roleName, applicationId);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got with etag$")
     public void Role_with_name_for_application_id_is_got_with_etag(String roleName, String applicationId) throws Throwable {
-        rolesSteps.getRoleWithNameForApplicationIdUsingEtag(roleName, applicationId);
+        roleBaseSteps.getRoleWithNameForApplicationIdUsingEtag(roleName, applicationId);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got for etag, forced new etag through update$")
     public void Role_with_name_for_application_id_is_got_for_etag_forced_new_etag_through_update(String roleName, String applicationId) throws Throwable {
-        rolesSteps.getRoleWithNameForApplicationIdUsingEtagAfterUpdate(roleName, applicationId);
+        roleBaseSteps.getRoleWithNameForApplicationIdUsingEtagAfterUpdate(roleName, applicationId);
     }
 
     @Given("^The following roles don't exist$")
     public void The_following_roles_don_t_exist(List<RoleDto> roles) throws Throwable {
-        rolesSteps.deleteRoles(roles);
+        roleBaseSteps.deleteRoles(roles);
     }
 
     @When("^List of roles is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -98,11 +119,16 @@ public class RolesStepdefs {
                                                                                              @Transform(NullEmptyStringConverter.class) String filter,
                                                                                              @Transform(NullEmptyStringConverter.class) String sort,
                                                                                              @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        rolesSteps.listOfRolesIsGotWith(limit, cursor, filter, sort, sortDesc);
+        roleBaseSteps.listOfRolesIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are roles with following names returned in order: (.*)")
     public void There_are_customers_with_following_codes_returned_in_order(List<String> names) throws Throwable {
-        rolesSteps.roleNamesAreInResponseInOrder(names);
+        roleBaseSteps.roleNamesAreInResponseInOrder(names);
+    }
+
+    @Given("^The following user customer roles exist$")
+    public void theFollowingUserCustomerRolesExist(List<RoleDto> roles) throws Throwable {
+        roleBaseSteps.followingRolesExist(roles);
     }
 }
