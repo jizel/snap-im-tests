@@ -6,8 +6,8 @@ Feature: Api subscription create update delete
       | applicationId                        | applicationName            | description               | website                    |
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel |
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | releaseDate | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | 2016-02-22  | Versions description 1 |
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | apiVersion |
       | 187b49db-673c-44e5-ab40-345ce5e89c37 | a318fd9a-a05d-42d8-8e84-22e904ace111 | apiVersion |
@@ -39,8 +39,8 @@ Feature: Api subscription create update delete
   @Smoke
   Scenario: Delete api subscription
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | releaseDate | description            |
-      | b318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 456 | inactive | 2016-02-22  | Versions description 1 |
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | b318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 456 | inactive | Versions description 1 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | apiVersion                           |
       | 287b49db-673c-44e5-ab40-345ce5e89c37 | b318fd9a-a05d-42d8-8e84-22e904ace111 | b1111d9a-a05d-42d8-8e84-42e904ace999 |
@@ -72,9 +72,9 @@ Feature: Api subscription create update delete
 
   Scenario Outline: Update api subscription with valid data
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | releaseDate | description            |
-      | c318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 7   | inactive | 2016-02-22  | Versions description 1 |
-      | d318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 8   | inactive | 2016-02-22  | Versions description 1 |
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | c318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 7   | inactive | Versions description 1 |
+      | d318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 8   | inactive | Versions description 1 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | apiVersion |
       | 387b49db-673c-44e5-ab40-345ce5e89c37 | c318fd9a-a05d-42d8-8e84-22e904ace111 | apiVersion |
@@ -94,8 +94,8 @@ Feature: Api subscription create update delete
     # "Version with identifier 6f552105-0bae-4410-b4bb-bee31567d4fa already link with"
   Scenario: Update api subscription with to the same applicationVersionId that already is
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | releaseDate | description            |
-      | b318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 456 | inactive | 2016-02-22  | Versions description 1 |
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | b318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 456 | inactive | Versions description 1 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | apiVersion                           |
       | 287b49db-673c-44e5-ab40-345ce5e89c37 | b318fd9a-a05d-42d8-8e84-22e904ace111 | b1111d9a-a05d-42d8-8e84-42e904ace999 |
@@ -123,8 +123,8 @@ Feature: Api subscription create update delete
   @Smoke
   Scenario: Create api subscription with valid data
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | releaseDate | description            |
-      | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | 2016-02-22  | Versions description 1 |
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 |
     Given The following api subscriptions is created
       | apiSubscriptionId                    | applicationVersionId                 | apiVersion |
       | e318fd9a-a05d-42d8-8e84-22e904ace111 | e318fd9a-a05d-42d8-8e84-22e904ace111 | something  |

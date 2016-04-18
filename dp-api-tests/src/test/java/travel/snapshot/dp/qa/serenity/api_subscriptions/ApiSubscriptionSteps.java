@@ -83,10 +83,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
             apiSubscription.setIsActive(0);
         }
 
-        List<ApiSubscriptionDto> listToSend = new ArrayList<ApiSubscriptionDto>();
-        listToSend.add(apiSubscription);
-
-        updateApiSubscription(apiSubscriptionId, listToSend);
+        updateApiSubscription(apiSubscriptionId, apiSubscription);
     }
 
     public void apiSubscriptionInListOfAll(String apiSubscriptionId, Boolean presence) {
@@ -109,19 +106,21 @@ public class ApiSubscriptionSteps extends BasicSteps {
         setSessionResponse(responce);
     }
 
-    public void updateApiSubscription(String apiSubscriptionId, List<ApiSubscriptionDto> updateData) {
+
+    public void updateApiSubscription(String apiSubscriptionId, ApiSubscriptionDto updateData) {
         Response apiSub = getEntity(apiSubscriptionId);
         Map<String, Object> mapToUpdate = new HashMap<>();
 
-        if (updateData.get(0).getApplicationVersionId() != null) {
-            mapToUpdate.put("api_version", updateData.get(0).getApplicationVersionId());
+
+        if (updateData.getApplicationVersionId() != null) {
+            mapToUpdate.put("api_version", updateData.getApplicationVersionId());
         }
 
-        if (updateData.get(0).getApplicationVersionId() != null) {
-            mapToUpdate.put("application_version_id", updateData.get(0).getApplicationVersionId());
+        if (updateData.getApplicationVersionId() != null) {
+            mapToUpdate.put("application_version_id", updateData.getApplicationVersionId());
         }
 
-        mapToUpdate.put("is_active", updateData.get(0).getIsActive());
+        mapToUpdate.put("is_active", updateData.getIsActive());
 
         Response resp = updateEntity(apiSubscriptionId, mapToUpdate, apiSub.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
