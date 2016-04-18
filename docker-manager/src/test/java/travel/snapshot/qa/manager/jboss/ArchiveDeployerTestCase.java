@@ -19,8 +19,6 @@ public class ArchiveDeployerTestCase {
 
     private final JBossManagerConfiguration configuration = new JBossManagerConfiguration.Builder().domain().build();
 
-    private DomainClient domainClient;
-
     private ArchiveDeployer archiveDeployer;
 
     @Rule
@@ -28,7 +26,7 @@ public class ArchiveDeployerTestCase {
 
     @Before
     public void setup() {
-        domainClient = DomainClient.Factory.create(new ModelControllerClientBuilder.Domain(configuration).build());
+        DomainClient domainClient = DomainClient.Factory.create(new ModelControllerClientBuilder.Domain(configuration).build());
         archiveDeployer = new ArchiveDeployer(domainClient.getDeploymentManager());
     }
 

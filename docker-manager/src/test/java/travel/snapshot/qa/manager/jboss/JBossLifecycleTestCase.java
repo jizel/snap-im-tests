@@ -5,6 +5,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static travel.snapshot.qa.manager.jboss.configuration.ContainerType.WILDFLY;
 
 import org.arquillian.spacelift.Spacelift;
 import org.jboss.as.arquillian.container.ManagementClient;
@@ -21,10 +22,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import travel.snapshot.qa.category.JBossTest;
+import travel.snapshot.qa.manager.Util;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.configuration.JVM;
-import travel.snapshot.qa.manager.jboss.configuration.Util;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossDomainStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
@@ -35,19 +36,19 @@ import java.util.Map;
 @Category(JBossTest.class)
 public class JBossLifecycleTestCase {
 
-    private static JBossManagerConfiguration configuration = new JBossManagerConfiguration.Builder()
-            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+    private JBossManagerConfiguration configuration = new JBossManagerConfiguration.Builder()
+            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome(WILDFLY)).build())
             .setContainerType(Util.getContainerType())
             .build();
 
-    private static JBossManagerConfiguration domainConfiguration = new JBossManagerConfiguration.Builder()
-            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+    private JBossManagerConfiguration domainConfiguration = new JBossManagerConfiguration.Builder()
+            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome(WILDFLY)).build())
             .setContainerType(Util.getContainerType())
             .domain()
             .build();
 
-    private static JBossManagerConfiguration invalidLocalConfiguration = new JBossManagerConfiguration.Builder()
-            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+    private JBossManagerConfiguration invalidLocalConfiguration = new JBossManagerConfiguration.Builder()
+            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome(WILDFLY)).build())
             .remote() // remote flag means that we will not try to start it locally but in test we try to do it
             .build();
 

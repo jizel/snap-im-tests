@@ -1,0 +1,95 @@
+import org.arquillian.spacelift.Spacelift
+import org.arquillian.spacelift.gradle.gradle.GradleInstallation
+import org.arquillian.spacelift.task.os.CommandTool
+
+apply plugin: 'org.arquillian.spacelift'
+
+/**
+ * This project just runs tests of a parent project - it serves as a testing proxy.
+ * The advantage of this is that you do not need to have Tomcat and Wildfly containers installed
+ * locally - this test will cache them to workspace and point testing build to these just-downloaded installations.
+ *
+ * Properties to this project are set just the same way as properties to the project itself are.
+ */
+spacelift {
+
+    workspace new File(project.rootDir, 'snapshot/workspace')
+    cacheDir new File(project.rootDir, 'snapshot/cache')
+
+    configuration {
+        dockerMode {
+            value System.getProperty("docker.mode", "host")
+        }
+        dockerHost {
+            value System.getProperty("docker.host", "127.0.0.1")
+        }
+    }
+
+    profiles {
+        'default' {
+            enabledInstallations 'gradle', 'tomcat', 'wildfly'
+            tests 'dockerManagerTests'
+        }
+    }
+
+    installations {
+        gradle(from: GradleInstallation) {}
+
+        tomcat {
+            remoteUrl { "https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.32/bin/apache-tomcat-8.0.32.tar.gz" }
+            postActions {
+                project.ant.copy(
+                        file: new File(project.rootDir, "resources/tomcat-users.xml"),
+                        todir: new File(home, "conf"),
+                        failonerror: false,
+                        overwrite: true)
+            }
+        }
+
+        wildfly {
+            remoteUrl { "http://download.jboss.org/wildfly/10.0.0.Final/wildfly-10.0.0.Final.tar.gz" }
+            postActions {
+                Spacelift.task(CommandTool)
+                        .addEnvironment("JBOSS_HOME", home.absolutePath)
+                        .programName("bash")
+                        .parameters(new File(home, "bin/add-user.sh").absolutePath, "admin", "admin")
+                        .execute().await()
+            }
+        }
+    }
+
+    tests {
+        dockerManagerTests {
+            execute {
+                Spacelift.task("gradle")
+                        .parameters("--project-dir", project.rootDir.parentFile.absolutePath)
+                        .parameters("clean", "test")
+                        .parameter("-Ddocker.mode=${dockerMode}")
+                        .parameter("-Ddocker.host=${dockerHost}")
+                        .parameter("-Djboss.wildfly.home=${wildfly.home}")
+                        .parameter("-Dcatalina.home=${tomcat.home}")
+                        .execute()
+                        .await()
+
+                Spacelift.task("gradle")
+                        .parameters("--project-dir", project.rootDir.parentFile.absolutePath)
+                        .parameter("jacocoTestReport")
+                        .execute()
+                        .await()
+            }
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+
+    dependencies {
+        classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
+    }
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '2.9' }

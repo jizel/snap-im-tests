@@ -1,6 +1,6 @@
 package travel.snapshot.qa.manager.jboss.configuration;
 
-import static travel.snapshot.qa.manager.jboss.configuration.Util.isNotNullAndEmpty;
+import static travel.snapshot.qa.manager.Util.isNotNullAndEmpty;
 
 import java.util.Arrays;
 import java.util.List;

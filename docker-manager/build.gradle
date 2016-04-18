@@ -8,27 +8,27 @@ group 'travel.snapshot.qa.manager'
 
 def versions = [
         // core
-        spacelift : "1.0.0.Alpha9",
-        cube      : "1.0.0.Alpha10",
-        arquillian: "1.1.11.Final",
+        spacelift         : "1.0.0.Alpha9",
+        cube              : "1.0.0.Alpha10",
+        arquillian        : "1.1.11.Final",
         arquillian_wildfly: "2.0.0.Final",
-        shrinkwrap: "2.2.2",
+        shrinkwrap        : "2.2.2",
 
         // helpers
-        httpclient: "4.5.1",
-        mysql     : "5.1.37",
-        mongo     : "3.2.1",
-        activemq  : "5.12.1",
-        redis     : "2.8.1",
-        flyway    : "3.2.1",
+        httpclient        : "4.5.1",
+        mysql             : "5.1.37",
+        mongo             : "3.2.1",
+        activemq          : "5.12.1",
+        redis             : "2.8.1",
+        flyway            : "3.2.1",
 
         // test
-        junit     : "4.12",
-        mockito   : "1.10.19",
+        junit             : "4.12",
+        mockito           : "1.10.19",
 
         // logging
-        log4j     : "1.2.17",
-        slf4j     : "1.7.13"
+        log4j             : "1.2.17",
+        slf4j             : "1.7.13"
 ]
 
 buildscript {
@@ -74,7 +74,7 @@ dependencies {
     compile "org.arquillian.cube:arquillian-cube-docker:${versions.cube}"
     compile "org.jboss.arquillian.core:arquillian-core-impl-base:${versions.arquillian}"
     compile "org.jboss.arquillian.config:arquillian-config-impl-base:${versions.arquillian}"
-    compile ("org.jboss.arquillian.container:arquillian-container-spi:${versions.arquillian}") {
+    compile("org.jboss.arquillian.container:arquillian-container-spi:${versions.arquillian}") {
         exclude group: "org.jboss.arquillian.config", module: "arquillian-config-impl-base"
     }
 
@@ -131,7 +131,7 @@ dependencies {
 // if this is set to "host" then "arquillian.xml" file is used
 // if this is set to "machine" then "arquillian-docker-machine.xml" is used
 // if it is set to something else or not set at all, "arquillian.xml" is used
-String dockerMode=System.getProperty("docker.mode", "host")
+String dockerMode = System.getProperty("docker.mode", "host")
 
 test {
     testLogging {

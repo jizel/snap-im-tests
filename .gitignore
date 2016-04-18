@@ -33,3 +33,5 @@ fake-data-generator/Python_load/src/*.tsv
 *.swp
 
 *.log
+
+docker-manager/docker-manager-tests/snapshot
