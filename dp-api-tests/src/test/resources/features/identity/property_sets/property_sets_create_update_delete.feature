@@ -27,12 +27,10 @@ Feature: Property sets create update delete
       | propertySetName  | propertySetDescription | propertySetType |
       | ps1_created_name | ps1_description        | branch          |
     Then Response code is "201"
-    And Body contains entity with attribute "property_set_name" value "ps1_created_name"
-    And Body contains entity with attribute "property_set_type" value "branch"
+    And Body contains entity with attribute "name" value "ps1_created_name"
+    And Body contains entity with attribute "property_set_type_id" value "branch"
     And "Location" header is set and contains the same property set
     And Etag header is present
-
-    #error codes
 
   @Smoke
   Scenario: Deleting Property set
@@ -41,11 +39,9 @@ Feature: Property sets create update delete
     And Body is empty
     And Property set with same id doesn't exist
 
-
   Scenario: Checking error code for deleting property
     When Nonexistent property set id is deleted
     Then Response code is "204"
-
 
   Scenario Outline: Updating property set
   Property sets for customer "c1t" were deleted in background, so we don't need to clean here.

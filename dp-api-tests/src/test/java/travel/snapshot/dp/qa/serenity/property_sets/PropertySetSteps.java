@@ -201,7 +201,7 @@ public class PropertySetSteps extends BasicSteps {
 
     public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, CustomerDto c) {
         propertySetNames.forEach(n -> {
-            String filter = String.format("property_set_name==%s and customer_id==%s", n, c.getCustomerId());
+            String filter = String.format("name==%s and customer_id==%s", n, c.getCustomerId());
             PropertySetDto[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
             for (PropertySetDto ps : propertySets) {
                 Response propertyUsersResponse = getSecondLevelEntities(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
@@ -301,7 +301,7 @@ public class PropertySetSteps extends BasicSteps {
 
     public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, CustomerDto customer) {
         propertySetNames.forEach(psn -> {
-            String filter = String.format("property_set_name==%s and customer_id==%s", psn, customer.getCustomerId());
+            String filter = String.format("name==%s and customer_id==%s", psn, customer.getCustomerId());
             PropertySetDto[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
             for (PropertySetDto ps : propertySets) {
                 Response propertyPropertySetResponse = getSecondLevelEntities(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
@@ -372,9 +372,9 @@ public class PropertySetSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
         given().spec(spec).get(propertyLocation).then()
-                .body("property_set_type", is(originalProperty.getPropertySetType()))
-                .body("property_set_description", is(originalProperty.getPropertySetDescription()))
-                .body("property_set_name", is(originalProperty.getPropertySetName()))
+                .body("property_set_type_id", is(originalProperty.getPropertySetType()))
+                .body("description", is(originalProperty.getPropertySetDescription()))
+                .body("name", is(originalProperty.getPropertySetName()))
                 .body("customer_id", is(originalProperty.getCustomerId()));
 
     }

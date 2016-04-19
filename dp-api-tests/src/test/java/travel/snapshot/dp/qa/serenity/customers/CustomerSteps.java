@@ -550,7 +550,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public List<CustomerDto> getCustomersForCodes(List<String> customerCodes) {
-        String filter = "code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
+        String filter = "customer_code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
         CustomerDto[] customers = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(CustomerDto[].class);
         return Arrays.asList(customers);
     }
