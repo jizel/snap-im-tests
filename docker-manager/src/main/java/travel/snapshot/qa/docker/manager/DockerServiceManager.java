@@ -36,6 +36,8 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
 
     protected LifecycleHookExecutor<T> lifecycleHookExecutor = new LifecycleHookExecutor<>();
 
+    private int precedence = DEFAULT_PRECEDENCE;
+
     public DockerServiceManager(final T serviceManager) {
         Validate.notNull(serviceManager, "Service manager can not be a null object!");
         this.serviceManager = serviceManager;
@@ -289,7 +291,15 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * @return bigger the number is, sooner underlying service will be started
      */
     public int precedence() {
-        return DEFAULT_PRECEDENCE;
+        return precedence;
+    }
+
+    /**
+     * @param precedence precedence to set
+     * @see #precedence()
+     */
+    public void setPrecedence(int precedence) {
+        this.precedence = precedence;
     }
 
     @Override
