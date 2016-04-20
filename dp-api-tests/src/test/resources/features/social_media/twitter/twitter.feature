@@ -19,7 +19,7 @@ Feature: Twitter metrics
       | /analytics/twitter/retweet_reach    | MONTH1      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/mentions         | DAY3        | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/mention_reach    | WEEKs1      | 99000099-9999-4999-a999-999999999999 |
-    
+
   @Smoke
   Scenario Outline: Validate that metrics have valid value in the db
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -68,10 +68,10 @@ Feature: Twitter metrics
     And Response contains "<count>" values of global stats dto
 
     Examples:
-      | url                | granularity | count                                                | since      | until      | property                             |
-      | /analytics/twitter | day         | 7167, 7394, 7462, 7487, 7506, 7521, 7697, 7741, 7745 | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/twitter | week        | 7359, 7627, 7668, 7719, 7737, 7782, 7924, 7944, 7958 | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/twitter | month       | 7073, 7301, 7387, 7411, 7431, 7451, 7623, 7672, 7674 | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
+      | url                | granularity | count                                                         | since      | until      | property                             |
+      | /analytics/twitter | day         | 10748, 10477, 10212, 10265, 9993, 10279, 10114, 10315, 10437  | 2016-04-07 | 2016-04-07 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | week        | 10797, 10531, 10293, 10338, 10051, 10304, 10153, 10397, 10519 | 2016-04-04 | 2016-04-10 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | month       | 11242, 11013, 10748, 10826, 10510, 10773, 10530, 10867, 10885 | 2016-04-01 | 2016-04-30 | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity for overall twitter metrics
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
