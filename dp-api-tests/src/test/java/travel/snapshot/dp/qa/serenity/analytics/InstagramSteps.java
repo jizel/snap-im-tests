@@ -39,8 +39,8 @@ public class InstagramSteps extends AnalyticsBaseSteps {
         for (MetricDto metric : actual.getData()) {
             List<RecordDto<? extends Number>> actualValues = metric.getValues();
 
-            if (actualValues.size() == 1) {
-                actualList.add(Integer.valueOf(actualValues.get(0).toString()));
+            if (actualValues.size() == 1){
+                actualList.add(Integer.valueOf(actualValues.get(0).getValue().toString()));
             }
         }
 
