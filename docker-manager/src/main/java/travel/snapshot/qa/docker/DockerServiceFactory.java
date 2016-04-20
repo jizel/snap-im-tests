@@ -2,6 +2,7 @@ package travel.snapshot.qa.docker;
 
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
+import travel.snapshot.qa.docker.manager.impl.GenericDockerManager;
 import travel.snapshot.qa.docker.manager.impl.JBossDomainDockerManager;
 import travel.snapshot.qa.docker.manager.impl.JBossStandaloneDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
@@ -10,6 +11,9 @@ import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;
+import travel.snapshot.qa.manager.generic.api.GenericManager;
+import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration;
+import travel.snapshot.qa.manager.generic.impl.GenericManagerImpl;
 import travel.snapshot.qa.manager.jboss.JBossDomainManager;
 import travel.snapshot.qa.manager.jboss.JBossStandaloneManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
@@ -31,6 +35,10 @@ import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguratio
  * @see travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
  */
 public class DockerServiceFactory {
+
+    public static GenericService generic() {
+        return new GenericService();
+    }
 
     public static TomcatService tomcat() {
         return new TomcatService();
@@ -54,6 +62,34 @@ public class DockerServiceFactory {
 
     public static JBossDomainService jbossDomain() {
         return new JBossDomainService();
+    }
+
+    /**
+     * Represents dummy Docker service which does not really manage anything. It just starts and stops a container.
+     */
+    public static class GenericService implements Service<GenericManager, GenericConfiguration> {
+
+        public static final String DEFAULT_GENERIC_CONTAINER_ID = "default";
+
+        @Override
+        public DockerServiceManager<GenericManager> init(GenericConfiguration configuration, String containerId) {
+            return new GenericDockerManager(new GenericManagerImpl(configuration)).setContainerId(containerId);
+        }
+
+        @Override
+        public DockerServiceManager<GenericManager> init(String containerId) {
+            return init(new GenericConfiguration.Builder().build(), DEFAULT_GENERIC_CONTAINER_ID);
+        }
+
+        @Override
+        public DockerServiceManager<GenericManager> init(GenericConfiguration configuration) {
+            return init(configuration, DEFAULT_GENERIC_CONTAINER_ID);
+        }
+
+        @Override
+        public DockerServiceManager<GenericManager> init() {
+            return init(new GenericConfiguration.Builder().build());
+        }
     }
 
     /**

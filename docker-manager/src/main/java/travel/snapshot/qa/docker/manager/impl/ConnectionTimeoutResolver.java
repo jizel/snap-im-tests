@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
+import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
@@ -22,6 +23,8 @@ public class ConnectionTimeoutResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectionTimeoutResolver.class);
 
+    private static final String GENERIC_CONNECTION_TIMEOUT_PROPERTY = "docker.generic.connection.timeout";
+
     private static final String TOMCAT_CONNECTION_TIMEOUT_PROPERTY = "docker.tomcat.connection.timeout";
 
     private static final String MARIADB_CONNECTION_TIMEOUT_PROPERTY = "docker.mariadb.connection.timeout";
@@ -33,6 +36,10 @@ public class ConnectionTimeoutResolver {
     private static final String JBOSS_STANDALONE_CONNECTION_TIMEOUT_PROPERTY = "docker.jboss.standalone.connection.timeout";
 
     private static final String JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY = "docker.jboss.domain.connection.timeout";
+
+    public static long resolveGenericConnectionTimeout(GenericConfiguration configuration) {
+        return resolveTimeout(configuration.getStartupTimeoutInSeconds(), GENERIC_CONNECTION_TIMEOUT_PROPERTY, ServiceType.GENERIC.name());
+    }
 
     public static long resolveTomcatConnectionTimeout(TomcatManagerConfiguration configuration) {
         return resolveTimeout(configuration.getStartupTimeoutInSeconds(), TOMCAT_CONNECTION_TIMEOUT_PROPERTY, ServiceType.TOMCAT.name());
@@ -83,4 +90,6 @@ public class ConnectionTimeoutResolver {
 
         return connectionTimeOut;
     }
+
+
 }
