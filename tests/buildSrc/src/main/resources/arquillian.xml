@@ -117,6 +117,7 @@
                 links:
                     - mariadbkey:mariadbkey
                     - activemq:activemq
+                    - mongodb:mongodb
                 binds:
                     - ${arquillian.xml.data.tomcat.config.dir}/tomcat:/data/tomcat/config
                     ${arquillian.xml.deployments.mount}
@@ -156,6 +157,32 @@
                     sleepPollingTime: 5 s
                     iterations: 15
                 portBindings: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+            nginx:
+                image: jumarko/nginx-lua:latest
+                exposedPorts: [80/tcp]
+                hostName: nginx
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [8899->80/tcp]
+                links:
+                    - tomcatkey:tomcat_backend_1
+                    - keycloak:keycloak_backend_1
+                    - redis:redis.nginx.snapshot.travel
+                binds:
+                    - ${arquillian.xml.data.nginx.config.dir}/nginx:/etc/nginx
+            redis:
+                image: redis:3.0.7
+                exposedPorts: [6379/tcp]
+                hostName: redis.nginx.snapshot.travel
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [6379/tcp]
         </property>
     </extension>
 

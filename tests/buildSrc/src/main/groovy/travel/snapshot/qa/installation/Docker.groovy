@@ -103,9 +103,15 @@ class Docker extends BaseContainerizableObject<Docker> implements Installation {
         System.setProperty("arquillian.xml.connection.mode", Properties.Docker.connectionMode)
         System.setProperty("arquillian.xml.docker.registry.password", Properties.Docker.registryPassword)
 
+        // TOMCAT
+
         // in case we do not use VM, config directory will be automatically mounted to respective container transparently
         System.setProperty("arquillian.xml.data.tomcat.config.dir", Properties.Tomcat.springConfigDirectoryMount)
         System.setProperty("arquillian.xml.deployments.mount", Properties.Tomcat.deploymentDirectoryBind)
+
+        // NGINX
+
+        System.setProperty("arquillian.xml.data.nginx.config.dir", Properties.Nginx.nginxConfigDirectoryMount)
 
         // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
         System.setProperty("arquillian.xml.java.rmi.server.hostname", "")

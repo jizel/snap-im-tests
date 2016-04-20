@@ -153,6 +153,8 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         // need to be sure that it exists
 
         DockerInteraction.execute("mkdir -p /home/docker/configuration", 0, 1)
+
+        // TOMCAT
         System.setProperty("arquillian.xml.data.tomcat.config.dir", Properties.Tomcat.springConfigDirectoryMount)
 
         def tomcatDeploymentsDir = Properties.Tomcat.deploymentDirectory
@@ -160,6 +162,9 @@ class DockerMachine extends BaseContainerizableObject<DockerMachine> implements 
         DockerInteraction.execute("mkdir -p ${tomcatDeploymentsDir}", 0, 1)
         DockerInteraction.execute("sudo -i chown -R docker:staff ${tomcatDeploymentsDir}", 0, 1)
         System.setProperty("arquillian.xml.deployments.mount", Properties.Tomcat.deploymentDirectoryBind)
+
+        // NGINX
+        System.setProperty("arquillian.xml.data.nginx.config.dir", Properties.Nginx.nginxConfigDirectoryMount)
 
         // In case we run in HOST mode, this is empty so IP of the container itself will be resolved
         System.setProperty("arquillian.xml.java.rmi.server.hostname", dockerMachineIp)

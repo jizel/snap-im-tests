@@ -9,6 +9,7 @@ import travel.snapshot.qa.installation.GitBasedInstallation
 import travel.snapshot.qa.installation.TomcatInstallationResolver
 import travel.snapshot.qa.installation.service.JBossStandaloneService
 import travel.snapshot.qa.installation.service.MariaDBKeycloakService
+import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.api.APITestsExecution
@@ -24,6 +25,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestsExecution
 import travel.snapshot.qa.test.execution.load.LoadTestsModuleParser
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.log.ContainerLogReporter
+import travel.snapshot.qa.test.execution.nginx.NginxConfigurationDeployer
 import travel.snapshot.qa.test.execution.report.ApiTestGuiReporter
 import travel.snapshot.qa.test.execution.report.LoadTestGuiReporter
 import travel.snapshot.qa.test.execution.threescale.ThreeScaleUploadExecutor
@@ -80,7 +82,9 @@ spacelift {
                         "docker.snapshot.travel:5000/snapshot/mariadb:10.1.13",
                         "docker.snapshot.travel:5000/snapshot/mongodb:3.2.4",
                         "docker.snapshot.travel:5000/snapshot/activemq:5.12.3",
-                        "docker.snapshot.travel:5000/snapshot/keycloak:1.9.1"
+                        "docker.snapshot.travel:5000/snapshot/keycloak:1.9.1",
+                        "jumarko/nginx-lua:latest",
+                        "redis:3.0.7"
                 ]
             }
         }
@@ -157,6 +161,21 @@ spacelift {
         dataPlatformRepositoryApiCheckoutCommit {
             type Boolean
             value Properties.API.repositoryCheckoutCommit
+        }
+
+        // operations repository
+
+        operationsRepositoryUrl {
+            value Properties.Operations.repositoryUrl
+        }
+        operationsRepository {
+            value Properties.Operations.repository
+        }
+        operationsRepositoryCommit {
+            value Properties.Operations.getRepositoryCommit("origin/master")
+        }
+        operationsRepositoryCheckoutCommit {
+            value Properties.Operations.repositoryCheckoutCommit
         }
     }
 
@@ -245,12 +264,11 @@ spacelift {
 
         keycloakPlatformStart(from: dataPlatformTest) {
             // gradle is needed when building identity module from dataPlatformRepository installation
-            enabledInstallations (dockerInstallations + keycloakServiceInstallations + "dataPlatformRepository" + "gradle")
+            enabledInstallations (dockerInstallations + keycloakServiceInstallations + "dataPlatformRepository" + "operationsRepository" + "gradle")
             tests 'keycloakPlatformStart', 'keycloakTest'
         }
         keycloakPlatformStop(from: dataPlatformTest) {
-            // gradle is needed when building identity module from dataPlatformRepository installation
-            enabledInstallations (dockerInstallations + keycloakServiceInstallations + "dataPlatformRepository" + "gradle")
+            enabledInstallations (dockerInstallations + keycloakServiceInstallations)
             tests 'platformStop'
         }
     }
@@ -294,6 +312,16 @@ spacelift {
                 platform.with(JBossStandaloneService.init("keycloak"))
             }
         }
+        nginx(from: DockerService) {
+            setup {
+                platform.with(generic().init(new GenericConfiguration.Builder().setBindPort(8899).build(), "nginx"))
+            }
+        }
+        redis(from: DockerService) {
+            setup {
+                platform.with(redis().init())
+            }
+        }
 
         maven(from: MavenInstallation) {}
 
@@ -317,6 +345,12 @@ spacelift {
             checkoutCommit dataPlatformRepositoryApiCheckoutCommit
             home dataPlatformApiRepository
         }
+        operationsRepository(from: GitBasedInstallation) {
+            repository operationsRepositoryUrl
+            commit operationsRepositoryCommit
+            checkoutCommit operationsRepositoryCheckoutCommit
+            home operationsRepository
+        }
     }
 
     tests {
@@ -338,7 +372,10 @@ spacelift {
         }
         keycloakPlatformStart(from: PlatformLifecycle) {
             with platform
-            init {  new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy() }
+            init {
+                new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy()
+                new NginxConfigurationDeployer(Properties.Docker.machineName).deploy()
+            }
             execute {
                 new MariaDBDropper(platform).drop(DATABASE_SCHEMES).container("mariadbkey").execute()
                 new MariaDBInitializer(platform).init(DATABASE_SCHEMES).container("mariadbkey").execute()
@@ -540,8 +577,15 @@ spacelift {
 
         keycloakTest {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.IDENTITY).execute()
-                new DataPlatformDeployer(platform).container("tomcatkey").deploy(DataPlatformModule.IDENTITY).execute()
+                new DataPlatformBuildExecutor()
+                        .build(DataPlatformModule.IDENTITY)
+                        .build(DataPlatformModule.CONFIGURATION)
+                        .execute()
+
+                new DataPlatformDeployer(platform).container("tomcatkey")
+                        .deploy(DataPlatformModule.IDENTITY)
+                        .deploy(DataPlatformModule.CONFIGURATION)
+                        .execute()
             }
             execute {
                 println "keycloak test"
@@ -568,7 +612,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.6'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.8'
     }
 }
 
