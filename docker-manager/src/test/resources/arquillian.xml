@@ -102,6 +102,15 @@
                     sleepPollingTime: 5 s
                     iterations: 15
                 portBindings: [1098/tcp,5672/tcp,8161/tcp,61613/tcp,61614/tcp,61616/tcp]
+            redis:
+                image: redis:3.0.7
+                exposedPorts: [6379/tcp]
+                await:
+                    strategy: polling
+                    type: ping
+                    sleepPollingTime: 5 s
+                    iterations: 15
+                portBindings: [6379/tcp]
         </property>
     </extension>
 

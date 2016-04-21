@@ -76,6 +76,10 @@ public class TomcatManager implements TomcatContainerManager {
     @Override
     public void start() throws ContainerManagerException {
 
+        if (configuration.isRemote()) {
+            throw new IllegalStateException("Starting of Tomcat container is allowed only if 'remote' is false.");
+        }
+
         if (Spacelift.task(configuration, TomcatStartedCheckTask.class).execute().await()) {
             throw new ContainerManagerException("Tomcat container is already running!");
         }

@@ -20,6 +20,10 @@ public class JBossStopper extends Task<JBossContainerManager, Void> {
 
         logger.info("Stopping JBoss container located at {}.", manager.getConfiguration().getJVM().getJBossHome());
 
+        if (manager.getConfiguration().isRemote()) {
+            throw new IllegalStateException("It is possible to stop JBoss container only in case it is not 'remote'");
+        }
+
         manager.stop();
 
         return null;
