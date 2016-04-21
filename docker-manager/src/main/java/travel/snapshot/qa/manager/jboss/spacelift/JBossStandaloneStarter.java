@@ -13,6 +13,10 @@ public class JBossStandaloneStarter extends JBossStarter<JBossStandaloneManager>
     protected JBossStandaloneManager process(JBossManagerConfiguration configuration) throws Exception {
         setConfiguration(configuration);
 
+        if (this.configuration.isDomain()) {
+            throw new IllegalStateException("You have to use standalone configuration.");
+        }
+
         JBossStandaloneManager jbossManager = new JBossStandaloneManager(this.configuration);
 
         logger.info("Starting JBoss container located at {} in standalone mode.", this.configuration.getJVM().getJBossHome());

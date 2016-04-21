@@ -66,8 +66,13 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
 
     @Override
     public void start() throws ContainerManagerException {
+
         if (isRunning()) {
             throw new ContainerManagerException("JBoss container is already running.");
+        }
+
+        if (configuration.isRemote()) {
+            throw new IllegalStateException("Starting of JBoss container is allowed only if 'remote' is false.");
         }
 
         try {
@@ -77,7 +82,6 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
 
             ProcessBuilder processBuilder = new ProcessBuilder(command.getFullCommand());
             processBuilder.redirectErrorStream(true);
-
 
             process = processBuilder.start();
 

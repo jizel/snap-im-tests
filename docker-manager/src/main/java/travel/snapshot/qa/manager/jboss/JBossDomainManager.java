@@ -32,8 +32,16 @@ public class JBossDomainManager extends AbstractJBossManager<ManagementClient, D
         this(new JBossManagerConfiguration.Builder().domain().build());
     }
 
+    /**
+     * @param configuration configuration for JBoss domain manager
+     * @throws IllegalStateException thrown in case configuration is not 'domain'.
+     */
     public JBossDomainManager(final JBossManagerConfiguration configuration) {
         super(configuration);
+
+        if (!configuration.isDomain()) {
+            throw new IllegalStateException("Provided JBoss manager configuration is not 'domain' for domain manager.");
+        }
 
         DomainClient domainClient = DomainClient.Factory.create(new ModelControllerClientBuilder.Domain(configuration).build());
 

@@ -27,6 +27,11 @@ public class JBossStandaloneManager extends AbstractJBossManager<ManagementClien
 
     public JBossStandaloneManager(final JBossManagerConfiguration configuration) throws ContainerManagerException {
         super(configuration);
+
+        if (configuration.isDomain()) {
+            throw new IllegalStateException("Provided JBoss manager configuration is 'domain' for standalone manager.");
+        }
+
         this.managementClient = new ManagementClientFactory.Standalone(configuration).build();
         this.deployer = new JBossStandaloneDeployer(managementClient);
     }
