@@ -7,6 +7,7 @@ import travel.snapshot.qa.docker.manager.impl.JBossDomainDockerManager;
 import travel.snapshot.qa.docker.manager.impl.JBossStandaloneDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
 import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
+import travel.snapshot.qa.docker.manager.impl.RedisDockerManager;
 import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
@@ -23,8 +24,13 @@ import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.impl.MongoDBManagerImpl;
+import travel.snapshot.qa.manager.redis.api.RedisManager;
+import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
+import travel.snapshot.qa.manager.redis.impl.RedisManagerImpl;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;
+
+import java.util.function.Supplier;
 
 /**
  * Convenience wrapper for all available Snapshot DataPlatform services.
@@ -64,12 +70,18 @@ public class DockerServiceFactory {
         return new JBossDomainService();
     }
 
+    public static RedisService redis() {
+        return new RedisService();
+    }
+
     /**
      * Represents dummy Docker service which does not really manage anything. It just starts and stops a container.
      */
     public static class GenericService implements Service<GenericManager, GenericConfiguration> {
 
         public static final String DEFAULT_GENERIC_CONTAINER_ID = "default";
+
+        private final Supplier<GenericConfiguration> genericConfigurationSupplier = () -> new GenericConfiguration.Builder().build();
 
         @Override
         public DockerServiceManager<GenericManager> init(GenericConfiguration configuration, String containerId) {
@@ -78,7 +90,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<GenericManager> init(String containerId) {
-            return init(new GenericConfiguration.Builder().build(), DEFAULT_GENERIC_CONTAINER_ID);
+            return init(genericConfigurationSupplier.get(), DEFAULT_GENERIC_CONTAINER_ID);
         }
 
         @Override
@@ -88,7 +100,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<GenericManager> init() {
-            return init(new GenericConfiguration.Builder().build());
+            return init(genericConfigurationSupplier.get());
         }
     }
 
@@ -100,11 +112,13 @@ public class DockerServiceFactory {
 
         public static final String DEFAULT_TOMCAT_CONTAINER_ID = "tomcat";
 
+        private final Supplier<TomcatManagerConfiguration> tomcatConfigurationSupplier = () -> new TomcatManagerConfiguration.Builder().remote().build();
+
         @Override
         public DockerServiceManager<TomcatManager> init(TomcatManagerConfiguration configuration, String containerId) {
 
             if (!configuration.isRemote()) {
-                throw new IllegalStateException("Used TomcatManagerConfiguration is not remote.");
+                throw new IllegalStateException("Used configuration is not remote.");
             }
 
             return new TomcatDockerManager(new TomcatManager(configuration)).setContainerId(containerId);
@@ -112,7 +126,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<TomcatManager> init(String containerId) {
-            return new TomcatDockerManager(new TomcatManager(new TomcatManagerConfiguration.Builder().remote().build())).setContainerId(containerId);
+            return init(tomcatConfigurationSupplier.get(), containerId);
         }
 
         @Override
@@ -122,7 +136,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<TomcatManager> init() {
-            return init(new TomcatManagerConfiguration.Builder().remote().build());
+            return init(tomcatConfigurationSupplier.get());
         }
     }
 
@@ -134,6 +148,8 @@ public class DockerServiceFactory {
 
         public static final String DEFAULT_MONGODB_CONTAINER_ID = "mongodb";
 
+        private final Supplier<MongoDBManagerConfiguration> mongoDBConfigurationSupplier = () -> new MongoDBManagerConfiguration.Builder().build();
+
         @Override
         public DockerServiceManager<MongoDBManager> init(MongoDBManagerConfiguration configuration, String containerId) {
             return new MongoDBDockerManager(new MongoDBManagerImpl(configuration)).setContainerId(containerId);
@@ -141,7 +157,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<MongoDBManager> init(String containerId) {
-            return new MongoDBDockerManager(new MongoDBManagerImpl(new MongoDBManagerConfiguration.Builder().build())).setContainerId(containerId);
+            return init(mongoDBConfigurationSupplier.get(), containerId);
         }
 
         @Override
@@ -151,7 +167,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<MongoDBManager> init() {
-            return init(new MongoDBManagerConfiguration.Builder().build());
+            return init(mongoDBConfigurationSupplier.get());
         }
     }
 
@@ -163,6 +179,8 @@ public class DockerServiceFactory {
 
         public static final String DEFAULT_MARIADB_CONTAINER_ID = "mariadb";
 
+        private final Supplier<MariaDBManagerConfiguration> mariadbConfigurationSupplier = () -> new MariaDBManagerConfiguration.Builder().build();
+
         @Override
         public DockerServiceManager<MariaDBManager> init(MariaDBManagerConfiguration configuration, String containerId) {
             return new MariaDBDockerManager(new MariaDBManagerImpl(configuration)).setContainerId(containerId);
@@ -170,7 +188,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<MariaDBManager> init(String containerId) {
-            return new MariaDBDockerManager(new MariaDBManagerImpl(new MariaDBManagerConfiguration.Builder().build())).setContainerId(containerId);
+            return init(mariadbConfigurationSupplier.get(), containerId);
         }
 
         @Override
@@ -180,7 +198,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<MariaDBManager> init() {
-            return init(new MariaDBManagerConfiguration.Builder().build());
+            return init(mariadbConfigurationSupplier.get());
         }
     }
 
@@ -192,6 +210,8 @@ public class DockerServiceFactory {
 
         public static final String DEFAULT_ACTIVEMQ_CONTAINER_ID = "activemq";
 
+        private final Supplier<ActiveMQManagerConfiguration> activeMQConfigurationSupplier = () -> new ActiveMQManagerConfiguration.Builder().build();
+
         @Override
         public DockerServiceManager<ActiveMQManager> init(ActiveMQManagerConfiguration configuration, String containerId) {
             return new ActiveMQDockerManager(new ActiveMQManagerImpl(configuration)).setContainerId(containerId);
@@ -199,7 +219,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<ActiveMQManager> init(String containerId) {
-            return init(new ActiveMQManagerConfiguration.Builder().build(), containerId);
+            return init(activeMQConfigurationSupplier.get(), containerId);
         }
 
         @Override
@@ -209,7 +229,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<ActiveMQManager> init() {
-            return init(new ActiveMQManagerConfiguration.Builder().build());
+            return init(activeMQConfigurationSupplier.get());
         }
     }
 
@@ -221,14 +241,31 @@ public class DockerServiceFactory {
 
         public static final String DEFAULT_JBOSS_STANDALONE_CONTAINER_ID = "jboss";
 
+        private final Supplier<JBossManagerConfiguration> jbossConfigurationSupplier = () -> new JBossManagerConfiguration.Builder().remote().build();
+
+        /**
+         * @param configuration configuration of a service
+         * @param containerId   container ID which this service will manage
+         * @return respective Docker manager for standalone JBoss container
+         * @throws IllegalStateException in case provided {@code configuration} is "domain" or not "remote".
+         */
         @Override
         public DockerServiceManager<JBossStandaloneManager> init(JBossManagerConfiguration configuration, String containerId) {
+
+            if (configuration.isDomain()) {
+                throw new IllegalStateException("Used configuration is 'domain' for standalone service.");
+            }
+
+            if (!configuration.isRemote()) {
+                throw new IllegalStateException("Used configuration is not 'remote'.");
+            }
+
             return new JBossStandaloneDockerManager(new JBossStandaloneManager(configuration)).setContainerId(containerId);
         }
 
         @Override
         public DockerServiceManager<JBossStandaloneManager> init(String containerId) {
-            return init(new JBossManagerConfiguration.Builder().build(), containerId);
+            return init(jbossConfigurationSupplier.get(), containerId);
         }
 
         @Override
@@ -238,7 +275,7 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<JBossStandaloneManager> init() {
-            return init(new JBossManagerConfiguration.Builder().build());
+            return init(jbossConfigurationSupplier.get());
         }
     }
 
@@ -250,14 +287,31 @@ public class DockerServiceFactory {
 
         public static final String DEFAULT_JBOSS_DOMAIN_CONTAINER_ID = "jboss_domain";
 
+        private final Supplier<JBossManagerConfiguration> jbossConfigurationSupplier = () -> new JBossManagerConfiguration.Builder().domain().remote().build();
+
+        /**
+         * @param configuration configuration of a service
+         * @param containerId   container ID which this service will manage
+         * @return respective Docker manager for domain JBoss container
+         * @throws IllegalStateException in case provided {@code configuration} is not "domain" or "remote".
+         */
         @Override
         public DockerServiceManager<JBossDomainManager> init(JBossManagerConfiguration configuration, String containerId) {
+
+            if (!configuration.isDomain()) {
+                throw new IllegalStateException("Used configuratoin is not 'domain' for domain service.");
+            }
+
+            if (!configuration.isRemote()) {
+                throw new IllegalStateException("Used configuration is not 'remote'.");
+            }
+
             return new JBossDomainDockerManager(new JBossDomainManager(configuration)).setContainerId(containerId);
         }
 
         @Override
         public DockerServiceManager<JBossDomainManager> init(String containerId) {
-            return init(new JBossManagerConfiguration.Builder().build(), containerId);
+            return init(jbossConfigurationSupplier.get(), containerId);
         }
 
         @Override
@@ -267,7 +321,35 @@ public class DockerServiceFactory {
 
         @Override
         public DockerServiceManager<JBossDomainManager> init() {
-            return init(new JBossManagerConfiguration.Builder().build());
+            return init(jbossConfigurationSupplier.get());
         }
     }
+
+    public static final class RedisService implements Service<RedisManager, RedisManagerConfiguration> {
+
+        public static final String DEFAULT_REDIS_CONTAINER_ID = "redis";
+
+        private final Supplier<RedisManagerConfiguration> redisConfigurationSupplier = () -> new RedisManagerConfiguration.Builder().build();
+
+        @Override
+        public DockerServiceManager<RedisManager> init(RedisManagerConfiguration configuration, String containerId) {
+            return new RedisDockerManager(new RedisManagerImpl(configuration)).setContainerId(containerId);
+        }
+
+        @Override
+        public DockerServiceManager<RedisManager> init(String containerId) {
+            return init(redisConfigurationSupplier.get(), containerId);
+        }
+
+        @Override
+        public DockerServiceManager<RedisManager> init(RedisManagerConfiguration configuration) {
+            return init(configuration, DEFAULT_REDIS_CONTAINER_ID);
+        }
+
+        @Override
+        public DockerServiceManager<RedisManager> init() {
+            return init(redisConfigurationSupplier.get());
+        }
+    }
+
 }

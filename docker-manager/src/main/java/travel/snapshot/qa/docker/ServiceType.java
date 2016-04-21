@@ -10,5 +10,5 @@ public enum ServiceType {
     TOMCAT,
     ACTIVEMQ,
     JBOSS_STANDALONE,
-    JBOSS_DOMAIN;
+    JBOSS_DOMAIN, REDIS;
 }
