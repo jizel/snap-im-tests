@@ -13,7 +13,7 @@ Feature: Applications get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "application_id"
-    And Body contains entity with attribute "application_name" value "Application test company 1"
+    And Body contains entity with attribute "name" value "Application test company 1"
     And Body contains entity with attribute "description" value "Application description 1"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
 
@@ -34,7 +34,7 @@ Feature: Applications get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "description" value "UpdatedDescription"
-    And Body contains entity with attribute "application_name" value "Application test company 1"
+    And Body contains entity with attribute "name" value "Application test company 1"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
 
   Scenario: Checking error code for nonexistent applications
@@ -162,12 +162,12 @@ Feature: Applications get
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                                                                  | sort        | sort_desc   | expected_names                                                                                                                              |
-      | 5     | 0      | 5        | 10    | application_name=='Application test*'                                   | description |             | Application test company 1, Application test company 10, Application test company 2, Application test company 3, Application test company 4 |
-      | 5     | 0      | 5        | 10    | application_name=='Application test*'                                   |             | description | Application test company 9, Application test company 8, Application test company 7, Application test company 6, Application test company 5  |
-      | 5     | 2      | 5        | 10    | application_name=='Application test*'                                   | description |             | Application test company 2, Application test company 3, Application test company 4, Application test company 5, Application test company 6  |
-      | 5     | 2      | 5        | 10    | application_name=='Application test*'                                   |             | description | Application test company 7, Application test company 6, Application test company 5,Application test company 4, Application test company 3   |
-      | 5     | 3      | 5        | 10    | application_name=='Application test*'                                   | description | /null       | Application test company 3, Application test company 4, Application test company 5, Application test company 6,Application test company 7   |
-      | /null | /null  | 1        | 1     | description=='*description 2'                                           | /null       | /null       | Application test company 2                                                                                                                  |
-      | /null | /null  | 1        | 1     | website==http://www.snapshot8.travel                                    | /null       | /null       | Application test company 8                                                                                                                  |
-      | /null | /null  | 1        | 1     | application_name=='Application test*' and description=='*description 2' | /null       | /null       | Application test company 2                                                                                                                  |
+      | limit | cursor | returned | total | filter                                                      | sort        | sort_desc   | expected_names                                                                                                                              |
+      | 5     | 0      | 5        | 10    | name=='Application test*'                                   | description |             | Application test company 1, Application test company 10, Application test company 2, Application test company 3, Application test company 4 |
+      | 5     | 0      | 5        | 10    | name=='Application test*'                                   |             | description | Application test company 9, Application test company 8, Application test company 7, Application test company 6, Application test company 5  |
+      | 5     | 2      | 5        | 10    | name=='Application test*'                                   | description |             | Application test company 2, Application test company 3, Application test company 4, Application test company 5, Application test company 6  |
+      | 5     | 2      | 5        | 10    | name=='Application test*'                                   |             | description | Application test company 7, Application test company 6, Application test company 5,Application test company 4, Application test company 3   |
+      | 5     | 3      | 5        | 10    | name=='Application test*'                                   | description | /null       | Application test company 3, Application test company 4, Application test company 5, Application test company 6,Application test company 7   |
+      | /null | /null  | 1        | 1     | description=='*description 2'                               | /null       | /null       | Application test company 2                                                                                                                  |
+      | /null | /null  | 1        | 1     | website==http://www.snapshot8.travel                        | /null       | /null       | Application test company 8                                                                                                                  |
+      | /null | /null  | 1        | 1     | name=='Application test*' and description=='*description 2' | /null       | /null       | Application test company 2                                                                                                                  |
