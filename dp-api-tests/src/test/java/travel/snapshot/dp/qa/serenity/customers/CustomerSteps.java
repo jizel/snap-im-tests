@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.serenity.customers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.response.Response;
 
 import net.serenitybdd.core.Serenity;
@@ -7,21 +8,26 @@ import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyViewDto;
+import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.DateUtils;
+import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -29,10 +35,8 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -56,10 +60,6 @@ public class CustomerSteps extends BasicSteps {
     public void followingCustomersExist(List<CustomerDto> customers) {
         customers.forEach(t -> {
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
-            CustomerDto existingCustomer = getCustomerByCodeInternal(t.getCode());
-            if (existingCustomer != null) {
-                deleteEntity(existingCustomer.getCustomerId());
-            }
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Customer cannot be created " + createResponse.getBody().asString());
@@ -82,10 +82,6 @@ public class CustomerSteps extends BasicSteps {
     public void followingCustomerIsCreated(CustomerDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        CustomerDto existingCustomer = getCustomerByCodeInternal(customer.getCode());
-        if (existingCustomer != null) {
-            deleteEntity(existingCustomer.getCustomerId());
-        }
         Response response = createEntity(customer);
         setSessionResponse(response);
     }
@@ -117,7 +113,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void compareCustomerPropertyOnHeaderWithStored(String headerName) {
-        CustomerPropertyRelationshipDto originalCustomerProperty = getSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY);
+        CustomerPropertyViewDto originalCustomerProperty = getSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String customerLocation = response.header(headerName).replaceFirst(BASE_PATH_CUSTOMERS, "");
         given().spec(spec).get(customerLocation).then()
@@ -153,7 +149,7 @@ public class CustomerSteps extends BasicSteps {
     private CustomerPropertyRelationshipDto getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         //TODO add type to query
         setAccessTokenParamFromSession();
-        String filter = String.format("property_id==%s;type==%s", propertyId, type);
+        String filter = String.format("property_id==%s;relationship_type==%s", propertyId, type);
         CustomerPropertyRelationshipDto[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(CustomerPropertyRelationshipDto[].class);
         return Arrays.asList(customerProperties).stream().findFirst().orElse(null);
     }
@@ -164,7 +160,7 @@ public class CustomerSteps extends BasicSteps {
             customerProperty.put("property_id", propertyId);
         }
         if (type != null) {
-            customerProperty.put("type", type);
+            customerProperty.put("relationship_type", type);
         }
         if (validFrom != null) {
             customerProperty.put("valid_from", validFrom);
@@ -194,6 +190,10 @@ public class CustomerSteps extends BasicSteps {
         return Arrays.asList(customers).stream().findFirst().orElse(null);
     }
 
+    public CustomerDto getCustomerById(String id) {
+        CustomerDto[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + id, null, null).as(CustomerDto[].class);
+        return Arrays.asList(customers).stream().findFirst().orElse(null);
+    }
 
     @Step
     public void customerWithIdIsGot(String customerId) {
@@ -242,16 +242,23 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithCode(String code, CustomerDto updatedCustomer) throws Throwable {
+    public void updateCustomerWithCode(String code, CustomerUpdateDto updatedCustomer) throws Throwable {
         CustomerDto original = getCustomerByCodeInternal(code);
         if (original == null) {
             fail("Customer with code " + code + " not found");
         }
 
         Response tempResponse = getEntity(original.getCustomerId(), null);
-        Map<String, Object> customerData = retrieveData(CustomerDto.class, updatedCustomer);
 
-        Response response = updateEntity(original.getCustomerId(), customerData, tempResponse.getHeader(HEADER_ETAG));
+        ObjectMapper mapper = new ObjectMapper();
+        String customerData = mapper.writeValueAsString(updatedCustomer);
+
+        String s = NullStringObjectValueConverter.transform(customerData).toString();
+        if (s.equalsIgnoreCase("{}")) {
+            fail("Empty update, check parameters!");
+        }
+
+        Response response = updateEntity(original.getCustomerId(), s, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -335,18 +342,21 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void customerWithCodeHasData(String code, CustomerDto data) throws Throwable {
-        Map<String, Object> originalData = retrieveData(CustomerDto.class, getCustomerByCodeInternal(code));
-        Map<String, Object> expectedData = retrieveData(CustomerDto.class, data);
+    public void customerWithIdHasData(String id, CustomerDto data) throws Throwable {
+        JSONObject customerFromDB = retrieveDataNew(getCustomerById(id));
+        JSONObject updatedData = retrieveDataNew(data);
 
-        expectedData.forEach((k, v) -> {
-            if (v == null) {
-                assertFalse("Customer JSON should not contains attributes with null values", originalData.containsKey(k));
-                return;
-            }
-            assertTrue("Customer has no data for attribute " + k, originalData.containsKey(k));
-            assertEquals(v, originalData.get(k));
-        });
+        Iterator<?> customerFromDBKeys = customerFromDB.keys();
+        Iterator<?> updatedDataKeys = updatedData.keys();
+
+        while (updatedDataKeys.hasNext()) {
+            String key = (String) updatedDataKeys.next();
+
+            Object updatedValue = updatedData.get(key);
+            Object databaseValue = customerFromDB.get(key);
+
+            assertEquals(updatedValue, databaseValue);
+        }
     }
 
     @Step
@@ -367,7 +377,7 @@ public class CustomerSteps extends BasicSteps {
         Response response = addPropertyToCustomerWithTypeFromTo(propertyId, c.getCustomerId(), type, dateFrom, dateTo);
 
         if (response.statusCode() == HttpStatus.SC_CREATED) {
-            setSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY, response.as(CustomerPropertyRelationshipDto.class));
+            setSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY, response.as(CustomerPropertyViewDto.class));
         }
         setSessionResponse(response);
     }

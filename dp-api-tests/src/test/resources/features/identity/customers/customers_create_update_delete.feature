@@ -4,9 +4,8 @@ Feature: Customers create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given All users are removed for customers with codes: c1t, c2t
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
   @Smoke
   Scenario: Creating Customer without parent with random address
@@ -38,7 +37,7 @@ Feature: Customers create update delete
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is 201
     And Content type is "application/json"
-    And Body contains entity with attribute "company_name" value "<name>"
+    And Body contains entity with attribute "name" value "<name>"
     Examples:
       | json_input_file                                                              | method | module   | url                 | name |
       | /messages/identity/customers/positive/create_customer_arabic_symbols.json    | POST   | identity | /identity/customers | ݑݒݓ  |
@@ -61,23 +60,29 @@ Feature: Customers create update delete
     Then Response code is "204"
 
   Scenario Outline: Updating customer
-    Given The following customers with codes don't exist
-      | UPDATED_CODE_c1t |
     When Customer with code "c1t" is updated with data
       | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated customer with code "<code>" has data
-      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
-      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
+    And Updated customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" has data
+      | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
+      | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
 
     Examples:
-      | companyName | email | code             | salesforceId         | vatId      | phone         | website        | notes | timezone      |
-      | /null       | /null | c1t              | salesforceid_updated | CZ10000001 | /null         | /null          | /null | Europe/Prague |
-      | /null       | /null | c1t              | /null                | /null      | +420123456789 | http://test.cz | /null | /null         |
-      | /null       | /null | UPDATED_CODE_c1t | /null                | /null      | /null         | /null          | /null | /null         |
+      | companyName        | email             | code         | salesforceId         | vatId       | phone         | website              | notes         | timezone      |
+      | updatedCompanyName | /null             | /null        | /null                | /null       | /null         | /null                | /null         | /null         |
+      | /null              | updated@email.com | /null        | /null                | /null       | /null         | /null                | /null         | /null         |
+      | /null              | /null             | updated_code | /null                | /null       | /null         | /null                | /null         | /null         |
+      | /null              | /null             | /null        | salesforceid_updated | /null       | /null         | /null                | /null         | /null         |
+      | /null              | /null             | /null        | /null                | CZ987654321 | /null         | /null                | /null         | /null         |
+      | /null              | /null             | /null        | /null                | /null       | +420987654321 | /null                | /null         | /null         |
+      | /null              | /null             | /null        | /null                | /null       | /null         | http://update.com    | /null         | /null         |
+      | /null              | /null             | /null        | /null                | /null       | /null         | /null                | updatedNotes  | /null         |
+      | /null              | /null             | /null        | /null                | /null       | /null         | /null                | /null         | Pacific/Fiji  |
+      | severalUpdates     | /null             | /null        | /null                | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague |
+      | allUpdates         | all@all.com       | allUpdated   | allUpdated_sf_id     | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    |
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
   # update with error fields, bad values, missing fields

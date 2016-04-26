@@ -43,12 +43,12 @@ Feature: Customers multiproperty
       | salesforceid_5 | p5_name      | p5_code      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague |
       | salesforceid_6 | p6_name      | p6_code      | http://www.snapshot.travel | p6@tenants.biz | true           | Europe/Prague |
 
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p4_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p5_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p6_code" and customer with code "c1t" exists with type "anchor" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p4_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p5_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p6_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
 
 
   Scenario Outline: Accessing customer's property_sets with everything user with each property in just one ps

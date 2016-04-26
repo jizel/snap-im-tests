@@ -15,6 +15,7 @@ import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
@@ -154,7 +155,7 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer with code \"([^\"]*)\" is updated with data$")
-    public void Customer_with_code_is_updated_with_data(String code, List<CustomerDto> customers) throws Throwable {
+    public void Customer_with_code_is_updated_with_data(String code, List<CustomerUpdateDto> customers) throws Throwable {
         customerSteps.updateCustomerWithCode(code, customers.get(0));
     }
 
@@ -261,9 +262,9 @@ public class CustomerStepdefs {
         customerSteps.numberOfEntitiesInResponse(CustomerDto.class, count);
     }
 
-    @Then("^Updated customer with code \"([^\"]*)\" has data$")
-    public void Updated_customer_with_code_has_data(String code, List<CustomerDto> customers) throws Throwable {
-        customerSteps.customerWithCodeHasData(code, customers.get(0));
+    @Then("^Updated customer with id \"([^\"]*)\" has data$")
+    public void Updated_customer_with_code_has_data(String customerId, List<CustomerDto> customers) throws Throwable {
+        customerSteps.customerWithIdHasData(customerId, customers.get(0));
     }
 
     @Then("^Customer with code \"([^\"]*)\" is active$")
@@ -390,7 +391,7 @@ public class CustomerStepdefs {
 
     @When("^Update customer with code \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
     public void updateCustomerWithCodeFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
-        CustomerDto c = new CustomerDto();
+        CustomerUpdateDto c = new CustomerUpdateDto();
         for (Field f : CustomerDto.class.getDeclaredFields()) {
             if (f.getName().equalsIgnoreCase(updatedField)) {
                 f.setAccessible(true);
