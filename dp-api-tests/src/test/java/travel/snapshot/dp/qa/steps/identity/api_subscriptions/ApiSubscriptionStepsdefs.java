@@ -4,7 +4,6 @@ import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cucumber.api.Transform;
@@ -12,7 +11,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.ApiSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.api_subscriptions.ApiSubscriptionSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
@@ -117,23 +115,9 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.numberOfEntitiesInResponse(ApiSubscriptionDto.class, numberOfApiSubscriptions);
     }
 
-    @Then("^There are api subscriptions with following codes returned in order: \"([^\"]*)\"$")
-    public void thereAreApiSubscriptionsWithFollowingCodesReturnedInOrder(List<String> order) throws Throwable {
+    @Then("^There are api subscriptions with following IDs returned in order: \"([^\"]*)\"$")
+    public void thereAreApiSubscriptionsWithFollowingIDsReturnedInOrder(List<String> order) throws Throwable {
         apiSteps.responceSortIs(order);
     }
 
-    @When("^Update api subscription with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
-    public void updateApiSubscriptionWithCodeFieldItsValue(String apiSubscriptionId, String updatedField, String value) throws Throwable {
-        ApiSubscriptionDto api = new ApiSubscriptionDto();
-        if (updatedField.equalsIgnoreCase("isActive")) {
-            api.setIsActive(Integer.parseInt(value));
-        }
-        if (updatedField.equalsIgnoreCase("apiVersion")) {
-            api.setApplicationVersionId(value);
-        }
-        if (updatedField.equalsIgnoreCase("applicationVersionId")) {
-            api.setApplicationVersionId(value);
-        }
-        apiSteps.updateApiSubscription(apiSubscriptionId, api);
-    }
 }

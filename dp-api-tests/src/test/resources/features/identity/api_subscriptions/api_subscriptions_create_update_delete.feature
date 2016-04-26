@@ -7,14 +7,48 @@ Feature: Api subscription create update delete
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel |
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
       | versionId                            | apiManagerId | versionName | status   | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
+      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following properties exist with random address and billing address
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+    Given The following commercial subscriptions exist
+      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | apiVersion |
-      | 187b49db-673c-44e5-ab40-345ce5e89c37 | a318fd9a-a05d-42d8-8e84-22e904ace111 | apiVersion |
+      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
+
+
+  @Smoke
+  Scenario: Create api subscription with valid data
+    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 |
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following properties exist with random address and billing address
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
+      | 842529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+    Given The following commercial subscriptions exist
+      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 2238fd9a-a05d-42d8-8e84-42e904ace123 | 842529dd-481f-430d-b6b6-686fbb687cab | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+    Given The following api subscriptions is created
+      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | e318fd9a-a05d-42d8-8e84-22e904ace111 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
+    Then Response code is 201
+    And Etag header is present
+    And Body contains entity with attribute "api_subscription_id" value "6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f"
+    And Body contains entity with attribute "application_version_id " value "e318fd9a-a05d-42d8-8e84-22e904ace111"
+    And Body contains entity with attribute "commercial_subscription_id" value "8e238f8e-2c9c-4e32-9a63-40474a9728eb"
 
 
   Scenario: Trying to create application subscription with the same versionID
-    Given Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is activated
+    Given Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is activated
     When Trying to create second api subscription with the same versionID
     Then Response code is 400
     And Custom code is 62
@@ -22,29 +56,23 @@ Feature: Api subscription create update delete
 
   @Smoke
   Scenario: Activate api subscription
-    When Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is activated
+    When Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is activated
     Then Response code is 204
     And Body is empty
-    And Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is active
+    And Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is active
 
 
   Scenario: Deactivate api subscription
-    When Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is activated
-    When Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is deactivated
+    When Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is activated
+    When Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is deactivated
     Then Response code is 204
     And Body is empty
-    And Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is not active
+    And Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is not active
 
 
   @Smoke
   Scenario: Delete api subscription
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | b318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 456 | inactive | Versions description 1 |
-    Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | apiVersion                           |
-      | 287b49db-673c-44e5-ab40-345ce5e89c37 | b318fd9a-a05d-42d8-8e84-22e904ace111 | b1111d9a-a05d-42d8-8e84-42e904ace999 |
-    When Api subscription with id "287b49db-673c-44e5-ab40-345ce5e89c37" is deleted
+    When Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is deleted
     Then Response code is 204
     And  Body is empty
     And Api subscription with id "287b49db-673c-44e5-ab40-345ce5e89c37" is not among all api subscriptions
@@ -56,80 +84,18 @@ Feature: Api subscription create update delete
     And  Body is empty
 
 
-  Scenario Outline: Update api subscription with invalid data
-    When Api subscription with id "187b49db-673c-44e5-ab40-345ce5e89c37" is updated with following data
-      | applicationVersionId | apiVersion |
-      | <appVerId>           | <apiVer>   |
-    Then Response code is 400
-    And Custom code is <customCode>
-    Examples:
-      | appVerId                             | apiVer    | customCode | error_note (not used)                                                           |
-      |                                      | something | 61         | # "The body parameter 'application_version_id' cannot be empty."                |
-      | something                            |           | 61         | # "The body parameter 'api_version' cannot be empty."                           |
-      | notValidId                           | something | 63         | # "Param 'application_version_id' is not universally unique identifier (UUID)"  |
-      | 6f552105-0bae-4410-b4bb-bee31567d4fa | something | 63         | # "Version with identifier 6f552105-0bae-4410-b4bb-bee31567d4fa was not found." |
-
-
-  Scenario Outline: Update api subscription with valid data
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | c318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 7   | inactive | Versions description 1 |
-      | d318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 8   | inactive | Versions description 1 |
-    Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | apiVersion |
-      | 387b49db-673c-44e5-ab40-345ce5e89c37 | c318fd9a-a05d-42d8-8e84-22e904ace111 | apiVersion |
-    When Api subscription with id "387b49db-673c-44e5-ab40-345ce5e89c37" is updated with following data
-      | applicationVersionId | apiVersion |
-      | <appVerId>           | <apiVer>   |
-    Then Response code is 204
-    And Body is empty
-    And Etag header is present
-    Examples:
-      | appVerId                             | apiVer         | note                                         |
-      | d318fd9a-a05d-42d8-8e84-22e904ace111 | apiVersion     | # applicationVersionID updated to second one |
-      | d318fd9a-a05d-42d8-8e84-22e904ace111 | string_updated | # apiVersion string updated                  |
-      | d318fd9a-a05d-42d8-8e84-22e904ace111 | string_updated | # no change, but still should successful     |
-
-
-    # "Version with identifier 6f552105-0bae-4410-b4bb-bee31567d4fa already link with"
-  Scenario: Update api subscription with to the same applicationVersionId that already is
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | b318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 456 | inactive | Versions description 1 |
-    Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | apiVersion                           |
-      | 287b49db-673c-44e5-ab40-345ce5e89c37 | b318fd9a-a05d-42d8-8e84-22e904ace111 | b1111d9a-a05d-42d8-8e84-42e904ace999 |
-    When Api subscription with id "287b49db-673c-44e5-ab40-345ce5e89c37" is updated with following data
-      | applicationVersionId                 | apiVersion  |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | api_updated |
-    Then Response code is 400
-    And Custom code is 62
-
-
   Scenario Outline: Create api subscription with invalid data
     Given The following api subscriptions is created
-      | apiSubscriptionId | applicationVersionId | apiVersion   |
-      | <apiSubId>        | <appVersionId>       | <apiVersion> |
+      | apiSubscriptionId   | applicationVersionId   | commercialSubscriptionId   |
+      | <apiSubscriptionId> | <applicationVersionId> | <commercialSubscriptionId> |
     Then Response code is <responseCode>
     And Custom code is <customCode>
-    Examples:
-      | apiSubId                             | appVersionId                         | apiVersion | responseCode | customCode | error_note                                                                                         |
-      | something                            | something                            | something  | 400          | 63         | # The value is invalid. Param 'api_subscription_id' is not universally unique identifier (UUID)    |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | something                            | something  | 400          | 63         | # The value is invalid. Param 'application_version_id' is not universally unique identifier (UUID) |
-      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something  | 400          | 63         | # Version with identifier 1d491c7d-4c70-4be7-ab47-73f36701bcf4 was not found.                      |
-      | something                            |                                      | something  | 400          | 61         | # The body parameter 'application_version_id' cannot be empty.                                     |
-      | h318fd9a-a05d-42d8-8e84-22e904ace111 | h318fd9a-a05d-42d8-8e84-22e904ace111 |            | 400          | 61         | # The body parameter 'api_version' cannot be empty.                                                |
+  Examples:
+      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             | responseCode | customCode | error_note                                                                                           |
+      | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # The value is invalid. Param 'api_subscription_id' is not universally unique identifier (UUID)      |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # The value is invalid. Param 'application_version_id' is not universally unique identifier (UUID)   |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 400          | 63         | # The value is invalid. Param 'commercialSubscriptionId' is not universally unique identifier (UUID) |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # The body parameter 'application_version_id' cannot be empty.                                       |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 400          | 63         | # The body parameter 'commercialSubscriptionId' cannot be empty.                                     |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # Version with identifier 1d491c7d-4c70-4be7-ab47-73f36701bcf4 was not found.                                     |
 
-  @Smoke
-  Scenario: Create api subscription with valid data
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 |
-    Given The following api subscriptions is created
-      | apiSubscriptionId                    | applicationVersionId                 | apiVersion |
-      | e318fd9a-a05d-42d8-8e84-22e904ace111 | e318fd9a-a05d-42d8-8e84-22e904ace111 | something  |
-    Then Response code is 201
-    And Etag header is present
-    And Body contains entity with attribute "api_subscription_id" value "e318fd9a-a05d-42d8-8e84-22e904ace111"
-    And Body contains entity with attribute "application_version_id " value "e318fd9a-a05d-42d8-8e84-22e904ace111"
-    And Body contains entity with attribute "api_version" value "something"
