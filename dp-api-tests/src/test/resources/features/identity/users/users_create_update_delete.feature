@@ -63,7 +63,6 @@ Feature: Users create update delete
       | customer | snp      | Snap      | Shot     |                        | Europe/Prague | cs-CZ   | 61          |
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs-CZ   | 61          |
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         | 61          |
-      | wrong    | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
 
   Scenario Outline: Checking error codes for creating user with invalid json
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"

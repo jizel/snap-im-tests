@@ -57,8 +57,8 @@ Feature: Users validations
       | /phone      | 400          | 59         |
       | /email      | 400          | 59         |
       | /timezone   | 400          | 59         |
-      | /culture    | 400          | 59         |
-      | /user_type  | 400          | 59         |
+      | /culture    | 400          | 63         |
+      | /user_type  | 400          | 63         |
 
   Scenario: Object creation - missing values
     When create "user" objects each with one missing field
@@ -79,8 +79,8 @@ Feature: Users validations
       | /phone      | 400          | 59         |
       | /email      | 400          | 59         |
       | /timezone   | 400          | 59         |
-      | /culture    | 400          | 59         |
-      | /user_type  | 400          | 59         |
+      | /culture    | 400          | 63         |
+      | /user_type  | 400          | 63         |
 
 #   TODO when field lengths are stabilized
 #
