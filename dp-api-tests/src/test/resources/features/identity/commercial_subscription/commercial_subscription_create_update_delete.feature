@@ -16,6 +16,7 @@ Feature: Commercial subscription create update delete
       | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | a318fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
+  # --------------------- CREATE ---------------------
   @Smoke
   Scenario: Create commercial subscription
     Given Commercial subscription is created
@@ -39,6 +40,7 @@ Feature: Commercial subscription create update delete
       | /messages/identity/commercial_subscriptions/create_commSubscription_missing_property_id.json    | POST   | identity | /identity/commercial_subscriptions | 400        | 53          |
 
 
+  # --------------------- DELETE ---------------------
   @Smoke
   Scenario: Deleting commercial subscriptions
     When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is deleted
@@ -53,6 +55,7 @@ Feature: Commercial subscription create update delete
     And Body is empty
 
 
+  # --------------------- UPDATE ---------------------
   @Smoke
   Scenario: Update commercial subscription - activate
     When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is activated
