@@ -84,7 +84,8 @@ spacelift {
                         "docker.snapshot.travel:5000/snapshot/mongodb:3.2.4",
                         "docker.snapshot.travel:5000/snapshot/activemq:5.12.3",
                         "docker.snapshot.travel:5000/snapshot/keycloak:1.9.1",
-                        "jumarko/nginx-lua:latest",
+                        // build this container locally, it is not pushed in registry yet
+                        //"jumarko/nginx-lua:latest",
                         "redis:3.0.7"
                 ]
             }
