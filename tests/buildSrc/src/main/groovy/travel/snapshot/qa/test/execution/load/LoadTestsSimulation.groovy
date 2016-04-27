@@ -39,7 +39,11 @@ enum LoadTestsSimulation {
 
     // TripAdvisor
 
-    TRIPADVISOR("travel.snapshot.dp.qa.tripadvisor.TripAdvisorSimulation", [ IDENTITY, REVIEW ])
+    TRIPADVISOR("travel.snapshot.dp.qa.tripadvisor.TripAdvisorSimulation", [ IDENTITY, REVIEW ]),
+
+    // OAUTH
+
+    OAUTH("travel.snapshot.dp.qa.oauth.TokenGenerationSimulation")
 
     // class in load tests project
     private final String name
@@ -50,6 +54,10 @@ enum LoadTestsSimulation {
     LoadTestsSimulation(String name, List<DataPlatformModule> modules) {
         this.name = name
         this.modules = modules
+    }
+
+    LoadTestsSimulation(String name) {
+        this.name = name
     }
 
     /**

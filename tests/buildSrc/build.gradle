@@ -21,7 +21,7 @@ dependencies {
     compile localGroovy()
 
     compile 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
-    compile 'travel.snapshot.qa.manager:docker-manager:1.0.6'
+    compile 'travel.snapshot.qa.manager:docker-manager:1.0.8'
     compile "log4j:log4j:1.2.17"
     compile "org.slf4j:slf4j-log4j12:1.7.13"
 }

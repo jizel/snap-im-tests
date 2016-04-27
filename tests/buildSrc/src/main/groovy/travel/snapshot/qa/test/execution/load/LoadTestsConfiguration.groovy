@@ -1,6 +1,5 @@
 package travel.snapshot.qa.test.execution.load
 
-import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.util.Properties
 
 class LoadTestsConfiguration {
@@ -19,6 +18,8 @@ class LoadTestsConfiguration {
 
     private int ramp = DEFAUT_RAMP
 
+    private OAuthConfiguration oauthConfiguration
+
     static LoadTestsConfiguration parseLoadTestsConfiguration() {
 
         LoadTestsConfiguration configuration = new LoadTestsConfiguration()
@@ -26,11 +27,12 @@ class LoadTestsConfiguration {
                 .startUsers(Properties.LoadTest.startUsers)
                 .endUsers(Properties.LoadTest.endUsers)
                 .ramp(Properties.LoadTest.ramp)
+                .oauthConfiguration(Properties.LoadTest.oauthConfiguration)
 
         configuration
     }
 
-    static List<List<?>> parse(DataPlatformTestOrchestration orchestration) {
+    static List<List<?>> parse() {
 
         LoadTestsConfiguration configuration = parseLoadTestsConfiguration()
 
@@ -63,6 +65,11 @@ class LoadTestsConfiguration {
         this
     }
 
+    LoadTestsConfiguration oauthConfiguration(OAuthConfiguration oauthConfiguration) {
+        this.oauthConfiguration = oauthConfiguration
+        this
+    }
+
     LoadTestEnvironment getEnvironment() {
         environment
     }
@@ -81,6 +88,10 @@ class LoadTestsConfiguration {
 
     String getHost() {
         host
+    }
+
+    OAuthConfiguration getOAuthConfiguration() {
+        oauthConfiguration
     }
 
     @Override

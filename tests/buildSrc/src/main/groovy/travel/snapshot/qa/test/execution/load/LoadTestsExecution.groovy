@@ -54,11 +54,20 @@ class LoadTestsExecution {
                 .property("startUsers=${configuration.startUsers}")
                 .property("endUsers=${configuration.endUsers}")
                 .property("ramp=${configuration.ramp}")
+                // oauth specific
+                .property("oauthClientId=${configuration.OAuthConfiguration.oauthClientId}")
+                .property("oauthClientSecret=${configuration.OAuthConfiguration.oauthClientSecret}")
 
         String host = Properties.LoadTest.host
 
         if (host) {
             mavenExecutor.property("host=${host}")
+        }
+
+        String port = Properties.LoadTest.port
+
+        if (port) {
+            mavenExecutor.property("port=${port}")
         }
 
         if (!host && Properties.LoadTest.environment == LoadTestEnvironment.DOCKER) {

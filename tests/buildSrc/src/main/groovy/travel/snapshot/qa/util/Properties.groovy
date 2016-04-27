@@ -6,6 +6,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
 import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
+import travel.snapshot.qa.test.execution.load.OAuthConfiguration
 import travel.snapshot.qa.test.execution.threescale.ThreeScaleApiEnvironment
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 import travel.snapshot.qa.util.container.DockerContainer
@@ -80,6 +81,27 @@ class Properties {
 
         static Boolean getRepositoryCheckoutCommit() {
             Boolean.parseBoolean(System.getProperty("dataPlatformRepositoryQACheckoutCommit"))
+        }
+    }
+
+    static class Operations {
+
+        static final String OPERATIONS_REPOSITORY_URL = "git@bitbucket.org:bbox/operations.git"
+
+        static String getRepositoryUrl() {
+            System.getProperty("operationsRepositoryUrl", OPERATIONS_REPOSITORY_URL)
+        }
+
+        static String getRepository() {
+            Location.resolveLocation(System.getProperty("operationsRepository", "operations")).absolutePath
+        }
+
+        static String getRepositoryCommit(String defaultCommit) {
+            System.getProperty("operationsCommit", defaultCommit)
+        }
+
+        static Boolean getRepositoryCheckoutCommit() {
+            Boolean.parseBoolean(System.getProperty("operationsCheckoutCommit"))
         }
     }
 
@@ -177,7 +199,8 @@ class Properties {
             // tomcat container is needed as a runtime for identity module
             // activemq is needed when identity module sends messages about whats going on
             // keycloak is Wildfly server witk Keycloak installation itself
-            static final List<String> KEYCLOAK_PLATFORM_INSTALLATIONS = [ 'mariadbkey', 'activemq', 'tomcatkey', 'keycloak' ]
+            // mongodb is for configuration module on which we can try to authenticate against
+            static final List<String> KEYCLOAK_PLATFORM_INSTALLATIONS = [ 'mongodb', 'mariadbkey', 'activemq', 'tomcatkey', 'keycloak', 'redis', 'nginx' ]
 
             static List<String> resolveDockerInstallations() {
                 List<String> installations = []
@@ -320,6 +343,41 @@ class Properties {
         }
     }
 
+    static class Nginx {
+
+        static String getNginxConfigDirectoryMount() {
+
+            String mount
+
+            if (Properties.Docker.mode == HOST.name()) {
+                if (SystemUtils.IS_OS_UNIX) {
+                    mount = Properties.Operations.repository
+                } else {
+                    throw new IllegalStateException("It is not possible to use HOST mode with other then Unix-like operation system.")
+                }
+            } else {
+                mount = "/home/docker/configuration"
+            }
+
+            mount
+        }
+
+        static String getNginxConfigDirectorySource() {
+
+            String configurationSource
+
+            if (SystemUtils.IS_OS_UNIX) {
+                configurationSource = Properties.Operations.repository + "/nginx"
+            } else {
+                // TODO fix this path for Windows machines
+                throw new UnsupportedOperationException()
+                //configurationSource = "configuration"
+            }
+
+            configurationSource
+        }
+    }
+    
     static class Test {
 
         private static final TestExecutionMode DEFAULT_EXECUTION_MODE = TEST
@@ -430,6 +488,14 @@ class Properties {
 
         static String getHost() {
             System.getProperty("loadTestHost")
+        }
+
+        static String getPort() {
+            System.getProperty("loadTestPort")
+        }
+
+        static OAuthConfiguration getOauthConfiguration() {
+            new OAuthConfiguration(System.getProperty("oauthClientId"), System.getProperty("oauthClientSecret"))
         }
     }
 
