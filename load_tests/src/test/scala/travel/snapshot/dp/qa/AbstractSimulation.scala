@@ -21,6 +21,10 @@ abstract class AbstractSimulation extends Simulation {
   val endUsers = Integer.getInteger("endUsers", 30)
   val rampTime = Integer.getInteger("ramp", 60)
 
+  // oauth related
+  val oauthClientId = System.getProperty("oauthClientId", "TestClient")
+  val oauthClientSecret = System.getProperty("oauthClientSecret")
+
   // access_token query property for social modules
   val accessToken = System.getProperty("access_token")
 

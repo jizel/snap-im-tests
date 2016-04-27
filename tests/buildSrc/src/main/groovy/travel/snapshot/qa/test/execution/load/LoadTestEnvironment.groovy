@@ -6,7 +6,8 @@ enum LoadTestEnvironment {
     PRODUCTION("production"),
     DEVELOPMENT("development"),
     TESTING("testing"),
-    DOCKER("docker")
+    DOCKER("docker"),
+    NGINX("nginx")
 
     private final String name
 

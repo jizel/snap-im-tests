@@ -31,6 +31,7 @@ import travel.snapshot.qa.test.execution.report.LoadTestGuiReporter
 import travel.snapshot.qa.test.execution.threescale.ThreeScaleUploadExecutor
 import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
+import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.Properties
 
 import static travel.snapshot.qa.docker.DockerServiceFactory.*
@@ -271,6 +272,10 @@ spacelift {
             enabledInstallations (dockerInstallations + keycloakServiceInstallations)
             tests 'platformStop'
         }
+        oauthLoadTest {
+            enabledInstallations ('maven', 'dataPlatformQARepository')
+            tests 'loadTests'
+        }
     }
 
     installations {
@@ -392,9 +397,11 @@ spacelift {
 
         reportableTest(from: DataPlatformTest) {
             report {
-                new ContainerLogReporter(platform, serviceInstallations).report()
-
-                ApiTestGuiReporter.report()
+                // oauth load tests are not dockerized
+                if (!ProjectHelper.isProfileSelected("oauthLoadTest")) {
+                    new ContainerLogReporter(platform, serviceInstallations).report()
+                    ApiTestGuiReporter.report()
+                }
             }
         }
 
@@ -529,16 +536,23 @@ spacelift {
 
             // Simulations to run are set by one of these:
             //
-            // -DloadTestSimulations=all|configuration|identity|web_performance|rate_shopper|social|tripadvisor
+            // -DloadTestSimulations=all|configuration|identity|web_performance|rate_shopper|social|tripadvisor|oauth
             //
             // Load test environment is set by one of these:
             //
-            // -DloadTestEnvironment=local|production|development|testing|docker
+            // -DloadTestEnvironment=local|production|development|testing|docker|nginx
+            //
+            // Load test host is set by system property 'loadTestHost'. If empty, default host according to 'loadTestEnvironment' is chosen.
+            // Load test port is set by system property 'loadTestPort'. If empty, 8080 port is chosen.
             //
             // Default is 'all' simulations against 'docker' environment
+            //
+            // In case you want to try nginx load tests where oauth token is being generated, you basically have to start it like this
+            // gradle test -Pprofile=oauthLoadTest -DloadTestSimulations=oauth -DloadTestEnvironment=nginx -DoauthClientId=TestClient \
+            //  -DoauthClientSecret=9b28e628-20b7-4a2c-9607-79f43d35069c -DloadTestRamp=120 -DloadTestEndUsers=60 --info --stacktrace
 
             data {
-                LoadTestsConfiguration.parse(platform)
+                LoadTestsConfiguration.parse()
             }
             execute { List data ->
                 new LoadTestsExecution((LoadTestsSimulation) data.get(0), (LoadTestsConfiguration) data.get(1)).execute()

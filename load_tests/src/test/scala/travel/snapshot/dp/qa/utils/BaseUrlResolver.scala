@@ -8,6 +8,7 @@ object LoadTestEnvironment extends Enumeration {
   val DEVELOPMENT = Value("development")
   val TESTING = Value("testing")
   val DOCKER = Value("docker")
+  val NGINX = Value("nginx")
 }
 
 object LoadTestContext extends Enumeration {
@@ -24,6 +25,7 @@ object LoadTestContext extends Enumeration {
   val WEB_PERFORMANCE = LoadTestContextInternalValue("performance", "WebPerformance-1.0/api/", "WebPerformance-1.0/api/")
   val RATE_SHOPPER = LoadTestContextInternalValue("rateshopper", "RateShopper-SA/api/", "RateShopper-SA/api/")
   val TRIP_ADVISOR = LoadTestContextInternalValue("tripadvisor", "Review-1.0/api/", "Review-1.0/api/")
+  val OAUTH = LoadTestContextInternalValue("oauth", "oauth/", "oauth/", null)
 
   protected final def LoadTestContextInternalValue(name: String,
                                                    localContext: String,
@@ -70,6 +72,13 @@ trait SystemPropertiesGatherer {
     resolveScenario
   )
 
+  val nginxEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "http"),
+    System.getProperty("host", "192.168.99.100"),
+    System.getProperty("port", "8899"),
+    resolveScenario
+  )
+
   private def resolveScenario: LoadTestContext.LoadTestContextValue = {
     val gatlingScenario: String = System.getProperty("gatling.simulationClass")
 
@@ -91,6 +100,8 @@ trait SystemPropertiesGatherer {
       LoadTestContext.RATE_SHOPPER
     } else if (gatlingScenario.contains("tripadvisor")) {
       LoadTestContext.TRIP_ADVISOR
+    } else if (gatlingScenario.contains("oauth")) {
+      LoadTestContext.OAUTH
     } else {
       throw new IllegalStateException("Unable to recognize what type of scenario you are going to execute!")
     }
@@ -137,6 +148,14 @@ object DockerUrlResolver extends SystemPropertiesGatherer {
   }
 }
 
+object NginxUrlResolver extends SystemPropertiesGatherer {
+
+  def apply(): String = {
+    val (protocol, host, port, scenario) = nginxEnvironmentProperties
+    s"$protocol://$host:$port/${scenario.localContext}"
+  }
+}
+
 object BaseUrlResolver {
 
   def apply(): String = {
@@ -146,6 +165,7 @@ object BaseUrlResolver {
       case LoadTestEnvironment.TESTING => TestingUrlResolver()
       case LoadTestEnvironment.PRODUCTION => ProductionUrlResolver()
       case LoadTestEnvironment.DOCKER => DockerUrlResolver()
+      case LoadTestEnvironment.NGINX => NginxUrlResolver()
     }
   }
 }

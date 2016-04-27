@@ -6,6 +6,7 @@ import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
 import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
 import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
+import travel.snapshot.qa.test.execution.load.OAuthConfiguration
 import travel.snapshot.qa.test.execution.threescale.ThreeScaleApiEnvironment
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 import travel.snapshot.qa.util.container.DockerContainer
@@ -487,6 +488,14 @@ class Properties {
 
         static String getHost() {
             System.getProperty("loadTestHost")
+        }
+
+        static String getPort() {
+            System.getProperty("loadTestPort")
+        }
+
+        static OAuthConfiguration getOauthConfiguration() {
+            new OAuthConfiguration(System.getProperty("oauthClientId"), System.getProperty("oauthClientSecret"))
         }
     }
 

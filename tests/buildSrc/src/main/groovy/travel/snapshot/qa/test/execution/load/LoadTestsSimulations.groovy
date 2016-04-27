@@ -75,6 +75,12 @@ enum LoadTestsSimulations {
                     .add(LoadTestsSimulation.TRIPADVISOR)
                     .build()
         }
+    },
+    OAUTH{
+        @Override
+        List<LoadTestsSimulation> simulations() {
+            new Builder().add(LoadTestsSimulation.OAUTH).build()
+        }
     }
 
     abstract List<LoadTestsSimulation> simulations()
