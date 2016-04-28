@@ -1,10 +1,11 @@
 package travel.snapshot.dp.qa.serenity.api_subscriptions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -66,16 +67,12 @@ public class ApiSubscriptionSteps extends BasicSteps {
             fail("There are no api subscription to recreate");
         }
 
-        ApiSubscriptionDto apiToCreate = new ApiSubscriptionDto();
-        apiToCreate.setApplicationVersionId(selected.getApplicationVersionId());
-        apiToCreate.setApplicationVersionId(selected.getApplicationVersionId());
-
-        Response response = createEntity(apiToCreate);
+        Response response = createEntity(selected);
         setSessionResponse(response);
     }
 
-    public void setActivateFieldApiSubscription(String apiSubscriptionId, Boolean active) {
-        ApiSubscriptionDto apiSubscription = getEntity(apiSubscriptionId).as(ApiSubscriptionDto.class);
+    public void setActivateFieldApiSubscription(String apiSubscriptionId, Boolean active) throws JsonProcessingException {
+        ApiSubscriptionUpdateDto apiSubscription = new ApiSubscriptionUpdateDto();
 
         if (active) {
             apiSubscription.setIsActive(1);
@@ -107,22 +104,16 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
 
-    public void updateApiSubscription(String apiSubscriptionId, ApiSubscriptionDto updateData) {
-        Response apiSub = getEntity(apiSubscriptionId);
-        Map<String, Object> mapToUpdate = new HashMap<>();
+    public void updateApiSubscription(String apiSubscriptionId, ApiSubscriptionUpdateDto updateData) throws JsonProcessingException {
 
-
-        if (updateData.getApplicationVersionId() != null) {
-            mapToUpdate.put("api_version", updateData.getApplicationVersionId());
+        Response originalApi = getEntity(apiSubscriptionId);
+        if (originalApi.statusCode() != HttpStatus.SC_OK) {
+            fail("Api subscription with id " + apiSubscriptionId + " not found!");
         }
 
-        if (updateData.getApplicationVersionId() != null) {
-            mapToUpdate.put("application_version_id", updateData.getApplicationVersionId());
-        }
+        JSONObject object = retrieveDataNew(updateData);
 
-        mapToUpdate.put("is_active", updateData.getIsActive());
-
-        Response resp = updateEntity(apiSubscriptionId, mapToUpdate, apiSub.getHeader(HEADER_ETAG));
+        Response resp = updateEntity(apiSubscriptionId, object.toString(), originalApi.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
@@ -144,7 +135,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
         ApiSubscriptionDto[] apiSubscriptios = getSessionResponse().as(ApiSubscriptionDto[].class);
         int i = 0;
         for (ApiSubscriptionDto api : apiSubscriptios) {
-            assertEquals(api.getApplicationVersionId(), order.get(i));
+            assertEquals(api.getApiSubscriptionId(), order.get(i));
             i++;
         }
     }

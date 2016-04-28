@@ -42,8 +42,7 @@ Feature: Customers properties create update delete
     And Body contains entity with attribute "property_name" value "p2_name"
     And Body contains entity with attribute "valid_from" value "2015-01-01"
     And Body contains entity with attribute "valid_to" value "2015-10-31"
-    And Body contains entity with attribute "type" value "anchor"
-    And "Location" header is set and contains the same customerProperty
+    And Body contains entity with attribute "relationship_type" value "anchor"
     And Etag header is present
 
 

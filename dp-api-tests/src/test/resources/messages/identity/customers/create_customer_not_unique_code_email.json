@@ -1,11 +1,10 @@
 {
-  "company_name": "Wrong Given company",
-  "code": "c1t",
+  "name": "Wrong Given company",
+  "customer_code": "c1t",
   "phone": "+42012345679",
   "email": "s1@tenants.biz",
   "website" : "http://www.snapshot.travel",
   "is_demo_customer": true,
-
   "address": {
     "address_line1": "string",
     "address_line2": "string",
@@ -14,5 +13,5 @@
     "country": "CZ"
   },
   "notes": "string",
-  "timezone" : "Europe/Prague"
+  "headquarters_timezone" : "Europe/Prague"
 }

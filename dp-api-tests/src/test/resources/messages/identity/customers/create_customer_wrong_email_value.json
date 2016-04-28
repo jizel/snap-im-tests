@@ -1,13 +1,10 @@
 {
-
-  "company_name": "company with wrong email",
-  "code": "ecn1",
+  "name": "company with wrong email",
+  "customer_code": "ecn1",
   "phone": "+42012345679",
   "email": "testing@",
   "website" : "http://www.snapshot.travel",
-
   "is_demo_customer": true,
-
   "address": {
     "address_line1": "string",
 
@@ -16,5 +13,5 @@
     "country": "CZ"
   },
   "notes": "string",
-  "timezone" : "Europe/Prague"
+  "headquarters_timezone" : "Europe/Prague"
 }

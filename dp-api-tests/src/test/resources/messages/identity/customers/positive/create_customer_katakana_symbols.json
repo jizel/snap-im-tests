@@ -1,6 +1,6 @@
 {
-  "company_name": "ラリル",
-  "code": "foreign5",
+  "name": "ラリル",
+  "customer_code": "foreign5",
   "phone": "+42012345679",
   "email": "foreign5@test.biz",
   "vat_id": "CZ12345678",
@@ -14,5 +14,5 @@
     "country": "CZ"
   },
   "notes": "string",
-  "timezone" : "Europe/Prague"
+  "headquarters_timezone" : "Europe/Prague"
 }

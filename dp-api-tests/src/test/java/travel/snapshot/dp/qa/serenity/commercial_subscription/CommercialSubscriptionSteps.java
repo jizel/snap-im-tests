@@ -15,6 +15,7 @@ import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionBaseDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -69,23 +70,9 @@ public class CommercialSubscriptionSteps extends BasicSteps {
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    @Step
-    public void updateCommSubscriptionWithId(String commSubscriptionId, CommercialSubscriptionBaseDto updatedCommSubscription) {
+    private void updateCommSubscriptionWithId(String commSubscriptionId, CommercialSubscriptionUpdateDto updatedCommSubscription) {
         Response tempResponse = getEntity(commSubscriptionId);
         Map<String, Object> mapToUpdate = new HashMap<>();
-
-
-        if (updatedCommSubscription.getCustomerId() != null) {
-            mapToUpdate.put("customer_id", updatedCommSubscription.getCustomerId());
-        }
-
-        if (updatedCommSubscription.getPropertyId() != null) {
-            mapToUpdate.put("property_id", updatedCommSubscription.getPropertyId());
-        }
-
-        if (updatedCommSubscription.getApplicationId() != null) {
-            mapToUpdate.put("application_id", updatedCommSubscription.getApplicationId());
-        }
 
         mapToUpdate.put("is_active", updatedCommSubscription.getIsActive());
 

@@ -7,8 +7,8 @@ Feature: Customers validation
     Given the following "customer" object definition
       | path                   | type   | required | correct                                                     | invalid   | longer   |
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | /code                  | String | true     | \w{50}                                                      | /null     | \w{256}  |
-      | /company_name          | String | true     | \w{255}                                                     | /null     | \w{256}  |
+      | /customer_code         | String | true     | \w{50}                                                      | /null     | \w{256}  |
+      | /name                  | String | true     | \w{255}                                                     | /null     | \w{256}  |
       | /salesforce_id         | String | false    | \w{100}                                                     | /null     | \w{101}  |
       | /vat_id                | String | true     | CZ[0-9]{9}                                                  | /null     | \w{101}  |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}    | \w{1001} |
@@ -17,7 +17,7 @@ Feature: Customers validation
       | /is_demo_customer      | Bool   | true     | (true\|false)                                               | /null     |          |
       #| /is_active             | String | false    | (0\|1)                                                       | x         |          |
       | /notes                 | String | false    | \w{255}                                                     | /null     | \w{256}  |
-      | /timezone              | String | true     | (America/New_York\|Europe/Prague)                           | UTC+01:00 |          |
+      | /headquarters_timezone | String | true     | (America/New_York\|Europe/Prague)                           | UTC+01:00 |          |
       | /address/address_line1 | String | true     | \w{100}                                                     | /null     | \w{101}  |
       | /address/address_line2 | String | false    | \w{100}                                                     | /null     | \w{101}  |
       | /address/city          | String | true     | \w{50}                                                      | /null     | \w{51}   |
@@ -150,22 +150,22 @@ Feature: Customers validation
       | addressLine1  | AddressLineNumberOne        |
       | addressLine1  | 无锡市 99/1A-BC                |
 
-    Scenario: Object update - US customer's region
-      When Update customer with code "validation1", address field "country", its value "US"
-      When Update customer with code "validation1", address field "region", its value "Texas"
-      Then Response code is 204
-      And Body is empty
-      And Etag header is present
+  Scenario: Object update - US customer's region
+    When Update customer with code "validation1", address field "country", its value "US"
+    When Update customer with code "validation1", address field "region", its value "Texas"
+    Then Response code is 204
+    And Body is empty
+    And Etag header is present
 
   Scenario Outline: Object update - customer - valid values
     When Update customer with code "validation1", field "<updated_field>", its value "<value>"
     Then Response code is 204
     And  Body is empty
     Examples:
-      | updated_field | value                 |
-      | timezone      | Pacific/Fiji          |
-      | timezone      | GMT                   |
-      | phone         | +42098765432          |
-      | email         | valid@snapshot.travel |
-      | vatId         | CZ98765432            |
-      | website       | http://snapshot.com   |
+      | updated_field         | value                 |
+      | headquarters_timezone | Pacific/Fiji          |
+      | headquarters_timezone | GMT                   |
+      | phone                 | +42098765432          |
+      | email                 | valid@snapshot.travel |
+      | vatId                 | CZ98765432            |
+      | website               | http://snapshot.com   |

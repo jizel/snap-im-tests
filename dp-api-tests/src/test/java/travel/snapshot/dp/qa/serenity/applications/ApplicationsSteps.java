@@ -157,7 +157,7 @@ public class ApplicationsSteps extends BasicSteps {
         Response tempResponse = getEntity(applicationId, null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("application_name", "Application test company 1");
+        mapForUpdate.put("name", "Application test company 1");
         mapForUpdate.put("description", "UpdatedDescription");
         mapForUpdate.put("website", "http://www.snapshot.travel");
 
@@ -332,7 +332,7 @@ public class ApplicationsSteps extends BasicSteps {
         Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("version_name", "Version 123");
+        mapForUpdate.put("name", "Version 123");
         mapForUpdate.put("api_manager_id", "123");
         mapForUpdate.put("status", "inactive");
         mapForUpdate.put("release_date", "2016-02-22");
@@ -399,7 +399,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     public VersionDto getApplicationVersionById(String applicationId, String versionId) {
         VersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
-                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "version_id==" + versionId, null, null).as(VersionDto[].class);
+                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null).as(VersionDto[].class);
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 

@@ -1,6 +1,6 @@
 {
-  "company_name": "笅笆笇",
-  "code": "foreign4",
+  "name": "笅笆笇",
+  "customer_code": "foreign4",
   "phone": "+42012345679",
   "email": "foreign4@test.biz",
   "vat_id": "CZ12345678",
@@ -14,5 +14,5 @@
     "country": "CZ"
   },
   "notes": "string",
-  "timezone" : "Europe/Prague"
+  "headquarters_timezone" : "Europe/Prague"
 }

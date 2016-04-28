@@ -11,8 +11,8 @@ Feature: Customers property sets
     Given All property sets are deleted for customers with codes: c1t, c2t
 
     Given The following users exist
-      | userType | userName             | firstName | lastName      | email                                 | timezone      | culture |
-      | snapshot | defaultSnapshotuser  | Default   | SnapshotUser  | defaultSnapshotUser1@snapshot.travel  | Europe/Prague | cs-CZ   |
+      | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
+      | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     #Get token for snapshot user and set it to session (?access_token={token})
     Given The password of user "defaultSnapshotuser" is "Password01"
@@ -148,9 +148,9 @@ Feature: Customers property sets
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                           | sort              | sort_desc         | expected_codes                                                            |
-      | 5     | 0      | 5        | 5     | property_set_name=='list_*'      | property_set_name |                   | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
-      | 5     | 0      | 5        | 5     | property_set_name=='list_*'      |                   | property_set_name | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
-      | 5     | 2      | 3        | 5     | property_set_name=='list_*'      | property_set_name |                   | list_ps3_name, list_ps4_name, list_ps5_name                               |
-      | 5     | 2      | 3        | 5     | property_set_name=='list_*'      |                   | property_set_name | list_ps3_name, list_ps2_name, list_ps1_name                               |
-      | /null | /null  | 1        | 1     | property_set_name==list_ps4_name | /null             | /null             | list_ps4_name                                                             |
+      | limit | cursor | returned | total | filter                           | sort  | sort_desc | expected_codes                                                            |
+      | 5     | 0      | 5        | 5     | name=='list_*'      | name  |           | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
+      | 5     | 0      | 5        | 5     | name=='list_*'      |       | name      | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
+      | 5     | 2      | 3        | 5     | name=='list_*'      | name  |           | list_ps3_name, list_ps4_name, list_ps5_name                               |
+      | 5     | 2      | 3        | 5     | name=='list_*'      |       | name      | list_ps3_name, list_ps2_name, list_ps1_name                               |
+      | /null | /null  | 1        | 1     | name==list_ps4_name | /null | /null     | list_ps4_name                                                             |

@@ -22,7 +22,7 @@ Feature: Users roles create update delete
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Given The following roles exist
-      | applicationId                        | roleName        | roleDescription        |
+      | applicationId                        | roleName        | Description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_rel_1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_rel_2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_rel_3 | optional description 3 |

@@ -1,6 +1,8 @@
 package travel.snapshot.dp.qa.serenity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
@@ -16,6 +18,7 @@ import net.thucydides.core.annotations.Step;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -28,10 +31,12 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
@@ -243,6 +248,14 @@ public class BasicSteps {
         return requestSpecification.body(object).when().post("/{id}", id);
     }
 
+    protected Response updateEntity(String id, String data, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        return requestSpecification.body(data).when().post("/{id}", id);
+    }
+
     protected Response deleteEntity(String id) {
         return given().spec(spec).when().delete("/{id}", id);
     }
@@ -393,10 +406,17 @@ public class BasicSteps {
         return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
     }
 
+    protected JSONObject retrieveDataNew(Object value) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String customerData = mapper.writeValueAsString(value);
+        return NullStringObjectValueConverter.transform(customerData);
+    }
+
     protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
         Map<String, Object> data = new HashMap<>();
         for (PropertyDescriptor descriptor : Introspector.getBeanInfo(c).getPropertyDescriptors()) {
             Method getter = descriptor.getReadMethod();
+            Enumeration<String> atts = descriptor.attributeNames();
             Object value = getter.invoke(entity);
             if (value != null) {
                 JsonProperty jsonProperty = getter.getAnnotation(JsonProperty.class);

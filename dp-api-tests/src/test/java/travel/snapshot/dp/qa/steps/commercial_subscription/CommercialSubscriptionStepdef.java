@@ -10,7 +10,6 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionBaseDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
@@ -46,12 +45,6 @@ public class CommercialSubscriptionStepdef {
     @When("Nonexistent commercial subscription id is deleted")
     public void Nonexistent_commercial_subscription_id_is_deleted() {
         commSubscriptionSteps.deleteCommSubscriptionWithId("NonExistentId");
-    }
-
-    @When("^Commercial subscription with id \"([^\"]*)\" is updated with data$")
-    public void Commercial_subscription_with_id_is_updated_with_data(String commSubscriptionId,
-                                                                     List<CommercialSubscriptionBaseDto> updatedCommSubscription) throws Exception {
-        commSubscriptionSteps.updateCommSubscriptionWithId(commSubscriptionId, updatedCommSubscription.get(0));
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is got$")

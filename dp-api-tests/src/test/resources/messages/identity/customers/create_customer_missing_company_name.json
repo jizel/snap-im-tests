@@ -1,18 +1,15 @@
 {
-
-  "code": "ecn1",
+  "customer_code": "ecn1",
   "phone": "+42012345679",
   "email": "testing@test.biz",
   "website" : "http://www.snapshot.travel",
   "is_demo_customer": true,
-
   "address": {
     "address_line1": "address line 1",
-
     "city": "Brno",
     "zip_code": "63500",
     "country": "CZ"
   },
   "notes": "notes notes",
-  "timezone" : "Europe/Prague"
+  "headquarters_timezone" : "Europe/Prague"
 }
