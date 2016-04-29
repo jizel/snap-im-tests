@@ -70,7 +70,7 @@ Feature: Customers users create update delete
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                                      | sort      | sort_desc | expected_usernames                                                                                      |
+      | limit | cursor | returned | total | filter                                 | sort      | sort_desc | expected_usernames                                                                                      |
       | 5     | 0      | 5        | 6     | user_name=='filter_cu_default*'             | user_name |           | filter_cu_default_1, filter_cu_default_2, filter_cu_default_3, filter_cu_default_4, filter_cu_default_5 |
       | 5     | 0      | 5        | 6     | user_name=='filter_cu_default*'             |           | user_name | filter_cu_default_6, filter_cu_default_5, filter_cu_default_4, filter_cu_default_3, filter_cu_default_2 |
       | 5     | 2      | 4        | 6     | user_name=='filter_cu_default*'             | user_name |           | filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6                      |

@@ -84,8 +84,8 @@ public class PropertiesStepdefs {
         propertySteps.followingPropertyIsCreated(properties.get(0));
     }
 
-    @When("^A property from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
-    public void property_from_country_region_code_email_is_created(String country, String region, String code, String email) {
+    @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
+    public void property_from_country_region_code_email_is_created(String customerId, String country, String region, String code, String email) {
         AddressDto address = new AddressDto();
         PropertyDto property = new PropertyDto();
         address.setAddressLine1("someAddress");
@@ -93,6 +93,7 @@ public class PropertiesStepdefs {
         address.setZipCode("1234");
         address.setCountry(country);
         address.setRegion(region);
+        property.setAnchorCustomerId(customerId);
         property.setPropertyName("someProperty");
         property.setPropertyCode(code);
         property.setEmail(email);

@@ -187,7 +187,7 @@ Feature: Customers create update delete
       | US      | Wyoming        | custcode50 | mail50@mail.com |
 
   Scenario Outline: Checking error codes for regions
-    When A property from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    When A property for customer "a792d2b2-3836-4207-a705-42bbecf3d881" from country "<country>" region "<region>" code "<code>" email "<email>" is created
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"

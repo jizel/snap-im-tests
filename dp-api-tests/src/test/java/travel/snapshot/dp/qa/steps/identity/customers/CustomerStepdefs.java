@@ -12,7 +12,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.CustomerBaseDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
@@ -392,7 +394,8 @@ public class CustomerStepdefs {
     @When("^Update customer with code \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
     public void updateCustomerWithCodeFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
         CustomerUpdateDto c = new CustomerUpdateDto();
-        for (Field f : CustomerDto.class.getDeclaredFields()) {
+        Field[] fields = CustomerBaseDto.class.getDeclaredFields();
+        for (Field f : CustomerBaseDto.class.getDeclaredFields()) {
             if (f.getName().equalsIgnoreCase(updatedField)) {
                 f.setAccessible(true);
                 f.set(c, updatedValue);
@@ -434,8 +437,8 @@ public class CustomerStepdefs {
 
     @When("^Update customer with code \"([^\"]*)\", address field \"([^\"]*)\", its value \"([^\"]*)\"$")
     public void updateCustomerWithCodeAddressFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
-        AddressDto updatedAddress = new AddressDto();
-        for (Field f : AddressDto.class.getDeclaredFields()) {
+        AddressUpdateDto updatedAddress = new AddressUpdateDto();
+        for (Field f : AddressUpdateDto.class.getDeclaredFields()) {
             if (f.getName().equalsIgnoreCase(updatedField)) {
                 f.setAccessible(true);
                 f.set(updatedAddress, updatedValue);

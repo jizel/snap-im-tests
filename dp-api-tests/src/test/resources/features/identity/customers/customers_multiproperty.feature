@@ -3,8 +3,8 @@ Feature: Customers multiproperty
   Background: Initial data to DB
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
      #everything - all properties available
      #limited - some properties not available
@@ -35,13 +35,13 @@ Feature: Customers multiproperty
       | ps2_name        | ps2_description        | branch          |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
-      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
-      | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
-      | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague |
-      | salesforceid_5 | p5_name      | p5_code      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague |
-      | salesforceid_6 | p6_name      | p6_code      | http://www.snapshot.travel | p6@tenants.biz | true           | Europe/Prague |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | salesforceid_5 | p5_name      | p5_code      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | salesforceid_6 | p6_name      | p6_code      | http://www.snapshot.travel | p6@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
 
     Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
     Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
@@ -81,12 +81,12 @@ Feature: Customers multiproperty
     And There are property sets with following names returned in order: <names>
 
     Examples:
-      | username   | password   | count | names              | order             |
-      | snapshot   | Password01 | 2     | ps1_name, ps2_name | property_set_name |
-      | everything | Password01 | 1     | ps1_name           | /null             |
-      | everything | Password01 | 1     | ps1_name           | property_set_name |
-      | limited    | Password01 | 1     | ps2_name           | property_set_name |
-      | random     | Password01 | 0     |                    | /null             |
+      | username   | password   | count | names              | order |
+      | snapshot   | Password01 | 2     | ps1_name, ps2_name | name  |
+      | everything | Password01 | 1     | ps1_name           | /null |
+      | everything | Password01 | 1     | ps1_name           | name  |
+      | limited    | Password01 | 1     | ps2_name           | name  |
+      | random     | Password01 | 0     |                    | /null |
 
 
   Scenario Outline: Accessing customer's property_sets with everything user with one property in both sets
@@ -120,9 +120,9 @@ Feature: Customers multiproperty
     And There are property sets with following names returned in order: <names>
 
     Examples:
-      | username   | password   | count | names              | order             |
-      | snapshot   | Password01 | 2     | ps1_name, ps2_name | property_set_name |
-      | everything | Password01 | 2     | ps1_name, ps2_name | /null             |
-      | everything | Password01 | 2     | ps1_name, ps2_name | property_set_name |
-      | limited    | Password01 | 1     | ps2_name           | property_set_name |
-      | random     | Password01 | 0     |                    | /null             |
+      | username   | password   | count | names              | order |
+      | snapshot   | Password01 | 2     | ps1_name, ps2_name | name  |
+      | everything | Password01 | 2     | ps1_name, ps2_name | /null |
+      | everything | Password01 | 2     | ps1_name, ps2_name | name  |
+      | limited    | Password01 | 1     | ps2_name           | name  |
+      | random     | Password01 | 0     |                    | /null |
