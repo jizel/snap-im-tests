@@ -501,6 +501,11 @@ public class PropertySteps extends BasicSteps {
         }
     }
 
+    public void listOfApiSubscriptionsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response resp = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_API_SUBSCRIPTION, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(resp);
+    }
+
     // TODO reuse existing code
 
 //    @Step
