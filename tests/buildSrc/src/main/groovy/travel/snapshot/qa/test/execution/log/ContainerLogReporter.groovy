@@ -25,9 +25,13 @@ class ContainerLogReporter {
 
         DataPlatformOrchestration orchestration = testOrchestration.get()
 
+        List<ServiceType> unsupportedServices = [ ServiceType.GENERIC, ServiceType.JBOSS_DOMAIN, ServiceType.JBOSS_STANDALONE ]
+
         for (ServiceType serviceType : ServiceType.values()) {
-            List<String> resolvedContainers = resolveContainers(serviceType, services, orchestration)
-            resolveReport(serviceType, resolvedContainers)
+            if (!unsupportedServices.contains(serviceType)) {
+                List<String> resolvedContainers = resolveContainers(serviceType, services, orchestration)
+                resolveReport(serviceType, resolvedContainers)
+            }
         }
     }
 
@@ -50,6 +54,9 @@ class ContainerLogReporter {
             case ServiceType.JBOSS_STANDALONE:
                 // TODO
                 break
+            case ServiceType.GENERIC:
+                // not supported
+                break;
             default:
                 throw new IllegalStateException(String.format("Unable to resolve reporting for service type %s.", serviceType.name()))
         }
