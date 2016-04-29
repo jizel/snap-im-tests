@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -237,6 +238,16 @@ public class PropertiesStepdefs {
     @When("^Property set with name \"([^\"]*)\" for property with code \"([^\"]*)\" is got$")
     public void Property_set_with_name_for_property_with_code_is_got(String propertySetName, String propertyCode) {
         propertySteps.propertyPropertySetWithNameIsGot(propertySetName, propertyCode);
+    }
+
+    @When("^List of api subscriptions is got for property with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void listOfApiSubscriptionsIsGotForPropertyWithIdAndLimitAndCursorAndFilterAndSortAndSort_desc(String propertyId,
+                                                                                                          @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                          @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                          @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                          @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                          @Transform(NullEmptyStringConverter.class) String sortDesc) {
+        propertySteps.listOfApiSubscriptionsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^List of property sets is got for property with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
