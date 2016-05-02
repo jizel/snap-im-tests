@@ -76,7 +76,7 @@ Feature: Customers properties create update delete
   Scenario: Updating customerProperty with etag
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
-    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "chain" from "2015-01-01" to "2015-12-31"
     When Property with code "p2_code" for customer with code "c2t" with type "chain" is updating field "valid_from" to value "2014-01-01"
     Then Response code is "204"
     And Body is empty
@@ -87,7 +87,7 @@ Feature: Customers properties create update delete
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "valid_from" to value "2015-01-01" with invalid etag
+    When Property with code "p2_code" for customer with code "c2t" with type "chain" is updating field "valid_from" to value "2015-01-01" with invalid etag
     Then Response code is "412"
     And Custom code is "57"
 
@@ -106,12 +106,12 @@ Feature: Customers properties create update delete
     And Custom code is "<custom_code>"
 
     Examples:
-      | field      | value      | status_code | custom_code |
-      | valid_from | 2016-01-01 | 400         | 63          |
-      | valid_from | invalid    | 400         | 59          |
-      | valid_to   | 2014-12-31 | 400         | 63          |
-      | valid_to   | invalid    | 400         | 59          |
-      | type       | invalid    | 400         | 63          |
+      | field             | value      | status_code | custom_code |
+      | valid_from        | 2016-01-01 | 400         | 63          |
+      | valid_from        | invalid    | 400         | 59          |
+      | valid_to          | 2014-12-31 | 400         | 63          |
+      | valid_to          | invalid    | 400         | 59          |
+      | relationship_type | invalid    | 400         | 63          |
 
   #error codes
 
