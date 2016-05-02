@@ -4,6 +4,7 @@ import net.thucydides.core.annotations.Steps;
 
 import java.util.List;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -11,6 +12,7 @@ import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyViewDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -219,5 +221,15 @@ public class PropertySetsStepdefs {
     @Then("^There are (\\d+) property set properties  returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
         propertySetSteps.numberOfEntitiesInResponse(PropertyViewDto.class, count);
+    }
+
+    @When("^Property set with name \"([^\"]*)\" for customer \"([^\"]*)\" is updated with following data$")
+    public void propertySetWithNameIsUpdatedWithFollowingData(String propName, String customerId, List<PropertySetUpdateDto> propSet) throws Throwable {
+        propertySetSteps.updatePropertySet(propName, customerId, propSet.get(0));
+    }
+
+    @Then("^Updated property set with name \"([^\"]*)\" for customer \"([^\"]*)\" has following data$")
+    public void updatedPropertySetWithNameForCustomerWithCodeHasFollowingData(String propName, String customerId, List<PropertySetUpdateDto> propSet) throws Throwable {
+        propertySetSteps.comparePropertySets(propName, customerId, propSet.get(0));
     }
 }

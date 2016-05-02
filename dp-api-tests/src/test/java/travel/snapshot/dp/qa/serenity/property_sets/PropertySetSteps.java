@@ -1,20 +1,24 @@
 package travel.snapshot.dp.qa.serenity.property_sets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyViewDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserViewDto;
@@ -382,5 +386,36 @@ public class PropertySetSteps extends BasicSteps {
     public void propertysetWithIdIsGot(String propertySet) {
         Response response = getEntity(propertySet, null);
         setSessionResponse(response);
+    }
+
+    public void updatePropertySet(String propName, String customerId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
+
+        PropertySetDto originalPropertySet = getPropertySetByNameForCustomer(propName, customerId);
+        if (originalPropertySet == null) {
+            fail("Property set with " + propName + " not found!");
+        }
+
+        JSONObject updatePropSet = retrieveDataNew(propertySetUpdateDto);
+
+        Response tempResp = getEntity(originalPropertySet.getPropertySetId());
+        Response resp = updateEntity(originalPropertySet.getPropertySetId(), updatePropSet.toString(), tempResp.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
+
+    }
+
+    public void comparePropertySets(String propName, String customerId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
+        JSONObject propertySetFromDb = retrieveDataNew(getPropertySetByNameForCustomer(propName, customerId));
+        JSONObject udpatedData = retrieveDataNew(propertySetUpdateDto);
+
+        Iterator<?> updatedDataKeys = udpatedData.keys();
+
+        while (updatedDataKeys.hasNext()) {
+            String key = (String) updatedDataKeys.next();
+
+            Object updatedValue = udpatedData.get(key);
+            Object databaseValue = propertySetFromDb.get(key);
+
+            assertEquals(updatedValue, databaseValue);
+        }
     }
 }

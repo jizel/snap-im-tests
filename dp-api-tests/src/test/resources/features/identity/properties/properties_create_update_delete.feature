@@ -1,20 +1,23 @@
 Feature: Properties create update delete
 
   #TODO add etag things to get/update/create
-  Background: 
+  Background:
     Given Database is cleaned
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
   Scenario: Creating property without parent with random address
     When Property is created with random address and billing address
-      | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      |
-      | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague |
+      | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
-    And Body contains property with attribute "property_name" value "pn1_name"
+    And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
     And "Location" header is set and contains the same property
 
@@ -56,25 +59,25 @@ Feature: Properties create update delete
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 4 | c4@tenants.biz | c4t  | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 5 | c5@tenants.biz | c5t  | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 6 | c6@tenants.biz | c6t  | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | companyName     | email          | code   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1test | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Given company 2 | c2@tenants.biz | c2test | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Given company 3 | c3@tenants.biz | c3test | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Given company 4 | c4@tenants.biz | c4test | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Given company 5 | c5@tenants.biz | c5test | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Given company 6 | c6@tenants.biz | c6test | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c3t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c4t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c5t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c6t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c1test" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c2test" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c3test" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c4test" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c5test" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c6test" exists with type "owner" from "2015-01-01" to "2030-02-31"
 
-    Given Customer with code "c1t" is activated
-    Given Customer with code "c2t" is activated
-    Given Customer with code "c3t" is activated
-    Given Customer with code "c4t" is activated
+    Given Customer with code "c1test" is activated
+    Given Customer with code "c2test" is activated
+    Given Customer with code "c3test" is activated
+    Given Customer with code "c4test" is activated
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
 
     Then Response code is "200"
@@ -84,21 +87,17 @@ Feature: Properties create update delete
     #And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned |total | filter                          | sort      | sort_desc | expected_names      |
-      | 5     | 0      | 4        |6     | code=='c*'                      | code      |           | c1t, c2t, c3t, c4t  |
-      | 5     | 0      | 4        |6     | code=='c*'                      |           | code      | c4t, c3t, c2t, c1t  |
-      | 5     | 2      | 2        |6     | code=='c*'                      | code      |           | c3t, c4t            |
-      | 5     | 2      | 2        |6     | code=='c*'                      |           | code      | c2t, c1t            |
-      | /null | /null  | 1        |1     | code==c3t                       | /null     | /null     | c3t                 |
-      | /null | /null  | 1        |1     | company_name=='Given company 2' | /null     | /null     | c2t                 |
+      | limit | cursor | returned | total | filter                  | sort          | sort_desc     | expected_names                 |
+      | 5     | 0      | 4        | 6     | customer_code=='c*'     | customer_code |               | c1test, c2test, c3test, c4test |
+      | 5     | 0      | 4        | 6     | customer_code=='c*'     |               | customer_code | c4test, c3test, c2test, c1test |
+      | 5     | 2      | 2        | 6     | customer_code=='c*'     | customer_code |               | c3test, c4test                 |
+      | 5     | 2      | 2        | 6     | customer_code=='c*'     |               | customer_code | c2test, c1test                 |
+      | /null | /null  | 1        | 1     | customer_code==c3test   | /null         | /null         | c3test                         |
+      | /null | /null  | 1        | 1     | name=='Given company 2' | /null         | /null         | c2test                         |
 
 
   Scenario Outline: Checking error codes for getting list of customers from properties
-    Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "chain" from "2015-01-01" to "2030-02-31"
     Given Customer with code "c1t" is activated
 
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -123,19 +122,19 @@ Feature: Properties create update delete
       | 10          | text   | /null    | /null        | /null        | 400           | 63          |
 
       #filtering and sorting
-      | 10    | 0      | /null    | company_name | company_name | 400           | 64          |
-      | 10    | 0      | /null    | /null        | nonexistent  | 400           | 63          |
-      | 10    | 0      | /null    | nonexistent  | /null        | 400           | 63          |
-      | 10    | 0      | code==   | /null        | /null        | 400           | 63          |
-      | 10    | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+      | 10          | 0      | /null    | company_name | company_name | 400           | 64          |
+      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 63          |
+      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 63          |
+      | 10          | 0      | code==   | /null        | /null        | 400           | 63          |
+      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
 
   Scenario Outline: Validate that property regions belong to the correct country
-    When A property from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created
     Then Content type is "application/json"
     And Response code is 201
     And Body contains entity with attribute "address.region" value "<region>"
 
-    Examples: 
+    Examples:
       | country | region         | code       | email           |
       | US      | Alabama        | propcode1  | mail1@mail.com  |
       | US      | Alaska         | propcode2  | mail2@mail.com  |
@@ -189,13 +188,13 @@ Feature: Properties create update delete
       | US      | Wyoming        | propcode50 | mail50@mail.com |
 
   Scenario Outline: Checking error codes for regions
-    When A property from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"
     And Body contains entity with attribute "message" value "Region with identifier <region> was not found."
 
-    Examples: 
+    Examples:
       | country | region  | code       | email           | response_code | custom_code |
       | DE      | invalid | propcode8  | mail8@mail.com  | 400           | 63          |
       | BG      | invalid | propcode9  | mail9@mail.com  | 400           | 63          |

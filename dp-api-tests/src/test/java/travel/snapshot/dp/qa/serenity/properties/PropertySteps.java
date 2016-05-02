@@ -173,7 +173,7 @@ public class PropertySteps extends BasicSteps {
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTIES, "");
         given().spec(spec).get(propertyLocation).then()
                 .body("salesforce_id", is(originalProperty.getSalesforceId()))
-                .body("property_name", is(originalProperty.getPropertyName()))
+                .body("name", is(originalProperty.getPropertyName()))
                 .body("property_code", is(originalProperty.getPropertyCode()))
                 .body("email", is(originalProperty.getEmail()));
 
@@ -465,7 +465,7 @@ public class PropertySteps extends BasicSteps {
         PropertyDto property = getPropertyByCodeInternal(propertyCode);
 
         Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, LIMIT_TO_ALL,
-                CURSOR_FROM_FIRST, "property_set_name=='" + propertySetName + "'", null, null);
+                CURSOR_FROM_FIRST, "name=='" + propertySetName + "'", null, null);
         setSessionResponse(customerUsersResponse);
     }
 
