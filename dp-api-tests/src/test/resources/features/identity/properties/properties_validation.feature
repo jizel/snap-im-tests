@@ -2,15 +2,19 @@ Feature: Properties validation
 
   Background:
     Given Database is cleaned
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given the location "identity/properties" for object "property"
     Given unique identifier "property_id" for object "property"
     Given the following "property" object definition
       | path                   | type   | required | correct                                                     | invalid  | longer     |
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
       | /property_code         | String | true     | \w{50}                                                      | /null    | \w{256}    |
-      | /property_name         | String | true     | \w{255}                                                     | /null    | \w{256}    |
+      | /name                  | String | true     | \w{255}                                                     | /null    | \w{256}    |
       | /salesforce_id         | String | false    | \w{100}                                                     | /null    | \w{101}    |
-      | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                 | \.{10}   | \w{1001}   |
+      | /anchor_customer_id    | String | true     | 1238fd9a-a05d-42d8-8e84-42e904ace123                        | /null    | \w{101}    |
+      | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}   | \w{1001}   |
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}   | \w{101}    |
       | /timezone              | String | true     | (America/New_York\|Europe/Prague)                           | UTC+1:00 | UTC+001:00 |
       | /is_demo_property      | Bool   | true     | (true\|false)                                               | /null    |            |
@@ -57,14 +61,14 @@ Feature: Properties validation
       | /website         | 400          | 59         |
       | /email           | 400          | 59         |
       | /timezone        | 400          | 59         |
-      | /address/country | 400          | 59         |
+      | /address/country | 400          | 63         |
 
   Scenario: Object creation - missing values
     When create "property" objects each with one missing field
     Then there are following responses
       | testedField            | responseCode | customCode |
       | /property_code         | 400          | 53         |
-      | /property_name         | 400          | 53         |
+      | /name                  | 400          | 53         |
       | /email                 | 400          | 53         |
       | /timezone              | 400          | 53         |
       | /is_demo_property      | 400          | 53         |
@@ -80,7 +84,7 @@ Feature: Properties validation
       | /website         | 400          | 59         |
       | /email           | 400          | 59         |
       | /timezone        | 400          | 59         |
-      | /address/country | 400          | 59         |
+      | /address/country | 400          | 63         |
 
 #   TODO when field lengths are stabilized
 #
