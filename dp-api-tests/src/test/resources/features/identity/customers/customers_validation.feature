@@ -46,12 +46,12 @@ Feature: Customers validation
   Scenario: Object update - correct values one by one
     When update "customer" objects each with one correct field value
     Then there are following responses
-      | testedField      | responseCode |
-      | /website         | 204          |
-      | /email           | 204          |
-      | /phone           | 204          |
-      | /address/country | 204          |
-      | /timezone        | 204          |
+      | testedField            | responseCode |
+      | /website               | 204          |
+      | /email                 | 204          |
+      | /phone                 | 204          |
+      | /address/country       | 204          |
+      | /headquarters_timezone | 204          |
 
 
   Scenario: Object filtering
@@ -62,21 +62,21 @@ Feature: Customers validation
   Scenario: Object creation - invalid values
     When create "customer" objects each with one invalid field value
     Then there are following responses
-      | testedField      | responseCode | customCode |
-      | /website         | 400          | 59         |
-      | /email           | 400          | 59         |
-      | /phone           | 400          | 59         |
-      | /timezone        | 400          | 59         |
-      | /address/country | 400          | 63         |
+      | testedField            | responseCode | customCode |
+      | /website               | 400          | 59         |
+      | /email                 | 400          | 59         |
+      | /phone                 | 400          | 59         |
+      | /headquarters_timezone | 400          | 59         |
+      | /address/country       | 400          | 63         |
 
   Scenario: Object creation - missing values
     When create "customer" objects each with one missing field
     Then there are following responses
       | testedField            | responseCode | customCode |
-      | /code                  | 400          | 53         |
-      | /company_name          | 400          | 53         |
+      | /customer_code         | 400          | 53         |
+      | /name                  | 400          | 53         |
       | /email                 | 400          | 53         |
-      | /timezone              | 400          | 53         |
+      | /headquarters_timezone | 400          | 53         |
       | /is_demo_customer      | 400          | 53         |
       | /address/address_line1 | 400          | 53         |
       | /address/city          | 400          | 53         |
@@ -162,10 +162,10 @@ Feature: Customers validation
     Then Response code is 204
     And  Body is empty
     Examples:
-      | updated_field         | value                 |
-      | headquarters_timezone | Pacific/Fiji          |
-      | headquarters_timezone | GMT                   |
-      | phone                 | +42098765432          |
-      | email                 | valid@snapshot.travel |
-      | vatId                 | CZ98765432            |
-      | website               | http://snapshot.com   |
+      | updated_field | value                 |
+      | timezone      | Pacific/Fiji          |
+      | timezone      | GMT                   |
+      | phone         | +42098765432          |
+      | email         | valid@snapshot.travel |
+      | vatId         | CZ98765432            |
+      | website       | http://snapshot.com   |

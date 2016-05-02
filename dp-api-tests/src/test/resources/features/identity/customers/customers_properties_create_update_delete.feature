@@ -3,25 +3,25 @@ Feature: Customers properties create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-      | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
     Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
-      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
-      | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
+      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 |
+      | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | b13fde13-615a-48fd-a287-ba4a7314193b |
 
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c2t" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with code "c3t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p2_code" and customer with code "c3t" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
     Given The following users exist
-      | userType | userName             | firstName | lastName      | email                                 | timezone      | culture |
-      | snapshot | defaultSnapshotuser  | Default   | SnapshotUser  | defaultSnapshotUser1@snapshot.travel  | Europe/Prague | cs-CZ   |
+      | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
+      | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given Relation between user with username "defaultSnapshotuser" and customer with code "c1t" exists with isPrimary "true"
     Given Relation between user with username "defaultSnapshotuser" and customer with code "c2t" exists with isPrimary "true"
@@ -37,14 +37,12 @@ Feature: Customers properties create update delete
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
 
-    When Property with code "p2_code" is added to customer with code "c1t" with type "anchor" from "2015-01-01" to "2015-10-31"
+    When Property with code "p2_code" is added to customer with code "c1t" with type "chain" from "2015-01-01" to "2015-10-31"
     Then Response code is "201"
-    And Body contains entity with attribute "property_name" value "p2_name"
+    And Body contains entity with attribute "name" value "p2_name"
     And Body contains entity with attribute "valid_from" value "2015-01-01"
     And Body contains entity with attribute "valid_to" value "2015-10-31"
-    And Body contains entity with attribute "relationship_type" value "anchor"
-    And Etag header is present
-
+    And Body contains entity with attribute "relationship_type" value "chain"
 
   Scenario Outline: Checking error codes for creating customerProperty
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
@@ -55,16 +53,16 @@ Feature: Customers properties create update delete
 
     Examples:
       |                      | property_code | customer_code | type        | valid_from | valid_to   | error_code | custom_code |
-      | missing date         | p2_code       | c2t           | anchor      | /null      |            | 400        | 53          |
-      | missing date         | p2_code       | c2t           | anchor      | /null      | /null      | 400        | 53          |
-      | missing date         | p2_code       | c2t           | anchor      |            | /null      | 400        | 53          |
-      | missing date         | p2_code       | c2t           | anchor      |            |            | 400        | 53          |
-      | from after to date   | p2_code       | c2t           | anchor      | 2015-01-01 | 2014-12-31 | 400        | 63          |
-      | wrong date format    | p2_code       | c2t           | anchor      | 2015-01-   | 2100-01-01 | 400        | 59          |
-      | wrong date format    | p2_code       | c2t           | anchor      | 2015-01-01 | asdfasdf   | 400        | 59          |
+      | missing date         | p2_code       | c2t           | chain       | /null      |            | 400        | 53          |
+      | missing date         | p2_code       | c2t           | chain       | /null      | /null      | 400        | 53          |
+      | missing date         | p2_code       | c2t           | chain       |            | /null      | 400        | 53          |
+      | missing date         | p2_code       | c2t           | chain       |            |            | 400        | 53          |
+      | from after to date   | p2_code       | c2t           | chain       | 2015-01-01 | 2014-12-31 | 400        | 63          |
+      | wrong date format    | p2_code       | c2t           | chain       | 2015-01-   | 2100-01-01 | 400        | 59          |
+      | wrong date format    | p2_code       | c2t           | chain       | 2015-01-01 | asdfasdf   | 400        | 59          |
       | wrong type           | p2_code       | c2t           | nonexistent | 2015-01-01 | 2100-01-01 | 400        | 63          |
-      | duplicate entry      | p1_code       | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 62          |
-      | notexistent property | nonexistent   | c1t           | anchor      | 2015-01-01 | 2100-01-01 | 400        | 63          |
+      | duplicate entry      | p1_code       | c1t           | chain       | 2015-01-01 | 2100-01-01 | 400        | 62          |
+      | notexistent property | nonexistent   | c1t           | chain       | 2015-01-01 | 2100-01-01 | 400        | 63          |
 
 
     #add wrong dates, wrong type, not unique type, more anchor for one property, ...
@@ -78,42 +76,42 @@ Feature: Customers properties create update delete
   Scenario: Updating customerProperty with etag
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
-    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "valid_from" to value "2014-01-01"
+    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    When Property with code "p2_code" for customer with code "c2t" with type "chain" is updating field "valid_from" to value "2014-01-01"
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Field "valid_from" has value "2014-01-01" for property with code "p2_code" for customer with code "c2t" with type "anchor"
+    And Field "valid_from" has value "2014-01-01" for property with code "p2_code" for customer with code "c2t" with type "chain"
 
   Scenario: Updating customerProperty with outdated etag
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
-    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "valid_from" to value "2015-01-01" with invalid etag
+    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    When Property with code "p2_code" for customer with code "c2t" with type "chain" is updating field "valid_from" to value "2015-01-01" with invalid etag
     Then Response code is "412"
     And Custom code is "57"
 
   @Smoke
   Scenario: Delete customer should remove all related property relation
-    Given Relation between property with code "p3_code" and customer with code "c3t" exists with type "anchor" from "2016-01-01" to "2016-01-15"
+    Given Relation between property with code "p3_code" and customer with code "c3t" exists with type "chain" from "2016-01-01" to "2016-01-15"
     Given Customer with code "c3t" is deleted
     Then Property "p3_code" is not assigned to customer "c3t"
 
   Scenario Outline: Updating customerProperty error codes
 
     Given All customerProperties are deleted from DB for customer code "c1t" and property code "p2_code"
-    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "anchor" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "c2t" with type "anchor" is updating field "<field>" to value "<value>"
+    Given Relation between property with code "p2_code" and customer with code "c2t" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    When Property with code "p2_code" for customer with code "c2t" with type "chain" is updating field "<field>" to value "<value>"
     Then Response code is "<status_code>"
     And Custom code is "<custom_code>"
 
     Examples:
-      | field      | value      | status_code | custom_code |
-      | valid_from | 2016-01-01 | 400         | 63          |
-      | valid_from | invalid    | 400         | 59          |
-      | valid_to   | 2014-12-31 | 400         | 63          |
-      | valid_to   | invalid    | 400         | 59          |
-      | type       | invalid    | 400         | 63          |
+      | field             | value      | status_code | custom_code |
+      | valid_from        | 2016-01-01 | 400         | 63          |
+      | valid_from        | invalid    | 400         | 59          |
+      | valid_to          | 2014-12-31 | 400         | 63          |
+      | valid_to          | invalid    | 400         | 59          |
+      | relationship_type | invalid    | 400         | 63          |
 
   #error codes
 

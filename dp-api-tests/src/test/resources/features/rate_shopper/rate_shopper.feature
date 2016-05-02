@@ -16,11 +16,14 @@ Feature: Rate shopper
 
   Scenario Outline: Checking correct currency parameter returned for market
     Given Database is cleaned
-    And The following properties exist with random address and billing address
-      | propertyId                           | salesforceId     | propertyName | propertyCode | website                    | email            | isDemoProperty | timezone      | ttiId |
-      | 99000099-9999-4999-a999-999999999999 | salesforceid_n1  | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz  | true           | Europe/Prague | 0     |
-      | 99000299-9999-4999-a999-999999999999 | salesforceid_n2  | pn2_name     | pn2_code     | http://www.snapshot.travel | pn2@tenants.biz  | true           | Europe/Prague | 2     |
-      | 99001499-9999-4999-a999-999999999999 | salesforceid_n14 | pn14_name    | pn14_code    | http://www.snapshot.travel | pn14@tenants.biz | true           | Europe/Prague | 14    |
+    Given The following customers exist with random address
+      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+    Given The following properties exist with random address and billing address
+      | propertyId                           | salesforceId     | propertyName | propertyCode | website                    | email            | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
+      | 99000099-9999-4999-a999-999999999999 | salesforceid_n1  | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz  | true           | Europe/Prague | 0     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
+      | 99000299-9999-4999-a999-999999999999 | salesforceid_n2  | pn2_name     | pn2_code     | http://www.snapshot.travel | pn2@tenants.biz  | true           | Europe/Prague | 2     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
+      | 99001499-9999-4999-a999-999999999999 | salesforceid_n14 | pn14_name    | pn14_code    | http://www.snapshot.travel | pn14@tenants.biz | true           | Europe/Prague | 14    | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
 
     When Getting BAR values for a given market for "<propertyId>" since "today" until "today"
     Then Content type is "application/json"
@@ -57,7 +60,7 @@ Feature: Rate shopper
 
 
 # GET /rate_shopper/analytics/property/{id}
-  
+
   #@issue DP-1262
   Scenario Outline: Checking error codes for analytics data
     When Sending an empty request to "<url>"

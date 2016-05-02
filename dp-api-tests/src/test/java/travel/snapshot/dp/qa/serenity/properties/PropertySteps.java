@@ -372,7 +372,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     private CustomerDto getCustomerForProperty(String propertyId, String customerCode) {
-        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "code==" + customerCode, null, null);
+        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_code==" + customerCode, null, null);
         return Arrays.asList(customerResponse.as(CustomerDto[].class)).stream().findFirst().orElse(null);
     }
 

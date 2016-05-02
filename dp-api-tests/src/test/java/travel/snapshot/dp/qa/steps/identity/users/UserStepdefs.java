@@ -9,6 +9,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipViewDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleViewDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
@@ -119,7 +120,7 @@ public class UserStepdefs {
 
     @Then("^There are (\\d+) customerUsers returned$")
     public void There_are_returned_customerUsers_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipDto.class, count);
+        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipViewDto.class, count);
     }
 
     @Then("^There are users with following usernames returned in order: (.*)$")
