@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'net.researchgate.release'
+apply plugin: 'jacoco'
 
 group 'travel.snapshot.qa.manager'
 
@@ -198,6 +199,17 @@ uploadArchives {
                 authentication(userName: nexusUser, password: nexusPassword)
             }
         }
+    }
+}
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
     }
 }
 
