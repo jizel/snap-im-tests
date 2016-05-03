@@ -11,6 +11,8 @@ import travel.snapshot.qa.manager.redis.api.RedisManagerException;
 import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 import travel.snapshot.qa.manager.redis.impl.RedisManagerImpl;
 
+import java.util.UUID;
+
 /**
  * Checks if Redis is started or not. Redis service is considered to be started in case it is possible to get a Jedis
  * resource from a {@link JedisPool} without exception being thrown.
@@ -30,6 +32,12 @@ public class RedisStartedCheckTask extends Task<RedisManagerConfiguration, Boole
 
         try {
             jedis = redisManager.getJedis();
+
+            String randomKey = UUID.randomUUID().toString();
+
+            jedis.set(randomKey, "123");
+            jedis.del(randomKey);
+
             return true;
         } catch (JedisException ex) {
             if (logger.isDebugEnabled()) {

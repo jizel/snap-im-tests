@@ -10,11 +10,11 @@ import travel.snapshot.qa.inspection.InspectionException;
 import travel.snapshot.qa.manager.api.ServiceManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Orchestrates the startup and the shutdown of the whole infrastructure services.
@@ -60,11 +60,14 @@ public final class Orchestration {
 
         Collections.sort(dockerServiceManagers, Comparator.reverseOrder());
 
-        final List<ServiceCubePair> started = dockerServiceManagers.stream()
-                .map(this::startService)
-                .collect(Collectors.toList());
+        dockerServiceManagers.stream().forEach(serviceManager -> {
+            if (!serviceManager.serviceRunning()) {
+                startService(serviceManager);
+            } else {
+                logger.info("Service {} is already running.", serviceManager.provides());
+            }
+        });
 
-        startedContainers.addAll(started);
         return startedContainers;
     }
 
@@ -75,11 +78,20 @@ public final class Orchestration {
      * @return Arquillian Cube with its service type
      */
     public ServiceCubePair startService(final DockerServiceManager<?> serviceManager) {
-        return new ServiceCubePair(serviceManager.provides(), serviceManager.start());
+        ServiceCubePair serviceCubePair = new ServiceCubePair(serviceManager.provides(), serviceManager.start());
+        startedContainers.add(serviceCubePair);
+        return serviceCubePair;
     }
 
+    /**
+     * Stops a started service
+     *
+     * @param startedService service to stop
+     * @return this
+     */
     public Orchestration stopService(final ServiceCubePair startedService) {
-        getDockerServiceManager(startedService.getServiceName(), startedService.getCube().getId()).stop();
+        getDockerServiceManager(startedService.getServiceName(), startedService.getCube().getId()).stop(startedService.getCube());
+        deleteServices(Arrays.asList(startedService));
         return this;
     }
 
@@ -100,12 +112,27 @@ public final class Orchestration {
      * @return this
      */
     public Orchestration stopServices(final List<ServiceCubePair> startedServices) {
-        startedServices.forEach(serviceCubePair ->
-                getDockerServiceManager(serviceCubePair.getServiceName(), serviceCubePair.getCube().getId())
-                        .stop(serviceCubePair.getCube()));
 
-        startedServices.clear();
+        List<ServiceCubePair> stoppedServices = new ArrayList<>();
+
+        for (ServiceCubePair serviceCubePair : startedServices) {
+            try {
+                getDockerServiceManager(serviceCubePair.getServiceName(), serviceCubePair.getCube().getId())
+                        .stop(serviceCubePair.getCube());
+            } catch (Exception ex) {
+                logger.info("Unable to stop a service: {}", ex.getMessage());
+            } finally {
+                stoppedServices.add(serviceCubePair);
+            }
+        }
+
+        deleteServices(stoppedServices);
+
         return this;
+    }
+
+    private void deleteServices(List<ServiceCubePair> servicesToDelete) {
+        startedContainers.removeAll(servicesToDelete);
     }
 
     /**

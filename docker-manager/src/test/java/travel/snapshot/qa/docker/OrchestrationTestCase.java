@@ -22,19 +22,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
-import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQDockerManager;
-import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager;
-import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
-import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager;
 import travel.snapshot.qa.docker.orchestration.Orchestration;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
+import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQDockerManager;
 import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager;
 import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
 import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService;
 import travel.snapshot.qa.manager.redis.impl.docker.RedisService;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
+import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager;
 import travel.snapshot.qa.manager.tomcat.docker.TomcatService;
 
 import java.io.File;
@@ -64,19 +64,24 @@ public class OrchestrationTestCase {
         ORCHESTRATION.with(new ActiveMQService().init())
                 .with(new MariaDBService().init())
                 .with(new MongoDBService().init())
-                .with(new TomcatService().init())
-                .with(new RedisService().init())
+                .with(new TomcatService().init(), new RedisService().init())
                 .startServices();
     }
 
     @AfterClass
     public static void teardown() {
+        // just stop a first one
+        ORCHESTRATION.stopService(ORCHESTRATION.getStartedContainers().get(0));
+        // all other should be stopped
         ORCHESTRATION.stopServices();
         ORCHESTRATION.stop();
     }
 
     @Test
     public void test() {
+
+        // this should do nothing because all are already started
+        ORCHESTRATION.startServices();
 
         MariaDBManager mariaDBManager = ORCHESTRATION.getDockerServiceManager(MariaDBDockerManager.class, DEFAULT_MARIADB_CONTAINER_ID).getServiceManager();
         ActiveMQManager activeMQManager = ORCHESTRATION.getDockerServiceManager(ActiveMQDockerManager.class, DEFAULT_ACTIVEMQ_CONTAINER_ID).getServiceManager();

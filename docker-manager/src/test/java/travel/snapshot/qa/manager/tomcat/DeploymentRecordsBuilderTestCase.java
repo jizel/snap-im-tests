@@ -52,7 +52,7 @@ public class DeploymentRecordsBuilderTestCase {
     public void invalidDeploymentRecordBuilderTest() throws Exception {
 
         expectedException.expect(DeploymentRecordsBuilderException.class);
-        expectedException.expectCause(is(instanceOf(DeploymentStateParserException.class)));
+        expectedException.expectCause(is(instanceOf(NumberFormatException.class)));
 
         final TomcatResponseBody responseBody = new TomcatResponseBody();
         responseBody.addLine(NON_PARSABLE_DEPLOYMENT_LINE);
@@ -60,5 +60,13 @@ public class DeploymentRecordsBuilderTestCase {
         final DeploymentRecord.DeploymentRecordsBuilder builder = new DeploymentRecord.DeploymentRecordsBuilder(responseBody);
 
         builder.build();
+    }
+
+    @Test
+    public void nullTomcatResponseBodyTest() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Tomcat response body must not be a null object.");
+
+        new DeploymentRecord.DeploymentRecordsBuilder(null).build();
     }
 }

@@ -8,7 +8,10 @@ import travel.snapshot.qa.manager.tomcat.api.ContainerManagerCommand;
  */
 public class TomcatDeployCommand implements ContainerManagerCommand {
 
-    private final Archive<?> deployment;
+    private Archive<?> deployment;
+
+    public TomcatDeployCommand() {
+    }
 
     public TomcatDeployCommand(Archive<?> deployment) {
         this.deployment = deployment;

@@ -1,6 +1,6 @@
 package travel.snapshot.qa.manager.tomcat.command.deployment.lifecycle;
 
-public class TomcatDeploymentLifecycleCommand {
+public abstract class TomcatDeploymentLifecycleCommand {
 
     protected String deployment;
 

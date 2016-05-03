@@ -17,8 +17,15 @@ public class TomcatLifecycleTestCase {
             .build();
 
     @Test
-    public void startAndStopTomcatVerbose() {
+    public void startAndStopTomcatWithChainedConfigurationVerbose() {
         TomcatManager tomcatManager = Spacelift.task(configuration, TomcatStarter.class).execute().await();
+
+        Spacelift.task(tomcatManager, TomcatStopper.class).execute().await();
+    }
+
+    @Test
+    public void startAndStopTomcatWithSetConfigurationVerbose() {
+        TomcatManager tomcatManager = Spacelift.task(TomcatStarter.class).configuration(configuration).execute().await();
 
         Spacelift.task(tomcatManager, TomcatStopper.class).execute().await();
     }

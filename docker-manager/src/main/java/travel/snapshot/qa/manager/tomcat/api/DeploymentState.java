@@ -5,19 +5,8 @@ package travel.snapshot.qa.manager.tomcat.api;
  */
 public enum DeploymentState {
 
-    RUNNING("running"),
-    STOPPED("stopped");
-
-    private String name;
-
-    DeploymentState(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
+    RUNNING,
+    STOPPED;
 
     /**
      * Returns enumeration of given name.
@@ -27,12 +16,10 @@ public enum DeploymentState {
      * @throws DeploymentStateParserException if it is not possible to parse enumeration from given name
      */
     public static DeploymentState parse(String name) throws DeploymentStateParserException {
-        for (DeploymentState state : values()) {
-            if (state.toString().equals(name)) {
-                return state;
-            }
+        try {
+            return DeploymentState.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new DeploymentStateParserException(String.format("Unable to parse '%s' to deployment state enumeration.", name));
         }
-
-        throw new DeploymentStateParserException(String.format("Unable to parse '%s' to deployment state enumeration.", name));
     }
 }

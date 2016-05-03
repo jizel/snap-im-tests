@@ -26,7 +26,7 @@ public class TomcatCommandBuilder {
         cb.parameter("-Djava.util.logging.config.file=" + absoluteCatalinaBasePath + "/conf/" + configuration.getLoggingProperties());
 
         cb.parameter("-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager");
-        cb.parameters(AdditionalJavaOptionsParser.parse(ADDITIONAL_JAVA_OPTS));
+        cb.parameters(new AdditionalJavaOptionsParser().parse(ADDITIONAL_JAVA_OPTS));
         cb.parameter("-classpath");
 
         String CLASS_PATH = absoluteCatalinaHomePath + "/bin/bootstrap.jar" + System.getProperty("path.separator");

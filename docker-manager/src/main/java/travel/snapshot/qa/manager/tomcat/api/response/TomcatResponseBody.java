@@ -7,7 +7,7 @@ import java.util.StringJoiner;
 
 public class TomcatResponseBody {
 
-    private List<String> body = new ArrayList<String>();
+    private List<String> body = new ArrayList<>();
 
     public void setBody(List<String> body) {
         this.body = body;

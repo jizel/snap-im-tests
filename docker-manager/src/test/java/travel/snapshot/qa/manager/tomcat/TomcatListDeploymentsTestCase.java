@@ -63,10 +63,15 @@ public class TomcatListDeploymentsTestCase {
 
         Assert.assertEquals(DEPLOYMENT_CONTEXT, deploymentRecord.getContextPath());
         Assert.assertEquals(DeploymentState.RUNNING, deploymentRecord.getDeploymentState());
+        Assert.assertEquals(0, deploymentRecord.getActiveSessions());
         Assert.assertTrue(deploymentRecord.isRunning());
 
         Assert.assertTrue(manager.isDeployed(DEPLOYMENT_CONTEXT));
         Assert.assertFalse(manager.isDeployed(UUID.randomUUID().toString()));
-    }
 
+        // stop deployment and get another response
+
+        manager.stopDeployment(DEPLOYMENT_CONTEXT);
+        Assert.assertFalse(manager.listDeployments().getDeployment(DEPLOYMENT_CONTEXT).isRunning());
+    }
 }
