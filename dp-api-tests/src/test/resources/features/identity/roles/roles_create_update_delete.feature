@@ -7,7 +7,7 @@ Feature: Roles create update delete
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following roles exist
-      | applicationId                        | roleName    | roleDescription        |
+      | applicationId                        | roleName    | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
@@ -15,14 +15,13 @@ Feature: Roles create update delete
       | applicationId                        | roleName          |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Updated role name |
 
-
   @Smoke
   Scenario: Creating role
     When Role is created
-      | applicationId                        | roleName            | roleDescription        |
+      | applicationId                        | roleName            | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
     Then Response code is "201"
-    And Body contains entity with attribute "role_name" value "Created role name 1"
+    And Body contains entity with attribute "name" value "Created role name 1"
     And Body contains entity with attribute "role_description" value "optional description 1"
     And "Location" header is set and contains the same role
     And Etag header is present
@@ -57,16 +56,16 @@ Feature: Roles create update delete
 
   Scenario Outline: Updating role
     When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
-      | applicationId   | roleName           | roleDescription   |
-      | <applicationId> | <updated_roleName> | <roleDescription> |
+      | applicationId   | roleName           | description   |
+      | <applicationId> | <updated_roleName> | <description> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Updated role with name "<updated_roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" has data
-      | applicationId   | roleName           | roleDescription   |
-      | <applicationId> | <updated_roleName> | <roleDescription> |
+      | applicationId   | roleName           | description   |
+      | <applicationId> | <updated_roleName> | <description> |
     Examples:
-      | applicationId | roleName    | updated_roleName  | roleDescription                |
+      | applicationId | roleName    | updated_roleName  | description                    |
       |               | Role name 1 | Updated role name |                                |
       |               | Role name 1 | Updated role name | Updated optional description   |
       |               | Role name 1 | Role name 1       | Updated optional description 1 |
@@ -74,19 +73,19 @@ Feature: Roles create update delete
 
   Scenario: Updating role with outdated etag
     When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data if updated before
-      | applicationId | roleName          | roleDescription |
-      |               | Updated role name |                 |
+      | applicationId | roleName          | description |
+      |               | Updated role name |             |
     Then Response code is "412"
     And Custom code is "57"
 
 
   Scenario Outline: Updating with invalid data
     When Role with name "<roleName>" for application id "<applicationId>" is updated with data
-      | applicationId           | roleName           | roleDescription           |
-      | <updated_applicationId> | <updated_roleName> | <updated_roleDescription> |
+      | applicationId           | roleName           | description           |
+      | <updated_applicationId> | <updated_roleName> | <updated_description> |
     Then Response code is "<responseCode>"
     And Custom code is "<customCode>"
     Examples:
-      | applicationId                        | updated_applicationId | roleName    | updated_roleName | updated_roleDescription | responseCode | customCode |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                         | 400          | 62         |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                         | 400          | 63         |
+      | applicationId                        | updated_applicationId | roleName    | updated_roleName | updated_description | responseCode | customCode |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                     | 400          | 62         |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                     | 400          | 63         |
