@@ -1,12 +1,9 @@
-package travel.snapshot.qa.docker.manager.impl;
-
-import static travel.snapshot.qa.docker.ServiceType.JBOSS_DOMAIN;
+package travel.snapshot.qa.manager.jboss.docker;
 
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.task.Task;
 import org.jboss.as.arquillian.container.domain.ManagementClient;
-import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.manager.jboss.JBossDomainManager;
 import travel.snapshot.qa.manager.jboss.check.JBossDomainStartChecker;
@@ -18,7 +15,9 @@ import travel.snapshot.qa.manager.jboss.check.JBossDomainStartChecker;
  */
 public class JBossDomainDockerManager extends DockerServiceManager<JBossDomainManager> {
 
-    private static final String JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY = "docker.jboss.domain.connection.timeout";
+    public static final String SERVICE_NAME = "jboss_domain";
+
+    private static final String JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY = "docker." + SERVICE_NAME + ".connection.timeout";
 
     public JBossDomainDockerManager(JBossDomainManager serviceManager) {
         super(serviceManager);
@@ -28,7 +27,7 @@ public class JBossDomainDockerManager extends DockerServiceManager<JBossDomainMa
     public Cube start(String containerId) {
         final Task<ManagementClient, Boolean> checkingTask = Spacelift.task(serviceManager.getManagementClient(), JBossDomainStartChecker.class);
 
-        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY, JBOSS_DOMAIN);
+        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), JBOSS_DOMAIN_CONNECTION_TIMEOUT_PROPERTY, provides());
 
         return super.start(checkingTask, containerId, timeout, 10);
     }
@@ -40,7 +39,7 @@ public class JBossDomainDockerManager extends DockerServiceManager<JBossDomainMa
     }
 
     @Override
-    public ServiceType provides() {
-        return ServiceType.JBOSS_DOMAIN;
+    public String provides() {
+        return SERVICE_NAME;
     }
 }

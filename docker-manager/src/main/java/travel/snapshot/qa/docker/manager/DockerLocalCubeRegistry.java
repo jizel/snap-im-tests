@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker.manager.impl;
+package travel.snapshot.qa.docker.manager;
 
 import org.arquillian.cube.impl.model.LocalCubeRegistry;
 

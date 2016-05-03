@@ -1,12 +1,9 @@
-package travel.snapshot.qa.docker.manager.impl;
-
-import static travel.snapshot.qa.docker.ServiceType.JBOSS_STANDALONE;
+package travel.snapshot.qa.manager.jboss.docker;
 
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.task.Task;
 import org.jboss.as.arquillian.container.ManagementClient;
-import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.manager.jboss.JBossStandaloneManager;
 import travel.snapshot.qa.manager.jboss.check.JBossStandaloneStartChecker;
@@ -18,6 +15,8 @@ import travel.snapshot.qa.manager.jboss.check.JBossStandaloneStartChecker;
  */
 public class JBossStandaloneDockerManager extends DockerServiceManager<JBossStandaloneManager> {
 
+    public static final String SERVICE_NAME = "jboss_standalone";
+
     private static final String JBOSS_STANDALONE_CONNECTION_TIMEOUT_PROPERTY = "docker.jboss.standalone.connection.timeout";
 
     public JBossStandaloneDockerManager(JBossStandaloneManager serviceManager) {
@@ -28,7 +27,7 @@ public class JBossStandaloneDockerManager extends DockerServiceManager<JBossStan
     public Cube start(String containerId) {
         final Task<ManagementClient, Boolean> checkingTask = Spacelift.task(serviceManager.getManagementClient(), JBossStandaloneStartChecker.class);
 
-        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), JBOSS_STANDALONE_CONNECTION_TIMEOUT_PROPERTY, JBOSS_STANDALONE);
+        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), JBOSS_STANDALONE_CONNECTION_TIMEOUT_PROPERTY, provides());
 
         return super.start(checkingTask, containerId, timeout, 10);
     }
@@ -40,7 +39,7 @@ public class JBossStandaloneDockerManager extends DockerServiceManager<JBossStan
     }
 
     @Override
-    public ServiceType provides() {
-        return ServiceType.JBOSS_STANDALONE;
+    public String provides() {
+        return SERVICE_NAME;
     }
 }

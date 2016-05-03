@@ -3,7 +3,6 @@ package travel.snapshot.qa.docker.orchestration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.docker.ServiceCubePair;
-import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.inspection.Inspection;
@@ -18,14 +17,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Orchestrates the startup and the shutdown of the whole Snapshot Data Platform infrastructure services.
- *
- * You would have to still deploy service modules to Tomcat via TomcatManager and prepare the database e.g. via flyway.
- * The result of this process is to have all Docker containers fully up and running so you can do so.
+ * Orchestrates the startup and the shutdown of the whole infrastructure services.
  */
-public class DataPlatformOrchestration {
+public final class Orchestration {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataPlatformOrchestration.class);
+    private static final Logger logger = LoggerFactory.getLogger(Orchestration.class);
 
     private final DockerManager dockerManager = DockerManager.instance();
 
@@ -38,9 +34,9 @@ public class DataPlatformOrchestration {
      *
      * @return this
      */
-    public DataPlatformOrchestration start() {
+    public Orchestration start() {
         dockerManager.startManager();
-        logger.info("Data platform orchestration has started.");
+        logger.info("Orchestration has started.");
         return this;
     }
 
@@ -49,9 +45,9 @@ public class DataPlatformOrchestration {
      *
      * @return this
      */
-    public DataPlatformOrchestration stop() {
+    public Orchestration stop() {
         dockerManager.stopManager();
-        logger.info("Data platform orchestration has stopped.");
+        logger.info("Orchestration has stopped.");
         return this;
     }
 
@@ -82,8 +78,8 @@ public class DataPlatformOrchestration {
         return new ServiceCubePair(serviceManager.provides(), serviceManager.start());
     }
 
-    public DataPlatformOrchestration stopService(final ServiceCubePair startedService) {
-        getDockerServiceManager(startedService.getServiceType(), startedService.getCube().getId()).stop();
+    public Orchestration stopService(final ServiceCubePair startedService) {
+        getDockerServiceManager(startedService.getServiceName(), startedService.getCube().getId()).stop();
         return this;
     }
 
@@ -92,7 +88,7 @@ public class DataPlatformOrchestration {
      *
      * @return this
      */
-    public DataPlatformOrchestration stopServices() {
+    public Orchestration stopServices() {
         stopServices(startedContainers);
         return this;
     }
@@ -103,9 +99,9 @@ public class DataPlatformOrchestration {
      * @param startedServices list of {@link ServiceCubePair}s to stop
      * @return this
      */
-    public DataPlatformOrchestration stopServices(final List<ServiceCubePair> startedServices) {
+    public Orchestration stopServices(final List<ServiceCubePair> startedServices) {
         startedServices.forEach(serviceCubePair ->
-                getDockerServiceManager(serviceCubePair.getServiceType(), serviceCubePair.getCube().getId())
+                getDockerServiceManager(serviceCubePair.getServiceName(), serviceCubePair.getCube().getId())
                         .stop(serviceCubePair.getCube()));
 
         startedServices.clear();
@@ -119,7 +115,7 @@ public class DataPlatformOrchestration {
      * @return this
      */
     @SafeVarargs
-    public final DataPlatformOrchestration with(final DockerServiceManager<? extends ServiceManager>... dockerServiceManagers) {
+    public final Orchestration with(final DockerServiceManager<? extends ServiceManager>... dockerServiceManagers) {
         for (final DockerServiceManager<? extends ServiceManager> dockerServiceManager : dockerServiceManagers) {
             with(dockerServiceManager);
         }
@@ -132,7 +128,7 @@ public class DataPlatformOrchestration {
      * @param dockerServiceManager Docker service manager to add to this orchestration.
      * @return this
      */
-    public DataPlatformOrchestration with(final DockerServiceManager<? extends ServiceManager> dockerServiceManager) {
+    public Orchestration with(final DockerServiceManager<? extends ServiceManager> dockerServiceManager) {
         this.dockerServiceManagers.add(dockerServiceManager);
         return this;
     }
@@ -154,13 +150,13 @@ public class DataPlatformOrchestration {
      * Returns Docker service manager for given {@code serviceType} and {@code containerId} or null if there is not such
      * service manager
      *
-     * @param serviceType type of service to get manager of
+     * @param serviceName name of service to get manager of
      * @param containerId container ID to get service manager of
      * @return Docker service manager of given service type and started container of given {@code containerId}
      */
-    public DockerServiceManager<?> getDockerServiceManager(final ServiceType serviceType, final String containerId) {
+    public DockerServiceManager<?> getDockerServiceManager(final String serviceName, final String containerId) {
         return dockerServiceManagers.stream().filter(serviceManager ->
-                serviceManager.provides() == serviceType && serviceManager.getDockerContainer().getId().equals(containerId))
+                serviceManager.provides().equals(serviceName) && serviceManager.getDockerContainer().getId().equals(containerId))
                 .findFirst().orElse(null);
     }
 

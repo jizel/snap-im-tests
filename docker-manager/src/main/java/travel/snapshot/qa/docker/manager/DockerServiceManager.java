@@ -7,7 +7,6 @@ import org.jboss.shrinkwrap.impl.base.io.tar.TarArchive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.connection.ConnectionCheck;
-import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.manager.api.ServiceManager;
 import travel.snapshot.qa.manager.api.configuration.Validate;
 
@@ -218,7 +217,7 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
     /**
      * @return type of service this Docker service manager handles
      */
-    public abstract ServiceType provides();
+    public abstract String provides();
 
     /**
      * Transfers resources between container and host. {@code from} file resides effectively in container. {@code from}
@@ -323,7 +322,7 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * @param serviceType     type of service a timeout is being resolved for
      * @return resolved timeout
      */
-    public static long resolveTimeout(long setTimeout, String timeoutProperty, ServiceType serviceType) {
+    public static long resolveTimeout(long setTimeout, String timeoutProperty, String serviceType) {
 
         long connectionTimeOut = setTimeout;
 
@@ -346,10 +345,10 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
                 throw new NumberFormatException("Connection timeout was lower than 0.");
             }
         } catch (NumberFormatException ex) {
-            logger.info("Connection timeout for {} service was not valid: {}.", serviceType.name(), resolvedSystemProperty);
+            logger.info("Connection timeout for {} service was not valid: {}.", serviceType, resolvedSystemProperty);
         }
 
-        logger.info(String.format("Resolved service timeout for %s is %s seconds.", serviceType.name(), connectionTimeOut));
+        logger.info(String.format("Resolved service timeout for %s is %s seconds.", serviceType, connectionTimeOut));
 
         return connectionTimeOut;
     }

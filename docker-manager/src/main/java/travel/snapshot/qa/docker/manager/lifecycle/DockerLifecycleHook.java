@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker.lifecycle;
+package travel.snapshot.qa.docker.manager.lifecycle;
 
 /**
  * Hook to execute in some moment in the lifecycle of a container.

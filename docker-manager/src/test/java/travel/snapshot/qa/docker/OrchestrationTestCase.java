@@ -1,13 +1,9 @@
 package travel.snapshot.qa.docker;
 
-import static travel.snapshot.qa.docker.DockerServiceFactory.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
-import static travel.snapshot.qa.docker.DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
-import static travel.snapshot.qa.docker.DockerServiceFactory.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
-import static travel.snapshot.qa.docker.DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID;
-import static travel.snapshot.qa.docker.DockerServiceFactory.activemq;
-import static travel.snapshot.qa.docker.DockerServiceFactory.mariadb;
-import static travel.snapshot.qa.docker.DockerServiceFactory.mongodb;
-import static travel.snapshot.qa.docker.DockerServiceFactory.tomcat;
+import static travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
+import static travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
+import static travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
+import static travel.snapshot.qa.manager.tomcat.docker.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID;
 
 import com.github.dockerjava.api.model.Container;
 import com.mongodb.MongoClient;
@@ -26,15 +22,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
-import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
-import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
-import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
-import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
+import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQDockerManager;
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
+import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager;
+import travel.snapshot.qa.docker.orchestration.Orchestration;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
+import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService;
+import travel.snapshot.qa.manager.redis.impl.docker.RedisService;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
+import travel.snapshot.qa.manager.tomcat.docker.TomcatService;
 
 import java.io.File;
 import java.io.InputStream;
@@ -48,11 +49,11 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Category(OrchestrationTest.class)
-public class DataPlatformOrchestrationTestCase {
+public class OrchestrationTestCase {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataPlatformOrchestrationTestCase.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrchestrationTestCase.class);
 
-    private static final DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration().start();
+    private static final Orchestration ORCHESTRATION = new Orchestration().start();
 
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
@@ -60,10 +61,11 @@ public class DataPlatformOrchestrationTestCase {
     @BeforeClass
     public static void setup() {
 
-        ORCHESTRATION.with(activemq().init(DEFAULT_ACTIVEMQ_CONTAINER_ID))
-                .with(mariadb().init(DEFAULT_MARIADB_CONTAINER_ID))
-                .with(mongodb().init(DEFAULT_MONGODB_CONTAINER_ID))
-                .with(tomcat().init(DEFAULT_TOMCAT_CONTAINER_ID))
+        ORCHESTRATION.with(new ActiveMQService().init())
+                .with(new MariaDBService().init())
+                .with(new MongoDBService().init())
+                .with(new TomcatService().init())
+                .with(new RedisService().init())
                 .startServices();
     }
 

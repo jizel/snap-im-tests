@@ -1,7 +1,6 @@
 package travel.snapshot.qa.docker;
 
-import static travel.snapshot.qa.docker.DockerServiceFactory.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
-import static travel.snapshot.qa.docker.DockerServiceFactory.mongodb;
+import static travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
 
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
@@ -12,15 +11,16 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import travel.snapshot.qa.category.OrchestrationTest;
-import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
+import travel.snapshot.qa.docker.orchestration.Orchestration;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoHostPortPair;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService;
 
 @Category(OrchestrationTest.class)
 public class MultipleServiceContainersTestCase {
 
-    private static final DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
+    private static final Orchestration ORCHESTRATION = new Orchestration();
 
     private static final String SECOND_MONGODB_CONTAINER_ID = "mongodb_2";
 
@@ -29,6 +29,8 @@ public class MultipleServiceContainersTestCase {
 
     @BeforeClass
     public static void setup() {
+
+        MongoDBService mongoDBService = new MongoDBService();
 
         // here we start two docker containers of different
         // container ID but they will run the same services
@@ -43,8 +45,8 @@ public class MultipleServiceContainersTestCase {
                 .setServer(new MongoHostPortPair(hostIp, 27018))
                 .build();
 
-        ORCHESTRATION.with(mongodb().init(mongoDBManagerConfiguration1, DEFAULT_MONGODB_CONTAINER_ID))
-                .with(mongodb().init(mongoDBManagerConfiguration2, SECOND_MONGODB_CONTAINER_ID))
+        ORCHESTRATION.with(mongoDBService.init(mongoDBManagerConfiguration1, DEFAULT_MONGODB_CONTAINER_ID))
+                .with(mongoDBService.init(mongoDBManagerConfiguration2, SECOND_MONGODB_CONTAINER_ID))
                 .startServices();
     }
 

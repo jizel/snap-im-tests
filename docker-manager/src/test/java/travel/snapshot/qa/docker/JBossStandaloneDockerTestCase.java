@@ -9,7 +9,7 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.docker.manager.impl.JBossStandaloneDockerManager;
+import travel.snapshot.qa.manager.jboss.docker.JBossStandaloneDockerManager;
 import travel.snapshot.qa.manager.jboss.JBossStandaloneManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.configuration.Management;

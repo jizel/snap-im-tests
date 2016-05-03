@@ -1,6 +1,6 @@
 package travel.snapshot.qa.docker;
 
-import static travel.snapshot.qa.docker.DockerServiceFactory.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
+import static travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
 
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
@@ -11,7 +11,7 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.docker.manager.impl.ActiveMQDockerManager;
+import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQDockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.configuration.ActiveMQManagerConfiguration;
 import travel.snapshot.qa.manager.activemq.impl.ActiveMQManagerImpl;

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
-import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager;
+import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import travel.snapshot.qa.manager.tomcat.api.Deployments;
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration;

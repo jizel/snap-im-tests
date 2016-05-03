@@ -1,6 +1,6 @@
 package travel.snapshot.qa.docker;
 
-import static travel.snapshot.qa.docker.DockerServiceFactory.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
+import static travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
 
 import com.mongodb.MongoClient;
 import org.arquillian.cube.spi.Cube;
@@ -12,7 +12,7 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.docker.manager.impl.MongoDBDockerManager;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.impl.MongoDBManagerImpl;

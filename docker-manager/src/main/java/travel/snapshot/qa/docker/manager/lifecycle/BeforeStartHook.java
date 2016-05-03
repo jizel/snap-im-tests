@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker.lifecycle;
+package travel.snapshot.qa.docker.manager.lifecycle;
 
 import travel.snapshot.qa.manager.api.ServiceManager;
 

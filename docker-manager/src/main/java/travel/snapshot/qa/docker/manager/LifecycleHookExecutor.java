@@ -1,9 +1,9 @@
 package travel.snapshot.qa.docker.manager;
 
-import travel.snapshot.qa.docker.lifecycle.AfterStartHook;
-import travel.snapshot.qa.docker.lifecycle.AfterStopHook;
-import travel.snapshot.qa.docker.lifecycle.BeforeStartHook;
-import travel.snapshot.qa.docker.lifecycle.BeforeStopHook;
+import travel.snapshot.qa.docker.manager.lifecycle.AfterStartHook;
+import travel.snapshot.qa.docker.manager.lifecycle.AfterStopHook;
+import travel.snapshot.qa.docker.manager.lifecycle.BeforeStartHook;
+import travel.snapshot.qa.docker.manager.lifecycle.BeforeStopHook;
 import travel.snapshot.qa.manager.api.ServiceManager;
 
 import java.util.ArrayList;

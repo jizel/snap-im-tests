@@ -13,6 +13,7 @@ import travel.snapshot.qa.category.DockerTest;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.manager.generic.api.GenericManager;
 import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration;
+import travel.snapshot.qa.manager.generic.impl.docker.GenericService;
 
 /**
  * For test purposes we just start Tomcat container and check TCP connection by generic service.
@@ -33,7 +34,7 @@ public class GenericDockerManagerTestCase {
 
     @BeforeClass
     public static void setup() {
-        genericDockerManager = DockerServiceFactory.generic().init(configuration, CONTAINER_ID);
+        genericDockerManager = new GenericService().init(configuration, CONTAINER_ID);
 
         genericDockerManager.getDockerManager().startManager();
     }

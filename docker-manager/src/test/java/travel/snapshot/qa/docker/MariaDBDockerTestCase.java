@@ -1,6 +1,6 @@
 package travel.snapshot.qa.docker;
 
-import static travel.snapshot.qa.docker.DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
+import static travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
 
 import org.apache.commons.io.IOUtils;
 import org.arquillian.cube.spi.Cube;
@@ -12,7 +12,7 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager;
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;

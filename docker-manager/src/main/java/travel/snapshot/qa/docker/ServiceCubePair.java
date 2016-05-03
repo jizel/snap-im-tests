@@ -1,28 +1,27 @@
 package travel.snapshot.qa.docker;
 
 import org.arquillian.cube.spi.Cube;
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
+import travel.snapshot.qa.docker.orchestration.Orchestration;
 
 import java.util.List;
 
 /**
  * Helper class which instances are returned in a list to caller after containers are started by {@link
- * DataPlatformOrchestration#startServices()}. That list is in turn passed to {@link
- * DataPlatformOrchestration#stopServices(List)}.
+ * Orchestration#startServices()}. That list is in turn passed to {@link Orchestration#stopServices(List)}.
  */
 public class ServiceCubePair {
 
-    private final ServiceType serviceType;
+    private final String serviceName;
 
     private final Cube cube;
 
-    public ServiceCubePair(final ServiceType serviceType, final Cube cube) {
-        this.serviceType = serviceType;
+    public ServiceCubePair(final String serviceName, final Cube cube) {
+        this.serviceName = serviceName;
         this.cube = cube;
     }
 
-    public ServiceType getServiceType() {
-        return serviceType;
+    public String getServiceName() {
+        return serviceName;
     }
 
     public Cube getCube() {
@@ -36,12 +35,12 @@ public class ServiceCubePair {
 
         ServiceCubePair that = (ServiceCubePair) o;
 
-        return serviceType == that.serviceType && cube.equals(that.cube);
+        return serviceName.equals(that.serviceName) && cube.equals(that.cube);
     }
 
     @Override
     public int hashCode() {
-        int result = serviceType.hashCode();
+        int result = serviceName.hashCode();
         result = 31 * result + cube.hashCode();
         return result;
     }

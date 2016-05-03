@@ -1,12 +1,9 @@
-package travel.snapshot.qa.docker.manager.impl;
-
-import static travel.snapshot.qa.docker.ServiceType.GENERIC;
+package travel.snapshot.qa.manager.generic.impl.docker;
 
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.task.Task;
 import travel.snapshot.qa.connection.ConnectionCheck;
 import travel.snapshot.qa.connection.ConnectionCheckExecutor;
-import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.docker.manager.DockerServiceManager;
 import travel.snapshot.qa.manager.generic.api.GenericManager;
 import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration;
@@ -16,7 +13,9 @@ import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration;
  */
 public class GenericDockerManager extends DockerServiceManager<GenericManager> {
 
-    private static final String GENERIC_CONNECTION_TIMEOUT_PROPERTY = "docker.generic.connection.timeout";
+    public static final String SERVICE_NAME = "generic";
+
+    private static final String GENERIC_CONNECTION_TIMEOUT_PROPERTY = "docker." + SERVICE_NAME + ".connection.timeout";
 
     public GenericDockerManager(GenericManager serviceManager) {
         super(serviceManager);
@@ -29,14 +28,14 @@ public class GenericDockerManager extends DockerServiceManager<GenericManager> {
             checkingTask = createCheckingTask(serviceManager.getConfiguration());
         }
 
-        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), GENERIC_CONNECTION_TIMEOUT_PROPERTY, GENERIC);
+        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), GENERIC_CONNECTION_TIMEOUT_PROPERTY, provides());
 
         return super.start(checkingTask, containerId, timeout, 10);
     }
 
     @Override
-    public ServiceType provides() {
-        return ServiceType.GENERIC;
+    public String provides() {
+        return SERVICE_NAME;
     }
 
     /**

@@ -20,7 +20,7 @@ import org.mockito.Spy;
 import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.docker.manager.ConnectionMode;
 import travel.snapshot.qa.docker.manager.DockerContainerLifecycleDecider;
-import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
+import travel.snapshot.qa.docker.manager.DockerLocalCubeRegistry;
 
 @Category(UnitTest.class)
 public class DockerContainerLifecycleDeciderTestCase {

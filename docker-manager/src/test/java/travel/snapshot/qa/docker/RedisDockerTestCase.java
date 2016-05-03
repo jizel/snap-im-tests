@@ -3,7 +3,7 @@ package travel.snapshot.qa.docker;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static travel.snapshot.qa.docker.DockerServiceFactory.RedisService.DEFAULT_REDIS_CONTAINER_ID;
+import static travel.snapshot.qa.manager.redis.impl.docker.RedisService.DEFAULT_REDIS_CONTAINER_ID;
 
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;
@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.docker.manager.impl.RedisDockerManager;
+import travel.snapshot.qa.manager.redis.impl.docker.RedisDockerManager;
 import travel.snapshot.qa.manager.redis.api.RedisManager;
 import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 import travel.snapshot.qa.manager.redis.impl.RedisManagerImpl;
