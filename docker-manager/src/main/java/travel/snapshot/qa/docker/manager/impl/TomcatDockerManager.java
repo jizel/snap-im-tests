@@ -1,5 +1,7 @@
 package travel.snapshot.qa.docker.manager.impl;
 
+import static travel.snapshot.qa.docker.ServiceType.TOMCAT;
+
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.task.Task;
@@ -16,6 +18,8 @@ import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguratio
  */
 public class TomcatDockerManager extends DockerServiceManager<TomcatManager> {
 
+    private static final String TOMCAT_CONNECTION_TIMEOUT_PROPERTY = "docker.tomcat.connection.timeout";
+
     public TomcatDockerManager(final TomcatManager tomcatManager) {
         super(tomcatManager);
     }
@@ -23,16 +27,18 @@ public class TomcatDockerManager extends DockerServiceManager<TomcatManager> {
     @Override
     public Cube start(final String containerId) {
 
+        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), TOMCAT_CONNECTION_TIMEOUT_PROPERTY, TOMCAT);
+
         if (super.checkingTask == null) {
             final Task<TomcatManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), TomcatStartedCheckTask.class);
-            return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveTomcatConnectionTimeout(serviceManager.getConfiguration()), 5);
+            return super.start(checkingTask, containerId, timeout, 5);
         }
 
-        return super.start(containerId, ConnectionTimeoutResolver.resolveTomcatConnectionTimeout(serviceManager.getConfiguration()), 5);
+        return super.start(containerId, timeout, 5);
     }
 
     @Override
     public ServiceType provides() {
-        return ServiceType.TOMCAT;
+        return TOMCAT;
     }
 }

@@ -15,6 +15,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Deploys artifacts to server groups in a domain mode.
+ */
 public class JBossDomainDeployer implements JBossContainerDeployer {
 
     private static final Logger logger = LoggerFactory.getLogger(JBossStandaloneDeployer.class);
@@ -30,12 +33,24 @@ public class JBossDomainDeployer implements JBossContainerDeployer {
         this.configuration = configuration;
     }
 
+    /**
+     * Sets a server group where an artifact will be deployed.s
+     *
+     * @param serverGroup a server group to deploy an artifact to
+     * @return this
+     */
     public JBossDomainDeployer serverGroup(String serverGroup) {
         this.serverGroups.clear();
         this.serverGroups.add(serverGroup);
         return this;
     }
 
+    /**
+     * Sets server groups where an artifact will be depoyed.
+     *
+     * @param serverGroups set of server groups to deploy an artifact to
+     * @return this
+     */
     public JBossDomainDeployer serverGroups(Set<String> serverGroups) {
         this.serverGroups.clear();
         this.serverGroups.addAll(serverGroups);

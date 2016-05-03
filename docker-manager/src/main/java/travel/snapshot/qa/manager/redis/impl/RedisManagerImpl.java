@@ -4,10 +4,13 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.exceptions.JedisException;
 import travel.snapshot.qa.manager.api.configuration.Validate;
-import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.redis.api.RedisManager;
+import travel.snapshot.qa.manager.redis.api.RedisManagerException;
 import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 
+/**
+ * Manages an instance of Redis.
+ */
 public class RedisManagerImpl implements RedisManager {
 
     private final RedisManagerConfiguration configuration;
@@ -26,16 +29,21 @@ public class RedisManagerImpl implements RedisManager {
     }
 
     @Override
-    public Jedis getJedis() {
-        return jedisPool.getResource();
+    public Jedis getJedis() throws RedisManagerException {
+        try {
+            return jedisPool.getResource();
+        } catch (JedisException ex) {
+            throw new RedisManagerException("Unable to get a Jedis resource.", ex);
+        }
+
     }
 
     @Override
-    public void close() throws ContainerManagerException {
+    public void close() throws RedisManagerException {
         try {
             jedisPool.close();
         } catch (JedisException ex) {
-            throw new ContainerManagerException("Could not close Jedis pool.", ex);
+            throw new RedisManagerException("Could not close Jedis pool.", ex);
         }
     }
 }

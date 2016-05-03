@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Deploys artifacts to a server in a standalone mode.
+ */
 public class JBossStandaloneDeployer implements JBossContainerDeployer {
 
     private static final Logger logger = LoggerFactory.getLogger(JBossStandaloneDeployer.class);
@@ -50,7 +53,7 @@ public class JBossStandaloneDeployer implements JBossContainerDeployer {
 
     // helpers
 
-    private String deployInternal(Archive<?> archive) throws ContainerDeploymentException {
+    private String deployInternal(final Archive<?> archive) throws ContainerDeploymentException {
 
         checkState();
 
@@ -69,7 +72,7 @@ public class JBossStandaloneDeployer implements JBossContainerDeployer {
         }
     }
 
-    private String deployInternal(String name, InputStream input) throws ContainerDeploymentException {
+    private String deployInternal(final String name, final InputStream input) throws ContainerDeploymentException {
 
         checkState();
 

@@ -26,21 +26,21 @@ public interface MariaDBManager extends ServiceManager, FlywayMigration {
      *
      * @param reader reader of a SQL script
      */
-    void executeScript(Reader reader);
+    void executeScript(Reader reader) throws MariaDBManagerException;
 
     /**
      * Executes SQL script against MariaDB
      *
      * @param sqlScript path to SQL script to execute
      */
-    void executeScript(String sqlScript);
+    void executeScript(String sqlScript) throws MariaDBManagerException;
 
     /**
      * Executes SQL script against MariaDB
      *
      * @param sqlScript file of SQL script to execute
      */
-    void executeScript(File sqlScript);
+    void executeScript(File sqlScript) throws MariaDBManagerException;
 
     /**
      * Executes SQL script against MariaDB
@@ -48,7 +48,7 @@ public interface MariaDBManager extends ServiceManager, FlywayMigration {
      * @param connection connection to use during execution of the script
      * @param sqlScript  path to SQL script to execute
      */
-    void executeScript(Connection connection, String sqlScript);
+    void executeScript(Connection connection, String sqlScript) throws MariaDBManagerException;
 
     /**
      * Executes SQL script against MariaDB
@@ -56,7 +56,7 @@ public interface MariaDBManager extends ServiceManager, FlywayMigration {
      * @param connection connection to use during execution of the script
      * @param sqlScript  file of SQL script to execute
      */
-    void executeScript(Connection connection, File sqlScript);
+    void executeScript(Connection connection, File sqlScript) throws MariaDBManagerException;
 
     /**
      * Executes SQL script against MariaDB via specified connection.
@@ -64,14 +64,14 @@ public interface MariaDBManager extends ServiceManager, FlywayMigration {
      * @param connection connection to use for the script execution
      * @param reader     reader of a SQL script
      */
-    void executeScript(Connection connection, Reader reader);
+    void executeScript(Connection connection, Reader reader) throws MariaDBManagerException;
 
     /**
      * Gets connection to MariaDB by which you can e.g. execute scripts or perform any query.
      *
      * @return connection to MariaDB
      */
-    Connection getConnection();
+    Connection getConnection() throws MariaDBManagerException;
 
     /**
      * Gets connection to the specified database.
@@ -79,7 +79,7 @@ public interface MariaDBManager extends ServiceManager, FlywayMigration {
      * @param database database to get the connection to
      * @return connecion to the given database
      */
-    Connection getConnection(String database);
+    Connection getConnection(String database) throws MariaDBManagerException;
 
     /**
      * Closes SQL connection to MariaDB.

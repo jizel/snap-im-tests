@@ -97,7 +97,7 @@ public final class DockerManager {
         Validate.notNullOrEmpty(containerId, INVALID_CONTAINER_ID_MESSAGE);
 
         if (!isManagerStarted) {
-            throw new IllegalStateException("Manager is not started!");
+            throw new IllegalStateException("Manager is not started.");
         }
 
         if (!new DockerContainerLifecycleDecider().init(cubeRegistry, manager).shouldStop(containerId)) {

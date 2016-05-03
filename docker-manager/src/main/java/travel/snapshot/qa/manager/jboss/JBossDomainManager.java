@@ -45,7 +45,7 @@ public class JBossDomainManager extends AbstractJBossManager<ManagementClient, D
 
         DomainClient domainClient = DomainClient.Factory.create(new ModelControllerClientBuilder.Domain(configuration).build());
 
-        this.managementClient = new ManagementClientFactory.Domain(configuration).modelControllerClient(domainClient).build();
+        this.managementClient = new ManagementClientFactory.Domain().modelControllerClient(domainClient).build();
         this.deployer = new JBossDomainDeployer(domainClient, configuration);
     }
 
@@ -59,7 +59,7 @@ public class JBossDomainManager extends AbstractJBossManager<ManagementClient, D
                 .stream()
                 .filter(entry -> entry.getValue() == status)
                 .map(entry -> {
-                    ServerIdentity identity = entry.getKey();
+                    final ServerIdentity identity = entry.getKey();
 
                     return new Domain.Server(identity.getServerName(), identity.getHostName(), identity.getServerGroupName(), false);
                 }).collect(Collectors.toList());

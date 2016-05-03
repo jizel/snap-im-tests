@@ -25,9 +25,9 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
 
     private final Map<String, String> environment = new HashMap<>();
 
-    private String user;
+    private String user = "admin";
 
-    private String password;
+    private String password = "admin";
 
     private File file;
 
@@ -41,6 +41,13 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
 
     private List<Integer> exitCodes = new ArrayList<>();
 
+    /**
+     * It is possible to set or override custom environment variables for a script invocation.
+     *
+     * @param key   environment property key to set
+     * @param value environment property value to set
+     * @return this
+     */
     public JBossCLI environment(String key, String value) {
         if (key != null && value != null) {
             environment.put(key, value);
@@ -48,6 +55,12 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
         return this;
     }
 
+    /**
+     * It is possible to set or override custom environment variables for a script invocation.
+     *
+     * @param environment environment to set as a map
+     * @return this
+     */
     public JBossCLI environment(Map<String, String> environment) {
         if (environment != null) {
             environment.entrySet().stream().filter(entry -> entry != null).forEach(entry -> environment(entry.getKey(), entry.getValue()));
@@ -55,46 +68,98 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
         return this;
     }
 
+    /**
+     * Sets a user name for controller when different from 'admin'
+     *
+     * @param user user to set
+     * @return this
+     */
     public JBossCLI user(String user) {
         this.user = user;
         return this;
     }
 
+    /**
+     * Sets a password for controller when different from 'admin'
+     *
+     * @param password password to set
+     * @return this
+     */
     public JBossCLI password(String password) {
         this.password = password;
         return this;
     }
 
-    public JBossCLI file(String file) {
-        this.file = new File(file);
+    /**
+     * When set, this file of a given path will be executed.
+     *
+     * @param filePath patho to file to be executed
+     * @return this
+     */
+    public JBossCLI file(String filePath) {
+        this.file = new File(filePath);
         return this;
     }
 
+    /**
+     * When set, this file will be executed.
+     *
+     * @param file file to execute
+     * @return this
+     */
     public JBossCLI file(File file) {
         this.file = file;
         return this;
     }
 
+    /**
+     * Sets a controller host different from "127.0.0.1".
+     *
+     * @param controllerHost controller host to set
+     * @return this
+     */
     public JBossCLI controllerHost(String controllerHost) {
         this.controllerHost = controllerHost;
         return this;
     }
 
+    /**
+     * Sets a controller port different from 9990.
+     *
+     * @param controllerPort controller port to set
+     * @return this
+     */
     public JBossCLI controllerPort(int controllerPort) {
         this.controllerPort = controllerPort;
         return this;
     }
 
+    /**
+     * Automatically connects to controller.
+     *
+     * @return this
+     */
     public JBossCLI connect() {
         this.connect = true;
         return this;
     }
 
+    /**
+     * @param command commands to execute
+     * @return this
+     */
     public JBossCLI cliCommand(String... command) {
         this.command.addAll(Arrays.asList(command));
         return this;
     }
 
+    /**
+     * Sets possible exit codes of a script. By default, it exit code is not 0, the script invocation is considered to
+     * be erroneous. There might be situations where you want to have an exit code not equal to 0.
+     *
+     * @param exitCodes exit codes which are allowed to be returned after script invocation
+     * @return this
+     */
     public JBossCLI shouldExitWith(Integer... exitCodes) {
         this.exitCodes.addAll(Arrays.asList(exitCodes));
         return this;
@@ -154,7 +219,7 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
         return sb.toString();
     }
 
-    private CommandTool getJBossCliTool() throws Exception {
+    private CommandTool getJBossCliTool() throws FileNotFoundException, NotExecutableScriptException {
 
         if (SystemUtils.IS_OS_WINDOWS) {
 
@@ -178,7 +243,7 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
         }
     }
 
-    private void validateScript(File jbossScript) throws Exception {
+    private void validateScript(File jbossScript) throws FileNotFoundException, NotExecutableScriptException {
         if (!jbossScript.exists()) {
             throw new FileNotFoundException(jbossScript.getAbsolutePath() + " does not exist.");
         }
@@ -188,6 +253,10 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
         }
     }
 
+    /**
+     * Exception thrown in case JBoss CLI script is not executable. It is the responsibility of a user to be sure that
+     * script is executable before its invocation.
+     */
     public static class NotExecutableScriptException extends Exception {
 
         private static final long serialVersionUID = -2281993207167380102L;

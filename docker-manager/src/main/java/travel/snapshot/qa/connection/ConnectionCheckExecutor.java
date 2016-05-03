@@ -52,7 +52,7 @@ public class ConnectionCheckExecutor {
         }
     }
 
-    private Class<? extends Task<ConnectionCheck, Boolean>> getCheckTask(Protocol protocol) {
+    private Class<? extends Task<ConnectionCheck, Boolean>> getCheckTask(final Protocol protocol) {
         switch (protocol) {
             case TCP:
                 return TCPConnectionCheckTask.class;
@@ -89,23 +89,27 @@ public class ConnectionCheckExecutor {
         }
 
         @Override
-        protected Boolean process(ConnectionCheck connectionCheck) throws Exception {
+        protected Boolean process(final ConnectionCheck connectionCheck) throws Exception {
+
+            ConnectionCheck resolvedConnectionCheck;
 
             if (connectionCheck == null) {
-                connectionCheck = this.connectionCheck;
+                resolvedConnectionCheck = this.connectionCheck;
+            } else {
+                resolvedConnectionCheck = connectionCheck;
             }
 
-            if (connectionCheck == null) {
+            if (resolvedConnectionCheck == null) {
                 throw new IllegalStateException("Connection check must not be a null object.");
             }
 
             Socket tcpClient = null;
 
             try {
-                tcpClient = new Socket(connectionCheck.getHost(), connectionCheck.getPort());
+                tcpClient = new Socket(resolvedConnectionCheck.getHost(), resolvedConnectionCheck.getPort());
                 return true;
             } catch (IOException ex) {
-                logger.debug("Unable to make TCP connection to {}:{}", connectionCheck.getHost(), connectionCheck.getPort());
+                logger.debug("Unable to make TCP connection to {}:{}", resolvedConnectionCheck.getHost(), resolvedConnectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(tcpClient);
@@ -140,13 +144,17 @@ public class ConnectionCheckExecutor {
         }
 
         @Override
-        protected Boolean process(ConnectionCheck connectionCheck) throws Exception {
+        protected Boolean process(final ConnectionCheck connectionCheck) throws Exception {
+
+            ConnectionCheck resolvedConnectionCheck;
 
             if (connectionCheck == null) {
-                connectionCheck = this.connectionCheck;
+                resolvedConnectionCheck = this.connectionCheck;
+            } else {
+                resolvedConnectionCheck = connectionCheck;
             }
 
-            if (connectionCheck == null) {
+            if (resolvedConnectionCheck == null) {
                 throw new IllegalStateException("Connection check must not be a null object.");
             }
 
@@ -154,23 +162,16 @@ public class ConnectionCheckExecutor {
 
             try {
                 final byte[] data = "hello".getBytes(StandardCharsets.UTF_8.toString());
-                final InetAddress address = InetAddress.getByName(connectionCheck.getHost());
-                final DatagramPacket packet = new DatagramPacket(data, data.length, address, connectionCheck.getPort());
+                final InetAddress address = InetAddress.getByName(resolvedConnectionCheck.getHost());
+                final DatagramPacket packet = new DatagramPacket(data, data.length, address, resolvedConnectionCheck.getPort());
                 udpClient.send(packet);
                 return true;
             } catch (IOException ex) {
-                logger.debug("Unable to make UDP connection to {}:{}", connectionCheck.getHost(), connectionCheck.getPort());
+                logger.debug("Unable to make UDP connection to {}:{}", resolvedConnectionCheck.getHost(), resolvedConnectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(udpClient);
             }
         }
     }
-
-    public static final class ConnectionCheckException extends RuntimeException {
-        public ConnectionCheckException(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
-
 }

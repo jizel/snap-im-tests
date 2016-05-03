@@ -10,8 +10,9 @@ import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
 import java.util.Optional;
 
 /**
- * Performs checks to see if some container should be started on not. When not started and it is already running, we can
- * just connect to it.
+ * Performs checks to see if some container should be started on not. When container was not started by us and it is
+ * already running, we can just connect to it. The fact if we connect to it in such case depends on {@link
+ * ConnectionMode}.
  */
 public class DockerContainerLifecycleDecider {
 

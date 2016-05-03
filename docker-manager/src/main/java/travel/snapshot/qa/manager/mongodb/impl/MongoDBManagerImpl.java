@@ -1,5 +1,7 @@
 package travel.snapshot.qa.manager.mongodb.impl;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.arquillian.spacelift.Spacelift;
@@ -10,8 +12,9 @@ import travel.snapshot.qa.manager.mongodb.api.MongoDBManagerException;
 import travel.snapshot.qa.manager.mongodb.check.MongoDBStartCheckTask;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 
-import java.util.concurrent.TimeUnit;
-
+/**
+ * Manages an instance of MongoDB.
+ */
 public class MongoDBManagerImpl implements MongoDBManager {
 
     private final MongoDBManagerConfiguration configuration;
@@ -27,7 +30,7 @@ public class MongoDBManagerImpl implements MongoDBManager {
     @Override
     public void waitForConnectivity() {
         Spacelift.task(configuration, MongoDBStartCheckTask.class).execute().until(
-                new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS.SECONDS),
+                new CountDownWatch(configuration.getStartupTimeoutInSeconds(), SECONDS),
                 new BasicWaitingCondition());
     }
 
@@ -42,7 +45,7 @@ public class MongoDBManagerImpl implements MongoDBManager {
     }
 
     @Override
-    public void closeClient(final MongoClient mongoClient) {
+    public void closeClient(final MongoClient mongoClient) throws MongoDBManagerException {
         try {
             mongoClient.close();
         } catch (Exception ex) {
