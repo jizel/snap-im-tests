@@ -29,9 +29,7 @@ public class MongoHostPortPair {
 
         MongoHostPortPair that = (MongoHostPortPair) o;
 
-        if (port != that.port) return false;
-        return host.equals(that.host);
-
+        return port == that.port && host.equals(that.host);
     }
 
     @Override

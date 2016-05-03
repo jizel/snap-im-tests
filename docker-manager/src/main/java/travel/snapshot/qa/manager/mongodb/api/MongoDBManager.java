@@ -34,6 +34,7 @@ public interface MongoDBManager extends ServiceManager {
      * Closes Mongo client.
      *
      * @param mongoClient client to close
+     * @throws MongoDBManagerException if it is not possible to close MongoDB client successfully.
      */
-    void closeClient(MongoClient mongoClient);
+    void closeClient(MongoClient mongoClient) throws MongoDBManagerException;
 }

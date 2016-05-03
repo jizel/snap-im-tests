@@ -1,5 +1,7 @@
 package travel.snapshot.qa.manager.mariadb.impl;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.flywaydb.core.Flyway;
@@ -24,7 +26,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MariaDBManagerImpl implements MariaDBManager {
 
@@ -43,24 +44,24 @@ public class MariaDBManagerImpl implements MariaDBManager {
     @Override
     public void waitForConnectivity() {
         Spacelift.task(configuration, MariaDBStartedCheckTask.class).execute().until(
-                new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS),
+                new CountDownWatch(configuration.getStartupTimeoutInSeconds(), SECONDS),
                 new BasicWaitingCondition());
     }
 
     @Override
-    public void executeScript(final Reader reader) {
+    public void executeScript(final Reader reader) throws MariaDBManagerException {
         Connection connection = getConnection();
         executeScript(connection, reader);
         closeConnection(connection);
     }
 
     @Override
-    public void executeScript(String sqlScript) {
+    public void executeScript(String sqlScript) throws MariaDBManagerException {
         executeScript(new File(sqlScript));
     }
 
     @Override
-    public void executeScript(File sqlScript) {
+    public void executeScript(File sqlScript) throws MariaDBManagerException {
         try (final Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sqlScript)))) {
             executeScript(reader);
         } catch (IOException ex) {
@@ -70,12 +71,12 @@ public class MariaDBManagerImpl implements MariaDBManager {
     }
 
     @Override
-    public void executeScript(Connection connection, String sqlScript) {
+    public void executeScript(Connection connection, String sqlScript) throws MariaDBManagerException {
         executeScript(connection, new File(sqlScript));
     }
 
     @Override
-    public void executeScript(Connection connection, File sqlScript) {
+    public void executeScript(Connection connection, File sqlScript) throws MariaDBManagerException {
         try (final Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(sqlScript)))) {
             executeScript(connection, reader);
         } catch (IOException ex) {
@@ -85,7 +86,7 @@ public class MariaDBManagerImpl implements MariaDBManager {
     }
 
     @Override
-    public void executeScript(final Connection connection, final Reader reader) {
+    public void executeScript(final Connection connection, final Reader reader) throws MariaDBManagerException {
         Validate.notNull(connection, "Connection to execute script on must not be a null object!");
         Validate.notNull(reader, "Reader to read SQL script must not be a null object!");
 
@@ -144,7 +145,7 @@ public class MariaDBManagerImpl implements MariaDBManager {
     }
 
     @Override
-    public Connection getConnection(String database) {
+    public Connection getConnection(String database) throws MariaDBManagerException {
         Connection connection;
 
         final String connectionString = configuration.getConnectionString(database);

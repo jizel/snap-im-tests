@@ -1,5 +1,7 @@
 package travel.snapshot.qa.docker.manager.impl;
 
+import static travel.snapshot.qa.docker.ServiceType.MONGODB;
+
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.task.Task;
@@ -16,6 +18,8 @@ import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfigurat
  */
 public class MongoDBDockerManager extends DockerServiceManager<MongoDBManager> {
 
+    private static final String MONGODB_CONNECTION_TIMEOUT_PROPERTY = "docker.mongodb.connection.timeout";
+
     private static final int PRECEDENCE = 100;
 
     public MongoDBDockerManager(final MongoDBManager mongoDBManager) {
@@ -25,12 +29,15 @@ public class MongoDBDockerManager extends DockerServiceManager<MongoDBManager> {
     @Override
     public Cube start(final String containerId) {
         final Task<MongoDBManagerConfiguration, Boolean> checkingTask = Spacelift.task(serviceManager.getConfiguration(), MongoDBStartCheckTask.class);
-        return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveMongoDBConnectionTimeout(serviceManager.getConfiguration()), 10);
+
+        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), MONGODB_CONNECTION_TIMEOUT_PROPERTY, MONGODB);
+
+        return super.start(checkingTask, containerId, timeout, 10);
     }
 
     @Override
     public ServiceType provides() {
-        return ServiceType.MONGODB;
+        return MONGODB;
     }
 
     @Override

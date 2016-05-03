@@ -34,13 +34,7 @@ public class ManagementClientFactory {
 
     public static class Domain {
 
-        private final JBossManagerConfiguration configuration;
-
         private DomainClient modelControllerClient;
-
-        public Domain(JBossManagerConfiguration configuration) {
-            this.configuration = configuration;
-        }
 
         public Domain modelControllerClient(DomainClient modelControllerClient) {
             this.modelControllerClient = modelControllerClient;

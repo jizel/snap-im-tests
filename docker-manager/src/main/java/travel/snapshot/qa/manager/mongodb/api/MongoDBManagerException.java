@@ -1,6 +1,8 @@
 package travel.snapshot.qa.manager.mongodb.api;
 
-public class MongoDBManagerException extends RuntimeException {
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
+
+public class MongoDBManagerException extends ContainerManagerException {
 
     public MongoDBManagerException() {
     }

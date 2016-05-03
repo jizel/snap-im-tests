@@ -4,6 +4,8 @@ import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.task.Task;
 import org.jboss.shrinkwrap.impl.base.io.tar.TarArchive;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.connection.ConnectionCheck;
 import travel.snapshot.qa.docker.ServiceType;
 import travel.snapshot.qa.manager.api.ServiceManager;
@@ -19,6 +21,8 @@ import java.io.InputStream;
  * contained when it comes to the managing of the lifecycle of container it runs at.
  */
 public abstract class DockerServiceManager<T extends ServiceManager> implements Comparable<DockerServiceManager> {
+
+    private static final Logger logger = LoggerFactory.getLogger(DockerServiceManager.class);
 
     protected final static int DEFAULT_PRECEDENCE = 0;
 
@@ -39,7 +43,7 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
     private int precedence = DEFAULT_PRECEDENCE;
 
     public DockerServiceManager(final T serviceManager) {
-        Validate.notNull(serviceManager, "Service manager can not be a null object!");
+        Validate.notNull(serviceManager, "Service manager can not be a null object.");
         this.serviceManager = serviceManager;
     }
 
@@ -101,11 +105,11 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      */
     public Cube start(final Task<?, Boolean> checkingTask, final String containerId, long timeout, long reexecutionInterval) {
 
-        Validate.notNullOrEmpty(containerId, "Container ID to start must not be a null object or an empty String!");
-        Validate.notNull(checkingTask, "Checking task must not be a null object!");
+        Validate.notNullOrEmpty(containerId, "Container ID to start must not be a null object or an empty String.");
+        Validate.notNull(checkingTask, "Checking task must not be a null object.");
 
         if (started) {
-            throw new IllegalStateException(String.format("Unable to start already started container '%s'", containerId));
+            throw new IllegalStateException(String.format("Unable to start already started container '%s'.", containerId));
         }
 
         lifecycleHookExecutor.executeBeforeStartHooks(serviceManager);
@@ -147,7 +151,7 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      * @param container container to stop
      */
     public void stop(final Cube container) {
-        Validate.notNull(container, "Container to stop must not be a null object!");
+        Validate.notNull(container, "Container to stop must not be a null object.");
         stop(container.getId());
     }
 
@@ -159,10 +163,10 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
      */
     public <T extends DockerServiceManager<? extends ServiceManager>> T stop(final String containerId) {
 
-        Validate.notNullOrEmpty(containerId, "Container ID to stop must not be a null object or an empty String!");
+        Validate.notNullOrEmpty(containerId, "Container ID to stop must not be a null object or an empty String.");
 
         if (!started) {
-            throw new IllegalStateException(String.format("Unable to stop non running container '%s'", containerId));
+            throw new IllegalStateException(String.format("Unable to stop non running container '%s'.", containerId));
         }
 
         lifecycleHookExecutor.executeBeforeStopHooks(serviceManager);
@@ -236,7 +240,7 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
             tarArchive.extractContents(new File(to));
             tarArchive.closeArchive();
         } catch (IOException ex) {
-            throw new RuntimeException(String.format("Unable to copy content from %s to %s for container %s",
+            throw new RuntimeException(String.format("Unable to copy content from %s to %s for container %s.",
                     from, to, containerId), ex);
         }
     }
@@ -305,5 +309,48 @@ public abstract class DockerServiceManager<T extends ServiceManager> implements 
     @Override
     public int compareTo(DockerServiceManager other) {
         return this.precedence() - other.precedence();
+    }
+
+    /**
+     * Resolves timeout either set in configuration of a service or set by system property of a given name.
+     *
+     * Timeout set it measured in seconds.
+     *
+     * Set system property overrides timeout value set programmatically in service configuration.
+     *
+     * @param setTimeout      timeout value from service configuration
+     * @param timeoutProperty system property to resolve timeout from
+     * @param serviceType     type of service a timeout is being resolved for
+     * @return resolved timeout
+     */
+    public static long resolveTimeout(long setTimeout, String timeoutProperty, ServiceType serviceType) {
+
+        long connectionTimeOut = setTimeout;
+
+        String resolvedSystemProperty = System.getProperty(timeoutProperty);
+
+        if (resolvedSystemProperty == null) {
+            return connectionTimeOut;
+        }
+
+        resolvedSystemProperty = resolvedSystemProperty.trim();
+
+        if (resolvedSystemProperty.isEmpty()) {
+            return connectionTimeOut;
+        }
+
+        try {
+            connectionTimeOut = Long.parseLong(resolvedSystemProperty);
+
+            if (connectionTimeOut <= 0) {
+                throw new NumberFormatException("Connection timeout was lower than 0.");
+            }
+        } catch (NumberFormatException ex) {
+            logger.info("Connection timeout for {} service was not valid: {}.", serviceType.name(), resolvedSystemProperty);
+        }
+
+        logger.info(String.format("Resolved service timeout for %s is %s seconds.", serviceType.name(), connectionTimeOut));
+
+        return connectionTimeOut;
     }
 }

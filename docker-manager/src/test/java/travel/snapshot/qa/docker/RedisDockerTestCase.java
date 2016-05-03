@@ -51,7 +51,7 @@ public class RedisDockerTestCase {
         logger.info("Redis Docker container has started");
 
         assertTrue("Redis Docker container is not running!", redisDockerManager.serviceRunning());
-        assertNotNull("Redis MongoDB container is a null object!", redisContainer);
+        assertNotNull("Redis Docker container is a null object!", redisContainer);
 
         Jedis jedis = redisDockerManager.getServiceManager().getJedis();
         assertNotNull("Jedis is a null object.", jedis);

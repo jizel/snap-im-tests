@@ -4,11 +4,19 @@ import org.arquillian.spacelift.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-import travel.snapshot.qa.manager.api.container.ContainerManagerException;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.exceptions.JedisException;
 import travel.snapshot.qa.manager.redis.api.RedisManager;
+import travel.snapshot.qa.manager.redis.api.RedisManagerException;
 import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 import travel.snapshot.qa.manager.redis.impl.RedisManagerImpl;
 
+/**
+ * Checks if Redis is started or not. Redis service is considered to be started in case it is possible to get a Jedis
+ * resource from a {@link JedisPool} without exception being thrown.
+ *
+ * @see JedisPool#getResource()
+ */
 public class RedisStartedCheckTask extends Task<RedisManagerConfiguration, Boolean> {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisStartedCheckTask.class);
@@ -16,14 +24,14 @@ public class RedisStartedCheckTask extends Task<RedisManagerConfiguration, Boole
     @Override
     protected Boolean process(RedisManagerConfiguration configuration) throws Exception {
 
-        RedisManager redisManager = new RedisManagerImpl(configuration);
+        final RedisManager redisManager = new RedisManagerImpl(configuration);
 
         Jedis jedis = null;
 
         try {
             jedis = redisManager.getJedis();
             return true;
-        } catch (Exception ex) {
+        } catch (JedisException ex) {
             if (logger.isDebugEnabled()) {
                 ex.printStackTrace();
             }
@@ -41,7 +49,7 @@ public class RedisStartedCheckTask extends Task<RedisManagerConfiguration, Boole
 
             try {
                 redisManager.close();
-            } catch (ContainerManagerException ex) {
+            } catch (RedisManagerException ex) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Unable to close Redis manager.");
                     ex.printStackTrace();

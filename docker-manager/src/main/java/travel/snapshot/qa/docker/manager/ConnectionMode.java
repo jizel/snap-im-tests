@@ -7,8 +7,8 @@ package travel.snapshot.qa.docker.manager;
 public enum ConnectionMode {
 
     /**
-     * Default connection mode if not set. Simply creates and stops all Docker Containers. If a container is already
-     * running, an exception is thrown.
+     * Default connection mode if not set otherwise. Simply creates and stops all Docker containers. If a container is
+     * already running, an exception is thrown.
      */
     STARTANDSTOP,
 

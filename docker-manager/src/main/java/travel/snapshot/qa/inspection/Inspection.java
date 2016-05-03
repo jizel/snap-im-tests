@@ -66,7 +66,7 @@ public class Inspection {
         try {
             inspectContainerResponse = executor.inspectContainer(containerId);
         } catch (Exception ex) {
-            throw new InspectionException(String.format("Unable to get IP of the container '%s'", containerId), ex);
+            throw new InspectionException(String.format("Unable to get IP of the container '%s'.", containerId), ex);
         }
 
         NetworkSettings networkSettings = Optional.of(inspectContainerResponse.getNetworkSettings())
@@ -76,7 +76,7 @@ public class Inspection {
                 .orElseThrow(() -> new IllegalStateException("No networks found."));
 
         Network network = Optional.of(networkMap.get(dockerNetwork))
-                .orElseThrow(() -> new IllegalStateException("Unable to get network name " + dockerNetwork));
+                .orElseThrow(() -> new IllegalStateException("Unable to get network name " + dockerNetwork + "."));
 
         return network.getIpAddress();
     }

@@ -72,7 +72,7 @@ public class ConnectionCheckTestCase {
 
     @Test
     public void invalidTCPConnection() throws Exception {
-        expectedException.expect(ConnectionCheckExecutor.ConnectionCheckException.class);
+        expectedException.expect(ConnectionCheckException.class);
         expectedException.expectMessage(String.format("Unable to connect in %s seconds.", 5));
 
         new ConnectionCheck.Builder()

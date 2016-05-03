@@ -4,7 +4,7 @@ import org.arquillian.spacelift.task.Task;
 
 /**
  * Connection check represents a way how to be sure that some underlying service we are depending on is started and
- * considered fully up and running and it is save to proceed to the interaction with it safely.
+ * considered fully up and running and it is safe to proceed to the interaction with it.
  */
 public class ConnectionCheck {
 
@@ -79,12 +79,12 @@ public class ConnectionCheck {
         }
 
         /**
-         * Sets connection task which performs the check. When not set, simple TCP (or UDP) check is executed which
-         * simply checks if it is possible to open a socket to the other side. Such connection is considered successful
+         * Sets connection task which performs a check. When not set, simple TCP (or UDP) check is executed which just
+         * checks if it is possible to open a socket to the other side. Such connection is considered successful
          * however, in a lot of cases, it is not sure if the service is fully up and running. For example Docker does
          * port binding and it is possible to open a socket there but it does not mean that the service is fully
-         * listening. For that reason, given check is service-specific and performs some action against the service
-         * which is successful iff service is truly up.
+         * prepared. For that reason, given check is service-specific and performs some action against the service which
+         * is successful iff service is truly up.
          *
          * @param checkingTask task which performs the check.
          */

@@ -1,5 +1,7 @@
 package travel.snapshot.qa.manager.jboss;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import org.arquillian.spacelift.execution.CountDownWatch;
 import org.arquillian.spacelift.process.Command;
 import org.arquillian.spacelift.task.Task;
@@ -15,11 +17,8 @@ import travel.snapshot.qa.manager.api.io.ContainerProcessDestroyer;
 import travel.snapshot.qa.manager.api.io.ContainerShutdownThread;
 import travel.snapshot.qa.manager.jboss.api.JBossContainerDeployer;
 import travel.snapshot.qa.manager.jboss.api.JBossContainerManager;
-import travel.snapshot.qa.manager.jboss.check.JBossStartedCondition;
 import travel.snapshot.qa.manager.jboss.configuration.JBossCommandBuilder;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
-
-import java.util.concurrent.TimeUnit;
 
 abstract class AbstractJBossManager<T extends Object, U extends ModelControllerClient> implements JBossContainerManager, JBossContainerDeployer {
 
@@ -97,7 +96,7 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
 
             getStartingTask()
                     .execute()
-                    .until(new CountDownWatch(configuration.getStartupTimeoutInSeconds(), TimeUnit.SECONDS), new JBossStartedCondition());
+                    .until(new CountDownWatch(configuration.getStartupTimeoutInSeconds(), SECONDS), started -> started);
 
         } catch (Exception e) {
             throw new ContainerManagerException("Could not start JBoss container: ", e);

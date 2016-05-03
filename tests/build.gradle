@@ -627,7 +627,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.8'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.9'
     }
 }
 

@@ -36,9 +36,7 @@ public class ServiceCubePair {
 
         ServiceCubePair that = (ServiceCubePair) o;
 
-        if (serviceType != that.serviceType) return false;
-        return cube.equals(that.cube);
-
+        return serviceType == that.serviceType && cube.equals(that.cube);
     }
 
     @Override

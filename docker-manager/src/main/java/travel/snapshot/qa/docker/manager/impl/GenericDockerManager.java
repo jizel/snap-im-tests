@@ -1,5 +1,7 @@
 package travel.snapshot.qa.docker.manager.impl;
 
+import static travel.snapshot.qa.docker.ServiceType.GENERIC;
+
 import org.arquillian.cube.spi.Cube;
 import org.arquillian.spacelift.task.Task;
 import travel.snapshot.qa.connection.ConnectionCheck;
@@ -14,6 +16,8 @@ import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration;
  */
 public class GenericDockerManager extends DockerServiceManager<GenericManager> {
 
+    private static final String GENERIC_CONNECTION_TIMEOUT_PROPERTY = "docker.generic.connection.timeout";
+
     public GenericDockerManager(GenericManager serviceManager) {
         super(serviceManager);
     }
@@ -25,7 +29,9 @@ public class GenericDockerManager extends DockerServiceManager<GenericManager> {
             checkingTask = createCheckingTask(serviceManager.getConfiguration());
         }
 
-        return super.start(checkingTask, containerId, ConnectionTimeoutResolver.resolveGenericConnectionTimeout(serviceManager.getConfiguration()), 10);
+        final long timeout = resolveTimeout(serviceManager.getConfiguration().getStartupTimeoutInSeconds(), GENERIC_CONNECTION_TIMEOUT_PROPERTY, GENERIC);
+
+        return super.start(checkingTask, containerId, timeout, 10);
     }
 
     @Override
@@ -33,7 +39,13 @@ public class GenericDockerManager extends DockerServiceManager<GenericManager> {
         return ServiceType.GENERIC;
     }
 
-    private Task<ConnectionCheck, Boolean> createCheckingTask(GenericConfiguration configuration) {
+    /**
+     * Builds specific connection check task from given configuration.
+     *
+     * @param configuration configuration to build a respective connection check task from
+     * @return built connection check task according to {@code configuration}
+     */
+    private Task<ConnectionCheck, Boolean> createCheckingTask(final GenericConfiguration configuration) {
 
         final ConnectionCheck connectionCheck = new ConnectionCheck.Builder()
                 .host(configuration.getBindAddress())
@@ -41,7 +53,7 @@ public class GenericDockerManager extends DockerServiceManager<GenericManager> {
                 .protocol(configuration.getProtocol())
                 .build();
 
-        Task<ConnectionCheck, Boolean> connectionCheckTask;
+        final Task<ConnectionCheck, Boolean> connectionCheckTask;
 
         switch (configuration.getProtocol()) {
             case TCP:
