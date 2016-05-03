@@ -1,29 +1,20 @@
 package travel.snapshot.dp.qa.steps.identity.roles;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
 
-/**
- * Created by sedlacek on 9/18/2015.
- */
-public class RolesStepdefs {
+import java.util.List;
 
-    org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
+public class RolesStepdefs {
 
     @Steps
     private RolesSteps rolesSteps;
-
 
     @Given("^The following roles exist$")
     public void The_following_roles_exist(List<RoleDto> roles) throws Throwable {
