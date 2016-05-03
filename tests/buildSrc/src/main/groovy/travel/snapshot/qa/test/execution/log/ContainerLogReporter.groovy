@@ -6,6 +6,15 @@ import travel.snapshot.qa.docker.ServiceType
 import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
 import travel.snapshot.qa.util.ProjectHelper
 
+import static travel.snapshot.qa.docker.ServiceType.ACTIVEMQ
+import static travel.snapshot.qa.docker.ServiceType.GENERIC
+import static travel.snapshot.qa.docker.ServiceType.JBOSS_DOMAIN
+import static travel.snapshot.qa.docker.ServiceType.JBOSS_STANDALONE
+import static travel.snapshot.qa.docker.ServiceType.MARIADB
+import static travel.snapshot.qa.docker.ServiceType.MONGODB
+import static travel.snapshot.qa.docker.ServiceType.REDIS
+import static travel.snapshot.qa.docker.ServiceType.TOMCAT
+
 class ContainerLogReporter {
 
     private DataPlatformTestOrchestration testOrchestration
@@ -25,7 +34,7 @@ class ContainerLogReporter {
 
         DataPlatformOrchestration orchestration = testOrchestration.get()
 
-        List<ServiceType> unsupportedServices = [ ServiceType.GENERIC, ServiceType.JBOSS_DOMAIN, ServiceType.JBOSS_STANDALONE ]
+        List<ServiceType> unsupportedServices = [ GENERIC, REDIS, JBOSS_DOMAIN, JBOSS_STANDALONE ]
 
         for (ServiceType serviceType : ServiceType.values()) {
             if (!unsupportedServices.contains(serviceType)) {
@@ -37,26 +46,29 @@ class ContainerLogReporter {
 
     private void resolveReport(ServiceType serviceType, List<String> containers) {
         switch (serviceType) {
-            case ServiceType.TOMCAT:
+            case TOMCAT:
                 new TomcatServiceLogReporter().report(containers)
                 break
-            case ServiceType.ACTIVEMQ:
+            case ACTIVEMQ:
                 new ActiveMQServiceLogReporter().report(containers)
                 break
-            case ServiceType.MARIADB:
+            case MARIADB:
                 new MariaDBServiceLogReporter().report(containers)
                 break
-            case ServiceType.MONGODB:
+            case MONGODB:
                 new MongoDBServiceLogReporter().report(containers)
                 break
-            case ServiceType.JBOSS_DOMAIN:
+            case JBOSS_DOMAIN:
                 // TODO
-            case ServiceType.JBOSS_STANDALONE:
+            case JBOSS_STANDALONE:
                 // TODO
                 break
-            case ServiceType.GENERIC:
+            case GENERIC:
                 // not supported
-                break;
+                break
+            case REDIS:
+                // not supported
+                break
             default:
                 throw new IllegalStateException(String.format("Unable to resolve reporting for service type %s.", serviceType.name()))
         }
