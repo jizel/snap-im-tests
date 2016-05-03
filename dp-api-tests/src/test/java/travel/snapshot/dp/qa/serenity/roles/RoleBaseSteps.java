@@ -150,7 +150,7 @@ public class RoleBaseSteps extends BasicSteps {
     @Step
     public void listOfRolesIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        setSessionResponse(response);
     }
 
     @Step

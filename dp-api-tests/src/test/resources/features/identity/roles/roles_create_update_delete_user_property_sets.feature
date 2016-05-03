@@ -24,7 +24,7 @@ Feature: Roles create update delete user property set
       | applicationId                        | roleName            | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
     Then Response code is "201"
-    And Body contains entity with attribute "role_name" value "Created role name 1"
+    And Body contains entity with attribute "name" value "Created role name 1"
     And Body contains entity with attribute "role_description" value "optional description 1"
     And "Location" header is set and contains the same role
     And Etag header is present
