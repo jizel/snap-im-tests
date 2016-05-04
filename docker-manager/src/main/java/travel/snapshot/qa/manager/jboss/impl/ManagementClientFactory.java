@@ -7,6 +7,10 @@ import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 public class ManagementClientFactory {
 
+    private ManagementClientFactory() {
+        throw new UnsupportedOperationException("no instantiation");
+    }
+
     public static class Standalone {
 
         private final JBossManagerConfiguration configuration;

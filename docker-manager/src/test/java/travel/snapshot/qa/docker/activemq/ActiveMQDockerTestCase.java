@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.activemq;
 
 import static travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
 

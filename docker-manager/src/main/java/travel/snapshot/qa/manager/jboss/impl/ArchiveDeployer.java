@@ -32,7 +32,7 @@ public class ArchiveDeployer extends org.jboss.as.arquillian.container.domain.Ar
     @Override
     public void undeploy(String runtimeName, Set<String> serverGroups) throws DeploymentException {
         if (serverGroups.isEmpty()) {
-            throw new DeploymentException("No target server groups to deploy to.");
+            throw new DeploymentException("No target server groups to undeploy from.");
         }
         try {
             DeploymentPlanBuilder builder = deploymentManager.newDeploymentPlan();

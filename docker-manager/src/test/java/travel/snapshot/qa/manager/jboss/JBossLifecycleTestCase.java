@@ -1,6 +1,7 @@
 package travel.snapshot.qa.manager.jboss;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.arquillian.spacelift.Spacelift;
@@ -46,8 +47,41 @@ public class JBossLifecycleTestCase {
 
         assertTrue("Server is not running!", standaloneManager.isRunning());
         assertTrue("Server is not in running state!", standaloneManager.getManagementClient().isServerInRunningState());
+        assertNotNull(standaloneManager.getModelControllerClient());
 
         Spacelift.task(standaloneManager, JBossStopper.class).execute().await();
+    }
+
+    @Test
+    public void startAndStopJBossContainerStandaloneWithoutSpacelift() {
+        JBossStandaloneManager standaloneManager = new JBossStandaloneManager();
+
+        standaloneManager.start();
+        standaloneManager.stop();
+    }
+
+    @Test
+    public void startAndStopJBossContainerDomainWithoutSpacelift() {
+        JBossDomainManager domainManager = new JBossDomainManager();
+
+        domainManager.start();
+        domainManager.stop();
+    }
+
+    @Test
+    public void createJBossStandaloneManagerWithDomainConfigurationTest() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Provided JBoss manager configuration is 'domain' for standalone manager.");
+
+        new JBossStandaloneManager(new JBossManagerConfiguration.Builder().domain().build());
+    }
+
+    @Test
+    public void createJBossDomainManagerWithStandaloneConfigurationTest() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Provided JBoss manager configuration is 'standalone' for domain manager.");
+
+        new JBossDomainManager(new JBossManagerConfiguration.Builder().build());
     }
 
     @Test
@@ -89,15 +123,15 @@ public class JBossLifecycleTestCase {
 
         assertEquals(2, domainManager.getServers(ServerStatus.STARTED).size());
 
+        assertNotNull(domainManager.getModelControllerClient());
+
         Spacelift.task(domainManager, JBossStopper.class).execute().await();
     }
 
     @Test
     @Ignore("run this only if getenv on JBOSS_HOME is null and jboss.home system property is null as well")
     public void startAndStopJBossContainerWithoutJBossHome() {
-
         expectedException.expect(Exception.class);
-
         Spacelift.task(JBossStandaloneStarter.class).then(JBossStopper.class).execute().await();
     }
 }

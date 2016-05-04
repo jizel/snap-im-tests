@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.orchestration;
 
 import static travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
 

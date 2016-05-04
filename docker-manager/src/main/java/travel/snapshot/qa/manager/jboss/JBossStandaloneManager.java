@@ -25,11 +25,15 @@ public class JBossStandaloneManager extends AbstractJBossManager<ManagementClien
         this(new JBossManagerConfiguration.Builder().build());
     }
 
+    /**
+     * @param configuration configuration for JBoss standalone manager
+     * @throws IllegalArgumentException thrown in case configuration is not 'standalone'.
+     */
     public JBossStandaloneManager(final JBossManagerConfiguration configuration) throws ContainerManagerException {
         super(configuration);
 
         if (configuration.isDomain()) {
-            throw new IllegalStateException("Provided JBoss manager configuration is 'domain' for standalone manager.");
+            throw new IllegalArgumentException("Provided JBoss manager configuration is 'domain' for standalone manager.");
         }
 
         this.managementClient = new ManagementClientFactory.Standalone(configuration).build();

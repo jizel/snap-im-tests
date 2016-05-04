@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.generic;
 
 import static travel.snapshot.qa.connection.Protocol.TCP;
 import static travel.snapshot.qa.connection.Protocol.UDP;

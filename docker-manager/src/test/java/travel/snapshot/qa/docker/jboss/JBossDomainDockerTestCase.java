@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.jboss;
 
 import org.arquillian.cube.spi.Cube;
 import org.junit.AfterClass;

@@ -10,7 +10,6 @@ import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecord;
 import travel.snapshot.qa.manager.tomcat.api.DeploymentRecordsBuilderException;
-import travel.snapshot.qa.manager.tomcat.api.DeploymentStateParserException;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseBody;
 
 @Category(UnitTest.class)

@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.tomcat;
 
 import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
 import org.arquillian.cube.spi.Cube;

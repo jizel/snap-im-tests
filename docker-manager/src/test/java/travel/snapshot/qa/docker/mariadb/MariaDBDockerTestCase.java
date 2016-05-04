@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.mariadb;
 
 import static travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
 

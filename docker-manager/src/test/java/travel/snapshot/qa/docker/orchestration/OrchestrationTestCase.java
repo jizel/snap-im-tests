@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.orchestration;
 
 import static travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
 import static travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
-import travel.snapshot.qa.docker.orchestration.Orchestration;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
 import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQDockerManager;
 import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService;

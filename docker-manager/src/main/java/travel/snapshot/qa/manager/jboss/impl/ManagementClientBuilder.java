@@ -6,7 +6,11 @@ import org.jboss.as.controller.client.helpers.domain.DomainClient;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
-class ManagementClientBuilder {
+public class ManagementClientBuilder {
+
+    private ManagementClientBuilder() {
+        throw new UnsupportedOperationException("no instantiation");
+    }
 
     public static class Standalone {
 
@@ -26,7 +30,7 @@ class ManagementClientBuilder {
                         configuration.getManagement().getManagementPort(),
                         configuration.getManagement().getManagementProtocol());
             } catch (Exception ex) {
-                throw new ContainerManagerException("Unable to build management client. ", ex);
+                throw new ContainerManagerException("Unable to build management client.", ex);
             }
         }
     }

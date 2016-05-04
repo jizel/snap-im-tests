@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.orchestration;
 
 import org.arquillian.cube.spi.Cube;
 import org.junit.Assert;
@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import travel.snapshot.qa.category.UnitTest;
-import travel.snapshot.qa.docker.orchestration.Orchestration;
+import travel.snapshot.qa.docker.ServiceCubePair;
 import travel.snapshot.qa.manager.generic.impl.docker.GenericDockerManager;
 
 import java.util.List;

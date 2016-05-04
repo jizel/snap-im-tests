@@ -1,4 +1,4 @@
-package travel.snapshot.qa.docker;
+package travel.snapshot.qa.docker.redis;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
