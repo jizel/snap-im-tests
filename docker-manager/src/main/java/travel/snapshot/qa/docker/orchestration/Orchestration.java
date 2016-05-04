@@ -90,7 +90,7 @@ public final class Orchestration {
      * @return this
      */
     public Orchestration stopService(final ServiceCubePair startedService) {
-        getDockerServiceManager(startedService.getServiceName(), startedService.getCube().getId()).stop(startedService.getCube());
+        getDockerServiceManager(startedService.getServiceName(), startedService.getCube().getId()).stop();
         deleteServices(Arrays.asList(startedService));
         return this;
     }
@@ -117,22 +117,16 @@ public final class Orchestration {
 
         for (ServiceCubePair serviceCubePair : startedServices) {
             try {
-                getDockerServiceManager(serviceCubePair.getServiceName(), serviceCubePair.getCube().getId())
-                        .stop(serviceCubePair.getCube());
+                getDockerServiceManager(serviceCubePair.getServiceName(), serviceCubePair.getCube().getId()).stop();
             } catch (Exception ex) {
                 logger.info("Unable to stop a service: {}", ex.getMessage());
-            } finally {
-                stoppedServices.add(serviceCubePair);
             }
+            stoppedServices.add(serviceCubePair);
         }
 
         deleteServices(stoppedServices);
 
         return this;
-    }
-
-    private void deleteServices(List<ServiceCubePair> servicesToDelete) {
-        startedContainers.removeAll(servicesToDelete);
     }
 
     /**
@@ -211,5 +205,9 @@ public final class Orchestration {
      */
     public String inspectIP(final String containerId) throws InspectionException {
         return new Inspection(this).inspectIP(containerId);
+    }
+
+    private void deleteServices(List<ServiceCubePair> servicesToDelete) {
+        startedContainers.removeAll(servicesToDelete);
     }
 }
