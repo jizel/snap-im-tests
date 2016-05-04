@@ -178,7 +178,7 @@ Feature: Users get
       | text  | 0      | /null       | /null        | /null        | 400           | 63          |
       | 10    | text   | /null       | /null        | /null        | 400           | 63          |
       #filtering and sorting
-      | 10    | 0      | /null       | company_name | company_name | 400           | 64          |
+      | 10    | 0      | /null       | user_name    | user_name    | 400           | 64          |
       | 10    | 0      | /null       | /null        | nonexistent  | 400           | 63          |
       | 10    | 0      | /null       | nonexistent  | /null        | 400           | 63          |
       | 10    | 0      | /null       | company_name |              | 400           | 63          |

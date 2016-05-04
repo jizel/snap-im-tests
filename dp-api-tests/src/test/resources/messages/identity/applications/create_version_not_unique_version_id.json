@@ -1,6 +1,6 @@
 {
   "application_version_id": "a318fd9a-a05d-42d8-8e84-22e904ace111",
-  "api_manager_id": "123",
+  "api_key": "123",
   "name": "Version 1",
   "status": "inactive",
   "release_date": "2016-02-18",

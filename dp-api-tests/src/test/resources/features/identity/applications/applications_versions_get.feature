@@ -17,7 +17,7 @@ Feature: Applications versions get
     And Etag header is present
     And Body contains entity with attribute "application_version_id"
     And Body contains entity with attribute "name" value "Version 123"
-    And Body contains entity with attribute "api_manager_id" value "123"
+    And Body contains entity with attribute "api_key" value "123"
     And Body contains entity with attribute "status" value "inactive"
     And Body contains entity with attribute "description" value "Versions description 1"
 
@@ -45,7 +45,7 @@ Feature: Applications versions get
     And Etag header is present
     And Body contains entity with attribute "application_version_id"
     And Body contains entity with attribute "name" value "Version 123"
-    And Body contains entity with attribute "api_manager_id" value "123"
+    And Body contains entity with attribute "api_key" value "123"
     And Body contains entity with attribute "status" value "inactive"
     And Body contains entity with attribute "description" value "UpdatedDescription"
 

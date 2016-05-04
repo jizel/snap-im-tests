@@ -333,7 +333,7 @@ public class ApplicationsSteps extends BasicSteps {
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("name", "Version 123");
-        mapForUpdate.put("api_manager_id", "123");
+        mapForUpdate.put("api_key", "123");
         mapForUpdate.put("status", "inactive");
         mapForUpdate.put("release_date", "2016-02-22");
         mapForUpdate.put("description", "UpdatedDescription");
