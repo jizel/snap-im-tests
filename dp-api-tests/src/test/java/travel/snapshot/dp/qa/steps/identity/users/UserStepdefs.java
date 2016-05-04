@@ -16,7 +16,7 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
-import travel.snapshot.dp.qa.serenity.roles.RolesSteps;
+import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
@@ -26,7 +26,7 @@ public class UserStepdefs {
     private UsersSteps usersSteps;
 
     @Steps
-    private RolesSteps rolesSteps;
+    private RoleBaseSteps roleBaseSteps;
 
     @Steps
     private CustomerSteps customerSteps;
@@ -131,7 +131,7 @@ public class UserStepdefs {
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_added_to_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleIsAddedToUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
@@ -156,21 +156,21 @@ public class UserStepdefs {
     @Given("^Relation between role with name \"([^\"]*)\" for application id \"([^\"]*)\" and user with username \"([^\"]*)\" exists with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Relation_between_role_with_name_for_application_i_and_user_with_username_exists_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 
     @Then("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is not there for user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with code \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_not_there_for_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityCode) throws Throwable {
         String entityId = getEntityIdForRelationshipType(relationshipType, entityCode);
-        RoleDto r = rolesSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleDoesntExistForUserWithRelationshipTypeEntity(r, username, relationshipType, entityId);
     }
 

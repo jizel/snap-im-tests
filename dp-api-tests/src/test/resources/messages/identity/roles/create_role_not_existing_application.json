@@ -1,5 +1,5 @@
 {
   "application_id": "NotExistingApplicationID",
-  "role_name": "Role name 1",
+  "name": "Role name 1",
   "role_description": "description"
 }
