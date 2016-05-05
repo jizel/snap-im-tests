@@ -18,7 +18,7 @@ public class TomcatResponseParser {
     public TomcatResponse parse(List<String> lines) throws IllegalStateException {
 
         if (lines.isEmpty()) {
-            throw new IllegalStateException("No lines from Tomcat, can not construct response.");
+            throw new IllegalStateException("No lines from Tomcat, can not construct a response.");
         }
 
         String header = lines.get(0);
@@ -37,7 +37,7 @@ public class TomcatResponseParser {
         Matcher headerMatcher = headerPattern.matcher(headerLine);
 
         if (!headerMatcher.matches()) {
-            throw new IllegalStateException("Header returned back from Tomcat can not be parsed.");
+            throw new IllegalStateException(String.format("Header returned back from Tomcat can not be parsed: %s.", headerLine));
         }
 
         TomcatResponseStatus reponseStatus = TomcatResponseStatus.valueOf(headerMatcher.group(1));
