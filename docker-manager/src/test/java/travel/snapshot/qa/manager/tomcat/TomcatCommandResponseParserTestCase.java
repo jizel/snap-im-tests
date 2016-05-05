@@ -11,6 +11,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.UnitTest;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponse;
+import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseBody;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseHeader;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseParser;
 import travel.snapshot.qa.manager.tomcat.api.response.TomcatResponseReason;
@@ -22,12 +23,16 @@ import java.util.List;
 @Category(UnitTest.class)
 public class TomcatCommandResponseParserTestCase {
 
-    private static final List<String> LINES = new ArrayList<String>() {{
-        add("OK - Listed applications for virtual host localhost");
+    private static final List<String> DEPLOYMENTS = new ArrayList<String>() {{
         add("SomeDeployment-1.0:stopped:0:SomeDeployment-1.0");
         add("host-manager:running:0:host-manager");
         add("OtherDeployment-1.0:running:0:OtherDeployment-1.0");
         add("manager:running:1:manager");
+    }};
+
+    private static final List<String> LINES = new ArrayList<String>() {{
+        add("OK - Listed applications for virtual host localhost");
+        addAll(DEPLOYMENTS);
     }};
 
     private static final List<String> ONLY_HEADER = new ArrayList<String>() {{
@@ -86,7 +91,7 @@ public class TomcatCommandResponseParserTestCase {
         TomcatResponseHeader okHeader = new TomcatResponseHeader(TomcatResponseStatus.OK, new TomcatResponseReason("response header"));
         TomcatResponseHeader failHeader = new TomcatResponseHeader(TomcatResponseStatus.FAIL, new TomcatResponseReason("response header"));
 
-        assertTrue(new TomcatResponse(okHeader).isOk());
-        assertFalse(new TomcatResponse(failHeader).isOk());
+        assertTrue(new TomcatResponse(okHeader, new TomcatResponseBody().addLines(DEPLOYMENTS)).isOk());
+        assertFalse(new TomcatResponse(failHeader, new TomcatResponseBody().addLines(DEPLOYMENTS)).isOk());
     }
 }

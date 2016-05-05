@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.tomcat.api.response;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,18 +18,17 @@ public class TomcatResponseParser {
      */
     public TomcatResponse parse(List<String> lines) throws IllegalStateException {
 
-        if (lines.isEmpty()) {
+        List<String> linesToParse = new ArrayList<>(lines);
+
+        if (linesToParse.isEmpty()) {
             throw new IllegalStateException("No lines from Tomcat, can not construct a response.");
         }
 
-        String header = lines.get(0);
+        TomcatResponse commandResponse = new TomcatResponse(parseHeader(linesToParse.get(0)));
 
-        TomcatResponse commandResponse = new TomcatResponse(parseHeader(header));
+        linesToParse.remove(0);
 
-        if (lines.size() > 0) {
-            List<String> body = lines.subList(1, lines.size());
-            commandResponse.setResponseBody(parseBody(body));
-        }
+        commandResponse.setResponseBody(new TomcatResponseBody(linesToParse));
 
         return commandResponse;
     }
@@ -44,11 +44,5 @@ public class TomcatResponseParser {
         TomcatResponseReason responseReason = new TomcatResponseReason(headerMatcher.group(2));
 
         return new TomcatResponseHeader(reponseStatus, responseReason);
-    }
-
-    private TomcatResponseBody parseBody(List<String> bodyLines) {
-        TomcatResponseBody responseBody = new TomcatResponseBody();
-        responseBody.setBody(bodyLines);
-        return responseBody;
     }
 }

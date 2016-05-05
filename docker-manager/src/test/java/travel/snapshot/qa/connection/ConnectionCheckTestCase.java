@@ -147,9 +147,7 @@ public class ConnectionCheckTestCase {
 
                 serverSocket.accept();
             } catch (IOException ex) {
-                // intentionally empty
-            } finally {
-                IOUtils.closeQuietly(serverSocket);
+                close();
             }
         }
 
@@ -181,9 +179,7 @@ public class ConnectionCheckTestCase {
                 }
 
             } catch (IOException ex) {
-                // intentionally empty
-            } finally {
-                IOUtils.closeQuietly(serverSocket);
+                close();
             }
         }
 

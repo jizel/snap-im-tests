@@ -9,16 +9,26 @@ public class TomcatResponseBody {
 
     private List<String> body = new ArrayList<>();
 
-    public void setBody(List<String> body) {
+    public TomcatResponseBody() {
+    }
+
+    public TomcatResponseBody(List<String> body) {
+        addLines(body);
+    }
+
+    public TomcatResponseBody setBody(List<String> body) {
         this.body = body;
+        return this;
     }
 
-    public void addLine(String line) {
+    public TomcatResponseBody addLine(String line) {
         this.body.add(line);
+        return this;
     }
 
-    public void addLines(List<String> lines) {
+    public TomcatResponseBody addLines(List<String> lines) {
         this.body.addAll(lines);
+        return this;
     }
 
     public List<String> getBody() {
