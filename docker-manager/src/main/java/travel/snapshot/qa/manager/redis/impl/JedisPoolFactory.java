@@ -6,7 +6,7 @@ import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 /**
  * Creates Jedis pool from given Redis configuration.
  */
-class JedisPoolFactory {
+public class JedisPoolFactory {
 
     private final RedisManagerConfiguration configuration;
 

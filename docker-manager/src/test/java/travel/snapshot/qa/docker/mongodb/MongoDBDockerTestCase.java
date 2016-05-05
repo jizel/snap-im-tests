@@ -12,10 +12,10 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
 import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfiguration;
 import travel.snapshot.qa.manager.mongodb.impl.MongoDBManagerImpl;
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public class MongoDBDockerTestCase {
         }
 
         Assert.assertNotNull("Returned MongoDB client is a null object!", mongoClient);
-        mongodb.getServiceManager().closeClient(mongoClient);
+        mongodb.getServiceManager().closeClient();
 
         mongodb.stop(startedMongoDBContainer);
         logger.info("Docker MongoDB container has stopped.");

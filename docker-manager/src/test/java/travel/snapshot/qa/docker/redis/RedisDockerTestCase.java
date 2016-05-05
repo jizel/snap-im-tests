@@ -14,10 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.manager.redis.impl.docker.RedisDockerManager;
 import travel.snapshot.qa.manager.redis.api.RedisManager;
 import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 import travel.snapshot.qa.manager.redis.impl.RedisManagerImpl;
+import travel.snapshot.qa.manager.redis.impl.docker.RedisDockerManager;
 
 @Category(DockerTest.class)
 public class RedisDockerTestCase {

@@ -10,13 +10,6 @@ import travel.snapshot.qa.manager.mongodb.configuration.MongoDBManagerConfigurat
 public interface MongoDBManager extends ServiceManager {
 
     /**
-     * Blocks until it is possible to connect to Mongo.
-     *
-     * @see travel.snapshot.qa.manager.mongodb.check.MongoDBStartCheckTask
-     */
-    void waitForConnectivity();
-
-    /**
      * Gets configuration of Mongo manager. When not set explicitly, default Mongo configuration should be used.
      *
      * @return client configuration of Mong Manager.
@@ -33,8 +26,7 @@ public interface MongoDBManager extends ServiceManager {
     /**
      * Closes Mongo client.
      *
-     * @param mongoClient client to close
      * @throws MongoDBManagerException if it is not possible to close MongoDB client successfully.
      */
-    void closeClient(MongoClient mongoClient) throws MongoDBManagerException;
+    void closeClient() throws MongoDBManagerException;
 }
