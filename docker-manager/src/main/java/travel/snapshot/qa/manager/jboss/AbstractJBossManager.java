@@ -20,6 +20,8 @@ import travel.snapshot.qa.manager.jboss.api.JBossContainerManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossCommandBuilder;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
+import java.io.File;
+
 abstract class AbstractJBossManager<T extends Object, U extends ModelControllerClient> implements JBossContainerManager, JBossContainerDeployer {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractJBossManager.class);
@@ -51,6 +53,11 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
     @Override
     public String deploy(String archiveFilePath) throws ContainerDeploymentException {
         return getDeployer().deploy(archiveFilePath);
+    }
+
+    @Override
+    public String deploy(File archiveFile) throws ContainerDeploymentException {
+        return getDeployer().deploy(archiveFile);
     }
 
     @Override

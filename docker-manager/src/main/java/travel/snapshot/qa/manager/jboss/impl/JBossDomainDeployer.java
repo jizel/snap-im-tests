@@ -63,6 +63,11 @@ public class JBossDomainDeployer implements JBossContainerDeployer {
     }
 
     @Override
+    public String deploy(File archive) throws ContainerDeploymentException {
+        return deploy(ShrinkWrap.createFromZipFile(WebArchive.class, archive));
+    }
+
+    @Override
     public String deploy(Archive<?> archive) throws ContainerDeploymentException {
         try {
 

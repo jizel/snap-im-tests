@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -37,14 +36,21 @@ public class JBossStandaloneDeploymentTestCase extends AbstractDeploymentTestCas
 
     @Test
     public void testDeploymentAndUndeployment() {
-        String runtimeName = manager.getDeployer().deploy(archive);
+        String runtimeName = manager.deploy(archive);
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
 
     @Test
     public void testFileDeploymentAndUndeployment() {
-        String runtimeName = manager.getDeployer().deploy(testingArchive.getAbsolutePath());
+        String runtimeName = manager.deploy(testingArchive);
+        assertNotNull(runtimeName);
+        // undeployment occurs in undeploy method
+    }
+
+    @Test
+    public void testFilePathDeploymentAndUndeployment() {
+        String runtimeName = manager.deploy(testingArchive.getAbsolutePath());
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
