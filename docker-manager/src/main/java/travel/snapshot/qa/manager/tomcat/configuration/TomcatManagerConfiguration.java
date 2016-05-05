@@ -1,5 +1,8 @@
 package travel.snapshot.qa.manager.tomcat.configuration;
 
+import static travel.snapshot.qa.manager.tomcat.configuration.HTTPScheme.HTTP;
+import static travel.snapshot.qa.manager.tomcat.configuration.HTTPScheme.HTTPS;
+
 import travel.snapshot.qa.manager.api.configuration.AbstractConfigurationBuilder;
 import travel.snapshot.qa.manager.api.configuration.Configuration;
 import travel.snapshot.qa.manager.api.configuration.Validate;
@@ -19,7 +22,6 @@ public class TomcatManagerConfiguration implements Configuration {
     private final File catalinaHome;
     private final File catalinaBase;
     private final int startupTimeoutInSeconds;
-    private final String appBase;
     private final String serverConfig;
     private final String loggingProperties;
     private final boolean outputToConsole;
@@ -38,7 +40,6 @@ public class TomcatManagerConfiguration implements Configuration {
         catalinaHome = builder.catalinaHome;
         catalinaBase = builder.catalinaBase;
         startupTimeoutInSeconds = builder.startupTimeoutInSeconds;
-        appBase = builder.appBase;
         serverConfig = builder.serverConfig;
         loggingProperties = builder.loggingProperties;
         outputToConsole = builder.outputToConsole;
@@ -54,6 +55,10 @@ public class TomcatManagerConfiguration implements Configuration {
 
     public static final class Builder extends AbstractConfigurationBuilder {
 
+        public static final int DEFAULT_HTTP_PORT = 8080;
+
+        public static final int DEFAULT_HTTPS_PORT = 8443;
+
         private File javaHome = resolveProperty("java.home", "JAVA_HOME");
 
         private String javaVmArguments = "-Xmx512m -XX:MaxPermSize=128m";
@@ -67,8 +72,6 @@ public class TomcatManagerConfiguration implements Configuration {
         private int bindHttpPort = 8080;
 
         private int startupTimeoutInSeconds = 120;
-
-        private String appBase = "webapps";
 
         private String serverConfig = "server.xml";
 
@@ -90,7 +93,7 @@ public class TomcatManagerConfiguration implements Configuration {
 
         private int managerPort;
 
-        private HTTPScheme httpScheme = HTTPScheme.HTTP;
+        private HTTPScheme httpScheme = HTTP;
 
         private boolean remote = false;
 
@@ -110,14 +113,6 @@ public class TomcatManagerConfiguration implements Configuration {
 
         public Builder setUrlCharset(final Charset urlCharset) {
             this.urlCharset = urlCharset;
-            return this;
-        }
-
-        /**
-         * @param appBase the directory where the deployed webapps are stored within the Tomcat installation
-         */
-        public Builder setAppBase(final String appBase) {
-            this.appBase = appBase;
             return this;
         }
 
@@ -179,8 +174,24 @@ public class TomcatManagerConfiguration implements Configuration {
             return this;
         }
 
+        /**
+         * Sets HTTP scheme to use. In case HTTPS scheme is set, bind port is automatically set to {@link
+         * #DEFAULT_HTTPS_PORT} otherwise it is automatically set to {@link #DEFAULT_HTTP_PORT}.
+         *
+         * You have to call method {@link #setBindPort(int)} in case you want to override port set here after this is
+         * set.
+         *
+         * @param httpScheme http scheme to use
+         */
         public Builder setHttpScheme(HTTPScheme httpScheme) {
             this.httpScheme = httpScheme;
+
+            if (httpScheme == HTTPS) {
+                bindHttpPort = DEFAULT_HTTPS_PORT;
+            } else {
+                bindHttpPort = DEFAULT_HTTP_PORT;
+            }
+
             return this;
         }
 
@@ -256,13 +267,10 @@ public class TomcatManagerConfiguration implements Configuration {
             int port = managerUrl.getPort();
 
             if (port == -1) {
-                switch (scheme) {
-                    case HTTP:
-                        return 80;
-                    case HTTPS:
-                        return 443;
-                    default:
-                        throw new IllegalStateException(String.format("Unable to resolve default HTTP scheme for scheme %s.", scheme.toString()));
+                if (scheme == HTTP) {
+                    return 8080;
+                } else {
+                    return 8443;
                 }
             } else {
                 return port;
@@ -280,10 +288,6 @@ public class TomcatManagerConfiguration implements Configuration {
 
     public Charset getUrlCharset() {
         return urlCharset;
-    }
-
-    public String getAppBase() {
-        return appBase;
     }
 
     public URL getManagerUrl() {
