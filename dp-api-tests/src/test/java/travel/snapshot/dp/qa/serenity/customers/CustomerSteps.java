@@ -179,7 +179,7 @@ public class CustomerSteps extends BasicSteps {
     private Response addUserToCustomerWithIsPrimary(String userId, String customerId, String isPrimary) {
         Map<String, Object> customerUser = new HashMap<>();
         customerUser.put("user_id", userId);
-        customerUser.put("is_primary", isPrimary);
+        customerUser.put("is_primary", Integer.valueOf(isPrimary));
 
 
         return given().spec(spec)

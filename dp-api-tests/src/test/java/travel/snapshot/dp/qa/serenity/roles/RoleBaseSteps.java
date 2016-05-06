@@ -26,11 +26,24 @@ public class RoleBaseSteps extends BasicSteps {
     private static final String SESSION_ROLE_ID = "role_id";
     private static final String ROLES_PATH = "/identity/roles";
     private static final String SESSION_CREATED_ROLE = "created_role";
+    public static final String USER_CUSTOMER_ROLES_PATH = "/identity/user_customer_roles";
+    public static final String USER_PROPERTY_SET_ROLES_PATH = "/identity/user_property_set_roles";
+    public static final String USER_PROPERTY_ROLES_PATH = "/identity/user_property_roles";
 
 
     public RoleBaseSteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+    }
+
+    public void setRolesPathCustomer(){
+        spec.basePath(USER_CUSTOMER_ROLES_PATH);
+    }
+    public void setRolesPathProperty(){
+        spec.basePath(USER_PROPERTY_ROLES_PATH);
+    }
+    public void setRolesPathPropertySet(){
+        spec.basePath(USER_PROPERTY_SET_ROLES_PATH);
     }
 
     public String getBasePath() {
@@ -102,11 +115,18 @@ public class RoleBaseSteps extends BasicSteps {
         return Arrays.asList(roles).stream().findFirst().orElse(null);
     }
 
+    public RoleDto getRoleByName(String name) {
+        String filter = String.format("name=='%s'", name);
+        RoleDto[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(RoleDto[].class);
+        return Arrays.asList(roles).stream().findFirst().orElse(null);
+    }
+
 
     @Step
-    public void getRoleWithId(String roleId) {
+    public RoleDto getRoleWithId(String roleId) {
         Response resp = getRole(roleId, null);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
+        return resp.as(RoleDto.class);
     }
 
     @Step
@@ -115,13 +135,13 @@ public class RoleBaseSteps extends BasicSteps {
         RoleDto roleByName = getRoleByNameForApplicationInternal(name, applicationId);
 
         Response resp = getRole(roleByName.getRoleId(), null);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
     }
 
     @Step
     public void deleteRoleWithId(String roleId) {
         Response resp = deleteRole(roleId);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
+        setSessionResponse(resp);
     }
 
     @Step
