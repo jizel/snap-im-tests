@@ -31,7 +31,7 @@ public class JBossStandaloneDeploymentTestCase extends AbstractDeploymentTestCas
 
     @After
     public void undeploy() {
-        manager.getDeployer().undeploy(DEPLOYMENT_NAME);
+        manager.undeploy(DEPLOYMENT_NAME);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class JBossStandaloneDeploymentTestCase extends AbstractDeploymentTestCas
 
         expectedException.expect(ContainerDeploymentException.class);
 
-        manager.getDeployer().deploy(archive);
-        manager.getDeployer().deploy(archive);
+        manager.deploy(archive);
+        manager.deploy(archive);
     }
 }

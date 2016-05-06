@@ -1,11 +1,14 @@
 package travel.snapshot.qa.manager.jboss.spacelift;
 
+import static travel.snapshot.qa.manager.api.configuration.Validate.isExecutableFile;
+
 import org.apache.commons.lang3.SystemUtils;
 import org.arquillian.spacelift.Spacelift;
 import org.arquillian.spacelift.process.CommandBuilder;
 import org.arquillian.spacelift.process.ProcessResult;
 import org.arquillian.spacelift.task.Task;
 import org.arquillian.spacelift.task.os.CommandTool;
+import travel.snapshot.qa.manager.api.configuration.Validate.FileNotExecutableException;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
 import java.io.File;
@@ -219,13 +222,13 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
         return sb.toString();
     }
 
-    private CommandTool getJBossCliTool() throws FileNotFoundException, NotExecutableScriptException {
+    CommandTool getJBossCliTool() throws FileNotFoundException, FileNotExecutableException {
 
         if (SystemUtils.IS_OS_WINDOWS) {
 
             File jbossScript = new File(environment.get("JBOSS_HOME"), "/bin/jboss-cli.bat");
 
-            validateScript(jbossScript);
+            isExecutableFile(jbossScript);
 
             return Spacelift.task(CommandTool.class)
                     .command(new CommandBuilder("cmd.exe"))
@@ -235,48 +238,11 @@ public class JBossCLI extends Task<JBossManagerConfiguration, ProcessResult> {
 
             File jbossScript = new File(environment.get("JBOSS_HOME"), "/bin/jboss-cli.sh");
 
-            validateScript(jbossScript);
+            isExecutableFile(jbossScript);
 
             return Spacelift.task(CommandTool.class)
                     .command(new CommandBuilder(jbossScript.getAbsolutePath()))
                     .addEnvironment(environment);
         }
     }
-
-    private void validateScript(File jbossScript) throws FileNotFoundException, NotExecutableScriptException {
-        if (!jbossScript.exists()) {
-            throw new FileNotFoundException(jbossScript.getAbsolutePath() + " does not exist.");
-        }
-
-        if (!jbossScript.canExecute()) {
-            throw new NotExecutableScriptException(jbossScript + " is not executable.");
-        }
-    }
-
-    /**
-     * Exception thrown in case JBoss CLI script is not executable. It is the responsibility of a user to be sure that
-     * script is executable before its invocation.
-     */
-    public static class NotExecutableScriptException extends Exception {
-
-        private static final long serialVersionUID = -2281993207167380102L;
-
-        public NotExecutableScriptException() {
-            super();
-        }
-
-        public NotExecutableScriptException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public NotExecutableScriptException(String message) {
-            super(message);
-        }
-
-        public NotExecutableScriptException(Throwable cause) {
-            super(cause);
-        }
-
-    }
-
 }

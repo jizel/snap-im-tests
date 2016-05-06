@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.manager.redis.api.RedisManager;
-import travel.snapshot.qa.manager.redis.configuration.RedisManagerConfiguration;
 import travel.snapshot.qa.manager.redis.impl.RedisManagerImpl;
 import travel.snapshot.qa.manager.redis.impl.docker.RedisDockerManager;
 
@@ -29,9 +27,7 @@ public class RedisDockerTestCase {
     @BeforeClass
     public static void setup() throws Exception {
 
-        final RedisManager redisManager = new RedisManagerImpl(new RedisManagerConfiguration.Builder().build());
-
-        redisDockerManager = new RedisDockerManager(redisManager);
+        redisDockerManager = new RedisDockerManager(new RedisManagerImpl());
         redisDockerManager.getDockerManager().startManager();
 
         logger.info("Redis Docker manager has started.");

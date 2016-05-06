@@ -6,43 +6,58 @@ import org.jboss.as.arquillian.container.ManagementClient;
 import org.jboss.as.controller.client.ModelControllerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xnio.IoUtils;
+import travel.snapshot.qa.manager.api.container.ContainerManagerConfigurationException;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.jboss.check.JBossStandaloneStartChecker;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.impl.JBossStandaloneDeployer;
 import travel.snapshot.qa.manager.jboss.impl.ManagementClientFactory;
+import travel.snapshot.qa.manager.jboss.impl.ModelControllerClientBuilder;
 
-public class JBossStandaloneManager extends AbstractJBossManager<ManagementClient, ModelControllerClient> {
+public class JBossStandaloneManager extends AbstractJBossManager<ManagementClient, ModelControllerClient, JBossStandaloneDeployer> {
 
     private static final Logger logger = LoggerFactory.getLogger(JBossStandaloneManager.class);
 
-    private final ManagementClient managementClient;
-
-    private final JBossStandaloneDeployer deployer;
-
+    /**
+     * Creates manager with default standalone configuration ready to manage local JBoss containers.
+     */
     public JBossStandaloneManager() {
         this(new JBossManagerConfiguration.Builder().build());
     }
 
     /**
      * @param configuration configuration for JBoss standalone manager
-     * @throws IllegalArgumentException thrown in case configuration is not 'standalone'.
+     * @throws ContainerManagerConfigurationException thrown in case configuration is not 'standalone'.
      */
-    public JBossStandaloneManager(final JBossManagerConfiguration configuration) throws ContainerManagerException {
-        super(configuration);
+    public JBossStandaloneManager(final JBossManagerConfiguration configuration) throws ContainerManagerConfigurationException {
+        this(configuration, new ModelControllerClientBuilder.Standalone(configuration).build());
+    }
+
+    /**
+     * @param configuration         configuration for JBoss standalone manager
+     * @param modelControllerClient model controller client to build management client from
+     * @throws ContainerManagerConfigurationException thrown in case configuration is not 'standalone'
+     */
+    public JBossStandaloneManager(final JBossManagerConfiguration configuration, final ModelControllerClient modelControllerClient) throws ContainerManagerConfigurationException {
+        this(configuration, new ManagementClientFactory.Standalone(configuration).modelControllerClient(modelControllerClient).build());
+    }
+
+    /**
+     * @param configuration    configuration for JBoss standalone manager
+     * @param managementClient standalone management client
+     * @throws ContainerManagerConfigurationException thrown in case configuration is not 'standalone'.
+     */
+    public JBossStandaloneManager(final JBossManagerConfiguration configuration, final ManagementClient managementClient) throws ContainerManagerConfigurationException {
+        super(configuration, managementClient, new JBossStandaloneDeployer(managementClient));
 
         if (configuration.isDomain()) {
-            throw new IllegalArgumentException("Provided JBoss manager configuration is 'domain' for standalone manager.");
+            throw new ContainerManagerConfigurationException("Provided JBoss manager configuration is 'domain' for standalone manager.");
         }
-
-        this.managementClient = new ManagementClientFactory.Standalone(configuration).build();
-        this.deployer = new JBossStandaloneDeployer(managementClient);
     }
 
     @Override
     public boolean isRunning() throws ContainerManagerException {
-        return managementClient.isServerInRunningState();
+        return getManagementClient().isServerInRunningState();
     }
 
     @Override
@@ -61,11 +76,11 @@ public class JBossStandaloneManager extends AbstractJBossManager<ManagementClien
     }
 
     @Override
-    public void closeManagementClient(ManagementClient managementClient) {
+    public void closeManagementClient(ManagementClient managementClient) throws ContainerManagerException {
         try {
-            IoUtils.safeClose(managementClient);
-        } catch (final Exception ex) {
-            logger.warn("Caught exception closing ManagementClient", ex);
+            managementClient.close();
+        } catch (Exception ex) {
+            throw new ContainerManagerException(String.format("Closing of JBoss standalone management client has not been successful: %s", ex.getMessage()), ex);
         }
     }
 

@@ -213,12 +213,12 @@ public class TomcatManagerConfiguration implements Configuration {
         private void validate() throws ContainerManagerConfigurationException {
 
             if (!remote) {
-                Validate.configurationDirectoryExists(catalinaHome,
+                Validate.directoryExists(catalinaHome,
                         "Either \"CATALINA_HOME\" environment variable or \"catalina.home\" system property in " +
                                 "TomcatManagerConfiguration must be set and point to a valid directory! " +
                                 catalinaHome + " is not valid directory!");
 
-                Validate.configurationDirectoryExists(javaHome,
+                Validate.directoryExists(javaHome,
                         "Either \"JAVA_HOME\" environment variable or \"java.home\" system property in " +
                                 "TomcatManagerConfiguration must be set and point to a valid directory! " +
                                 javaHome + " is not valid directory!");

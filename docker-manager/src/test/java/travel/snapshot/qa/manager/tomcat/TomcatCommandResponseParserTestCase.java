@@ -91,7 +91,7 @@ public class TomcatCommandResponseParserTestCase {
         TomcatResponseHeader okHeader = new TomcatResponseHeader(TomcatResponseStatus.OK, new TomcatResponseReason("response header"));
         TomcatResponseHeader failHeader = new TomcatResponseHeader(TomcatResponseStatus.FAIL, new TomcatResponseReason("response header"));
 
-        assertTrue(new TomcatResponse(okHeader, new TomcatResponseBody().addLines(DEPLOYMENTS)).isOk());
-        assertFalse(new TomcatResponse(failHeader, new TomcatResponseBody().addLines(DEPLOYMENTS)).isOk());
+        assertTrue(new TomcatResponse(okHeader, new TomcatResponseBody().setBody(DEPLOYMENTS).addLines(DEPLOYMENTS)).isOk());
+        assertFalse(new TomcatResponse(failHeader, new TomcatResponseBody().setBody(DEPLOYMENTS).addLines(DEPLOYMENTS)).isOk());
     }
 }

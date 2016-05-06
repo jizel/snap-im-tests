@@ -49,6 +49,7 @@ public class JBossDomainStarter extends Task<JBossManagerConfiguration, JBossDom
 
         if (!configuration.isDomain()) {
             logger.info("Provided confiugration is not domain and will be ignored.");
+            return false;
         }
 
         this.configuration = configuration;

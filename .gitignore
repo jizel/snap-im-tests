@@ -31,3 +31,5 @@ target/
 fake-data-generator/Python_load/src/*.tsv
 
 *.swp
+
+*.log

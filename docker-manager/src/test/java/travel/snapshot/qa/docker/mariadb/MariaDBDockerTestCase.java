@@ -12,12 +12,13 @@ import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.DockerTest;
-import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager;
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager;
 import travel.snapshot.qa.manager.mariadb.configuration.MariaDBManagerConfiguration;
 import travel.snapshot.qa.manager.mariadb.impl.MariaDBManagerImpl;
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.Connection;
@@ -75,6 +76,11 @@ public class MariaDBDockerTestCase {
 
         logger.info("Going to execute SQL script in " + SQL_SCRIPT);
 
+        mariaDBDockerManager.getServiceManager().executeScript("src/test/resources/" + SQL_SCRIPT);
+        mariaDBDockerManager.getServiceManager().executeScript(new File("src/test/resources/" + SQL_SCRIPT));
+
+        mariaDBDockerManager.getServiceManager().executeScript(connection, "src/test/resources/" + SQL_SCRIPT);
+        mariaDBDockerManager.getServiceManager().executeScript(connection, new File("src/test/resources/" + SQL_SCRIPT));
         mariaDBDockerManager.getServiceManager().executeScript(connection, sqlScriptReader);
 
         logger.info("SQL script executed");

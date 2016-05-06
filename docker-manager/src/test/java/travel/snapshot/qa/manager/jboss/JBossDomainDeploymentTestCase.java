@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -54,8 +53,15 @@ public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
     }
 
     @Test
+    public void testFilePathDeploymentAndUndeployment() {
+        String runtimeName = domainManager.deploy(testingArchive.getAbsolutePath());
+        assertNotNull(runtimeName);
+        // undeployment occurs in undeploy method
+    }
+
+    @Test
     public void testFileDeploymentAndUndeployment() {
-        String runtimeName = domainManager.getDeployer().deploy(testingArchive.getAbsolutePath());
+        String runtimeName = domainManager.deploy(testingArchive);
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
@@ -65,7 +71,7 @@ public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
 
         expectedException.expect(ContainerDeploymentException.class);
 
-        domainManager.getDeployer().deploy(archive);
-        domainManager.getDeployer().deploy(archive);
+        domainManager.deploy(archive);
+        domainManager.deploy(archive);
     }
 }

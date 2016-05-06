@@ -13,7 +13,7 @@ public class JBossStandaloneStarter extends Task<JBossManagerConfiguration, JBos
 
     private static final Logger logger = LoggerFactory.getLogger(JBossStandaloneStarter.class);
 
-    private JBossManagerConfiguration configuration;
+    private JBossManagerConfiguration configuration = new JBossManagerConfiguration.Builder().build();
 
     /**
      * Sets configuration for standalone container.
@@ -47,8 +47,9 @@ public class JBossStandaloneStarter extends Task<JBossManagerConfiguration, JBos
             return false;
         }
 
-        if (!configuration.isDomain()) {
+        if (configuration.isDomain()) {
             logger.info("Provided confiugration is domain and will be ignored.");
+            return false;
         }
 
         this.configuration = configuration;

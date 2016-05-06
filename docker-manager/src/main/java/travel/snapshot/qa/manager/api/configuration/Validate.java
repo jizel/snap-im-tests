@@ -3,6 +3,7 @@ package travel.snapshot.qa.manager.api.configuration;
 import travel.snapshot.qa.manager.api.container.ContainerManagerConfigurationException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public final class Validate {
@@ -73,8 +74,7 @@ public final class Validate {
      * @throws ContainerManagerConfigurationException Thrown if string is empty, null or it does not represent a path to
      *                                                a valid directory
      */
-    public static void configurationDirectoryExists(final String string, final String message)
-            throws ContainerManagerConfigurationException {
+    public static void directoryExists(final String string, final String message) throws ContainerManagerConfigurationException {
 
         if (string == null || string.length() == 0 || !new File(string).isDirectory()) {
             throw new ContainerManagerConfigurationException(message);
@@ -89,12 +89,38 @@ public final class Validate {
      * @throws ContainerManagerConfigurationException Thrown if string is empty, null or it does not represent a path to
      *                                                a valid directory
      */
-    public static void configurationDirectoryExists(final File file, final String message)
-            throws ContainerManagerConfigurationException {
+    public static void directoryExists(final File file, final String message) throws ContainerManagerConfigurationException {
         try {
-            configurationDirectoryExists(file.getCanonicalPath(), message);
+            directoryExists(file.getCanonicalPath(), message);
         } catch (IOException ex) {
             throw new ContainerManagerConfigurationException(ex);
+        }
+    }
+
+    /**
+     *
+     * @param file
+     * @throws FileNotFoundException
+     * @throws FileNotExecutableException
+     */
+    public static void isExecutableFile(File file) throws FileNotFoundException, FileNotExecutableException {
+        notNull(file, "File to check is a null object.");
+
+        if (!file.exists()) {
+            throw new FileNotFoundException(file.getAbsolutePath() + " does not exist.");
+        }
+
+        if (!file.canExecute()) {
+            throw new FileNotExecutableException(file + " is not executable.");
+        }
+    }
+
+    public static class FileNotExecutableException extends Exception {
+
+        private static final long serialVersionUID = -2281993207167380102L;
+
+        public FileNotExecutableException(String message) {
+            super(message);
         }
     }
 }

@@ -1,19 +1,27 @@
 package travel.snapshot.qa.manager.jboss;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.arquillian.spacelift.Spacelift;
+import org.jboss.as.arquillian.container.ManagementClient;
 import org.jboss.as.arquillian.container.domain.Domain;
 import org.jboss.as.controller.client.helpers.domain.ServerIdentity;
 import org.jboss.as.controller.client.helpers.domain.ServerStatus;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import travel.snapshot.qa.category.JBossTest;
+import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.configuration.JVM;
 import travel.snapshot.qa.manager.jboss.configuration.Util;
@@ -38,14 +46,39 @@ public class JBossLifecycleTestCase {
             .domain()
             .build();
 
+    private static JBossManagerConfiguration invalidLocalConfiguration = new JBossManagerConfiguration.Builder()
+            .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+            .remote() // remote flag means that we will not try to start it locally but in test we try to do it
+            .build();
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Mock
+    private ManagementClient standaloneManagementClient;
+
+    @Mock
+    private org.jboss.as.arquillian.container.domain.ManagementClient domainManagementClient;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void localStartWithRemoteConfigurationWillFail() {
+        expectedException.expect(ContainerManagerException.class);
+        expectedException.expectMessage("Could not start JBoss container: Starting of JBoss container is allowed only if 'remote' is false.");
+
+        new JBossStandaloneManager(invalidLocalConfiguration).start();
+    }
 
     @Test
     public void startAndStopJBossContainerStandalone() {
         JBossStandaloneManager standaloneManager = Spacelift.task(configuration, JBossStandaloneStarter.class).execute().await();
 
         assertTrue("Server is not running!", standaloneManager.isRunning());
+        assertTrue("Server is not in running state!", standaloneManager.getManagementClient().isServerInRunningState());
         assertTrue("Server is not in running state!", standaloneManager.getManagementClient().isServerInRunningState());
         assertNotNull(standaloneManager.getModelControllerClient());
 
@@ -69,19 +102,25 @@ public class JBossLifecycleTestCase {
     }
 
     @Test
-    public void createJBossStandaloneManagerWithDomainConfigurationTest() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Provided JBoss manager configuration is 'domain' for standalone manager.");
+    public void testFailingCloseOfStandaloneManagementClient() {
+        expectedException.expect(ContainerManagerException.class);
+        expectedException.expectCause(is(instanceOf(RuntimeException.class)));
+        expectedException.expectMessage("Closing of JBoss standalone management client has not been successful: intentionally thrown exception");
 
-        new JBossStandaloneManager(new JBossManagerConfiguration.Builder().domain().build());
+        Mockito.doThrow(new RuntimeException("intentionally thrown exception")).when(standaloneManagementClient).close();
+
+        new JBossStandaloneManager().closeManagementClient(standaloneManagementClient);
     }
 
     @Test
-    public void createJBossDomainManagerWithStandaloneConfigurationTest() {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Provided JBoss manager configuration is 'standalone' for domain manager.");
+    public void testFailingCloseOfDomainManagementClient() {
+        expectedException.expect(ContainerManagerException.class);
+        expectedException.expectCause(is(instanceOf(RuntimeException.class)));
+        expectedException.expectMessage("Closing of JBoss domain management client has not been successful: intentionally thrown exception");
 
-        new JBossDomainManager(new JBossManagerConfiguration.Builder().build());
+        Mockito.doThrow(new RuntimeException("intentionally thrown exception")).when(domainManagementClient).close();
+
+        new JBossDomainManager().closeManagementClient(domainManagementClient);
     }
 
     @Test
