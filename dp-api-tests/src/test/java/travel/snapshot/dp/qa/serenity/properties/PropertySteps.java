@@ -296,7 +296,7 @@ public class PropertySteps extends BasicSteps {
      * @return Requested property or {@code null} if no such property exists in the list
      */
     public PropertyDto getPropertyByCodeInternal(String code) {
-        PropertyDto[] properties = getEntities("1", "0", "property_code==" + code, null, null).as(PropertyDto[].class);
+        PropertyDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null).as(PropertyDto[].class);
         return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
 

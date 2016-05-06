@@ -261,6 +261,10 @@ public class BasicSteps {
         return given().spec(spec).when().delete("/{id}", id);
     }
 
+    public Response deleteEntityUrl(String url, String id) {
+        return given().spec(spec).when().delete(url+"/{id}", id);
+    }
+
     protected Response getEntity(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {

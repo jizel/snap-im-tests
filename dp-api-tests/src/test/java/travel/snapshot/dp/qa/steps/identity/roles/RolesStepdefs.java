@@ -1,18 +1,15 @@
 package travel.snapshot.dp.qa.steps.identity.roles;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import org.slf4j.LoggerFactory;
 
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
-import travel.snapshot.dp.qa.serenity.roles.RolesUserCustomerSteps;
-import travel.snapshot.dp.qa.serenity.roles.RolesUserPropertySetSteps;
-import travel.snapshot.dp.qa.serenity.roles.RolesUserPropertySteps;
 
 import java.util.List;
 
@@ -24,17 +21,17 @@ public class RolesStepdefs {
 
     @Given("^Switch for user customer role tests$")
     public void switchForUserCustomerRoleTests() throws Throwable {
-        roleBaseSteps = new RolesUserCustomerSteps();
+        roleBaseSteps.setRolesPathCustomer();
     }
 
     @Given("^Switch for user property role tests$")
     public void switchForUserPropertyRoleTests() throws Throwable {
-        roleBaseSteps = new RolesUserPropertySteps();
+        roleBaseSteps.setRolesPathProperty();
     }
 
     @Given("^Switch for user property set role tests$")
     public void switchForUserPropertySetRoleTests() throws Throwable {
-        roleBaseSteps = new RolesUserPropertySetSteps();
+        roleBaseSteps.setRolesPathPropertySet();
     }
 
     @Given("^The following roles exist$")

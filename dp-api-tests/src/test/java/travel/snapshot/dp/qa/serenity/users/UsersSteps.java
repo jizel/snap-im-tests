@@ -211,7 +211,6 @@ public class UsersSteps extends BasicSteps {
             assertEquals("User on index=" + i + " is not expected", usernames.get(i), u.getUserName());
             i++;
         }
-
     }
 
     public void roleIsAddedToUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
@@ -239,6 +238,19 @@ public class UsersSteps extends BasicSteps {
         }
     }
 
+    @Step
+    public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
+        RoleDto existingUserEntityRole = getRoleForUserEntity(roleId, userName, entityId, entityName);
+        if (existingUserEntityRole != null) {
+            Response deleteResponse = deleteEntityUrl(buildPathForRoles(entityName, userName, entityId), roleId);
+            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+                fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
+            }
+        }
+        Response createResponse = addRoleToUserEntity(roleId, userName, entityId, entityName);
+        setSessionResponse(createResponse);
+    }
+
     private Response deleteRoleFromUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
@@ -257,12 +269,28 @@ public class UsersSteps extends BasicSteps {
                 .when().post("/{userId}/roles", userId);
     }
 
+    private Response addRoleToUserEntity(String roleId, String userName, String entityId, String entityName) {
+        Map<String, String> data = new HashMap<>();
+        data.put("role_id", roleId);
+
+        String path = buildPathForRoles(entityName, userName, entityId);
+        return given().spec(spec)
+                .body(data)
+                .when().post(path);
+    }
+
     private RoleViewDto getRoleForUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
         Response userRolesResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
         return Arrays.asList(userRolesResponse.as(RoleViewDto[].class)).stream().findFirst().orElse(null);
+    }
+
+    private RoleDto getRoleForUserEntity(String roleId, String userName, String entityId, String entityName) {
+        String path = buildPathForRoles(entityName, userName, entityId);
+        Response userRolesUserEntity = getEntities(path, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, null);
+        return Arrays.asList(userRolesUserEntity.as(RoleDto[].class)).stream().findFirst().orElse(null);
     }
 
     public void roleIsDeletedFromUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
@@ -288,9 +316,9 @@ public class UsersSteps extends BasicSteps {
 
     public void rolenamesAreInResponseInOrder(List<String> rolenames) {
         Response response = getSessionResponse();
-        RoleViewDto[] userRoles = response.as(RoleViewDto[].class);
+        RoleDto[] userRoles = response.as(RoleDto[].class);
         int i = 0;
-        for (RoleViewDto ur : userRoles) {
+        for (RoleDto ur : userRoles) {
             assertEquals("UserRole on index=" + i + " is not expected", rolenames.get(i), ur.getRoleName());
             i++;
         }
@@ -354,5 +382,49 @@ public class UsersSteps extends BasicSteps {
             assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), user.getIsActive());
         }
     }
+
+    @Step
+    public void roleExistsBetweenNotExistingUserAndEntity(String entityName, String roleId, String userId, String entityId) {
+        Map<String, String> data = new HashMap<>();
+        data.put("role_id", roleId);
+
+        Response resp = given().spec(spec).body(data).when()
+                .post(String.format("%s/%s/%s/%s", userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES));
+
+        setSessionResponse(resp);
+    }
+
+    @Step
+    public void roleBetweenUserAndEntityIsDeleted(String entityName, String roleId, String userName, String entityId) {
+        Response deleteResponse = deleteEntityUrl(buildPathForRoles(entityName, userName, entityId), roleId);
+        setSessionResponse(deleteResponse);
+    }
+
+    @Step
+    public void roleBetweenUserAndEntityNotExists(String entityName, String roleId, String userName, String entityId) {
+        RoleDto roleDto = getRoleForUserEntity(roleId, userName, entityId, entityName);
+        if (roleDto != null) {
+            fail("Role exists and should not ! Role id = " + roleId);
+        }
+    }
+
+    @Step
+    public void roleNameExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
+        Response resp = addRoleToUserEntity(roleId, userName, entityId, entityName);
+        setSessionResponse(resp);
+    }
+
+    @Step
+    public void getRolesBetweenUserAndEntity(String entityName, String userName, String entityId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        String path = buildPathForRoles(entityName, userName, entityId);
+        Response resp = getEntities(path, limit, cursor, filter, sort, sortDesc, null);
+        setSessionResponse(resp);
+    }
+
+    private String buildPathForRoles(String entityName, String userName, String entityId) {
+        UserDto user = getUserByUsername(userName);
+        return String.format("%s/%s/%s/%s", user.getUserId(), entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
+    }
+
 
 }
