@@ -25,8 +25,8 @@ Feature: Customers validation
       | /address/country       | String | true     | US                                                          | xx        | USA      |
 
     Given The following customers exist with random address
-      | companyName          | email                   | code        | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Validation company 1 | validation1@tenants.biz | validation1 | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName          | email                   | code        | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | validation1 | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
   # --- happy path ---
 
@@ -110,49 +110,69 @@ Feature: Customers validation
       | website       | 59          | www.snapshot.com |
 
   Scenario Outline: Object update - customer's address - invalid values
-    When Update customer with code "validation1", address field "<address_field>", its value "<value>"
+    When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
+      | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
+      | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
     Then Response code is 400
     And Custom code is "<custom_code>"
     Examples:
-      | address_field | value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | custom_code |
-      | country       | XX                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | 63          |
-      | country       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
-      | city          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
-      | city          | 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901                                                                                                                                                                                                         | 63          |
-      | zipCode       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
-      | zipCode       | 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901                                                                                                                                                                                                                                                                                                                                                                                                                 | 63          |
-      | region        | 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901                                                                                                                                                                                                                                                                                                                                                                                                                 | 63          |
-      | addressLine2  | 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901 | 63          |
-      | addressLine1  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | 61          |
-      | addressLine1  | 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901 | 63          |
+      | country | city    | zipCode | region  | addressLine1 | addressLine2 | custom_code |
+      | /null   | \w{256} | /null   | /null   | /null        | /null        | 63          |
+      | XX      | /null   | /null   | /null   | /null        | /null        | 63          |
+      | USA     | /null   | /null   | /null   | /null        | /null        | 63          |
+      | /null   | /null   | \w{101} | /null   | /null        | /null        | 63          |
+      | /null   | /null   | /null   | \w{101} | /null        | /null        | 63          |
+      | /null   | /null   | /null   | /null   | \w{501}      | /null        | 63          |
+      | /null   | /null   | /null   | /null   | /null        | \w{501}      | 63          |
+
+
+  Scenario Outline: Object update - customer's address - empty values
+    When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
+      | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
+      | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
+    Then Response code is 400
+    And Custom code is "<custom_code>"
+    Examples:
+      | country | city  | zipCode | region | addressLine1 | addressLine2 | custom_code |
+      |         | /null | /null   | /null  | /null        | /null        | 61          |
+      | /null   |       | /null   | /null  | /null        | /null        | 61          |
+      | /null   | /null |         | /null  | /null        | /null        | 61          |
+      | /null   | /null | /null   | /null  |              | /null        | 61          |
+
 
   Scenario Outline: Object update - customer's address - valid values
-    When Update customer with code "validation1", address field "<address_field>", its value "<value>"
+    When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
+      | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
+      | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
     Then Response code is 204
     And Body is empty
     And Etag header is present
     Examples:
-      | address_field | value                       |
-      | country       | CZ                          |
-      | country       | US                          |
-      | country       | EG                          |
-      | country       | CN                          |
-      | city          | Prague                      |
-      | city          | NewYork1                    |
-      | city          | 上海市                         |
-      | zipCode       | 60200                       |
-      | zipCode       | ThisIsAnAwesomeValidZipCode |
-      | region        |                             |
-      | addressLine2  |                             |
-      | addressLine2  | AddressLineNumberTwo        |
-      | addressLine2  | 1                           |
-      | addressLine1  | 1                           |
-      | addressLine1  | AddressLineNumberOne        |
-      | addressLine1  | 无锡市 99/1A-BC                |
+      | country | city      | zipCode | region | addressLine1         | addressLine2         |
+      | CZ      | /null     | /null   | /null  | /null                | /null                |
+      | US      | /null     | /null   | /null  | /null                | /null                |
+      | EG      | /null     | /null   | /null  | /null                | /null                |
+      | CN      | /null     | /null   | /null  | /null                | /null                |
+      | /null   | Prague    | /null   | /null  | /null                | /null                |
+      | /null   | NewYork   | /null   | /null  | /null                | /null                |
+      | /null   | NewYork11 | /null   | /null  | /null                | /null                |
+      | /null   | 上海市       | /null   | /null  | /null                | /null                |
+      | /null   | 上海市2      | /null   | /null  | /null                | /null                |
+      | /null   | /null     | 60200   | /null  | /null                | /null                |
+      | /null   | /null     | 123456  | /null  | /null                | /null                |
+      | /null   | /null     | /null   |        | /null                | /null                |
+      | /null   | /null     | /null   | /null  | 1                    | /null                |
+      | /null   | /null     | /null   | /null  | AddressLineNumberOne | /null                |
+      | /null   | /null     | /null   | /null  | 无锡市 99/1A-BC         | /null                |
+      | /null   | /null     | /null   | /null  | /null                |                      |
+      | /null   | /null     | /null   | /null  | /null                | AddressLineNumberTwo |
+      | /null   | /null     | /null   | /null  | /null                | 2                    |
+      | /null   | /null     | /null   | /null  | /null                | /null                |
 
   Scenario: Object update - US customer's region
-    When Update customer with code "validation1", address field "country", its value "US"
-    When Update customer with code "validation1", address field "region", its value "Texas"
+    When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
+      | country | city  | zipCode | region | addressLine1 | addressLine2 |
+      | US      | /null | /null   | Texas  | /null        | /null        |
     Then Response code is 204
     And Body is empty
     And Etag header is present

@@ -25,4 +25,8 @@ public class NullStringObjectValueConverter {
         }
         return data;
     }
+
+    public static JSONObject transform(JSONObject json) {
+        return NullStringObjectValueConverter.transform(json.toString());
+    }
 }
