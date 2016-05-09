@@ -21,9 +21,9 @@ public class JMSProducerHelper {
      * @param session     session to build a message producer for
      * @param destination destination to build a message producer for
      * @return message producer which sends message to given {@code destination}
-     * @throws IllegalArgumentException if {@code session} or {@code destination} is a null object
+     * @throws ActiveMQManagerException if it is not able to create producer
      */
-    public MessageProducer buildProducer(final Session session, final Destination destination) {
+    public MessageProducer buildProducer(final Session session, final Destination destination) throws ActiveMQManagerException {
         Validate.notNull(session, "Session must not be a null object.");
         Validate.notNull(destination, "Destination must not be a null object.");
 
@@ -43,9 +43,9 @@ public class JMSProducerHelper {
      *
      * @param message  message to send by {@code producer}
      * @param producer producer by which {@code message} will be sent
-     * @throws IllegalArgumentException if {@code producer} or {@code message} is a null object
+     * @throws ActiveMQManagerException if it is not able to send a message
      */
-    public void send(final Message message, final MessageProducer producer) {
+    public void send(final Message message, final MessageProducer producer) throws ActiveMQManagerException {
         Validate.notNull(message, "Message to send by producer must not be a null object.");
         Validate.notNull(message, "Producer to send a message by must not be a null object.");
 
@@ -60,13 +60,10 @@ public class JMSProducerHelper {
      * Closes a producer. This method returns without closing the producer when it is a null object.
      *
      * @param producer producer to close
+     * @throws ActiveMQManagerException if it is not possible to close producer
      */
-    public void close(final MessageProducer producer) {
-
-        if (producer == null) {
-            logger.debug("Producer to close is a null object.");
-            return;
-        }
+    public void close(final MessageProducer producer) throws ActiveMQManagerException {
+        Validate.notNull(producer, "Producer to close is a null object.");
 
         try {
             producer.close();

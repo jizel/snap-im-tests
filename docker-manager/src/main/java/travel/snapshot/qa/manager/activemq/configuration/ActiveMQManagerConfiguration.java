@@ -1,5 +1,6 @@
 package travel.snapshot.qa.manager.activemq.configuration;
 
+import travel.snapshot.qa.manager.activemq.impl.JMSMessageContext;
 import travel.snapshot.qa.manager.api.configuration.AbstractConfigurationBuilder;
 import travel.snapshot.qa.manager.api.configuration.Configuration;
 
@@ -15,12 +16,15 @@ public class ActiveMQManagerConfiguration implements Configuration {
 
     private final String password;
 
+    private final JMSMessageContext jmsMessageContext;
+
     private ActiveMQManagerConfiguration(final Builder builder) {
         this.startupTimeoutInSeconds = builder.startupTimeoutInSeconds;
         this.brokerAddress = builder.brokerAddress;
         this.brokerPort = builder.brokerPort;
         this.username = builder.username;
         this.password = builder.password;
+        this.jmsMessageContext = builder.jmsMessageContext;
     }
 
     public int getStartupTimeoutInSeconds() {
@@ -43,6 +47,10 @@ public class ActiveMQManagerConfiguration implements Configuration {
         return password;
     }
 
+    public JMSMessageContext getJMSMessageContext() {
+        return jmsMessageContext;
+    }
+
     public static class Builder extends AbstractConfigurationBuilder {
 
         private int startupTimeoutInSeconds = 60;
@@ -55,8 +63,19 @@ public class ActiveMQManagerConfiguration implements Configuration {
 
         private String password = "admin";
 
+        public JMSMessageContext jmsMessageContext = new JMSMessageContext.Builder().build();
+
         public Builder() {
             this.brokerAddress = resolveHostIp();
+        }
+
+        /**
+         * @param jmsMessageContext JMS message context to set
+         * @return this
+         */
+        public Builder messageContext(final JMSMessageContext jmsMessageContext) {
+            this.jmsMessageContext = jmsMessageContext;
+            return this;
         }
 
         /**
