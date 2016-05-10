@@ -2,7 +2,7 @@ package travel.snapshot.qa.test.execution.tomcat
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import travel.snapshot.qa.docker.DockerServiceFactory
+import travel.snapshot.qa.manager.tomcat.docker.TomcatService
 import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.interaction.DockerInteraction
@@ -16,7 +16,7 @@ class TomcatConfigurationDeployer {
 
     private String dockerMachine
 
-    private String containerId = DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
+    private String containerId = TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
 
     TomcatConfigurationDeployer(String dockerMachine) {
         this.dockerMachine = dockerMachine

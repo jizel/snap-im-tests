@@ -4,10 +4,10 @@ import travel.snapshot.qa.DataPlatformTestOrchestration
 import travel.snapshot.qa.connection.ConnectionCheck
 import travel.snapshot.qa.connection.ConnectionCheckExecutor.TCPConnectionCheckTask
 import travel.snapshot.qa.manager.tomcat.configuration.TomcatManagerConfiguration
+import travel.snapshot.qa.manager.tomcat.docker.TomcatService
 import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.TestExecutionMode
 
-import static travel.snapshot.qa.docker.DockerServiceFactory.tomcat
 import static travel.snapshot.qa.util.TestExecutionMode.DEVELOPMENT
 import static travel.snapshot.qa.util.TestExecutionMode.TEST
 
@@ -41,12 +41,12 @@ class TomcatInstallationResolver {
 
                 final TCPConnectionCheckTask connectionCheckTask = new TCPConnectionCheckTask().connectionCheck(connectionCheck)
 
-                orchestration.with(tomcat().init().setCheckingTask(connectionCheckTask))
+                orchestration.with(new TomcatService().init().setCheckingTask(connectionCheckTask))
                 break
             case TEST:
                 // here we expect that /manager will be deployed in Tomcat while checking the connction
                 // so listing of deployments will work
-                orchestration.with(tomcat().init())
+                orchestration.with(new TomcatService().init())
                 break
         }
     }

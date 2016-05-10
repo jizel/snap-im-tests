@@ -2,11 +2,7 @@ package travel.snapshot.qa.util
 
 import org.apache.commons.lang3.SystemUtils
 import travel.snapshot.qa.docker.manager.ConnectionMode
-import travel.snapshot.qa.test.execution.load.LoadTestEnvironment
-import travel.snapshot.qa.test.execution.load.LoadTestsConfiguration
-import travel.snapshot.qa.test.execution.load.LoadTestsSimulation
-import travel.snapshot.qa.test.execution.load.LoadTestsSimulations
-import travel.snapshot.qa.test.execution.load.OAuthConfiguration
+import travel.snapshot.qa.test.execution.load.*
 import travel.snapshot.qa.test.execution.threescale.ThreeScaleApiEnvironment
 import travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy
 import travel.snapshot.qa.util.container.DockerContainer

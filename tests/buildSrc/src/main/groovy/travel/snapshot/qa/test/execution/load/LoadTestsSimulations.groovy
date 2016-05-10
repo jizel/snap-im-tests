@@ -1,13 +1,6 @@
 package travel.snapshot.qa.test.execution.load
 
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.FACEBOOK
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.IDENTITY_PROPERTY
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.IDENTITY_PROPERTY_SET
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.IDENTITY_PROPERTY_SET_WITH_USERS
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.IDENTITY_USER
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.INSTAGRAM
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.SOCIAL_COMMON
-import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.TWITTER
+import static travel.snapshot.qa.test.execution.load.LoadTestsSimulation.*
 
 enum LoadTestsSimulations {
 

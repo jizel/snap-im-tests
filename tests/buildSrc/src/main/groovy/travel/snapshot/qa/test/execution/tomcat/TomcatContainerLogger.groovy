@@ -3,23 +3,20 @@ package travel.snapshot.qa.test.execution.tomcat
 import org.arquillian.spacelift.task.Task
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import travel.snapshot.qa.docker.DockerServiceFactory
-import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
+import travel.snapshot.qa.docker.orchestration.Orchestration
+import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager
+import travel.snapshot.qa.manager.tomcat.docker.TomcatService
 
 /**
  * Writes out logs from Tomcat.
  */
-class TomcatContainerLogger extends Task<DataPlatformOrchestration, Void> {
+class TomcatContainerLogger extends Task<Orchestration, Void> {
 
     private static final Logger logger = LoggerFactory.getLogger(TomcatContainerLogger)
 
-    private static final String DEFAULT_TOMCAT_CONTAINER =
-            DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
-
     private final LogOutputStream logOutputStream = new LogOutputStream(logger)
 
-    private String container = DEFAULT_TOMCAT_CONTAINER
+    private String container = TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
 
     TomcatContainerLogger container(String container) {
         this.container = container
@@ -27,7 +24,7 @@ class TomcatContainerLogger extends Task<DataPlatformOrchestration, Void> {
     }
 
     @Override
-    protected Void process(DataPlatformOrchestration orchestration) throws Exception {
+    protected Void process(Orchestration orchestration) throws Exception {
         orchestration.getDockerServiceManager(TomcatDockerManager, container)
                 .dockerManager
                 .clientExecutor

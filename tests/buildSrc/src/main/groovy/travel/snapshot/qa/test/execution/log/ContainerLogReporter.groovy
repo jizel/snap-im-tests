@@ -1,19 +1,12 @@
 package travel.snapshot.qa.test.execution.log
 
 import travel.snapshot.qa.DataPlatformTestOrchestration
+import travel.snapshot.qa.ServiceType
 import travel.snapshot.qa.docker.ServiceCubePair
-import travel.snapshot.qa.docker.ServiceType
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
+import travel.snapshot.qa.docker.orchestration.Orchestration
 import travel.snapshot.qa.util.ProjectHelper
 
-import static travel.snapshot.qa.docker.ServiceType.ACTIVEMQ
-import static travel.snapshot.qa.docker.ServiceType.GENERIC
-import static travel.snapshot.qa.docker.ServiceType.JBOSS_DOMAIN
-import static travel.snapshot.qa.docker.ServiceType.JBOSS_STANDALONE
-import static travel.snapshot.qa.docker.ServiceType.MARIADB
-import static travel.snapshot.qa.docker.ServiceType.MONGODB
-import static travel.snapshot.qa.docker.ServiceType.REDIS
-import static travel.snapshot.qa.docker.ServiceType.TOMCAT
+import static travel.snapshot.qa.ServiceType.*
 
 class ContainerLogReporter {
 
@@ -32,7 +25,7 @@ class ContainerLogReporter {
             return
         }
 
-        DataPlatformOrchestration orchestration = testOrchestration.get()
+        Orchestration orchestration = testOrchestration.get()
 
         List<ServiceType> unsupportedServices = [ GENERIC, REDIS, JBOSS_DOMAIN, JBOSS_STANDALONE ]
 
@@ -44,7 +37,7 @@ class ContainerLogReporter {
         }
     }
 
-    private void resolveReport(ServiceType serviceType, List<String> containers) {
+    private static void resolveReport(ServiceType serviceType, List<String> containers) {
         switch (serviceType) {
             case TOMCAT:
                 new TomcatServiceLogReporter().report(containers)
@@ -74,9 +67,9 @@ class ContainerLogReporter {
         }
     }
 
-    private List<String> resolveContainers(ServiceType serviceType, List<String> services, DataPlatformOrchestration orchestration) {
+    private static List<String> resolveContainers(ServiceType serviceType, List<String> services, Orchestration orchestration) {
         orchestration.getStartedContainers().findAll { ServiceCubePair container ->
-            container.serviceType == serviceType && services.contains(container.getCube().getId())
+            container.serviceName == serviceType.name() && services.contains(container.getCube().getId())
         }.collect { it.getCube().getId() }
     }
 }

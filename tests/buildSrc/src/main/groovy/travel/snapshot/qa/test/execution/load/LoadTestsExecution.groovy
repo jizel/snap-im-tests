@@ -2,7 +2,7 @@ package travel.snapshot.qa.test.execution.load
 
 import org.arquillian.spacelift.Spacelift
 import org.arquillian.spacelift.gradle.maven.MavenExecutor
-import travel.snapshot.qa.docker.ServiceType
+import travel.snapshot.qa.ServiceType
 import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.Properties
 

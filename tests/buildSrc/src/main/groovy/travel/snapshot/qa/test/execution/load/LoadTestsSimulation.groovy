@@ -2,12 +2,7 @@ package travel.snapshot.qa.test.execution.load
 
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 
-import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.FACEBOOK_SERVICE_API
-import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.IDENTITY
-import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.INSTAGRAM_SERVICE_API
-import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.REVIEW
-import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.SOCIAL_MEDIA_API
-import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.TWITTER_SERVICE_API
+import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.*
 
 enum LoadTestsSimulation {
 
