@@ -13,7 +13,6 @@ import org.jboss.arquillian.core.spi.ManagerBuilder;
 import org.jboss.arquillian.core.spi.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
 
 /**
  * Wraps Arquillian Cube core services into a separate helper class. We do not depend on Arquillian runner - its core

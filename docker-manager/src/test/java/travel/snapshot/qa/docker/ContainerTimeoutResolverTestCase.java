@@ -2,7 +2,7 @@ package travel.snapshot.qa.docker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static travel.snapshot.qa.docker.ServiceType.GENERIC;
+import static travel.snapshot.qa.manager.generic.impl.docker.GenericDockerManager.SERVICE_NAME;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,13 +18,13 @@ import java.util.function.ToLongBiFunction;
 @Category(UnitTest.class)
 public class ContainerTimeoutResolverTestCase {
 
-    private final ToLongBiFunction<GenericConfiguration, ServiceType> timeoutResolver = (configuration, serviceType) ->
+    private final ToLongBiFunction<GenericConfiguration, String> timeoutResolver = (configuration, serviceType) ->
             DockerServiceManager.resolveTimeout(configuration.getStartupTimeoutInSeconds(), constructProperty(serviceType), serviceType);
 
     @Before
     public void setup() {
 
-        final String connectionTimeout = getConnectionTimeoutSystemProperty(GENERIC);
+        final String connectionTimeout = getConnectionTimeoutSystemProperty(SERVICE_NAME);
 
         assertTrue("Connection timeout property is not null nor an empty String.",
                 connectionTimeout == null || connectionTimeout.isEmpty());
@@ -32,7 +32,7 @@ public class ContainerTimeoutResolverTestCase {
 
     @After
     public void teardown() {
-        cleanConnectionTimeoutProperty(GENERIC);
+        cleanConnectionTimeoutProperty(SERVICE_NAME);
     }
 
     @Test
@@ -42,26 +42,26 @@ public class ContainerTimeoutResolverTestCase {
                 .setStartupTimeoutInSeconds(45)
                 .build();
 
-        assertEquals("Set timeout property differs from the resolved one.", 45L, timeoutResolver.applyAsLong(configuration, GENERIC));
+        assertEquals("Set timeout property differs from the resolved one.", 45L, timeoutResolver.applyAsLong(configuration, SERVICE_NAME));
 
-        System.setProperty(constructProperty(GENERIC), Long.toString(180));
+        System.setProperty(constructProperty(SERVICE_NAME), Long.toString(180));
 
-        assertEquals("Set timeout property differs from the resolved one.", 180, timeoutResolver.applyAsLong(configuration, GENERIC));
+        assertEquals("Set timeout property differs from the resolved one.", 180, timeoutResolver.applyAsLong(configuration, SERVICE_NAME));
 
-        cleanConnectionTimeoutProperty(GENERIC);
+        cleanConnectionTimeoutProperty(SERVICE_NAME);
 
-        assertEquals("Set timeout property differs from the resolved one.", 45, timeoutResolver.applyAsLong(configuration, GENERIC));
+        assertEquals("Set timeout property differs from the resolved one.", 45, timeoutResolver.applyAsLong(configuration, SERVICE_NAME));
     }
 
-    private String getConnectionTimeoutSystemProperty(ServiceType serviceType) {
-        return System.getProperty(constructProperty(serviceType));
+    private String getConnectionTimeoutSystemProperty(String serviceName) {
+        return System.getProperty(constructProperty(serviceName));
     }
 
-    private void cleanConnectionTimeoutProperty(ServiceType serviceType) {
-        System.setProperty(constructProperty(serviceType), "");
+    private void cleanConnectionTimeoutProperty(String serviceName) {
+        System.setProperty(constructProperty(serviceName), "");
     }
 
-    private String constructProperty(ServiceType serviceType) {
-        return MessageFormat.format("docker.{0}.connection.timeout", serviceType.name().toLowerCase());
+    private String constructProperty(String serviceName) {
+        return MessageFormat.format("docker.{0}.connection.timeout", serviceName.toLowerCase());
     }
 }

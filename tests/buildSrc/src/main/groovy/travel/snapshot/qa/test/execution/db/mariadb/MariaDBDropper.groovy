@@ -3,10 +3,10 @@ package travel.snapshot.qa.test.execution.db.mariadb
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.DataPlatformTestOrchestration
-import travel.snapshot.qa.docker.DockerServiceFactory
-import travel.snapshot.qa.docker.ServiceType
-import travel.snapshot.qa.docker.manager.impl.MariaDBDockerManager
+import travel.snapshot.qa.ServiceType
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBDockerManager
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 
@@ -21,8 +21,8 @@ class MariaDBDropper {
 
     private static final Logger logger = LoggerFactory.getLogger(MariaDBDropper)
 
-    private static final String DEFAULT_MARIADB_CONTAINER =
-            DockerServiceFactory.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID
+    private static
+    final String DEFAULT_MARIADB_CONTAINER = MariaDBService.DEFAULT_MARIADB_CONTAINER_ID
 
     private final DataPlatformTestOrchestration orchestration
 

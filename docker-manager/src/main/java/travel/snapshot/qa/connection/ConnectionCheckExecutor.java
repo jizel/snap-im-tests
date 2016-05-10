@@ -13,6 +13,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
@@ -119,7 +120,9 @@ public class ConnectionCheckExecutor {
 
     /**
      * Checks "connection" (even UDP is connection-less in its nature) by trying to sent a DatagramPacket to the other
-     * side.
+     * side. After packet is sent, this check wait for any response.
+     *
+     * This check can be used only in connection with UDP services which do return something back to client.
      */
     public static final class UDPConnectionCheckTask extends Task<ConnectionCheck, Boolean> {
 
@@ -161,13 +164,27 @@ public class ConnectionCheckExecutor {
             final DatagramSocket udpClient = new DatagramSocket();
 
             try {
+                // send data to server
                 final byte[] data = "hello".getBytes(StandardCharsets.UTF_8.toString());
                 final InetAddress address = InetAddress.getByName(resolvedConnectionCheck.getHost());
                 final DatagramPacket packet = new DatagramPacket(data, data.length, address, resolvedConnectionCheck.getPort());
+
+                logger.debug("Request to server {}:{} sent.", address.getHostName(), resolvedConnectionCheck.getPort());
                 udpClient.send(packet);
+
+                // wait for response until timout
+                udpClient.setSoTimeout(3000);
+                byte[] buffer = new byte[256];
+                udpClient.receive(new DatagramPacket(buffer, buffer.length));
+
+                logger.debug("Request from server {}:{} received.", address.getHostName(), resolvedConnectionCheck.getPort());
+
                 return true;
+            } catch (SocketTimeoutException ex) {
+                logger.info("Response was not received before timeout.");
+                return false;
             } catch (IOException ex) {
-                logger.debug("Unable to make UDP connection to {}:{}", resolvedConnectionCheck.getHost(), resolvedConnectionCheck.getPort());
+                logger.info("Unable to make UDP connection to {}:{}. {}", resolvedConnectionCheck.getHost(), resolvedConnectionCheck.getPort());
                 return false;
             } finally {
                 IOUtils.closeQuietly(udpClient);

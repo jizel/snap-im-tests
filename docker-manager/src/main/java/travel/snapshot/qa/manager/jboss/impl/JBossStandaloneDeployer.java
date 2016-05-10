@@ -37,6 +37,11 @@ public class JBossStandaloneDeployer implements JBossContainerDeployer {
     }
 
     @Override
+    public String deploy(File archive) throws ContainerDeploymentException {
+        return deployInternal(ShrinkWrap.createFromZipFile(WebArchive.class, archive));
+    }
+
+    @Override
     public String deploy(Archive<?> archive) throws ContainerDeploymentException {
         return deployInternal(archive);
     }

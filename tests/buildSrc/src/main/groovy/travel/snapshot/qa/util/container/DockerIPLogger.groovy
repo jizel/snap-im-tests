@@ -2,7 +2,7 @@ package travel.snapshot.qa.util.container
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
+import travel.snapshot.qa.docker.orchestration.Orchestration
 import travel.snapshot.qa.util.DockerMode
 import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.machine.DockerMachineHelper
@@ -16,7 +16,7 @@ class DockerIPLogger {
      *
      * @param orchestration orchestration to get IPs from
      */
-    static def log(final DataPlatformOrchestration orchestration) {
+    static def log(final Orchestration orchestration) {
 
         logger.info("========================================")
 

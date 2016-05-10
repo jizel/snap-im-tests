@@ -12,6 +12,10 @@ import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.JBossTest;
 import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Category(JBossTest.class)
 public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
 
@@ -36,14 +40,28 @@ public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
 
     @Test
     public void testDeploymentAndUndeployment() {
-        String runtimeName = domainManager.getDeployer().deploy(archive);
+        String runtimeName = domainManager.getDeployer().serverGroup("main-server-group").deploy(archive);
+        assertNotNull(runtimeName);
+        // undeployment occurs in undeploy method
+
+        domainManager.getDeployer().undeploy(DEPLOYMENT_NAME);
+
+        Set<String> serverGroups = Stream.of("main-server-group").collect(Collectors.toSet());
+        String runtimeName2 = domainManager.getDeployer().serverGroups(serverGroups).deploy(archive);
+
+        assertNotNull(runtimeName2);
+    }
+
+    @Test
+    public void testFilePathDeploymentAndUndeployment() {
+        String runtimeName = domainManager.deploy(testingArchive.getAbsolutePath());
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
 
     @Test
     public void testFileDeploymentAndUndeployment() {
-        String runtimeName = domainManager.getDeployer().deploy(testingArchive.getAbsolutePath());
+        String runtimeName = domainManager.deploy(testingArchive);
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
@@ -53,7 +71,7 @@ public class JBossDomainDeploymentTestCase extends AbstractDeploymentTestCase {
 
         expectedException.expect(ContainerDeploymentException.class);
 
-        domainManager.getDeployer().deploy(archive);
-        domainManager.getDeployer().deploy(archive);
+        domainManager.deploy(archive);
+        domainManager.deploy(archive);
     }
 }

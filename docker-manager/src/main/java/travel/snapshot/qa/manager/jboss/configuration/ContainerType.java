@@ -7,40 +7,6 @@ import java.util.List;
 
 public enum ContainerType {
 
-    AS7 {
-        @Override
-        public List<String> javaOptions(JBossManagerConfiguration jboss) {
-
-            List<String> opts = new ArrayList<>();
-
-            if (!jboss.isDomain()) {
-                opts.add("-server");
-                opts.add("-XX:+UseCompressedOops");
-                opts.add("-XX:+TieredCompilation");
-            } else if (Spacelift.task(jboss.getJVM(), JavaServerOptionCapabilityCheck.class).execute().await()) {
-                opts.add("-server");
-            }
-
-            opts.add("-Xms64m");
-            opts.add("-Xmx512m");
-            opts.add("-XX:MaxPermSize=256m");
-            opts.add("-Djava.net.preferIPv4Stack=true");
-            opts.add("-Dorg.jboss.resolver.warning=true");
-            opts.add("-Dsun.rmi.dgc.client.gcInterval=3600000");
-            opts.add("-Dsun.rmi.dgc.server.gcInterval=3600000");
-            opts.add("-Djboss.modules.system.pkgs=org.jboss.byteman");
-            opts.add("-Djava.awt.headless=true");
-
-            if (jboss.isDomain()) {
-                opts.add("-Djboss.domain.default.config=" + jboss.getConfiguration().getDomainConfig());
-                opts.add("-Djboss.host.default.config=" + jboss.getConfiguration().getHostConfig());
-            } else {
-                opts.add("-Djboss.server.default.config=" + jboss.getConfiguration().getStandaloneConfig());
-            }
-
-            return opts;
-        }
-    },
     EAP {
         @Override
         public List<String> javaOptions(JBossManagerConfiguration jboss) {

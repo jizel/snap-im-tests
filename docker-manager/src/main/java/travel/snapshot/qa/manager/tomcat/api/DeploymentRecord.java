@@ -16,9 +16,9 @@ public class DeploymentRecord {
 
     private DeploymentState deploymentState;
 
-    private Integer activeSessions;
+    private int activeSessions;
 
-    public DeploymentRecord(String contextPath, DeploymentState deploymentState, Integer activeSessions) {
+    private DeploymentRecord(String contextPath, DeploymentState deploymentState, int activeSessions) {
         this.contextPath = contextPath;
         this.deploymentState = deploymentState;
         this.activeSessions = activeSessions;
@@ -32,7 +32,7 @@ public class DeploymentRecord {
         return deploymentState;
     }
 
-    public Integer getActiveSessions() {
+    public int getActiveSessions() {
         return activeSessions;
     }
 
@@ -69,10 +69,8 @@ public class DeploymentRecord {
             List<DeploymentRecord> deploymentRecords = new ArrayList<>();
 
             for (String deploymentLine : deploymentLines) {
-                DeploymentRecord record = parse(deploymentLine);
-                if (record != null) {
-                    deploymentRecords.add(record);
-                }
+                deploymentRecords.add(parse(deploymentLine));
+
             }
 
             return deploymentRecords;
@@ -89,10 +87,10 @@ public class DeploymentRecord {
             try {
                 String context = deploymentMatcher.group(1);
                 DeploymentState deploymentState = DeploymentState.parse(deploymentMatcher.group(2));
-                Integer sessions = Integer.valueOf(deploymentMatcher.group(3));
+                int sessions = Integer.valueOf(deploymentMatcher.group(3));
 
                 return new DeploymentRecord(context, deploymentState, sessions);
-            } catch (DeploymentStateParserException ex) {
+            } catch (NumberFormatException | DeploymentStateParserException ex) {
                 throw new DeploymentRecordsBuilderException(
                         String.format("Unable to parse deployment record from deployment line '%s'", deploymentLine),
                         ex);

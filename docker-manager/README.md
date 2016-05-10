@@ -1,7 +1,8 @@
 # Docker manager
 
 This project tries to achieve the encapsulation of [Arquillian Cube](https://github.com/arquillian/arquillian-cube) 
-project into very simple wrappers so you can abstract the whole Snapshot DataPlatform to Java oneliners.
+project into very simple wrappers so you can abstract the whole Snapshot DataPlatform with Java oneliners and use it 
+possibly in other JVM languages.
 
 Another motivation behind this project is to use internals of Arquillian Cube without the need to use its JUnit runner 
 so we can embed the initialization of Snapshot DataPlatform services virtually anywhere where JVM is present.
@@ -11,16 +12,18 @@ Our performace tests are based on Gatling framework which is written in Scala an
 all so again - we can not use Arquillian Cube as-is hence there is a need for the extraction. Thirdly, it is possible, 
 however not planned yet, to incorporate this Docker abstraction into DP tests themselves if we are willing to do so.
 
-This project will be mainly used in dedicated test project which will handle the execution of DP API, performance tests, 
-possibly UI tests and so on.
+This project is mainly used in dedicated test project which is located in `tests` directory of this repository and 
+it handles the execution of DP tests, DP API tests, performance tests and so on with starting whole platform in 
+Docker containers which are linked together and fully intialized. By this way, we are dynamically constructing 
+whole DP infrastructure from scratch by composing Docker containers whiche are started by this project.
 
 ## How it works?
 
 Snapshot Docker manager is based on _services_. For example, Snapshot DataPlatform depends on Tomcat container, 
-MariaDB database and Mongo database. In a nutshell, all you would need to do to start these Docker containers is shown 
-[here](src/test/java/travel/snapshot/qa/docker/DataPlatformOrchestrationTestCase.java) and it is only the matter 
-of the implementation to provide Docker abstractions to other services - e.g. in the future we can containerize 
-integrations services to Docker image (already done by Juraj) and manage it from Java as well.
+MariaDB database, Mongo database, ActiveMQ message broker and so on. In a nutshell, all you would need to do to 
+start these Docker containers is shown [here](src/test/java/travel/snapshot/qa/docker/orchestration/OrchestrationTestCase.java) 
+and it is only the matter of the implementation to provide Docker abstractions to other services - e.g. in the future we can containerize 
+integrations services to Docker image and manage it from Java as well.
 
 ## How do you check if some service is running?
 
@@ -37,7 +40,7 @@ only checks if exposed port is there. _It does not check whether service is init
 
 The check for Tomcat is done by repeatedly trying to list its deployments. The check for MariaDB is done by 
 repeatedly trying to make `java.sql.Connection`. The check for Mongo is done by trying to list collections on a 
-configured database.
+configured database and check for ActiveMQ is to get a connection to broker and so on. This technique can be applied to all other services.
 
 ## Why do you not use connection checking capabilities of Arquillian Cube itself?
 
@@ -99,16 +102,16 @@ the binding IP address should be because by default, these properties are resolv
 
 ## How do I run tests?
 
-In case of tests against Docker machine, you have to create Docker machine of name `dev` and start it beforehand and execute:
+In case of tests against Docker machine, you have to create Docker machine of name `default` and start it beforehand and execute:
 
-    gradle clean test -Ddocker.mode=machine -Ddocker.machine=yourMachine -Ddocker.host=192.168.99.100
+    gradle clean test -Ddocker.mode=machine -Ddocker.machine=default -Ddocker.host=192.168.99.100
 
 `docker.host` IP address is the address of the started Docker machine. You get this information from this command:
 
-    docker-machine ip yourMachine
+    docker-machine ip default
 
 You do not need to set this property in case there is environment property of name `DOCKER_HOST` set with that IP. This 
-happens when you execute tests in the same shell where you executed evaluation command `eval "$(docker-machine env myMachine)"`.
+happens when you execute tests in the same shell where you executed evaluation command `eval "$(docker-machine env default)"`.
 
 In case you want tests to be executed against Docker containers which runs at your host, execute them like:
 
@@ -118,6 +121,13 @@ By default, `docker.mode` has value `host` and `docker.machine` has value `defau
 
 Be sure that you have Tomcat instance installed locally and `CATALINA_HOME` and `CATALINA_BASE` are set correctly and 
 you can login in there with `admin:admin` and there are only two deployments - manager and manager-host.
+
+It is recommended to execute tests by testing project located in `docker-manager-tests` directory. Tests themselves are 
+using Tomcat and Wildfly containers which has to be somewhere located at your localhost. That testing project just 
+downloads Tomcat and Wildfly containers from the Internet and caches them to its workspace so you do not need to do 
+absolutely nothing to run them, you just do:
+
+    gradle test
 
 ## Connection timeouts
 
@@ -135,6 +145,34 @@ common these environments are slow in terms of service startup time so it may be
 in a default timout period hence whole test execution would fail. This allows you to set the timeout property as you wish hence 
 the possibility of the service staring timeout is smaller.
 
+## Orchestration
+
+Once you have service manager for each respective service you need, this is only view to some particular service as such. In other words, 
+every service manager offers you the ability to interact with it by its native API. But this manager is provided to you from another abstraction 
+layer - Docker service managers. Docker service managers manage the lifecycle of the service containers their represent - their start and stop and 
+ensure that Docker containers are fully up and running by connection checks. Docker service managers are finally encapsulated into an _orchestration_.
+
+    Orchestration ORCHESTRATION = new Orchestration().start(); (1)
+
+    ORCHESTRATION
+        .with(new ActiveMQService().init()) (2)
+        .with(new MariaDBService().init(new MariaDBConfiguration.Builder().password("123").build())) (3)
+        .with(new MongoDBService().init())
+        .with(new TomcatService().init(), new RedisService().init())
+        .startServices(); (4)
+
+In (1) you instantiate Orchestration object and starts underlying Arquillian Core manager. In (2) you add Docker service managers to orchestration.
+Every Docker service manager has to be initialized. There are multiple initialization methods which accept both respective service configuration and container 
+name this Docker service manager will start / stop. Manager configurations optionally put into initialization methods can override defaults. Default configurations 
+are good to use in connection with Docker containers which you find in operations repository but if you want to override something, it is done as shown in (3).
+Finally you have to start these containers by (4).
+
+The logic behind (4) is that every Docker container is started by underlying Arquillian Cube (sequentially as added by `with` methods) 
+while every Docker service manager knows via specific service connection checks how to block the execution until the service is fully started - after that it moves 
+to other service.
+
+Configurations to each respective service is everytime done by configuration builders by builder pattern as shown in (3).
+
 ## ActiveMQ manager
 
 [ActiveMQManager](src/main/java/travel/snapshot/qa/manager/activemq/api/ActiveMQManager.java) gives you the possibility 
@@ -144,9 +182,15 @@ to construct and send messages to started ActiveMQ container. You get the instan
 
 or via orchestration API like:
 
-    DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
-    ORCHESTRATION.with(activemq()).startServices();
-    ActiveMQManager activeMQManager = ORCHESTRATION.getActiveMQDockerManager().getServiceManager();
+    Orchestration ORCHESTRATION = new Orchestration().start();
+    ORCHESTRATION
+        .with(new ActiveMQService().init())
+        .with(new MariaDBService().init())
+        .with(new MongoDBService().init())
+        .with(new TomcatService().init(), new RedisService().init())
+        .startServices();
+
+    ActiveMQManager activeMQManager = ORCHESTRATION.getDockerServiceManager(ActiveMQDockerManager.class, ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID).getServiceManager();
 
 ## MariaDB manager
 
@@ -157,9 +201,9 @@ interact with MariaDB database, execute some SQL script or do Flyway migrations 
 
 or via orchestration API like:
 
-    DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
-    ORCHESTRATION.with(mariadb()).startServices();
-    MariaDBManager mariaDBManager = ORCHESTRATION.getMariaDBDockerManager().getServiceManager();
+    Orchestration ORCHESTRATION = new Orchestration().start();
+    ORCHESTRATION.with(new MariaDBService().init()).startServices();
+    MariaDBManager mariaDBManager = ORCHESTRATION.getDockerServiceManager(MariaDBDockerManager.class, MariaDBService.DEFAULT_MARIADB_CONTAINER_ID).getServiceManager();
 
 ## MongoDB manager
 
@@ -170,12 +214,9 @@ interact with MongoDB database. You can get MongoClient from official MongoDB dr
 
 or via orchestration API like:
 
-    DataPlatformOrchestration ORCHESTRATION = new DataPlatformOrchestration();
-    ORCHESTRATION.with(mongodb()).startServices();
-    MongoDBManager mongoDBManager = ORCHESTRATION.getMongoDockerManager().getServiceManager();
-
-You get methods you put to `with` method on the orchestration object by importing statically methods in 
-[DockerServiceFactory](src/main/java/travel/snapshot/qa/docker/DockerServiceFactory.java)
+    Orchestration ORCHESTRATION = new Orchestration().start();
+    ORCHESTRATION.with(new MongoDBService().init()).startServices();
+    MongoDBManager mongoDBManager = ORCHESTRATION.getDockerServiceManager(MongoDBDockerManager.class, MongoDBService.DEFAULT_MONGODB_CONTAINER_ID).getServiceManager();
 
 It is important to say that you can use these managers without dockerization by the first approach. All it takes to 
 talk to some existing service, e.g. started at your localhost, is to instantiate managers like it is shown in the 
@@ -185,6 +226,19 @@ In case you want to use Docker and orchestration API, you have to have `arquilli
 how you can try it with Docker machine is [here](src/test/resources/arquillian-docker-machine.xml) and example 
 without Docker machine is [here](src/test/resources/arquillian.xml).
 
+## Redis manager
+
+[RedisManager](travel.snapshot.qa.manager.redis.api.RedisManager) enables you to start Docker container of Redis and interact with Redis 
+by [Jedis](https://github.com/xetorthio/jedis).
+
+    final RedisManager redisManager = new RedisManagerImpl(new RedisManagerConfiguration.Builder().build());
+
+or via orchestration API like:
+
+    Orchestration ORCHESTRATION = new Orchestration().start();
+    ORCHESTRATION.with(new RedisService().init()).startServices();
+    RedisManager redisManager = ORCHESTRATION.getDockerServiceManager(RedisDockerManager.class, RedisService.DEFAULT_REDIS_CONTAINER_ID).getServiceManager();
+
 ## Tomcat manager
 
 Tomcat manager is a very simple tool which wraps whole Tomcat container lifecycle execution and deployment into one-liners.
@@ -192,7 +246,7 @@ Tomcat manager is a very simple tool which wraps whole Tomcat container lifecycl
 ### Starting of a container
 
 Starting of a container is done as follows. You can omit configuration parameter for TomcatStarter task
-if you are satisfied by defaults. Roughly speaking it starts Tomcat container located in CATALINA_HOME. You can 
+if you are satisfied by defaults. Roughly speaking it starts Tomcat container located in `CATALINA_HOME`. You can 
 override this and many other options by provided configuration but you are normally good to go without it.
 
 Default admin username and password is admin/admin. You can override this by respective setters on a configration object. This has to be set correctly.
@@ -320,21 +374,10 @@ When timeout is not specified, it periodically checks up to 60 seconds. Port is 
 
 You can use UDP protocol as well by `Protocol.UDP`.
 
-### How to start tests?
+## How to release new version?
 
-Tests are executed like you are used to:
-
-    gradle clean test
-    
-You have to have container installed locally and you have to have it without any deployments (except manager wars).
-In case you are going to execute tests locally, you have to set environment properties `CATALINA_HOME` 
-(and `CATALINA_BASE` if it differs from `CATALINA_HOME`) which point to the directory where your Tomcat container is located.
-
-It is possible to test [TomcatDeploymentTestCase](src/test/java/travel/snapshot/qa/manager/tomcat/TomcatDeploymentTestCase.java)
-against remote instance, for example against Docker. You have to execute that test like this:
-
-    gradle clean build -Dremote=true -DremoteHost=<ip of container> -Dtest.single=TomcatDeploymentTestCase test
-
-Be sure your container is started (locally or in Docker) in such way that it is possible to reach it from your host at `127.0.0.1:8080`.
-In case you do not have ports forwarded to your localhost address of `127.0.0.1`, you would need to specify `remoteHost` 
-system property.
+Run tests, update version in `gradle.properties` to non-snapshot version, `gradle clean install -x test`, optionally 
+add local repositories to `tests/build.gradle` and `tests/buildSrc/build.gradle` in this repository and check all is good, 
+execute `gradle uploadArchives` here, finally. The last step will upload artifacts to our Nexus repository. 
+Be sure you have credentials rightly set. Update version in `gradle.properties` to next snapshot version. Make commits after 
+every change in build.gradle files.

@@ -6,18 +6,17 @@ import org.arquillian.spacelift.execution.Execution
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import travel.snapshot.qa.DataPlatformTestOrchestration
-import travel.snapshot.qa.docker.DockerServiceFactory
-import travel.snapshot.qa.docker.manager.impl.TomcatDockerManager
-import travel.snapshot.qa.manager.tomcat.TomcatManager
+import travel.snapshot.qa.docker.orchestration.Orchestration
 import travel.snapshot.qa.manager.api.container.ContainerDeploymentException
+import travel.snapshot.qa.manager.tomcat.TomcatManager
+import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager
+import travel.snapshot.qa.manager.tomcat.docker.TomcatService
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule
 import travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules
 import travel.snapshot.qa.util.Properties
 import travel.snapshot.qa.util.Timer
 
-import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORFAIL
-import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORREDEPLOY
-import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.DEPLOYORSKIP
+import static travel.snapshot.qa.test.execution.tomcat.DeploymentStrategy.*
 
 /**
  * Deploys modules (wars) to Tomcat instance.
@@ -26,10 +25,9 @@ class DataPlatformDeployer {
 
     private static final Logger logger = LoggerFactory.getLogger(DataPlatformDeployer)
 
-    private static final String DEFAULT_TOMCAT_CONTAINER =
-            DockerServiceFactory.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
+    private static final String DEFAULT_TOMCAT_CONTAINER = TomcatService.DEFAULT_TOMCAT_CONTAINER_ID
 
-    private final DataPlatformTestOrchestration orchestration
+    private final Orchestration orchestration
 
     private final File dataPlatformDir
 
@@ -41,7 +39,7 @@ class DataPlatformDeployer {
 
     DataPlatformDeployer(DataPlatformTestOrchestration orchestration) {
         this.dataPlatformDir = Properties.Location.dataPlatformRepository
-        this.orchestration = orchestration
+        this.orchestration = orchestration.get()
     }
 
     DataPlatformDeployer strategy(DeploymentStrategy deploymentStrategy) {
@@ -115,7 +113,7 @@ class DataPlatformDeployer {
      * @return this
      */
     DataPlatformDeployer execute() {
-        final TomcatDockerManager dockerManager = orchestration.get().getDockerServiceManager(TomcatDockerManager, containerId)
+        final TomcatDockerManager dockerManager = orchestration.getDockerServiceManager(TomcatDockerManager, containerId)
         final TomcatManager manager = dockerManager.getServiceManager()
 
         if (!dockerManager || !manager) {
@@ -183,7 +181,7 @@ class DataPlatformDeployer {
 
         logger.info("Deploying of {} module started.", module.getDeploymentContext())
 
-        TomcatContainerLogger loggerTask = Spacelift.task(orchestration.get(), TomcatContainerLogger).container(containerId)
+        TomcatContainerLogger loggerTask = Spacelift.task(orchestration, TomcatContainerLogger).container(containerId)
         // we do not await() here, this runs in background so we see Tomcat logs
         Execution<Void> loggerExecution = loggerTask.execute()
 
@@ -206,7 +204,7 @@ class DataPlatformDeployer {
 
         logger.info("Undeploying of {} module started.", module.getDeploymentContext())
 
-        TomcatContainerLogger loggerTask = Spacelift.task(orchestration.get(), TomcatContainerLogger).container(containerId)
+        TomcatContainerLogger loggerTask = Spacelift.task(orchestration, TomcatContainerLogger).container(containerId)
         // we do not await() here, this runs in background so we see Tomcat logs
         Execution<Void> loggerExecution = loggerTask.execute()
 

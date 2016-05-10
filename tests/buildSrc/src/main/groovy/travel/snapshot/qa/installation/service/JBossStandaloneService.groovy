@@ -1,6 +1,5 @@
 package travel.snapshot.qa.installation.service
 
-import travel.snapshot.qa.docker.DockerServiceFactory
 import travel.snapshot.qa.docker.Service
 import travel.snapshot.qa.docker.manager.DockerServiceManager
 import travel.snapshot.qa.manager.jboss.JBossStandaloneManager
@@ -12,7 +11,7 @@ class JBossStandaloneService {
 
     static DockerServiceManager<JBossStandaloneManager> init(String containerId) {
 
-        final Service<JBossStandaloneManager, JBossManagerConfiguration> jbossService = DockerServiceFactory.jbossStandalone()
+        final Service<JBossStandaloneManager, JBossManagerConfiguration> jbossService = new travel.snapshot.qa.manager.jboss.docker.JBossStandaloneService()
 
         final Management.Builder managementBuilder = new Management.Builder()
 

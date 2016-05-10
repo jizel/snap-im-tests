@@ -42,13 +42,6 @@ public class MariaDBManagerImpl implements MariaDBManager {
     }
 
     @Override
-    public void waitForConnectivity() {
-        Spacelift.task(configuration, MariaDBStartedCheckTask.class).execute().until(
-                new CountDownWatch(configuration.getStartupTimeoutInSeconds(), SECONDS),
-                new BasicWaitingCondition());
-    }
-
-    @Override
     public void executeScript(final Reader reader) throws MariaDBManagerException {
         Connection connection = getConnection();
         executeScript(connection, reader);

@@ -4,7 +4,7 @@ import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.NetworkSettings;
 import com.github.dockerjava.api.model.NetworkSettings.Network;
 import org.arquillian.cube.docker.impl.docker.DockerClientExecutor;
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration;
+import travel.snapshot.qa.docker.orchestration.Orchestration;
 import travel.snapshot.qa.manager.api.configuration.Validate;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class Inspection {
 
-    private DataPlatformOrchestration orchestration;
+    private Orchestration orchestration;
 
     private DockerClientExecutor executor;
 
@@ -30,7 +30,7 @@ public class Inspection {
     /**
      * @param orchestration orchestration to perform the inspection on
      */
-    public Inspection(final DataPlatformOrchestration orchestration) {
+    public Inspection(final Orchestration orchestration) {
         Validate.notNull(orchestration, "Orchestration to perform the inspection on must not be a null object.");
         this.orchestration = orchestration;
         Validate.notNull(orchestration.getDockerManager().getClientExecutor(), "Docker client executor to perform the inspection on must not be a null object.");

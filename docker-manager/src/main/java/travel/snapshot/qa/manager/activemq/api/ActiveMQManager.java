@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.Message;
+import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
@@ -51,7 +52,23 @@ public interface ActiveMQManager extends ServiceManager {
      */
     <T extends Serializable> Message buildMessage(T messageObject, Session session);
 
+    /**
+     * Builds a producer to send messages.
+     *
+     * @param session     session to build a consumer for
+     * @param destination destination to send messages to
+     * @return built message producer
+     */
     MessageProducer buildProducer(Session session, Destination destination);
+
+    /**
+     * Builds a consumer to read messages.
+     *
+     * @param session     session to build a consumer for
+     * @param destination destination to consume messages from
+     * @return built consumer
+     */
+    MessageConsumer buildConsumer(Session session, Destination destination);
 
     /**
      * Sends given {@link javax.jms.Message} by specified {@link javax.jms.MessageProducer}.
@@ -102,4 +119,11 @@ public interface ActiveMQManager extends ServiceManager {
      * @param messageProducer message producer to close
      */
     void closeMessageProducer(MessageProducer messageProducer);
+
+    /**
+     * Closes message consumer.
+     *
+     * @param messageConsumer message consumer to close
+     */
+    void closeMessageConsumer(MessageConsumer messageConsumer);
 }

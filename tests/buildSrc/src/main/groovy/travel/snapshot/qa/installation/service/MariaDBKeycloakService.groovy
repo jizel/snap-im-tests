@@ -1,10 +1,9 @@
 package travel.snapshot.qa.installation.service
 
-import travel.snapshot.qa.docker.lifecycle.AfterStartHook
 import travel.snapshot.qa.docker.manager.DockerServiceManager
+import travel.snapshot.qa.docker.manager.lifecycle.AfterStartHook
 import travel.snapshot.qa.manager.mariadb.api.MariaDBManager
-
-import static travel.snapshot.qa.docker.DockerServiceFactory.mariadb
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService
 
 /**
  * There has to be "keycloak" database before Keycloak container is started so Keycloak app server
@@ -15,7 +14,7 @@ class MariaDBKeycloakService {
 
     static DockerServiceManager<MariaDBManager> init(String containerId) {
 
-        final DockerServiceManager<MariaDBManager> mariaDBDockerManager = mariadb().init(containerId)
+        final DockerServiceManager<MariaDBManager> mariaDBDockerManager = new MariaDBService().init(containerId)
 
         mariaDBDockerManager.getLifecycleHookExecutor().addAfterStartHook(new AfterStartHook<MariaDBManager>() {
             @Override

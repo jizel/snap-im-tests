@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.Message;
+import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 
@@ -28,7 +29,8 @@ public class ActiveMQManagerImpl implements ActiveMQManager {
 
         jmsHelper = new JMSHelper()
                 .brokerAddress(configuration.getBrokerAddress())
-                .brokerPort(configuration.getBrokerPort());
+                .brokerPort(configuration.getBrokerPort())
+                .withContext(configuration.getJMSMessageContext());
     }
 
     @Override
@@ -62,6 +64,11 @@ public class ActiveMQManagerImpl implements ActiveMQManager {
     }
 
     @Override
+    public MessageConsumer buildConsumer(Session session, Destination destination) {
+        return new JMSConsumerHelper().buildConsumer(session, destination);
+    }
+
+    @Override
     public void send(Message message, MessageProducer messageProducer) {
         new JMSProducerHelper().send(message, messageProducer);
     }
@@ -89,5 +96,10 @@ public class ActiveMQManagerImpl implements ActiveMQManager {
     @Override
     public void closeMessageProducer(MessageProducer messageProducer) {
         new JMSProducerHelper().close(messageProducer);
+    }
+
+    @Override
+    public void closeMessageConsumer(MessageConsumer messageConsumer) {
+        new JMSConsumerHelper().close(messageConsumer);
     }
 }

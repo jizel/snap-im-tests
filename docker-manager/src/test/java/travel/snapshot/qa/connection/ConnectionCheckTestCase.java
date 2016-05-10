@@ -1,12 +1,19 @@
 package travel.snapshot.qa.connection;
 
+import static org.junit.Assert.assertTrue;
+import static travel.snapshot.qa.connection.Protocol.TCP;
+import static travel.snapshot.qa.connection.Protocol.UDP;
+
 import org.apache.commons.io.IOUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.arquillian.spacelift.Spacelift;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.qa.category.UnitTest;
 
 import java.io.IOException;
@@ -35,28 +42,31 @@ public class ConnectionCheckTestCase {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() throws Exception {
         tcpServer = new TCPServer();
         tcpServer.start();
 
-        udpServer = new UDPServer();
+        udpServer = new UDPServer(HOST, UDP_SERVER_PORT);
         udpServer.start();
     }
 
-    @AfterClass
-    public static void teardown() throws Exception {
+    @After
+    public void teardown() throws Exception {
         tcpServer.close();
+        Thread.sleep(2000);
         udpServer.close();
+        Thread.sleep(2000);
     }
 
     @Test
     public void testTCPConnection() throws Exception {
-
         new ConnectionCheck.Builder()
                 .host(HOST)
                 .port(TCP_SERVER_PORT)
-                .protocol(Protocol.TCP)
+                .protocol(TCP)
+                .timeout(10)
+                .reexecutionInterval(5)
                 .build()
                 .execute();
     }
@@ -66,19 +76,65 @@ public class ConnectionCheckTestCase {
         new ConnectionCheck.Builder()
                 .host(HOST)
                 .port(UDP_SERVER_PORT)
-                .protocol(Protocol.UDP)
-                .build().execute();
+                .protocol(UDP)
+                .timeout(10)
+                .reexecutionInterval(5)
+                .build()
+                .execute();
     }
 
     @Test
-    public void invalidTCPConnection() throws Exception {
+    public void testValidTCPConnectionCheckTask() throws Exception {
+        ConnectionCheck tcpConnectionCheck = new ConnectionCheck.Builder()
+                .host(HOST)
+                .port(TCP_SERVER_PORT)
+                .timeout(20)
+                .reexecutionInterval(5)
+                .protocol(TCP)
+                .build();
+
+        assertTrue(Spacelift.task(ConnectionCheckExecutor.TCPConnectionCheckTask.class)
+                .connectionCheck(tcpConnectionCheck)
+                .execute()
+                .await());
+    }
+
+    @Test
+    public void testValidUDPConnectionCheckTask() throws Exception {
+        ConnectionCheck udpConnectionCheck = new ConnectionCheck.Builder()
+                .host(HOST)
+                .port(UDP_SERVER_PORT)
+                .protocol(UDP)
+                .build();
+
+        assertTrue(Spacelift.task(ConnectionCheckExecutor.UDPConnectionCheckTask.class)
+                .connectionCheck(udpConnectionCheck)
+                .execute()
+                .await());
+    }
+
+    @Test
+    public void testInvalidUDPConnection() throws Exception {
         expectedException.expect(ConnectionCheckException.class);
         expectedException.expectMessage(String.format("Unable to connect in %s seconds.", 5));
 
         new ConnectionCheck.Builder()
                 .host(HOST)
                 .port(INACTIVE_PORT)
-                .protocol(Protocol.TCP)
+                .protocol(UDP)
+                .timeout(5)
+                .build().execute();
+    }
+
+    @Test
+    public void testInvalidTCPConnection() throws Exception {
+        expectedException.expect(ConnectionCheckException.class);
+        expectedException.expectMessage(String.format("Unable to connect in %s seconds.", 5));
+
+        new ConnectionCheck.Builder()
+                .host(HOST)
+                .port(INACTIVE_PORT)
+                .protocol(TCP)
                 .timeout(5)
                 .build().execute();
     }
@@ -95,9 +151,7 @@ public class ConnectionCheckTestCase {
 
                 serverSocket.accept();
             } catch (IOException ex) {
-                // intentionally empty
-            } finally {
-                IOUtils.closeQuietly(serverSocket);
+                close();
             }
         }
 
@@ -108,25 +162,44 @@ public class ConnectionCheckTestCase {
 
     private static final class UDPServer extends Thread {
 
+        private static final Logger logger = LoggerFactory.getLogger(UDPServer.class);
+
         private DatagramSocket serverSocket;
+
+        final byte[] buffer = new byte[256];
+
+        final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
+        public UDPServer(String host, int port) throws IOException {
+            serverSocket = new DatagramSocket(port, InetAddress.getByName(host));
+        }
 
         @Override
         public void run() {
             try {
-                serverSocket = new DatagramSocket(UDP_SERVER_PORT, InetAddress.getByName(HOST));
-                final byte[] buffer = new byte[256];
-                final DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                while (true) {
+                    receive(packet);
+                    send(packet);
+                }
 
-                serverSocket.receive(packet);
             } catch (IOException ex) {
-                // intentionally empty
-            } finally {
-                IOUtils.closeQuietly(serverSocket);
+                close();
             }
         }
 
         public void close() {
             IOUtils.closeQuietly(serverSocket);
+        }
+
+        private void receive(DatagramPacket packet) throws IOException {
+            serverSocket.receive(packet);
+            logger.info("UDP server received a packet from {}:{}", packet.getAddress(), packet.getPort());
+        }
+
+        private void send(DatagramPacket packet) throws IOException {
+            DatagramPacket clientPacket = new DatagramPacket(buffer, buffer.length, packet.getAddress(), packet.getPort());
+            logger.info("UDP server sending a packet to {}:{}", clientPacket.getAddress(), clientPacket.getPort());
+            serverSocket.send(clientPacket);
         }
     }
 }

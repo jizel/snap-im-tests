@@ -15,13 +15,6 @@ import java.sql.Statement;
 public interface MariaDBManager extends ServiceManager, FlywayMigration {
 
     /**
-     * Blocks until it is possible to get {@link java.sql.Connection} to MariaDB.
-     *
-     * @see travel.snapshot.qa.manager.mariadb.check.MariaDBStartedCheckTask
-     */
-    void waitForConnectivity();
-
-    /**
      * Executes SQL script against MariaDB
      *
      * @param reader reader of a SQL script

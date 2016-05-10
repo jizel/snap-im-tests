@@ -1,6 +1,6 @@
 package travel.snapshot.qa.test.execution.db.mariadb
 
-import travel.snapshot.qa.docker.ServiceType
+import travel.snapshot.qa.ServiceType
 import travel.snapshot.qa.test.execution.db.ModuleDatabaseConfiguration
 
 /**

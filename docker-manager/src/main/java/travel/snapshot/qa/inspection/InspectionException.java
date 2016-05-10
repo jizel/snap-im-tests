@@ -1,5 +1,8 @@
 package travel.snapshot.qa.inspection;
 
+/**
+ * Exception thrown in case some error has occured while inspecting Docker container.
+ */
 public class InspectionException extends RuntimeException {
 
     public InspectionException() {

@@ -1,6 +1,6 @@
 package travel.snapshot.qa.test.execution.db
 
-import travel.snapshot.qa.docker.ServiceType
+import travel.snapshot.qa.ServiceType
 
 /**
  * Every specific database configuration should implement this interface

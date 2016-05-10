@@ -3,6 +3,8 @@ package travel.snapshot.qa.manager.jboss.api;
 import org.jboss.shrinkwrap.api.Archive;
 import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
 
+import java.io.File;
+
 public interface JBossContainerDeployer {
 
     /**
@@ -12,6 +14,14 @@ public interface JBossContainerDeployer {
      * @return runtime deployment name
      */
     String deploy(String archiveFilePath) throws ContainerDeploymentException;
+
+    /**
+     * Deploys archive to a container. Archive is represented by its path.
+     *
+     * @param archive file witch archive to deploy
+     * @return runtime deployment name
+     */
+    String deploy(File archive) throws ContainerDeploymentException;
 
     /**
      * Deploys archive to a container.

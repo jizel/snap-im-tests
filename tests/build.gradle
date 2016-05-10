@@ -1,15 +1,15 @@
 import org.arquillian.spacelift.gradle.configuration.BuiltinConfigurationItemConverters
-import travel.snapshot.qa.installation.MavenInstallation
 import travel.snapshot.qa.DataPlatformTestOrchestration
-import travel.snapshot.qa.installation.Docker
-import travel.snapshot.qa.installation.DockerMachine
-import travel.snapshot.qa.installation.DockerService
-import travel.snapshot.qa.installation.GradleInstallation
-import travel.snapshot.qa.installation.GitBasedInstallation
-import travel.snapshot.qa.installation.TomcatInstallationResolver
+import travel.snapshot.qa.installation.*
 import travel.snapshot.qa.installation.service.JBossStandaloneService
 import travel.snapshot.qa.installation.service.MariaDBKeycloakService
+import travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService
 import travel.snapshot.qa.manager.generic.configuration.GenericConfiguration
+import travel.snapshot.qa.manager.generic.impl.docker.GenericService
+import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService
+import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService
+import travel.snapshot.qa.manager.redis.impl.docker.RedisService
+import travel.snapshot.qa.manager.tomcat.docker.TomcatService
 import travel.snapshot.qa.test.DataPlatformTest
 import travel.snapshot.qa.test.PlatformLifecycle
 import travel.snapshot.qa.test.execution.api.APITestsExecution
@@ -33,8 +33,6 @@ import travel.snapshot.qa.test.execution.tomcat.DataPlatformDeployer
 import travel.snapshot.qa.test.execution.tomcat.TomcatConfigurationDeployer
 import travel.snapshot.qa.util.ProjectHelper
 import travel.snapshot.qa.util.Properties
-
-import static travel.snapshot.qa.docker.DockerServiceFactory.*
 
 import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModule.PROJECT
 import static travel.snapshot.qa.test.execution.dataplatform.DataPlatformModules.DATABASE_SCHEMES
@@ -290,17 +288,17 @@ spacelift {
         }
         mariadb(from: DockerService) {
             setup {
-                platform.with(mariadb().init())
+                platform.with(new MariaDBService().init())
             }
         }
         mongodb(from: DockerService) {
             setup {
-                platform.with(mongodb().init())
+                platform.with(new MongoDBService().init())
             }
         }
         activemq(from: DockerService) {
             setup {
-                platform.with(activemq().init())
+                platform.with(new ActiveMQService().init())
             }
         }
         mariadbkey(from: DockerService) {
@@ -310,7 +308,7 @@ spacelift {
         }
         tomcatkey(from: DockerService) {
             setup {
-                platform.with(tomcat().init("tomcatkey"))
+                platform.with(new TomcatService().init("tomcatkey"))
             }
         }
         keycloak(from: DockerService) {
@@ -320,12 +318,12 @@ spacelift {
         }
         nginx(from: DockerService) {
             setup {
-                platform.with(generic().init(new GenericConfiguration.Builder().setBindPort(8899).build(), "nginx"))
+                platform.with(new GenericService().init(new GenericConfiguration.Builder().setBindPort(8899).build(), "nginx"))
             }
         }
         redis(from: DockerService) {
             setup {
-                platform.with(redis().init())
+                platform.with(new RedisService().init())
             }
         }
 
@@ -365,7 +363,7 @@ spacelift {
 
         platformStart(from: PlatformLifecycle) {
             with platform
-            init {  new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy() }
+            init { new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy() }
             execute {
                 new MariaDBDropper(platform).drop(DATABASE_SCHEMES).execute()
                 new MariaDBInitializer(platform).init(DATABASE_SCHEMES).execute()
@@ -378,6 +376,7 @@ spacelift {
         }
         keycloakPlatformStart(from: PlatformLifecycle) {
             with platform
+            teardown false
             init {
                 new TomcatConfigurationDeployer(Properties.Docker.machineName).deploy()
                 new NginxConfigurationDeployer(Properties.Docker.machineName).deploy()
@@ -391,7 +390,7 @@ spacelift {
         // Building of Data Platform
 
         platformBuild(from: DataPlatformTest) {
-            execute {  new DataPlatformBuildExecutor().build(PROJECT).execute() }
+            execute { new DataPlatformBuildExecutor().build(PROJECT).execute() }
         }
 
         // reporting
@@ -509,7 +508,7 @@ spacelift {
         apiTestsSmoke(inherits: apiTestsBase) {
             beforeTest {
                 // it is just faster to build whole project when executing smoke tests then build all modules one by one
-                new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute()
+                new DataPlatformBuildExecutor().build(PROJECT).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.SMOKE.modules()).execute()
             }
             execute {
@@ -519,7 +518,7 @@ spacelift {
 
         apiTestsAll(inherits: apiTestsBase) {
             beforeTest {
-                new DataPlatformBuildExecutor().build(DataPlatformModule.PROJECT).execute()
+                new DataPlatformBuildExecutor().build(PROJECT).execute()
                 new DataPlatformDeployer(platform).deploy(DataPlatformModules.ALL.modules()).execute()
             }
             execute {
@@ -550,7 +549,7 @@ spacelift {
             //
             // In case you want to try nginx load tests where oauth token is being generated, you basically have to start it like this
             // gradle test -Pprofile=oauthLoadTest -DloadTestSimulations=oauth -DloadTestEnvironment=nginx -DoauthClientId=TestClient \
-            //  -DoauthClientSecret=9b28e628-20b7-4a2c-9607-79f43d35069c -DloadTestRamp=120 -DloadTestEndUsers=60 --info --stacktrace
+            //  -DoauthClientSecret=9b28e628-20b7-4a2c-9607-79f43d35069c -DloadTestRamp=120 -DloadTestEndUsers=60
 
             data {
                 LoadTestsConfiguration.parse()
@@ -627,7 +626,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.9'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.10'
     }
 }
 

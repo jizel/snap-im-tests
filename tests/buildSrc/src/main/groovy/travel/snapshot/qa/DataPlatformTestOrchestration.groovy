@@ -1,14 +1,14 @@
 package travel.snapshot.qa
 
 import travel.snapshot.qa.docker.manager.DockerServiceManager
-import travel.snapshot.qa.docker.orchestration.DataPlatformOrchestration
+import travel.snapshot.qa.docker.orchestration.Orchestration
 
 /**
- * Wrapper for DataPlatformOrchestration which can start and stop containers.
+ * Wrapper for Orchestration which can start and stop containers.
  */
 class DataPlatformTestOrchestration {
 
-    private final def orchestration = new DataPlatformOrchestration()
+    private final def orchestration = new Orchestration()
 
     private final def dockerManagers = []
 
@@ -90,7 +90,7 @@ class DataPlatformTestOrchestration {
 
     /**
      *
-     * @return instance of DataPlatformOrchestration
+     * @return instance of Orchestration
      */
     def get() {
         orchestration

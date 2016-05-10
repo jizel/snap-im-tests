@@ -5,7 +5,6 @@ import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.jboss.arquillian.core.spi.Manager;
 import org.jboss.arquillian.core.spi.Validate;
-import travel.snapshot.qa.docker.manager.impl.DockerLocalCubeRegistry;
 
 import java.util.Optional;
 

@@ -12,11 +12,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import travel.snapshot.qa.category.JBossTest;
+import travel.snapshot.qa.manager.Util;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.jboss.api.JBossContainerManager;
+import travel.snapshot.qa.manager.jboss.configuration.ContainerType;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.configuration.JVM;
-import travel.snapshot.qa.manager.jboss.configuration.Util;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
 
@@ -35,7 +36,7 @@ public class AlreadyStartedJBossTestCase {
 
         configuration = new JBossManagerConfiguration.Builder()
                 .setContainerType(Util.getContainerType())
-                .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome()).build())
+                .setJVM(new JVM.Builder().setJBossHome(Util.getJBossHome(ContainerType.WILDFLY)).build())
                 .build();
 
         manager = Spacelift.task(configuration, JBossStandaloneStarter.class).execute().await();

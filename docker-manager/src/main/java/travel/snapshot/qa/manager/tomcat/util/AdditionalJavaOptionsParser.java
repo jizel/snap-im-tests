@@ -31,16 +31,16 @@ public class AdditionalJavaOptionsParser {
     private static final String QUOTED_CONTENT = "^\"(.*)\"$";
 
     /**
-     * Parse additional java options. Options are separated by whitespace. In case some option value contains
+     * Parse additional Java options. Options are separated by whitespace. In case some option value contains
      * whitespace, the whole key-value pair has to be quoted. For instance string 'opt0 opt1=val1 "opt2=val2 with
      * space"' results in three key-value pairs (opt0 option has an empty value).
      *
      * @param additionalOptions - options to filter
      * @return List of parsed options, returns empty list rather that null value
      */
-    public static List<String> parse(final String additionalOptions) {
+    public List<String> parse(final String additionalOptions) {
 
-        final List<String> options = new ArrayList<String>();
+        final List<String> options = new ArrayList<>();
         if (additionalOptions != null) {
             final Pattern p = Pattern.compile(OPTION, Pattern.DOTALL);
             final Matcher m = p.matcher(additionalOptions);

@@ -149,10 +149,17 @@ public class MariaDBManagerConfiguration implements Configuration {
         }
 
         /**
-         * @param startupTimeoutInSeconds timeout value, defaults to {@literal 60}.
+         * Sets startup timeout. After this time, when MariaDB service is not started, its start is considered
+         * unsuccessful.
+         *
+         * @param startupTimeoutInSeconds timeout value in seconds, defaults to {@literal 60}.
          * @return this
+         * @throws IllegalArgumentException if {@code startupTimeoutInSeconds} is lower or equal to 0.
          */
         public Builder startupTimeoutInSeconds(final long startupTimeoutInSeconds) {
+            if (startupTimeoutInSeconds <= 0) {
+                throw new IllegalArgumentException(String.format("Startup timeout can not be lower than or equal to 0: %s", startupTimeoutInSeconds));
+            }
             this.startupTimeoutInSeconds = startupTimeoutInSeconds;
             return this;
         }

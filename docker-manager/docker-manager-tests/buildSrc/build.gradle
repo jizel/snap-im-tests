@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+
+    compile 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
+    compile "log4j:log4j:1.2.17"
+    compile "org.slf4j:slf4j-log4j12:1.7.13"
+}
+
+configurations {
+    compile.exclude(module: "shrinkwrap-resolver-depchain")
+}

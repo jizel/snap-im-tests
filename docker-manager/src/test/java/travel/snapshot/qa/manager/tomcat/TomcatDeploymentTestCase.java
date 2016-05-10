@@ -49,6 +49,8 @@ public class TomcatDeploymentTestCase {
 
     private static final String DEPLOYMENT_CONTEXT = "test";
 
+    private static final String DEPLOYMENT_CONTEXT_WITH_SLASH_PREFIX = "/" + DEPLOYMENT_CONTEXT;
+
     private static final File testingArchive = new File(DEPLOYMENT_NAME);
 
     private static final boolean remote = Boolean.parseBoolean(System.getProperty("remote"));
@@ -135,7 +137,7 @@ public class TomcatDeploymentTestCase {
 
         Assert.assertTrue(manager.listDeployments(DeploymentState.STOPPED).contains(DEPLOYMENT_CONTEXT));
 
-        manager.startDeployment(DEPLOYMENT_CONTEXT);
+        manager.startDeployment(DEPLOYMENT_CONTEXT_WITH_SLASH_PREFIX);
 
         Assert.assertTrue(manager.listDeployments(DeploymentState.RUNNING).contains(DEPLOYMENT_CONTEXT));
 

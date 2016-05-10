@@ -15,12 +15,23 @@ public class RedisManagerImpl implements RedisManager {
 
     private final RedisManagerConfiguration configuration;
 
-    private final JedisPool jedisPool;
+    private final JedisPoolFactory jedisPoolFactory;
+
+    private JedisPool jedisPool;
+
+    public RedisManagerImpl() {
+        this(new RedisManagerConfiguration.Builder().build());
+    }
 
     public RedisManagerImpl(RedisManagerConfiguration configuration) {
         Validate.notNull(configuration, "Redis manager configuration is a null object.");
         this.configuration = configuration;
-        jedisPool = new JedisPoolFactory(configuration).build();
+        this.jedisPoolFactory = new JedisPoolFactory(configuration);
+    }
+
+    public RedisManagerImpl(RedisManagerConfiguration configuration, JedisPoolFactory jedisPoolFactory) {
+        this.configuration = configuration;
+        this.jedisPoolFactory = jedisPoolFactory;
     }
 
     @Override
@@ -30,6 +41,11 @@ public class RedisManagerImpl implements RedisManager {
 
     @Override
     public Jedis getJedis() throws RedisManagerException {
+
+        if (jedisPool == null) {
+            jedisPool = jedisPoolFactory.build();
+        }
+
         try {
             return jedisPool.getResource();
         } catch (JedisException ex) {
@@ -41,9 +57,9 @@ public class RedisManagerImpl implements RedisManager {
     @Override
     public void close() throws RedisManagerException {
         try {
-            jedisPool.close();
+            getJedis().close();
         } catch (JedisException ex) {
-            throw new RedisManagerException("Could not close Jedis pool.", ex);
+            throw new RedisManagerException(String.format("Could not close Jedis pool: %s", ex.getMessage()), ex);
         }
     }
 }

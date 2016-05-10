@@ -1,5 +1,7 @@
 package travel.snapshot.qa.manager.jboss;
 
+import static travel.snapshot.qa.manager.Util.getJBossHome;
+
 import org.apache.commons.io.IOUtils;
 import org.arquillian.spacelift.Spacelift;
 import org.jboss.shrinkwrap.api.Archive;
@@ -9,7 +11,6 @@ import org.junit.Assert;
 import travel.snapshot.qa.manager.jboss.configuration.ContainerType;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 import travel.snapshot.qa.manager.jboss.configuration.JVM;
-import travel.snapshot.qa.manager.jboss.configuration.Util;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossDomainStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStandaloneStarter;
 import travel.snapshot.qa.manager.jboss.spacelift.JBossStopper;
@@ -25,14 +26,6 @@ public abstract class AbstractDeploymentTestCase {
         testingArchive.deleteOnExit();
     }
 
-    private static JVM jvm = new JVM.Builder().setJBossHome(Util.getJBossHome()).build();
-
-    private static ContainerType containerType = Util.getContainerType();
-
-    private static JBossManagerConfiguration configuration;
-
-    private static JBossManagerConfiguration domainConfiguration;
-
     protected static JBossStandaloneManager manager;
 
     protected static JBossDomainManager domainManager;
@@ -43,18 +36,20 @@ public abstract class AbstractDeploymentTestCase {
 
     protected static final File testingArchive = new File(DEPLOYMENT_NAME);
 
+    private static JVM jvm = new JVM.Builder().setJBossHome(getJBossHome(ContainerType.WILDFLY)).build();
+
+    private static JBossManagerConfiguration configuration = new JBossManagerConfiguration.Builder()
+            .setContainerType(ContainerType.WILDFLY)
+            .setJVM(jvm)
+            .build();
+
+    private static JBossManagerConfiguration domainConfiguration = new JBossManagerConfiguration.Builder()
+            .setContainerType(ContainerType.WILDFLY)
+            .domain()
+            .setJVM(jvm)
+            .build();
+
     public static void setup() throws Exception {
-        configuration = new JBossManagerConfiguration.Builder()
-                .setContainerType(containerType)
-                .setJVM(jvm)
-                .build();
-
-        domainConfiguration = new JBossManagerConfiguration.Builder()
-                .setContainerType(containerType)
-                .domain()
-                .setJVM(jvm)
-                .build();
-
         createArchive();
     }
 

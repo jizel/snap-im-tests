@@ -9,7 +9,6 @@ import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.shrinkwrap.api.Archive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.qa.manager.api.configuration.Validate;
 import travel.snapshot.qa.manager.api.container.ContainerDeploymentException;
 import travel.snapshot.qa.manager.api.container.ContainerManagerException;
 import travel.snapshot.qa.manager.api.io.ConsoleConsumer;
@@ -20,26 +19,35 @@ import travel.snapshot.qa.manager.jboss.api.JBossContainerManager;
 import travel.snapshot.qa.manager.jboss.configuration.JBossCommandBuilder;
 import travel.snapshot.qa.manager.jboss.configuration.JBossManagerConfiguration;
 
-abstract class AbstractJBossManager<T extends Object, U extends ModelControllerClient> implements JBossContainerManager, JBossContainerDeployer {
+import java.io.File;
+
+abstract class AbstractJBossManager<T extends Object, U extends ModelControllerClient, V extends JBossContainerDeployer> implements JBossContainerManager, JBossContainerDeployer {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractJBossManager.class);
 
     private final JBossManagerConfiguration configuration;
 
+    protected final T managementClient;
+
+    protected final V deployer;
+
     private Thread shutdownThread;
 
     private Process process;
 
-    AbstractJBossManager(final JBossManagerConfiguration configuration) {
-        Validate.notNull(configuration, "Provided configuration is a null object!");
+    public AbstractJBossManager(JBossManagerConfiguration configuration, T managementClient, V deployer) {
         this.configuration = configuration;
+        this.managementClient = managementClient;
+        this.deployer = deployer;
     }
 
-    public abstract T getManagementClient();
+    public T getManagementClient() {
+        return managementClient;
+    }
 
     public abstract U getModelControllerClient();
 
-    public abstract void closeManagementClient(T managementClient);
+    public abstract void closeManagementClient(T managementClient) throws ContainerManagerException;
 
     abstract Task<T, Boolean> getStartingTask();
 
@@ -51,6 +59,11 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
     @Override
     public String deploy(String archiveFilePath) throws ContainerDeploymentException {
         return getDeployer().deploy(archiveFilePath);
+    }
+
+    @Override
+    public String deploy(File archiveFile) throws ContainerDeploymentException {
+        return getDeployer().deploy(archiveFile);
     }
 
     @Override
@@ -66,15 +79,15 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
     @Override
     public void start() throws ContainerManagerException {
 
-        if (isRunning()) {
-            throw new ContainerManagerException("JBoss container is already running.");
-        }
-
-        if (configuration.isRemote()) {
-            throw new IllegalStateException("Starting of JBoss container is allowed only if 'remote' is false.");
-        }
-
         try {
+            if (isRunning()) {
+                throw new ContainerManagerException("JBoss container is already running.");
+            }
+
+            if (configuration.isRemote()) {
+                throw new ContainerManagerException("Starting of JBoss container is allowed only if 'remote' is false.");
+            }
+
             Command command = new JBossCommandBuilder().build(configuration);
 
             logger.info("Starting JBoss container with {}.", command.toString());
@@ -98,8 +111,8 @@ abstract class AbstractJBossManager<T extends Object, U extends ModelControllerC
                     .execute()
                     .until(new CountDownWatch(configuration.getStartupTimeoutInSeconds(), SECONDS), started -> started);
 
-        } catch (Exception e) {
-            throw new ContainerManagerException("Could not start JBoss container: ", e);
+        } catch (Exception ex) {
+            throw new ContainerManagerException(String.format("Could not start JBoss container: %s", ex.getMessage()), ex);
         }
     }
 

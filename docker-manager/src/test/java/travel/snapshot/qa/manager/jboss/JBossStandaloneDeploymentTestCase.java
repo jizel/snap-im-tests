@@ -31,19 +31,26 @@ public class JBossStandaloneDeploymentTestCase extends AbstractDeploymentTestCas
 
     @After
     public void undeploy() {
-        manager.getDeployer().undeploy(DEPLOYMENT_NAME);
+        manager.undeploy(DEPLOYMENT_NAME);
     }
 
     @Test
     public void testDeploymentAndUndeployment() {
-        String runtimeName = manager.getDeployer().deploy(archive);
+        String runtimeName = manager.deploy(archive);
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
 
     @Test
     public void testFileDeploymentAndUndeployment() {
-        String runtimeName = manager.getDeployer().deploy(testingArchive.getAbsolutePath());
+        String runtimeName = manager.deploy(testingArchive);
+        assertNotNull(runtimeName);
+        // undeployment occurs in undeploy method
+    }
+
+    @Test
+    public void testFilePathDeploymentAndUndeployment() {
+        String runtimeName = manager.deploy(testingArchive.getAbsolutePath());
         assertNotNull(runtimeName);
         // undeployment occurs in undeploy method
     }
@@ -53,7 +60,7 @@ public class JBossStandaloneDeploymentTestCase extends AbstractDeploymentTestCas
 
         expectedException.expect(ContainerDeploymentException.class);
 
-        manager.getDeployer().deploy(archive);
-        manager.getDeployer().deploy(archive);
+        manager.deploy(archive);
+        manager.deploy(archive);
     }
 }
