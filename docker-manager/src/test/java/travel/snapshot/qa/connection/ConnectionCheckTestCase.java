@@ -54,7 +54,9 @@ public class ConnectionCheckTestCase {
     @After
     public void teardown() throws Exception {
         tcpServer.close();
+        Thread.sleep(2000);
         udpServer.close();
+        Thread.sleep(2000);
     }
 
     @Test
@@ -86,6 +88,8 @@ public class ConnectionCheckTestCase {
         ConnectionCheck tcpConnectionCheck = new ConnectionCheck.Builder()
                 .host(HOST)
                 .port(TCP_SERVER_PORT)
+                .timeout(20)
+                .reexecutionInterval(5)
                 .protocol(TCP)
                 .build();
 
