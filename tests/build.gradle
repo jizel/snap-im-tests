@@ -611,7 +611,6 @@ spacelift {
 buildscript {
     repositories {
         mavenCentral()
-        mavenLocal()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
         maven {
@@ -627,7 +626,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.smiklosovic:arquillian-spacelift-gradle:1.0.5.Final'
-        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.10-SNAPSHOT'
+        classpath 'travel.snapshot.qa.manager:docker-manager:1.0.10'
     }
 }
 
