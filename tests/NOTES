@@ -1,0 +1,91 @@
+## Keycloak
+
+Keycloak platform start, from the configuration point of view, does not work fully.
+
+In order to start whole DP with Keycloak behind nginx and 3scale, there needs to be started these services:
+
+1) MariaDB container for DP schemes, Identity module will put there its stuff as well as Keycloak
+2) MongoDB container for Configuration module
+3) Redis container for oauth token caching from nginx
+4) ActiveMQ container where messages are sent from modules in Tomcat
+5) Tomcat container where DP modules are deployed
+6) Keycloak container which serves as a identity management solution of DP
+7) nginx container which will behave as a proxy between user and DP backend and issues tokens to user and caches them to redis + communicates with 3scale.
+8) mail server for Keycloak to send emails to - this is not implemented right now and we are using just a google smtp server
+
+The thing is that when you start it all, you have to setup so called "realm" in Keycloak. The configuration of the realm, among many other things (1),
+involves the setup of keys of new realm you created (of name Snapshot) in Realm Settings - Keys. These keys are used for token generation.
+Certificate in keys screen has to be put to nginx in operations repository in "operations/nginx/keycloak_cert.pem". But when you start this all, it is too
+late to start nginx with that certificate as you are configuring realm after nginx is started with some other certificate so they will not match.
+
+You could pre-setup whole Snapshot realm and once you are done, you could export it to json by Keycloak management API (2) and you would download certificates as well.
+Once done and you are going to recreate this realm, you would just import that json with realm info back to just-started Keycloak container by that REST API. Since nginx is 
+being started as the last one and you have the right certificate, you would save that certificate to operations/nginx/keycloak_cert.pem.
+
+For that reason, the best thing to do is to start all services manually at your local host except nginx. nginx would be started in Docker machine after you have fully 
+setup Keycloak hence you will have a chance to copy that certificate to nginx before its manual start.
+
+There is documentation how to run nginx container in operations repository in nginx directory.
+
+## Load tests
+
+Load tests are written in Scala by framework called Gatling (3). We do not had a lot of time to polish the code frequently so it is now little bit obsolete but they 
+can be repaired quite easilly. The last known thing which happen to break the tests is the un-implemented Etag handling in requests.
+
+Load tests can be either started manually from the load_tests directory where documentation how to do it is located or it can be executed by project in this directory by 
+respective load test related profiles. Consult the build.gradle how to do it.
+
+## Bamboo builds
+
+There is QA build which builds all Cucumber tests in dp-api-tests repository here (5). It just executes tests in this directory, its configuration can been seen in Bamboo job:
+
+gradle test -Pall -DdockerMode=HOST -DconnectionMode=STARTANDSTOP -DdataPlatformRepository=../../../../data-platform -DdataPlatformQARepository=../../../../dataplatformqa --debug --info --stacktrace
+
+## 3scale API generation
+
+3scale API generation is built by job in Bamboo (4) periodically whenever somebody pushes something into master branch of DataPlatform API repository. Trigger is set to 
+every 10 minutes.
+
+1) DataPlatformAPI repository is cloned
+2) API project is built by Maven
+3) generated json files are uploaded to 3scale backend by "curl"
+
+There is 3scale admin portal where you can manage what will be displayed where. Contact David Stula for more information how it works.
+
+If you want to add new module to be built and uploaded, besides creating right templates in 3scale backend which decription is out of scope of this readme, you have to 
+add that module to the ThreeScaleModuleID class in this project. The first value of the enumeration serves as development ID, the second as test ID. You get that ID 
+from the 3scale service backend from the URL of some REST service in Active docs.
+
+## Local setup of Gradle environment:
+
+For brevity, it is good idea to have some system properties set directly in gradle.properies in `~/.gradle/gradle.properties` in order not to repeat yourself every time in the 
+command line. My gradle.properties file looks like this:
+
+nexusUser=snapshot (1)
+nexusPassword=travel.123 (2)
+systemProp.dockerRegistryPassword=aqGG86d1Yf3Y (3)
+systemProp.testProjectHome=/home/smikloso/dev/dataplatformqa/tests (4)
+systemProp.dataPlatformRepository=/home/smikloso/dev/data-platform (5)
+systemProp.dataPlatformQARepository=/home/smikloso/dev/dataplatformqa (6)
+systemProp.dataPlatformApiRepository=/home/smikloso/dev/dataplatformapi (7)
+systemProp.operationsRepository=/home/smikloso/dev/operations (8)
+systemProp.threeScaleProviderKey=1b1483ccc5832b0978bf136348e32808 (9)
+systemProp.testRunningWithGui=true (10)
+
+1, 2 - Nexus related credentials.
+3 - password for Docker registry from where Docker images are downloaded
+4) home of test project, in this example it is this directory I am writing this file
+5) location of data-platform repository
+6) location of qa repository
+7) location of api repository
+8) location of operations repository
+9) key used for 3scale API uploading
+10) in case it is true, you assume all tests are running in the environment which is not headless. The result is that e.g. when you API tests are done, 
+Google Chrome browser will automatically open a tab with HTML report of Cucumber tests or Gatling tests so you can do something else you do not need to 
+constantly check if tests are done - once they are done, tab in Google Chrome will open for you.
+
+(1) https://conhos.atlassian.net/wiki/display/TD/OAuth+flow
+(2) http://keycloak.github.io/docs/rest-api/index.html
+(3) http://gatling.io
+(4) https://conhos.atlassian.net/builds/browse/DP-API3
+(5) https://conhos.atlassian.net/builds/browse/DP-QAAT
