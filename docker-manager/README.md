@@ -373,3 +373,11 @@ When timeout is not specified, it periodically checks up to 60 seconds. Port is 
 `127.0.0.1`. When this call returns successfully, you can be sure that underlying service is up and running.
 
 You can use UDP protocol as well by `Protocol.UDP`.
+
+## How to release new version?
+
+Run tests, update version in `gradle.properties` to non-snapshot version, `gradle clean install -x test`, optionally 
+add local repositories to `tests/build.gradle` and `tests/buildSrc/build.gradle` in this repository and check all is good, 
+execute `gradle uploadArchives` here, finally. The last step will upload artifacts to our Nexus repository. 
+Be sure you have credentials rightly set. Update version in `gradle.properties` to next snapshot version. Make commits after 
+every change in build.gradle files.
