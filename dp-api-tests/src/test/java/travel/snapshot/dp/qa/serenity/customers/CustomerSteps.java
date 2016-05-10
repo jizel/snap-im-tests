@@ -20,7 +20,6 @@ import java.util.Map;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyViewDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
@@ -31,6 +30,7 @@ import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.DateUtils;
 import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -265,19 +265,18 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerAddress(String customerCode, AddressUpdateDto updatedAddress) throws Throwable {
-        CustomerDto originalCustomer = getCustomerByCodeInternal(customerCode);
-        if (originalCustomer == null) {
-            fail("Customer with code " + customerCode + " not found");
+    public void updateCustomerAddress(String customerId, AddressUpdateDto updatedAddress) throws Throwable {
+        Response temp = getEntity(customerId);
+        if (temp.getStatusCode() != HttpStatus.SC_OK) {
+            fail("Customer " + customerId + " not found!");
         }
 
-        Response temp = getEntity(originalCustomer.getCustomerId());
-        Map<String, Object> addressData = new HashMap<String, Object>();
-        addressData.put("address", retrieveData(AddressUpdateDto.class, updatedAddress));
+        JSONObject addressJson = new JSONObject();
+        JSONObject regexGenerated = RegexValueConverter.transform(retrieveDataNew(updatedAddress));
+        addressJson.putOpt("address", regexGenerated);
 
-        Response response = updateEntity(originalCustomer.getCustomerId(), addressData, temp.getHeader(HEADER_ETAG));
+        Response response = updateEntity(customerId, addressJson.toString(), temp.getHeader(HEADER_ETAG));
         setSessionResponse(response);
-
     }
 
     @Step

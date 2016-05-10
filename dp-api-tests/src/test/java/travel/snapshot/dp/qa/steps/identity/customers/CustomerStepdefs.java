@@ -16,7 +16,6 @@ import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerBaseDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyViewDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
@@ -436,17 +435,9 @@ public class CustomerStepdefs {
         customerSteps.numberOfEntitiesInResponse(CommercialSubscriptionDto.class, count);
     }
 
-    @When("^Update customer with code \"([^\"]*)\", address field \"([^\"]*)\", its value \"([^\"]*)\"$")
-    public void updateCustomerWithCodeAddressFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
-        AddressUpdateDto updatedAddress = new AddressUpdateDto();
-        for (Field f : AddressUpdateDto.class.getDeclaredFields()) {
-            if (f.getName().equalsIgnoreCase(updatedField)) {
-                f.setAccessible(true);
-                f.set(updatedAddress, updatedValue);
-                break;
-            }
-        }
 
-        customerSteps.updateCustomerAddress(customerCode, updatedAddress);
+    @When("^Customer with id \"([^\"]*)\", update address with following data$")
+    public void customerWithCodeUpdateAddressWithFollowingData(String customerId, List<AddressUpdateDto> addresses) throws Throwable {
+        customerSteps.updateCustomerAddress(customerId, addresses.get(0));
     }
 }
