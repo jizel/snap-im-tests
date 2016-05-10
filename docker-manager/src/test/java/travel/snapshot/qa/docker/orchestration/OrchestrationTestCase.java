@@ -1,8 +1,10 @@
 package travel.snapshot.qa.docker.orchestration;
 
+import static org.junit.Assert.assertNotNull;
 import static travel.snapshot.qa.manager.activemq.impl.docker.ActiveMQService.DEFAULT_ACTIVEMQ_CONTAINER_ID;
 import static travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService.DEFAULT_MARIADB_CONTAINER_ID;
 import static travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService.DEFAULT_MONGODB_CONTAINER_ID;
+import static travel.snapshot.qa.manager.redis.impl.docker.RedisService.DEFAULT_REDIS_CONTAINER_ID;
 import static travel.snapshot.qa.manager.tomcat.docker.TomcatService.DEFAULT_TOMCAT_CONTAINER_ID;
 
 import com.github.dockerjava.api.model.Container;
@@ -20,6 +22,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 import travel.snapshot.qa.category.OrchestrationTest;
 import travel.snapshot.qa.docker.manager.DockerManager;
 import travel.snapshot.qa.manager.activemq.api.ActiveMQManager;
@@ -31,6 +34,8 @@ import travel.snapshot.qa.manager.mariadb.impl.docker.MariaDBService;
 import travel.snapshot.qa.manager.mongodb.api.MongoDBManager;
 import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBDockerManager;
 import travel.snapshot.qa.manager.mongodb.impl.docker.MongoDBService;
+import travel.snapshot.qa.manager.redis.api.RedisManager;
+import travel.snapshot.qa.manager.redis.impl.docker.RedisDockerManager;
 import travel.snapshot.qa.manager.redis.impl.docker.RedisService;
 import travel.snapshot.qa.manager.tomcat.TomcatManager;
 import travel.snapshot.qa.manager.tomcat.docker.TomcatDockerManager;
@@ -86,25 +91,30 @@ public class OrchestrationTestCase {
         ActiveMQManager activeMQManager = ORCHESTRATION.getDockerServiceManager(ActiveMQDockerManager.class, DEFAULT_ACTIVEMQ_CONTAINER_ID).getServiceManager();
         MongoDBManager mongoDBManager = ORCHESTRATION.getDockerServiceManager(MongoDBDockerManager.class, DEFAULT_MONGODB_CONTAINER_ID).getServiceManager();
         TomcatManager tomcatManager = ORCHESTRATION.getDockerServiceManager(TomcatDockerManager.class, DEFAULT_TOMCAT_CONTAINER_ID).getServiceManager();
+        RedisManager redisManager = ORCHESTRATION.getDockerServiceManager(RedisDockerManager.class, DEFAULT_REDIS_CONTAINER_ID).getServiceManager();
 
         // MariaDB
 
         final Connection sqlConnection = mariaDBManager.getConnection();
-        Assert.assertNotNull(sqlConnection);
+        assertNotNull(sqlConnection);
         mariaDBManager.closeConnection(sqlConnection);
 
         // ActiveMQ
 
         final javax.jms.Connection activeMQConnection = activeMQManager.buildConnection();
-        Assert.assertNotNull(activeMQConnection);
+        assertNotNull(activeMQConnection);
         activeMQManager.closeConnection(activeMQConnection);
 
         // MongoDB
 
         final MongoClient mongoClient = mongoDBManager.getClient();
-        Assert.assertNotNull(mongoClient);
+        assertNotNull(mongoClient);
         mongoClient.listDatabases().maxTime(1, TimeUnit.MINUTES);
         mongoClient.close();
+
+        final Jedis jedis = redisManager.getJedis();
+        assertNotNull(jedis);
+        redisManager.close();
 
         // Tomcat
 
