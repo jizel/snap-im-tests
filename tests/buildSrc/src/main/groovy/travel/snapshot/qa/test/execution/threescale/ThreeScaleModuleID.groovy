@@ -2,6 +2,7 @@ package travel.snapshot.qa.test.execution.threescale
 
 enum ThreeScaleModuleID {
 
+    IDENITITY_API_COMMONS(54109, 54110),
     IDENTITY_APPLICATION_API(53628, 53829),
     IDENTITY_CUSTOMER_API(53629, 53830),
     IDENTITY_PROPERTY_API(53630, 53831),
