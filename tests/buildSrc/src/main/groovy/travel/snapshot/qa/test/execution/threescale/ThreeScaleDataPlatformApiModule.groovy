@@ -2,6 +2,7 @@ package travel.snapshot.qa.test.execution.threescale
 
 enum ThreeScaleDataPlatformApiModule {
 
+    IDENTITY_API("Identity API", "identity-api/api-commons/target/swagger/identity-api-commons/swagger.json", ThreeScaleModuleID.IDENITITY_API_COMMONS),
     IDENTITY_APPLICATION_API("Identity Application API", "identity-api/application-api/target/swagger/identity-application-api/swagger.json", ThreeScaleModuleID.IDENTITY_APPLICATION_API),
     IDENTITY_CUSTOMER_API("Identity Customer API", "identity-api/customer-api/target/swagger/identity-customer-api/swagger.json", ThreeScaleModuleID.IDENTITY_CUSTOMER_API),
     IDENTITY_PROPERTY_API("Identity Property API", "identity-api/property-api/target/swagger/identity-property-api/swagger.json", ThreeScaleModuleID.IDENTITY_PROPERTY_API),
