@@ -177,7 +177,7 @@ public class BasicSteps {
     @Step
     public void bodyContainsEntityWith(String attributeName, String attributeValue) {
         Response response = getSessionResponse();
-        response.then().body(attributeName, is(attributeValue));
+        response.then().body(attributeName, isOneOf(attributeValue, Boolean.valueOf(attributeValue)));
     }
 
     public void bodyContainsEntityWith(String attributeName) {
@@ -262,7 +262,7 @@ public class BasicSteps {
     }
 
     public Response deleteEntityUrl(String url, String id) {
-        return given().spec(spec).when().delete(url+"/{id}", id);
+        return given().spec(spec).when().delete(url + "/{id}", id);
     }
 
     protected Response getEntity(String id, String etag) {

@@ -23,7 +23,8 @@ public class DbUtilsSteps {
     static final String DELETE_API_SUBSCRIPTIONS = "delete  from Api_Subscription";
     static final String DELETE_APPLICATION = "delete from Application";
     static final String DELETE_APPLICATION_VERSIONS = "delete from Version";
-    private static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
+    static final String DELETE_USER_GROUPS = "delete from user_group";
+    static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
     static final String DELETE_COMMERCIAL_SUBSCRIPTION = "delete from Commercial_Subscription";
     private DbHelper dbHelper = new DbHelper();
 
@@ -39,9 +40,9 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_COMMERCIAL_SUBSCRIPTION);
         dbHelper.identityDb().update(DELETE_PROPERTY_PROPERTYSET);
         dbHelper.identityDb().update(DELETE_PROPERTY);
+        dbHelper.identityDb().update(DELETE_USER_GROUPS);
         dbHelper.identityDb().update(UPDATE_PROPERTY_SET);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET);
-        dbHelper.identityDb().update(UPDATE_CUSTOMER);
         dbHelper.identityDb().update(DELETE_CUSTOMER);
         dbHelper.identityDb().update(DELETE_USER);
         dbHelper.identityDb().update(DELETE_ADDRESS);
