@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
@@ -138,5 +141,91 @@ public class UserGroupsSteps extends BasicSteps {
 
             assertEquals(updatedValue, databaseValue);
         }
+    }
+
+    /*
+    Method to establish relationship between UserGroup and PropertySet
+    @param: userGroupId
+    @param: propertySetId
+    @param: isActive
+     */
+    public void relationshipGroupPropertySetExist(String userGroupId, String propertySetId, Boolean isActive) {
+        UserGroupPropertySetRelationshipDto relation = new UserGroupPropertySetRelationshipDto();
+        relation.setPropertySetId(propertySetId);
+        relation.setIsActive(isActive);
+
+        Response resp = createSecondLevelRelationship(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, relation);
+        setSessionResponse(resp);
+    }
+
+    /*
+    Method to establish relationship between UserGroup and Property
+    @param: userGroupId
+    @param: propertyId
+    @param: isActive
+     */
+    public void relationshipGroupPropertyExist(String userGroupId, String propertyId, Boolean isActive) {
+        UserGroupPropertyRelationshipDto relation = new UserGroupPropertyRelationshipDto();
+        relation.setPropertyId(propertyId);
+        relation.setIsActive(isActive);
+
+        Response resp = createSecondLevelRelationship(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        setSessionResponse(resp);
+    }
+
+    public void getUserGroupsProperty(String userGroupId, String propertyId) {
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        setSessionResponse(resp);
+    }
+
+    public void getUserGroupsPropertySet(String userGroupId, String propertySetId) {
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        setSessionResponse(resp);
+    }
+
+    public void relationshipGroupPropertyIsDeleted(String userGroupId, String propertyId) {
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        setSessionResponse(resp);
+    }
+
+    public void relationshipGroupPropertySetIsDeleted(String userGroupId, String propertySetId) {
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        setSessionResponse(resp);
+    }
+
+    public void checkGroupPropertyExistence(String userGroupId, String propertyId) {
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        if (resp.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
+            fail("Relationship userGroup-property still exists!");
+        }
+    }
+
+    public void checkGroupPropertySetExistence(String userGroupId, String propertySetId) {
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        if (resp.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
+            fail("Relationship userGroup-propertySet still exists!");
+        }
+    }
+
+    public void setGroupPropertyActivity(String userGroupId, String propertyId, boolean activity) throws JsonProcessingException {
+        Response tempReponse = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        UserGroupPropertyRelationshipUpdateDto relation = new UserGroupPropertyRelationshipDto();
+        relation.setIsActive(activity);
+
+        JSONObject obj = retrieveDataNew(relation);
+
+        Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, obj, tempReponse.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
+    }
+
+    public void setGroupPropertySetActivity(String userGroupId, String propertySetId, boolean b) throws JsonProcessingException {
+        Response tempReponse = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        UserGroupPropertySetRelationshipDto relation = new UserGroupPropertySetRelationshipDto();
+        relation.setIsActive(b);
+
+        JSONObject obj = retrieveDataNew(relation);
+
+        Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, obj, tempReponse.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
     }
 }

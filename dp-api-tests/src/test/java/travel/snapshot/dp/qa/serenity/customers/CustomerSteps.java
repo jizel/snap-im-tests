@@ -226,7 +226,6 @@ public class CustomerSteps extends BasicSteps {
         String customerId = c.getCustomerId();
         Response response = deleteEntity(customerId);//delete customer
         setSessionResponse(response);
-        Serenity.setSessionVariable(SESSION_CUSTOMER_ID).to(customerId);//store to session
     }
 
     @Step

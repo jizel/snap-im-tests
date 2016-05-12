@@ -1,4 +1,4 @@
-Feature: User groups get
+Feature: User groups create update delete
 
   Background:
     Given Database is cleaned
@@ -55,6 +55,11 @@ Feature: User groups get
     When User group with id "NonExistentUserGroup" is deleted
     Then Response code is 204
     And Body is empty
+
+  Scenario: Cascade delete (customer is deleted, all his user groups as well)
+    When Customer with code "ug1" is deleted
+    Then Response code is 204
+    And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
 
   Scenario Outline: Creating user group with invalid data
     When The following user group is created

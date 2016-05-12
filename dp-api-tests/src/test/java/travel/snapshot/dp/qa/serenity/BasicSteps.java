@@ -273,6 +273,12 @@ public class BasicSteps {
         return requestSpecification.when().get("/{id}", id);
     }
 
+    protected Response createSecondLevelRelationship(String firstLevelId, String secondLevelId, Object jsonBody) {
+        RequestSpecification requestSpecification = given().spec(spec).body(jsonBody);
+        Response response = requestSpecification.post(String.format("/" + firstLevelId + "/" + secondLevelId));
+        return response;
+    }
+
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (!StringUtils.isBlank(etag)) {
@@ -300,6 +306,14 @@ public class BasicSteps {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     /**
