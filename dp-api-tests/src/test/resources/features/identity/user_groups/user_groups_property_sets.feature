@@ -82,3 +82,7 @@ Feature: User groups property sets
     Then Response code is 201
     And Content type is "application/json"
     And Body contains entity with attribute "is_active" value "false"
+
+#  TODO: Getting list of relationships, sort, filter, sortdesc
+
+#  TODO: Getting list of relationships, limit, cursor

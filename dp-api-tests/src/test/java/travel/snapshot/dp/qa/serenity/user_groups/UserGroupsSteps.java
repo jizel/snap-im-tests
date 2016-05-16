@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import travel.snapshot.dp.api.identity.model.RoleIdDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
@@ -26,7 +27,7 @@ import static org.junit.Assert.fail;
 
 public class UserGroupsSteps extends BasicSteps {
 
-    private static final String USER_GROUPS_PATH = "/identity/users_groups";
+    private static final String USER_GROUPS_PATH = "/identity/user_groups";
 
     public UserGroupsSteps() {
         super();
@@ -78,7 +79,12 @@ public class UserGroupsSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void responseSortId(List<String> order) {
+    public void listGroupRoleIsGot(String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    public void responseSortByDescription(List<String> order) {
         if (order.isEmpty()) {
             return;
         }
@@ -87,6 +93,21 @@ public class UserGroupsSteps extends BasicSteps {
         int i = 0;
         for (UserGroupDto api : userGroups) {
             assertEquals(api.getDescription(), order.get(i));
+            i++;
+        }
+    }
+
+    public void responseSortById(List<String> order) {
+        if (order.isEmpty()) {
+            return;
+        }
+
+        RoleIdDto[] roles = getSessionResponse().as(RoleIdDto[].class);
+        int i = 0;
+        for (RoleIdDto r : roles) {
+            if (!r.getRoleId().startsWith(order.get(i))) {
+                fail("Expected ID: " + r.getRoleId() + "but was starting with: " + order.get(i));
+            }
             i++;
         }
     }
@@ -226,6 +247,35 @@ public class UserGroupsSteps extends BasicSteps {
         JSONObject obj = retrieveDataNew(relation);
 
         Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, obj, tempReponse.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
+    }
+
+    public void relationshipGroupRoleExist(String userGroupId, String roleId) throws JsonProcessingException {
+        RoleIdDto roleObject = new RoleIdDto();
+        roleObject.setRoleId(roleId);
+
+        JSONObject roleInJson = retrieveDataNew(roleObject);
+
+        Response response = createSecondLevelRelationship(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleInJson.toString());
+        setSessionResponse(response);
+    }
+
+    public void checkUserGroupRoleRelationExistency(String userGroupId, String roleId, Boolean existency) {
+        RoleIdDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null).as(RoleIdDto[].class);
+        Boolean found = false;
+        for (RoleIdDto role : listOfRoles) {
+            if (role.getRoleId().equalsIgnoreCase(roleId)) {
+                found = true;
+            }
+        }
+
+        if (found != existency) {
+            fail("Expected: " + existency.toString() + " but otherwise!");
+        }
+    }
+
+    public void deleteUserGroupRoleRelationship(String userGroupId, String roleId) {
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleId);
         setSessionResponse(resp);
     }
 }

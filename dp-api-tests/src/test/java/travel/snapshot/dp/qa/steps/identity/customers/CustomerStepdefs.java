@@ -16,7 +16,7 @@ import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerBaseDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyViewDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
@@ -286,7 +286,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customerProperties returned$")
     public void There_are_returned_customerProperties_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(CustomerPropertyViewDto.class, count);
+        customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, count);
     }
 
     @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")

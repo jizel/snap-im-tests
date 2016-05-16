@@ -8,6 +8,7 @@ import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import travel.snapshot.dp.api.identity.model.RoleIdDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -70,6 +71,16 @@ public class UserGroupsdefs {
         userGroupSteps.listUserGroupsIsGot(limit, cursor, filter, sort, sortDesc);
     }
 
+    @When("^List of relationships userGroups-Roles for userGroup \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void listOfRelationshipsUserGroupsRolesIsGotWithLimitAndCursorAndFilterAndSortAndSort_desc(String userGroupId,
+                                                                                                      @Transform(NullEmptyStringConverter.class) String limit,
+                                                                                                      @Transform(NullEmptyStringConverter.class) String cursor,
+                                                                                                      @Transform(NullEmptyStringConverter.class) String filter,
+                                                                                                      @Transform(NullEmptyStringConverter.class) String sort,
+                                                                                                      @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        userGroupSteps.listGroupRoleIsGot(userGroupId, limit, cursor, filter, sort, sortDesc);
+    }
+
     @When("^User group with id \"([^\"]*)\" is activated$")
     public void userGroupWithIdIsActivated(String userGroupId) throws Throwable {
         userGroupSteps.setUserGroupActiveField(userGroupId, true);
@@ -95,10 +106,19 @@ public class UserGroupsdefs {
         userGroupSteps.getUserGroupsProperty(userGroupId, propertyId);
     }
 
-
     @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is got$")
     public void relationBetweenUserGroupAndPropertySetIsGot(String userGroupId, String propertySetId) throws Throwable {
         userGroupSteps.getUserGroupsPropertySet(userGroupId, propertySetId);
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is created$")
+    public void relationBetweenUserGroupAndRoleIsCreated(String userGroupId, String roleId) throws Throwable {
+        userGroupSteps.relationshipGroupRoleExist(userGroupId, roleId);
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" exists$")
+    public void relationBetweenUserGroupAndRoleExists(String userGroupId, String roleId) throws Throwable {
+        userGroupSteps.relationshipGroupRoleExist(userGroupId, roleId);
     }
 
     @When("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is created with isActive \"([^\"]*)\"$")
@@ -111,7 +131,6 @@ public class UserGroupsdefs {
         userGroupSteps.relationshipGroupPropertySetExist(userGroupId, propertySetId, isActive);
     }
 
-
     @When("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is deleted$")
     public void relationBetweenUserGroupAndPropertyIsDeleted(String userGroupId, String propertyId) throws Throwable {
         userGroupSteps.relationshipGroupPropertyIsDeleted(userGroupId, propertyId);
@@ -120,6 +139,11 @@ public class UserGroupsdefs {
     @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is deleted$")
     public void relationBetweenUserGroupAndPropertySetIsDeleted(String userGroupId, String propertySetId) throws Throwable {
         userGroupSteps.relationshipGroupPropertySetIsDeleted(userGroupId, propertySetId);
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is deleted$")
+    public void relationBetweenUserGroupAndRoleIsDeleted(String userGroupId, String roleId) throws Throwable {
+        userGroupSteps.deleteUserGroupRoleRelationship(userGroupId, roleId);
     }
 
     @When("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is activated$")
@@ -151,7 +175,7 @@ public class UserGroupsdefs {
 
     @Then("^There are user groups with following description returned in order: \"([^\"]*)\"$")
     public void thereAreUserGroupsWithFollowingDescriptionReturnedInOrder(List<String> order) throws Throwable {
-        userGroupSteps.responseSortId(order);
+        userGroupSteps.responseSortByDescription(order);
     }
 
     @Then("^User group with id \"([^\"]*)\" is active$")
@@ -182,5 +206,25 @@ public class UserGroupsdefs {
     @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is no more exists$")
     public void relationBetweenUserGroupAndPropertySetIsNoMoreExists(String userGroupId, String propertySetId) throws Throwable {
         userGroupSteps.checkGroupPropertySetExistence(userGroupId, propertySetId);
+    }
+
+    @Then("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is established$")
+    public void relationBetweenUserGroupAndRoleIsEstablished(String userGroupId, String roleId) throws Throwable {
+        userGroupSteps.checkUserGroupRoleRelationExistency(userGroupId, roleId, true);
+    }
+
+    @Then("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is not established$")
+    public void relationBetweenUserGroupAndRoleIsNotEstablished(String userGroupId, String roleId) throws Throwable {
+        userGroupSteps.checkUserGroupRoleRelationExistency(userGroupId, roleId, false);
+    }
+
+    @Then("^There are \"([^\"]*)\" relationships returned$")
+    public void thereAreRelationshipsReturned(int numberOfRoles) throws Throwable {
+        userGroupSteps.numberOfEntitiesInResponse(RoleIdDto.class, numberOfRoles);
+    }
+
+    @Then("^There are relationships start with following IDs returned in order: \"([^\"]*)\"$")
+    public void thereAreRelationshipsStartWithFollowingIDsReturnedInOrder(List<String> order) throws Throwable {
+        userGroupSteps.responseSortById(order);
     }
 }
