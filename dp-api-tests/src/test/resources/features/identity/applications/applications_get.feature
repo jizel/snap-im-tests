@@ -40,7 +40,7 @@ Feature: Applications get
   Scenario: Checking error code for nonexistent applications
     When Nonexistent application id is got
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   Scenario Outline: Getting list of applications
     Given The following applications exist
