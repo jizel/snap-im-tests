@@ -54,16 +54,11 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void followingApplicationsExist(List<ApplicationDto> application) {
         application.forEach(t -> {
-            ApplicationDto existingApplication = getApplicationById(t.getApplicationId());
-            if (existingApplication != null) {
-                deleteEntity(existingApplication.getApplicationId());
-            }
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Application cannot be created");
+                fail("Application cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
             }
         });
-        Serenity.setSessionVariable(SESSION_APPLICATIONS).to(application);
     }
 
     @Step

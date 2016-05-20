@@ -1,30 +1,32 @@
 package travel.snapshot.dp.qa.serenity.roles;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
+
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 
 public class RoleBaseSteps extends BasicSteps {
 
     private static final String SESSION_ROLE_ID = "role_id";
-    private static final String ROLES_PATH = "/identity/roles";
     private static final String SESSION_CREATED_ROLE = "created_role";
     public static final String USER_CUSTOMER_ROLES_PATH = "/identity/user_customer_roles";
     public static final String USER_PROPERTY_SET_ROLES_PATH = "/identity/user_property_set_roles";
@@ -36,13 +38,15 @@ public class RoleBaseSteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
     }
 
-    public void setRolesPathCustomer(){
+    public void setRolesPathCustomer() {
         spec.basePath(USER_CUSTOMER_ROLES_PATH);
     }
-    public void setRolesPathProperty(){
+
+    public void setRolesPathProperty() {
         spec.basePath(USER_PROPERTY_ROLES_PATH);
     }
-    public void setRolesPathPropertySet(){
+
+    public void setRolesPathPropertySet() {
         spec.basePath(USER_PROPERTY_SET_ROLES_PATH);
     }
 
@@ -53,13 +57,9 @@ public class RoleBaseSteps extends BasicSteps {
     @Step
     public void followingRolesExist(List<RoleDto> roles) {
         roles.forEach(r -> {
-            RoleDto existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getApplicationId());
-            if (existingRole != null) {
-                deleteRole(existingRole.getRoleId());
-            }
             Response createResponse = createRole(r);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Role cannot be created");
+                fail("Role cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
             }
         });
     }
