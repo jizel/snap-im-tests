@@ -5,7 +5,10 @@ Feature: Properties get
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following properties exist with random address and billing address
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
@@ -50,11 +53,11 @@ Feature: Properties get
   Scenario: Checking error code for nonexistent property
     When Nonexistent property id sent
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
 
   Scenario Outline: Getting list of properties
-    Given The following properties exist with random address and billing address
+    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_01 | p01_name     | p01_code     | http://www.snapshot.travel | p01@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_02 | p02_name     | p02_code     | http://www.snapshot.travel | p02@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -155,7 +158,7 @@ Feature: Properties get
       | text  | 0      | /null            | /null       | /null       | 400           | 63          |
       | 10    | text   | /null            | /null       | /null       | 400           | 63          |
       #filtering and sorting
-      | 10    | 0      | /null            | code        | code        | 400           | 64          |
+      | 10    | 0      | /null            | description | description | 400           | 64          |
       | 10    | 0      | /null            | /null       | nonexistent | 400           | 63          |
       | 10    | 0      | /null            | nonexistent | /null       | 400           | 63          |
       | 10    | 0      | code==           | /null       | /null       | 400           | 63          |

@@ -6,20 +6,22 @@ Feature: Properties create update delete
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following properties exist with random address and billing address
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
   Scenario: Creating property without parent with random address
-    When Property is created with random address and billing address
+    When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
-    And "Location" header is set and contains the same property
 
   @Smoke
   Scenario: Deleting Property
@@ -49,12 +51,12 @@ Feature: Properties create update delete
   Scenario: Activating non existing properties
     When Property with non existing property id "11111111-1111-1111-1111-111111111111" is inactivated
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   Scenario: Deactivating non existing properties
     When Property with non existing property id "11111111-1111-1111-1111-111111111111" is activated
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
@@ -105,31 +107,31 @@ Feature: Properties create update delete
     And Custom code is "<custom_code>"
 
     Examples:
-      | limit       | cursor | filter   | sort         | sort_desc    | response_code | custom_code |
+      | limit       | cursor | filter   | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
-      | /null       | -1     | /null    | /null        | /null        | 400           | 63          |
-      |             | -1     | /null    | /null        | /null        | 400           | 63          |
-      | /null       | text   | /null    | /null        | /null        | 400           | 63          |
-      |             | text   | /null    | /null        | /null        | 400           | 63          |
-      | -1          |        | /null    | /null        | /null        | 400           | 63          |
-      | -1          | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 201         | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 21474836470 | /null  | /null    | /null        | /null        | 400           | 63          |
-      | text        |        | /null    | /null        | /null        | 400           | 63          |
-      | text        | /null  | /null    | /null        | /null        | 400           | 63          |
-      | 10          | -1     | /null    | /null        | /null        | 400           | 63          |
-      | text        | 0      | /null    | /null        | /null        | 400           | 63          |
-      | 10          | text   | /null    | /null        | /null        | 400           | 63          |
+      | /null       | -1     | /null    | /null       | /null       | 400           | 63          |
+      |             | -1     | /null    | /null       | /null       | 400           | 63          |
+      | /null       | text   | /null    | /null       | /null       | 400           | 63          |
+      |             | text   | /null    | /null       | /null       | 400           | 63          |
+      | -1          |        | /null    | /null       | /null       | 400           | 63          |
+      | -1          | /null  | /null    | /null       | /null       | 400           | 63          |
+      | 201         | /null  | /null    | /null       | /null       | 400           | 63          |
+      | 21474836470 | /null  | /null    | /null       | /null       | 400           | 63          |
+      | text        |        | /null    | /null       | /null       | 400           | 63          |
+      | text        | /null  | /null    | /null       | /null       | 400           | 63          |
+      | 10          | -1     | /null    | /null       | /null       | 400           | 63          |
+      | text        | 0      | /null    | /null       | /null       | 400           | 63          |
+      | 10          | text   | /null    | /null       | /null       | 400           | 63          |
 
       #filtering and sorting
-      | 10          | 0      | /null    | company_name | company_name | 400           | 64          |
-      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 63          |
-      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 63          |
-      | 10          | 0      | code==   | /null        | /null        | 400           | 63          |
-      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+      | 10          | 0      | /null    | website     | website     | 400           | 64          |
+      | 10          | 0      | /null    | /null       | nonexistent | 400           | 63          |
+      | 10          | 0      | /null    | nonexistent | /null       | 400           | 63          |
+      | 10          | 0      | code==   | /null       | /null       | 400           | 63          |
+      | 10          | 0      | vat==CZ* | /null       | /null       | 400           | 63          |
 
   Scenario Outline: Validate that property regions belong to the correct country
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "5d829079-48f0-4f00-9bec-e2329a8bdaac"
     Then Content type is "application/json"
     And Response code is 201
     And Body contains entity with attribute "address.region" value "<region>"
@@ -188,18 +190,18 @@ Feature: Properties create update delete
       | US      | Wyoming        | propcode50 | mail50@mail.com |
 
   Scenario Outline: Checking error codes for regions
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "5d829079-48f0-4f00-9bec-e2329a8bdaac"
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"
-    And Body contains entity with attribute "message" value "Region with identifier <region> was not found."
+    And Body contains entity with attribute "message" value "The associate Region with ID <region> was not found."
 
     Examples:
       | country | region  | code       | email           | response_code | custom_code |
-      | DE      | invalid | propcode8  | mail8@mail.com  | 400           | 63          |
-      | BG      | invalid | propcode9  | mail9@mail.com  | 400           | 63          |
-      | US      | invalid | propcode10 | mail10@mail.com | 400           | 63          |
-      | CZ      | invalid | propcode11 | mail11@mail.com | 400           | 63          |
-      | AU      | invalid | propcode12 | mail12@mail.com | 400           | 63          |
-      | CZ      | Texas   | propcode14 | mail14@mail.com | 400           | 63          |
-      | AU      | Ohio    | propcode15 | mail15@mail.com | 400           | 63          |
+      | DE      | invalid | propcode8  | mail8@mail.com  | 422           | 42202       |
+      | BG      | invalid | propcode9  | mail9@mail.com  | 422           | 42202       |
+      | US      | invalid | propcode10 | mail10@mail.com | 422           | 42202       |
+      | CZ      | invalid | propcode11 | mail11@mail.com | 422           | 42202       |
+      | AU      | invalid | propcode12 | mail12@mail.com | 422           | 42202       |
+      | CZ      | Texas   | propcode14 | mail14@mail.com | 422           | 42202       |
+      | AU      | Ohio    | propcode15 | mail15@mail.com | 422           | 42202       |
