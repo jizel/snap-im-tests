@@ -12,7 +12,10 @@ Feature: Api subscription get
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following properties exist with random address and billing address
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
@@ -44,7 +47,7 @@ Feature: Api subscription get
     When Api subscription with id "nonExistingApi" is got
     Then Response code is 404
     And Content type is "application/json"
-    And Custom code is 152
+    And Custom code is 40402
 
   Scenario Outline: Getting list of api subscriptions with valid query parameters
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
@@ -91,7 +94,10 @@ Feature: Api subscription get
       | 96b3106a-82cc-4fa0-a35c-5e9e32194304 | Given company 18 | c18@tenants.biz | c18list | salesforceid_given_18 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | faf0b7b5-5f1e-48e9-9ded-529e59baec6c | Given company 19 | c19@tenants.biz | c19list | salesforceid_given_19 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | e0ddefaf-05d4-4330-ae67-1310af0d0b45 | Given company 20 | c20@tenants.biz | c20list | salesforceid_given_20 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following properties exist with random address and billing address
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following properties exist with random address and billing address for user "6d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1  | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz  | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2  | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz  | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
@@ -217,7 +223,10 @@ Feature: Api subscription get
       | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3 | c3@tenants.biz | c3tlist | salesforceid_given_3 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 59f91161-ae55-4369-b963-0db1410b00d7 | Given company 4 | c4@tenants.biz | c4tlist | salesforceid_given_4 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | b7306a7d-851c-4f59-856d-907eff0aa9b7 | Given company 5 | c5@tenants.biz | c5tlist | salesforceid_given_5 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following properties exist with random address and billing address
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 7d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following properties exist with random address and billing address for user "7d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1 | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2 | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
