@@ -14,6 +14,8 @@ import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleViewDto;
+import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -40,30 +42,27 @@ public class UsersSteps extends BasicSteps {
         spec.basePath(USERS_PATH);
     }
 
-    @Step
-    public void followingUsersExist(List<UserDto> users) {
+    public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary) {
         users.forEach(u -> {
-            UserDto existingUser = getUserByUsername(u.getUserName());
-            if (existingUser != null) {
-                deleteEntity(existingUser.getUserId());
-            }
-            Response createResponse = createEntity(u);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("User cannot be created");
+            UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+            relation.setCustomerId(customerId);
+            relation.setIsPrimary(isPrimary);
+            u.setUserCustomerRelationshipDto(relation);
+
+            Response createResp = createEntity(u);
+            if (createResp.getStatusCode() != HttpStatus.SC_CREATED) {
+                fail("User cannot be created! Status:" + createResp.getStatusCode() + " " + createResp.getBody().asString());
             }
         });
     }
 
     @Step
-    public void followingUserIsCreated(UserDto user) {
-        UserDto existingUser = null;
-        if (user != null && !user.getUserName().isEmpty()) {
-            existingUser = getUserByUsername(user.getUserName());
-        }
-        Serenity.setSessionVariable(SESSION_CREATED_USER).to(user);
-        if (existingUser != null) {
-            deleteEntity(existingUser.getUserId());
-        }
+    public void followingUserIsCreated(UserCreateDto user, String customerId, Boolean isPrimary) {
+        UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+        relation.setCustomerId(customerId);
+        relation.setIsPrimary(isPrimary);
+        user.setUserCustomerRelationshipDto(relation);
+
         Response response = createEntity(user);
         setSessionResponse(response);
     }
@@ -156,11 +155,11 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
+
     public UserDto getUserByUsername(String username) {
         UserDto[] users = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null).as(UserDto[].class);
         return Arrays.asList(users).stream().findFirst().orElse(null);
     }
-
 
     @Step
     public void userWithUsernameIsGot(String username) {
@@ -213,13 +212,13 @@ public class UsersSteps extends BasicSteps {
         }
     }
 
+
     public void roleIsAddedToUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
 
         Response response = addRoleToUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         setSessionResponse(response);
     }
-
 
     public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
@@ -421,10 +420,12 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
+
     private String buildPathForRoles(String entityName, String userName, String entityId) {
         UserDto user = getUserByUsername(userName);
+        if (user == null) {
+            return String.format("%s/%s/%s/%s", userName, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
+        }
         return String.format("%s/%s/%s/%s", user.getUserId(), entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
     }
-
-
 }
