@@ -3,34 +3,24 @@ Feature: Property sets users create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-
-    Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name, ps2_name
-    Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
-    Given All property sets are deleted for customers with codes: c1t, c2t
-
-    Given The following property sets exist for customer with code "c1t"
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default0 | Default0  | User0    | def0@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 7d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 8d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
       | ps2_name        | ps2_description        | branch          |
-
-    Given The following users exist
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
-
-    Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
 
   @Smoke
   Scenario: Adding user to property set
     When User with username "default3" is added to property set with name "ps1_name" for customer with code "c1t"
     Then Response code is "204"
 
-  #TODO validate just one primary user, notexistent user, already present user
-  #validate different type of users
 
   @Smoke
   Scenario: Removing user from property set
@@ -46,7 +36,7 @@ Feature: Property sets users create update delete
     Then Response code is "204"
 
   Scenario Outline: Filtering list of users for property set
-    Given The following users exist
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName             | firstName         | lastName       | email                            | phone        | timezone          | culture |
       | customer | filter_psu_default_1 | FilterPSUDefault1 | FilterPSUUser1 | filter_psu_user1@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_psu_default_2 | FilterPSUDefault2 | FilterPSUUser2 | filter_psu_user2@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
@@ -54,20 +44,17 @@ Feature: Property sets users create update delete
       | customer | filter_psu_default_4 | FilterPSUDefault4 | FilterPSUUser4 | filter_psu_user4@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | partner  | filter_psu_default_5 | FilterPSUDefault5 | FilterPSUUser5 | filter_psu_user5@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_psu_default_6 | FilterPSUDefault6 | FilterPSUUser6 | filter_psu_user6@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
-
     Given Relation between user with username "filter_psu_default_1" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_2" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_3" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_4" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_5" and property set with name "ps1_name" for customer with code "c1t" exists
     Given Relation between user with username "filter_psu_default_6" and property set with name "ps1_name" for customer with code "c1t" exists
-
     When List of users for property set with name "ps1_name" for customer with code "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned
     And There are property set users with following usernames returned in order: <expected_usernames>
-
     Examples:
       | limit | cursor | returned | filter                           | sort      | sort_desc | expected_usernames                                                                                           |
       | 5     | 0      | 5        | user_name=='filter_psu_default*' | user_name |           | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5 |

@@ -16,7 +16,9 @@ import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserViewDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
@@ -47,25 +49,18 @@ public class PropertySteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
 
-    // --- steps ---
-
-    @Step
-    public void followingPropertiesExist(List<PropertyDto> properties) {
+    public void followingPropertiesExist(List<PropertyCreateDto> properties, String userId) {
         properties.forEach(t -> {
-            // remove duplicates
-            PropertyDto existingProperty = getPropertyByCodeInternal(t.getPropertyCode());
-            if (existingProperty != null) {
-                deleteProperty(existingProperty.getPropertyId());
-            }
-
-            // introduce new records
+            PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+            relation.setUserId(userId);
+            t.setPropertyUserRelationshipDto(relation);
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+
             Response createResponse = createProperty(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Property cannot be created: " + createResponse.asString());
+                fail("Property cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
             }
         });
-        Serenity.setSessionVariable(SERENITY_SESSION__PROPERTIES).to(properties);
     }
 
     @Step
@@ -143,25 +138,23 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void followingPropertyIsCreated(PropertyDto property) {
+    public void followingPropertyIsCreated(PropertyCreateDto property, String userId) {
+        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        relation.setUserId(userId);
+        property.setPropertyUserRelationshipDto(relation);
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
-        Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
-        PropertyDto existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
-        if (existingProperty != null) {
-            deleteProperty(existingProperty.getPropertyId());
-        }
+
         Response response = createProperty(property);
         setSessionResponse(response);
     }
 
     @Step
-    public void followingPropertyIsCreatedWithAddress(PropertyDto property, AddressDto address) {
+    public void followingPropertyIsCreatedWithAddress(PropertyCreateDto property, AddressDto address, String userId) {
+        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        relation.setUserId(userId);
+        property.setPropertyUserRelationshipDto(relation);
         property.setAddress(address);
-        Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY).to(property);
-        PropertyDto existingProperty = getPropertyByCodeInternal(property.getPropertyCode());
-        if (existingProperty != null) {
-            deleteProperty(existingProperty.getPropertyId());
-        }
+
         Response response = createProperty(property);
         setSessionResponse(response);
     }
@@ -268,6 +261,7 @@ public class PropertySteps extends BasicSteps {
                 .when().delete("/{id}", id);
     }
 
+
     /**
      * GET - list of property objects
      *
@@ -287,7 +281,6 @@ public class PropertySteps extends BasicSteps {
         }
         return requestSpecification.when().get();
     }
-
 
     /**
      * GET - single property filtered by code from a list of properties

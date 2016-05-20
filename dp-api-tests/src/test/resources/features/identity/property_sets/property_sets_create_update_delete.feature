@@ -7,27 +7,25 @@ Feature: Property sets create update delete
     Given Database is cleaned
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-    Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name
-    Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name
-    Given All property sets are deleted for customers with codes: c1t
-      #FIX ClassCastException - 500
-    Given The following property sets exist for customer with code "c1t"
+      | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+    Given The following users exist for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
-    Given The following properties exist with random address and billing address
+    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 49ae92d9-2d80-47d9-994b-77f5f598336a |
 
   @Smoke
   Scenario: Creating property set for customer with code "c1t"
-    When Property set is created for customer with code "c1t"
+    When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName  | propertySetDescription | propertySetType |
       | ps1_created_name | ps1_description        | branch          |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "ps1_created_name"
     And Body contains entity with attribute "property_set_type_id" value "branch"
-    And "Location" header is set and contains the same property set
     And Etag header is present
 
   @Smoke
@@ -43,13 +41,13 @@ Feature: Property sets create update delete
 
   Scenario Outline: Updating property set
   Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
-    When Property set with name "<propertySetName>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" is updated with following data
+    When Property set with name "<propertySetName>" for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" is updated with following data
       | propertySetName           | propertySetDescription   | propertySetType   |
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated property set with name "<updated_propertySetName>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" has following data
+    And Updated property set with name "<updated_propertySetName>" for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" has following data
       | propertySetName           | propertySetDescription   | propertySetType   |
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
     Examples:

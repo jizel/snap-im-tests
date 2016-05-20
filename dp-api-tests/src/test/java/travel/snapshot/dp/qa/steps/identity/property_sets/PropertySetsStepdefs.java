@@ -11,6 +11,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyViewDto;
@@ -38,10 +39,9 @@ public class PropertySetsStepdefs {
     @Steps
     private PropertySteps propertySteps;
 
-    @Given("^The following property sets exist for customer with code \"([^\"]*)\"$")
-    public void The_following_property_set_exist_for_customer_with_code(String customerCode, List<PropertySetDto> propertySets) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.followingPropertySetsExistForCustomer(propertySets, c);
+    @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
+    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String userId, List<PropertySetCreateDto> propertySets) throws Throwable {
+        propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId);
     }
 
     @Given("^All property sets are deleted for customers with codes: (.*)$")
@@ -76,6 +76,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(p, propertySetName, c);
     }
 
+    @When("^The following property set is created for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
+    public void theFollowingPropertySetIsCreatedForCustomerWithIdAndUser(String customerId, String userId, List<PropertySetCreateDto> propertySets) throws Throwable {
+        propertySetSteps.followingPropertySetIsCreated(propertySets.get(0), customerId, userId);
+    }
+
     @When("^List of property sets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_property_sets_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
                                                                                                      @Transform(NullEmptyStringConverter.class) String cursor,
@@ -84,12 +89,6 @@ public class PropertySetsStepdefs {
                                                                                                      @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         propertySetSteps.listOfPropertySetsIsGotWith(limit, cursor, filter, sort, sortDesc);
 
-    }
-
-    @When("^Property set is created for customer with code \"([^\"]*)\"$")
-    public void Property_set_is_created_for_customer_with_code(String customerCode, List<PropertySetDto> propertySets) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.followingPropertySetIsCreatedForCustomer(c, propertySets.get(0));
     }
 
     @When("^Property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is deleted$")
