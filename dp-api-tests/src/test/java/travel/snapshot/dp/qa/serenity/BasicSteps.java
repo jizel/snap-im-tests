@@ -177,7 +177,7 @@ public class BasicSteps {
     @Step
     public void bodyContainsEntityWith(String attributeName, String attributeValue) {
         Response response = getSessionResponse();
-        response.then().body(attributeName, is(attributeValue));
+        response.then().body(attributeName, isOneOf(attributeValue, Boolean.valueOf(attributeValue)));
     }
 
     public void bodyContainsEntityWith(String attributeName) {
@@ -262,7 +262,7 @@ public class BasicSteps {
     }
 
     public Response deleteEntityUrl(String url, String id) {
-        return given().spec(spec).when().delete(url+"/{id}", id);
+        return given().spec(spec).when().delete(url + "/{id}", id);
     }
 
     protected Response getEntity(String id, String etag) {
@@ -271,6 +271,12 @@ public class BasicSteps {
             requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{id}", id);
+    }
+
+    protected Response createSecondLevelRelationship(String firstLevelId, String secondLevelId, Object jsonBody) {
+        RequestSpecification requestSpecification = given().spec(spec).body(jsonBody);
+        Response response = requestSpecification.post(String.format("/" + firstLevelId + "/" + secondLevelId));
+        return response;
     }
 
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
@@ -300,6 +306,14 @@ public class BasicSteps {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (!StringUtils.isBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     /**
