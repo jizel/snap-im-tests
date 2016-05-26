@@ -15,6 +15,7 @@ import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerBaseDto;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
@@ -57,7 +58,7 @@ public class CustomerStepdefs {
 
 
     @Given("^The following customers exist with random address$")
-    public void The_following_tenants_exist(List<CustomerDto> customers) throws Throwable {
+    public void The_following_tenants_exist(List<CustomerCreateDto> customers) throws Throwable {
         customerSteps.followingCustomersExist(customers);
     }
 
@@ -119,7 +120,7 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer is created with random address$")
-    public void customer_is_created(List<CustomerDto> customers) throws Throwable {
+    public void customer_is_created(List<CustomerCreateDto> customers) throws Throwable {
         customerSteps.followingCustomerIsCreated(customers.get(0));
     }
 
@@ -159,6 +160,11 @@ public class CustomerStepdefs {
     @When("^Customer with code \"([^\"]*)\" is updated with data$")
     public void Customer_with_code_is_updated_with_data(String code, List<CustomerUpdateDto> customers) throws Throwable {
         customerSteps.updateCustomerWithCode(code, customers.get(0));
+    }
+
+    @When("^Customer with id \"([^\"]*)\" is updated with data$")
+    public void customerWithIdIsUpdatedWithData(String customerId, List<CustomerUpdateDto> customersData) throws Throwable {
+        customerSteps.updateCustomerWithCode(customerId, customersData.get(0));
     }
 
     @When("^Customer with code \"([^\"]*)\" is deleted$")
@@ -344,12 +350,12 @@ public class CustomerStepdefs {
 
     @When("^List of property sets for customer \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String customerCode, @Transform(NullEmptyStringConverter.class) String limit,
+            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
             @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomerPropertySetsIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
+        customerSteps.listOfCustomerPropertySetsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Given("^All users are removed for customers with codes: (.*)$")
@@ -430,14 +436,19 @@ public class CustomerStepdefs {
         customerSteps.listOfCustomerApiSubscriptionsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
     }
 
+
     @Then("There are (\\d+) customers commercial subscriptions returned")
     public void There_are_customers_commercial_subscriptions_returned(int count) throws Throwable {
         customerSteps.numberOfEntitiesInResponse(CommercialSubscriptionDto.class, count);
     }
 
-
     @When("^Customer with id \"([^\"]*)\", update address with following data$")
     public void customerWithCodeUpdateAddressWithFollowingData(String customerId, List<AddressUpdateDto> addresses) throws Throwable {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
+    }
+
+    @When("^Relation between user with username \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
+    public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String userId, String customerId) throws Throwable {
+        customerSteps.relationExistsBetweenUserAndCustomerIsDeleted(userId, customerId);
     }
 }

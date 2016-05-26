@@ -2,13 +2,15 @@ Feature: Users get
 
   Background:
     Given Database is cleaned
-    Given The following users exist
+    Given The following customers exist with random address
+      | customerId                           | companyName  | email                    | code         | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 728c45dd-a964-4f78-afe0-88d108c682ed | UserCustomer | userCustomer@tenants.biz | userCustomer | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default4 | Default4  | User4    | def4@snapshot.travel | Europe/Prague | cs-CZ   |
-
     Given The password of user "default3" is "Password01"
 
   @Smoke
@@ -18,7 +20,6 @@ Feature: Users get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "user_id"
-
     And Body contains entity with attribute "user_type" value "customer"
     And Body contains entity with attribute "user_name" value "default1"
     And Body contains entity with attribute "first_name" value "Default1"
@@ -33,18 +34,14 @@ Feature: Users get
     And Body is empty
 
   Scenario: Get token for deleted user
-    Given The following users exist
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | customer | default5 | Default5  | User5    | def5@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The password of user "default5" is "Password01"
-    Given User with userName "default5" is deleted
-    When Get token for user "default5" with password "Password01"
+    Given The password of user "default4" is "Password01"
+    Given User with userName "default4" is deleted
+    When Get token for user "default4" with password "Password01"
     Then Response code is 401
 
   Scenario Outline: Checking error codes for work with tokens
     When Get token for user "<username>" with password "<password>"
     Then Response code is "<response_code>"
-
     Examples:
       | username | password         | response_code |
       | default3 | Password01       | 200           |
@@ -54,14 +51,11 @@ Feature: Users get
       |          |                  | 401           |
 
   Scenario: Getting user with not current etag
-  User is got, etag is saved to tmp, then user culture is updated to "sk" so etag should change and is got again with previous etag
-
     When User with username "default1" is got for etag, updated and got with previous etag
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "user_id"
-
     And Body contains entity with attribute "user_type" value "customer"
     And Body contains entity with attribute "user_name" value "default1"
     And Body contains entity with attribute "first_name" value "Default1"
@@ -73,11 +67,10 @@ Feature: Users get
   Scenario: Checking error code for getting user
     When Nonexistent user id is got
     Then Response code is "404"
-    And Custom code is "152"
-
+    And Custom code is "40402"
 
   Scenario Outline: Getting list of users
-    Given The following users exist
+    Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
       | userType | userName        | firstName     | lastName   | email                       | timezone      | culture |
       | customer | list_default_1  | ListDefault1  | ListUser1  | list_user1@snapshot.travel  | Europe/Prague | cs-CZ   |
       | customer | list_default_2  | ListDefault2  | ListUser2  | list_user2@snapshot.travel  | Europe/Prague | cs-CZ   |
@@ -199,7 +192,7 @@ Feature: Users get
       | /null | /null  | /null  | /null |           |
 
   Scenario Outline: Filtering list of users
-    Given The following users exist
+    Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
       | userType | userName         | firstName      | lastName    | email                        | phone        | timezone          | culture |
       | customer | filter_default_1 | FilterDefault1 | FilterUser1 | filter_user1@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_default_2 | FilterDefault2 | FilterUser2 | filter_user2@snapshot.travel | +42010111213 | Europe/Bratislava | cs-CZ   |

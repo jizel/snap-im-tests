@@ -55,7 +55,7 @@ Feature: Applications versions get
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Nonexistent application version id is got for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   Scenario Outline: Getting list of application versions
     Given The following applications exist

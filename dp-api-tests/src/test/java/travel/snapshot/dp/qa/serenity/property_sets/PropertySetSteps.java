@@ -17,8 +17,10 @@ import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyViewDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserViewDto;
@@ -50,94 +52,37 @@ public class PropertySetSteps extends BasicSteps {
 
     // --- steps ---
 
-    @Step
-    public void followingPropertySetsExistForCustomer(List<PropertySetDto> propertySets, CustomerDto customer) {
-        propertySets.forEach(t -> {
-            // remove duplicates
-            PropertySetDto existingPropertySet = getPropertySetByNameForCustomer(t.getPropertySetName(), customer.getCustomerId());
-            if (existingPropertySet != null) {
-                deleteEntity(existingPropertySet.getPropertySetId());
-            }
+    public void followingPropertySetsExist(List<PropertySetCreateDto> propertySets, String customerId, String userId) {
+        propertySets.forEach(entity -> {
+            entity.setCustomerId(customerId);
+            PropertySetUserRelationshipDto relation = new PropertySetUserRelationshipDto();
+            relation.setUserId(userId);
+            entity.setPropertySetUserRelationshipDto(relation);
 
-            t.setCustomerId(customer.getCustomerId());
-            Response createResponse = createEntity(t);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Property set cannot be created: " + createResponse.asString());
+            Response resp = createEntity(entity);
+            if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
+                fail("Property set cannot be created: " + resp.asString());
             }
         });
-        Serenity.setSessionVariable(SERENITY_SESSION__PROPERTY_SETS).to(propertySets);
+
     }
+
+    public void followingPropertySetIsCreated(PropertySetCreateDto propertySetCreateDto, String customerId, String userId) {
+        propertySetCreateDto.setCustomerId(customerId);
+        PropertySetUserRelationshipDto relation = new PropertySetUserRelationshipDto();
+        relation.setUserId(userId);
+        propertySetCreateDto.setPropertySetUserRelationshipDto(relation);
+
+        Response resp = createEntity(propertySetCreateDto);
+        setSessionResponse(resp);
+    }
+
 
     public PropertySetDto getPropertySetByNameForCustomer(String propertySetName, String customerId) {
         String filter = String.format("name==%s and customer_id==%s", propertySetName, customerId);
         PropertySetDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
         return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
-
-/*
-    @Step
-    public void getPropertyByCodeUsingEtag(String code) {
-        Property propertyFromList = getPropertyByCodeInternal(code);
-        if (propertyFromList == null) {
-            fail("No matching property with code: [" + code + "] found.");
-        }
-
-        // we first need to get current ETag of a property
-        Response responseWithETag = getProperty(propertyFromList.getPropertyId(), null);
-
-        // try to get the property with current ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
-        
-        // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-    }
-    
-    @Step
-    public void getPropertyWithCodeUsingEtagAfterUpdate(String code) {
-        Property propertyFromList = getPropertyByCodeInternal(code);
-        if (propertyFromList == null) {
-            fail("No matching property with code: [" + code + "] found.");
-        }
-
-        // we first need to get current ETag of a property
-        Response responseWithETag = getProperty(propertyFromList.getPropertyId(), null);
-
-        // force new ETag on server side
-        Response updateResponse = updateProperty(
-                propertyFromList.getPropertyId(),
-                Collections.singletonMap("vat_id", "CZ99999999"),
-                responseWithETag.getHeader(HEADER_ETAG));
-        if (updateResponse.getStatusCode() != 204) {
-            fail("Property cannot be updated: " + updateResponse.asString());
-        }
-
-        // get with old ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
-        
-        // store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-    }
-    
-
-    @Step
-    public void deletePropertyWithCode(String code) {
-        String propertyId = getPropertyByCodeInternal(code).getPropertyId();
-        Response resp = deleteProperty(propertyId);
-
-        //store to session
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-        Serenity.setSessionVariable(SERENITY_SESSION__PROPERTY_ID).to(propertyId);
-    }
-
-    @Step
-    public void propertyIdInSessionDoesntExist() {
-        String propertyId = Serenity.sessionVariableCalled(SERENITY_SESSION__PROPERTY_ID);
-
-        Response response = getProperty(propertyId, null);
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-    
-    */
 
     public void deleteAllPropertySetsForCustomer(List<CustomerDto> customers) {
         customers.forEach(c -> {
@@ -159,6 +104,9 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void propertySetNamesAreInResponseInOrder(List<String> names) {
+        if (names.isEmpty()) {
+            return;
+        }
         Response response = getSessionResponse();
         PropertySetDto[] propertySets = response.as(PropertySetDto[].class);
         int i = 0;
@@ -166,18 +114,6 @@ public class PropertySetSteps extends BasicSteps {
             assertEquals("Property set on index=" + i + " is not expected", names.get(i), ps.getPropertySetName());
             i++;
         }
-    }
-
-    public void followingPropertySetIsCreatedForCustomer(CustomerDto c, PropertySetDto propertySet) {
-        PropertySetDto existingPropertySet = getPropertySetByNameForCustomer(propertySet.getPropertySetName(), c.getCustomerId());
-        if (existingPropertySet != null) {
-            deleteEntity(existingPropertySet.getPropertySetId());
-        }
-
-        propertySet.setCustomerId(c.getCustomerId());
-        Serenity.setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET).to(propertySet);
-        Response createResponse = createEntity(propertySet);
-        setSessionResponse(createResponse);
     }
 
     public void propertySetWithNameForCustomerIsDeleted(CustomerDto c, String propertySetName) {

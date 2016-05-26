@@ -3,16 +3,12 @@ Feature: Customers property sets
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-
-    Given All properties are removed from property_sets for customer with code "c1t" with names: ps1_name, ps2_name
-    Given All property sets are deleted for customers with codes: c1t, c2t
-
-    Given The following users exist
-      | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
-      | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 55e2cf39-ffb6-4bb8-ad3f-66306c2be124 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | 0fdc1123-b242-46a7-8377-f95210df8c66 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+    Given The following users exist for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" as primary "false"
+      | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
+      | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     #Get token for snapshot user and set it to session (?access_token={token})
     Given The password of user "defaultSnapshotuser" is "Password01"
@@ -21,7 +17,7 @@ Feature: Customers property sets
 
   Scenario Outline: getting list of property sets for customer "c1t" on customers side
 #failing because of not functional filtering
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "ae912431-b6aa-4d78-a6d9-f8620ccd9d0b"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | branch          |
       | list_ps2_name   | list_ps2_description   | branch          |
@@ -82,13 +78,11 @@ Feature: Customers property sets
       | list_ps57_name  | list_ps57_description  | branch          |
       | list_ps58_name  | list_ps58_description  | branch          |
       | list_ps59_name  | list_ps59_description  | branch          |
-
-    When List of property sets for customer "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
+    When List of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customer property sets returned
     And Total count is "<total>"
-
     Examples:
       | limit | cursor | returned | total |
       | /null |        | 50       | 59    |
@@ -148,7 +142,7 @@ Feature: Customers property sets
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                           | sort  | sort_desc | expected_codes                                                            |
+      | limit | cursor | returned | total | filter              | sort  | sort_desc | expected_codes                                                            |
       | 5     | 0      | 5        | 5     | name=='list_*'      | name  |           | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
       | 5     | 0      | 5        | 5     | name=='list_*'      |       | name      | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
       | 5     | 2      | 3        | 5     | name=='list_*'      | name  |           | list_ps3_name, list_ps4_name, list_ps5_name                               |

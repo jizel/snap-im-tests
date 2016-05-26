@@ -6,35 +6,23 @@ Feature: Users property set roles CRUD
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-
-    Given The following users exist
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-
-    Given The following property sets exist for customer with code "c1t"
+    Given The following users exist for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 2048b11e-eff2-477c-b322-015bbd931e46 | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | e0aa919b-5b55-4f03-99ba-48c9f8fec42d | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "2048b11e-eff2-477c-b322-015bbd931e46"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
-
-    Given Relation between user with username "default1" and customer with code "c1t" exists with isPrimary "0"
-    Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
-
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-
-#    Given The following properties exist with random address and billing address
-#      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-#      | salesforceid_1 | p1_name      | ps1_name      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
-#
-#    Given Relation between user with username "default1" and property with code "ps1_name" exists
-
     Given Switch for user property set role tests
     Given The following roles exist
       | roleId                               | roleName    | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-# ----------------------------------------------------------------------------------------------------------------------
+
+
   @Smoke
   Scenario Outline: Assigning role to user property set
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_code>" is added
@@ -46,8 +34,8 @@ Feature: Users property set roles CRUD
 
   Scenario Outline: Assigning not existing role
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_code>" is added
-    Then Response code is "400"
-    And Custom code is 63
+    Then Response code is "422"
+    And Custom code is 42202
     Examples:
       | role_id                              | user_name | property_set_name | customer_code |
       | 1111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | c1t           |
@@ -58,8 +46,8 @@ Feature: Users property set roles CRUD
       | roleId                               | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_code>" is added
-    Then Response code is "400"
-    And Custom code is 63
+    Then Response code is "422"
+    And Custom code is 42202
     Examples:
       | role_id                              | user_name | property_set_name | customer_code |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | c1t           |
@@ -70,8 +58,8 @@ Feature: Users property set roles CRUD
       | roleId                               | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_code>" is added
-    Then Response code is "400"
-    And Custom code is 63
+    Then Response code is "422"
+    And Custom code is 42202
 
     Examples:
       | role_id                              | user_name | property_set_name | customer_code |
@@ -80,9 +68,8 @@ Feature: Users property set roles CRUD
   #todo issue dp-1294
   Scenario Outline: Assigning role to not existing property set
     When Role with id "<role_id>" for user name "<user_name>" and property set id "<property_set_id>" is added
-    Then Response code is "400"
-    And Custom code is 63
-
+    Then Response code is "404"
+    And Custom code is 40402
     Examples:
       | role_id                              | user_name | property_set_id                      |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | 1111fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -90,9 +77,8 @@ Feature: Users property set roles CRUD
     #todo issue dp-1294
   Scenario Outline: Assigning role to not existing user
     When Role with id "<role_id>" for not existing user id and property set name "<property_set_name>" for customer code "<customer_code>" is added
-    Then Response code is "400"
-    And Custom code is 63
-
+    Then Response code is "404"
+    And Custom code is 40402
     Examples:
       | role_id                              | property_set_name | customer_code |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | ps1_name          | c1t           |

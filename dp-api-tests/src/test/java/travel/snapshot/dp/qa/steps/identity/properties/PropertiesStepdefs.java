@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -32,9 +32,9 @@ public class PropertiesStepdefs {
 
     // --- given ---
 
-    @Given("^The following properties exist with random address and billing address$")
-    public void The_following_properties_exist(List<PropertyDto> properties) throws Throwable {
-        propertySteps.followingPropertiesExist(properties);
+    @Given("^The following properties exist with random address and billing address for user \"([^\"]*)\"$")
+    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddressForUser(String userId, List<PropertyCreateDto> properties) throws Throwable {
+        propertySteps.followingPropertiesExist(properties, userId);
     }
 
     @Given("^All users are removed for properties with codes: (.*)$")
@@ -79,15 +79,15 @@ public class PropertiesStepdefs {
         propertySteps.listOfPropertiesExistsWith(limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Property is created with random address and billing address$")
-    public void property_is_created(List<PropertyDto> properties) throws Throwable {
-        propertySteps.followingPropertyIsCreated(properties.get(0));
+    @When("^The following property is created with random address and billing address for user \"([^\"]*)\"$")
+    public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userId, List<PropertyCreateDto> properties) throws Throwable {
+        propertySteps.followingPropertyIsCreated(properties.get(0), userId);
     }
 
-    @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
-    public void property_from_country_region_code_email_is_created(String customerId, String country, String region, String code, String email) {
+    @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created with userId \"([^\"]*)\"$")
+    public void aPropertyForCustomerFromCountryRegionCodeEmailIsCreatedWithUserId(String customerId, String country, String region, String code, String email, String userId) throws Throwable {
         AddressDto address = new AddressDto();
-        PropertyDto property = new PropertyDto();
+        PropertyCreateDto property = new PropertyCreateDto();
         address.setAddressLine1("someAddress");
         address.setCity("someCity");
         address.setZipCode("1234");
@@ -99,7 +99,7 @@ public class PropertiesStepdefs {
         property.setEmail(email);
         property.setIsDemoProperty(true);
         property.setTimezone("GMT");
-        propertySteps.followingPropertyIsCreatedWithAddress(property, address);
+        propertySteps.followingPropertyIsCreatedWithAddress(property, address, userId);
     }
 
     @When("^Property with code \"([^\"]*)\" is deleted$")

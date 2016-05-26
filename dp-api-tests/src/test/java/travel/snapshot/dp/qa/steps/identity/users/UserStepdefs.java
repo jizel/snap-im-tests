@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
@@ -39,14 +40,14 @@ public class UserStepdefs {
     @Steps
     private PropertySetSteps propertySetSteps;
 
-    @Given("^The following users exist$")
-    public void The_following_roles_exist(List<UserDto> users) throws Throwable {
-        usersSteps.followingUsersExist(users);
+    @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
+    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
+        usersSteps.followingUsersExist(users, customerId, isPrimary);
     }
 
-    @When("^User is created$")
-    public void User_is_created(List<UserDto> users) throws Throwable {
-        usersSteps.followingUserIsCreated(users.get(0));
+    @When("^The following users is created for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
+    public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
+        usersSteps.followingUserIsCreated(users.get(0), customerId, isPrimary);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")
@@ -364,6 +365,7 @@ public class UserStepdefs {
         userRolesSteps.roleBetweenUserAndPropertySetNotExists(roleId, userName, propSet.getPropertySetId());
     }
 
+
     @Given("^Role with name \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\" for customer code \"([^\"]*)\" is added$")
     public void roleWithNameForUserNameAndPropertySetNameForCustomerCodeIsAdded(String roleName, String userName, String propSetName, String customerCode) throws Throwable {
         CustomerDto customer = customerSteps.getCustomerByCodeInternal(customerCode);
@@ -374,7 +376,6 @@ public class UserStepdefs {
 
         userRolesSteps.roleNameExistsBetweenUserAndPropertySet(role.getRoleId(), userName, propSet.getPropertySetId());
     }
-
 
     @When("^List of roles for user with username \"([^\"]*)\" and property set name \"([^\"]*)\" for customer code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void listOfRolesForUserWithUsernameAndPropertySetNameForCustomerCodeIsGotWithLimitAndCursorAndFilterAndSortAndSort_desc(String userName, String propSetName, String customerCode,

@@ -3,14 +3,12 @@ Feature: Property sets get
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-      | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-
-    Given All users are removed for property_sets for customer with code "c1t" with names: ps1_name
-    Given All property sets are deleted for customers with codes: c1t, c2t
-
-    Given The following property sets exist for customer with code "c1t"
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+    Given The following users exist for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
       | ps2_name        | ps2_description        | branch          |
@@ -20,10 +18,11 @@ Feature: Property sets get
   Scenario: Checking error code for getting property set
     When Nonexistent property set id is got
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
+
 
   Scenario Outline: Getting property sets
-    Given The following property sets exist for customer with code "c2t"
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | branch          |
       | list_ps2_name   | list_ps2_description   | branch          |
@@ -84,15 +83,12 @@ Feature: Property sets get
       | list_ps57_name  | list_ps57_description  | branch          |
       | list_ps58_name  | list_ps58_description  | branch          |
       | list_ps59_name  | list_ps59_description  | branch          |
-
-
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> property sets returned
     And Link header is '<link_header>'
     And Total count is "<total>"
-
     Examples:
       | limit | cursor | returned | total | link_header                                                                                                       |
       | /null |        | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
@@ -110,7 +106,6 @@ Feature: Property sets get
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
-
     Examples:
       | limit | cursor | filter         | sort            | sort_desc       | response_code | custom_code |
       #limit and cursor
@@ -133,7 +128,7 @@ Feature: Property sets get
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 63          |
 
   Scenario Outline: Filtering list of property sets
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName      | propertySetDescription | propertySetType |
       | list_ps1_name        | list_ps1_description   | branch          |
       | list_ps2_name        | list_ps2_description   | branch          |

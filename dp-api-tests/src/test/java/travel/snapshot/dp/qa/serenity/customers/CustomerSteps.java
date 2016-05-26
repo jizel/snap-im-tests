@@ -19,6 +19,7 @@ import java.util.Map;
 
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
@@ -59,7 +60,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void followingCustomersExist(List<CustomerDto> customers) {
+    public void followingCustomersExist(List<CustomerCreateDto> customers) {
         customers.forEach(t -> {
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
             Response createResponse = createEntity(t);
@@ -81,7 +82,7 @@ public class CustomerSteps extends BasicSteps {
 
 
     @Step
-    public void followingCustomerIsCreated(CustomerDto customer) {
+    public void followingCustomerIsCreated(CustomerCreateDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
         Response response = createEntity(customer);
@@ -179,7 +180,7 @@ public class CustomerSteps extends BasicSteps {
     private Response addUserToCustomerWithIsPrimary(String userId, String customerId, String isPrimary) {
         Map<String, Object> customerUser = new HashMap<>();
         customerUser.put("user_id", userId);
-        customerUser.put("is_primary", Integer.valueOf(isPrimary));
+        customerUser.put("is_primary", isPrimary);
 
 
         return given().spec(spec)
@@ -243,13 +244,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithCode(String code, CustomerUpdateDto updatedCustomer) throws Throwable {
-        CustomerDto original = getCustomerByCodeInternal(code);
-        if (original == null) {
-            fail("Customer with code " + code + " not found");
-        }
-
-        Response tempResponse = getEntity(original.getCustomerId(), null);
+    public void updateCustomerWithCode(String customerId, CustomerUpdateDto updatedCustomer) throws Throwable {
+        Response tempResponse = getEntity(customerId, null);
 
         ObjectMapper mapper = new ObjectMapper();
         String customerData = mapper.writeValueAsString(updatedCustomer);
@@ -259,7 +255,7 @@ public class CustomerSteps extends BasicSteps {
             fail("Empty update, check parameters!");
         }
 
-        Response response = updateEntity(original.getCustomerId(), s, tempResponse.getHeader(HEADER_ETAG));
+        Response response = updateEntity(customerId, s, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -440,7 +436,7 @@ public class CustomerSteps extends BasicSteps {
     public void relationExistsBetweenUserAndCustomerWithPrimary(UserDto user, String customerCode, String isPrimary) {
         CustomerDto c = getCustomerByCodeInternal(customerCode);
 
-        CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(c.getCustomerId(), user.getUserName());
+        CustomerUserRelationshipViewDto existingCustomerUser = getUserForCustomer(c.getCustomerId(), user.getUserName());
         if (existingCustomerUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
@@ -454,9 +450,9 @@ public class CustomerSteps extends BasicSteps {
         }
     }
 
-    private CustomerUserRelationshipDto getUserForCustomer(String customerId, String userName) {
+    private CustomerUserRelationshipViewDto getUserForCustomer(String customerId, String userName) {
         Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
-        return Arrays.asList(customerUserResponse.as(CustomerUserRelationshipDto[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(customerUserResponse.as(CustomerUserRelationshipViewDto[].class)).stream().findFirst().orElse(null);
     }
 
     @Step
@@ -509,10 +505,9 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfCustomerPropertySetsIsGotWith(String customerCode, String limit, String cursor, String filter, String sort, String sortDesc) {
-        CustomerDto c = getCustomerByCodeInternal(customerCode);
+    public void listOfCustomerPropertySetsIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
         setAccessTokenParamFromSession();
-        Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
     }
 
@@ -540,7 +535,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void userDoesntExistForCustomer(UserDto u, String customerCode) {
         CustomerDto c = getCustomerByCodeInternal(customerCode);
-        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(c.getCustomerId(), u.getUserName());
+        CustomerUserRelationshipViewDto userForCustomer = getUserForCustomer(c.getCustomerId(), u.getUserName());
         assertNull("User should not be present in customer", userForCustomer);
     }
 
@@ -618,5 +613,10 @@ public class CustomerSteps extends BasicSteps {
             default:
                 fail("Bad field for customer property");
         }
+    }
+
+    public void relationExistsBetweenUserAndCustomerIsDeleted(String userId, String customerId) {
+        Response resp = deleteSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        setSessionResponse(resp);
     }
 }

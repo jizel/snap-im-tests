@@ -47,7 +47,7 @@ public class UserGroupsSteps extends BasicSteps {
         {
             Response createResponse = createEntity(ug);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("User group cannot be created: " + createResponse.getStatusCode() + " " + createResponse.getBody());
+                fail("User group cannot be created: " + createResponse.getStatusCode() + " " + createResponse.getBody().asString());
             }
         });
     }

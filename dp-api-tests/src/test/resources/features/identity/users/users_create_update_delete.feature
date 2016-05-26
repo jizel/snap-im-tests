@@ -2,13 +2,16 @@ Feature: Users create update delete
 
   Background:
     Given Database is cleaned
-    Given The following users exist
+    Given The following customers exist with random address
+      | customerId                           | companyName        | email                          | code               | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | userCreateCustomer | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
 
   Scenario Outline: Creating users
-    When User is created
+    When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
       | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
     Then Response code is "201"
@@ -19,10 +22,7 @@ Feature: Users create update delete
     And Body contains entity with attribute "email" value "<email>"
     And Body contains entity with attribute "timezone" value "<timezone>"
     And Body contains entity with attribute "culture" value "<culture>"
-    And "Location" header is set and contains the same user
     And Etag header is present
-
-
     Examples:
       | userType | userName | firstName | lastName | email                           | timezone      | culture |
       | customer | snp      | Snap      | Shot     | snp@snapshot.travel             | Europe/Prague | cs-CZ   |
@@ -42,12 +42,11 @@ Feature: Users create update delete
       | customer | snp7     | Snap7     | Shot7    | dummy-test.1_mail+32@gmail.com  | Europe/Prague | cs-CZ   |
 
   Scenario Outline: Creating users with wrong fields
-    When User is created
+    When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
       | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
     Then Response code is "400"
     And Custom code is "<custom_code>"
-
     Examples:
       | userType | userName | firstName | lastName | email                  | timezone      | culture | custom_code |
       | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs-CZ   | 59          |
@@ -124,9 +123,9 @@ Feature: Users create update delete
   Scenario: Activating non existing user
     When User with not existing id "11111111-1111-1111-1111-111111111111" is inactivated
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   Scenario: Deactivating non existing user
     When User with not existing id "11111111-1111-1111-1111-111111111111" is activated
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
