@@ -1,6 +1,6 @@
 Feature: Customers multiproperty
 
-  Background: Initial data to DB
+  Background:
     Given Database is cleaned
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
@@ -10,31 +10,27 @@ Feature: Customers multiproperty
      #limited - some properties not available
      #snapshot - user that has everything accessible
      #random - no access to properties
-    Given The following users exist
-      | userType | userName   | firstName | lastName | email                  | timezone      | culture |
-      | customer | everything | Default1  | User1    | def1@snapshot.travel   | Europe/Prague | cs-CZ   |
-      | customer | limited    | Default2  | User2    | def2@snapshot.travel   | Europe/Prague | cs-CZ   |
-      | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel   | Europe/Prague | cs-CZ   |
-      | customer | random     | random    | random   | random@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
+      | userId                               | userType | userName   | firstName | lastName | email                  | timezone      | culture |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | customer | everything | Default1  | User1    | def1@snapshot.travel   | Europe/Prague | cs-CZ   |
+      | ce5d9f8a-9623-4154-aba4-109e64cdc149 | customer | limited    | Default2  | User2    | def2@snapshot.travel   | Europe/Prague | cs-CZ   |
+      | 3d262796-1ba1-442c-92fb-a95f6a598ffc | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel   | Europe/Prague | cs-CZ   |
+      | 20d70d2e-e299-4860-b102-4e886fb99ac1 | customer | random     | random    | random   | random@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The password of user "everything" is "Password01"
     Given The password of user "limited" is "Password01"
     Given The password of user "snapshot" is "Password01"
     Given The password of user "random" is "Password01"
 
-    Given Relation between user with username "everything" and customer with code "c1t" exists with isPrimary "true"
-    Given Relation between user with username "limited" and customer with code "c1t" exists with isPrimary "true"
-    Given Relation between user with username "random" and customer with code "c1t" exists with isPrimary "true"
-
     #Even though user "snapshot" do not have relation with customer he should have access to all property sets
     #Given Relation between user with username "snapshot" and customer with code "c1t" exists with isPrimary "true"
 
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" and user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
       | ps2_name        | ps2_description        | branch          |
 
-    Given The following properties exist with random address and billing address
+    Given The following properties exist with random address and billing address for user "3d262796-1ba1-442c-92fb-a95f6a598ffc"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
@@ -122,7 +118,7 @@ Feature: Customers multiproperty
     Examples:
       | username   | password   | count | names              | order |
       | snapshot   | Password01 | 2     | ps1_name, ps2_name | name  |
-      | everything | Password01 | 2     | ps1_name, ps2_name | /null |
+      | everything | Password01 | 2     |                    | /null |
       | everything | Password01 | 2     | ps1_name, ps2_name | name  |
       | limited    | Password01 | 1     | ps2_name           | name  |
       | random     | Password01 | 0     |                    | /null |

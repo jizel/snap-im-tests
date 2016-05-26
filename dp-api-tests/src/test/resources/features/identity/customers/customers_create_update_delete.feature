@@ -4,18 +4,20 @@ Feature: Customers create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
   @Smoke
   Scenario: Creating Customer without parent with random address
     When Customer is created with random address
-      | companyName           | email          | code | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Creation test company | s1@tenants.biz | s1t  | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | companyName           | email          | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Creation test company | s1@tenants.biz | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Creation test company"
     And Body contains entity with attribute "email" value "s1@tenants.biz"
-    And Body contains entity with attribute "customer_code" value "s1t"
+    And Body contains entity with attribute "salesforce_id" value "salesforceid_created_1"
+    And Body contains entity with attribute "phone" value "+420123456789"
+    And Body contains entity with attribute "customer_code"
     And "Location" header is set and contains the same customer
 
   Scenario Outline: Checking error codes for creating customer
@@ -29,7 +31,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_email_value.json     | POST   | identity | /identity/customers | 400        | 59          |
       | /messages/identity/customers/create_customer_wrong_field_email.json     | POST   | identity | /identity/customers | 400        | 56          |
       | /messages/identity/customers/create_customer_wrong_vatid_value.json     | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_country_value.json   | POST   | identity | /identity/customers | 400        | 63          |
+      | /messages/identity/customers/create_customer_wrong_country_value.json   | POST   | identity | /identity/customers | 422        | 42202       |
       | /messages/identity/customers/create_customer_wrong_phone_value.json     | POST   | identity | /identity/customers | 400        | 59          |
       | /messages/identity/customers/create_customer_wrong_website_value.json   | POST   | identity | /identity/customers | 400        | 59          |
 
@@ -60,29 +62,27 @@ Feature: Customers create update delete
     Then Response code is "204"
 
   Scenario Outline: Updating customer
-    When Customer with code "c1t" is updated with data
-      | companyName   | email   | code   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
-      | <companyName> | <email> | <code> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data
+      | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
+      | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Updated customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" has data
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
-
     Examples:
-      | companyName        | email             | code         | salesforceId         | vatId       | phone         | website              | notes         | timezone      |
-      | updatedCompanyName | /null             | /null        | /null                | /null       | /null         | /null                | /null         | /null         |
-      | /null              | updated@email.com | /null        | /null                | /null       | /null         | /null                | /null         | /null         |
-      | /null              | /null             | updated_code | /null                | /null       | /null         | /null                | /null         | /null         |
-      | /null              | /null             | /null        | salesforceid_updated | /null       | /null         | /null                | /null         | /null         |
-      | /null              | /null             | /null        | /null                | CZ987654321 | /null         | /null                | /null         | /null         |
-      | /null              | /null             | /null        | /null                | /null       | +420987654321 | /null                | /null         | /null         |
-      | /null              | /null             | /null        | /null                | /null       | /null         | http://update.com    | /null         | /null         |
-      | /null              | /null             | /null        | /null                | /null       | /null         | /null                | updatedNotes  | /null         |
-      | /null              | /null             | /null        | /null                | /null       | /null         | /null                | /null         | Pacific/Fiji  |
-      | severalUpdates     | /null             | /null        | /null                | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague |
-      | allUpdates         | all@all.com       | allUpdated   | allUpdated_sf_id     | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    |
+      | companyName        | email             | salesforceId         | vatId       | phone         | website              | notes         | timezone      |
+      | updatedCompanyName | /null             | /null                | /null       | /null         | /null                | /null         | /null         |
+      | /null              | updated@email.com | /null                | /null       | /null         | /null                | /null         | /null         |
+      | /null              | /null             | salesforceid_updated | /null       | /null         | /null                | /null         | /null         |
+      | /null              | /null             | /null                | CZ987654321 | /null         | /null                | /null         | /null         |
+      | /null              | /null             | /null                | /null       | +420987654321 | /null                | /null         | /null         |
+      | /null              | /null             | /null                | /null       | /null         | http://update.com    | /null         | /null         |
+      | /null              | /null             | /null                | /null       | /null         | /null                | updatedNotes  | /null         |
+      | /null              | /null             | /null                | /null       | /null         | /null                | /null         | Pacific/Fiji  |
+      | severalUpdates     | /null             | /null                | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague |
+      | allUpdates         | all@all.com       | allUpdated_sf_id     | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    |
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
   # update with error fields, bad values, missing fields

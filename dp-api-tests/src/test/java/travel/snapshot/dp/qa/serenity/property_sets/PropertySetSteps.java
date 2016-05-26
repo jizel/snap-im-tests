@@ -104,6 +104,9 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void propertySetNamesAreInResponseInOrder(List<String> names) {
+        if (names.isEmpty()) {
+            return;
+        }
         Response response = getSessionResponse();
         PropertySetDto[] propertySets = response.as(PropertySetDto[].class);
         int i = 0;

@@ -13,7 +13,7 @@ Feature: Properties property sets get
       | 0b202111-cdaf-439a-8bef-3140f56c657e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   Scenario: Getting properties property sets
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
@@ -24,7 +24,7 @@ Feature: Properties property sets get
     And Body contains entity with attribute "property_set_name"
 
   Scenario Outline: Getting list of properties property sets
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | branch          |
       | list_ps2_name   | list_ps2_description   | branch          |
@@ -155,7 +155,7 @@ Feature: Properties property sets get
       | 5     | 10     | 5        | 54    |
 
   Scenario Outline: Filtering list of properties property sets
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | branch          |
       | list_ps2_name   | list_ps2_description   | branch          |
@@ -203,23 +203,23 @@ Feature: Properties property sets get
     And Custom code is "<custom_code>"
 
     Examples:
-      | limit       | cursor | filter | sort              | sort_desc         | response_code | custom_code |
-      | /null       | -1     | /null  | /null             | /null             | 400           | 63          |
-      |             | -1     | /null  | /null             | /null             | 400           | 63          |
-      | /null       | text   | /null  | /null             | /null             | 400           | 63          |
-      |             | text   | /null  | /null             | /null             | 400           | 63          |
-      | -1          |        | /null  | /null             | /null             | 400           | 63          |
-      | -1          | /null  | /null  | /null             | /null             | 400           | 63          |
-      | 201         | /null  | /null  | /null             | /null             | 400           | 63          |
-      | 21474836470 | /null  | /null  | /null             | /null             | 400           | 63          |
-      | text        |        | /null  | /null             | /null             | 400           | 63          |
-      | text        | /null  | /null  | /null             | /null             | 400           | 63          |
-      | 10          | -1     | /null  | /null             | /null             | 400           | 63          |
-      | text        | 0      | /null  | /null             | /null             | 400           | 63          |
-      | 10          | text   | /null  | /null             | /null             | 400           | 63          |
-      | 10          | 0      | /null  | property_set_name | property_set_name | 400           | 64          |
-      | 10          | 0      | /null  | /null             | nonexistent       | 400           | 63          |
-      | 10          | 0      | /null  | nonexistent       | /null             | 400           | 63          |
-      | 10          | 0      | code== | /null             | /null             | 400           | 63          |
+      | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
+      | /null       | -1     | /null  | /null       | /null       | 400           | 63          |
+      |             | -1     | /null  | /null       | /null       | 400           | 63          |
+      | /null       | text   | /null  | /null       | /null       | 400           | 63          |
+      |             | text   | /null  | /null       | /null       | 400           | 63          |
+      | -1          |        | /null  | /null       | /null       | 400           | 63          |
+      | -1          | /null  | /null  | /null       | /null       | 400           | 63          |
+      | 201         | /null  | /null  | /null       | /null       | 400           | 63          |
+      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 63          |
+      | text        |        | /null  | /null       | /null       | 400           | 63          |
+      | text        | /null  | /null  | /null       | /null       | 400           | 63          |
+      | 10          | -1     | /null  | /null       | /null       | 400           | 63          |
+      | text        | 0      | /null  | /null       | /null       | 400           | 63          |
+      | 10          | text   | /null  | /null       | /null       | 400           | 63          |
+      | 10          | 0      | /null  | name        | name        | 400           | 64          |
+      | 10          | 0      | /null  | /null       | nonexistent | 400           | 63          |
+      | 10          | 0      | /null  | nonexistent | /null       | 400           | 63          |
+      | 10          | 0      | code== | /null       | /null       | 400           | 63          |
       
       

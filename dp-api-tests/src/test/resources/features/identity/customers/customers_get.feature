@@ -37,7 +37,7 @@ Feature: Customers get
   Scenario: Checking error code for getting customer
     When Nonexistent customer id is got
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
 
   Scenario Outline: Getting list of customers
