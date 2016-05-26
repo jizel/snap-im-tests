@@ -406,12 +406,6 @@ public class BasicSteps {
         return queryParams;
     }
 
-    protected Response createSecondLevelRelationship(String firstLevelId, String secondLevelId, Object jsonBody) {
-        RequestSpecification requestSpecification = given().spec(spec).body(jsonBody);
-        Response response = requestSpecification.post(String.format("/" + firstLevelId + "/" + secondLevelId));
-        return response;
-    }
-
     protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
 
@@ -430,15 +424,6 @@ public class BasicSteps {
 
         return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
     }
-
-    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
-    }
-
 
     protected JSONObject retrieveDataNew(Object value) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
