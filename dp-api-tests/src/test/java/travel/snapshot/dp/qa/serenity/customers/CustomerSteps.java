@@ -36,6 +36,7 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -205,14 +206,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void customerWithCodeIsGot(String code) {
-        CustomerDto customerFromList = getCustomerByCodeInternal(code);
-
-        Response response = getEntity(customerFromList.getCustomerId(), null);
-        setSessionResponse(response);
-    }
-
-    @Step
     public void deleteCustomerWithId(String customerId) {
         Response response = deleteEntity(customerId);
         setSessionResponse(response);
@@ -300,32 +293,28 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void customerWithCodeIsGotWithEtag(String code) {
-        //TODO implement actual customer search
-        CustomerDto customerFromList = getCustomerByCodeInternal(code);
+    public void customerWithIdIsGotWithEtag(String customerId) {
 
-        Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
+        Response tempResponse = getEntity(customerId, null);
 
-        Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader(HEADER_ETAG));
+        Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
     @Step
-    public void customerWithCodeIsGotWithEtagAfterUpdate(String code) {
-        CustomerDto customerFromList = getCustomerByCodeInternal(code);
-
-        Response tempResponse = getEntity(customerFromList.getCustomerId(), null);
+    public void customerWithIdIsGotWithEtagAfterUpdate(String customerId) {
+        Response tempResponse = getEntity(customerId, null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("vat_id", "CZ99999999");
 
-        Response updateResponse = updateEntity(customerFromList.getCustomerId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+        Response updateResponse = updateEntity(customerId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
         if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Customer cannot be updated: " + updateResponse.asString());
         }
 
-        Response resp = getEntity(customerFromList.getCustomerId(), tempResponse.getHeader(HEADER_ETAG));
+        Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
@@ -356,12 +345,12 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void codesAreInResponseInOrder(List<String> codes) {
+    public void emailsAreInResponseInOrder(List<String> emails) {
         Response response = getSessionResponse();
         CustomerDto[] customers = response.as(CustomerDto[].class);
         int i = 0;
         for (CustomerDto c : customers) {
-            assertEquals("Customer on index=" + i + " is not expected", codes.get(i), c.getCode());
+            contains("Customer on index=" + i + " is not expected", emails.get(i), c.getEmail());
             i++;
         }
     }

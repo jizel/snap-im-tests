@@ -172,11 +172,6 @@ public class CustomerStepdefs {
         customerSteps.customerWithCodeIsDeleted(code);
     }
 
-    @When("^Customer with code \"([^\"]*)\" is got$")
-    public void Customer_with_code_is_got(String code) throws Throwable {
-        customerSteps.customerWithCodeIsGot(code);
-    }
-
     @When("^Customer with code \"([^\"]*)\" is activated$")
     public void Customer_with_code_is_activated(String code) throws Throwable {
         customerSteps.activateCustomerWithCode(code);
@@ -185,16 +180,6 @@ public class CustomerStepdefs {
     @When("^Customer with code \"([^\"]*)\" is inactivated$")
     public void Customer_with_code_is_inactivated(String code) throws Throwable {
         customerSteps.inactivateCustomerWithCode(code);
-    }
-
-    @When("^Customer with code \"([^\"]*)\" is got with etag$")
-    public void Customer_with_code_is_got_with_etag(String code) throws Throwable {
-        customerSteps.customerWithCodeIsGotWithEtag(code);
-    }
-
-    @When("^Customer with code \"([^\"]*)\" is got for etag, updated and got with previous etag$")
-    public void Customer_with_code_is_got_for_etag_updated_and_got_with_previous_etag(String code) throws Throwable {
-        customerSteps.customerWithCodeIsGotWithEtagAfterUpdate(code);
     }
 
     @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")
@@ -283,11 +268,6 @@ public class CustomerStepdefs {
     @Then("^Customer with code \"([^\"]*)\" is not active$")
     public void Customer_with_code_is_not_active(String code) throws Throwable {
         customerSteps.isActiveSetTo(false, code);
-    }
-
-    @Then("^There are customers with following codes returned in order: (.*)")
-    public void There_are_customers_with_following_codes_returned_in_order(List<String> codes) throws Throwable {
-        customerSteps.codesAreInResponseInOrder(codes);
     }
 
     @Then("^There are (\\d+) customerProperties returned$")
@@ -450,5 +430,25 @@ public class CustomerStepdefs {
     @When("^Relation between user with username \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
     public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String userId, String customerId) throws Throwable {
         customerSteps.relationExistsBetweenUserAndCustomerIsDeleted(userId, customerId);
+    }
+
+    @When("^Customer with customerId \"([^\"]*)\" is got$")
+    public void customerWithCustomerIdIsGot(String customerId) throws Throwable {
+        customerSteps.customerWithIdIsGot(customerId);
+    }
+
+    @When("^Customer with customerId \"([^\"]*)\" is got with etag$")
+    public void customerWithCustomerIdIsGotWithEtag(String customerId) throws Throwable {
+        customerSteps.customerWithIdIsGotWithEtag(customerId);
+    }
+
+    @When("^Customer with customerId \"([^\"]*)\" is got for etag, updated and got with previous etag$")
+    public void customerWithCustomerIdIsGotForEtagUpdatedAndGotWithPreviousEtag(String customerId) throws Throwable {
+        customerSteps.customerWithIdIsGotWithEtagAfterUpdate(customerId);
+    }
+
+    @Then("^There are customers with following emails returned in order: \"([^\"]*)\"$")
+    public void thereAreCustomersWithFollowingEmailsReturnedInOrder(List<String> emails) throws Throwable {
+        customerSteps.emailsAreInResponseInOrder(emails);
     }
 }
