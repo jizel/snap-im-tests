@@ -1,10 +1,9 @@
 {
   "name": "ᴦᴧᴨ",
-  "customer_code": "foreign2",
   "phone": "+42012345679",
   "email": "foreign2@test.biz",
   "vat_id": "CZ12345678",
-  "website" : "http://snapshot.travel",
+  "website": "http://snapshot.travel",
   "is_demo_customer": true,
   "address": {
     "address_line1": "string",
@@ -14,5 +13,5 @@
     "country": "CZ"
   },
   "notes": "string",
-  "headquarters_timezone" : "Europe/Prague"
+  "headquarters_timezone": "Europe/Prague"
 }

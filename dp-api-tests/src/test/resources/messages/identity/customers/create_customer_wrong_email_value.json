@@ -1,6 +1,5 @@
 {
   "name": "company with wrong email",
-  "customer_code": "ecn1",
   "phone": "+42012345679",
   "email": "testing@",
   "website" : "http://www.snapshot.travel",
