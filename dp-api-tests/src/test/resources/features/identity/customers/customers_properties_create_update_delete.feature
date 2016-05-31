@@ -79,7 +79,7 @@ Feature: Customers properties create update delete
   @Smoke
   Scenario: Delete customer should remove all related property relation
     Given Relation between property with code "p3_code" and customer with code "c3t" exists with type "chain" from "2016-01-01" to "2016-01-15"
-    Given Customer with code "c3t" is deleted
+    Given Customer with customer id "b13fde13-615a-48fd-a287-ba4a7314193b" is deleted
     Then Property "p3_code" is not assigned to customer "c3t"
 
   Scenario Outline: Updating customerProperty error codes

@@ -278,4 +278,14 @@ public class UserGroupsSteps extends BasicSteps {
         Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleId);
         setSessionResponse(resp);
     }
+
+    public void checkuserGroupPropertyRelationActivity(String userGroupId, String propertyId, boolean activity) {
+        UserGroupPropertyRelationshipDto relation = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).as(UserGroupPropertyRelationshipDto.class);
+        assertEquals(relation.getIsActive(), activity);
+    }
+
+    public void checkuserGroupPropertySetRelationActivity(String userGroupId, String propertySetId, boolean b) {
+        UserGroupPropertySetRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null).as(UserGroupPropertySetRelationshipDto.class);
+        assertEquals(relationship.getIsActive(), b);
+    }
 }
