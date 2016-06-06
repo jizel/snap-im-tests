@@ -22,6 +22,8 @@ import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.qa.helpers.AddressUtils;
+import travel.snapshot.dp.qa.helpers.CustomerUtils;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -48,6 +50,13 @@ public class CustomerStepdefs {
     @Steps
     private ReviewMultipropertyCustomerSteps reviewMultipropertyCustomerSteps;
 
+    // ---------------------------- GIVEN ------------------------------
+
+    @Given("^All users are removed for customers with codes: (.*)$")
+    public void All_users_are_removed_for_customers_with_codes_default(List<String> codes) throws Throwable {
+        customerSteps.removeAllUsersFromCustomers(codes);
+    }
+
     @Given("^Set access token from session for customer steps defs$")
     public void setAccessTokenFromSessionForCustomerStepsDefs() throws Throwable {
         customerSteps.setAccessTokenParamFromSession();
@@ -56,53 +65,9 @@ public class CustomerStepdefs {
         reviewMultipropertyCustomerSteps.setAccessTokenParamFromSession();
     }
 
-
     @Given("^The following customers exist with random address$")
     public void The_following_tenants_exist(List<CustomerCreateDto> customers) throws Throwable {
         customerSteps.followingCustomersExist(customers);
-    }
-
-    @When("^A customer from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created$")
-    public void customer_from_country_region_code_email_is_created(String country, String region, String code,
-                                                                   String email) {
-        AddressDto address = new AddressDto();
-        CustomerDto customer = new CustomerDto();
-        address.setAddressLine1("someAddress");
-        address.setAddressLine2("someAddressLine2");
-        address.setCity("someCity");
-        address.setZipCode("1234");
-        address.setCountry(country);
-        address.setRegion(region);
-        customer.setCompanyName("someCompany");
-        customer.setCode(code);
-        customer.setEmail(email);
-        customer.setIsDemoCustomer(true);
-        customer.setTimezone("GMT");
-        customerSteps.followingCustomerIsCreatedWithAddress(customer, address);
-    }
-
-    @When("^A customer from country \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" vatId \"([^\"]*)\" company nqma \"([^\"]*)\"is created$")
-    public void a_customer_from_country_with_code_and_email_is_created_with_proper_vatID(String country, String code,
-                                                                                         String email, String vatId, String companyName) {
-        AddressDto address = new AddressDto();
-        CustomerDto customer = new CustomerDto();
-        address.setAddressLine1("someAddress");
-        address.setAddressLine2("someAddressLine2");
-        address.setCity("someCity");
-        address.setZipCode("1234");
-        address.setCountry(country);
-        customer.setCompanyName(companyName);
-        customer.setCode(code);
-        customer.setEmail(email);
-        customer.setIsDemoCustomer(true);
-        customer.setTimezone("GMT");
-        customer.setVatId(vatId);
-        customerSteps.followingCustomerIsCreatedWithAddress(customer, address);
-    }
-
-    @Given("^The following customers with codes don't exist$")
-    public void The_following_customers_dont_exist(List<String> customerCodes) throws Throwable {
-        customerSteps.followingCustomersDontExist(customerCodes);
     }
 
     @Given("^Relation between property with code \"([^\"]*)\" and customer with code \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
@@ -117,6 +82,17 @@ public class CustomerStepdefs {
                                                                                                  String customerCode, String isPrimary) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerCode, isPrimary);
+    }
+
+    // ---------------------------- WHEN ------------------------------
+
+    @When("^A customer with following country \"([^\"]*)\", region \"([^\"]*)\", vatId \"([^\"]*)\" is created$")
+    public void aCustomerWithFollowingCountryRegionVatIdIsCreated(@Transform(NullEmptyStringConverter.class) String country,
+                                                                  @Transform(NullEmptyStringConverter.class) String region,
+                                                                  @Transform(NullEmptyStringConverter.class) String vatId) throws Throwable {
+        AddressDto addressForCustomer = AddressUtils.createRandomAddress(10, 10, 5, country, region);
+        CustomerCreateDto customer = CustomerUtils.createRandomCustomer(vatId);
+        customerSteps.followingCustomerIsCreatedWithAddress(customer, addressForCustomer);
     }
 
     @When("^Customer is created with random address$")
@@ -137,16 +113,6 @@ public class CustomerStepdefs {
 
     }
 
-    @When("^Nonexistent customer id is got$")
-    public void Nonexistent_customer_id_is_got() throws Throwable {
-        customerSteps.customerWithIdIsGot("nonexistent_id");
-    }
-
-    @When("^Nonexistent customer id is deleted$")
-    public void Nonexistent_customer_id_is_deleted() throws Throwable {
-        customerSteps.deleteCustomerWithId("nonexistent_id");
-    }
-
     @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_customers_is_got_with_limit_and_cursor_and_filter_filter_and_sort_and_sort_desc(
             @Transform(NullEmptyStringConverter.class) String limit,
@@ -157,35 +123,9 @@ public class CustomerStepdefs {
         customerSteps.listOfCustomersIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Customer with code \"([^\"]*)\" is updated with data$")
-    public void Customer_with_code_is_updated_with_data(String code, List<CustomerUpdateDto> customers) throws Throwable {
-        customerSteps.updateCustomerWithCode(code, customers.get(0));
-    }
-
     @When("^Customer with id \"([^\"]*)\" is updated with data$")
     public void customerWithIdIsUpdatedWithData(String customerId, List<CustomerUpdateDto> customersData) throws Throwable {
         customerSteps.updateCustomerWithCode(customerId, customersData.get(0));
-    }
-
-    @When("^Customer with code \"([^\"]*)\" is deleted$")
-    public void Customer_with_code_is_deleted(String code) throws Throwable {
-        customerSteps.customerWithCodeIsDeleted(code);
-    }
-
-    @When("^Customer with code \"([^\"]*)\" is activated$")
-    public void Customer_with_code_is_activated(String code) throws Throwable {
-        customerSteps.activateCustomerWithCode(code);
-    }
-
-    @When("^Customer with code \"([^\"]*)\" is inactivated$")
-    public void Customer_with_code_is_inactivated(String code) throws Throwable {
-        customerSteps.inactivateCustomerWithCode(code);
-    }
-
-    @When("^Customer with code \"([^\"]*)\" is updated with data if updated before$")
-    public void Customer_with_code_is_updated_with_data_if_updated_before(String code, List<CustomerDto> customers)
-            throws Throwable {
-        customerSteps.updateCustomerWithCodeIfUpdatedBefore(code, customers.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" is added to customer with code \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
@@ -240,60 +180,6 @@ public class CustomerStepdefs {
         customerSteps.userIsDeletedFromCustomer(u, customerCode);
     }
 
-    @Then("^Customer with same id doesn't exist$")
-    public void Customer_with_same_id_doesn_t_exist() throws Throwable {
-        customerSteps.customerIdInSessionDoesntExist();
-    }
-
-    @Then("^\"([^\"]*)\" header is set and contains the same customer$")
-    public void header_is_set_and_contains_the_same_customer(String headerName) throws Throwable {
-        customerSteps.compareCustomerOnHeaderWithStored(headerName);
-    }
-
-    @Then("^There are (\\d+) customers returned$")
-    public void There_are_customers_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(CustomerDto.class, count);
-    }
-
-    @Then("^Updated customer with id \"([^\"]*)\" has data$")
-    public void Updated_customer_with_code_has_data(String customerId, List<CustomerDto> customers) throws Throwable {
-        customerSteps.customerWithIdHasData(customerId, customers.get(0));
-    }
-
-    @Then("^Customer with code \"([^\"]*)\" is active$")
-    public void Customer_with_code_is_active(String code) throws Throwable {
-        customerSteps.isActiveSetTo(true, code);
-    }
-
-    @Then("^Customer with code \"([^\"]*)\" is not active$")
-    public void Customer_with_code_is_not_active(String code) throws Throwable {
-        customerSteps.isActiveSetTo(false, code);
-    }
-
-    @Then("^There are (\\d+) customerProperties returned$")
-    public void There_are_returned_customerProperties_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, count);
-    }
-
-    @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")
-    public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerCode)
-            throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        customerSteps.userDoesntExistForCustomer(u, customerCode);
-    }
-
-    @When("^Nonexistent user is removed from customer with code \"([^\"]*)\"$")
-    public void Nonexistent_user_is_removed_from_customer_with_code(String customerId) throws Throwable {
-        UserDto user = new UserDto();
-        user.setUserId("nonexistent");
-        customerSteps.userIsDeletedFromCustomer(user, customerId);
-    }
-
-    @Then("^\"([^\"]*)\" header is set and contains the same customerProperty$")
-    public void header_is_set_and_contains_the_same_customerProperty(String header) throws Throwable {
-        customerSteps.compareCustomerPropertyOnHeaderWithStored(header);
-    }
-
     @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode,
                                                                                                String customerCode, String type, String fieldName, String value) throws Throwable {
@@ -322,106 +208,6 @@ public class CustomerStepdefs {
         customerSteps.propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(p, customerCode, type);
     }
 
-    @Then("^There are (\\d+) customer property sets returned$")
-    public void There_are_returned_customer_property_sets_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(PropertySetDto.class, count);
-
-    }
-
-    @When("^List of property sets for customer \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomerPropertySetsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
-    }
-
-    @Given("^All users are removed for customers with codes: (.*)$")
-    public void All_users_are_removed_for_customers_with_codes_default(List<String> codes) throws Throwable {
-        customerSteps.removeAllUsersFromCustomers(codes);
-    }
-
-    @When("^List of users for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_users_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String customerCode, @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfUsersIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
-    }
-
-    @Then("^There are customer users with following usernames returned in order: (.*)$")
-    public void There_are_customer_users_with_following_usernames_returned_in_order_expected_usernames(
-            List<String> usernames) throws Throwable {
-        customerSteps.usernamesAreInResponseInOrder(usernames);
-    }
-
-    @Given("^Customer with code \"([^\"]*)\" does not exist$")
-    public void Customer_with_code_does_not_exist(String customerCode) throws Throwable {
-        customerSteps.customerWithCodeIsDeleted(customerCode);
-    }
-
-    @Then("^Field \"([^\"]*)\" has value \"([^\"]*)\" for property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\"$")
-    public void Field_has_value_for_property_with_code_for_customer_with_code_with_type(String fieldName, String value,
-                                                                                        String propertyCode, String customerCode, String type) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode,
-                type);
-    }
-
-    @Then("^All customers are active$")
-    public void all_customers_are_active() throws Throwable {
-        customerSteps.allCustomersAreActive();
-    }
-
-    @When("^Update customer with code \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
-    public void updateCustomerWithCodeFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
-        CustomerUpdateDto c = new CustomerUpdateDto();
-        Field[] fields = CustomerBaseDto.class.getDeclaredFields();
-        for (Field f : CustomerBaseDto.class.getDeclaredFields()) {
-            if (f.getName().equalsIgnoreCase(updatedField)) {
-                f.setAccessible(true);
-                f.set(c, updatedValue);
-                break;
-            }
-        }
-        customerSteps.updateCustomerWithCode(customerCode, c);
-    }
-
-    @When("Customers commercial subscriptions for customer id \"([^\"]*)\" is got")
-    public void Customers_commercial_subscriptions_for_customer_id_is_got(String customerId) {
-        customerSteps.getCommSubscriptionForCustomerId(customerId);
-    }
-
-    @When("^List of customers commercial subscriptions is got for customer with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_customers_commercial_subscriptions_is_got_for_customer_id_with_limit_cursor_filter_sort_sortdesc(
-            String applicationId, @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomerCommSubscriptionsIsGotWith(applicationId, limit, cursor, filter, sort, sortDesc);
-    }
-
-    @When("^List of api subscriptions is got for customer with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void listOfApiSubscriptionsIsGotForCustomerWithIdAndLimitAndCursorAndFilterAndSortAndSort_desc(
-            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomerApiSubscriptionsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
-    }
-
-
-    @Then("There are (\\d+) customers commercial subscriptions returned")
-    public void There_are_customers_commercial_subscriptions_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(CommercialSubscriptionDto.class, count);
-    }
-
     @When("^Customer with id \"([^\"]*)\", update address with following data$")
     public void customerWithCodeUpdateAddressWithFollowingData(String customerId, List<AddressUpdateDto> addresses) throws Throwable {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
@@ -447,8 +233,163 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGotWithEtagAfterUpdate(customerId);
     }
 
+    @When("^Customer with customer id \"([^\"]*)\" is deleted$")
+    public void customerWithCustomerIdIsDeleted(String customerId) throws Throwable {
+        customerSteps.deleteCustomerWithId(customerId);
+    }
+
+    @When("^Customer with id \"([^\"]*)\" is updated with outdated etag$")
+    public void customerWithIdIsUpdatedWithOutdatedEtag(String customerId) throws Throwable {
+        customerSteps.customerWithIdIsUpdatedWithOutdatedEtag(customerId);
+    }
+
+    @When("^List of property sets for customer \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        customerSteps.listOfCustomerPropertySetsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @When("^List of users for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_users_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+            String customerCode, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        customerSteps.listOfUsersIsGotWith(customerCode, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @When("^Update customer with code \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
+    public void updateCustomerWithCodeFieldItsValue(String customerCode, String updatedField, String updatedValue) throws Throwable {
+        CustomerUpdateDto c = new CustomerUpdateDto();
+        Field[] fields = CustomerBaseDto.class.getDeclaredFields();
+        for (Field f : CustomerBaseDto.class.getDeclaredFields()) {
+            if (f.getName().equalsIgnoreCase(updatedField)) {
+                f.setAccessible(true);
+                f.set(c, updatedValue);
+                break;
+            }
+        }
+        customerSteps.updateCustomerWithCode(customerCode, c);
+    }
+
+    /*@When("^Customer with id \"([^\"]*)\" is activated$")
+    public void customerWithIdIsActivated(String customerId) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }
+
+    @When("^Customer with id \"([^\"]*)\" is inactivated$")
+    public void customerWithIdIsInactivated(String customerId) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        throw new PendingException();
+    }*/
+
+    @When("Customers commercial subscriptions for customer id \"([^\"]*)\" is got")
+    public void Customers_commercial_subscriptions_for_customer_id_is_got(String customerId) {
+        customerSteps.getCommSubscriptionForCustomerId(customerId);
+    }
+
+
+    @When("^List of customers commercial subscriptions is got for customer with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_customers_commercial_subscriptions_is_got_for_customer_id_with_limit_cursor_filter_sort_sortdesc(
+            String applicationId, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        customerSteps.listOfCustomerCommSubscriptionsIsGotWith(applicationId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @When("^List of api subscriptions is got for customer with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void listOfApiSubscriptionsIsGotForCustomerWithIdAndLimitAndCursorAndFilterAndSortAndSort_desc(
+            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String cursor,
+            @Transform(NullEmptyStringConverter.class) String filter,
+            @Transform(NullEmptyStringConverter.class) String sort,
+            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        customerSteps.listOfCustomerApiSubscriptionsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    // ---------------------------- THEN ------------------------------
+
+    @Then("^There are (\\d+) customers returned$")
+    public void There_are_customers_returned(int count) throws Throwable {
+        customerSteps.numberOfEntitiesInResponse(CustomerDto.class, count);
+    }
+
+    @Then("^Updated customer with id \"([^\"]*)\" has data$")
+    public void Updated_customer_with_code_has_data(String customerId, List<CustomerDto> customers) throws Throwable {
+        customerSteps.customerWithIdHasData(customerId, customers.get(0));
+    }
+
+    @Then("^There are (\\d+) customerProperties returned$")
+    public void There_are_returned_customerProperties_returned(int count) throws Throwable {
+        customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, count);
+    }
+
+    @Then("^User with username \"([^\"]*)\" isn't there for customer with code \"([^\"]*)\"$")
+    public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerCode)
+            throws Throwable {
+        UserDto u = usersSteps.getUserByUsername(username);
+        customerSteps.userDoesntExistForCustomer(u, customerCode);
+    }
+
+    @Then("^\"([^\"]*)\" header is set and contains the same customerProperty$")
+    public void header_is_set_and_contains_the_same_customerProperty(String header) throws Throwable {
+        customerSteps.compareCustomerPropertyOnHeaderWithStored(header);
+    }
+
+    @Then("^There are (\\d+) customer property sets returned$")
+    public void There_are_returned_customer_property_sets_returned(int count) throws Throwable {
+        customerSteps.numberOfEntitiesInResponse(PropertySetDto.class, count);
+
+    }
+
+    @Then("^There are customer users with following usernames returned in order: (.*)$")
+    public void There_are_customer_users_with_following_usernames_returned_in_order_expected_usernames(
+            List<String> usernames) throws Throwable {
+        customerSteps.usernamesAreInResponseInOrder(usernames);
+    }
+
+    @Then("^Field \"([^\"]*)\" has value \"([^\"]*)\" for property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\"$")
+    public void Field_has_value_for_property_with_code_for_customer_with_code_with_type(String fieldName,
+                                                                                        String value,
+                                                                                        String propertyCode,
+                                                                                        String customerCode,
+                                                                                        String type) throws Throwable {
+        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerCode,
+                type);
+    }
+
+    @Then("There are (\\d+) customers commercial subscriptions returned")
+    public void There_are_customers_commercial_subscriptions_returned(int count) throws Throwable {
+        customerSteps.numberOfEntitiesInResponse(CommercialSubscriptionDto.class, count);
+    }
+
     @Then("^There are customers with following emails returned in order: \"([^\"]*)\"$")
     public void thereAreCustomersWithFollowingEmailsReturnedInOrder(List<String> emails) throws Throwable {
         customerSteps.emailsAreInResponseInOrder(emails);
     }
+
+    @Then("^Customer with id \"([^\"]*)\" doesn't exist$")
+    public void customerWithIdDoesnTExist(String customerId) throws Throwable {
+        customerSteps.customerWithIdDoesNotExist(customerId);
+
+    }
+
+    /*@Then("^Customer with id \"([^\"]*)\" is active$")
+    public void customerWithIdIsActive(String customerId) throws Throwable {
+        customerSteps.checkCustomerActivity(customerId, true);
+    }
+
+    @Then("^Customer with id \"([^\"]*)\" is not active$")
+    public void customerWithIdIsNotActive(String customerId) throws Throwable {
+        customerSteps.checkCustomerActivity(customerId, false);
+    }*/
 }

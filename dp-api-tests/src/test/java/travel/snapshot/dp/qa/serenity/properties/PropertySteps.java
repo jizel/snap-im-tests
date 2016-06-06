@@ -54,7 +54,7 @@ public class PropertySteps extends BasicSteps {
             PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
             relation.setUserId(userId);
             t.setPropertyUserRelationshipDto(relation);
-            t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+            t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
             Response createResponse = createProperty(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -142,7 +142,7 @@ public class PropertySteps extends BasicSteps {
         PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
         relation.setUserId(userId);
         property.setPropertyUserRelationshipDto(relation);
-        property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+        property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
         Response response = createProperty(property);
         setSessionResponse(response);

@@ -227,4 +227,24 @@ public class UserGroupsdefs {
     public void thereAreRelationshipsStartWithFollowingIDsReturnedInOrder(List<String> order) throws Throwable {
         userGroupSteps.responseSortById(order);
     }
+
+    @Then("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is activate$")
+    public void relationBetweenUserGroupAndPropertyIsActivate(String userGroupId, String propertyId) throws Throwable {
+        userGroupSteps.checkuserGroupPropertyRelationActivity(userGroupId, propertyId, true);
+    }
+
+    @Then("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is not activate$")
+    public void relationBetweenUserGroupAndPropertyIsNotActivate(String userGroupId, String propertyId) throws Throwable {
+        userGroupSteps.checkuserGroupPropertyRelationActivity(userGroupId, propertyId, false);
+    }
+
+    @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is activate$")
+    public void relationBetweenUserGroupAndPropertySetIsActivate(String userGroupId, String propertySetId) throws Throwable {
+        userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroupId, propertySetId, true);
+    }
+
+    @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is not activate$")
+    public void relationBetweenUserGroupAndPropertySetIsNotActivate(String userGroupId, String propertySetId) throws Throwable {
+        userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroupId, propertySetId, false);
+    }
 }

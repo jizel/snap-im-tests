@@ -3,18 +3,20 @@ Feature: User groups create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName        | email          | code | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug1  | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
+
 
   Scenario: Create user group with ID that already exists
     When The following user group is created
       | userGroupId                          | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
-    Then Response code is "400"
-    And Custom code is 62
+    Then Response code is "409"
+    And Custom code is 40901
+
 
   @Smoke
   Scenario: Create user group
@@ -30,12 +32,14 @@ Feature: User groups create update delete
     And Body contains entity with attribute "is_active" value "false"
     And Body contains entity with attribute "description" value "userGroupDescription"
 
+
   @Smoke
   Scenario: Activate user group
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is activated
     Then Response code is 204
     And Body is empty
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is active
+
 
   Scenario: Deactivate user group
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is activated
@@ -44,6 +48,7 @@ Feature: User groups create update delete
     And Body is empty
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is not active
 
+
   @Smoke
   Scenario: Delete user group
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is deleted
@@ -51,34 +56,38 @@ Feature: User groups create update delete
     And Body is empty
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
 
+
   Scenario: Delete non-existing user group
     When User group with id "NonExistentUserGroup" is deleted
     Then Response code is 204
     And Body is empty
 
+
   Scenario: Cascade delete (customer is deleted, all his user groups as well)
-    When Customer with code "ug1" is deleted
+    When Customer with customer id "45a5f9e4-5351-4e41-9d20-fdb4609e9353" is deleted
     Then Response code is 204
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
+
 
   Scenario Outline: Creating user group with invalid data
     When The following user group is created
       | userGroupId   | customerId   | name   | isActive   | description   |
       | <userGroupId> | <customerId> | <name> | <isActive> | <description> |
-    Then Response code is 400
+    Then Response code is <response_code>
     And Custom code is <error_code>
     Examples:
-      | userGroupId | customerId                           | name          | isActive | description | error_code | #note                        |
-      | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 63         | # UUID format                |
-      | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 63         | # UUID format                |
-      | /null       | /null                                | /null         | /null    | /null       | 53         | # customerId is mandatory    |
-      | /null       |                                      | /null         | /null    | /null       | 53         | # customerId cannot be empty |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null         | /null    | /null       | 53         | # name is mandatory          |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |               | /null    | /null       | 61         | # name cannot be empty       |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | \w{256}       | /null    | /null       | 63         | # too long name              |
-      | /null       | NotExisting                          | userGroupName | /null    | /null       | 63         | # customerId not in UUID     |
-      | /null       | 11a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 63         | # customerId not found       |
-      | /null       | NotExisting                          | userGroupName | /null    | \w{501}     | 63         | # too long description       |
+      | userGroupId | customerId                           | name          | isActive | description | response_code | error_code | #note                        |
+      | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 400           | 63         | # UUID format                |
+      | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 400           | 63         | # UUID format                |
+      | /null       | /null                                | /null         | /null    | /null       | 400           | 53         | # customerId is mandatory    |
+      | /null       |                                      | /null         | /null    | /null       | 400           | 53         | # customerId cannot be empty |
+      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null         | /null    | /null       | 400           | 53         | # name is mandatory          |
+      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |               | /null    | /null       | 400           | 61         | # name cannot be empty       |
+      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | \w{256}       | /null    | /null       | 400           | 63         | # too long name              |
+      | /null       | NotExisting                          | userGroupName | /null    | /null       | 400           | 63         | # customerId not in UUID     |
+      | /null       | 11a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 404           | 40402      | # customerId not found       |
+      | /null       | NotExisting                          | userGroupName | /null    | \w{501}     | 400           | 63         | # too long description       |
+
 
   Scenario Outline: Updating user group with valid data
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
@@ -107,9 +116,9 @@ Feature: User groups create update delete
 
   Scenario Outline: Updating user group with valid data - customer
     Given The following customers exist with random address
-      | customerId                           | companyName         | email           | code | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer2 | ug2@tenants.biz | ug2  | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer3 | ug3@tenants.biz | ug3  | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName         | email           | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer2 | ug2@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer3 | ug3@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
       | customerId   | name   | isActive   | description   |
       | <customerId> | <name> | <isActive> | <description> |

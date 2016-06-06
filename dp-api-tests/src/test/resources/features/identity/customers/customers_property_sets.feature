@@ -122,7 +122,7 @@ Feature: Customers property sets
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 63          |
 
   Scenario Outline: Filtering list of property sets
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with c1t"
       | propertySetName      | propertySetDescription | propertySetType |
       | list_ps1_name        | list_ps1_description   | branch          |
       | list_ps2_name        | list_ps2_description   | branch          |

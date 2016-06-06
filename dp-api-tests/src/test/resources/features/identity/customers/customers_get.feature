@@ -35,7 +35,7 @@ Feature: Customers get
     And Body contains entity with attribute "vat_id" value "CZ99999999"
 
   Scenario: Checking error code for getting customer
-    When Nonexistent customer id is got
+    When Customer with customerId "NotExistent" is got
     Then Response code is "404"
     And Custom code is "40402"
 

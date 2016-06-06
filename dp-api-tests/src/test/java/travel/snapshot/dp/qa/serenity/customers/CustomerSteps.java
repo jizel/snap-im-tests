@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.serenity.customers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.response.Response;
 
@@ -63,7 +64,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void followingCustomersExist(List<CustomerCreateDto> customers) {
         customers.forEach(t -> {
-            t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+            t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Customer cannot be created " + createResponse.getBody().asString());
@@ -84,35 +85,18 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void followingCustomerIsCreated(CustomerCreateDto customer) {
-        customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ"));
+        customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
         Response response = createEntity(customer);
         setSessionResponse(response);
     }
 
     @Step
-    public void followingCustomerIsCreatedWithAddress(CustomerDto customer, AddressDto address) {
+    public void followingCustomerIsCreatedWithAddress(CustomerCreateDto customer, AddressDto address) {
         customer.setAddress(address);
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        CustomerDto existingCustomer = getCustomerByCodeInternal(customer.getCode());
-        if (existingCustomer != null) {
-            deleteEntity(existingCustomer.getCustomerId());
-        }
         Response response = createEntity(customer);
         setSessionResponse(response);
-    }
-
-    @Step
-    public void compareCustomerOnHeaderWithStored(String headerName) {
-        CustomerDto originalCustomer = Serenity.sessionVariableCalled(SESSION_CREATED_CUSTOMER);
-        Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String customerLocation = response.header(headerName).replaceFirst(BASE_PATH_CUSTOMERS, "");
-        given().spec(spec).get(customerLocation).then()
-                .body("salesforce_id", is(originalCustomer.getSalesforceId()))
-                .body("name", is(originalCustomer.getCompanyName()))
-                .body("customer_code", is(originalCustomer.getCode()))
-                .body("email", is(originalCustomer.getEmail()))
-                .body("vat_id", is(originalCustomer.getVatId()));
     }
 
     @Step
@@ -140,14 +124,6 @@ public class CustomerSteps extends BasicSteps {
     private Response inactivateCustomer(String id) {
         return given().spec(spec)
                 .when().post("/{id}/inactive", id);
-    }
-
-    public void allCustomersAreActive() {
-        Response response = getSessionResponse();
-        List<Integer> isActiveList = response.body().jsonPath().getList("is_active");
-        for (int c : isActiveList) {
-            assertEquals(1, c);
-        }
     }
 
     private CustomerPropertyRelationshipDto getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
@@ -212,25 +188,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void customerWithCodeIsDeleted(String code) {
-        CustomerDto c = getCustomerByCodeInternal(code);
-        if (c == null) {
-            return;
-        }
-        String customerId = c.getCustomerId();
-        Response response = deleteEntity(customerId);//delete customer
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void customerIdInSessionDoesntExist() {
-        String customerId = Serenity.sessionVariableCalled(SESSION_CUSTOMER_ID);
-
-        Response response = getEntity(customerId, null);
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Step
     public void listOfCustomersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
@@ -268,31 +225,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void activateCustomerWithCode(String code) {
-        CustomerDto customer = getCustomerByCodeInternal(code);
-        Response response = activateCustomer(customer.getCustomerId());
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void isActiveSetTo(boolean activeFlag, String code) {
-        CustomerDto customer = getCustomerByCodeInternal(code);
-        if (activeFlag) {
-            assertNotNull("Customer should be returned", customer);
-            assertEquals("Customer should have code=" + code, code, customer.getCode());
-        } else {
-            assertNull("Customer should NOT be returned, only active customer are returned", customer);
-        }
-    }
-
-    @Step
-    public void inactivateCustomerWithCode(String code) {
-        CustomerDto customer = getCustomerByCodeInternal(code);
-        Response response = inactivateCustomer(customer.getCustomerId());
-        setSessionResponse(response);
-    }
-
-    @Step
     public void customerWithIdIsGotWithEtag(String customerId) {
 
         Response tempResponse = getEntity(customerId, null);
@@ -316,15 +248,6 @@ public class CustomerSteps extends BasicSteps {
 
         Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
-    }
-
-    public void updateCustomerWithCodeIfUpdatedBefore(String code, CustomerDto updatedCustomer) throws Throwable {
-        CustomerDto original = getCustomerByCodeInternal(code);
-
-        Map<String, Object> customerData = retrieveData(CustomerDto.class, updatedCustomer);
-
-        Response response = updateEntity(original.getCustomerId(), customerData, "fake-etag");
-        setSessionResponse(response);
     }
 
     public void customerWithIdHasData(String id, CustomerDto data) throws Throwable {
@@ -370,30 +293,10 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(PropertyDto p, String customerCode, String type, String validFrom, String validTo) {
         CustomerDto c = getCustomerByCodeInternal(customerCode);
-
-        //TODO FIX temporary turned off checking of already created relationship
-        /*setAccessTokenParamFromSession();
-
-        CustomerProperty existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
-        if (existingCustomerProperty != null) {
-
-            Response customerPropertyResponseWithEtag = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
-            String etag = customerPropertyResponseWithEtag.header(HEADER_ETAG);
-
-            Map<String, Object> data = new HashMap<>();
-            data.put("valid_from", validFrom);
-            data.put("valid_to", validTo);
-
-            Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, etag);
-            if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-                fail("CustomerProperty cannot be modified");
-            }
-        } else {*/
         Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerProperty cannot be created " + createResponse.getBody().asString());
         }
-        //}
     }
 
     public void propertyIsUpdateForCustomerWithType(PropertyDto p, String customerCode, String type, String fieldName, String value) {
@@ -501,11 +404,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void followingCustomersDontExist(List<String> customerCodes) {
-        customerCodes.forEach(this::customerWithCodeIsDeleted);
-    }
-
-    @Step
     public void userIsAddedToCustomerWithIsPrimary(UserDto u, String customerCode, String isPrimary) {
         CustomerDto c = getCustomerByCodeInternal(customerCode);
 
@@ -608,4 +506,26 @@ public class CustomerSteps extends BasicSteps {
         Response resp = deleteSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(resp);
     }
+
+    public void customerWithIdDoesNotExist(String customerId) {
+        Response resp = getEntity(customerId);
+        if (resp.getStatusCode() == HttpStatus.SC_OK) {
+            fail("Customer should not be present, but it is!");
+        }
+    }
+
+    public void customerWithIdIsUpdatedWithOutdatedEtag(String customerId) throws JsonProcessingException {
+        CustomerUpdateDto updateData = new CustomerUpdateDto();
+        updateData.setNotes("UpdatedNotes");
+
+        Response tempResp = getEntity(customerId);
+        Response firstUpdate = updateEntity(customerId, retrieveDataNew(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
+        Response secondUpdate = updateEntity(customerId, retrieveDataNew(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
+        setSessionResponse(secondUpdate);
+    }
+
+    /*public void checkCustomerActivity(String customerId, boolean activity) {
+        CustomerDto customer = getEntity(customerId).as(CustomerDto.class);
+        assertEquals(customer.getIsActive(), activity);
+    }*/
 }
