@@ -54,7 +54,7 @@ There is 3scale admin portal where you can manage what will be displayed where. 
 
 If you want to add new module to be built and uploaded, besides creating right templates in 3scale backend which decription is out of scope of this readme, you have to 
 add that module to the ThreeScaleModuleID class in this project. The first value of the enumeration serves as development ID, the second as test ID. You get that ID 
-from the 3scale service backend from the URL of some REST service in Active docs.
+from the 3scale service backend from https://snapshot-admin.3scale.net/admin/api_docs/services.
 
 ## Local setup of Gradle environment:
 
