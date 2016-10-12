@@ -88,9 +88,14 @@ Feature: Eventing identity module
 
   Scenario: Eventing property activated
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+
     And The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      |
-      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+
     And Property with code "act_prop_event" is stored in session under key "EVENTING_PROPERTY"
     And Subscription with name "Test" for topic "Notifications.crud" is created
     When Property with code "act_prop_event" is activated
@@ -102,9 +107,14 @@ Feature: Eventing identity module
 
   Scenario: Eventing property deactivated
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+
     And The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode    | website                    | email          | isDemoProperty | timezone      |
-      | salesforceid_1 | p1_name      | dact_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+
     And Property with code "dact_prop_event" is stored in session under key "EVENTING_PROPERTY"
     And Subscription with name "Test" for topic "Notifications.crud" is created
     And Property with code "dact_prop_event" is activated
@@ -121,9 +131,14 @@ Feature: Eventing identity module
     Given Property with code "event_prop_1_create" is deleted
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When Property is created with random address and billing address
-      | salesforceId    | propertyName             | propertyCode        | website                    | email           | isDemoProperty | timezone      |
-      | salesforceid_n1 | Eventing property create | event_prop_1_create | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague |
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+
+    And The following properties exist with random address and billing address
+      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
     And Notification in session operation is "Create"
@@ -133,9 +148,14 @@ Feature: Eventing identity module
   Scenario: Eventing property deleted
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
-    Given The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      |
-      | salesforceid_1 | p1_name      | del_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+
+    And The following properties exist with random address and billing address
+      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+
     Given Property with code "del_prop_event" is stored in session under key "EVENTING_PROPERTY"
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Property with code "del_prop_event" is deleted
