@@ -113,7 +113,7 @@ Feature: Eventing identity module
 
     And The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | salesforceid_1 | p1_name      | dact_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     And Property with code "dact_prop_event" is stored in session under key "EVENTING_PROPERTY"
     And Subscription with name "Test" for topic "Notifications.crud" is created
@@ -135,9 +135,12 @@ Feature: Eventing identity module
       | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Customer"
+
     And The following properties exist with random address and billing address
       | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | act_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | salesforceid_1 | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
