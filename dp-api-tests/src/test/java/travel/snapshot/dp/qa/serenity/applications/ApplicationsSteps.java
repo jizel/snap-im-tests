@@ -56,7 +56,7 @@ public class ApplicationsSteps extends BasicSteps {
         application.forEach(t -> {
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Application cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
+                fail("Application cannot be created: " + createResponse.asString());
             }
         });
     }

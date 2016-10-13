@@ -75,6 +75,9 @@ public class RoleBaseSteps extends BasicSteps {
         }
 
         Response response = createRole(role);
+        if (response.getStatusCode() != HttpStatus.SC_CREATED) {
+            fail("Role cannot be created: " + response.asString());
+        }
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
@@ -113,6 +116,11 @@ public class RoleBaseSteps extends BasicSteps {
         String filter = String.format("name=='%s' and application_id=='%s'", name, applicationId);
         RoleDto[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(RoleDto[].class);
         return Arrays.asList(roles).stream().findFirst().orElse(null);
+    }
+
+    public RoleDto getRoleByNameForApplicationInternalUsingCustomerRole(String name, String applicationId) {
+        setRolesPathCustomer();
+        return getRoleByNameForApplicationInternal(name, applicationId);
     }
 
     public RoleDto getRoleByName(String name) {

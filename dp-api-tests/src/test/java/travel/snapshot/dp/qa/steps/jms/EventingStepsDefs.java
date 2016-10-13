@@ -136,7 +136,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for role with name \"([^\"]*)\" for application id  \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName, String applicationId) throws Throwable {
-        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternalUsingCustomerRole(roleName, applicationId);
         steps.notificationContainsId(r.getRoleId());
     }
 
@@ -155,7 +155,7 @@ public class EventingStepsDefs {
 
     @Given("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
     public void Role_with_name_is_stored_in_session_under_key(String roleName, String applicationId, String sessionKey) throws Throwable {
-        steps.setSessionVariable(sessionKey, roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId));
+        steps.setSessionVariable(sessionKey, roleBaseSteps.getRoleByNameForApplicationInternalUsingCustomerRole(roleName, applicationId));
     }
 
     @Then("^Notification in session id stands for role in session on key \"([^\"]*)\"$")
