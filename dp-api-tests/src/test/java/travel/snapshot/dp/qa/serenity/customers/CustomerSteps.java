@@ -38,11 +38,9 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -225,8 +223,33 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void customerWithIdIsGotWithEtag(String customerId) {
+    public void activateCustomerWithCode(String code) {
+        CustomerDto customer = getCustomerByCodeInternal(code);
+        Response response = activateCustomer(customer.getCustomerId());
+        setSessionResponse(response);
+    }
 
+    @Step
+    public void isActiveSetTo(boolean activeFlag, String code) {
+        CustomerDto customer = getCustomerByCodeInternal(code);
+        if (activeFlag) {
+            assertNotNull("Customer should be returned", customer);
+            assertEquals("Customer should have code=" + code, code, customer.getCode());
+        } else {
+//          Change isActive flag from 0 to true when running against DP version with DP-1319 merged
+            assertThat("Customer should have isActive flag set to 0", customer.getIsActive(), equalTo(0));
+        }
+    }
+
+    @Step
+    public void inactivateCustomerWithCode(String code) {
+        CustomerDto customer = getCustomerByCodeInternal(code);
+        Response response = inactivateCustomer(customer.getCustomerId());
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void customerWithIdIsGotWithEtag(String customerId) {
         Response tempResponse = getEntity(customerId, null);
 
         Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
