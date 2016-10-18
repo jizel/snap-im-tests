@@ -14,7 +14,7 @@ Feature: Applications versions create update delete
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Version 1"
     And Body contains entity with attribute "status" value "inactive"
-    And Body contains entity with attribute "api_key" value "123"
+    And Body contains entity with attribute "api_manager_id" value "123"
     And Body contains entity with attribute "description" value "Versions description 1"
 
   Scenario Outline: Checking error codes for creating application versions
