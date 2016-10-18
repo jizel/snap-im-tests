@@ -25,7 +25,8 @@ Feature: Property sets create update delete
       | ps1_created_name | ps1_description        | branch          |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "ps1_created_name"
-    And Body contains entity with attribute "property_set_type_id" value "branch"
+    And Body contains entity with attribute "property_set_type" value "branch"
+    And "Location" header is set and contains the same property set
     And Etag header is present
 
   @Smoke

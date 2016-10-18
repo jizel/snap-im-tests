@@ -312,7 +312,7 @@ public class PropertySetSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
         given().spec(spec).get(propertyLocation).then()
-                .body("property_set_type_id", is(originalProperty.getPropertySetType()))
+                .body("property_set_type", is(originalProperty.getPropertySetType()))
                 .body("description", is(originalProperty.getPropertySetDescription()))
                 .body("name", is(originalProperty.getPropertySetName()))
                 .body("customer_id", is(originalProperty.getCustomerId()));

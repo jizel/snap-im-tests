@@ -154,7 +154,7 @@ Feature: Property sets get
       | 5     | 2      | 3        | 5     | name=='list_*'                               | name  |           | list_ps3_name, list_ps4_name, list_ps5_name                               |
       | 5     | 2      | 3        | 5     | name=='list_*'                               |       | name      | list_ps3_name, list_ps2_name, list_ps1_name                               |
       | /null | /null  | 1        | 1     | name==list_ps4_name                          | /null | /null     | list_ps4_name                                                             |
-      | /null | /null  | 2        | 2     | name==list_* and property_set_type_id==chain | name  | /null     | list_ps4_name, list_ps5_name                                              |
+      | /null | /null  | 2        | 2     | name==list_* and property_set_type==chain    | name  | /null     | list_ps4_name, list_ps5_name                                              |
       | /null | /null  | 1        | 1     | description==list_ps8_des*                   | /null | /null     | second_list_ps8_name                                                      |
 
 
