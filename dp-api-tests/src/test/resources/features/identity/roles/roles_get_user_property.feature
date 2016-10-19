@@ -193,6 +193,6 @@ Feature: Roles get user property
       | /null | /null  | 1        | 1     | name=='Filter role name 6'                                                         | /null | /null     | Filter role name 6                                                                                 |
       | /null | /null  | 2        | 2     | name=='Filter role name*' and application_id==a318fd9a-a05d-42d8-8e84-42e904ace123 | name  | /null     | Filter role name 1, Filter role name 2                                                             |
       | /null | /null  | 4        | 4     | application_id==b318fd9a-a05d-42d8-8e84-42e904ace123                               | name  | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
-      | /null | /null  | 2        | 2     | role_description=='different*'                                                     | name  | /null     | Filter role name 3, Filter role name 4                                                             |
+      | /null | /null  | 2        | 2     | description=='different*'                                                          | name  | /null     | Filter role name 3, Filter role name 4                                                             |
   #add all fields
 
