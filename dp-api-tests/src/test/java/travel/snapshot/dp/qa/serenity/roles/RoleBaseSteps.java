@@ -31,6 +31,7 @@ public class RoleBaseSteps extends BasicSteps {
     public static final String USER_CUSTOMER_ROLES_PATH = "/identity/user_customer_roles";
     public static final String USER_PROPERTY_SET_ROLES_PATH = "/identity/user_property_set_roles";
     public static final String USER_PROPERTY_ROLES_PATH = "/identity/user_property_roles";
+    private String roleBasePath = "";
 
 
     public RoleBaseSteps() {
@@ -40,18 +41,21 @@ public class RoleBaseSteps extends BasicSteps {
 
     public void setRolesPathCustomer() {
         spec.basePath(USER_CUSTOMER_ROLES_PATH);
+        roleBasePath = USER_CUSTOMER_ROLES_PATH;
     }
 
     public void setRolesPathProperty() {
         spec.basePath(USER_PROPERTY_ROLES_PATH);
+        roleBasePath = USER_PROPERTY_ROLES_PATH;
     }
 
     public void setRolesPathPropertySet() {
         spec.basePath(USER_PROPERTY_SET_ROLES_PATH);
+        roleBasePath = USER_PROPERTY_SET_ROLES_PATH;
     }
 
     public String getBasePath() {
-        return "";
+        return roleBasePath;
     }
 
     @Step
@@ -131,10 +135,10 @@ public class RoleBaseSteps extends BasicSteps {
 
 
     @Step
-    public RoleDto getRoleWithId(String roleId) {
+    public Response getRoleWithId(String roleId) {
         Response resp = getRole(roleId, null);
         setSessionResponse(resp);
-        return resp.as(RoleDto.class);
+        return resp;
     }
 
     @Step
@@ -290,10 +294,10 @@ public class RoleBaseSteps extends BasicSteps {
         }
     }
 
-    public void compareRoleOnHeaderWithStored(String headerName, String header) throws Exception {
+    public void compareRoleOnHeaderWithStored(String headerName) throws Exception {
         RoleDto originalRole = Serenity.sessionVariableCalled(SESSION_CREATED_ROLE);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        String roleLocation = response.header(headerName).replaceFirst(header, "");
+        String roleLocation = response.header(headerName).replaceFirst(getBasePath(), "");
         given().spec(spec).get(roleLocation).then()
                 .body("application_id", is(originalRole.getApplicationId()))
                 .body("role_description", is(originalRole.getDescription()))
