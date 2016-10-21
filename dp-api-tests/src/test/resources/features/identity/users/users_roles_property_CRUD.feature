@@ -1,3 +1,4 @@
+@Identity
 Feature: Users property roles CRUD
 
   Background:

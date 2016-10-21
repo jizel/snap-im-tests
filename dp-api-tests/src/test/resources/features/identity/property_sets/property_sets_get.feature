@@ -1,3 +1,4 @@
+@Identity
 Feature: Property sets get
 
   Background:

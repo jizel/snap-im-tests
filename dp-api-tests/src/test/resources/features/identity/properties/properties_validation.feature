@@ -1,3 +1,4 @@
+@Identity
 Feature: Properties validation
 
   Background:

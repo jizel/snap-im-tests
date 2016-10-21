@@ -1,3 +1,4 @@
+@Identity
 Feature: Property sets create update delete
 
   #TODO add etag things to get/update/create

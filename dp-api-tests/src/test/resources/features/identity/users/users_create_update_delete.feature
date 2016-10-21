@@ -1,3 +1,4 @@
+@Identity
 Feature: Users create update delete
 
   Background:

@@ -1,3 +1,4 @@
+@Identity
 Feature: Api subscription create update delete
 
   Background:

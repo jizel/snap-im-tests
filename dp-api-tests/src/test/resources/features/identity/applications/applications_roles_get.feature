@@ -1,3 +1,4 @@
+@Identity
 Feature: Applications roles get
 
   Background:

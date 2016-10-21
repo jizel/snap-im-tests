@@ -1,3 +1,4 @@
+@Identity
 Feature: Customers property sets
 
   Background:

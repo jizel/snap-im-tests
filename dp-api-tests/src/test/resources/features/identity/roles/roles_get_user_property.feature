@@ -1,3 +1,4 @@
+@Identity
 Feature: Roles get user property
 
   Background:
