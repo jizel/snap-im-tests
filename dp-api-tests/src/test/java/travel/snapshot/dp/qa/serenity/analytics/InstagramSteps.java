@@ -38,10 +38,7 @@ public class InstagramSteps extends AnalyticsBaseSteps {
         ArrayList<Integer> actualList = new ArrayList<Integer>();
         for (MetricDto metric : actual.getData()) {
             List<RecordDto<? extends Number>> actualValues = metric.getValues();
-
-            if (actualValues.size() == 1){
-                actualList.add(Integer.valueOf(actualValues.get(0).getValue().toString()));
-            }
+            actualList.add(Integer.valueOf(actualValues.get(0).getValue().toString()));
         }
 
         expected.sort(Integer::compareTo);

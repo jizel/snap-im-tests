@@ -164,8 +164,7 @@ public class BasicSteps {
      */
     public void integerPartOfValueIs(String path, int value) {
         Response response = getSessionResponse();
-        List<Double> values = response.body().jsonPath().getList(path, double.class);
-        assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
+        response.then().body(path, hasItem(value));
     }
 
     @Step

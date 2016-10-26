@@ -88,11 +88,11 @@ public class SocialMediaStepdefs {
 
     @Then("^Response since is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
     public void responseSinceIsForGranularity(String value, String granularity) throws Throwable {
-        steps.dateFieldIs("since", value, granularity);
+        steps.dateFieldIs("since", value);
     }
 
     @Then("^Response until is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
     public void responseUntilIsForGranularity(String value, String granularity) throws Throwable {
-        steps.dateFieldIs("until", value, granularity);
+        steps.dateFieldIs("until", value);
     }
 }

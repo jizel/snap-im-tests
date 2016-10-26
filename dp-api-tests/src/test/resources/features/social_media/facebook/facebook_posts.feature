@@ -52,9 +52,12 @@ Feature: facebook posts
   Scenario Outline: Checking that data returned are correct (date(UTC) from DB is recalculated to property timezone)
     #property 99000099 has DB value for posts stored everyday at 2015-12-30 11:09:24 UTC -> convert -> 2015-12-30T18:09:24
     When Database is cleaned
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     And The following properties exist with random address and billing address
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone     |
-      | 99000099-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Asia/Bangkok |
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone     | anchorCustomerId                     |
+      | 99000099-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Asia/Bangkok | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     And List of facebook items "<url>" for property id "<property>" is got with limit "1" and cursor "/null"
     Then Response code is 200
     And Facebook posts contains datetime "<datetime>" engagement "<engagement>" content "<content>" and reach "<reach>"

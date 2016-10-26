@@ -62,8 +62,8 @@ Feature: facebook
     Examples:
       | url                 | granularity | count                              | since      | until      | property                             |
       | /analytics/facebook | day         | 7488, 7397, 7548, 7829, 7710, 7517 | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook | week        | 7709, 7664, 7745, 8033, 7905, 7773 | 2015-12-05 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook | month       | 7411, 7358, 7481, 7751, 7635, 7441 | 2015-10-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook | week        | 7709, 7664, 7745, 8033, 7905, 7773 | 2015-12-07 | 2015-12-14 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook | month       | 7411, 7358, 7481, 7751, 7635, 7441 | 2015-11-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Get specific analytics data from API for a given granularity and check it`s count
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -79,63 +79,63 @@ Feature: facebook
       | url                                 | granularity | count | since             | until | real_since        | real_until | property                             |
       | /analytics/facebook/number_of_posts | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/number_of_posts | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/number_of_posts | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/number_of_posts | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
       | /analytics/facebook/engagement      | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/engagement      | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/engagement      | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
       | /analytics/facebook/likes           | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/likes           | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/likes           | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
       | /analytics/facebook/unlikes         | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/unlikes         | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/unlikes         | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
       | /analytics/facebook/reach           | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/reach           | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/reach           | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
       | /analytics/facebook/followers       | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/followers       | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/followers       | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | day         | 366   | today - 365 days | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
 
   @Smoke
@@ -152,13 +152,13 @@ Feature: facebook
       | url                  | granularity | count | since             | until | real_since        | real_until | property                             |
       | /analytics/facebook/ | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/facebook/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/ | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Getting non-existent analytics data
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -194,6 +194,7 @@ Feature: facebook
       | /analytics/facebook/reach           |
       | /analytics/facebook/followers       |
 
+#    Make new negative tests - missing granularity, since and until params
   Scenario Outline: Get analytics data from API for correct granularity
     When Get facebook "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is 200
@@ -202,10 +203,10 @@ Feature: facebook
 
     Examples:
       | url                                 | granularity | expected_granularity | since           | until      |
-      | /analytics/facebook                 |             | day                  | 2015-12-03      | 2015-12-03 |
-      | /analytics/facebook/number_of_posts | week        | week                 | 2015-12-03      |            |
-      | /analytics/facebook/engagement      | month       | month                |                 | today      |
-      | /analytics/facebook/likes           | day         | day                  | today - 1 month |            |
+      | /analytics/facebook                 | day         | day                  | 2015-12-03      | 2015-12-03 |
+      | /analytics/facebook/number_of_posts | week        | week                 | 2015-11-03      | 2015-12-03 |
+      | /analytics/facebook/engagement      | month       | month                | 2015-11-03      | 2015-12-03 |
+      | /analytics/facebook/likes           | day         | day                  | today - 1 month |  today     |
 
 
   Scenario Outline: Get analytics data from API from 1800s
@@ -223,11 +224,11 @@ Feature: facebook
       | /analytics/facebook/unlikes         | month       | 1888-11-01 | 1889-01-01 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/followers       | day         | 1888-11-01 | 1889-01-01 | 99000099-9999-4999-a999-999999999999 |
 
-  Scenario Outline: Get analytics data from API from 1800s
+  Scenario Outline: Get facebook analytics data from API from 1800s
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<start_date>" until "<end_date>"
     Then Response code is 200
     And Content type is "application/json"
-    And Response contains 0 values in data enclosure
+    And Response contains 0 values for all metrics
 
     Examples:
       | url                  | granularity | start_date | end_date   | property                             |
@@ -236,9 +237,9 @@ Feature: facebook
 
   Scenario Outline: Get analytics data with wrong time interval
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
+    Then Response code is 400
     And Content type is "application/json"
-    And Response contains 0 values
+    And Custom code is 63
 
     Examples:
       | url                                 | granularity | since | until            | property                             |
@@ -248,15 +249,5 @@ Feature: facebook
       | /analytics/facebook/engagement      | week        | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/unlikes         | month       | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/followers       | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
-
-  Scenario Outline: Get analytics data with wrong time interval
-    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
-    And Content type is "application/json"
-    And Response contains 0 values in data enclosure
-
-    Examples:
-      | url                 | granularity | since | until            | property                             |
-      | /analytics/facebook | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
-
+      | /analytics/facebook                 | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
 
