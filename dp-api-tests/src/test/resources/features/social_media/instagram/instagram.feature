@@ -1,3 +1,4 @@
+@SocialMedia
 Feature: Instagram
   Testing of api for instagram with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
 

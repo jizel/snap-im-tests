@@ -1,3 +1,4 @@
+@SocialMedia
 Feature: common
 
   Scenario Outline: Get collective analytics data from API for all metrics
