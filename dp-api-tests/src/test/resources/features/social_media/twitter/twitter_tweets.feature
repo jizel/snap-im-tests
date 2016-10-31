@@ -14,11 +14,11 @@ Feature: Twitter tweets
       | /analytics/twitter/tweets | /null | /null  | 50    | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/tweets | /null | 0      | 50    | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/tweets | /null | 1      | 50    | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/twitter/tweets | 0     | /null  | 0     | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/tweets | 1     | /null  | 1     | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/tweets | 1     | 0      | 1     | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/twitter/tweets | 0     | 0      | 0     | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/tweets | 1     | 0      | 1     | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/tweets | 51    | 0      | 51    | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/twitter/tweets | 0     | 1      | 0     | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/tweets | 1     | 1      | 1     | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Twitter tweets are sorted ascendingly by their attributes
     When List of twitter items "<url>" for property id "<property>" is got with limit "/null" and cursor "/null" and sort by "<sort>" descendingly
@@ -66,3 +66,4 @@ Feature: Twitter tweets
       | /analytics/twitter/tweets | text  | /null  | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/tweets | text  |        | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/tweets | 10    | text   | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/tweets | 0     | 1      | 99000099-9999-4999-a999-999999999999 |
