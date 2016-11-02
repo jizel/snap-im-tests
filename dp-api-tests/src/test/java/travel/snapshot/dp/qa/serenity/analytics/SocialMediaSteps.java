@@ -1,27 +1,23 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -42,7 +38,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .param("granularity", granularity)
                 .param("since", since)
                 .param("until", until)
-                .get("/social_media/analytics/facebook/{metric}", metric).jsonPath().getList("values");
+                .get("/social_media/analytics/facebook/{metric}", metric).jsonPath().getList("values.value");
         int facebookSum = facebookValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> twitterValues = given().spec(spec)
@@ -51,7 +47,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .param("granularity", granularity)
                 .param("since", since)
                 .param("until", until)
-                .get("/social_media/analytics/twitter/{metric}", metric).jsonPath().getList("values");
+                .get("/social_media/analytics/twitter/{metric}", metric).jsonPath().getList("values.value");
         int twitterSum = twitterValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> instagramValues = given().spec(spec)
@@ -60,7 +56,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .param("granularity", granularity)
                 .param("since", since)
                 .param("until", until)
-                .get("/social_media/analytics/instagram/{metric}", metric).jsonPath().getList("values");
+                .get("/social_media/analytics/instagram/{metric}", metric).jsonPath().getList("values.value");
         int instagramSum = instagramValues.stream().mapToInt(i -> i).sum();
 
         List<Integer> totalValues = given().spec(spec)
@@ -69,7 +65,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .param("granularity", granularity)
                 .param("since", since)
                 .param("until", until)
-                .get("/social_media/analytics/{metric}", metric).jsonPath().getList("values");
+                .get("/social_media/analytics/{metric}", metric).jsonPath().getList("values.value");
         int totalSum = totalValues.stream().mapToInt(i -> i).sum();
 
         assertEquals(facebookSum + twitterSum + instagramSum, totalSum);
