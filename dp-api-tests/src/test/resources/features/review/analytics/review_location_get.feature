@@ -23,7 +23,7 @@ Feature: Review locaitons
     Given Set access token for review steps defs
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 # /locations/
 #---------------------------------------------------------------------------------------------------------------------
@@ -83,17 +83,16 @@ Feature: Review locaitons
     And Content type is "application/json"
     And There are "<returned>" locations returned
     And There are locations with following name returned in order: "<expected_names>"
-  #And Total count is "<total>" #header "X-Total-Count" not implemented
 
     Examples:
-      | limit | cursor | returned | total | filter                                        | sort          | sort_desc     | expected_names                                                                      |
-      | 5     | 0      | 5        | 6     | location_name=='filter_town*'                 | location_name |               | filter_town1000, filter_town1001, filter_town1002, filter_town1003, filter_town1004 |
-      | 5     | 0      | 5        | 6     | location_name=='filter_town*'                 |               | location_name | filter_town1005, filter_town1004, filter_town1003, filter_town1002, filter_town1001 |
-      | 5     | 2      | 4        | 6     | location_name=='filter_town*'                 | location_name |               | filter_town1002, filter_town1003, filter_town1004, filter_town1005                  |
-      | 5     | 2      | 4        | 6     | location_name=='filter_town*'                 |               | location_name | filter_town1003, filter_town1002, filter_town1001, filter_town1000                  |
-      | /null | /null  | 1        | 1     | location_name==filter_town1005                |               |               | filter_town1005                                                                     |
-      | /null | /null  | 1        | 1     | location_name==filter_town*;location_id==1005 |               |               | filter_town1005                                                                     |
-      | /null | /null  | 1        | 1     | location_id==1001                             |               |               | filter_town1001                                                                     |
+      | limit | cursor | returned | filter                                  | sort          | sort_desc     | expected_names                                  |
+      | 5     | 0      | 5        | location_name=='town_99*'               | location_name |               | town 99, town 990, town 991, town 992, town 993 |
+      | 5     | 0      | 5        | location_name=='town_99*'               |               | location_name | town 993, town 992, town 991, town 990, town 99 |
+      | 5     | 2      | 5        | location_name=='town_99*'               | location_name |               | town 991, town 992, town 993, town 994, town 995|
+      | 5     | 2      | 5        | location_name=='town_99*'               |               | location_name | town 997, town 996, town 995, town 994, town 993|
+      | /null | /null  | 1        | location_name==town_999                 |               |               | town 999                                        |
+      | /null | /null  | 1        | location_name==town_99*;location_id==99 |               |               | town 99                                         |
+      | /null | /null  | 1        | location_id==99                         |               |               | town 99                                         |
 
 
   #/location/<property>
@@ -109,7 +108,7 @@ Feature: Review locaitons
 
     Examples:
       | url       | property                             | location_id | location_name |
-      | /location | 99000199-9999-4999-a999-999999999999 | 19          | town19        |
+      | /location | 99000199-9999-4999-a999-999999999999 | 19          | town 19     |
 
 
   Scenario Outline: Getting error code for not existing property id from /location
@@ -176,7 +175,6 @@ Feature: Review locaitons
       | 10          | 0      | not_here==  | /null       | /null       | 63          |
       | 10          | 0      | random==CZ* | /null       | /null       | 63          |
 
-  #TODO DP-935 - X-Total-Count header is missing
   Scenario Outline: Filtering list of location properties
     When List of location properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" for location id "20"
     Then Response code is "200"

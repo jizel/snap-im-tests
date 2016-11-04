@@ -1,17 +1,16 @@
 package travel.snapshot.dp.qa.serenity.review;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
-
 import net.thucydides.core.annotations.Step;
-
-import java.util.List;
-
 import travel.snapshot.dp.api.review.model.LocationDto;
 import travel.snapshot.dp.api.review.model.LocationPropertyDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.analytics.AnalyticsBaseSteps;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
 
 public class ReviewLocationSteps extends AnalyticsBaseSteps {
 
@@ -34,7 +33,8 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
         LocationDto[] locations = response.as(LocationDto[].class);
         int i = 0;
         for (LocationDto location : locations) {
-            assertEquals("location on index=" + i + " is not expected", names.get(i), location.getLocationName());
+//            assertEquals("location on index=" + i + " is not expected", names.get(i), location.getLocationName());
+            assertThat("location on index=" + i + " is not expected", location.getLocationName(), equalTo(names.get(i)));
             i++;
         }
     }

@@ -5,35 +5,45 @@
   "data_owners": [
     "tripadvisor"
   ],
-    "popularity_index_rank": [
-        {
-            "ranking": "93",
-            "total_number": "7778"
-        }
-    ],
-    "overall_bubble_rating": [
-        "7.4"
-    ],
+  "popularity_index_rank": [
+    {
+      "value": {
+        "ranking": 93,
+        "total_number": 7778
+      }
+    }
+  ],
+  "overall_bubble_rating": [
+    {
+      "value": 7.4
+    }
+  ],
     "number_of_reviews": [
-        "37050"
+      {
+        "value": 37050
+      }
     ],
     "rating_score": [
         {
-            "One": "41997",
-            "Two": "8081",
-            "Three": "48821",
-            "Four": "35960",
-            "Five": "22359"
+          "value": {
+            "One": 41997,
+            "Two": 8081,
+            "Three": 48821,
+            "Four": 35960,
+            "Five": 22359
+          }
         }
     ],
     "aspects_of_business": [
         {
-            "location": "3.2",
-            "sleep_quality": "3.3",
-            "room": "0.9",
-            "service": "1.7",
-            "value": "5.4",
-            "cleanliness": "0.9"
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 3.3,
+            "room": 0.9,
+            "service": 1.7,
+            "value": 5.4,
+            "cleanliness": 0.9
+          }
         }
     ]
 }

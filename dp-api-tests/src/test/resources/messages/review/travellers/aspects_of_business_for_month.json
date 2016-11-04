@@ -1,153 +1,47 @@
 {
-  "since": "2015-09-01",
-  "until": "2015-11-30",
-  "granularity": "month",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-11-12",
+  "until": "2015-12-03",
+  "granularity": "week",
   "data": [
     {
       "type": "friends",
       "aspects_of_business": [
         {
-          "location": 3.03333,
-          "sleep_quality": 4.8,
-          "room": 2,
-          "service": 1.55,
-          "value": 5.1,
-          "cleanliness": 1.5
+          "value": {
+
+          },
+          "data_incomplete": true
         },
         {
-          "location": 2.98333,
-          "sleep_quality": 4.77143,
-          "room": 1.74,
-          "service": 1.225,
-          "value": 5.35,
-          "cleanliness": 1.28333
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.5,
+            "room": 0.6,
+            "service": 1.8,
+            "value": 5.3,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
         },
         {
-          "location": 3.1,
-          "sleep_quality": 4.275,
-          "room": 0.7,
-          "service": 1.65,
-          "value": 5.4,
-          "cleanliness": 1.175
-        }
-      ]
-    },
-    {
-      "type": "family",
-      "aspects_of_business": [
-        {
-          "location": 3.22,
-          "sleep_quality": 4.95714,
-          "room": 2.1,
-          "service": 1.71667,
-          "value": 4.95714,
-          "cleanliness": 1.51667
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 3.95,
+            "room": 0.5,
+            "service": 1.7,
+            "value": 5.5,
+            "cleanliness": 0.5
+          },
+          "data_incomplete": true
         },
         {
-          "location": 2.94,
-          "sleep_quality": 4.8,
-          "room": 2,
-          "service": 1.41667,
-          "value": 5.4,
-          "cleanliness": 1.32
-        },
-        {
-          "location": 3.06,
-          "sleep_quality": 4.55,
-          "room": 0.72,
-          "service": 1.625,
-          "value": 5.4,
-          "cleanliness": 1.1
-        }
-      ]
-    },
-    {
-      "type": "business",
-      "aspects_of_business": [
-        {
-          "location": 2.95,
-          "sleep_quality": 5.1,
-          "room": 2.15,
-          "service": 1.65,
-          "value": 4.8,
-          "cleanliness": 1.5
-        },
-        {
-          "location": 3.05,
-          "sleep_quality": 4.64,
-          "room": 1.675,
-          "service": 1.28,
-          "value": 5.33333,
-          "cleanliness": 1.36
-        },
-        {
-          "location": 3.1,
-          "sleep_quality": 4.45,
-          "room": 0.5,
-          "service": 1.7,
-          "value": 5.5,
-          "cleanliness": 0.8
-        }
-      ]
-    },
-    {
-      "type": "solo",
-      "aspects_of_business": [
-        {
-          "location": 3.23333,
-          "sleep_quality": 5.08,
-          "room": 2.14,
-          "service": 1.64,
-          "value": 4.94,
-          "cleanliness": 1.525
-        },
-        {
-          "location": 2.975,
-          "sleep_quality": 4.86667,
-          "room": 1.9,
-          "service": 1.6,
-          "value": 5.4,
-          "cleanliness": 1.4
-        },
-        {
-          "location": 3.05,
-          "sleep_quality": 4.3,
-          "room": 0.56667,
-          "service": 1.75,
-          "value": 5.33333,
-          "cleanliness": 1.1
-        }
-      ]
-    },
-    {
-      "type": "unspecified",
-      "aspects_of_business": [
-        {
-          "location": 2.925,
-          "sleep_quality": 5,
-          "room": 2.06667,
-          "service": 1.74,
-          "value": 5.01667,
-          "cleanliness": 1.53333
-        },
-        {
-          "location": 2.94,
-          "sleep_quality": 4.9,
-          "room": 1.9,
-          "service": 1.43333,
-          "value": 5.4,
-          "cleanliness": 1.3
-        },
-        {
-          "location": 3.07143,
-          "sleep_quality": 4.52,
-          "room": 0.72857,
-          "service": 1.62,
-          "value": 5.38571,
-          "cleanliness": 1.15714
+          "value": {
+
+          },
+          "data_incomplete": true
         }
       ]
     },
@@ -155,28 +49,196 @@
       "type": "couples",
       "aspects_of_business": [
         {
-          "location": 3.3,
-          "sleep_quality": 5,
-          "room": 2.1,
-          "service": 1.8,
-          "value": 5,
-          "cleanliness": 1.56667
+          "value": {
+
+          },
+          "data_incomplete": true
         },
         {
-          "location": 2.93333,
-          "sleep_quality": 4.7,
-          "room": 1.55,
-          "service": 1.2,
-          "value": 5,
-          "cleanliness": 1.45
+          "value": {
+            "location": 3.1,
+            "sleep_quality": 4.6,
+            "room": 0.4,
+            "service": 1.8,
+            "cleanliness": 1.0
+          },
+          "data_incomplete": true
         },
         {
-          "location": 2.95,
-          "sleep_quality": 4.41429,
-          "room": 0.525,
-          "service": 1.65,
-          "value": 5.43333,
-          "cleanliness": 1.18
+          "value": {
+            "sleep_quality": 4.06667,
+            "room": 0.5,
+            "service": 1.7,
+            "value": 5.5,
+            "cleanliness": 0.66667
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 3.4,
+            "room": 0.9,
+            "service": 1.65,
+            "value": 5.4,
+            "cleanliness": 0.9
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "solo",
+      "aspects_of_business": [
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.3,
+            "room": 0.45,
+            "service": 1.75,
+            "value": 5.3,
+            "cleanliness": 0.4
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "family",
+      "aspects_of_business": [
+        {
+          "value": {
+            "location": 2.9,
+            "sleep_quality": 4.4,
+            "room": 0.7,
+            "service": 1.65,
+            "value": 5.5,
+            "cleanliness": 1.2
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.1,
+            "room": 0.4,
+            "service": 1.8,
+            "value": 5.3,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.4,
+            "room": 0.8,
+            "service": 1.7,
+            "value": 5.4,
+            "cleanliness": 0.9
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "unspecified",
+      "aspects_of_business": [
+        {
+          "value": {
+            "location": 3.1,
+            "sleep_quality": 4.6,
+            "room": 0.6,
+            "value": 5.3,
+            "cleanliness": 1.0
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.5,
+            "service": 1.7,
+            "value": 5.3,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.1,
+            "room": 0.6,
+            "service": 1.7,
+            "value": 5.6,
+            "cleanliness": 0.95
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "business",
+      "aspects_of_business": [
+        {
+          "value": {
+            "location": 3.1,
+            "sleep_quality": 4.4,
+            "room": 0.5,
+            "service": 1.7,
+            "value": 5.5,
+            "cleanliness": 0.0
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "sleep_quality": 4.5,
+            "room": 0.5,
+            "service": 1.7,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
         }
       ]
     }

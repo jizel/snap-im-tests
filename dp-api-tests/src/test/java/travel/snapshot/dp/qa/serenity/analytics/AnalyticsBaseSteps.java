@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import travel.snapshot.dp.qa.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+
 import java.io.InputStream;
 import java.time.DayOfWeek;
 import java.time.LocalDate;

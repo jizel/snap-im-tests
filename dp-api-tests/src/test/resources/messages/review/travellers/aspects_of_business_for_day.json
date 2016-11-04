@@ -1,50 +1,77 @@
 {
-  "since": "2015-12-03",
-  "until": "2015-12-03",
-  "granularity": "day",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
   "data": [
     {
       "type": "friends",
       "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "couples",
+      "aspects_of_business": [
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "solo",
+      "aspects_of_business": [
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "family",
       "aspects_of_business": [
         {
-          "room": 0.9,
-          "service": 1.7,
-          "value": 5.4,
-          "cleanliness": 0.9
+          "value": {
+            "room": 0.9,
+            "service": 1.7,
+            "value": 5.4,
+            "cleanliness": 0.9
+          }
+        }
+      ]
+    },
+    {
+      "type": "unspecified",
+      "aspects_of_business": [
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
         }
       ]
     },
     {
       "type": "business",
       "aspects_of_business": [
-        {}
-      ]
-    },
-    {
-      "type": "solo",
-      "aspects_of_business": [
-        {}
-      ]
-    },
-    {
-      "type": "unspecified",
-      "aspects_of_business": [
-        {}
-      ]
-    },
-    {
-      "type": "couples",
-      "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     }
   ]

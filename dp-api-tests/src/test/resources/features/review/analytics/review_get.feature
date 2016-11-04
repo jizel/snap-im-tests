@@ -28,7 +28,7 @@ Feature: Review
     Given Set access token for review steps defs
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 
   Scenario Outline: Get trip advisor analytics data from API for a given wrong granularity
@@ -75,13 +75,13 @@ Feature: Review
       | url                     | granularity | count | since             | until | real_since        | real_until | property                             |
       | /analytics/rating_score | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
       | /analytics/rating_score | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
   @Smoke
   Scenario Outline: Get specific analytics data from API for a given granularity of more complex endpoints
@@ -95,16 +95,16 @@ Feature: Review
     And Response contains <count> number of review analytics
 
     Examples:
-      | url         | granularity | count | since             | until | real_since        | real_until | property                             |
-      | /analytics/ | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | url        | granularity | count | since             | until | real_since        | real_until | property                             |
+      | /analytics | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /analytics | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
   @Smoke
   Scenario Outline: Checking data corectness for analitics for analytics
@@ -138,13 +138,13 @@ Feature: Review
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
-    And Body does not contain property with attribute "values"
+    And Response contains 0 values
 
     Examples:
       | url                     | granularity | since      | until      | property                             |
       | /analytics/rating_score | day         | 1880-12-01 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
       | /analytics/rating_score | week        | 1880-10-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | month       | 1880-01-03 | 1800-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | month       | 1880-01-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
   Scenario Outline: Get specific analytics data from TA API that are more than year old for analytics
@@ -152,11 +152,11 @@ Feature: Review
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
-    And Body does not contain property with attribute "aspects_of_business"
-    And Body does not contain property with attribute "overall_bubble_rating"
-    And Body does not contain property with attribute "number_of_reviews"
-    And Body does not contain property with attribute "rating_score"
-    And Body does not contain property with attribute "popularity_index_rank"
+    Then Response contains 0 values of attribute named "aspects_of_business"
+    Then Response contains 0 values of attribute named "overall_bubble_rating"
+    Then Response contains 0 values of attribute named "number_of_reviews"
+    Then Response contains 0 values of attribute named "rating_score"
+    Then Response contains 0 values of attribute named "popularity_index_rank"
 
     Examples:
       | url         | granularity | since      | until      | property                             |
@@ -165,36 +165,34 @@ Feature: Review
       | /analytics/ | month       | 1800-12-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
+#  Change expected message when DP-1495 is fixed
   Scenario Outline: Get analytics data from TA API that has wrong time interval for /analytics/rating_score
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
-    And Data is owned by "tripadvisor"
-    And Content type is "application/json"
-    And Body does not contain property with attribute "values"
+    Then Response code is 400
+    And Custom code is 63
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
 
     Examples:
-      | url                     | granularity | until      | since      | property                             |
-      | /analytics/rating_score | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/rating_score | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | url                     | granularity | until      | since      | property                             | message                                                                                                                                                               |
+      | /analytics/rating_score | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /analytics/rating_score | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /analytics/rating_score | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
 
+    #  Change expected message when DP-1495 is fixed
   Scenario Outline: Get specific analytics data from TA API has wrong time interval for /analytics/
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
-    And Data is owned by "tripadvisor"
-    And Content type is "application/json"
-    And Body does not contain property with attribute "aspects_of_business"
-    And Body does not contain property with attribute "overall_bubble_rating"
-    And Body does not contain property with attribute "number_of_reviews"
-    And Body does not contain property with attribute "rating_score"
-    And Body does not contain property with attribute "popularity_index_rank"
+    Then Response code is 400
+    And Custom code is 63
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
 
     Examples:
-      | url         | granularity | until      | since      | property                             |
-      | /analytics/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /analytics/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | url         | granularity | until      | since      | property                             | message                                                                                                                                                             |
+      | /analytics/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /analytics/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /analytics/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
 
 # NEW
@@ -204,25 +202,25 @@ Feature: Review
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
-    And Body does not contain property with attribute "properties"
+    Then Response contains 0 values of attribute named "properties"
 
     Examples:
       | url                              | granularity | since      | until      |
       | /analytics/popularity_index_rank | day         | 1880-12-01 | 1880-12-03 |
       | /analytics/popularity_index_rank | week        | 1880-10-03 | 1880-12-03 |
-      | /analytics/popularity_index_rank | month       | 1880-01-03 | 1800-12-03 |
+      | /analytics/popularity_index_rank | month       | 1880-01-03 | 1880-12-03 |
 
       | /analytics/aspects_of_business   | day         | 1880-12-01 | 1880-12-03 |
       | /analytics/aspects_of_business   | week        | 1880-10-03 | 1880-12-03 |
-      | /analytics/aspects_of_business   | month       | 1880-01-03 | 1800-12-03 |
+      | /analytics/aspects_of_business   | month       | 1880-01-03 | 1880-12-03 |
 
       | /analytics/number_of_reviews     | day         | 1880-12-01 | 1880-12-03 |
       | /analytics/number_of_reviews     | week        | 1880-10-03 | 1880-12-03 |
-      | /analytics/number_of_reviews     | month       | 1880-01-03 | 1800-12-03 |
+      | /analytics/number_of_reviews     | month       | 1880-01-03 | 1880-12-03 |
 
       | /analytics/overall_bubble_rating | day         | 1880-12-01 | 1880-12-03 |
       | /analytics/overall_bubble_rating | week        | 1880-10-03 | 1880-12-03 |
-      | /analytics/overall_bubble_rating | month       | 1880-01-03 | 1800-12-03 |
+      | /analytics/overall_bubble_rating | month       | 1880-01-03 | 1880-12-03 |
 
   Scenario Outline: Validate that popularity_index_rank have valid value in the db
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
@@ -261,7 +259,7 @@ Feature: Review
       | /analytics/number_of_reviews | week        | /multiproperty/property/number_of_reviews_week.json  | 2015-11-12 | 2015-12-03 |
       | /analytics/number_of_reviews | month       | /multiproperty/property/number_of_reviews_month.json | 2015-08-26 | 2015-12-03 |
 
-  Scenario Outline: Validate that number_of_reviews have valid value in the db
+  Scenario Outline: Validate that overall_bubble_rating have valid value in the db
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
     And Content type is "application/json"
     And Response code is "200"
@@ -273,30 +271,32 @@ Feature: Review
       | /analytics/overall_bubble_rating | week        | /multiproperty/property/bubble_for_week.json  | 2015-11-12 | 2015-12-03 |
       | /analytics/overall_bubble_rating | month       | /multiproperty/property/bubble_for_month.json | 2015-08-26 | 2015-12-03 |
 
+  #  Change expected message when DP-1495 is fixed
   Scenario Outline: Get analytics data from TA API that has wrong time interval for smaller review endpoints
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
-    Then Response code is 200
-    And Data is owned by "tripadvisor"
-    And Content type is "application/json"
+    Then Response code is 400
+    And Custom code is 63
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
     And Body does not contain property with attribute "properties"
 
     Examples:
-      | url                              | granularity | until      | since      |
-      | /analytics/popularity_index_rank | day         | 2015-12-02 | 2015-12-03 |
-      | /analytics/popularity_index_rank | week        | 2015-11-12 | 2015-12-03 |
-      | /analytics/popularity_index_rank | month       | 2015-08-26 | 2015-12-03 |
+      | url                              | granularity | until      | since      | message                                                                                                                                                               |
+      | /analytics/popularity_index_rank | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /analytics/popularity_index_rank | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /analytics/popularity_index_rank | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
-      | /analytics/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 |
-      | /analytics/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 |
-      | /analytics/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 |
+      | /analytics/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /analytics/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /analytics/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
-      | /analytics/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 |
-      | /analytics/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 |
-      | /analytics/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 |
+      | /analytics/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /analytics/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /analytics/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
-      | /analytics/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 |
-      | /analytics/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 |
-      | /analytics/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 |
+      | /analytics/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /analytics/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /analytics/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
   Scenario Outline: Get new specific analytics data from API for a given granularity for smaller review endpoints
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
@@ -313,43 +313,43 @@ Feature: Review
       | url                              | granularity | count | since             | until | real_since        | real_until |
       | /analytics/popularity_index_rank | day         | 1     | today             | today | today             | today      |
       | /analytics/popularity_index_rank | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | /analytics/popularity_index_rank | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | /analytics/popularity_index_rank | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | /analytics/popularity_index_rank | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | /analytics/popularity_index_rank | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | /analytics/popularity_index_rank | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | /analytics/popularity_index_rank | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | /analytics/popularity_index_rank | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | /analytics/popularity_index_rank | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | /analytics/popularity_index_rank | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | /analytics/popularity_index_rank | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | /analytics/popularity_index_rank | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | /analytics/popularity_index_rank | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | /analytics/popularity_index_rank | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | /analytics/popularity_index_rank | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
       | /analytics/number_of_reviews     | day         | 1     | today             | today | today             | today      |
       | /analytics/number_of_reviews     | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | /analytics/number_of_reviews     | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | /analytics/number_of_reviews     | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | /analytics/number_of_reviews     | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | /analytics/number_of_reviews     | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | /analytics/number_of_reviews     | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | /analytics/number_of_reviews     | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | /analytics/number_of_reviews     | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | /analytics/number_of_reviews     | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | /analytics/number_of_reviews     | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | /analytics/number_of_reviews     | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | /analytics/number_of_reviews     | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | /analytics/number_of_reviews     | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | /analytics/number_of_reviews     | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | /analytics/number_of_reviews     | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
       | /analytics/aspects_of_business   | day         | 1     | today             | today | today             | today      |
       | /analytics/aspects_of_business   | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | /analytics/aspects_of_business   | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | /analytics/aspects_of_business   | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | /analytics/aspects_of_business   | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | /analytics/aspects_of_business   | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | /analytics/aspects_of_business   | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | /analytics/aspects_of_business   | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | /analytics/aspects_of_business   | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | /analytics/aspects_of_business   | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | /analytics/aspects_of_business   | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | /analytics/aspects_of_business   | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | /analytics/aspects_of_business   | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | /analytics/aspects_of_business   | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | /analytics/aspects_of_business   | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | /analytics/aspects_of_business   | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
       | /analytics/overall_bubble_rating | day         | 1     | today             | today | today             | today      |
       | /analytics/overall_bubble_rating | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | /analytics/overall_bubble_rating | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | /analytics/overall_bubble_rating | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | /analytics/overall_bubble_rating | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | /analytics/overall_bubble_rating | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | /analytics/overall_bubble_rating | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | /analytics/overall_bubble_rating | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | /analytics/overall_bubble_rating | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | /analytics/overall_bubble_rating | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | /analytics/overall_bubble_rating | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | /analytics/overall_bubble_rating | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | /analytics/overall_bubble_rating | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | /analytics/overall_bubble_rating | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | /analytics/overall_bubble_rating | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | /analytics/overall_bubble_rating | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
 
   Scenario Outline: Checking error codes for analytics data for every field

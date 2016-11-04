@@ -1,45 +1,57 @@
 {
-  "since": "2015-12-03",
-  "until": "2015-12-03",
-  "granularity": "day",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
   "data": [
     {
       "type": "friends",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "couples",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "solo",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "family",
       "overall": [
-        7.4
+        {
+          "value": 7.4
+        }
       ]
     },
     {
       "type": "unspecified",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "business",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ]
     }
   ]

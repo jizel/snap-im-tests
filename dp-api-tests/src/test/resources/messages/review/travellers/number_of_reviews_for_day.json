@@ -1,45 +1,57 @@
 {
-  "since": "2015-12-03",
-  "until": "2015-12-03",
-  "granularity": "day",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
   "data": [
     {
       "type": "friends",
       "number_of_reviews": [
-        null
-      ]
-    },
-    {
-      "type": "family",
-      "number_of_reviews": [
-        37050
-      ]
-    },
-    {
-      "type": "business",
-      "number_of_reviews": [
-        null
-      ]
-    },
-    {
-      "type": "solo",
-      "number_of_reviews": [
-        null
-      ]
-    },
-    {
-      "type": "unspecified",
-      "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "couples",
       "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "solo",
+      "number_of_reviews": [
+        {
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "family",
+      "number_of_reviews": [
+        {
+          "value": 37050
+        }
+      ]
+    },
+    {
+      "type": "unspecified",
+      "number_of_reviews": [
+        {
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "business",
+      "number_of_reviews": [
+        {
+          "data_incomplete": true
+        }
       ]
     }
   ]

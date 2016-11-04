@@ -1,9 +1,8 @@
 package travel.snapshot.dp.qa.steps;
 
-import net.thucydides.core.annotations.Steps;
-
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 public class BasicStepDefs {
@@ -81,5 +80,10 @@ public class BasicStepDefs {
     @Then("^Total count is \"(.*)\"$")
     public void Total_count_is_total(String total) throws Throwable {
         basicSteps.headerIs("X-Total-Count", total);
+    }
+
+    @Then("^Response contains (\\d+) values of attribute named \"([^\"]*)\"$")
+    public void responseContainsPropertiesWithAttribute(int count, String attributeName) throws Throwable {
+        basicSteps.responseContainsNoOfAttributes(count, attributeName);
     }
 }

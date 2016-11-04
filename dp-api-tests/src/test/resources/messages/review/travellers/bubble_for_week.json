@@ -1,51 +1,125 @@
 {
-  "since": "2015-11-16",
-  "until": "2015-11-29",
-  "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-11-12",
+  "until": "2015-12-03",
+  "granularity": "week",
   "data": [
     {
       "type": "friends",
       "overall": [
-        6.9,
-        7.2
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 6.9,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "couples",
       "overall": [
-        7.2,
-        7.2
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.3,
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "solo",
       "overall": [
-        7.05,
-        null
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 7.05,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "family",
       "overall": [
-        7.2,
-        null
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 7.3,
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "unspecified",
       "overall": [
-        7.1,
-        7.2
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.1,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "business",
       "overall": [
-        7.1,
-        null
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.1,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ]
     }
   ]

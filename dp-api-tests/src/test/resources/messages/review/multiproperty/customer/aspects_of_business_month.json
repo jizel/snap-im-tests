@@ -1,37 +1,65 @@
 {
-  "since": "2015-09-01",
-  "until": "2015-11-30",
-  "granularity": "month",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-08-26",
+  "until": "2015-12-03",
+  "granularity": "month",
   "properties": [
     {
       "property_id": "99000399-9999-4999-a999-999999999999",
       "values": [
         {
-          "location": 1.57,
-          "sleep_quality": 2.28,
-          "room": 2.68667,
-          "service": 3.07667,
-          "value": 1.90667,
-          "cleanliness": 2.99333
+          "value": {
+            "location": 1.46667,
+            "sleep_quality": 1.95,
+            "room": 2.63333,
+            "service": 2.95,
+            "value": 1.8,
+            "cleanliness": 2.76667
+          },
+          "data_incomplete": true
         },
         {
-          "location": 1.39032,
-          "sleep_quality": 1.69677,
-          "room": 2.61935,
-          "service": 2.70645,
-          "value": 1.97097,
-          "cleanliness": 3.6871
+          "value": {
+            "location": 1.57,
+            "sleep_quality": 2.28,
+            "room": 2.68667,
+            "service": 3.07667,
+            "value": 1.90667,
+            "cleanliness": 2.99333
+          }
         },
         {
-          "location": 0.98333,
-          "sleep_quality": 1.7,
-          "room": 2.55667,
-          "service": 2.87667,
-          "value": 1.67333,
-          "cleanliness": 3.86667
+          "value": {
+            "location": 1.39032,
+            "sleep_quality": 1.69677,
+            "room": 2.61935,
+            "service": 2.70645,
+            "value": 1.97097,
+            "cleanliness": 3.6871
+          }
+        },
+        {
+          "value": {
+            "location": 0.98333,
+            "sleep_quality": 1.7,
+            "room": 2.55667,
+            "service": 2.87667,
+            "value": 1.67333,
+            "cleanliness": 3.86667
+          }
+        },
+        {
+          "value": {
+            "location": 0.7,
+            "sleep_quality": 1.8,
+            "room": 2.83333,
+            "service": 3.33333,
+            "value": 1.3,
+            "cleanliness": 4.33333
+          },
+          "data_incomplete": true
         }
       ]
     },
@@ -39,28 +67,56 @@
       "property_id": "99000299-9999-4999-a999-999999999999",
       "values": [
         {
-          "location": 0.73,
-          "sleep_quality": 0.14,
-          "room": 0.73333,
-          "service": 0.87,
-          "value": 2.94,
-          "cleanliness": 3.51667
+          "value": {
+            "location": 0.9,
+            "sleep_quality": 0.0,
+            "room": 0.76667,
+            "service": 1.41667,
+            "value": 2.5,
+            "cleanliness": 3.05
+          },
+          "data_incomplete": true
         },
         {
-          "location": 0.53871,
-          "sleep_quality": 0.56774,
-          "room": 1.18387,
-          "service": 0.97742,
-          "value": 2.65484,
-          "cleanliness": 3.45161
+          "value": {
+            "location": 0.73,
+            "sleep_quality": 0.14,
+            "room": 0.73333,
+            "service": 0.87,
+            "value": 2.94,
+            "cleanliness": 3.51667
+          }
         },
         {
-          "location": 0.72333,
-          "sleep_quality": 0.97667,
-          "room": 1.81667,
-          "service": 1.76,
-          "value": 2.44,
-          "cleanliness": 3.72667
+          "value": {
+            "location": 0.53871,
+            "sleep_quality": 0.56774,
+            "room": 1.18387,
+            "service": 0.97742,
+            "value": 2.65484,
+            "cleanliness": 3.45161
+          }
+        },
+        {
+          "value": {
+            "location": 0.72333,
+            "sleep_quality": 0.97667,
+            "room": 1.81667,
+            "service": 1.76,
+            "value": 2.44,
+            "cleanliness": 3.72667
+          }
+        },
+        {
+          "value": {
+            "location": 0.7,
+            "sleep_quality": 1.56667,
+            "room": 2.06667,
+            "service": 2.1,
+            "value": 2.5,
+            "cleanliness": 4.4
+          },
+          "data_incomplete": true
         }
       ]
     },
@@ -68,28 +124,56 @@
       "property_id": "99000199-9999-4999-a999-999999999999",
       "values": [
         {
-          "location": 3.15667,
-          "sleep_quality": 4.97667,
-          "room": 2.10667,
-          "service": 1.71,
-          "value": 5.00333,
-          "cleanliness": 1.52
+          "value": {
+            "location": 3.4,
+            "sleep_quality": 5.2,
+            "room": 2.2,
+            "service": 1.91667,
+            "value": 5.26667,
+            "cleanliness": 1.46667
+          },
+          "data_incomplete": true
         },
         {
-          "location": 2.95806,
-          "sleep_quality": 4.78065,
-          "room": 1.73226,
-          "service": 1.35484,
-          "value": 5.37742,
-          "cleanliness": 1.33871
+          "value": {
+            "location": 3.15667,
+            "sleep_quality": 4.97667,
+            "room": 2.10667,
+            "service": 1.71,
+            "value": 5.00333,
+            "cleanliness": 1.52
+          }
         },
         {
-          "location": 3.06667,
-          "sleep_quality": 4.44,
-          "room": 0.66333,
-          "service": 1.65,
-          "value": 5.39333,
-          "cleanliness": 1.11
+          "value": {
+            "location": 2.95806,
+            "sleep_quality": 4.78065,
+            "room": 1.73226,
+            "service": 1.35484,
+            "value": 5.37742,
+            "cleanliness": 1.33871
+          }
+        },
+        {
+          "value": {
+            "location": 3.06667,
+            "sleep_quality": 4.44,
+            "room": 0.66333,
+            "service": 1.65,
+            "value": 5.39333,
+            "cleanliness": 1.11
+          }
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 3.36667,
+            "room": 0.9,
+            "service": 1.66667,
+            "value": 5.4,
+            "cleanliness": 0.9
+          },
+          "data_incomplete": true
         }
       ]
     }

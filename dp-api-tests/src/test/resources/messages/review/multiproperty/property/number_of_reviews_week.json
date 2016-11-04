@@ -1,16 +1,28 @@
 {
-  "since": "2015-11-16",
-  "until": "2015-11-29",
-  "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-11-12",
+  "until": "2015-12-03",
+  "granularity": "week",
   "properties": [
     {
       "property_id": "99000199-9999-4999-a999-999999999999",
       "values": [
-        37013,
-        37037
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 37013
+        },
+        {
+          "value": 37037
+        },
+        {
+          "value": 37050,
+          "data_incomplete": true
+        }
       ]
     }
   ]

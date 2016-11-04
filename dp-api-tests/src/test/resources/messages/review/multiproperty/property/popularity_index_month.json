@@ -1,25 +1,45 @@
 {
-  "since": "2015-09-01",
-  "until": "2015-11-30",
-  "granularity": "month",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-08-26",
+  "until": "2015-12-03",
+  "granularity": "month",
   "properties": [
     {
       "property_id": "99000199-9999-4999-a999-999999999999",
       "values": [
         {
-          "ranking": 76,
-          "total_number": 7755
+          "value": {
+            "ranking": 73,
+            "total_number": 7750
+          },
+          "data_incomplete": true
         },
         {
-          "ranking": 82,
-          "total_number": 7764
+          "value": {
+            "ranking": 76,
+            "total_number": 7755
+          }
         },
         {
-          "ranking": 89,
-          "total_number": 7775
+          "value": {
+            "ranking": 82,
+            "total_number": 7764
+          }
+        },
+        {
+          "value": {
+            "ranking": 89,
+            "total_number": 7775
+          }
+        },
+        {
+          "value": {
+            "ranking": 93,
+            "total_number": 7778
+          },
+          "data_incomplete": true
         }
       ]
     }

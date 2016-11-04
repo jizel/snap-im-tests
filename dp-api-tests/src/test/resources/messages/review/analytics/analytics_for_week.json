@@ -1,34 +1,152 @@
 {
-  "since": "2015-11-16",
-  "until": "2015-11-29",
+  "since": "2015-11-12",
+  "until": "2015-12-03",
   "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
   "popularity_index_rank": [
-    {"ranking":"90","total_number":"7776"},
-    {"ranking":"92","total_number":"7778"}
-  ],
-  "overall_bubble_rating":["7.08571","7.2"],
-  "number_of_reviews":["37013","37037"],
-  "rating_score":[
     {
-      "One":"41946",
-      "Two":"8045",
-      "Three":"48798",
-      "Four":"35928",
-      "Five":"22309"
+      "value": {
+        "ranking": 88,
+        "total_number": 7775
+      },
+      "data_incomplete": true
     },
     {
-      "One":"41989",
-      "Two":"8064",
-      "Three":"48811",
-      "Four":"35928",
-      "Five":"22334"
+      "value": {
+        "ranking": 90,
+        "total_number": 7776
+      }
+    },
+    {
+      "value": {
+        "ranking": 92,
+        "total_number": 7778
+      }
+    },
+    {
+      "value": {
+        "ranking": 93,
+        "total_number": 7778
+      },
+      "data_incomplete": true
+    }
+  ],
+  "overall_bubble_rating": [
+    {
+      "value": 7.2,
+      "data_incomplete": true
+    },
+    {
+      "value": 7.08571
+    },
+    {
+      "value": 7.2
+    },
+    {
+      "value": 7.3,
+      "data_incomplete": true
+    }
+  ],
+  "number_of_reviews": [
+    {
+      "value": 36966,
+      "data_incomplete": true
+    },
+    {
+      "value": 37013
+    },
+    {
+      "value": 37037
+    },
+    {
+      "value": 37050,
+      "data_incomplete": true
+    }
+  ],
+  "rating_score": [
+    {
+      "value": {
+        "One": 41933,
+        "Two": 7981,
+        "Three": 48782,
+        "Four": 35895,
+        "Five": 22280
+      },
+      "data_incomplete": true
+    },
+    {
+      "value": {
+        "One": 41946,
+        "Two": 8045,
+        "Three": 48798,
+        "Four": 35928,
+        "Five": 22309
+      }
+    },
+    {
+      "value": {
+        "One": 41989,
+        "Two": 8064,
+        "Three": 48811,
+        "Four": 35928,
+        "Five": 22334
+      }
+    },
+    {
+      "value": {
+        "One": 41997,
+        "Two": 8081,
+        "Three": 48821,
+        "Four": 35960,
+        "Five": 22359
+      },
+      "data_incomplete": true
     }
   ],
   "aspects_of_business": [
-    {"location":"3.15714","sleep_quality":"4.51429","room":"0.47143","service":"1.75714","value":"5.3","cleanliness":"0.82857"},
-    {"location":"3.2","sleep_quality":"4.0","room":"0.52857","service":"1.7","value":"5.5","cleanliness":"0.94286"}
+    {
+      "value": {
+        "location": 3.0,
+        "sleep_quality": 4.525,
+        "room": 0.625,
+        "service": 1.7,
+        "value": 5.45,
+        "cleanliness": 1.15
+      },
+      "data_incomplete": true
+    },
+    {
+      "value": {
+        "location": 3.15714,
+        "sleep_quality": 4.51429,
+        "room": 0.47143,
+        "service": 1.75714,
+        "value": 5.3,
+        "cleanliness": 0.82857
+      }
+    },
+    {
+      "value": {
+        "location": 3.2,
+        "sleep_quality": 4.0,
+        "room": 0.52857,
+        "service": 1.7,
+        "value": 5.5,
+        "cleanliness": 0.94286
+      }
+    },
+    {
+      "value": {
+        "location": 3.25,
+        "sleep_quality": 3.475,
+        "room": 0.85,
+        "service": 1.675,
+        "value": 5.4,
+        "cleanliness": 0.9
+      },
+      "data_incomplete": true
+    }
   ]
 }
