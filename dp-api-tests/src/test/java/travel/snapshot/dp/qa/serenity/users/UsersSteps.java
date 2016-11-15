@@ -1,33 +1,24 @@
 package travel.snapshot.dp.qa.serenity.users;
 
-import com.jayway.restassured.response.Response;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
+import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.http.HttpStatus;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.RoleViewDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class UsersSteps extends BasicSteps {
 
@@ -47,7 +38,8 @@ public class UsersSteps extends BasicSteps {
             UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
             relation.setCustomerId(customerId);
             relation.setIsPrimary(isPrimary);
-            u.setUserCustomerRelationshipDto(relation);
+//            TBD: UserCustomerRelationshipDto refactored, does not contain setUserCustomerRelationshipDto(relation)
+//           TODO: uncomment u.setUserCustomerRelationshipDto(relation);
 
             Response createResp = createEntity(u);
             if (createResp.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -61,7 +53,8 @@ public class UsersSteps extends BasicSteps {
         UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
         relation.setCustomerId(customerId);
         relation.setIsPrimary(isPrimary);
-        user.setUserCustomerRelationshipDto(relation);
+//            TBD: UserCustomerRelationshipDto refactored, does not contain setUserCustomerRelationshipDto(relation)
+//      TODO: uncomment  user.setUserCustomerRelationshipDto(relation);
 
         Response response = createEntity(user);
         setSessionResponse(response);
@@ -223,7 +216,7 @@ public class UsersSteps extends BasicSteps {
     public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
 
-        RoleViewDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         if (existingUserRole != null) {
 
             Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
@@ -278,12 +271,12 @@ public class UsersSteps extends BasicSteps {
                 .when().post(path);
     }
 
-    private RoleViewDto getRoleForUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
+    private RoleDto getRoleForUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
         Response userRolesResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
-        return Arrays.asList(userRolesResponse.as(RoleViewDto[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(userRolesResponse.as(RoleDto[].class)).stream().findFirst().orElse(null);
     }
 
     private RoleDto getRoleForUserEntity(String roleId, String userName, String entityId, String entityName) {
@@ -300,7 +293,7 @@ public class UsersSteps extends BasicSteps {
 
     public void roleDoesntExistForUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
-        RoleViewDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
         assertNull("Role should not be present for User", existingUserRole);
     }
 

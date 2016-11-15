@@ -1,26 +1,24 @@
 package travel.snapshot.dp.qa.steps.identity.property_sets;
 
-import net.thucydides.core.annotations.Steps;
-
-import java.util.List;
-
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyViewDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
+
+import java.util.List;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -219,7 +217,7 @@ public class PropertySetsStepdefs {
 
     @Then("^There are (\\d+) property set properties  returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
-        propertySetSteps.numberOfEntitiesInResponse(PropertyViewDto.class, count);
+        propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, count);
     }
 
     @When("^Property set with name \"([^\"]*)\" for customer \"([^\"]*)\" is updated with following data$")
