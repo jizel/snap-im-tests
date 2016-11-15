@@ -1,3 +1,4 @@
+@Identity
 Feature: Customers properties create update delete
 
   Background:

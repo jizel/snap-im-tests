@@ -1,86 +1,137 @@
 {
-  "since": "2015-12-03",
-  "until": "2015-12-03",
-  "granularity": "day",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-12-03",
+  "until": "2015-12-03",
+  "granularity": "day",
   "data": [
     {
       "type": "friends",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "couples",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "solo",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "family",
       "overall": [
-        7.4
+        {
+          "value": 7.4
+        }
       ],
       "number_of_reviews": [
-        37050
+        {
+          "value": 37050
+        }
       ],
       "aspects_of_business": [
         {
-          "room": 0.9,
-          "service": 1.7,
-          "value": 5.4,
-          "cleanliness": 0.9
+          "value": {
+            "room": 0.9,
+            "service": 1.7,
+            "value": 5.4,
+            "cleanliness": 0.9
+          }
         }
       ]
     },
     {
       "type": "unspecified",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "business",
       "overall": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "number_of_reviews": [
-        null
+        {
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
-        {}
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
       ]
     }
   ]

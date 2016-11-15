@@ -1,16 +1,18 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
-import net.thucydides.core.annotations.Steps;
-
-import java.util.List;
-
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import travel.snapshot.dp.api.identity.model.*;
+import net.thucydides.core.annotations.Steps;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -19,6 +21,8 @@ import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 import travel.snapshot.dp.qa.serenity.users.UserRolesSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import travel.snapshot.dp.qa.steps.BasicStepDefs;
+
+import java.util.List;
 
 public class UserStepdefs {
 
@@ -126,7 +130,7 @@ public class UserStepdefs {
 
     @Then("^There are (\\d+) customerUsers returned$")
     public void There_are_returned_customerUsers_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipViewDto.class, count);
+        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipDto.class, count);
     }
 
     @Then("^There are users with following usernames returned in order: (.*)$")

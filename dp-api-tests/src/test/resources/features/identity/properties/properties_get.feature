@@ -1,3 +1,4 @@
+@Identity
 Feature: Properties get
 
   Background:
@@ -146,23 +147,23 @@ Feature: Properties get
     Examples:
       | limit | cursor | filter           | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
-      | /null | -1     | /null            | /null       | /null       | 400           | 63          |
-      |       | -1     | /null            | /null       | /null       | 400           | 63          |
-      | /null | text   | /null            | /null       | /null       | 400           | 63          |
-      |       | text   | /null            | /null       | /null       | 400           | 63          |
-      | -1    |        | /null            | /null       | /null       | 400           | 63          |
-      | -1    | /null  | /null            | /null       | /null       | 400           | 63          |
-      | text  |        | /null            | /null       | /null       | 400           | 63          |
-      | text  | /null  | /null            | /null       | /null       | 400           | 63          |
-      | 10    | -1     | /null            | /null       | /null       | 400           | 63          |
-      | text  | 0      | /null            | /null       | /null       | 400           | 63          |
-      | 10    | text   | /null            | /null       | /null       | 400           | 63          |
+      | /null | -1     | /null            | /null         | /null         | 400           | 63      |
+      |       | -1     | /null            | /null         | /null         | 400           | 63      |
+      | /null | text   | /null            | /null         | /null         | 400           | 63      |
+      |       | text   | /null            | /null         | /null         | 400           | 63      |
+      | -1    |        | /null            | /null         | /null         | 400           | 63      |
+      | -1    | /null  | /null            | /null         | /null         | 400           | 63      |
+      | text  |        | /null            | /null         | /null         | 400           | 63      |
+      | text  | /null  | /null            | /null         | /null         | 400           | 63      |
+      | 10    | -1     | /null            | /null         | /null         | 400           | 63      |
+      | text  | 0      | /null            | /null         | /null         | 400           | 63      |
+      | 10    | text   | /null            | /null         | /null         | 400           | 63      |
       #filtering and sorting
-      | 10    | 0      | /null            | description | description | 400           | 64          |
-      | 10    | 0      | /null            | /null       | nonexistent | 400           | 63          |
-      | 10    | 0      | /null            | nonexistent | /null       | 400           | 63          |
-      | 10    | 0      | code==           | /null       | /null       | 400           | 63          |
-      | 10    | 0      | nonexistent==CZ* | /null       | /null       | 400           | 63          |
+      | 10    | 0      | /null            | property_code | property_code | 400           | 64      |
+      | 10    | 0      | /null            | /null         | nonexistent   | 400           | 63      |
+      | 10    | 0      | /null            | nonexistent   | /null         | 400           | 63      |
+      | 10    | 0      | code==           | /null         | /null         | 400           | 63      |
+      | 10    | 0      | nonexistent==CZ* | /null         | /null         | 400           | 63      |
 
   # negative values, strings, empty
   # wrong parameters (variables: parameter name, parameter value),

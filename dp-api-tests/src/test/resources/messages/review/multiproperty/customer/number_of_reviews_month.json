@@ -1,33 +1,75 @@
 {
-  "since": "2015-09-01",
-  "until": "2015-11-30",
-  "granularity": "month",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-08-26",
+  "until": "2015-12-03",
+  "granularity": "month",
   "properties": [
     {
       "property_id": "99000399-9999-4999-a999-999999999999",
       "values": [
-        25136,
-        25242,
-        25364
+        {
+          "value": 25055,
+          "data_incomplete": true
+        },
+        {
+          "value": 25136
+        },
+        {
+          "value": 25242
+        },
+        {
+          "value": 25364
+        },
+        {
+          "value": 25384,
+          "data_incomplete": true
+        }
       ]
     },
     {
       "property_id": "99000299-9999-4999-a999-999999999999",
       "values": [
-        49252,
-        49339,
-        49403
+        {
+          "value": 49180,
+          "data_incomplete": true
+        },
+        {
+          "value": 49252
+        },
+        {
+          "value": 49339
+        },
+        {
+          "value": 49403
+        },
+        {
+          "value": 49434,
+          "data_incomplete": true
+        }
       ]
     },
     {
       "property_id": "99000199-9999-4999-a999-999999999999",
       "values": [
-        36760,
-        36907,
-        37050
+        {
+          "value": 36646,
+          "data_incomplete": true
+        },
+        {
+          "value": 36760
+        },
+        {
+          "value": 36907
+        },
+        {
+          "value": 37050
+        },
+        {
+          "value": 37050,
+          "data_incomplete": true
+        }
       ]
     }
   ]

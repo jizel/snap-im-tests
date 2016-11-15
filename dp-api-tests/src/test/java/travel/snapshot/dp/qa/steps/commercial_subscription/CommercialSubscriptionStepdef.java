@@ -1,18 +1,16 @@
 package travel.snapshot.dp.qa.steps.commercial_subscription;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
+
+import java.util.List;
 
 public class CommercialSubscriptionStepdef {
 
@@ -90,12 +88,12 @@ public class CommercialSubscriptionStepdef {
 
     @When("^Commercial subscription with id \"([^\"]*)\" is activated$")
     public void commercialSubscriptionWithIdIsActivated(String commSubscriptionId) throws Exception {
-        commSubscriptionSteps.setCommSubscriptionIsActiveField(commSubscriptionId, 1);
+        commSubscriptionSteps.setCommSubscriptionIsActiveField(commSubscriptionId, true);
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is deactivated$")
     public void commercialSubscriptionWithIdIsDeactivated(String commSubscriptionId) throws Throwable {
-        commSubscriptionSteps.setCommSubscriptionIsActiveField(commSubscriptionId, 0);
+        commSubscriptionSteps.setCommSubscriptionIsActiveField(commSubscriptionId, false);
     }
 
     @Then("^Commercial subscription with id \"([^\"]*)\" is activate$")

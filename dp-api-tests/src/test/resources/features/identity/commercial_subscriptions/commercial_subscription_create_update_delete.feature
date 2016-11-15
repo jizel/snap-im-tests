@@ -1,3 +1,4 @@
+@Identity
 Feature: Commercial subscription create update delete
 
   Background:

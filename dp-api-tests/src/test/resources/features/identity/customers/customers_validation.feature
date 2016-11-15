@@ -1,3 +1,4 @@
+@Identity
 Feature: Customers validation
 
   Background:

@@ -1,5 +1,16 @@
 package travel.snapshot.dp.qa.serenity;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,13 +23,14 @@ import com.jayway.restassured.filter.log.LogDetail;
 import com.jayway.restassured.filter.log.ResponseLoggingFilter;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
+import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -35,22 +47,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -164,8 +160,7 @@ public class BasicSteps {
      */
     public void integerPartOfValueIs(String path, int value) {
         Response response = getSessionResponse();
-        List<Double> values = response.body().jsonPath().getList(path, double.class);
-        assertTrue("\n" + "Expected " + value + ", found " + values.get(0).intValue(), value == values.get(0).intValue());
+        response.then().body(path, hasItem(value));
     }
 
     @Step
@@ -483,5 +478,10 @@ public class BasicSteps {
     public void headerIs(String headerName, String value) {
         Response response = getSessionResponse();
         response.then().header(headerName, is(value));
+    }
+
+    public void responseContainsNoOfAttributes(int count, String attributeName) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName + ".size()", is(count));
     }
 }

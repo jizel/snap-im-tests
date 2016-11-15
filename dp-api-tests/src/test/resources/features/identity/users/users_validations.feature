@@ -1,3 +1,4 @@
+@Identity
 Feature: Users validations
 
   Background:

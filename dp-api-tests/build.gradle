@@ -51,13 +51,13 @@ dependencies {
     compile 'org.json:json:20150729'
     compile 'com.google.code.gson:gson:2.4'
 
-    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: '1.22.0'
-    compile group: 'travel.snapshot.dp.api', name: 'review-api', version: '1.22.0'
-    compile group: 'travel.snapshot.dp.api', name: 'identity-subscription-api', version: '1.22.0'
-    compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: '1.22.0'
-    compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: '1.22.0'
-    compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: '1.22.0'
-    compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: '1.22.0'
+    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: '1.37.21'
+    compile group: 'travel.snapshot.dp.api', name: 'review-api', version: '1.37.21'
+    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: '1.37.21'
+    compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: '1.37.21'
+    compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: '1.37.21'
+    compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: '1.37.21'
+    compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: '1.37.21'
 
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.6'
 

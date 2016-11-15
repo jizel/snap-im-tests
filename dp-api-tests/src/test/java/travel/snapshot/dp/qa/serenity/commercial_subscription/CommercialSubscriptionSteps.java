@@ -1,26 +1,22 @@
 package travel.snapshot.dp.qa.serenity.commercial_subscription;
 
-import com.jayway.restassured.response.Response;
+import static org.junit.Assert.*;
 
+import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionBaseDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CommercialSubscriptionSteps extends BasicSteps {
 
@@ -81,7 +77,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     }
 
     @Step
-    public void setCommSubscriptionIsActiveField(String commSubscriptionId, int isActive) {
+    public void setCommSubscriptionIsActiveField(String commSubscriptionId, Boolean isActive) {
         CommercialSubscriptionBaseDto comSub = new CommercialSubscriptionBaseDto();
         comSub.setIsActive(isActive);
 

@@ -1,10 +1,17 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
-
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.helpers.ObjectMappers;
+import travel.snapshot.dp.qa.helpers.StringUtil;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
 import java.time.DayOfWeek;
@@ -15,17 +22,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-
-import travel.snapshot.dp.qa.helpers.ObjectMappers;
-import travel.snapshot.dp.qa.helpers.StringUtil;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -110,11 +106,10 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void responseContainsObjectsAllWithPropertyAndValues(String property, List<String> values) {
-        List responseList = getSessionResponse().jsonPath().get("resultList");
+        List responseList = getSessionResponse().body().jsonPath().getList(property);
 
         for (Object record : responseList) {
-            List dataOwners = (List) ((Map) record).get(property);
-            assertTrue(dataOwners.containsAll(values));
+            assertTrue(((List) record).containsAll(values));
         }
     }
 

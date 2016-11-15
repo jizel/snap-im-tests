@@ -1,81 +1,183 @@
 {
-  "since": "2015-09-01",
-  "until": "2015-11-30",
-  "granularity": "month",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-08-26",
+  "until": "2015-12-03",
+  "granularity": "month",
   "popularity_index_rank": [
     {
-      "ranking": "76",
-      "total_number": "7755"
+      "value": {
+        "ranking": 73,
+        "total_number": 7750
+      },
+      "data_incomplete": true
     },
     {
-      "ranking": "82",
-      "total_number": "7764"
+      "value": {
+        "ranking": 76,
+        "total_number": 7755
+      }
     },
     {
-      "ranking": "89",
-      "total_number": "7775"
+      "value": {
+        "ranking": 82,
+        "total_number": 7764
+      }
+    },
+    {
+      "value": {
+        "ranking": 89,
+        "total_number": 7775
+      }
+    },
+    {
+      "value": {
+        "ranking": 93,
+        "total_number": 7778
+      },
+      "data_incomplete": true
     }
   ],
   "overall_bubble_rating": [
-    "7.42667",
-    "7.48387",
-    "7.16667"
+    {
+      "value": 7.28333,
+      "data_incomplete": true
+    },
+    {
+      "value": 7.42667
+    },
+    {
+      "value": 7.48387
+    },
+    {
+      "value": 7.16667
+    },
+    {
+      "value": 7.33333,
+      "data_incomplete": true
+    }
   ],
   "number_of_reviews": [
-    "36760",
-    "36907",
-    "37050"
+    {
+      "value": 36646,
+      "data_incomplete": true
+    },
+    {
+      "value": 36760
+    },
+    {
+      "value": 36907
+    },
+    {
+      "value": 37050
+    },
+    {
+      "value": 37050,
+      "data_incomplete": true
+    }
   ],
   "rating_score": [
     {
-      "One": "41796",
-      "Two": "7849",
-      "Three": "48556",
-      "Four": "35699",
-      "Five": "22210"
+      "value": {
+        "One": 41768,
+        "Two": 7792,
+        "Three": 48497,
+        "Four": 35602,
+        "Five": 22128
+      },
+      "data_incomplete": true
     },
     {
-      "One": "41873",
-      "Two": "7931",
-      "Three": "48750",
-      "Four": "35795",
-      "Five": "22275"
+      "value": {
+        "One": 41796,
+        "Two": 7849,
+        "Three": 48556,
+        "Four": 35699,
+        "Five": 22210
+      }
     },
     {
-      "One": "41997",
-      "Two": "8064",
-      "Three": "48811",
-      "Four": "35928",
-      "Five": "22334"
+      "value": {
+        "One": 41873,
+        "Two": 7931,
+        "Three": 48750,
+        "Four": 35795,
+        "Five": 22275
+      }
+    },
+    {
+      "value": {
+        "One": 41997,
+        "Two": 8064,
+        "Three": 48811,
+        "Four": 35928,
+        "Five": 22334
+      }
+    },
+    {
+      "value": {
+        "One": 41997,
+        "Two": 8081,
+        "Three": 48821,
+        "Four": 35960,
+        "Five": 22359
+      },
+      "data_incomplete": true
     }
   ],
   "aspects_of_business": [
     {
-      "location": "3.15667",
-      "sleep_quality": "4.97667",
-      "room": "2.10667",
-      "service": "1.71",
-      "value": "5.00333",
-      "cleanliness": "1.52"
+      "value": {
+        "location": 3.4,
+        "sleep_quality": 5.2,
+        "room": 2.2,
+        "service": 1.91667,
+        "value": 5.26667,
+        "cleanliness": 1.46667
+      },
+      "data_incomplete": true
     },
     {
-      "location": "2.95806",
-      "sleep_quality": "4.78065",
-      "room": "1.73226",
-      "service": "1.35484",
-      "value": "5.37742",
-      "cleanliness": "1.33871"
+      "value": {
+        "location": 3.15667,
+        "sleep_quality": 4.97667,
+        "room": 2.10667,
+        "service": 1.71,
+        "value": 5.00333,
+        "cleanliness": 1.52
+      }
     },
     {
-      "location": "3.06667",
-      "sleep_quality": "4.44",
-      "room": "0.66333",
-      "service": "1.65",
-      "value": "5.39333",
-      "cleanliness": "1.11"
+      "value": {
+        "location": 2.95806,
+        "sleep_quality": 4.78065,
+        "room": 1.73226,
+        "service": 1.35484,
+        "value": 5.37742,
+        "cleanliness": 1.33871
+      }
+    },
+    {
+      "value": {
+        "location": 3.06667,
+        "sleep_quality": 4.44,
+        "room": 0.66333,
+        "service": 1.65,
+        "value": 5.39333,
+        "cleanliness": 1.11
+      }
+    },
+    {
+      "value": {
+        "location": 3.2,
+        "sleep_quality": 3.36667,
+        "room": 0.9,
+        "service": 1.66667,
+        "value": 5.4,
+        "cleanliness": 0.9
+      },
+      "data_incomplete": true
     }
   ]
 }

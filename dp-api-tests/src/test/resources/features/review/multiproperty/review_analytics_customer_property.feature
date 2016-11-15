@@ -5,11 +5,14 @@ Feature: Review multiproperty customer property
   Background:
     # 5 property, 1 customer, 1 user, with all needed relations
     Given Database is cleaned
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c3t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following properties exist with random address and billing address
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
-      | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
-      | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague |
-      | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague |
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Given The following customers exist with random address
       | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
@@ -27,9 +30,9 @@ Feature: Review multiproperty customer property
     Given Set access token from session for customer steps defs
     Given Set access token for review steps defs
 
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
     Given Relation between user with username "default1" and property with code "p2_code" exists
@@ -91,19 +94,31 @@ Feature: Review multiproperty customer property
       | overall_bubble_rating | c1t           | month       | 2015-12-03 | 2015-12-03 | -23486       | /null        |
       | overall_bubble_rating | c1t           | day         | 2015-12-03 | 2015-12-03 | /null        | -23486       |
 
-  Scenario Outline: Checking default values for response
-    When Get "<metric>" for list of properties for customer "<customer_code>" with since "/null" until "/null" granularity "/null" limit "/null" and cursor "/null"
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Body contains entity with attribute "granularity" value "day"
-    And Data is owned by "tripadvisor"
+  Scenario Outline: Checking mandatory values
+    When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    Then Response code is 400
+    And Custom code is 52
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
 
     Examples:
-      | metric                | customer_code |
-      | popularity_index_rank | c1t           |
-      | aspects_of_business   | c1t           |
-      | number_of_reviews     | c1t           |
-      | overall_bubble_rating | c1t           |
+      | metric                | customer_code | since      | until      | granularity | message                                       |
+      | popularity_index_rank | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | popularity_index_rank | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | popularity_index_rank | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+
+      | aspects_of_business   | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | aspects_of_business   | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | aspects_of_business   | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+
+      | number_of_reviews     | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | number_of_reviews     | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | number_of_reviews     | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+
+      | overall_bubble_rating | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | overall_bubble_rating | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | overall_bubble_rating | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+
 
   Scenario Outline: Get specific amount of analytics data from API for a given granularity
     When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
@@ -120,43 +135,43 @@ Feature: Review multiproperty customer property
       | metric                | customer_code | granularity | count | since             | until | real_since        | real_until |
       | popularity_index_rank | c1t           | day         | 1     | today             | today | today             | today      |
       | popularity_index_rank | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | popularity_index_rank | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | popularity_index_rank | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | popularity_index_rank | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | popularity_index_rank | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | popularity_index_rank | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | popularity_index_rank | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | popularity_index_rank | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | popularity_index_rank | c1t           | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | popularity_index_rank | c1t           | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | popularity_index_rank | c1t           | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | popularity_index_rank | c1t           | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | popularity_index_rank | c1t           | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | popularity_index_rank | c1t           | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | popularity_index_rank | c1t           | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
       | aspects_of_business   | c1t           | day         | 1     | today             | today | today             | today      |
       | aspects_of_business   | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | aspects_of_business   | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | aspects_of_business   | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | aspects_of_business   | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | aspects_of_business   | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | aspects_of_business   | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | aspects_of_business   | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | aspects_of_business   | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | aspects_of_business   | c1t           | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | aspects_of_business   | c1t           | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | aspects_of_business   | c1t           | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | aspects_of_business   | c1t           | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | aspects_of_business   | c1t           | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | aspects_of_business   | c1t           | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | aspects_of_business   | c1t           | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
       | number_of_reviews     | c1t           | day         | 1     | today             | today | today             | today      |
       | number_of_reviews     | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | number_of_reviews     | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | number_of_reviews     | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | number_of_reviews     | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | number_of_reviews     | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | number_of_reviews     | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | number_of_reviews     | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | number_of_reviews     | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | number_of_reviews     | c1t           | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | number_of_reviews     | c1t           | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | number_of_reviews     | c1t           | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | number_of_reviews     | c1t           | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | number_of_reviews     | c1t           | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | number_of_reviews     | c1t           | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | number_of_reviews     | c1t           | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
       | overall_bubble_rating | c1t           | day         | 1     | today             | today | today             | today      |
       | overall_bubble_rating | c1t           | day         | 41    | today - 40 days   | today | today - 40 days   | today      |
-      | overall_bubble_rating | c1t           | day         | 366   | today - 40 months | today | today - 365 days  | today      |
-      | overall_bubble_rating | c1t           | week        | 1     | today - 13 days   | today | today - 13 days   | today      |
-      | overall_bubble_rating | c1t           | week        | 3     | today - 27 days   | today | today - 27 days   | today      |
-      | overall_bubble_rating | c1t           | week        | 51    | today - 363 days  | today | today - 363 days  | today      |
-      | overall_bubble_rating | c1t           | month       | 1     | today - 2 months  | today | today - 2 months  | today      |
-      | overall_bubble_rating | c1t           | month       | 3     | today - 4 months  | today | today - 4 months  | today      |
-      | overall_bubble_rating | c1t           | month       | 11    | today - 40 months | today | today - 12 months | today      |
+      | overall_bubble_rating | c1t           | day         | 366   | today - 365 days  | today | today - 365 days  | today      |
+      | overall_bubble_rating | c1t           | week        | 3     | today - 13 days   | today | today - 13 days   | today      |
+      | overall_bubble_rating | c1t           | week        | 5     | today - 27 days   | today | today - 27 days   | today      |
+      | overall_bubble_rating | c1t           | week        | 53    | today - 363 days  | today | today - 363 days  | today      |
+      | overall_bubble_rating | c1t           | month       | 3     | today - 2 months  | today | today - 2 months  | today      |
+      | overall_bubble_rating | c1t           | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
+      | overall_bubble_rating | c1t           | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
   @Smoke
   Scenario Outline: Checking data corectness for popularity_index_rank
@@ -212,7 +227,7 @@ Feature: Review multiproperty customer property
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
-    And Body does not contain property with attribute "properties"
+    And Response contains 0 values of attribute named "properties"
 
     Examples:
       | metric                | customer_code | granularity | since      | until      |
@@ -233,27 +248,28 @@ Feature: Review multiproperty customer property
       | overall_bubble_rating | c1t           | month       | 1880-10-01 | 1880-12-03 |
 
 
+    #  Change expected message when DP-1495 is fixed
   Scenario Outline: Get analytics data from TA API that has wrong time interval
     When Get "<metric>" for list of properties for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
-    Then Response code is 200
-    And Data is owned by "tripadvisor"
-    And Content type is "application/json"
-    And Body does not contain property with attribute "properties"
+    Then Response code is 400
+    And Custom code is 63
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
 
     Examples:
-      | metric                | customer_code | granularity | until      | since      |
-      | popularity_index_rank | c1t           | day         | 2015-12-02 | 2015-12-03 |
-      | popularity_index_rank | c1t           | week        | 2015-11-02 | 2015-12-03 |
-      | popularity_index_rank | c1t           | month       | 2015-10-02 | 2015-12-03 |
+      | metric                | customer_code | granularity | until      | since      | message                                                                                                                                                               |
+      | popularity_index_rank | c1t           | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | popularity_index_rank | c1t           | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | popularity_index_rank | c1t           | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
 
-      | aspects_of_business   | c1t           | day         | 2015-12-02 | 2015-12-03 |
-      | aspects_of_business   | c1t           | week        | 2015-11-02 | 2015-12-03 |
-      | aspects_of_business   | c1t           | month       | 2015-10-02 | 2015-12-03 |
+      | aspects_of_business   | c1t           | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | aspects_of_business   | c1t           | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | aspects_of_business   | c1t           | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
 
-      | number_of_reviews     | c1t           | day         | 2015-12-02 | 2015-12-03 |
-      | number_of_reviews     | c1t           | week        | 2015-11-02 | 2015-12-03 |
-      | number_of_reviews     | c1t           | month       | 2015-10-02 | 2015-12-03 |
+      | number_of_reviews     | c1t           | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | number_of_reviews     | c1t           | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | number_of_reviews     | c1t           | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
 
-      | overall_bubble_rating | c1t           | day         | 2015-12-02 | 2015-12-03 |
-      | overall_bubble_rating | c1t           | week        | 2015-11-02 | 2015-12-03 |
-      | overall_bubble_rating | c1t           | month       | 2015-10-02 | 2015-12-03 |
+      | overall_bubble_rating | c1t           | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | overall_bubble_rating | c1t           | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | overall_bubble_rating | c1t           | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |

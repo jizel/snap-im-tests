@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.steps;
 
+import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,8 @@ public class CommonAnalyticsStepdefs {
 
     @Then("^The metric count is (\\d+[,.]?\\d*)$")
     public void Metric_count_is(int value) throws Throwable {
-        analyticsBaseSteps.integerPartOfValueIs("values", value);
+//        Will this work for multiple values? And is it needed? Make a more robust solution if so.
+        analyticsBaseSteps.integerPartOfValueIs("values.value", value);
     }
 
     @Then("^Response contains correct number of values for granularity \"([^\"]*)\" between \"([^\"]*)\" and \"([^\"]*)\"$")

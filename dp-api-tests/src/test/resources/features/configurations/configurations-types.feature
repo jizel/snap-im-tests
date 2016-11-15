@@ -1,3 +1,4 @@
+@Configurations
 Feature: Configurations types create update delete
 
   #TODO add etag things to get/update/create

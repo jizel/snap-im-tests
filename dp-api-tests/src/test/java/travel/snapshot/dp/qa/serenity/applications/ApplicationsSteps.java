@@ -56,7 +56,7 @@ public class ApplicationsSteps extends BasicSteps {
         application.forEach(t -> {
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Application cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
+                fail("Application cannot be created: " + createResponse.asString());
             }
         });
     }
@@ -328,7 +328,7 @@ public class ApplicationsSteps extends BasicSteps {
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("name", "Version 123");
-        mapForUpdate.put("api_key", "123");
+        mapForUpdate.put("api_manager_id", "123");
         mapForUpdate.put("status", "inactive");
         mapForUpdate.put("release_date", "2016-02-22");
         mapForUpdate.put("description", "UpdatedDescription");

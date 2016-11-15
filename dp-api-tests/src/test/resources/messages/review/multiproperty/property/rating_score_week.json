@@ -1,24 +1,48 @@
 {
-  "since": "2015-11-16",
-  "until": "2015-11-29",
-  "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-11-12",
+  "until": "2015-12-03",
+  "granularity": "week",
   "values": [
     {
-      "One": 41946,
-      "Two": 8045,
-      "Three": 48798,
-      "Four": 35928,
-      "Five": 22309
+      "value": {
+        "One": 41933,
+        "Two": 7981,
+        "Three": 48782,
+        "Four": 35895,
+        "Five": 22280
+      },
+      "data_incomplete": true
     },
     {
-      "One": 41989,
-      "Two": 8064,
-      "Three": 48811,
-      "Four": 35928,
-      "Five": 22334
+      "value": {
+        "One": 41946,
+        "Two": 8045,
+        "Three": 48798,
+        "Four": 35928,
+        "Five": 22309
+      }
+    },
+    {
+      "value": {
+        "One": 41989,
+        "Two": 8064,
+        "Three": 48811,
+        "Four": 35928,
+        "Five": 22334
+      }
+    },
+    {
+      "value": {
+        "One": 41997,
+        "Two": 8081,
+        "Three": 48821,
+        "Four": 35960,
+        "Five": 22359
+      },
+      "data_incomplete": true
     }
   ]
 }

@@ -1,24 +1,18 @@
 package travel.snapshot.dp.qa.serenity.api_subscriptions;
 
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.ApiSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by vlcek on 3/17/2016.
@@ -75,9 +69,9 @@ public class ApiSubscriptionSteps extends BasicSteps {
         ApiSubscriptionUpdateDto apiSubscription = new ApiSubscriptionUpdateDto();
 
         if (active) {
-            apiSubscription.setIsActive(1);
+            apiSubscription.setIsActive(true);
         } else {
-            apiSubscription.setIsActive(0);
+            apiSubscription.setIsActive(false);
         }
 
         updateApiSubscription(apiSubscriptionId, apiSubscription);

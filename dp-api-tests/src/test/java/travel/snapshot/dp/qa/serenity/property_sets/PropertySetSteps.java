@@ -1,37 +1,32 @@
 package travel.snapshot.dp.qa.serenity.property_sets;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyViewDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserViewDto;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -145,8 +140,8 @@ public class PropertySetSteps extends BasicSteps {
             PropertySetDto[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
             for (PropertySetDto ps : propertySets) {
                 Response propertyUsersResponse = getSecondLevelEntities(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
-                UserViewDto[] propertyUsers = propertyUsersResponse.as(UserViewDto[].class);
-                for (UserViewDto pu : propertyUsers) {
+                PropertyUserRelationshipDto[] propertyUsers = propertyUsersResponse.as(PropertyUserRelationshipDto[].class);
+                for (PropertyUserRelationshipDto pu : propertyUsers) {
                     Response deleteResponse = deleteSecondLevelEntity(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
@@ -160,7 +155,7 @@ public class PropertySetSteps extends BasicSteps {
     public void relationExistsBetweenUserAndPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
-        UserViewDto existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
+        PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
         if (existingPropertySetUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
@@ -182,9 +177,9 @@ public class PropertySetSteps extends BasicSteps {
                 .when().post("/{propertySetId}/users", propertySetId);
     }
 
-    private UserViewDto getUserForPropertySet(String propertySetId, String userName) {
+    private PropertyUserRelationshipDto getUserForPropertySet(String propertySetId, String userName) {
         Response propertySetUserResponse = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
-        return Arrays.asList(propertySetUserResponse.as(UserViewDto[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(propertySetUserResponse.as(PropertyUserRelationshipDto[].class)).stream().findFirst().orElse(null);
     }
 
     public void userIsAddedToPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
@@ -203,7 +198,7 @@ public class PropertySetSteps extends BasicSteps {
 
     public void userDoesntExistForPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-        UserViewDto existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
+        PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), u.getUserName());
         assertNull("User should not be present in propertyset", existingPropertySetUser);
     }
 
@@ -221,20 +216,22 @@ public class PropertySetSteps extends BasicSteps {
 
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
-        UserViewDto[] propertiesUsers = response.as(UserViewDto[].class);
+        PropertyUserRelationshipDto[] propertiesUsers = response.as(PropertyUserRelationshipDto[].class);
         int i = 0;
-        for (UserViewDto pu : propertiesUsers) {
-            assertEquals("Propertysetuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
+        for (PropertyUserRelationshipDto pu : propertiesUsers) {
+//            userName is not part of new class - PropertyUserRelationShip, needs to be obtained via different endpoint
+//            assertEquals("Propertysetuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
             i++;
         }
     }
 
     public void propertyNamesAreInResponseInOrder(List<String> propertyNames) {
         Response response = getSessionResponse();
-        PropertyViewDto[] propertyPropertySets = response.as(PropertyViewDto[].class);
+        PropertySetPropertyRelationshipDto[] propertyPropertySets = response.as(PropertySetPropertyRelationshipDto[].class);
         int i = 0;
-        for (PropertyViewDto pu : propertyPropertySets) {
-            assertEquals("Propertyuser on index=" + i + " is not expected", propertyNames.get(i), pu.getPropertyName());
+        for (PropertySetPropertyRelationshipDto pu : propertyPropertySets) {
+//            propertyName is not part of new class - PropertySetPropertyRelationshipDto, needs to be obtained via different endpoint
+//            assertEquals("Propertyuser on index=" + i + " is not expected", propertyNames.get(i), pu.getPropertyName());
             i++;
         }
     }
@@ -245,8 +242,8 @@ public class PropertySetSteps extends BasicSteps {
             PropertySetDto[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
             for (PropertySetDto ps : propertySets) {
                 Response propertyPropertySetResponse = getSecondLevelEntities(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
-                PropertyViewDto[] propertyPropertySets = propertyPropertySetResponse.as(PropertyViewDto[].class);
-                for (PropertyViewDto pps : propertyPropertySets) {
+                PropertySetPropertyRelationshipDto[] propertyPropertySets = propertyPropertySetResponse.as(PropertySetPropertyRelationshipDto[].class);
+                for (PropertySetPropertyRelationshipDto pps : propertyPropertySets) {
                     Response deleteResponse = deleteSecondLevelEntity(ps.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set property cannot be deleted: " + deleteResponse.asString());
@@ -259,7 +256,7 @@ public class PropertySetSteps extends BasicSteps {
     public void relationExistsBetweenPropertyAndPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
-        PropertyViewDto existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
+        PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
         if (existingPropertySetUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
@@ -281,14 +278,14 @@ public class PropertySetSteps extends BasicSteps {
                 .when().post("/{propertySetId}/properties", propertySetId);
     }
 
-    private PropertyViewDto getPropertyForPropertySet(String propertySetId, String propertyId) {
+    private PropertySetPropertyRelationshipDto getPropertyForPropertySet(String propertySetId, String propertyId) {
         Response propertySetPropertiesResponse = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_id==" + propertyId, null, null);
-        return Arrays.asList(propertySetPropertiesResponse.as(PropertyViewDto[].class)).stream().findFirst().orElse(null);
+        return Arrays.asList(propertySetPropertiesResponse.as(PropertySetPropertyRelationshipDto[].class)).stream().findFirst().orElse(null);
     }
 
     public void propertiesDoesntExistForPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-        PropertyViewDto existingPropertySetProperty = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
+        PropertySetPropertyRelationshipDto existingPropertySetProperty = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
         assertNull("Property should not be present in propertyset", existingPropertySetProperty);
     }
 
@@ -312,7 +309,7 @@ public class PropertySetSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
         given().spec(spec).get(propertyLocation).then()
-                .body("property_set_type_id", is(originalProperty.getPropertySetType()))
+                .body("property_set_type", is(originalProperty.getPropertySetType()))
                 .body("description", is(originalProperty.getPropertySetDescription()))
                 .body("name", is(originalProperty.getPropertySetName()))
                 .body("customer_id", is(originalProperty.getCustomerId()));

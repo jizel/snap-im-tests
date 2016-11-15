@@ -1,14 +1,11 @@
 package travel.snapshot.dp.qa.serenity.analytics;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 import com.jayway.restassured.response.Response;
-
-import junit.framework.Assert;
-
 import net.thucydides.core.annotations.Step;
-
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-
-import static groovy.util.GroovyTestCase.assertEquals;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -23,16 +20,14 @@ public class FacebookSteps extends AnalyticsBaseSteps {
     /**
      * Method is design that it will check only first facebook post for correct data, for moving to
      * another ones you can use cursor in request
+     * - Can we do this differently? Refactor.
      */
     @Step
     public void checkFacebookPostFromResponse(String datetimeExpected, int engagementExpected, String contentExpected, int reachExpected) throws Exception {
         Response response = getSessionResponse();
-        for (int i = 0; i < (int) response.path("resultList.size()"); i++) {
-
-            assertEquals(response.path("resultList.datetime[0]"), datetimeExpected);
-            assertEquals(response.path("resultList.content[0]"), contentExpected);
-            Assert.assertEquals((int) response.path("resultList.reach[0]"), reachExpected);
-            Assert.assertEquals((int) response.path("resultList.engagement[0]"), engagementExpected);
-        }
+            assertThat("Datetime in response is wrong", response.jsonPath().getList("datetime").get(0), equalTo(datetimeExpected));
+            assertThat("Engagement in response is wrong", response.jsonPath().getList("engagement").get(0), equalTo(engagementExpected));
+            assertThat("Content in response is wrong", response.jsonPath().getList("content").get(0), equalTo(contentExpected));
+            assertThat("Reach in response is wrong", response.jsonPath().getList("reach").get(0), equalTo(reachExpected));
     }
 }

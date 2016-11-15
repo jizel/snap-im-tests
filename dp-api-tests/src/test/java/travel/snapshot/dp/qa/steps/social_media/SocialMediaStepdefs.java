@@ -1,16 +1,14 @@
 package travel.snapshot.dp.qa.steps.social_media;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.analytics.SocialMediaSteps;
+
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -41,7 +39,7 @@ public class SocialMediaStepdefs {
 
     @When("^Property is missing for \"([^\"]*)\"$")
     public void property_is_missing_for(String url) throws Throwable {
-        steps.getDataWithoutProperty(url);
+        steps.getDataWithoutProperty("/social_media" + url);
     }
 
     @When("^List of social media items \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
@@ -88,11 +86,11 @@ public class SocialMediaStepdefs {
 
     @Then("^Response since is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
     public void responseSinceIsForGranularity(String value, String granularity) throws Throwable {
-        steps.dateFieldIs("since", value, granularity);
+        steps.dateFieldIs("since", value);
     }
 
     @Then("^Response until is \"([^\"]*)\" for granularity \"([^\"]*)\"$")
     public void responseUntilIsForGranularity(String value, String granularity) throws Throwable {
-        steps.dateFieldIs("until", value, granularity);
+        steps.dateFieldIs("until", value);
     }
 }

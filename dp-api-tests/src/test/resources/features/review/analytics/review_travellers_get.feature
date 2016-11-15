@@ -7,13 +7,13 @@ Feature: Review travelers
 
   Background:
     Given Database is cleaned
-    Given The following properties exist with random address and billing address
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      |
-      | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
-
     Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+
+    Given The following properties exist with random address and billing address
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |
@@ -27,7 +27,8 @@ Feature: Review travelers
     Given Set access token for review steps defs
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "anchor" from "2015-01-01" to "2016-12-31"
+#    Relation with type 'anchor' doesn't exist anymore (was replaced with anchorCustomerId - Story DP-1232). Replaced with type 'owner'. Other types (data_owner, owner, asset_management, management, chain, membership) need to be covered too.
+    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 
   Scenario Outline: Get amount of specific analytics data from API for a given granularity for travelers overall bubble rating
@@ -44,13 +45,13 @@ Feature: Review travelers
       | url                               | granularity | count | since             | until | real_since        | real_until | property                             |
       | /travellers/overall_bubble_rating | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/overall_bubble_rating | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/overall_bubble_rating | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
 
   Scenario Outline: Get amount specific analytics data from API for a given granularity for aspect of business
@@ -67,13 +68,13 @@ Feature: Review travelers
       | url                             | granularity | count | since             | until | real_since        | real_until | property                             |
       | /travellers/aspects_of_business | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
 
   Scenario Outline: Get amount of specific analytics data from API for a given granularity for travelers number of reviews
@@ -88,16 +89,15 @@ Feature: Review travelers
 
     Examples:
       | url                           | granularity | count | since             | until | real_since        | real_until | property                             |
-      | /travellers/number_of_reviews | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
-
+      |  /travellers/number_of_reviews | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/number_of_reviews | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
   @Smoke
   Scenario Outline: Get amount of analytics data from API for a given granularity of more complex endpoints
@@ -112,15 +112,15 @@ Feature: Review travelers
 
     Examples:
       | url          | granularity | count | since             | until | real_since        | real_until | property                             |
-      | /travellers/ | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
+      |  /travellers/ | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
   @Smoke
   Scenario Outline: Checking data corectness for all travellers analitics
@@ -177,7 +177,7 @@ Feature: Review travelers
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
-    And Body does not contain property with attribute "data"
+    Then Response contains 0 values of attribute named "data"
 
     Examples:
       | url                               | granularity | since      | until      | property                             |
@@ -189,9 +189,9 @@ Feature: Review travelers
       | /travellers/number_of_reviews     | week        | 1880-05-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
       | /travellers/aspects_of_business   | week        | 1880-05-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
 
-      | /travellers/overall_bubble_rating | month       | 1880-01-03 | 1800-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews     | month       | 1880-01-03 | 1800-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business   | month       | 1880-01-03 | 1800-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | month       | 1880-01-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/number_of_reviews     | month       | 1880-01-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business   | month       | 1880-01-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
   Scenario Outline: Get specific analytics data from TA API that are more than year old
@@ -199,7 +199,7 @@ Feature: Review travelers
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
-    And Body does not contain property with attribute "data"
+    And Response contains 0 values of attribute named "data"
 
     Examples:
       | url          | granularity | since      | until      | property                             |
@@ -210,37 +210,38 @@ Feature: Review travelers
 
   Scenario Outline: Get analytics data from TA API that has wrong time interval
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
-    And Data is owned by "tripadvisor"
-    And Content type is "application/json"
-    And Body does not contain property with attribute "data"
+    Then Response code is 400
+    And Custom code is 63
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
 
     Examples:
-      | url                               | granularity | until      | since      | property                             |
-      | /travellers/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | url                               | granularity | until      | since      | property                             | message                                                                                                                                                               |
+      | /travellers/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /travellers/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /travellers/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
 
-      | /travellers/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /travellers/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /travellers/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
 
-      | /travellers/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | /travellers/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | /travellers/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
-  Scenario Outline: Get specific analytics data from TA API has wrong time interval
+  Scenario Outline: Get travellers analytics data from TA API has wrong time interval
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
-    And Data is owned by "tripadvisor"
-    And Content type is "application/json"
-    And Body does not contain property with attribute "data"
+    Then Response code is 400
+    And Custom code is 63
+    And Body contains entity with attribute "type" value "error"
+    And Body contains entity with attribute "message" value "<message>"
 
+    #  Change expected message when DP-1495 is fixed
     Examples:
-      | url          | granularity | until      | since      | property                             |
-      | /travellers/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
-      | /travellers/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | url          | granularity | until      | since      | property                             | message                                                                                                                                                               |
+      | /travellers/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | /travellers/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /travellers/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
 
 
 

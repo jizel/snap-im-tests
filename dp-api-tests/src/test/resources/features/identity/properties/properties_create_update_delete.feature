@@ -1,3 +1,4 @@
+@Identity
 Feature: Properties create update delete
 
   #TODO add etag things to get/update/create
@@ -124,11 +125,11 @@ Feature: Properties create update delete
       | 10          | text   | /null    | /null       | /null       | 400           | 63          |
 
       #filtering and sorting
-      | 10          | 0      | /null    | website     | website     | 400           | 64          |
-      | 10          | 0      | /null    | /null       | nonexistent | 400           | 63          |
-      | 10          | 0      | /null    | nonexistent | /null       | 400           | 63          |
-      | 10          | 0      | code==   | /null       | /null       | 400           | 63          |
-      | 10          | 0      | vat==CZ* | /null       | /null       | 400           | 63          |
+      | 10          | 0      | /null    | name         | name         | 400           | 64          |
+      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 63          |
+      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 63          |
+      | 10          | 0      | code==   | /null        | /null        | 400           | 63          |
+      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
 
   Scenario Outline: Validate that property regions belong to the correct country
     When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "5d829079-48f0-4f00-9bec-e2329a8bdaac"

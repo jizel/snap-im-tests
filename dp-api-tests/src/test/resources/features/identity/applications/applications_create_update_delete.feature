@@ -1,3 +1,4 @@
+@Identity
 Feature: Applications create update delete
 
   Background:

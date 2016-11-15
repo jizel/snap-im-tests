@@ -1,51 +1,125 @@
 {
-  "since": "2015-11-16",
-  "until": "2015-11-29",
-  "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-11-12",
+  "until": "2015-12-03",
+  "granularity": "week",
   "data": [
     {
       "type": "friends",
       "number_of_reviews": [
-        36999,
-        37037
-      ]
-    },
-    {
-      "type": "family",
-      "number_of_reviews": [
-        36981,
-        null
-      ]
-    },
-    {
-      "type": "business",
-      "number_of_reviews": [
-        37013,
-        null
-      ]
-    },
-    {
-      "type": "solo",
-      "number_of_reviews": [
-        37013,
-        null
-      ]
-    },
-    {
-      "type": "unspecified",
-      "number_of_reviews": [
-        36999,
-        37037
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 36999,
+          "data_incomplete": true
+        },
+        {
+          "value": 37037,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ]
     },
     {
       "type": "couples",
       "number_of_reviews": [
-        36981,
-        37037
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 36981,
+          "data_incomplete": true
+        },
+        {
+          "value": 37037,
+          "data_incomplete": true
+        },
+        {
+          "value": 37050,
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "solo",
+      "number_of_reviews": [
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 37013,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "family",
+      "number_of_reviews": [
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 36981,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 37050,
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "unspecified",
+      "number_of_reviews": [
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 36999,
+          "data_incomplete": true
+        },
+        {
+          "value": 37037,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "business",
+      "number_of_reviews": [
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 37013,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ]
     }
   ]

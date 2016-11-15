@@ -1,3 +1,4 @@
+@SocialMedia
 Feature: Instagram
   Testing of api for instagram with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
 
@@ -63,10 +64,10 @@ Feature: Instagram
     Examples:
       | url                  | granularity | count                                     | since      | until      | property                             |
       | /analytics/instagram | day         | 7470, 7508, 7558, 7558, 7606, 7813, 15321 | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram | week        | 7024, 7079, 7197, 7224, 7224, 7395, 14474 | 2015-11-03 | 2015-11-20 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram | month       | 7385, 7440, 7471, 7471, 7542, 7762, 15202 | 2015-10-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram | week        | 7024, 7079, 7197, 7224, 7224, 7395, 14474 | 2015-11-13 | 2015-11-20 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram | month       | 7385, 7440, 7471, 7471, 7542, 7762, 15202 | 2015-11-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
 
-  Scenario Outline: Get specific analytics data from API for a given granularity
+  Scenario Outline: Get specific analytics data from API for at given granularity
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
     And Content type is "application/json"
@@ -95,64 +96,64 @@ Feature: Instagram
       | /analytics/instagram/likes      | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/comments   | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
 
-      | /analytics/instagram/pictures   | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/engagement | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/followers  | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/tags       | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/reach      | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/likes      | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/comments   | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/pictures   | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers  | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags       | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach      | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes      | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments   | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
   @Smoke
-  Scenario Outline: Get specific analytics data from API for a given granularity
+  Scenario Outline: Get specific analytics data from instagram API for a given granularity
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
     And Content type is "application/json"
@@ -166,13 +167,13 @@ Feature: Instagram
       | url                   | granularity | count | since             | until | real_since        | real_until | property                             |
       | /analytics/instagram/ | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | day         | 366   | today - 40 months | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | week        | 1     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | week        | 3     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | week        | 51    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | month       | 1     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | month       | 3     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/instagram/ | month       | 11    | today - 40 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | week        | 5     | today - 27 days   | today | today - 27 days   | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | week        | 53    | today - 363 days  | today | today - 363 days  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | month       | 3     | today - 2 months  | today | today - 2 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/ | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
 
   Scenario Outline: Getting non-existent analytics data
@@ -210,20 +211,20 @@ Feature: Instagram
 
   Scenario Outline: Get analytics data from API with missing granularity
     When Get instagram "<url>" data with "/null" granularity for "99000099-9999-4999-a999-999999999999" since "/null" until "/null"
-    Then Response code is 200
+    Then Response code is 400
     And Content type is "application/json"
-    And Data is owned by "instagram"
-    And Body contains entity with attribute "granularity" value "<expected_granularity>"
+    And Custom code is 52
+    And Body contains entity with attribute "message" value "Mandatory parameter 'granularity' is missing."
 
     Examples:
-      | url                             | expected_granularity |
-      | /analytics/instagram/pictures   | day                  |
-      | /analytics/instagram/engagement | day                  |
-      | /analytics/instagram/followers  | day                  |
-      | /analytics/instagram/tags       | day                  |
-      | /analytics/instagram/reach      | day                  |
-      | /analytics/instagram/likes      | day                  |
-      | /analytics/instagram/comments   | day                  |
+      | url                             |
+      | /analytics/instagram/pictures   |
+      | /analytics/instagram/engagement |
+      | /analytics/instagram/followers  |
+      | /analytics/instagram/tags       |
+      | /analytics/instagram/reach      |
+      | /analytics/instagram/likes      |
+      | /analytics/instagram/comments   |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -255,11 +256,11 @@ Feature: Instagram
       | /analytics/instagram/likes      | day         | 1888-09-01 | 1888-10-01 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/comments   | day         | 1888-09-01 | 1888-10-01 | 99000099-9999-4999-a999-999999999999 |
 
-  Scenario Outline: Get analytics data from API from 1800s
+  Scenario Outline: Get instagram analytics data from API from 1800s
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
     And Content type is "application/json"
-    And Response contains 0 values in data enclosure
+    And Response contains 0 values for all metrics
 
     Examples:
       | url                  | granularity | since      | until      | property                             |
@@ -267,9 +268,9 @@ Feature: Instagram
 
   Scenario Outline: Get analytics data with wrong time interval
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
+    Then Response code is 400
     And Content type is "application/json"
-    And Response contains 0 values in data enclosure
+    And Custom code is 63
 
     Examples:
       | url                  | granularity | since | until           | property                             |
@@ -277,9 +278,9 @@ Feature: Instagram
 
   Scenario Outline: Get analytics data with wrong time interval asd
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
-    Then Response code is 200
+    Then Response code is 400
     And Content type is "application/json"
-    And Response contains 0 values
+    And Custom code is 63
 
     Examples:
       | url                             | granularity | since | until           | property                             |

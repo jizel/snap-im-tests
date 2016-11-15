@@ -1,3 +1,4 @@
+@Identity
 Feature: Users customer roles CRUD
 
   Background:

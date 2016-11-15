@@ -1,155 +1,440 @@
 {
-  "since": "2015-11-16",
-  "until": "2015-11-29",
-  "granularity": "week",
   "data_owners": [
     "tripadvisor"
   ],
+  "since": "2015-11-12",
+  "until": "2015-12-03",
+  "granularity": "week",
   "data": [
     {
       "type": "friends",
       "overall": [
-        6.9,
-        7.2
-      ],
-      "number_of_reviews": [
-        36999,
-        37037
-      ],
-      "aspects_of_business": [
         {
-          "location": 3.2,
-          "sleep_quality": 4.5,
-          "room": 0.6,
-          "service": 1.8,
-          "value": 5.3,
-          "cleanliness": 0.8
+          "data_incomplete": true
         },
         {
-          "location": 3.2,
-          "sleep_quality": 3.95,
-          "room": 0.5,
-          "service": 1.7,
-          "value": 5.5,
-          "cleanliness": 1
+          "value": 6.9,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
         }
-      ]
-    },
-    {
-      "type": "family",
-      "overall": [
-        7.2,
-        null
       ],
       "number_of_reviews": [
-        36981,
-        null
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 36999,
+          "data_incomplete": true
+        },
+        {
+          "value": 37037,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
         {
-          "location": 3.1,
-          "room": 0.4,
-          "service": 1.8,
-          "value": 5.3,
-          "cleanliness": 0.8
-        },
-        {}
-      ]
-    },
-    {
-      "type": "business",
-      "overall": [
-        7.1,
-        null
-      ],
-      "number_of_reviews": [
-        37013,
-        null
-      ],
-      "aspects_of_business": [
-        {
-          "sleep_quality": 4.5,
-          "room": 0.5,
-          "service": 1.7,
-          "cleanliness": 0.8
-        },
-        {}
-      ]
-    },
-    {
-      "type": "solo",
-      "overall": [
-        7.05,
-        null
-      ],
-      "number_of_reviews": [
-        37013,
-        null
-      ],
-      "aspects_of_business": [
-        {
-          "location": 3.2,
-          "sleep_quality": 4.3,
-          "room": 0.45,
-          "service": 1.75,
-          "value": 5.3,
-          "cleanliness": 0.8
-        },
-        {}
-      ]
-    },
-    {
-      "type": "unspecified",
-      "overall": [
-        7.1,
-        7.2
-      ],
-      "number_of_reviews": [
-        36999,
-        37037
-      ],
-      "aspects_of_business": [
-        {
-          "location": 3.2,
-          "sleep_quality": 4.5,
-          "service": 1.7,
-          "value": 5.3,
-          "cleanliness": 0.8
+          "value": {
+
+          },
+          "data_incomplete": true
         },
         {
-          "location": 3.2,
-          "sleep_quality": 4.1,
-          "room": 0.6,
-          "service": 1.7,
-          "value": 5.6,
-          "cleanliness": 0.95
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.5,
+            "room": 0.6,
+            "service": 1.8,
+            "value": 5.3,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 3.95,
+            "room": 0.5,
+            "service": 1.7,
+            "value": 5.5,
+            "cleanliness": 0.5
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
         }
       ]
     },
     {
       "type": "couples",
       "overall": [
-        7.2,
-        7.2
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.3,
+          "data_incomplete": true
+        }
       ],
       "number_of_reviews": [
-        36981,
-        37037
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 36981,
+          "data_incomplete": true
+        },
+        {
+          "value": 37037,
+          "data_incomplete": true
+        },
+        {
+          "value": 37050,
+          "data_incomplete": true
+        }
       ],
       "aspects_of_business": [
         {
-          "location": 3.1,
-          "sleep_quality": 4.6,
-          "room": 0.4,
-          "service": 1.8,
-          "cleanliness": 1
+          "value": {
+
+          },
+          "data_incomplete": true
         },
         {
-          "sleep_quality": 4.06667,
-          "room": 0.5,
-          "service": 1.7,
-          "value": 5.5,
-          "cleanliness": 1
+          "value": {
+            "location": 3.1,
+            "sleep_quality": 4.6,
+            "room": 0.4,
+            "service": 1.8,
+            "cleanliness": 1.0
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "sleep_quality": 4.06667,
+            "room": 0.5,
+            "service": 1.7,
+            "value": 5.5,
+            "cleanliness": 0.66667
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 3.4,
+            "room": 0.9,
+            "service": 1.65,
+            "value": 5.4,
+            "cleanliness": 0.9
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "solo",
+      "overall": [
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 7.05,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ],
+      "number_of_reviews": [
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 37013,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ],
+      "aspects_of_business": [
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.3,
+            "room": 0.45,
+            "service": 1.75,
+            "value": 5.3,
+            "cleanliness": 0.4
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "family",
+      "overall": [
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 7.3,
+          "data_incomplete": true
+        }
+      ],
+      "number_of_reviews": [
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 36981,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "value": 37050,
+          "data_incomplete": true
+        }
+      ],
+      "aspects_of_business": [
+        {
+          "value": {
+            "location": 2.9,
+            "sleep_quality": 4.4,
+            "room": 0.7,
+            "service": 1.65,
+            "value": 5.5,
+            "cleanliness": 1.2
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.1,
+            "room": 0.4,
+            "service": 1.8,
+            "value": 5.3,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.4,
+            "room": 0.8,
+            "service": 1.7,
+            "value": 5.4,
+            "cleanliness": 0.9
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "unspecified",
+      "overall": [
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.1,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ],
+      "number_of_reviews": [
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 36999,
+          "data_incomplete": true
+        },
+        {
+          "value": 37037,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ],
+      "aspects_of_business": [
+        {
+          "value": {
+            "location": 3.1,
+            "sleep_quality": 4.6,
+            "room": 0.6,
+            "value": 5.3,
+            "cleanliness": 1.0
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.5,
+            "service": 1.7,
+            "value": 5.3,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "location": 3.2,
+            "sleep_quality": 4.1,
+            "room": 0.6,
+            "service": 1.7,
+            "value": 5.6,
+            "cleanliness": 0.95
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        }
+      ]
+    },
+    {
+      "type": "business",
+      "overall": [
+        {
+          "value": 7.2,
+          "data_incomplete": true
+        },
+        {
+          "value": 7.1,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ],
+      "number_of_reviews": [
+        {
+          "value": 36966,
+          "data_incomplete": true
+        },
+        {
+          "value": 37013,
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        },
+        {
+          "data_incomplete": true
+        }
+      ],
+      "aspects_of_business": [
+        {
+          "value": {
+            "location": 3.1,
+            "sleep_quality": 4.4,
+            "room": 0.5,
+            "service": 1.7,
+            "value": 5.5,
+            "cleanliness": 0.0
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+            "sleep_quality": 4.5,
+            "room": 0.5,
+            "service": 1.7,
+            "cleanliness": 0.8
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
+        },
+        {
+          "value": {
+
+          },
+          "data_incomplete": true
         }
       ]
     }
