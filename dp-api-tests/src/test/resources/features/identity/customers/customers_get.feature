@@ -133,26 +133,26 @@ Feature: Customers get
     Examples:
       | limit       | cursor | filter   | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
-      | /null       | -1     | /null    | /null       | /null       | 400           | 63          |
-      |             | -1     | /null    | /null       | /null       | 400           | 63          |
-      | /null       | text   | /null    | /null       | /null       | 400           | 63          |
-      |             | text   | /null    | /null       | /null       | 400           | 63          |
-      | -1          |        | /null    | /null       | /null       | 400           | 63          |
-      | -1          | /null  | /null    | /null       | /null       | 400           | 63          |
-      | 201         | /null  | /null    | /null       | /null       | 400           | 63          |
-      | 21474836470 | /null  | /null    | /null       | /null       | 400           | 63          |
-      | text        |        | /null    | /null       | /null       | 400           | 63          |
-      | text        | /null  | /null    | /null       | /null       | 400           | 63          |
-      | 10          | -1     | /null    | /null       | /null       | 400           | 63          |
-      | text        | 0      | /null    | /null       | /null       | 400           | 63          |
-      | 10          | text   | /null    | /null       | /null       | 400           | 63          |
+      | /null       | -1     | /null    | /null       | /null       | 400           | 40002       |
+      |             | -1     | /null    | /null       | /null       | 400           | 40002       |
+      | /null       | text   | /null    | /null       | /null       | 400           | 40002       |
+      |             | text   | /null    | /null       | /null       | 400           | 40002       |
+      | -1          |        | /null    | /null       | /null       | 400           | 40002       |
+      | -1          | /null  | /null    | /null       | /null       | 400           | 40002       |
+      | 201         | /null  | /null    | /null       | /null       | 400           | 40002       |
+      | 21474836470 | /null  | /null    | /null       | /null       | 400           | 40002       |
+      | text        |        | /null    | /null       | /null       | 400           | 40002       |
+      | text        | /null  | /null    | /null       | /null       | 400           | 40002       |
+      | 10          | -1     | /null    | /null       | /null       | 400           | 40002       |
+      | text        | 0      | /null    | /null       | /null       | 400           | 40002       |
+      | 10          | text   | /null    | /null       | /null       | 400           | 40002       |
 
       #filtering and sorting
-      | 10          | 0      | /null    | name        | name        | 400           | 64          |
-      | 10          | 0      | /null    | /null       | nonexistent | 400           | 63          |
-      | 10          | 0      | /null    | nonexistent | /null       | 400           | 63          |
-      | 10          | 0      | code==   | /null       | /null       | 400           | 63          |
-      | 10          | 0      | vat==CZ* | /null       | /null       | 400           | 63          |
+      | 10          | 0      | /null    | name        | name        | 400           | 40002       |
+      | 10          | 0      | /null    | /null       | nonexistent | 400           | 40002       |
+      | 10          | 0      | /null    | nonexistent | /null       | 400           | 40002       |
+      | 10          | 0      | code==   | /null       | /null       | 400           | 40002       |
+      | 10          | 0      | vat==CZ* | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address
