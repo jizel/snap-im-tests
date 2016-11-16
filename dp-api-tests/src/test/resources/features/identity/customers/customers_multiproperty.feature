@@ -4,8 +4,8 @@ Feature: Customers multiproperty
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
      #everything - all properties available
      #limited - some properties not available
@@ -40,24 +40,24 @@ Feature: Customers multiproperty
       | salesforceid_5 | p5_name      | p5_code      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
       | salesforceid_6 | p6_name      | p6_code      | http://www.snapshot.travel | p6@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
 
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p4_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p5_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
-    Given Relation between property with code "p6_code" and customer with code "c1t" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p1_code" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p2_code" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p3_code" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p4_code" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p5_code" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with type "owner" from "2016-01-01" to "2016-02-28"
+    Given Relation between property with code "p6_code" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with type "owner" from "2016-01-01" to "2016-02-28"
 
 
   Scenario Outline: Accessing customer's property_sets with everything user with each property in just one ps
   Property set 1 and property set 2 properties are disjuncted, everything user has access just for properties from ps1
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
 
-    Given Relation between property with code "p5_code" and property set with name "ps2_name" for customer with code "c1t" exists
-    Given Relation between property with code "p6_code" and property set with name "ps2_name" for customer with code "c1t" exists
+    Given Relation between property with code "p5_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p6_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
 
       #user everything should get properties from ps1
       #limited should get only property set 2
@@ -71,7 +71,7 @@ Feature: Customers multiproperty
     Given Relation between user with username "limited" and property with code "p6_code" exists
 
     Given Get token for user "<username>" with password "<password>"
-    When List of property sets for customer "c1t" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
+    When List of property sets for customer "a792d2b2-3836-4207-a705-42bbecf3d881" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <count> customer property sets returned
@@ -89,13 +89,13 @@ Feature: Customers multiproperty
   Scenario Outline: Accessing customer's property_sets with everything user with one property in both sets
   There are same properties in property set 1 and 2, everything user has access to all properties, both property sets should be returned
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
 
-    Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with code "c1t" exists
-    Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with code "c1t" exists
+    Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
 
     #user everything should get both property sets
     #user limited should get only one property set
@@ -110,7 +110,7 @@ Feature: Customers multiproperty
 
     Given Get token for user "<username>" with password "<password>"
 
-    When List of property sets for customer "c1t" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
+    When List of property sets for customer "a792d2b2-3836-4207-a705-42bbecf3d881" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <count> customer property sets returned

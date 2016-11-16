@@ -34,14 +34,13 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary) {
-        users.forEach(u -> {
+        users.forEach(user -> {
             UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
             relation.setCustomerId(customerId);
             relation.setIsPrimary(isPrimary);
-//            TBD: UserCustomerRelationshipDto refactored, does not contain setUserCustomerRelationshipDto(relation)
-//           TODO: uncomment u.setUserCustomerRelationshipDto(relation);
+            user.setUserCustomerRelationship(relation);
 
-            Response createResp = createEntity(u);
+            Response createResp = createEntity(user);
             if (createResp.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("User cannot be created! Status:" + createResp.getStatusCode() + " " + createResp.getBody().asString());
             }
@@ -53,8 +52,7 @@ public class UsersSteps extends BasicSteps {
         UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
         relation.setCustomerId(customerId);
         relation.setIsPrimary(isPrimary);
-//            TBD: UserCustomerRelationshipDto refactored, does not contain setUserCustomerRelationshipDto(relation)
-//      TODO: uncomment  user.setUserCustomerRelationshipDto(relation);
+        user.setUserCustomerRelationship(relation);
 
         Response response = createEntity(user);
         setSessionResponse(response);
