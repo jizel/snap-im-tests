@@ -6,10 +6,13 @@ Feature: Customers get
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 87ae86b7-f5b5-4288-a59e-6bbf9fca4096 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following users exist for customer "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" as primary "true"
+      | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
   Scenario: Getting customer
-    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got
+    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -19,14 +22,14 @@ Feature: Customers get
     And Body contains entity with attribute "vat_id" value "CZ10000001"
 
   Scenario: Getting customer with etag
-    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got with etag
+    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got with etag by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "304"
     And Body is empty
 
   Scenario: Getting customer with not current etag
   Customer is got, etag is saved to tmp, then customer vat_id is updated to "CZnotvalidvatid" so etag should change and is got again with previous etag
 
-    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got for etag, updated and got with previous etag
+    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got for etag, updated and got with previous etag by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -36,7 +39,7 @@ Feature: Customers get
     And Body contains entity with attribute "vat_id" value "CZ99999999"
 
   Scenario: Checking error code for getting customer
-    When Customer with customerId "NotExistent" is got
+    When Customer with customerId "NotExistent" is got by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "404"
     And Custom code is "40402"
 
@@ -104,7 +107,7 @@ Feature: Customers get
       | List test Given company 58 | list_c58@tenants.biz | list_salesforceid_given_58 | CZ22000059 | true           | +420123456789 | http://www.snapshot.travel | Europe/Sofia |
 
 
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null" by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "200"
     And Content type is "application/json"
     And Total count is "<total>"
@@ -126,7 +129,7 @@ Feature: Customers get
     #TODO test filter, sort with different values
 
   Scenario Outline: Checking error codes for getting list of customers
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
@@ -165,7 +168,7 @@ Feature: Customers get
       | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_salesforceid_given_6 | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
       | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_salesforceid_given_7 | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
 
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customers returned

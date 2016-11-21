@@ -1,6 +1,9 @@
 package travel.snapshot.dp.qa.serenity;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -26,7 +29,6 @@ import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -56,6 +58,7 @@ public class BasicSteps {
     public static final String HEADER_IF_MATCH = "If-Match";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
     public static final String OAUTH_PARAMETER_NAME = "access_token";
+    public static final String XAUTH_USER_ID = "X-Auth-UserId";
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
@@ -99,11 +102,11 @@ public class BasicSteps {
         String responseLogLevel = PropertiesHelper.getProperty(CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL);
         String requestLogLevel = PropertiesHelper.getProperty(CONFIGURATION_REQUEST_HTTP_LOG_LEVEL);
 
-        if (StringUtils.isNotBlank(responseLogLevel)) {
+        if (isNotBlank(responseLogLevel)) {
             builder.log(LogDetail.valueOf(requestLogLevel));
         }
 
-        if (StringUtils.isNotBlank(responseLogLevel)) {
+        if (isNotBlank(responseLogLevel)) {
             RestAssured.replaceFiltersWith(
                     new ResponseLoggingFilter(
                             LogDetail.valueOf(responseLogLevel),
@@ -119,7 +122,7 @@ public class BasicSteps {
 
     public void setAccessTokenParamFromSession() {
         String token = getSessionVariable(OAUTH_PARAMETER_NAME);
-        if (StringUtils.isNotEmpty(token)) {
+        if (isNotEmpty(token)) {
             spec.queryParam(OAUTH_PARAMETER_NAME, token);
         }
     }
@@ -238,17 +241,41 @@ public class BasicSteps {
 
     protected Response updateEntity(String id, Map<String, Object> object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
+        if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object).when().post("/{id}", id);
     }
 
-    protected Response updateEntity(String id, String data, String etag) {
+    protected Response updateEntityByUser(String userId, String customerId, Map<String, Object> customerData, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
+        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
+        return requestSpecification.body(customerData).when().post("/{id}", customerId);
+    }
+
+    protected Response updateEntity(String id, String data, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isNotBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        return requestSpecification.body(data).when().post("/{id}", id);
+    }
+
+    protected Response updateEntityByUser(String id, String userId, String data, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        if (isNotBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
         return requestSpecification.body(data).when().post("/{id}", id);
     }
 
@@ -262,10 +289,22 @@ public class BasicSteps {
 
     protected Response getEntity(String id, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
+        if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{id}", id);
+    }
+
+    protected Response getEntityByUser(String customerId, String userId, String etag) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        if (isNotBlank(etag)) {
+            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
+        }
+        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
+        return requestSpecification.when().get("/{id}", customerId);
     }
 
     protected Response createSecondLevelRelationship(String firstLevelId, String secondLevelId, Object jsonBody) {
@@ -276,7 +315,7 @@ public class BasicSteps {
 
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
+        if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
@@ -297,7 +336,7 @@ public class BasicSteps {
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
+        if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
@@ -305,7 +344,7 @@ public class BasicSteps {
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (!StringUtils.isBlank(etag)) {
+        if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
@@ -328,6 +367,25 @@ public class BasicSteps {
             url = "";
         }
 
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
+        requestSpecification.parameters(params);
+
+        return requestSpecification.when().get(url);
+    }
+
+    protected Response getEntitiesByUser(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        return getEntitiesByUser(userId, null, limit, cursor, filter, sort, sortDesc, null);
+    }
+
+    protected Response getEntitiesByUser(String userId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        if (url == null) {
+            url = "";
+        }
+        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
 
@@ -371,7 +429,7 @@ public class BasicSteps {
             queryParams.put("until", until);
         }
 
-        if (StringUtils.isNotBlank(granularity)) {
+        if (isNotBlank(granularity)) {
             queryParams.put("granularity", granularity);
         }
         return queryParams;
