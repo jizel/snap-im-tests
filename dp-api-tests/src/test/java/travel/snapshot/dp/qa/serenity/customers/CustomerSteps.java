@@ -168,9 +168,22 @@ public class CustomerSteps extends BasicSteps {
         return Arrays.asList(customers).stream().findFirst().orElse(null);
     }
 
+    public CustomerDto getCustomerByIdByUser(String customerId, String userId) {
+        Response response = getEntityByUser(customerId, userId, null);
+        CustomerDto customer = response.as(CustomerDto.class);
+        setSessionResponse(response);
+        return customer;
+    }
+
     @Step
     public void customerWithIdIsGot(String customerId) {
         Response response = getEntity(customerId, null);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void customerWithIdIsGotByUser(String customerId, String userId) {
+        Response response = getEntityByUser(customerId, userId, null);
         setSessionResponse(response);
     }
 
@@ -187,6 +200,12 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
+    public void listOfCustomersIsGotByUserWith(String  userId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntitiesByUser(userId, limit, cursor, filter, sort, sortDesc);
+        setSessionResponse(response);
+    }
+
+    @Step
     public void updateCustomerWithCode(String customerId, CustomerUpdateDto updatedCustomer) throws Throwable {
         Response tempResponse = getEntity(customerId, null);
 
@@ -199,6 +218,22 @@ public class CustomerSteps extends BasicSteps {
         }
 
         Response response = updateEntity(customerId, s, tempResponse.getHeader(HEADER_ETAG));
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void updateCustomerWithCodeByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
+        Response tempResponse = getEntityByUser(customerId, userId, null);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String customerData = mapper.writeValueAsString(updatedCustomer);
+
+        String customerDataString = NullStringObjectValueConverter.transform(customerData).toString();
+        if (customerDataString.equalsIgnoreCase("{}")) {
+            fail("Empty update, check parameters!");
+        }
+
+        Response response = updateEntityByUser(customerId, userId, customerDataString, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -252,24 +287,32 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void customerWithIdIsGotWithEtagAfterUpdate(String customerId) {
-        Response tempResponse = getEntity(customerId, null);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("vat_id", "CZ99999999");
-
-        Response updateResponse = updateEntity(customerId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
-
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Customer cannot be updated: " + updateResponse.asString());
-        }
+    public void customerWithIdIsGotWithEtagByUser(String customerId, String userId) {
+        Response tempResponse = getEntityByUser(customerId, userId, null);
 
         Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
-    public void customerWithIdHasData(String id, CustomerDto data) throws Throwable {
-        JSONObject customerFromDB = retrieveDataNew(getCustomerById(id));
+    @Step
+    public void customerWithIdIsGotWithEtagAfterUpdate(String customerId, String userId) {
+        Response tempResponse = getEntityByUser(customerId, userId, null);
+
+        Map<String, Object> mapForUpdate = new HashMap<>();
+        mapForUpdate.put("vat_id", "CZ99999999");
+
+        Response updateResponse = updateEntityByUser(customerId, userId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+
+        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+            fail("Customer cannot be updated: " + updateResponse.asString());
+        }
+
+        Response resp = getEntityByUser(customerId, userId,tempResponse.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
+    }
+
+    public void customerWithIdHasData(String customerId, String userId, CustomerDto data) throws Throwable {
+        JSONObject customerFromDB = retrieveDataNew(getCustomerByIdByUser(customerId, userId));
         JSONObject updatedData = retrieveDataNew(data);
 
         Iterator<?> customerFromDBKeys = customerFromDB.keys();

@@ -7,6 +7,9 @@ Feature: Customers create update delete
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
+      | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
   Scenario: Creating Customer
@@ -64,13 +67,13 @@ Feature: Customers create update delete
   #TODO update with error fields, bad values, missing fields
   #TODO update nonexistent field
   Scenario Outline: Updating customer
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" has data
+    And User with id "a63edcc6-6830-457c-89b1-7801730bd0ae" checks updated customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" has data
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Examples:

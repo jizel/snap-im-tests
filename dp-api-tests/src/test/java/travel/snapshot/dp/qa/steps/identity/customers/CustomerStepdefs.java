@@ -111,19 +111,20 @@ public class CustomerStepdefs {
 
     }
 
-    @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\" by user with id \"([^\"]*)\"$")
     public void List_of_customers_is_got_with_limit_and_cursor_and_filter_filter_and_sort_and_sort_desc(
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomersIsGotWith(limit, cursor, filter, sort, sortDesc);
+            @Transform(NullEmptyStringConverter.class) String sortDesc,
+            String userId) throws Throwable {
+        customerSteps.listOfCustomersIsGotByUserWith(userId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Customer with id \"([^\"]*)\" is updated with data$")
-    public void customerWithIdIsUpdatedWithData(String customerId, List<CustomerUpdateDto> customersData) throws Throwable {
-        customerSteps.updateCustomerWithCode(customerId, customersData.get(0));
+    @When("^Customer with id \"([^\"]*)\" is updated with data by user with id \"([^\"]*)\"$")
+    public void customerWithIdIsUpdatedWithData(String customerId, String userId, List<CustomerUpdateDto> customersData) throws Throwable {
+        customerSteps.updateCustomerWithCodeByUser(customerId, userId, customersData.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
@@ -226,9 +227,9 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGotWithEtag(customerId);
     }
 
-    @When("^Customer with customerId \"([^\"]*)\" is got for etag, updated and got with previous etag$")
-    public void customerWithCustomerIdIsGotForEtagUpdatedAndGotWithPreviousEtag(String customerId) throws Throwable {
-        customerSteps.customerWithIdIsGotWithEtagAfterUpdate(customerId);
+    @When("^Customer with customerId \"([^\"]*)\" is got for etag, updated and got with previous etag by user with id \"([^\"]*)\"$")
+    public void customerWithCustomerIdIsGotForEtagUpdatedAndGotWithPreviousEtag(String customerId, String userId) throws Throwable {
+        customerSteps.customerWithIdIsGotWithEtagAfterUpdate(customerId, userId);
     }
 
     @When("^Customer with customer id \"([^\"]*)\" is deleted$")
@@ -320,9 +321,9 @@ public class CustomerStepdefs {
         customerSteps.numberOfEntitiesInResponse(CustomerDto.class, count);
     }
 
-    @Then("^Updated customer with id \"([^\"]*)\" has data$")
-    public void Updated_customer_with_code_has_data(String customerId, List<CustomerDto> customers) throws Throwable {
-        customerSteps.customerWithIdHasData(customerId, customers.get(0));
+    @Then("^User with id \"([^\"]*)\" checks updated customer with id \"([^\"]*)\" has data$")
+    public void Updated_customer_with_code_has_data(String userId, String customerId, List<CustomerDto> customers) throws Throwable {
+        customerSteps.customerWithIdHasData(customerId, userId, customers.get(0));
     }
 
     @Then("^There are (\\d+) customerProperties returned$")
@@ -379,6 +380,16 @@ public class CustomerStepdefs {
     public void customerWithIdDoesnTExist(String customerId) throws Throwable {
         customerSteps.customerWithIdDoesNotExist(customerId);
 
+    }
+
+    @When("^Customer with customerId \"([^\"]*)\" is got by user with id \"([^\"]*)\"$")
+    public void customerWithCustomerIdIsGotByUserWithId(String customerId, String userId) throws Throwable {
+        customerSteps.customerWithIdIsGotByUser(customerId, userId);
+    }
+
+    @When("^Customer with customerId \"([^\"]*)\" is got with etag by user with id \"([^\"]*)\"$")
+    public void customerWithCustomerIdIsGotWithEtagByUserWithId(String customerId, String userId) throws Throwable {
+        customerSteps.customerWithIdIsGotWithEtagByUser(customerId, userId);
     }
 
     /*@Then("^Customer with id \"([^\"]*)\" is active$")
