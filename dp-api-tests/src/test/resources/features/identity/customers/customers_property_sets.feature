@@ -104,23 +104,23 @@ Feature: Customers property sets
     Examples:
       | limit | cursor | filter         | sort            | sort_desc       | response_code | custom_code |
       #limit and cursor
-      | /null | -1     | /null          | /null           | /null           | 400           | 63          |
-      |       | -1     | /null          | /null           | /null           | 400           | 63          |
-      | /null | text   | /null          | /null           | /null           | 400           | 63          |
-      |       | text   | /null          | /null           | /null           | 400           | 63          |
-      | -1    |        | /null          | /null           | /null           | 400           | 63          |
-      | -1    | /null  | /null          | /null           | /null           | 400           | 63          |
-      | text  |        | /null          | /null           | /null           | 400           | 63          |
-      | text  | /null  | /null          | /null           | /null           | 400           | 63          |
-      | 10    | -1     | /null          | /null           | /null           | 400           | 63          |
-      | text  | 0      | /null          | /null           | /null           | 400           | 63          |
-      | 10    | text   | /null          | /null           | /null           | 400           | 63          |
+      | /null | -1     | /null          | /null           | /null           | 400           | 40002       |
+      |       | -1     | /null          | /null           | /null           | 400           | 40002       |
+      | /null | text   | /null          | /null           | /null           | 400           | 40002       |
+      |       | text   | /null          | /null           | /null           | 400           | 40002       |
+      | -1    |        | /null          | /null           | /null           | 400           | 40002       |
+      | -1    | /null  | /null          | /null           | /null           | 400           | 40002       |
+      | text  |        | /null          | /null           | /null           | 400           | 40002       |
+      | text  | /null  | /null          | /null           | /null           | 400           | 40002       |
+      | 10    | -1     | /null          | /null           | /null           | 400           | 40002       |
+      | text  | 0      | /null          | /null           | /null           | 400           | 40002       |
+      | 10    | text   | /null          | /null           | /null           | 400           | 40002       |
       #filtering and sorting
-      | 10    | 0      | /null          | property_set_id | property_set_id | 400           | 64          |
-      | 10    | 0      | /null          | wrong           | /null           | 400           | 63          |
-      | 10    | 0      | /null          | /null           | wrong           | 400           | 63          |
-      | 10    | 0      | customer_id==  | /null           | /null           | 400           | 63          |
-      | 10    | 0      | parent==blabla | /null           | /null           | 400           | 63          |
+      | 10    | 0      | /null          | property_set_id | property_set_id | 400           | 40002       |
+      | 10    | 0      | /null          | wrong           | /null           | 400           | 40002       |
+      | 10    | 0      | /null          | /null           | wrong           | 400           | 40002       |
+      | 10    | 0      | customer_id==  | /null           | /null           | 400           | 40002       |
+      | 10    | 0      | parent==blabla | /null           | /null           | 400           | 40002       |
 
   Scenario Outline: Filtering list of property sets
     Given The following property sets exist for customer with c1t"

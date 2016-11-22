@@ -25,14 +25,14 @@ Feature: Customers create update delete
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
     Examples:
-      | json_input_file                                                        | method | module   | url                 | error_code | custom_code |
-      | /messages/identity/customers/create_customer_missing_company_name.json | POST   | identity | /identity/customers | 400        | 53          |
-      | /messages/identity/customers/create_customer_wrong_email_value.json    | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_field_email.json    | POST   | identity | /identity/customers | 400        | 56          |
-      | /messages/identity/customers/create_customer_wrong_vatid_value.json    | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_country_value.json  | POST   | identity | /identity/customers | 422        | 42202       |
-      | /messages/identity/customers/create_customer_wrong_phone_value.json    | POST   | identity | /identity/customers | 400        | 59          |
-      | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 400        | 59          |
+      | json_input_file                                                        | method | module   | url                 | error_code | custom_code    |
+      | /messages/identity/customers/create_customer_missing_company_name.json | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_email_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_field_email.json    | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_vatid_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_country_value.json  | POST   | identity | /identity/customers | 422        | 42202          |
+      | /messages/identity/customers/create_customer_wrong_phone_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
 
   Scenario Outline: Create foreign customers
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
@@ -202,7 +202,7 @@ Feature: Customers create update delete
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"
-    And Body contains entity with attribute "message" value "The associate Region with ID <region> was not found."
+    And Body contains entity with attribute "message" value "Reference does not exist. The entity Region with ID <region> cannot be found."
 
     Examples:
       | country | region           | vatId    | response_code | custom_code |
@@ -226,10 +226,10 @@ Feature: Customers create update delete
     And Custom code is "<custom_code>"
     Examples:
       | country | region   | vatId      | response_code | custom_code |
-      | AU      | Tasmania | notValidId | 400           | 59          |
-      | AU      | Tasmania | 1234       | 400           | 59          |
-      | CA      | Yukon    | notValid   | 400           | 59          |
-      | CA      | Yukon    | CZ1234578  | 400           | 59          |
+      | AU      | Tasmania | notValidId | 422           | 42201       |
+      | AU      | Tasmania | 1234       | 422           | 42201       |
+      | CA      | Yukon    | notValid   | 422           | 42201      |
+      | CA      | Yukon    | CZ1234578  | 422           | 42201       |
 
   Scenario Outline: Validate that customer has invalid VAT ID
     When A customer with following country "<country>", region "/null", vatId "<vatId>" is created

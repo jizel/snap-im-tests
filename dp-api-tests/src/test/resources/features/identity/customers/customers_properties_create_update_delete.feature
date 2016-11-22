@@ -41,15 +41,15 @@ Feature: Customers properties create update delete
     And Custom code is "<custom_code>"
     Examples:
       |                      | property_code | customer_id                          | type        | valid_from | valid_to   | error_code | custom_code |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      |            | 400        | 53          |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | /null      | 400        | 53          |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            | /null      | 400        | 53          |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 400        | 53          |
-      | from after to date   | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 400        | 63          |
-      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 400        | 59          |
-      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 400        | 59          |
-      | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 400        | 63          |
-      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 400        | 62          |
+      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      |            | 422        | 42201       |
+      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | /null      | 422        | 42201       |
+      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            | /null      | 422        | 42201       |
+      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 422        | 42201       |
+      | from after to date   | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 422        | 42201       |
+      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 422        | 42201       |
+      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 422        | 42201       |
+      | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
+      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 400        | 42201       |
       | notexistent property | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
 
 
@@ -91,11 +91,11 @@ Feature: Customers properties create update delete
     And Custom code is "<custom_code>"
     Examples:
       | field             | value      | status_code | custom_code |
-      | valid_from        | 2016-01-01 | 400         | 63          |
-      | valid_from        | invalid    | 400         | 59          |
-      | valid_to          | 2014-12-31 | 400         | 63          |
-      | valid_to          | invalid    | 400         | 59          |
-      | relationship_type | invalid    | 400         | 63          |
+      | valid_from        | 2016-01-01 | 400         | 40002       |
+      | valid_from        | invalid    | 400         | 40002       |
+      | valid_to          | 2014-12-31 | 400         | 40002       |
+      | valid_to          | invalid    | 400         | 40002       |
+      | relationship_type | invalid    | 400         | 40002       |
 
   #error codes
 
