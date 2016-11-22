@@ -26,8 +26,8 @@ Feature: Customers validation
       | /address/country       | String | true     | US                                                          | xx        | USA      |
 
     Given The following customers exist with random address
-      | customerId                           | companyName          | email                   | code        | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | validation1 | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName          | email                   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
   # --- happy path ---
 
@@ -94,7 +94,7 @@ Feature: Customers validation
       | /address/country | 400          | 63         |
 
   Scenario Outline: Object update - customer - invalid values
-    When Update customer with code "validation1", field "<updated_field>", its value "<value>"
+    When Update customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", field "<updated_field>", its value "<value>"
     Then Response code is 400
     And Custom code is "<custom_code>"
     Examples:
@@ -179,7 +179,7 @@ Feature: Customers validation
     And Etag header is present
 
   Scenario Outline: Object update - customer - valid values
-    When Update customer with code "validation1", field "<updated_field>", its value "<value>"
+    When Update customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", field "<updated_field>", its value "<value>"
     Then Response code is 204
     And  Body is empty
     Examples:

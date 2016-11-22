@@ -358,14 +358,14 @@ public class PropertySteps extends BasicSteps {
         return Arrays.asList(customerUserResponse.as(PartnerUserRelationshipDto[].class)).stream().findFirst().orElse(null);
     }
 
-    private CustomerDto getCustomerForProperty(String propertyId, String customerCode) {
-        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_code==" + customerCode, null, null);
+    private CustomerDto getCustomerForProperty(String propertyId, String customerId) {
+        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null);
         return Arrays.asList(customerResponse.as(CustomerDto[].class)).stream().findFirst().orElse(null);
     }
 
-    public void customerDoesNotExistForProperty(String customerCode, String propertyCode) {
+    public void customerDoesNotExistForProperty(String customerId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        CustomerDto cust = getCustomerForProperty(p.getPropertyId(), customerCode);
+        CustomerDto cust = getCustomerForProperty(p.getPropertyId(), customerId);
         assertNull("Customer should not be link with property", cust);
     }
 
