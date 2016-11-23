@@ -1,17 +1,18 @@
 package travel.snapshot.dp.qa.steps.review;
 
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.List;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.review.model.AspectsOfBusinessStatsDto;
 import travel.snapshot.dp.api.review.model.LocationDto;
 import travel.snapshot.dp.api.review.model.LocationPropertyDto;
@@ -33,11 +34,8 @@ import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertySinglePropertySt
 import travel.snapshot.dp.qa.serenity.review.ReviewSteps;
 import travel.snapshot.dp.qa.serenity.review.ReviewTravelersSteps;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
+import java.util.Collections;
+import java.util.List;
 
 
 public class ReviewStepsdefs {
@@ -246,13 +244,13 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get \"([^\"]*)\" for list of properties for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void getForListOfPropertiesForCustomerWithSinceUntilAndGranularity(String metric, String customerCode,
+    public void getForListOfPropertiesForCustomerWithSinceUntilAndGranularity(String metric, String customerId,
                                                                               @Transform(NullEmptyStringConverter.class) String since,
                                                                               @Transform(NullEmptyStringConverter.class) String until,
                                                                               @Transform(NullEmptyStringConverter.class) String granularity,
                                                                               @Transform(NullEmptyStringConverter.class) String limit,
                                                                               @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
-        reviewMultipropertyCustomerSteps.getCustomerPropertiesMetric(metric, customerCode, since, until, granularity, limit, cursor);
+        reviewMultipropertyCustomerSteps.getCustomerPropertiesMetric(metric, customerId, since, until, granularity, limit, cursor);
     }
 
 
@@ -265,13 +263,13 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get \"([^\"]*)\" for statistics agregated for property set \"([^\"]*)\" for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void getForStatisticsAgregatedForPropertySetForCustomerWithSinceUntilGranularityLimitAndCursor(String metric, String pSetCode, String customer,
+    public void getForStatisticsAgregatedForPropertySetForCustomerWithSinceUntilGranularityLimitAndCursor(String metric, String pSetCode, String customerId,
                                                                                                           @Transform(NullEmptyStringConverter.class) String since,
                                                                                                           @Transform(NullEmptyStringConverter.class) String until,
                                                                                                           @Transform(NullEmptyStringConverter.class) String granularity,
                                                                                                           @Transform(NullEmptyStringConverter.class) String limit,
                                                                                                           @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
-        reviewMultipropertyPropertySetSteps.getAggregatedStatisticsForPropertySet(metric, pSetCode, customer, since, until, granularity, limit, cursor);
+        reviewMultipropertyPropertySetSteps.getAggregatedStatisticsForPropertySet(metric, pSetCode, customerId, since, until, granularity, limit, cursor);
     }
 
     @Then("^Response properties contains \"([^\"]*)\" values$")

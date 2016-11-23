@@ -158,10 +158,6 @@ public class CustomerSteps extends BasicSteps {
                 .when().post("/{customerId}/users", customerId);
     }
 
-    public CustomerDto getCustomerByCodeInternal(String code) {
-        CustomerDto[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_code==" + code, null, null).as(CustomerDto[].class);
-        return Arrays.asList(customers).stream().findFirst().orElse(null);
-    }
 
     public CustomerDto getCustomerById(String id) {
         CustomerDto[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + id, null, null).as(CustomerDto[].class);
@@ -205,7 +201,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithCode(String customerId, CustomerUpdateDto updatedCustomer) throws Throwable {
+    public void updateCustomerWithId(String customerId, CustomerUpdateDto updatedCustomer) throws Throwable {
         Response tempResponse = getEntity(customerId, null);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -221,7 +217,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithCodeByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
+    public void updateCustomerWithIdByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
         Response tempResponse = getEntityByUser(customerId, userId, null);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -253,14 +249,16 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void activateCustomerWithCode(String code) {
-        CustomerDto customer = getCustomerByCodeInternal(code);
+//        Does not work - to be removed and replaced when testing DP-1319
+        CustomerDto customer = getCustomerById(code);
         Response response = activateCustomer(customer.getCustomerId());
         setSessionResponse(response);
     }
 
     @Step
     public void isActiveSetTo(boolean activeFlag, String code) {
-        CustomerDto customer = getCustomerByCodeInternal(code);
+        //        Does not work - to be removed and replaced when testing DP-1319
+        CustomerDto customer = getCustomerById(code);
         if (activeFlag) {
             assertNotNull("Customer should be returned", customer);
             assertEquals("Customer should have code=" + code, code, customer.getCode());
@@ -272,7 +270,8 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void inactivateCustomerWithCode(String code) {
-        CustomerDto customer = getCustomerByCodeInternal(code);
+        //        Does not work - to be removed and replaced when testing DP-1319
+        CustomerDto customer = getCustomerById(code);
         Response response = inactivateCustomer(customer.getCustomerId());
         setSessionResponse(response);
     }
@@ -373,14 +372,12 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(updateResponse);
     }
 
-    public void propertyIsUpdateForCustomerWithTypeWithInvalidEtag(PropertyDto p, String customerCode, String type, String fieldName, String value) {
-        CustomerDto c = getCustomerByCodeInternal(customerCode);
-
-        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
+    public void propertyIsUpdateForCustomerWithTypeWithInvalidEtag(PropertyDto p, String customerId, String type, String fieldName, String value) {
+        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(customerId, p.getPropertyId(), type);
         Map<String, Object> data = new HashMap<>();
         data.put(fieldName, value);
 
-        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, "invalid");
+        Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, "invalid");
         setSessionResponse(updateResponse);
     }
 
@@ -501,8 +498,8 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public List<CustomerDto> getCustomersForCodes(List<String> customerCodes) {
-        String filter = "customer_code=in=(" + StringUtils.join(customerCodes.iterator(), ',') + ")";
+    public List<CustomerDto> getCustomersForIds(List<String> customerIds) {
+        String filter = "customer_id=in=(" + StringUtils.join(customerIds, ',') + ")";
         CustomerDto[] customers = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(CustomerDto[].class);
         return Arrays.asList(customers);
     }

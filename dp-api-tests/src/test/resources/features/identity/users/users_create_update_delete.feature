@@ -4,8 +4,8 @@ Feature: Users create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName        | email                          | code               | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | userCreateCustomer | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |

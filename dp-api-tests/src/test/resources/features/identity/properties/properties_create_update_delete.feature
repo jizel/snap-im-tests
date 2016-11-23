@@ -5,8 +5,8 @@ Feature: Properties create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -62,25 +62,25 @@ Feature: Properties create update delete
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
     Given The following customers exist with random address
-      | companyName     | email          | code   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Given company 1 | c1@tenants.biz | c1test | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 2 | c2@tenants.biz | c2test | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 3 | c3@tenants.biz | c3test | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 4 | c4@tenants.biz | c4test | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 5 | c5@tenants.biz | c5test | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | Given company 6 | c6@tenants.biz | c6test | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 3238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 4238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 4 | c4@tenants.biz | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 5238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 5 | c5@tenants.biz | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 6238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 6 | c6@tenants.biz | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
-    Given Relation between property with code "p1_code" and customer with code "c1test" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c2test" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c3test" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c4test" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c5test" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with code "c6test" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "3238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "4238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "5238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "6238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
 
-    Given Customer with code "c1test" is activated
-    Given Customer with code "c2test" is activated
-    Given Customer with code "c3test" is activated
-    Given Customer with code "c4test" is activated
+    Given Customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    Given Customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    Given Customer with id "3238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    Given Customer with id "4238fd9a-a05d-42d8-8e84-42e904ace123" is activated
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
 
     Then Response code is "200"
@@ -89,19 +89,20 @@ Feature: Properties create update delete
     And There are customers with following codes returned in order: <expected_names>
     #And Total count is "<total>"
 
+#    Expected names are incorrect - fix
     Examples:
-      | limit | cursor | returned | total | filter                  | sort          | sort_desc     | expected_names                 |
-      | 5     | 0      | 4        | 6     | customer_code=='c*'     | customer_code |               | c1test, c2test, c3test, c4test |
-      | 5     | 0      | 4        | 6     | customer_code=='c*'     |               | customer_code | c4test, c3test, c2test, c1test |
-      | 5     | 2      | 2        | 6     | customer_code=='c*'     | customer_code |               | c3test, c4test                 |
-      | 5     | 2      | 2        | 6     | customer_code=='c*'     |               | customer_code | c2test, c1test                 |
-      | /null | /null  | 1        | 1     | customer_code==c3test   | /null         | /null         | c3test                         |
-      | /null | /null  | 1        | 1     | name=='Given company 2' | /null         | /null         | c2test                         |
+      | limit | cursor | returned | total | filter                   | sort          | sort_desc     | expected_names                 |
+      | 5     | 0      | 4        | 6     | customer_id=='*238fd9a*' | customer_code |               | c3test, c4test                 |
+      | 5     | 0      | 4        | 6     | customer_id=='*238fd9a*' |               | customer_code | c4test, c3test, c2test,        |
+      | 5     | 2      | 2        | 6     | customer_id=='*238fd9a*' | customer_code |               | c3test, c4test                 |
+      | 5     | 2      | 2        | 6     | customer_id=='*238fd9a*' |               | customer_code | c2test,                        |
+      | /null | /null  | 1        | 1     | customer_id=='3238fd9a*' | /null         | /null         | c3test                         |
+      | /null | /null  | 1        | 1     | name=='Given company 2'  | /null         | /null         | c2test                         |
 
 
   Scenario Outline: Checking error codes for getting list of customers from properties
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "chain" from "2015-01-01" to "2030-02-31"
-    Given Customer with code "c1t" is activated
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2030-02-31"
+    Given Customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
 
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"

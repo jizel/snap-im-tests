@@ -4,10 +4,10 @@ Feature: Customers properties create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-      | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-      | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | c3t  | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -73,7 +73,7 @@ Feature: Customers properties create update delete
   Scenario: Updating customerProperty with outdated etag
     Given All customerProperties are deleted from DB for customer id "40ebf861-7549-46f1-a99f-249716c83b33" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    When Property with code "p2_code" for customer with code "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with type "chain" is updating field "valid_from" to value "2015-01-01" with invalid etag
+    When Property with code "p2_code" for customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with type "chain" is updating field "valid_from" to value "2015-01-01" with invalid etag
     Then Response code is "412"
     And Custom code is "41202"
 

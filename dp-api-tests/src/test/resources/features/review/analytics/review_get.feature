@@ -9,8 +9,8 @@ Feature: Review
     Given Database is cleaned
 
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
     Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -21,14 +21,14 @@ Feature: Review
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The password of user "default1" is "Password1"
-    Given Relation between user with username "default1" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "default1" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
     Given Get token for user "default1" with password "Password1"
     Given Set access token from session for customer steps defs
     Given Set access token for review steps defs
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 
   Scenario Outline: Get trip advisor analytics data from API for a given wrong granularity

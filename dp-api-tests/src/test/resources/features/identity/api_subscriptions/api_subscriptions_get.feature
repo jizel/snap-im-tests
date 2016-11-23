@@ -11,8 +11,8 @@ Feature: Api subscription get
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
       | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -74,27 +74,27 @@ Feature: Api subscription get
       | bc4bed55-de3d-471e-a1e8-fce6f6e029aa | 19           | Version 19List | inactive | Versions description 19 |
       | bf7b9b34-14de-4987-82c7-6251aa43a188 | 20           | Version 20List | inactive | Versions description 20 |
     Given The following customers exist with random address
-      | customerId                           | companyName      | email           | code    | salesforceId          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1  | c1@tenants.biz  | c1tlist | salesforceid_given_1  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | Given company 2  | c2@tenants.biz  | c2tlist | salesforceid_given_2  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3  | c3@tenants.biz  | c3tlist | salesforceid_given_3  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 59f91161-ae55-4369-b963-0db1410b00d7 | Given company 4  | c4@tenants.biz  | c4tlist | salesforceid_given_4  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | b7306a7d-851c-4f59-856d-907eff0aa9b7 | Given company 5  | c5@tenants.biz  | c5tlist | salesforceid_given_5  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | ddea7528-fefa-4a93-8b4d-de6b27db3e30 | Given company 6  | c6@tenants.biz  | c6tlist | salesforceid_given_6  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 65bf60db-9da1-419b-88b7-2b232872c786 | Given company 7  | c7@tenants.biz  | c7tlist | salesforceid_given_7  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 2c441da4-0669-425f-aa00-62aa1375fb43 | Given company 8  | c8@tenants.biz  | c8tlist | salesforceid_given_8  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | c2e72a45-36a3-4973-be6d-32134e4801fc | Given company 9  | c9@tenants.biz  | c9tlist | salesforceid_given_9  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | b377a0fb-76c6-48ef-b594-b3fe53575927 | Given company 10 | c10@tenants.biz | c10list | salesforceid_given_10 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 16d55fcb-b2a1-4209-9fc3-103dedb5ed47 | Given company 11 | c11@tenants.biz | c11list | salesforceid_given_11 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | eff32916-1ed9-420e-abdf-92ac2c8a732b | Given company 12 | c12@tenants.biz | c12list | salesforceid_given_12 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | b053ddd4-12dd-469c-ad2e-0b6765075367 | Given company 13 | c13@tenants.biz | c13list | salesforceid_given_13 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 873d6310-90cb-452b-8627-28c00e3fbbe8 | Given company 14 | c14@tenants.biz | c14list | salesforceid_given_14 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 1b825c33-17f1-43bc-b3ab-22549137a0dd | Given company 15 | c15@tenants.biz | c15list | salesforceid_given_15 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 3822afa6-5b94-4294-951a-24fd05963e08 | Given company 16 | c16@tenants.biz | c16list | salesforceid_given_16 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | c5eb2185-b558-45a1-bb51-8f1bce3fa0a6 | Given company 17 | c17@tenants.biz | c17list | salesforceid_given_17 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 96b3106a-82cc-4fa0-a35c-5e9e32194304 | Given company 18 | c18@tenants.biz | c18list | salesforceid_given_18 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | faf0b7b5-5f1e-48e9-9ded-529e59baec6c | Given company 19 | c19@tenants.biz | c19list | salesforceid_given_19 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | e0ddefaf-05d4-4330-ae67-1310af0d0b45 | Given company 20 | c20@tenants.biz | c20list | salesforceid_given_20 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName      | email           | salesforceId          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1  | c1@tenants.biz  | salesforceid_given_1  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | Given company 2  | c2@tenants.biz  | salesforceid_given_2  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3  | c3@tenants.biz  | salesforceid_given_3  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 59f91161-ae55-4369-b963-0db1410b00d7 | Given company 4  | c4@tenants.biz  | salesforceid_given_4  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | b7306a7d-851c-4f59-856d-907eff0aa9b7 | Given company 5  | c5@tenants.biz  | salesforceid_given_5  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | ddea7528-fefa-4a93-8b4d-de6b27db3e30 | Given company 6  | c6@tenants.biz  | salesforceid_given_6  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 65bf60db-9da1-419b-88b7-2b232872c786 | Given company 7  | c7@tenants.biz  | salesforceid_given_7  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 2c441da4-0669-425f-aa00-62aa1375fb43 | Given company 8  | c8@tenants.biz  | salesforceid_given_8  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | c2e72a45-36a3-4973-be6d-32134e4801fc | Given company 9  | c9@tenants.biz  | salesforceid_given_9  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | b377a0fb-76c6-48ef-b594-b3fe53575927 | Given company 10 | c10@tenants.biz | salesforceid_given_10 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 16d55fcb-b2a1-4209-9fc3-103dedb5ed47 | Given company 11 | c11@tenants.biz | salesforceid_given_11 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | eff32916-1ed9-420e-abdf-92ac2c8a732b | Given company 12 | c12@tenants.biz | salesforceid_given_12 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | b053ddd4-12dd-469c-ad2e-0b6765075367 | Given company 13 | c13@tenants.biz | salesforceid_given_13 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 873d6310-90cb-452b-8627-28c00e3fbbe8 | Given company 14 | c14@tenants.biz | salesforceid_given_14 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 1b825c33-17f1-43bc-b3ab-22549137a0dd | Given company 15 | c15@tenants.biz | salesforceid_given_15 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 3822afa6-5b94-4294-951a-24fd05963e08 | Given company 16 | c16@tenants.biz | salesforceid_given_16 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | c5eb2185-b558-45a1-bb51-8f1bce3fa0a6 | Given company 17 | c17@tenants.biz | salesforceid_given_17 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 96b3106a-82cc-4fa0-a35c-5e9e32194304 | Given company 18 | c18@tenants.biz | salesforceid_given_18 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | faf0b7b5-5f1e-48e9-9ded-529e59baec6c | Given company 19 | c19@tenants.biz | salesforceid_given_19 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | e0ddefaf-05d4-4330-ae67-1310af0d0b45 | Given company 20 | c20@tenants.biz | salesforceid_given_20 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -218,12 +218,12 @@ Feature: Api subscription get
       | bc39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4filtering | inactive | Versions description 4 |
       | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5filtering | inactive | Versions description 5 |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code    | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1tlist | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | Given company 2 | c2@tenants.biz | c2tlist | salesforceid_given_2 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3 | c3@tenants.biz | c3tlist | salesforceid_given_3 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 59f91161-ae55-4369-b963-0db1410b00d7 | Given company 4 | c4@tenants.biz | c4tlist | salesforceid_given_4 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | b7306a7d-851c-4f59-856d-907eff0aa9b7 | Given company 5 | c5@tenants.biz | c5tlist | salesforceid_given_5 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 59f91161-ae55-4369-b963-0db1410b00d7 | Given company 4 | c4@tenants.biz | salesforceid_given_4 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | b7306a7d-851c-4f59-856d-907eff0aa9b7 | Given company 5 | c5@tenants.biz | salesforceid_given_5 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
