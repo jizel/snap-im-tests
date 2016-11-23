@@ -1,15 +1,11 @@
 package travel.snapshot.dp.qa.serenity.user_groups;
 
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import travel.snapshot.dp.api.identity.model.RoleIdDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
@@ -20,10 +16,9 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class UserGroupsSteps extends BasicSteps {
 
@@ -124,7 +119,8 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void deleteUserGroup(String userGroupId) {
-        Response response = deleteEntity(userGroupId);
+        Response tempResponse = getEntity(userGroupId, null);
+        Response response = deleteEntity(userGroupId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 

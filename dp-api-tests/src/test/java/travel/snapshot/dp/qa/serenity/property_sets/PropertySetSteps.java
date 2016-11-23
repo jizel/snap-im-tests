@@ -85,7 +85,8 @@ public class PropertySetSteps extends BasicSteps {
             Response entities = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null);
             PropertySetDto[] propertySets = entities.as(PropertySetDto[].class);
             for (PropertySetDto ps : propertySets) {
-                Response deleteResponse = deleteEntity(ps.getPropertySetId());
+                Response tempResponse = getEntity(ps.getPropertySetId(), null);
+                Response deleteResponse = deleteEntity(ps.getPropertySetId(), tempResponse.getHeader(HEADER_ETAG));
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("Property set cannot be deleted: " + deleteResponse.asString());
                 }
@@ -117,7 +118,8 @@ public class PropertySetSteps extends BasicSteps {
             return;
         }
         String propertySetId = existingPropertySet.getPropertySetId();
-        Response response = deleteEntity(propertySetId);
+        Response tempResponse = getEntity(propertySetId, null);
+        Response response = deleteEntity(propertySetId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
         setSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID, propertySetId);
     }
@@ -130,7 +132,8 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void deletePropertySetWithId(String propertySetId) {
-        Response response = deleteEntity(propertySetId);
+        Response tempResponse = getEntity(propertySetId, null);
+        Response response = deleteEntity(propertySetId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 

@@ -60,8 +60,7 @@ Feature: Customers create update delete
 
   Scenario: Checking error code for deleting customer
     When Customer with customer id "NotExistentCustomer" is deleted
-    Then Response code is "204"
-    And Body is empty
+    Then Response code is "412"
     And Customer with id "NotExistentCustomer" doesn't exist
 
   #TODO update with error fields, bad values, missing fields
@@ -94,7 +93,7 @@ Feature: Customers create update delete
   Scenario: Updating customer with outdated etag
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with outdated etag
     Then Response code is "412"
-    And Custom code is "57"
+    And Custom code is "41202"
 
 
 #  @Smoke

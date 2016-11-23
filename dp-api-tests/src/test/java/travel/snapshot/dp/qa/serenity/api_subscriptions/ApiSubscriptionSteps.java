@@ -93,8 +93,9 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
     public void deleteApiSubscription(String apiSubscriptionId) {
-        Response responce = deleteEntity(apiSubscriptionId);
-        setSessionResponse(responce);
+        Response tempResponse = getEntity(apiSubscriptionId, null);
+        Response response = deleteEntity(apiSubscriptionId, tempResponse.getHeader(HEADER_ETAG));
+        setSessionResponse(response);
     }
 
 
