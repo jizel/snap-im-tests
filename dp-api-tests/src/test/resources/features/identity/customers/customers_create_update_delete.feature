@@ -8,8 +8,9 @@ Feature: Customers create update delete
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
-      | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
-      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userId                               | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created for customer "a792d2b2-3836-4207-a705-42bbecf3d881"
 
   @Smoke
   Scenario: Creating Customer

@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -51,6 +53,21 @@ public class UserStepdefs {
     @When("^The following users is created for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
     public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
         usersSteps.followingUserIsCreated(users.get(0), customerId, isPrimary);
+    }
+
+    @Given("^Default Snapshot user is created for customer \"([^\"]*)\"$")
+    public void defaultSnapshotUserIsCreated(String customerId) throws Throwable {
+        UserCreateDto defaultSnapshotUser = new UserCreateDto();
+        defaultSnapshotUser.setUserId(usersSteps.DEFAULT_SNAPSHOT_USER_ID);
+        defaultSnapshotUser.setUserType(SNAPSHOT);
+        defaultSnapshotUser.setUserName("defaultSnapshotUser");
+        defaultSnapshotUser.setFirstName("Default");
+        defaultSnapshotUser.setLastName("SnapshotUser");
+        defaultSnapshotUser.setEmail("defaultSnapshotUser1@snapshot.travel");
+        defaultSnapshotUser.setTimezone("Europe/Prague");
+        defaultSnapshotUser.setCulture("cs-CZ");
+
+        usersSteps.followingUserIsCreated(defaultSnapshotUser, customerId, true);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")

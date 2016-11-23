@@ -141,8 +141,8 @@ public class CustomerSteps extends BasicSteps {
         if (validTo != null) {
             customerProperty.put("valid_to", validTo);
         }
-
-        return given().spec(spec)
+        // Using default user snapshot from BasicSteps in authentication header.
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(customerProperty)
                 .when().post("/{customerId}/properties", customerId);
     }
@@ -165,7 +165,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public CustomerDto getCustomerByIdByUser(String customerId, String userId) {
-        Response response = getEntityByUser(customerId, userId, null);
+        Response response = getEntityByUser(userId, customerId, null);
         CustomerDto customer = response.as(CustomerDto.class);
         setSessionResponse(response);
         return customer;
@@ -179,7 +179,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithIdIsGotByUser(String customerId, String userId) {
-        Response response = getEntityByUser(customerId, userId, null);
+        Response response = getEntityByUser(userId, customerId, null);
         setSessionResponse(response);
     }
 
@@ -217,8 +217,10 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithIdByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
-        Response tempResponse = getEntityByUser(customerId, userId, null);
+
+    public void updateCustomerWithCodeByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
+        Response tempResponse = getEntityByUser(userId, customerId, null);
+
 
         ObjectMapper mapper = new ObjectMapper();
         String customerData = mapper.writeValueAsString(updatedCustomer);
@@ -228,7 +230,7 @@ public class CustomerSteps extends BasicSteps {
             fail("Empty update, check parameters!");
         }
 
-        Response response = updateEntityByUser(customerId, userId, customerDataString, tempResponse.getHeader(HEADER_ETAG));
+        Response response = updateEntityByUser(userId, customerId, customerDataString, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
@@ -286,7 +288,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithIdIsGotWithEtagByUser(String customerId, String userId) {
-        Response tempResponse = getEntityByUser(customerId, userId, null);
+        Response tempResponse = getEntityByUser(userId, customerId, null);
 
         Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
@@ -294,18 +296,18 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithIdIsGotWithEtagAfterUpdate(String customerId, String userId) {
-        Response tempResponse = getEntityByUser(customerId, userId, null);
+        Response tempResponse = getEntityByUser(userId, customerId, null);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("vat_id", "CZ99999999");
 
-        Response updateResponse = updateEntityByUser(customerId, userId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+        Response updateResponse = updateEntityByUser(userId, customerId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
 
         if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Customer cannot be updated: " + updateResponse.asString());
         }
 
-        Response resp = getEntityByUser(customerId, userId,tempResponse.getHeader(HEADER_ETAG));
+        Response resp = getEntityByUser(userId, customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
     }
 
@@ -350,9 +352,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(PropertyDto p, String customerId, String type, String validFrom, String validTo) {
-        CustomerDto c = getCustomerById(customerId);
-        Response createResponse = addPropertyToCustomerWithTypeFromTo(p.getPropertyId(), c.getCustomerId(), type, validFrom, validTo);
+    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(PropertyDto property, String customerId, String type, String validFrom, String validTo) {
+        Response createResponse = addPropertyToCustomerWithTypeFromTo(property.getPropertyId(), customerId, type, validFrom, validTo);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerProperty cannot be created " + createResponse.getBody().asString());
         }

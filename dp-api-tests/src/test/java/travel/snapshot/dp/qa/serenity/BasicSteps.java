@@ -58,7 +58,8 @@ public class BasicSteps {
     public static final String HEADER_IF_MATCH = "If-Match";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
     public static final String OAUTH_PARAMETER_NAME = "access_token";
-    public static final String XAUTH_USER_ID = "X-Auth-UserId";
+    public static final String HEADER_XAUTH_USER_ID = "X-Auth-UserId";
+    public static final String DEFAULT_SNAPSHOT_USER_ID = "11111111-0000-4000-a000-000000000000";
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
@@ -236,18 +237,18 @@ public class BasicSteps {
     }
 
     protected Response createEntity(Object entity) {
-        return given().spec(spec).body(entity).when().post();
+        return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entity);
     }
 
-    protected Response updateEntity(String id, Map<String, Object> object, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        return requestSpecification.body(object).when().post("/{id}", id);
+    protected Response createEntityByUser(String userId, Object entity) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(entity).when().post();
     }
 
-    protected Response updateEntityByUser(String userId, String customerId, Map<String, Object> customerData, String etag) {
+    protected Response updateEntity(String entityId, Map<String, Object> data, String etag) {
+        return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
+    }
+
+    protected Response updateEntityByUser(String userId, String entityId, Map<String, Object> data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
@@ -255,19 +256,15 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
-        return requestSpecification.body(customerData).when().post("/{id}", customerId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        return requestSpecification.body(data).when().post("/{id}", entityId);
     }
 
-    protected Response updateEntity(String id, String data, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        return requestSpecification.body(data).when().post("/{id}", id);
+    protected Response updateEntity(String entityId, String data, String etag) {
+        return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUser(String id, String userId, String data, String etag) {
+    protected Response updateEntityByUser(String userId, String entityId, String data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
@@ -275,9 +272,10 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
-        return requestSpecification.body(data).when().post("/{id}", id);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        return requestSpecification.body(data).when().post("/{id}", entityId);
     }
+
 
     protected Response deleteEntity(String entityId, String etag) {
         return deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
@@ -285,7 +283,7 @@ public class BasicSteps {
 
     protected Response deleteEntityByUser(String userId, String entityId, String etag) {
         if (isBlank(userId)){
-            fail("User ID to be send in request header is null.");
+            fail("User ID to be send in request header is blank.");
         }
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
@@ -305,15 +303,11 @@ public class BasicSteps {
         return given().spec(spec).when().delete(url + "/{id}", id);
     }
 
-    protected Response getEntity(String id, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
-        }
-        return requestSpecification.when().get("/{id}", id);
+    protected Response getEntity(String entityId, String etag) {
+        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
     }
 
-    protected Response getEntityByUser(String customerId, String userId, String etag) {
+    protected Response getEntityByUser(String userId, String entityId, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
@@ -321,8 +315,8 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
-        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
-        return requestSpecification.when().get("/{id}", customerId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        return requestSpecification.when().get("/{id}", entityId);
     }
 
     protected Response createSecondLevelRelationship(String firstLevelId, String secondLevelId, Object jsonBody) {
@@ -375,20 +369,11 @@ public class BasicSteps {
      * @param sortDesc @return
      */
     protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc) {
-        return getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+        return getEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, null, limit, cursor, filter, sort, sortDesc, null);
     }
 
     protected Response getEntities(String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
-        RequestSpecification requestSpecification = given().spec(spec);
-
-        if (url == null) {
-            url = "";
-        }
-
-        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
-        requestSpecification.parameters(params);
-
-        return requestSpecification.when().get(url);
+        return getEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, url, limit, cursor, filter, sort, sortDesc, queryParams);
     }
 
     protected Response getEntitiesByUser(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
@@ -403,7 +388,7 @@ public class BasicSteps {
         if (url == null) {
             url = "";
         }
-        requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
 
@@ -478,16 +463,24 @@ public class BasicSteps {
     }
 
     protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        return getSecondLevelEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
+        return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
+    }
+
+    protected Response getSecondLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
 
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
 
         return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
-    }
-
-    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
-        return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
     protected Response getSecondLevelEntitiesForDates(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity, String filter, String sort, String sortDesc) {
