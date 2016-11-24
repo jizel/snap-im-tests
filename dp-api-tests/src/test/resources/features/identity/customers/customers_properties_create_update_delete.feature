@@ -8,9 +8,10 @@ Feature: Customers properties create update delete
       | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
       | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-    Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
-      | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
-      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created for customer "40ebf861-7549-46f1-a99f-249716c83b33"
+    Given The following users exist for customer "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" as primary "true"
+      | userId                               | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 9e678710-a1f6-47da-9468-0694466541df | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |

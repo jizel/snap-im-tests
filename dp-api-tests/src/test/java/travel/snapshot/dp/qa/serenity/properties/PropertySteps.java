@@ -205,11 +205,8 @@ public class PropertySteps extends BasicSteps {
      * @param t property
      * @return server response
      */
-    private Response createProperty(PropertyDto t) {
-        return given().spec(spec)
-                .body(t)
-                .when().post();
-
+    private Response createProperty(PropertyDto property) {
+        return createEntity(property);
     }
 
     /**
