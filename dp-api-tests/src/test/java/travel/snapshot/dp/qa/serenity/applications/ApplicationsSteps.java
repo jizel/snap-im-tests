@@ -1,28 +1,22 @@
 package travel.snapshot.dp.qa.serenity.applications;
 
-import com.jayway.restassured.response.Response;
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.*;
 
+import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.http.HttpStatus;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ApplicationsSteps extends BasicSteps {
 
@@ -45,7 +39,7 @@ public class ApplicationsSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION).to(application);
         ApplicationDto existingApplication = getApplicationById(application.getApplicationId());
         if (existingApplication != null) {
-            deleteEntity(existingApplication.getApplicationId());
+            deleteEntityWithEtag(existingApplication.getApplicationId());
         }
         Response response = createEntity(application);
         setSessionResponse(response);
@@ -63,13 +57,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationWithIdIsDeleted(String applicationId) {
-        ApplicationDto app = getApplicationById(applicationId);
-        if (app == null) {
-            return;
-        }
-
-        Response response = deleteEntity(applicationId);
-        setSessionResponse(response);
+        deleteEntityWithEtag(applicationId);
         Serenity.setSessionVariable(SESSION_APPLICATION_ID).to(applicationId);
     }
 
@@ -79,12 +67,6 @@ public class ApplicationsSteps extends BasicSteps {
 
         Response response = getEntity(applicationId, null);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Step
-    public void deleteApplicationWithId(String id) {
-        Response response = deleteEntity(id);
-        setSessionResponse(response);
     }
 
     @Step

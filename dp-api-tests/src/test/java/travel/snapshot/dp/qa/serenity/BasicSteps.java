@@ -273,14 +273,32 @@ public class BasicSteps {
             fail("User ID to be send in request header is null.");
         }
         if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+            requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         requestSpecification = requestSpecification.header(XAUTH_USER_ID, userId);
         return requestSpecification.body(data).when().post("/{id}", id);
     }
 
-    protected Response deleteEntity(String id) {
-        return given().spec(spec).when().delete("/{id}", id);
+    protected Response deleteEntity(String entityId, String etag) {
+        return deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+    }
+
+    protected Response deleteEntityByUser(String userId, String entityId, String etag) {
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        RequestSpecification requestSpecification = given().spec(spec);
+        requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        if (isNotBlank(etag)) {
+            requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        return requestSpecification.when().delete("/{id}", entityId);
+    }
+
+    protected void deleteEntityWithEtag(String entityId) {
+        String etag = getEntity(entityId).getHeader(HEADER_ETAG);
+        Response response = deleteEntity(entityId, etag);
+        setSessionResponse(response);
     }
 
     public Response deleteEntityUrl(String url, String id) {

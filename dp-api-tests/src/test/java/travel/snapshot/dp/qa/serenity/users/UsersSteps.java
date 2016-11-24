@@ -85,20 +85,17 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void deleteUserWithId(String userId) {
-        Response response = deleteEntity(userId);
-        setSessionResponse(response);
+        deleteEntityWithEtag(userId);
     }
 
     @Step
     public void deleteUserWithUserName(String userName) {
-        UserDto u = getUserByUsername(userName);
-        if (u == null) {
+        UserDto user = getUserByUsername(userName);
+        if (user == null) {
             return;
         }
-        String userId = u.getUserId();
-        Response response = deleteEntity(userId);
-
-        setSessionResponse(response);
+        String userId = user.getUserId();
+        deleteEntityWithEtag(userId);
         setSessionVariable(SESSION_USER_ID, userId);
     }
 

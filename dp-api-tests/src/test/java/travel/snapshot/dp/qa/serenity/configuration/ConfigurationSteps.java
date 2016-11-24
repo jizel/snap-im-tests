@@ -1,17 +1,25 @@
 package travel.snapshot.dp.qa.serenity.configuration;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
+import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,18 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
-
-import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
-import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -137,8 +133,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfigurationType(String identifier) {
-        Response resp = deleteEntity(identifier);
-        setSessionResponse(resp);
+        deleteEntityWithEtag(identifier);
     }
 
     @Step
@@ -149,18 +144,18 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void followingConfigurationTypesExist(List<ConfigurationTypeDto> configurationTypes, Integer count) {
-        configurationTypes.forEach(t -> {
+        configurationTypes.forEach(type -> {
 
-            if (isConfigurationTypeExist(t.getIdentifier())) {
-                deleteEntity(t.getIdentifier());
+            if (isConfigurationTypeExist(type.getIdentifier())) {
+                deleteEntityWithEtag(type.getIdentifier());
             }
 
-            Response createResponse = createEntity(t);
+            Response createResponse = createEntity(type);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Configuration type cannot be created");
             }
             IntStream.rangeClosed(1, count).forEach(i -> {
-                Response createKeyResponse = createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
+                Response createKeyResponse = createValueForKey(type.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
                 if (createKeyResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                     fail("Configuration key cannot be created");
                 }
@@ -172,13 +167,13 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void dataIsUsedForCreation(String jsonData, boolean deleteBeforeCreate) {
-        ConfigurationTypeDto ct = getConfigurationTypeFromString(jsonData);
+        ConfigurationTypeDto configurationType = getConfigurationTypeFromString(jsonData);
 
-        if (deleteBeforeCreate && isConfigurationTypeExist(ct.getIdentifier())) {
-            deleteEntity(ct.getIdentifier());
+        if (deleteBeforeCreate && isConfigurationTypeExist(configurationType.getIdentifier())) {
+            deleteEntityWithEtag(configurationType.getIdentifier());
         }
 
-        Response response = createEntity(ct);
+        Response response = createEntity(configurationType);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
@@ -188,7 +183,7 @@ public class ConfigurationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
-            deleteEntity(configurationType.getIdentifier());
+            deleteEntityWithEtag(configurationType.getIdentifier());
         }
         Response response = createEntity(configurationType);
         setSessionResponse(response);

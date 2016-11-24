@@ -189,8 +189,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void deleteCustomerWithId(String customerId) {
-        Response response = deleteEntity(customerId);
-        setSessionResponse(response);
+        deleteEntityWithEtag(customerId);
     }
 
     @Step

@@ -1,21 +1,19 @@
 package travel.snapshot.dp.qa.steps.identity.applications;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
+
+import java.util.List;
 
 public class ApplicationsStepsdef {
 
@@ -46,7 +44,7 @@ public class ApplicationsStepsdef {
 
     @When("^Nonexistent application id is deleted$")
     public void Nonexistent_application_id_is_deleted() throws Throwable {
-        applicationSteps.deleteApplicationWithId("nonexistent_id");
+        applicationSteps.applicationWithIdIsDeleted("nonexistent_id");
     }
 
     @When("^Application with id \"([^\"]*)\" is updated with data$")
