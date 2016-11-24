@@ -39,8 +39,7 @@ public class ApplicationsSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION).to(application);
         ApplicationDto existingApplication = getApplicationById(application.getApplicationId());
         if (existingApplication != null) {
-            Response tempResponse = getEntity(application.getApplicationId(), null);
-            deleteEntity(existingApplication.getApplicationId(), tempResponse.getHeader(HEADER_ETAG));
+            deleteEntityWithEtag(existingApplication.getApplicationId());
         }
         Response response = createEntity(application);
         setSessionResponse(response);
@@ -58,10 +57,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationWithIdIsDeleted(String applicationId) {
-        Response tempResponse = getEntity(applicationId, null);
-
-        Response response = deleteEntity(applicationId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
+        deleteEntityWithEtag(applicationId);
         Serenity.setSessionVariable(SESSION_APPLICATION_ID).to(applicationId);
     }
 

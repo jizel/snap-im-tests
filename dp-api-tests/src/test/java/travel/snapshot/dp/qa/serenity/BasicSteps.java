@@ -295,6 +295,12 @@ public class BasicSteps {
         return requestSpecification.when().delete("/{id}", entityId);
     }
 
+    protected void deleteEntityWithEtag(String entityId) {
+        String etag = getEntity(entityId).getHeader(HEADER_ETAG);
+        Response response = deleteEntity(entityId, etag);
+        setSessionResponse(response);
+    }
+
     public Response deleteEntityUrl(String url, String id) {
         return given().spec(spec).when().delete(url + "/{id}", id);
     }

@@ -119,9 +119,7 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void deleteUserGroup(String userGroupId) {
-        Response tempResponse = getEntity(userGroupId, null);
-        Response response = deleteEntity(userGroupId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
+       deleteEntityWithEtag(userGroupId);
     }
 
     public void checkUserGroupExistency(String userGroupId, boolean existency) {

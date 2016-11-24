@@ -133,9 +133,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfigurationType(String identifier) {
-        Response tempResponse = getEntity(identifier, null);
-        Response response = deleteEntity(identifier, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
+        deleteEntityWithEtag(identifier);
     }
 
     @Step
@@ -146,19 +144,18 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void followingConfigurationTypesExist(List<ConfigurationTypeDto> configurationTypes, Integer count) {
-        configurationTypes.forEach(t -> {
+        configurationTypes.forEach(type -> {
 
-            if (isConfigurationTypeExist(t.getIdentifier())) {
-                Response tempResponse = getEntity(t.getIdentifier(), null);
-                deleteEntity(t.getIdentifier(), tempResponse.getHeader(HEADER_ETAG));
+            if (isConfigurationTypeExist(type.getIdentifier())) {
+                deleteEntityWithEtag(type.getIdentifier());
             }
 
-            Response createResponse = createEntity(t);
+            Response createResponse = createEntity(type);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Configuration type cannot be created");
             }
             IntStream.rangeClosed(1, count).forEach(i -> {
-                Response createKeyResponse = createValueForKey(t.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
+                Response createKeyResponse = createValueForKey(type.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
                 if (createKeyResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                     fail("Configuration key cannot be created");
                 }
@@ -173,8 +170,7 @@ public class ConfigurationSteps extends BasicSteps {
         ConfigurationTypeDto configurationType = getConfigurationTypeFromString(jsonData);
 
         if (deleteBeforeCreate && isConfigurationTypeExist(configurationType.getIdentifier())) {
-            Response tempResponse = getEntity(configurationType.getIdentifier(), null);
-            deleteEntity(configurationType.getIdentifier(), tempResponse.getHeader(HEADER_ETAG));
+            deleteEntityWithEtag(configurationType.getIdentifier());
         }
 
         Response response = createEntity(configurationType);
@@ -187,8 +183,7 @@ public class ConfigurationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
-            Response tempResponse = getEntity(configurationType.getIdentifier(), null);
-            deleteEntity(configurationType.getIdentifier(), tempResponse.getHeader(HEADER_ETAG));
+            deleteEntityWithEtag(configurationType.getIdentifier());
         }
         Response response = createEntity(configurationType);
         setSessionResponse(response);

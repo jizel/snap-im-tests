@@ -35,8 +35,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
         commSubcsriptions.forEach(s -> {
             CommercialSubscriptionDto existingSubscription = getSubscriptionById(s.getCommercialSubscriptionId());
             if (existingSubscription != null) {
-                Response tempResponse = getEntity(existingSubscription.getCommercialSubscriptionId(), null);
-                deleteEntity(existingSubscription.getCommercialSubscriptionId(), tempResponse.getHeader(HEADER_ETAG));
+                deleteEntityWithEtag(existingSubscription.getCommercialSubscriptionId());
             }
 
             Response createResponse = createEntity(s);
@@ -55,10 +54,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
 
     @Step
     public void deleteCommSubscriptionWithId(String commSubcriptionId) {
-        Response tempResponse = getEntity(commSubcriptionId, null);
-        Response response = deleteEntity(commSubcriptionId, tempResponse.getHeader(HEADER_ETAG));
-
-        setSessionResponse(response);
+        deleteEntityWithEtag(commSubcriptionId);
         Serenity.setSessionVariable(SESSION_COMMERCIAL_SUBSCRIPTION_ID).to(commSubcriptionId);
     }
 

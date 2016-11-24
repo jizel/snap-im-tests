@@ -85,9 +85,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void deleteUserWithId(String userId) {
-        Response tempResponse = getEntity(userId, null);
-        Response response = deleteEntity(userId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
+        deleteEntityWithEtag(userId);
     }
 
     @Step
@@ -97,10 +95,7 @@ public class UsersSteps extends BasicSteps {
             return;
         }
         String userId = user.getUserId();
-        Response tempResponse = getEntity(userId, null);
-        Response response = deleteEntity(userId, tempResponse.getHeader(HEADER_ETAG));
-
-        setSessionResponse(response);
+        deleteEntityWithEtag(userId);
         setSessionVariable(SESSION_USER_ID, userId);
     }
 
