@@ -17,8 +17,8 @@ Feature: Rate shopper
   Scenario Outline: Checking correct currency parameter returned for market
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId     | propertyName | propertyCode | website                    | email            | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1  | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz  | true           | Europe/Prague | 0     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
@@ -39,8 +39,8 @@ Feature: Rate shopper
   Scenario Outline: Check minimal, average, and maximal market values
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     And The following properties exist with random address and billing address
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 3     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
@@ -78,8 +78,8 @@ Feature: Rate shopper
   Scenario Outline: Checking correct currency parameter returned for property
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId     | propertyName | propertyCode | website                    | email            | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1  | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz  | true           | Europe/Prague | 0     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
@@ -101,8 +101,8 @@ Feature: Rate shopper
   Scenario Outline: Get BAR values for a given property analytics data from API
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     And The following properties exist with random address and billing address
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000499-9999-4999-a999-999999999999 | salesforceid_n4 | pn4_name     | pn4_code     | http://www.snapshot.travel | pn4@tenants.biz | true           | Europe/Prague | 4     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
@@ -144,8 +144,8 @@ Feature: Rate shopper
   Scenario Outline: Getting a list of items
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     And The following properties exist with random address and billing address
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n0 | pn0_name     | pn0_code     | http://www.snapshot.travel | pn0@tenants.biz | true           | Europe/Prague | 3     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
@@ -174,8 +174,8 @@ Feature: Rate shopper
   Scenario Outline: Checking error codes for getting list of properties in one market
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     And The following properties exist with random address and billing address
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 0     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
@@ -203,8 +203,8 @@ Feature: Rate shopper
   Scenario Outline: Given property in future or without fetchDatetime are calculated real time
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     And The following properties exist with random address and billing address
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n0 | pn0_name     | pn0_code     | http://www.snapshot.travel | pn0@tenants.biz | true           | Europe/Prague | 3     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |

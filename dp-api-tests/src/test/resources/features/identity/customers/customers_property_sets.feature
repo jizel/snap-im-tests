@@ -16,7 +16,7 @@ Feature: Customers property sets
     Given Get token for user "defaultSnapshotuser" with password "Password01"
 
 
-  Scenario Outline: getting list of property sets for customer "c1t" on customers side
+  Scenario Outline: getting list of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" on customers side
 #failing because of not functional filtering
     Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "ae912431-b6aa-4d78-a6d9-f8620ccd9d0b"
       | propertySetName | propertySetDescription | propertySetType |
@@ -97,7 +97,7 @@ Feature: Customers property sets
       | 5     | 5      | 5        | 59    |
 
   Scenario Outline: Checking error codes for getting list of property sets
-    When List of property sets for customer "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
@@ -123,7 +123,7 @@ Feature: Customers property sets
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 40002       |
 
   Scenario Outline: Filtering list of property sets
-    Given The following property sets exist for customer with c1t"
+    Given The following property sets exist for customer with id "5e2cf39-ffb6-4bb8-ad3f-66306c2be124"
       | propertySetName      | propertySetDescription | propertySetType |
       | list_ps1_name        | list_ps1_description   | branch          |
       | list_ps2_name        | list_ps2_description   | branch          |
@@ -135,7 +135,7 @@ Feature: Customers property sets
       | second_list_ps8_name | list_ps8_description   | branch          |
 
 
-    When List of property sets for customer "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customer property sets returned

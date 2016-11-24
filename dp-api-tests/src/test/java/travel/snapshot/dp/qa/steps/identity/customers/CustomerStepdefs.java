@@ -6,6 +6,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ReflectionUtils;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
@@ -51,7 +52,7 @@ public class CustomerStepdefs {
     // ---------------------------- GIVEN ------------------------------
 
     @Given("^All users are removed for customers with ids: (.*)$")
-    public void All_users_are_removed_for_customers_with_codes_default(List<String> customerIds) throws Throwable {
+    public void All_users_are_removed_for_customers_with_ids_default(List<String> customerIds) throws Throwable {
         customerSteps.removeAllUsersFromCustomers(customerIds);
     }
 
@@ -76,7 +77,7 @@ public class CustomerStepdefs {
     }
 
     @Given("^Relation between user with username \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
-    public void Relation_between_user_with_username_and_customer_with_code_exists_with_isPrimary(String username,
+    public void Relation_between_user_with_username_and_customer_with_id_exists_with_isPrimary(String username,
                                                                                                  String customerId, String isPrimary) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerId, isPrimary);
@@ -124,7 +125,7 @@ public class CustomerStepdefs {
 
     @When("^Customer with id \"([^\"]*)\" is updated with data by user with id \"([^\"]*)\"$")
     public void customerWithIdIsUpdatedWithData(String customerId, String userId, List<CustomerUpdateDto> customersData) throws Throwable {
-        customerSteps.updateCustomerWithCodeByUser(customerId, userId, customersData.get(0));
+        customerSteps.updateCustomerWithIdByUser(customerId, userId, customersData.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
@@ -156,7 +157,7 @@ public class CustomerStepdefs {
     }
 
     @When("^List of customerProperties is got for customer with id \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_customerProperties_is_got_for_customer_with_code_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+    public void List_of_customerProperties_is_got_for_customer_with_id_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
             String customerId, @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
@@ -166,14 +167,14 @@ public class CustomerStepdefs {
     }
 
     @When("^User with username \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
-    public void User_with_username_is_added_to_customer_with_code_with_isPrimary(String username, String customerId,
+    public void User_with_username_is_added_to_customer_with_id_with_isPrimary(String username, String customerId,
                                                                                  String isPrimary) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
         customerSteps.userIsAddedToCustomerWithIsPrimary(u, customerId, isPrimary);
     }
 
     @When("^User with username \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"$")
-    public void User_with_username_is_removed_from_customer_with_code(String username, String customerId)
+    public void User_with_username_is_removed_from_customer_with_id(String username, String customerId)
             throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         customerSteps.userIsDeletedFromCustomer(user, customerId);
@@ -186,11 +187,11 @@ public class CustomerStepdefs {
         customerSteps.propertyIsUpdateForCustomerWithType(p, customerId, type, fieldName, value);
     }
 
-    @When("^Property with code \"([^\"]*)\" for customer with code \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
+    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(
-            String propertyCode, String customerCode, String type, String fieldName, String value) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(p, customerCode, type, fieldName, value);
+            String propertyCode, String customerId, String type, String fieldName, String value) throws Throwable {
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(property, customerId, type, fieldName, value);
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\" with etag$")
@@ -208,7 +209,7 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer with id \"([^\"]*)\", update address with following data$")
-    public void customerWithCodeUpdateAddressWithFollowingData(String customerId, List<AddressUpdateDto> addresses) throws Throwable {
+    public void customerWithIdUpdateAddressWithFollowingData(String customerId, List<AddressUpdateDto> addresses) throws Throwable {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
     }
 
@@ -253,7 +254,7 @@ public class CustomerStepdefs {
     }
 
     @When("^List of users for customer with id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_users_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
+    public void List_of_users_for_customer_with_id_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
             String customerId, @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
@@ -263,17 +264,13 @@ public class CustomerStepdefs {
     }
 
     @When("^Update customer with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
-    public void updateCustomerWithCodeFieldItsValue(String customerId, String updatedField, String updatedValue) throws Throwable {
-        CustomerUpdateDto c = new CustomerUpdateDto();
-        Field[] fields = CustomerBaseDto.class.getDeclaredFields();
-        for (Field f : CustomerBaseDto.class.getDeclaredFields()) {
-            if (f.getName().equalsIgnoreCase(updatedField)) {
-                f.setAccessible(true);
-                f.set(c, updatedValue);
-                break;
-            }
-        }
-        customerSteps.updateCustomerWithCode(customerId, c);
+    public void updateCustomerWithIdFieldItsValue(String customerId, String updatedField, String updatedValue) throws Throwable {
+        CustomerUpdateDto customer = new CustomerUpdateDto();
+
+        Field field = ReflectionUtils.findField(CustomerBaseDto.class, updatedField);
+        field.setAccessible(true);
+        field.set(customer, updatedValue);
+        customerSteps.updateCustomerWithId(customerId, customer);
     }
 
     /*@When("^Customer with id \"([^\"]*)\" is activated$")

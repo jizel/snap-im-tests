@@ -4,8 +4,8 @@ Feature: Property sets users create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default0 | Default0  | User0    | def0@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -19,21 +19,21 @@ Feature: Property sets users create update delete
 
   @Smoke
   Scenario: Adding user to property set
-    When User with username "default3" is added to property set with name "ps1_name" for customer with code "c1t"
+    When User with username "default3" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Then Response code is "204"
 
 
   @Smoke
   Scenario: Removing user from property set
-    Given Relation between user with username "default2" and property set with name "ps1_name" for customer with code "c1t" exists
-    When User with username "default2" is removed from property set with name "ps1_name" for customer with code "c1t"
+    Given Relation between user with username "default2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    When User with username "default2" is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Then Response code is "204"
     And Body is empty
-    And User with username "default2" isn't there for property set with name "ps1_name" for customer with code "c1t"
+    And User with username "default2" isn't there for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
 
 
   Scenario: Checking error code for removing user from property set
-    When Nonexistent user is removed from property set with name "ps1_name" for customer with code "c1t"
+    When Nonexistent user is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Then Response code is "204"
 
   Scenario Outline: Filtering list of users for property set
@@ -45,13 +45,13 @@ Feature: Property sets users create update delete
       | customer | filter_psu_default_4 | FilterPSUDefault4 | FilterPSUUser4 | filter_psu_user4@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | partner  | filter_psu_default_5 | FilterPSUDefault5 | FilterPSUUser5 | filter_psu_user5@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_psu_default_6 | FilterPSUDefault6 | FilterPSUUser6 | filter_psu_user6@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
-    Given Relation between user with username "filter_psu_default_1" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between user with username "filter_psu_default_2" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between user with username "filter_psu_default_3" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between user with username "filter_psu_default_4" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between user with username "filter_psu_default_5" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between user with username "filter_psu_default_6" and property set with name "ps1_name" for customer with code "c1t" exists
-    When List of users for property set with name "ps1_name" for customer with code "c1t" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    Given Relation between user with username "filter_psu_default_1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "filter_psu_default_2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "filter_psu_default_3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "filter_psu_default_4" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "filter_psu_default_5" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "filter_psu_default_6" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    When List of users for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned

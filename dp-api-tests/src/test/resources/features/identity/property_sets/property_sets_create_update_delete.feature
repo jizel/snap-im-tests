@@ -7,8 +7,8 @@ Feature: Property sets create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -20,7 +20,7 @@ Feature: Property sets create update delete
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 49ae92d9-2d80-47d9-994b-77f5f598336a |
 
   @Smoke
-  Scenario: Creating property set for customer with code "c1t"
+  Scenario: Creating property set for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
     When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName  | propertySetDescription | propertySetType |
       | ps1_created_name | ps1_description        | branch          |
@@ -32,7 +32,7 @@ Feature: Property sets create update delete
 
   @Smoke
   Scenario: Deleting Property set
-    When Property set with name "ps1_name" for customer with code "c1t" is deleted
+    When Property set with name "ps1_name" for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" is deleted
     Then Response code is "204"
     And Body is empty
     And Property set with same id doesn't exist
@@ -42,7 +42,7 @@ Feature: Property sets create update delete
     Then Response code is "204"
 
   Scenario Outline: Updating property set
-  Property sets for customer "c1t" were deleted in background, so we don't need to clean here.
+  Property sets for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" were deleted in background, so we don't need to clean here.
     When Property set with name "<propertySetName>" for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" is updated with following data
       | propertySetName           | propertySetDescription   | propertySetType   |
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |

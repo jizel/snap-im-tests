@@ -42,36 +42,36 @@ public class PropertySetsStepdefs {
         propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId);
     }
 
-    @Given("^All property sets are deleted for customers with codes: (.*)$")
-    public void All_property_sets_are_deleted_for_customers_c_t_c_t(List<String> customerCodes) throws Throwable {
-        List<CustomerDto> customers = customerSteps.getCustomersForCodes(customerCodes);
+    @Given("^All property sets are deleted for customers with ids: (.*)$")
+    public void All_property_sets_are_deleted_for_customers_c_t_c_t(List<String> customerIds) throws Throwable {
+        List<CustomerDto> customers = customerSteps.getCustomersForIds(customerIds);
         propertySetSteps.deleteAllPropertySetsForCustomer(customers);
     }
 
-    @Given("^All users are removed for property_sets for customer with code \"([^\"]*)\" with names: (.*)$")
-    public void All_users_are_removed_for_property_sets(String customerCode, List<String> names) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, c);
+    @Given("^All users are removed for property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
+    public void All_users_are_removed_for_property_sets(String customerId, List<String> names) throws Throwable {
+        CustomerDto customer = customerSteps.getCustomerById(customerId);
+        propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
     }
 
-    @Given("^Relation between user with username \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" exists$")
-    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String customerCode) throws Throwable {
+    @Given("^Relation between user with username \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
+    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String customerId) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(u, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(u, propertySetName, customer);
     }
 
-    @Given("^All properties are removed from property_sets for customer with code \"([^\"]*)\" with names: (.*)$")
-    public void All_properties_are_removed_from_property_sets_for_customer_with_code_with_names_ps__name_ps__name(String customerCode, List<String> propertySetNames) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, c);
+    @Given("^All properties are removed from property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
+    public void All_properties_are_removed_from_property_sets_for_customer_with_code_with_names_ps__name_ps__name(String customerId, List<String> propertySetNames) throws Throwable {
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, customer);
     }
 
     @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
     public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName, String customerId) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        CustomerDto c = customerSteps.getCustomerById(customerId);
-        propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(p, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(p, propertySetName, customer);
     }
 
     @When("^The following property set is created for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
@@ -89,10 +89,10 @@ public class PropertySetsStepdefs {
 
     }
 
-    @When("^Property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is deleted$")
-    public void Property_set_with_name_for_customer_with_code_is_deleted(String propertySetName, String customerCode) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.propertySetWithNameForCustomerIsDeleted(c, propertySetName);
+    @When("^Property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" is deleted$")
+    public void Property_set_with_name_for_customer_with_code_is_deleted(String propertySetName, String customerId) throws Throwable {
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.propertySetWithNameForCustomerIsDeleted(customer, propertySetName);
     }
 
     @When("^Nonexistent property set id is got$")
@@ -105,70 +105,70 @@ public class PropertySetsStepdefs {
         propertySetSteps.deletePropertySetWithId("nonexistent");
     }
 
-    @When("^User with username \"([^\"]*)\" is added to property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerCode) throws Throwable {
+    @When("^User with username \"([^\"]*)\" is added to property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerId) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.userIsAddedToPropertySetForCustomer(u, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.userIsAddedToPropertySetForCustomer(u, propertySetName, customer);
     }
 
-    @When("^User with username \"([^\"]*)\" is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void User_with_username_is_removed_from_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerCode) throws Throwable {
+    @When("^User with username \"([^\"]*)\" is removed from property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void User_with_username_is_removed_from_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerId) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.userIsRemovedFromPropertySetForCustomer(u, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.userIsRemovedFromPropertySetForCustomer(u, propertySetName, customer);
     }
 
-    @When("^Nonexistent user is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void Nonexistent_user_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
+    @When("^Nonexistent user is removed from property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void Nonexistent_user_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName, String customerId) throws Throwable {
         UserDto user = new UserDto();
         user.setUserId("nonexistent");
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.userIsRemovedFromPropertySetForCustomer(user, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.userIsRemovedFromPropertySetForCustomer(user, propertySetName, customer);
     }
 
-    @When("^List of properties for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_properties_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName, String customerCode,
+    @When("^List of properties for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_properties_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName, String customerId,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String limit,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.listOfPropertiesIsGotWith(propertySetName, c, limit, cursor, filter, sort, sortDesc);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.listOfPropertiesIsGotWith(propertySetName, customer, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of users for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_users_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName, String customerCode,
+    @When("^List of users for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    public void List_of_users_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName, String customerId,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String limit,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.listOfUsersIsGotWith(propertySetName, c, limit, cursor, filter, sort, sortDesc);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.listOfUsersIsGotWith(propertySetName, customer, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Nonexistent property is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void Nonexistent_property_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName, String customerCode) throws Throwable {
+    @When("^Nonexistent property is removed from property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void Nonexistent_property_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName, String customerId) throws Throwable {
         PropertyDto p = new PropertyDto();
         p.setPropertyId("nonexistent");
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.propertyIsRemovedFromPropertySetForCustomer(p, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.propertyIsRemovedFromPropertySetForCustomer(p, propertySetName, customer);
     }
 
-    @When("^Property with code \"([^\"]*)\" is added to property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void Property_with_code_is_added_to_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerCode) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" is added to property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void Property_with_code_is_added_to_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerId) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.propertyIsAddedToPropertySetForCustomer(p, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.propertyIsAddedToPropertySetForCustomer(p, propertySetName, customer);
     }
 
-    @When("^Property with code \"([^\"]*)\" is removed from property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void Property_with_code_is_removed_from_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerCode) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" is removed from property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void Property_with_code_is_removed_from_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerId) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.propertyIsRemovedFromPropertySetForCustomer(p, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.propertyIsRemovedFromPropertySetForCustomer(p, propertySetName, customer);
     }
 
     @Then("^There are (\\d+) property sets returned$")
@@ -186,18 +186,18 @@ public class PropertySetsStepdefs {
         propertySetSteps.propertySetNamesAreInResponseInOrder(names);
     }
 
-    @Then("^User with username \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void User_with_username_isn_t_there_for_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerCode) throws Throwable {
+    @Then("^User with username \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void User_with_username_isn_t_there_for_property_set_with_name_for_customer_with_code(String username, String propertySetName, String customerId) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.userDoesntExistForPropertySetForCustomer(u, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.userDoesntExistForPropertySetForCustomer(u, propertySetName, customer);
     }
 
-    @Then("^Property with code \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with code \"([^\"]*)\"$")
-    public void Property_with_code_isn_t_there_for_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerCode) throws Throwable {
+    @Then("^Property with code \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    public void Property_with_code_isn_t_there_for_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerId) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        CustomerDto c = customerSteps.getCustomerByCodeInternal(customerCode);
-        propertySetSteps.propertiesDoesntExistForPropertySetForCustomer(p, propertySetName, c);
+        CustomerDto customer= customerSteps.getCustomerById(customerId);
+        propertySetSteps.propertiesDoesntExistForPropertySetForCustomer(p, propertySetName, customer);
     }
 
     @Then("^There are properties with following names returned in order: (.*)$")

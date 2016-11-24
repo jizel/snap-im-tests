@@ -7,46 +7,42 @@ Feature: Review multiproperty property set
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | c3t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-
-    Given The following customers exist with random address
-      | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
-      | Given company 1 | c1@tenants.biz | c1t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-
+    
     Given The following users exist
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The password of user "default1" is "Password1"
 
-    Given Relation between user with username "default1" and customer with code "c1t" exists with isPrimary "true"
+    Given Relation between user with username "default1" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
-    Given The following property sets exist for customer with code "c1t"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | branch          |
 
     Given Get token for user "default1" with password "Password1"
     Given Set access token from session for customer steps defs
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with code "c1t" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
 
-    Given Relation between property with code "p1_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p2_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
-    Given Relation between property with code "p3_code" and customer with code "c1t" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p2_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p3_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
     Given Relation between user with username "default1" and property with code "p1_code" exists
     Given Relation between user with username "default1" and property with code "p2_code" exists
     Given Relation between user with username "default1" and property with code "p3_code" exists
 
-    Given Relation between user with username "default1" and property set with name "ps1_name" for customer with code "c1t" exists
+    Given Relation between user with username "default1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
 
     Given Set access token for review steps defs
 
@@ -54,7 +50,7 @@ Feature: Review multiproperty property set
 # GET /review/analytics/property_set/{property_set_id}/popularity_index_rank
 
   Scenario Outline: Get Review analytics data from API for a given wrong granularity
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "<limit>" and cursor "<cursor>"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "<limit>" and cursor "<cursor>"
     Then Content type is "application/json"
     And Response code is "400"
     And Custom code is "63"
@@ -106,32 +102,32 @@ Feature: Review multiproperty property set
       | overall_bubble_rating | ps1_name          | day         | 2015-12-03 | 2015-12-03 | /null        | -23486       |
 
   Scenario Outline: Checking mandatory values
-    When Get "<metric>" for statistics agregated for property set "ps1_name" for customer "<customer_code>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "ps1_name" for customer "<customer_id>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 400
     And Custom code is 52
     And Body contains entity with attribute "type" value "error"
     And Body contains entity with attribute "message" value "<message>"
 
     Examples:
-      | metric                | customer_code | since      | until      | granularity | message                                       |
-      | popularity_index_rank | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
-      | popularity_index_rank | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
-      | popularity_index_rank | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+      | metric                | customer_id                          | since      | until      | granularity | message                                       |
+      | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
 
-      | aspects_of_business   | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
-      | aspects_of_business   | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
-      | aspects_of_business   | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+      | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
 
-      | number_of_reviews     | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
-      | number_of_reviews     | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
-      | number_of_reviews     | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+      | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
 
-      | overall_bubble_rating | c1t           | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
-      | overall_bubble_rating | c1t           | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
-      | overall_bubble_rating | c1t           | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
+      | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
+      | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
 
   Scenario Outline: Get specific analytics data from API for a given granularity
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
@@ -185,7 +181,7 @@ Feature: Review multiproperty property set
 
 
   Scenario Outline: Checking data corectness for popularity_index_rank
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And Review file "<json_input_file>" equals to previous response for popularity index
@@ -198,7 +194,7 @@ Feature: Review multiproperty property set
 
   @Smoke
   Scenario Outline: Checking data corectness for aspects_of_business
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And Review file "<json_input_file>" equals to previous response for aspects of business
@@ -210,7 +206,7 @@ Feature: Review multiproperty property set
       | aspects_of_business | /multiproperty/customer/aspects_of_business_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Checking data corectness for number_of_reviews
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And Review file "<json_input_file>" equals to previous response for number of reviews
@@ -222,7 +218,7 @@ Feature: Review multiproperty property set
       | number_of_reviews | /multiproperty/customer/number_of_reviews_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Checking data corectness for overall_bubble_rating
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And Review file "<json_input_file>" equals to previous response for overall bubble rating
@@ -235,7 +231,7 @@ Feature: Review multiproperty property set
 
 
   Scenario Outline: Get analytics data from TA API that are more than year old
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 200
     And Data is owned by "tripadvisor"
     And Content type is "application/json"
@@ -260,7 +256,7 @@ Feature: Review multiproperty property set
       | overall_bubble_rating | ps1_name          | month       | 1880-10-01 | 1880-12-03 |
 
   Scenario Outline: Get analytics data from TA API that has wrong time interval
-    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "c1t" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
+    When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 400
     And Custom code is 63
     And Body contains entity with attribute "type" value "error"
