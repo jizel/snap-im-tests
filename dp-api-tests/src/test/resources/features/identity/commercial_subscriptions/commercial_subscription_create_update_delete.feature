@@ -39,9 +39,9 @@ Feature: Commercial subscription create update delete
     And Custom code is "<custom_code>"
     Examples:
       | json_input_file                                                                                 | method | module   | url                                | error_code | custom_code |
-      | /messages/identity/commercial_subscriptions/create_commSubscription_missing_application_id.json | POST   | identity | /identity/commercial_subscriptions | 400        | 53          |
-      | /messages/identity/commercial_subscriptions/create_commSubscription_missing_customer_id.json    | POST   | identity | /identity/commercial_subscriptions | 400        | 53          |
-      | /messages/identity/commercial_subscriptions/create_commSubscription_missing_property_id.json    | POST   | identity | /identity/commercial_subscriptions | 400        | 53          |
+      | /messages/identity/commercial_subscriptions/create_commSubscription_missing_application_id.json | POST   | identity | /identity/commercial_subscriptions | 422        | 42201       |
+      | /messages/identity/commercial_subscriptions/create_commSubscription_missing_customer_id.json    | POST   | identity | /identity/commercial_subscriptions | 422        | 42201       |
+      | /messages/identity/commercial_subscriptions/create_commSubscription_missing_property_id.json    | POST   | identity | /identity/commercial_subscriptions | 422        | 42201       |
 
 
   # --------------------- DELETE ---------------------
@@ -55,8 +55,8 @@ Feature: Commercial subscription create update delete
 
   Scenario: Checking error code for deleting commercial subscription
     When Nonexistent commercial subscription id is deleted
-    Then Response code is "204"
-    And Body is empty
+    Then Response code is "412"
+    And Custom code is "41202"
 
 
   # --------------------- UPDATE ---------------------

@@ -10,6 +10,7 @@ Feature: Properties create update delete
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -33,7 +34,7 @@ Feature: Properties create update delete
 
   Scenario: Checking error code for deleting property
     When Nonexistent property id is deleted
-    Then Response code is "204"
+    Then Response code is "412"
 
   @Smoke
   Scenario: Property is activated
@@ -111,26 +112,26 @@ Feature: Properties create update delete
     Examples:
       | limit       | cursor | filter   | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
-      | /null       | -1     | /null    | /null       | /null       | 400           | 63          |
-      |             | -1     | /null    | /null       | /null       | 400           | 63          |
-      | /null       | text   | /null    | /null       | /null       | 400           | 63          |
-      |             | text   | /null    | /null       | /null       | 400           | 63          |
-      | -1          |        | /null    | /null       | /null       | 400           | 63          |
-      | -1          | /null  | /null    | /null       | /null       | 400           | 63          |
-      | 201         | /null  | /null    | /null       | /null       | 400           | 63          |
-      | 21474836470 | /null  | /null    | /null       | /null       | 400           | 63          |
-      | text        |        | /null    | /null       | /null       | 400           | 63          |
-      | text        | /null  | /null    | /null       | /null       | 400           | 63          |
-      | 10          | -1     | /null    | /null       | /null       | 400           | 63          |
-      | text        | 0      | /null    | /null       | /null       | 400           | 63          |
-      | 10          | text   | /null    | /null       | /null       | 400           | 63          |
+      | /null       | -1     | /null    | /null       | /null       | 400           | 40002          |
+      |             | -1     | /null    | /null       | /null       | 400           | 40002          |
+      | /null       | text   | /null    | /null       | /null       | 400           | 40002          |
+      |             | text   | /null    | /null       | /null       | 400           | 40002          |
+      | -1          |        | /null    | /null       | /null       | 400           | 40002          |
+      | -1          | /null  | /null    | /null       | /null       | 400           | 40002          |
+      | 201         | /null  | /null    | /null       | /null       | 400           | 40002          |
+      | 21474836470 | /null  | /null    | /null       | /null       | 400           | 40002          |
+      | text        |        | /null    | /null       | /null       | 400           | 40002          |
+      | text        | /null  | /null    | /null       | /null       | 400           | 40002          |
+      | 10          | -1     | /null    | /null       | /null       | 400           | 40002          |
+      | text        | 0      | /null    | /null       | /null       | 400           | 40002          |
+      | 10          | text   | /null    | /null       | /null       | 400           | 40002          |
 
       #filtering and sorting
-      | 10          | 0      | /null    | name         | name         | 400           | 64          |
-      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 63          |
-      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 63          |
-      | 10          | 0      | code==   | /null        | /null        | 400           | 63          |
-      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 63          |
+      | 10          | 0      | /null    | name         | name         | 400           | 40002          |
+      | 10          | 0      | /null    | /null        | nonexistent  | 400           | 40002          |
+      | 10          | 0      | /null    | nonexistent  | /null        | 400           | 40002          |
+      | 10          | 0      | code==   | /null        | /null        | 400           | 40002          |
+      | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 40002          |
 
   Scenario Outline: Validate that property regions belong to the correct country
     When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "5d829079-48f0-4f00-9bec-e2329a8bdaac"

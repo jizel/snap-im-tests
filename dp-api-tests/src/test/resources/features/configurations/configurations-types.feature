@@ -29,9 +29,9 @@ Feature: Configurations types create update delete
 
     Examples:
       | json_data                                                          | method | error_code | custom_code |
-      | { "identifier":"", "description":"identifier is empty"}            | POST   | 400        | 61          |
-      | { "description":"identifier is missing"}                           | POST   | 400        | 53          |
-      | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 400        | 62          |
+      | { "identifier":"", "description":"identifier is empty"}            | POST   | 422        | 42201       |
+      | { "description":"identifier is missing"}                           | POST   | 422        | 42201       |
+      | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 422        | 42201       |
 
   @Smoke
   Scenario: Deleting Configuration Type
@@ -75,7 +75,7 @@ Feature: Configurations types create update delete
   Scenario: Getting configuration type with nonexisting id
     When Configuration type with with identifier "nonexisting_id"  is got
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   # error states
   #wrong id, wrong/missing x-application
@@ -170,23 +170,23 @@ Feature: Configurations types create update delete
     Examples:
       | limit | cursor | filter           | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
-      | /null | -1     | /null            | /null       | /null       | 400           | 63          |
-      |       | -1     | /null            | /null       | /null       | 400           | 63          |
-      | /null | text   | /null            | /null       | /null       | 400           | 63          |
-      |       | text   | /null            | /null       | /null       | 400           | 63          |
-      | -1    |        | /null            | /null       | /null       | 400           | 63          |
-      | -1    | /null  | /null            | /null       | /null       | 400           | 63          |
-      | text  |        | /null            | /null       | /null       | 400           | 63          |
-      | text  | /null  | /null            | /null       | /null       | 400           | 63          |
-      | 10    | -1     | /null            | /null       | /null       | 400           | 63          |
-      | text  | 0      | /null            | /null       | /null       | 400           | 63          |
-      | 10    | text   | /null            | /null       | /null       | 400           | 63          |
+      | /null | -1     | /null            | /null       | /null       | 400           | 40002       |
+      |       | -1     | /null            | /null       | /null       | 400           | 40002       |
+      | /null | text   | /null            | /null       | /null       | 400           | 40002       |
+      |       | text   | /null            | /null       | /null       | 400           | 40002       |
+      | -1    |        | /null            | /null       | /null       | 400           | 40002       |
+      | -1    | /null  | /null            | /null       | /null       | 400           | 40002       |
+      | text  |        | /null            | /null       | /null       | 400           | 40002       |
+      | text  | /null  | /null            | /null       | /null       | 400           | 40002       |
+      | 10    | -1     | /null            | /null       | /null       | 400           | 40002       |
+      | text  | 0      | /null            | /null       | /null       | 400           | 40002       |
+      | 10    | text   | /null            | /null       | /null       | 400           | 40002       |
       #filtering and sorting
-      | 10    | 0      | /null            | identifier  | identifier  | 400           | 64          |
-      | 10    | 0      | /null            | /null       | nonexistent | 400           | 63          |
-      | 10    | 0      | /null            | nonexistent | /null       | 400           | 63          |
-      | 10    | 0      | identifier==     | /null       | /null       | 400           | 63          |
-      | 10    | 0      | nonexistent==CZ* | /null       | /null       | 400           | 63          |
+      | 10    | 0      | /null            | identifier  | identifier  | 400           | 40002       |
+      | 10    | 0      | /null            | /null       | nonexistent | 400           | 40002       |
+      | 10    | 0      | /null            | nonexistent | /null       | 400           | 40002       |
+      | 10    | 0      | identifier==     | /null       | /null       | 400           | 40002       |
+      | 10    | 0      | nonexistent==CZ* | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of configurations types
     Given The following configurations exist for configuration type identifier "conf_id_2"

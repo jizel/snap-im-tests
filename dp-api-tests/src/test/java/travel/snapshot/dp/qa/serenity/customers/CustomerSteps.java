@@ -217,8 +217,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-
-    public void updateCustomerWithCodeByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
+    public void updateCustomerWithIdByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
         Response tempResponse = getEntityByUser(userId, customerId, null);
 
 

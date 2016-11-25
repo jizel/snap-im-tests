@@ -70,7 +70,7 @@ Feature: Users create update delete
     And Custom code is "<custom_code>"
     Examples:
       | json_input_file                                             | method | module   | url             | error_code | custom_code |
-      | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 400        | 63          |
+      | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 400        | 40002       |
 
   @Smoke
   Scenario: Deleting user

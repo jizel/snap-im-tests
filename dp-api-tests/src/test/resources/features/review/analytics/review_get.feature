@@ -48,9 +48,9 @@ Feature: Review
 
   Scenario Outline: Checking error codes for analytics data without property
     When Get trip advisor "<url>" with missing property header
-    Then Response code is 400
+    Then Response code is 422
     And Content type is "application/json"
-    And Custom code is "52"
+    And Custom code is "42201"
 
     Examples:
       | url                                         |
@@ -169,7 +169,7 @@ Feature: Review
   Scenario Outline: Get analytics data from TA API that has wrong time interval for /analytics/rating_score
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
-    And Custom code is 63
+    And Custom code is 40002
     And Body contains entity with attribute "type" value "error"
     And Body contains entity with attribute "message" value "<message>"
 
@@ -184,7 +184,7 @@ Feature: Review
   Scenario Outline: Get specific analytics data from TA API has wrong time interval for /analytics/
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
-    And Custom code is 63
+    And Custom code is 40002
     And Body contains entity with attribute "type" value "error"
     And Body contains entity with attribute "message" value "<message>"
 

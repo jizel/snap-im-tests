@@ -143,29 +143,29 @@ Feature: Roles get user customer
       | description                 | limit | cursor | filter      | sort   | sort_desc | response_code | custom_code |
 
       #limit and cursor
-      | negative cursor, null limit | /null | -1     | /null       | /null  | /null     | 400           | 63          |
-      | --empty string limit        |       | -1     | /null       | /null  | /null     | 400           | 63          |
-      | cursor NaN, null limit      | /null | text   | /null       | /null  | /null     | 400           | 63          |
-      | --empty string limit        |       | text   | /null       | /null  | /null     | 400           | 63          |
-      | negative limit, cursor null | -1    |        | /null       | /null  | /null     | 400           | 63          |
-      | --cursor empty string       | -1    | /null  | /null       | /null  | /null     | 400           | 63          |
-      | NaN limit                   | text  |        | /null       | /null  | /null     | 400           | 63          |
-      | --"--                       | text  | /null  | /null       | /null  | /null     | 400           | 63          |
-      |                             | 10    | -1     | /null       | /null  | /null     | 400           | 63          |
-      |                             | text  | 0      | /null       | /null  | /null     | 400           | 63          |
-      |                             | 10    | text   | /null       | /null  | /null     | 400           | 63          |
+      | negative cursor, null limit | /null | -1     | /null       | /null  | /null     | 400           | 40002       |
+      | --empty string limit        |       | -1     | /null       | /null  | /null     | 400           | 40002       |
+      | cursor NaN, null limit      | /null | text   | /null       | /null  | /null     | 400           | 40002       |
+      | --empty string limit        |       | text   | /null       | /null  | /null     | 400           | 40002       |
+      | negative limit, cursor null | -1    |        | /null       | /null  | /null     | 400           | 40002       |
+      | --cursor empty string       | -1    | /null  | /null       | /null  | /null     | 400           | 40002       |
+      | NaN limit                   | text  |        | /null       | /null  | /null     | 400           | 40002       |
+      | --"--                       | text  | /null  | /null       | /null  | /null     | 400           | 40002       |
+      |                             | 10    | -1     | /null       | /null  | /null     | 400           | 40002       |
+      |                             | text  | 0      | /null       | /null  | /null     | 400           | 40002       |
+      |                             | 10    | text   | /null       | /null  | /null     | 400           | 40002       |
 
       #filtering and sorting
-      | both sort and sort_desc     | 10    | 0      | /null       | name   | name      | 400           | 64          |
-      #|| 10    | 0      | /null    | company_name |              | 400           | 63          |
-      #|| 10    | 0      | /null    |              | company_name | 400           | 63          |
-      #|| 10    | 0      | /null    | /null        |              | 400           | 63          |
-      #|| 10    | 0      | /null    |              | /null        | 400           | 63          |
-      #|| 10    | 0      | /null    |              |              | 400           | 63          |
-      | invalid expression          | 10    | 0      | code==      | /null  | /null     | 400           | 63          |
-      | invalid field  in filter    | 10    | 0      | role_n==aa* | /null  | /null     | 400           | 63          |
-      | invalid field  in sort      | 10    | 0      | /null       | role_n | /null     | 400           | 63          |
-      | invalid field  in sort_desc | 10    | 0      | /null       | /null  | aaa       | 400           | 63          |
+      | both sort and sort_desc     | 10    | 0      | /null       | name   | name      | 400           | 40002       |
+      #|| 10    | 0      | /null    | company_name |              | 400           | 40002       |
+      #|| 10    | 0      | /null    |              | company_name | 400           | 40002       |
+      #|| 10    | 0      | /null    | /null        |              | 400           | 40002       |
+      #|| 10    | 0      | /null    |              | /null        | 400           | 40002       |
+      #|| 10    | 0      | /null    |              |              | 400           | 40002       |
+      | invalid expression          | 10    | 0      | code==      | /null  | /null     | 400           | 40002       |
+      | invalid field  in filter    | 10    | 0      | role_n==aa* | /null  | /null     | 400           | 40002       |
+      | invalid field  in sort      | 10    | 0      | /null       | role_n | /null     | 400           | 40002       |
+      | invalid field  in sort_desc | 10    | 0      | /null       | /null  | aaa       | 400           | 40002       |
 
   Scenario Outline: Filtering list of roles
     Given The following roles exist

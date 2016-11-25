@@ -194,9 +194,9 @@ Feature: Instagram
 
   Scenario Outline: Checking error codes for analytics data
     When Get instagram "<url>" with missing property header
-    Then Response code is 400
+    Then Response code is 422
     And Content type is "application/json"
-    And Custom code is "52"
+    And Custom code is "42201"
 
     Examples:
       | url                             |

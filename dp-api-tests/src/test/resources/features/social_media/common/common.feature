@@ -62,10 +62,10 @@ Feature: common
 
     Examples: 
       | url                   | error_code | custom_code |
-      | /analytics/           | 400        | 52          |
-      | /analytics/followers  | 400        | 52          |
-      | /analytics/engagement | 400        | 52          |
-      | /analytics/reach      | 400        | 52          |
+      | /analytics/           | 422        | 42202       |
+      | /analytics/followers  | 422        | 42202       |
+      | /analytics/engagement | 422        | 42202       |
+      | /analytics/reach      | 422        | 42202       |
 
   Scenario Outline: Get analytics data from API with missing parameters
     When Get social media "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"

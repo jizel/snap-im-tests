@@ -248,8 +248,8 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     private Response deleteProperty(String id) {
-        return given().spec(spec)
-                .when().delete("/{id}", id);
+        deleteEntityWithEtag(id);
+        return getSessionResponse();
     }
 
 

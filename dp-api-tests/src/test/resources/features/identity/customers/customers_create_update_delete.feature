@@ -237,8 +237,8 @@ Feature: Customers create update delete
   Scenario Outline: Validate that customer has invalid VAT ID
     When A customer with following country "<country>", region "/null", vatId "<vatId>" is created
     Then Content type is "application/json"
-    And Response code is 400
-    And Custom code is 59
+    And Response code is 422
+    And Custom code is 42201
 
     Examples:
       | country | vatId                |

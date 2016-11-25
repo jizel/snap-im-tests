@@ -220,8 +220,8 @@ Feature: Twitter metrics
 
   Scenario Outline: Checking error codes for analytics data
     When Get twitter "<url>" with missing property header
-    Then Response code is 400
-    And Custom code is "52"
+    Then Response code is 422
+    And Custom code is "42201"
 
     Examples:
       | url                                 |
