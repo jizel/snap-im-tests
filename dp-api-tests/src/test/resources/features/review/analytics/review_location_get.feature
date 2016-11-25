@@ -56,25 +56,25 @@ Feature: Review locaitons
     Examples:
       | limit       | cursor | filter      | sort          | sort_desc     | custom_code |
       #limit and cursor
-      |             | -1     | /null       | /null         | /null         | 63          |
-      |             | -1     | /null       | /null         | /null         | 63          |
-      |             | text   | /null       | /null         | /null         | 63          |
-      |             | text   | /null       | /null         | /null         | 63          |
-      | -1          |        | /null       | /null         | /null         | 63          |
-      | -1          |        | /null       | /null         | /null         | 63          |
-      | 201         |        | /null       | /null         | /null         | 63          |
-      | 21474836470 |        | /null       | /null         | /null         | 63          |
-      | text        |        | /null       | /null         | /null         | 63          |
-      | text        | /null  | /null       | /null         | /null         | 63          |
-      | 10          | -1     | /null       | /null         | /null         | 63          |
-      | text        | 0      | /null       | /null         | /null         | 63          |
-      | 10          | text   | /null       | /null         | /null         | 63          |
+      |             | -1     | /null       | /null         | /null         | 40002       |
+      |             | -1     | /null       | /null         | /null         | 40002       |
+      |             | text   | /null       | /null         | /null         | 40002       |
+      |             | text   | /null       | /null         | /null         | 40002       |
+      | -1          |        | /null       | /null         | /null         | 40002       |
+      | -1          |        | /null       | /null         | /null         | 40002       |
+      | 201         |        | /null       | /null         | /null         | 40002       |
+      | 21474836470 |        | /null       | /null         | /null         | 40002       |
+      | text        |        | /null       | /null         | /null         | 40002       |
+      | text        | /null  | /null       | /null         | /null         | 40002       |
+      | 10          | -1     | /null       | /null         | /null         | 40002       |
+      | text        | 0      | /null       | /null         | /null         | 40002       |
+      | 10          | text   | /null       | /null         | /null         | 40002       |
       #filtering and sorting
-      | 10          | 0      | /null       | location_name | location_name | 64          |
-      | 10          | 0      | /null       | /null         | nonexistent   | 63          |
-      | 10          | 0      | /null       | nonexistent   | /null         | 63          |
-      | 10          | 0      | not_here==  | /null         | /null         | 63          |
-      | 10          | 0      | random==CZ* | /null         | /null         | 63          |
+      | 10          | 0      | /null       | location_name | location_name | 40002       |
+      | 10          | 0      | /null       | /null         | nonexistent   | 40002       |
+      | 10          | 0      | /null       | nonexistent   | /null         | 40002       |
+      | 10          | 0      | not_here==  | /null         | /null         | 40002       |
+      | 10          | 0      | random==CZ* | /null         | /null         | 40002       |
 
   #TODO DP-935 - X-Total-Count header is missing
   Scenario Outline: Filtering list of locations
@@ -120,9 +120,9 @@ Feature: Review locaitons
     #todo DP-1117 - response message for property "null" has wrong message - check here after fix
     Examples:
       | url       | property                             | response_code | custom_code |
-      | /location | 11111111-1111-4111-a111-111111111111 | 404           | 152         |
-      | /location | null                                 | 400           | 63          |
-      | /location | /null                                | 400           | 52          |
+      | /location | 11111111-1111-4111-a111-111111111111 | 404           | 40402       |
+      | /location | null                                 | 400           | 40402       |
+      | /location | /null                                | 400           | 40402       |
 
 
   #/location/<location_id>/properties
@@ -155,25 +155,25 @@ Feature: Review locaitons
     Examples:
       | limit       | cursor | filter      | sort        | sort_desc   | custom_code |
       #limit and cursor
-      | /null       | -1     | /null       | /null       | /null       | 63          |
-      |             | -1     | /null       | /null       | /null       | 63          |
-      | /null       | text   | /null       | /null       | /null       | 63          |
-      |             | text   | /null       | /null       | /null       | 63          |
-      | -1          |        | /null       | /null       | /null       | 63          |
-      | -1          | /null  | /null       | /null       | /null       | 63          |
-      | 201         | /null  | /null       | /null       | /null       | 63          |
-      | 21474836470 | /null  | /null       | /null       | /null       | 63          |
-      | text        |        | /null       | /null       | /null       | 63          |
-      | text        | /null  | /null       | /null       | /null       | 63          |
-      | 10          | -1     | /null       | /null       | /null       | 63          |
-      | text        | 0      | /null       | /null       | /null       | 63          |
-      | 10          | text   | /null       | /null       | /null       | 63          |
+      | /null       | -1     | /null       | /null       | /null       | 40002       |
+      |             | -1     | /null       | /null       | /null       | 40002       |
+      | /null       | text   | /null       | /null       | /null       | 40002       |
+      |             | text   | /null       | /null       | /null       | 40002       |
+      | -1          |        | /null       | /null       | /null       | 40002       |
+      | -1          | /null  | /null       | /null       | /null       | 40002       |
+      | 201         | /null  | /null       | /null       | /null       | 40002       |
+      | 21474836470 | /null  | /null       | /null       | /null       | 40002       |
+      | text        |        | /null       | /null       | /null       | 40002       |
+      | text        | /null  | /null       | /null       | /null       | 40002       |
+      | 10          | -1     | /null       | /null       | /null       | 40002       |
+      | text        | 0      | /null       | /null       | /null       | 40002       |
+      | 10          | text   | /null       | /null       | /null       | 40002       |
       #filtering and sorting
-      | 10          | 0      | /null       | property_id | property_id | 64          |
-      | 10          | 0      | /null       | /null       | nonexistent | 63          |
-      | 10          | 0      | /null       | nonexistent | /null       | 63          |
-      | 10          | 0      | not_here==  | /null       | /null       | 63          |
-      | 10          | 0      | random==CZ* | /null       | /null       | 63          |
+      | 10          | 0      | /null       | property_id | property_id | 40002       |
+      | 10          | 0      | /null       | /null       | nonexistent | 40002       |
+      | 10          | 0      | /null       | nonexistent | /null       | 40002       |
+      | 10          | 0      | not_here==  | /null       | /null       | 40002       |
+      | 10          | 0      | random==CZ* | /null       | /null       | 40002       |
 
   Scenario Outline: Filtering list of location properties
     When List of location properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" for location id "20"

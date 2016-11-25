@@ -37,12 +37,12 @@ Feature: Roles create update delete user property set
     And Custom code is "<custom_code>"
     Examples:
       | json_input_file                                                    | method | module   | url                               | error_code | custom_code |
-      | /messages/identity/roles/create_role_missing_application_id.json   | POST   | identity | /identity/user_property_set_roles | 400        | 53          |
-      | /messages/identity/roles/create_role_missing_role_name.json        | POST   | identity | /identity/user_property_set_roles | 400        | 53          |
-      | /messages/identity/roles/create_role_not_existing_application.json | POST   | identity | /identity/user_property_set_roles | 400        | 63          |
-      | /messages/identity/roles/create_role_not_recognized_field.json     | POST   | identity | /identity/user_property_set_roles | 400        | 56          |
-      | /messages/identity/roles/create_role_not_unique_role_name.json     | POST   | identity | /identity/user_property_set_roles | 400        | 62          |
-      | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/user_property_set_roles | 400        | 51          |
+      | /messages/identity/roles/create_role_missing_application_id.json   | POST   | identity | /identity/user_property_set_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_missing_role_name.json        | POST   | identity | /identity/user_property_set_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_existing_application.json | POST   | identity | /identity/user_property_set_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_recognized_field.json     | POST   | identity | /identity/user_property_set_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_unique_role_name.json     | POST   | identity | /identity/user_property_set_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/user_property_set_roles | 422        | 42201       |
 
 
   @Smoke
@@ -91,5 +91,5 @@ Feature: Roles create update delete user property set
     And Custom code is "<customCode>"
     Examples:
       | applicationId                        | updated_applicationId | roleName    | updated_roleName | updated_roleDescription | responseCode | customCode |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                         | 400          | 62         |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                         | 400          | 63         |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                         | 400          | 40002      |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                         | 400          | 40002      |

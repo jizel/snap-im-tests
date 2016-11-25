@@ -145,23 +145,23 @@ Feature: Applications versions get
 
     Examples:
       | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
-      | /null       | -1     | /null  | /null       | /null       | 400           | 63          |
-      |             | -1     | /null  | /null       | /null       | 400           | 63          |
-      | /null       | text   | /null  | /null       | /null       | 400           | 63          |
-      |             | text   | /null  | /null       | /null       | 400           | 63          |
-      | -1          |        | /null  | /null       | /null       | 400           | 63          |
-      | -1          | /null  | /null  | /null       | /null       | 400           | 63          |
-      | 201         | /null  | /null  | /null       | /null       | 400           | 63          |
-      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 63          |
-      | text        |        | /null  | /null       | /null       | 400           | 63          |
-      | text        | /null  | /null  | /null       | /null       | 400           | 63          |
-      | 10          | -1     | /null  | /null       | /null       | 400           | 63          |
-      | text        | 0      | /null  | /null       | /null       | 400           | 63          |
-      | 10          | text   | /null  | /null       | /null       | 400           | 63          |
-      | 10          | 0      | /null  | description | description | 400           | 64          |
-      | 10          | 0      | /null  | /null       | nonexistent | 400           | 63          |
-      | 10          | 0      | /null  | nonexistent | /null       | 400           | 63          |
-      | 10          | 0      | code== | /null       | /null       | 400           | 63          |
+      | /null       | -1     | /null  | /null       | /null       | 400           | 40002       |
+      |             | -1     | /null  | /null       | /null       | 400           | 40002       |
+      | /null       | text   | /null  | /null       | /null       | 400           | 40002       |
+      |             | text   | /null  | /null       | /null       | 400           | 40002       |
+      | -1          |        | /null  | /null       | /null       | 400           | 40002       |
+      | -1          | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | 201         | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | text        |        | /null  | /null       | /null       | 400           | 40002       |
+      | text        | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | 10          | -1     | /null  | /null       | /null       | 400           | 40002       |
+      | text        | 0      | /null  | /null       | /null       | 400           | 40002       |
+      | 10          | text   | /null  | /null       | /null       | 400           | 40002       |
+      | 10          | 0      | /null  | description | description | 400           | 40002       |
+      | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
+      | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
+      | 10          | 0      | code== | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of application versions
     Given The following applications exist

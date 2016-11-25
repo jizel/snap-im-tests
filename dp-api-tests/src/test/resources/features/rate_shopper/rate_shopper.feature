@@ -6,7 +6,7 @@ Feature: Rate shopper
     When Getting BAR values for a given market for "<propertyId>" since "<since>" until "<until>"
     Then Response code is "400"
     And Content type is "application/json"
-    And Custom code is "52"
+    And Custom code is "40002"
 
     Examples:
       | propertyId                           | since | until |
@@ -69,7 +69,7 @@ Feature: Rate shopper
     When Sending an empty request to "<url>"
     Then Response code is "404"
     And Content type is "application/json"
-    And Custom code is "152"
+    And Custom code is "40402"
 
     Examples:
       | url                                      |
@@ -138,8 +138,8 @@ Feature: Rate shopper
 
     Examples:
       | propertyId                           | CustomCode | ReturnCode |
-      | /null                                | 52         | 400        |
-      | 98000099-9999-4999-a999-999999999999 | 152        | 404        |
+      | /null                                | 40002      | 400        |
+      | 98000099-9999-4999-a999-999999999999 | 40402      | 404        |
 
   Scenario Outline: Getting a list of items
     Given Database is cleaned
@@ -186,19 +186,19 @@ Feature: Rate shopper
 
     Examples:
       | property                             | limit       | cursor | response_code | custom_code |
-      | 99000099-9999-4999-a999-999999999999 | /null       | -1     | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 |             | -1     | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | /null       | text   | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 |             | text   | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | -1          |        | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | -1          | /null  | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | 201         | /null  | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | 21474836470 | /null  | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | text        |        | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | text        | /null  | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | 10          | -1     | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | text        | 0      | 400           | 63          |
-      | 99000099-9999-4999-a999-999999999999 | 10          | text   | 400           | 63          |
+      | 99000099-9999-4999-a999-999999999999 | /null       | -1     | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 |             | -1     | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | /null       | text   | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 |             | text   | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | -1          |        | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | -1          | /null  | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | 201         | /null  | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | 21474836470 | /null  | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | text        |        | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | text        | /null  | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | 10          | -1     | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | text        | 0      | 400           | 40002       |
+      | 99000099-9999-4999-a999-999999999999 | 10          | text   | 400           | 40002       |
 
   Scenario Outline: Given property in future or without fetchDatetime are calculated real time
     Given Database is cleaned

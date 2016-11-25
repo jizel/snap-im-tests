@@ -25,7 +25,7 @@ Feature: facebook posts
   Scenario Outline: Checking error codes for getting list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is 400
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | url                       | limit | cursor | property                             |

@@ -106,14 +106,14 @@ Feature: web_performance
 
     Examples:
       | url                                   | response_code | custom_code | content_type     |
-      | /analytics/visits                     | 400           | 52          | application/json |
-      | /analytics/visits_unique              | 400           | 52          | application/json |
-      | /analytics/revenue                    | 400           | 52          | application/json |
-      | /analytics/conversion_rates           | 400           | 52          | application/json |
-      | /analytics/visits/countries           | 400           | 52          | application/json |
-      | /analytics/visits_unique/countries    | 400           | 52          | application/json |
-      | /analytics/conversion_rates/countries | 400           | 52          | application/json |
-      | /analytics/referrals                  | 400           | 52          | application/json |
+      | /analytics/visits                     | 422           | 42201       | application/json |
+      | /analytics/visits_unique              | 422           | 42201       | application/json |
+      | /analytics/revenue                    | 422           | 42201       | application/json |
+      | /analytics/conversion_rates           | 422           | 42201       | application/json |
+      | /analytics/visits/countries           | 422           | 42201       | application/json |
+      | /analytics/visits_unique/countries    | 422           | 42201       | application/json |
+      | /analytics/conversion_rates/countries | 422           | 42201       | application/json |
+      | /analytics/referrals                  | 422           | 42201       | application/json |
 
   Scenario Outline: Checking non-valid since and until parameters
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
@@ -123,26 +123,26 @@ Feature: web_performance
 
     Examples:
       | url                         | granularity | since | until             | response_code | custom_code |
-      | /analytics/visits           | day         | today | today - 100 days  | 400           | 63          |
-      | /analytics/visits           | week        | today | today - 30 weeks  | 400           | 63          |
-      | /analytics/visits           | month       | today | today - 40 months | 400           | 63          |
+      | /analytics/visits           | day         | today | today - 100 days  | 400           | 40002       |
+      | /analytics/visits           | week        | today | today - 30 weeks  | 400           | 40002       |
+      | /analytics/visits           | month       | today | today - 40 months | 400           | 40002       |
       # this returns 200, case when both dates are in future is not treated yet
-      #| /analytics/visits           | day         | today + 2 days | today + 3 days    | 400           | 63          |
-      | /analytics/visits_unique    | day         | today | today - 100 days  | 400           | 63          |
-      | /analytics/visits_unique    | week        | today | today - 30 weeks  | 400           | 63          |
-      | /analytics/visits_unique    | month       | today | today - 40 months | 400           | 63          |
+      #| /analytics/visits           | day         | today + 2 days | today + 3 days    | 400           | 40002       |
+      | /analytics/visits_unique    | day         | today | today - 100 days  | 400           | 40002       |
+      | /analytics/visits_unique    | week        | today | today - 30 weeks  | 400           | 40002       |
+      | /analytics/visits_unique    | month       | today | today - 40 months | 400           | 40002       |
       # this returns 200, case when both dates are in future is not treated yet
-      #| /analytics/visits_unique    | day         | today + 2 days | today + 3 days    | 200           | 63          |
-      | /analytics/revenue          | day         | today | today - 100 days  | 400           | 63          |
-      | /analytics/revenue          | week        | today | today - 30 weeks  | 400           | 63          |
-      | /analytics/revenue          | month       | today | today - 40 months | 400           | 63          |
+      #| /analytics/visits_unique    | day         | today + 2 days | today + 3 days    | 200           | 40002       |
+      | /analytics/revenue          | day         | today | today - 100 days  | 400           | 40002       |
+      | /analytics/revenue          | week        | today | today - 30 weeks  | 400           | 40002       |
+      | /analytics/revenue          | month       | today | today - 40 months | 400           | 40002       |
       # this returns 200, case when both dates are in future is not treated yet
-      #| /analytics/revenue          | day         | today + 2 days | today + 3 days    | 400           | 63          |
-      | /analytics/conversion_rates | day         | today | today - 100 days  | 400           | 63          |
-      | /analytics/conversion_rates | week        | today | today - 30 weeks  | 400           | 63          |
-      | /analytics/conversion_rates | month       | today | today - 40 months | 400           | 63          |
+      #| /analytics/revenue          | day         | today + 2 days | today + 3 days    | 400           | 40002       |
+      | /analytics/conversion_rates | day         | today | today - 100 days  | 400           | 40002       |
+      | /analytics/conversion_rates | week        | today | today - 30 weeks  | 400           | 40002       |
+      | /analytics/conversion_rates | month       | today | today - 40 months | 400           | 40002       |
       # this returns 200, case when both dates are in future is not treated yet
-      #| /analytics/conversion_rates | day         | today + 2 days | today + 3 days    | 400           | 63          |
+      #| /analytics/conversion_rates | day         | today + 2 days | today + 3 days    | 400           | 40002       |
 
   Scenario Outline: Checking number of values in response for various granularities
     When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
@@ -199,8 +199,8 @@ Feature: web_performance
 
     Examples:
       | metric  | direction  | response_code | custom_code |
-      | invalid | ascending  | 400           | 63          |
-      | invalid | descending | 400           | 63          |
+      | invalid | ascending  | 400           | 40002       |
+      | invalid | descending | 400           | 40002       |
 
   Scenario Outline: Checking ISO country codes
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"

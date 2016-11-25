@@ -24,10 +24,10 @@ Feature: Applications create update delete
 
     Examples:
       | json_input_file                                                                     | method | module   | url                    | error_code | custom_code |
-      | /messages/identity/applications/create_application_missing_application_name.json    | POST   | identity | /identity/applications | 400        | 53          |
-      | /messages/identity/applications/create_application_not_unique_application_name.json | POST   | identity | /identity/applications | 400        | 62          |
-      | /messages/identity/applications/create_application_not_unique_application_id.json   | POST   | identity | /identity/applications | 400        | 62          |
-      | /messages/identity/applications/create_application_wrong_website_value.json         | POST   | identity | /identity/applications | 400        | 59          |
+      | /messages/identity/applications/create_application_missing_application_name.json    | POST   | identity | /identity/applications | 422        | 42201       |
+      | /messages/identity/applications/create_application_not_unique_application_name.json | POST   | identity | /identity/applications | 422        | 42201       |
+      | /messages/identity/applications/create_application_not_unique_application_id.json   | POST   | identity | /identity/applications | 422        | 42201       |
+      | /messages/identity/applications/create_application_wrong_website_value.json         | POST   | identity | /identity/applications | 422        | 42201       |
 
   @Smoke
   Scenario: Deleting application
@@ -70,4 +70,4 @@ Feature: Applications create update delete
       | applicationName  | description | website                    |
       | Updated App Name |             | http://www.snapshot.travel |
     Then Response code is "412"
-    And Custom code is "57"
+    And Custom code is "41202"

@@ -63,8 +63,8 @@ Feature: Review multiproperty single property
 
   Scenario Outline: Checking error codes for analytics data
     When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
-    Then Response code is 400
-    And Custom code is 52
+    Then Response code is 422
+    And Custom code is 42201
     And Body contains entity with attribute "type" value "error"
     And Body contains entity with attribute "message" value "<message>"
 

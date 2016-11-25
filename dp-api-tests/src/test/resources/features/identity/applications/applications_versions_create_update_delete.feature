@@ -31,11 +31,11 @@ Feature: Applications versions create update delete
 
     Examples:
       | json_input_file                                                             | method | module   | url                                                                              | error_code | custom_code |
-      | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 400        | 53          |
-      | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 400        | 53          |
-      | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 400        | 53          |
-      | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 400        | 62          |
-      | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 400        | 62          |
+      | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions | 422        | 42201       |
 
   @Smoke
   Scenario: Deleting application version
@@ -55,7 +55,7 @@ Feature: Applications versions create update delete
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Nonexistent application version for application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
-    Then Response code is "204"
+    Then Response code is "41202"
 
   Scenario Outline: Updating application
     Given The following applications exist
