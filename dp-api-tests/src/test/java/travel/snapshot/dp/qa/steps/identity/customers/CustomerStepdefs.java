@@ -72,8 +72,8 @@ public class CustomerStepdefs {
     @Given("^Relation between property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
     public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
                                                                                                     String customerId, String type, String validFrom, String validTo) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(p, customerId, type, validFrom, validTo);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(property, customerId, type, validFrom, validTo);
     }
 
     @Given("^Relation between user with username \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")

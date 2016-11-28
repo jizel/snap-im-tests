@@ -8,8 +8,8 @@ Feature: Users create update delete
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
 
   Scenario Outline: Creating users
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"

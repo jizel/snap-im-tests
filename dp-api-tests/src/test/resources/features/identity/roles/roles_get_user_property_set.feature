@@ -10,7 +10,7 @@ Feature: Roles get user property set
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |
 
-    Given The following user customer roles exist
+    Given The following roles exist
       | applicationId                        | roleName    | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |

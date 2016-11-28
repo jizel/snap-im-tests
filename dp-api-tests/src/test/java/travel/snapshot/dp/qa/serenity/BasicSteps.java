@@ -335,6 +335,10 @@ public class BasicSteps {
 
     protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
+        String etag = getSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, null).getHeader(HEADER_ETAG);
+        if (isNotBlank(etag)) {
+            requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
         if (queryParams != null) {
             requestSpecification.parameters(queryParams);
         }

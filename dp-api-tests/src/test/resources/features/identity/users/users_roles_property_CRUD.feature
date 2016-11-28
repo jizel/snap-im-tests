@@ -7,13 +7,14 @@ Feature: Users property roles CRUD
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following users exist for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+    Given The following users exist for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | 33e9ddbe-c8f6-44e7-a536-27a0be3e90c3 | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | f5e630d0-dfe2-4466-b7ea-491265a329d2 | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 33e9ddbe-c8f6-44e7-a536-27a0be3e90c3 | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | f5e630d0-dfe2-4466-b7ea-491265a329d2 | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace124 |
+#    Given Default Snapshot user is created for customer "2234fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following properties exist with random address and billing address for user "33e9ddbe-c8f6-44e7-a536-27a0be3e90c3"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1234fd9a-a05d-42d8-8e84-42e904ace123 |

@@ -5,6 +5,7 @@ Feature: User groups roles
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given Default Snapshot user is created for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
@@ -12,14 +13,14 @@ Feature: User groups roles
       | applicationName                       | website                    | applicationId                        |
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Given Switch for user customer role tests
-    Given The following user customer roles exist
+    Given The following roles exist
       | roleId                               | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role1 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists
 
   @Smoke
   Scenario: Create relationship UserGroup-Role
-    Given The following user customer roles exist
+    Given The following roles exist
       | roleId                               | applicationId                        | roleName |
       | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role1 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is created
@@ -55,7 +56,7 @@ Feature: User groups roles
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is not established
 
   Scenario Outline: Get list of userGroup's role - valid
-    Given The following user customer roles exist
+    Given The following roles exist
       | roleId                               | applicationId                        | roleName        |
       | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role1 |
       | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role2 |

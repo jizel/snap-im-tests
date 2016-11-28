@@ -8,12 +8,12 @@ Feature: Customers property sets
       | 55e2cf39-ffb6-4bb8-ad3f-66306c2be124 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
       | 0fdc1123-b242-46a7-8377-f95210df8c66 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     Given The following users exist for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" as primary "false"
-      | userId                               | userType | userName            | firstName | lastName     | email                                | timezone      | culture |
-      | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | defaultSnapshotuser | Default   | SnapshotUser | defaultSnapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userId                               | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
+      | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     #Get token for snapshot user and set it to session (?access_token={token})
-    Given The password of user "defaultSnapshotuser" is "Password01"
-    Given Get token for user "defaultSnapshotuser" with password "Password01"
+    Given The password of user "snapshotuser" is "Password01"
+    Given Get token for user "snapshotuser" with password "Password01"
 
 
   Scenario Outline: getting list of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" on customers side
@@ -123,7 +123,7 @@ Feature: Customers property sets
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 40002       |
 
   Scenario Outline: Filtering list of property sets
-    Given The following property sets exist for customer with id "5e2cf39-ffb6-4bb8-ad3f-66306c2be124"
+    Given The following property sets exist for customer with id "5e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "ae912431-b6aa-4d78-a6d9-f8620ccd9d0b"
       | propertySetName      | propertySetDescription | propertySetType |
       | list_ps1_name        | list_ps1_description   | branch          |
       | list_ps2_name        | list_ps2_description   | branch          |

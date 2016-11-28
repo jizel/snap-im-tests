@@ -1,21 +1,29 @@
 package travel.snapshot.dp.qa.serenity;
 
-import com.google.common.collect.Lists;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.Lists;
 import com.jayway.restassured.response.Response;
 import com.mifmif.common.regex.Generex;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.qa.helpers.FieldType;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.ObjectField;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.ResponseEntry;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,18 +32,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import travel.snapshot.dp.qa.helpers.FieldType;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.helpers.ObjectField;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.ResponseEntry;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * @author konkol
@@ -137,7 +133,7 @@ public class CommonObjectSteps extends BasicSteps {
     @Step
     public void verifyLocationObject() throws IOException {
         Response stored = getSessionResponse();
-        Response current = given().spec(spec).get(stored.header("location"));
+        Response current = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).get(stored.header("location"));
         Assert.assertThat(getJsonNode(current), is(getJsonNode(stored)));
     }
 
@@ -239,7 +235,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restCreateObject(String objectLocation, String json) {
-        return given().spec(spec).basePath(objectLocation)
+        return given().spec(spec).basePath(objectLocation).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(json)
                 .when().post();
     }

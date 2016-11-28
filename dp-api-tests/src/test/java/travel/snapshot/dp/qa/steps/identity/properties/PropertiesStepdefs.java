@@ -7,10 +7,12 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
@@ -27,6 +29,8 @@ public class PropertiesStepdefs {
     private PropertySteps propertySteps;
     @Steps
     private UsersSteps usersSteps;
+    @Steps
+    private CustomerSteps customerSteps;
 
     // --- given ---
 
@@ -42,8 +46,8 @@ public class PropertiesStepdefs {
 
     @Given("^Relation between user with username \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
     public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        propertySteps.relationExistsBetweenUserAndProperty(u, propertyCode);
+        UserDto user = usersSteps.getUserByUsername(username);
+        propertySteps.relationExistsBetweenUserAndProperty(user, propertyCode);
     }
 
     // --- when ---
@@ -173,7 +177,8 @@ public class PropertiesStepdefs {
 
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")
     public void each_customer_is_a_customer_of_property_with_code(String propertyCode) throws Throwable {
-        propertySteps.allCustomersAreCustomersOfProperty(propertyCode);
+        CustomerDto[] allCustomers = customerSteps.listOfCustomersIsGotWith(null, "0", null, null, null).as(CustomerDto[].class);
+        propertySteps.allCustomersAreCustomersOfProperty(allCustomers, propertyCode);
     }
 
     // --- and ---

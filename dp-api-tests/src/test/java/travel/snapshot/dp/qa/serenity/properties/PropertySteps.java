@@ -9,17 +9,19 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
+import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,8 +37,10 @@ public class PropertySteps extends BasicSteps {
     private static final String SERENITY_SESSION__PROPERTIES = "properties";
     private static final String SERENITY_SESSION__CREATED_PROPERTY = "created_property";
     private static final String SERENITY_SESSION__PROPERTY_ID = "property_id";
-
     private static final String BASE_PATH__PROPERTIES = "/identity/properties";
+
+    @Steps
+    private DbUtilsSteps dbSteps;
 
     public PropertySteps() {
         super();
@@ -44,13 +48,13 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void followingPropertiesExist(List<PropertyCreateDto> properties, String userId) {
-        properties.forEach(t -> {
+        properties.forEach(property -> {
             PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
             relation.setUserId(userId);
-            t.setPropertyUserRelationshipDto(relation);
-            t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
+            property.setPropertyUserRelationshipDto(relation);
+            property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
-            Response createResponse = createProperty(t);
+            Response createResponse = createProperty(userId, property);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
             }
@@ -138,7 +142,7 @@ public class PropertySteps extends BasicSteps {
         property.setPropertyUserRelationshipDto(relation);
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
-        Response response = createProperty(property);
+        Response response = createProperty(userId, property);
         setSessionResponse(response);
     }
 
@@ -149,7 +153,7 @@ public class PropertySteps extends BasicSteps {
         property.setPropertyUserRelationshipDto(relation);
         property.setAddress(address);
 
-        Response response = createProperty(property);
+        Response response = createProperty(userId, property);
         setSessionResponse(response);
     }
 
@@ -202,26 +206,22 @@ public class PropertySteps extends BasicSteps {
     /**
      * POST - new property object
      *
-     * @param t property
+     * @param property property
      * @return server response
      */
-    private Response createProperty(PropertyDto property) {
-        return createEntity(property);
+    private Response createProperty(String userId, PropertyDto property) {
+        return createEntityByUser(userId, property);
     }
 
     /**
      * GET - property object by ID
      *
-     * @param id   ID of the property object
+     * @param propertyId ID of the property object
      * @param etag ETag version stamp
      * @return server response
      */
-    private Response getProperty(String id, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (etag != null && !etag.isEmpty()) {
-            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
-        }
-        return requestSpecification.when().get("/{id}", id);
+    private Response getProperty(String propertyId, String etag) {
+        return getEntity(propertyId, etag);
     }
 
     /**
@@ -284,6 +284,11 @@ public class PropertySteps extends BasicSteps {
         return Arrays.asList(properties).stream().findFirst().orElse(null);
     }
 
+    public PropertyDto getPropertyByCodeInternalByUser(String userId, String code) {
+        PropertyDto[] properties = getEntitiesByUser(userId, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null).as(PropertyDto[].class);
+        return Arrays.stream(properties).findFirst().orElse(null);
+    }
+
     /**
      * Parses provided string for predefined prefixes, returning a Java type where applicable.
      *
@@ -325,18 +330,15 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void relationExistsBetweenUserAndProperty(UserDto user, String propertyCode) {
-        PropertyDto p = getPropertyByCodeInternal(propertyCode);
+        PropertyDto property = getPropertyByCodeInternalByUser(user.getUserId(), propertyCode);
 
-        PartnerUserRelationshipDto existingPropertyUser = getUserForProperty(p.getPropertyId(), user.getUserName());
+        PartnerUserRelationshipDto existingPropertyUser = getUserForProperty(property.getPropertyId(), user.getUserId());
         if (existingPropertyUser != null) {
-
-            Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
-            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-                fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
-            }
+            // Delete second level entities does not work for properties/users because the endpoint is not implemented. Using DB delete instead.
+            dbSteps.deletePropertyUserFromDb(user.getUserId(), property.getPropertyId());
         }
-        Response createResponse = addUserToProperty(user.getUserId(), p.getPropertyId());
-        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+        Response createResponse = addUserToProperty(user.getUserId(), property.getPropertyId());
+        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
         }
     }
@@ -345,13 +347,13 @@ public class PropertySteps extends BasicSteps {
         Map<String, Object> propertyUser = new HashMap<>();
         propertyUser.put("user_id", userId);
 
-        return given().spec(spec)
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
                 .body(propertyUser)
                 .when().post("/{propertyId}/users", propertyId);
     }
 
-    private PartnerUserRelationshipDto getUserForProperty(String propertyId, String code) {
-        Response customerUserResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + code, null, null);
+    private PartnerUserRelationshipDto getUserForProperty(String propertyId, String userId) {
+        Response customerUserResponse = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
         return Arrays.asList(customerUserResponse.as(PartnerUserRelationshipDto[].class)).stream().findFirst().orElse(null);
     }
 
@@ -380,7 +382,7 @@ public class PropertySteps extends BasicSteps {
 
     public void userDoesntExistForProperty(UserDto u, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        PartnerUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), u.getUserName());
+        PartnerUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), u.getUserId());
         assertNull("User should not be present in property", userForProperty);
     }
 
@@ -476,11 +478,10 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void allCustomersAreCustomersOfProperty(String propertyCode) {
+    public void allCustomersAreCustomersOfProperty(CustomerDto[] allCustomers, String propertyCode) {
         String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
-        Response response = getSessionResponse();
-        CustomerDto[] customers = response.as(CustomerDto[].class);
-        for (CustomerDto c : customers) {
+        // This is slightly better but still does not work - listOfCustomersIsGotWith does not return list of customers but list of relations and needs to be changed
+        for (CustomerDto c : allCustomers) {
             given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getCustomerId() + "/properties").
                     then().body("property_id", hasItem(propertyID));
         }

@@ -46,9 +46,9 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationsExist(List<ApplicationDto> application) {
-        application.forEach(t -> {
-            Response createResponse = createEntity(t);
+    public void followingApplicationsExist(List<ApplicationDto> applications) {
+        applications.forEach(application -> {
+            Response createResponse = createEntity(application);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Application cannot be created: " + createResponse.asString());
             }

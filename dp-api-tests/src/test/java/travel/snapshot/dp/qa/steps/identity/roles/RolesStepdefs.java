@@ -1,12 +1,10 @@
 package travel.snapshot.dp.qa.steps.identity.roles;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
@@ -122,10 +120,5 @@ public class RolesStepdefs {
     @Then("^There are roles with following names returned in order: (.*)")
     public void There_are_customers_with_following_codes_returned_in_order(List<String> names) throws Throwable {
         roleBaseSteps.roleNamesAreInResponseInOrder(names);
-    }
-
-    @Given("^The following user customer roles exist$")
-    public void theFollowingUserCustomerRolesExist(List<RoleDto> roles) throws Throwable {
-        roleBaseSteps.followingRolesExist(roles);
     }
 }
