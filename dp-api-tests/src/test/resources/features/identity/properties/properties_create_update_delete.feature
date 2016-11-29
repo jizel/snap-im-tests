@@ -245,3 +245,19 @@ Feature: Properties create update delete
       | AU      | TheGreatTasmania | propcode17 | mail17@mail.com | 422           | 42202       |
       | CA      | Yukon region     | propcode18 | mail18@mail.com | 422           | 42202       |
       | CA      | TheGreatYukon    | propcode19 | mail19@mail.com | 422           | 42202       |
+
+  @Bug
+  Scenario: Creating property with same name as previously deleted one - DP-1380
+    Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | propertyId                            | salesforceId | propertyName  | propertyCode  | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |
+      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | sl_id_1      | property_name | property_code | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is 201
+    When Property with code "property_code" is deleted
+    Then Response code is 204
+    Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | propertyId                            | salesforceId | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | sl_id_1      | property_name | property_code | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is 201
+    And Body contains entity with attribute "property_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
+    And Body contains entity with attribute "property_code" value "p1_code"
+    And Body contains entity with attribute "property_name" value "p1_name"

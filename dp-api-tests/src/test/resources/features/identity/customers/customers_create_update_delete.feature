@@ -548,3 +548,19 @@ Feature: Customers create update delete
       | SI      | SI12345678           |
       | SK      | SK1234567890         |
       | HR      | HR12345678901        |
+
+  @Bug
+  Scenario: Creating customer with same name as previously deleted one - DP-1380
+    Given The following customers exist with random address
+      | customerId                           | companyName | email              | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 0002d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | salesforceid_1 | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
+    Then Response code is 201
+    When Customer with customer id "0002d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is 204
+    Given The following customers exist with random address
+      | customerId                           | companyName | email              | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1112d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | salesforceid_1 | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
+    Then Response code is 201
+    And Body contains entity with attribute "customer_id" value "1112d2b2-3836-4207-a705-42bbecf3d881"
+    And Body contains entity with attribute "salesforce_id" value "salesforceid_1"
+    And Body contains entity with attribute "name" value "Company 1"
