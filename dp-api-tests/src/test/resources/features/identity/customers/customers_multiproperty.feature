@@ -28,8 +28,8 @@ Feature: Customers multiproperty
 
     Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" and user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | propertySetName | propertySetDescription | propertySetType |
-      | ps1_name        | ps1_description        | branch          |
-      | ps2_name        | ps2_description        | branch          |
+      | ps1_name        | ps1_description        | brand           |
+      | ps2_name        | ps2_description        | brand           |
 
     Given The following properties exist with random address and billing address for user "3d262796-1ba1-442c-92fb-a95f6a598ffc"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

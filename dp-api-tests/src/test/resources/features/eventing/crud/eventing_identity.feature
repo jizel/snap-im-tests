@@ -273,12 +273,15 @@ Feature: Eventing identity module
     When Customer is created with random address
       | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
+      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given All property sets are deleted for customers with ids: a792d2b2-3836-4207-a705-42bbecf3d881
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When Property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881"
+    When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName   | propertySetDescription | propertySetType |
-      | ps1_event_created | ps1_description        | branch          |
+      | ps1_event_created | ps1_description        | brand           |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "PropertySet"
     And Notification in session operation is "Create"
@@ -290,15 +293,18 @@ Feature: Eventing identity module
     When Customer is created with random address
       | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
+      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-    Given The following property sets exist for Customer with id "event_propset_del_cust"
+    When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName           | propertySetDescription | propertySetType |
-      | event_propset_del_propset | description            | branch          |
+      | event_propset_del_propset | description            | brand           |
 
-    Given Property set with name "event_propset_del_propset" for Customer with id "event_propset_del_cust" is stored in session under key "EVENTING_PROPERTY_SET"
+    Given Property set with name "event_propset_del_propset" for Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is stored in session under key "EVENTING_PROPERTY_SET"
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When Property set with name "event_propset_del_propset" for Customer with id "event_propset_del_cust" is deleted
+    When Property set with name "event_propset_del_propset" for Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "PropertySet"
     And Notification in session operation is "Delete"

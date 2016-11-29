@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.property_sets;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
@@ -48,13 +49,13 @@ public class PropertySetSteps extends BasicSteps {
     // --- steps ---
 
     public void followingPropertySetsExist(List<PropertySetCreateDto> propertySets, String customerId, String userId) {
-        propertySets.forEach(entity -> {
-            entity.setCustomerId(customerId);
+        propertySets.forEach(propertySet -> {
+            propertySet.setCustomerId(customerId);
             PropertySetUserRelationshipDto relation = new PropertySetUserRelationshipDto();
             relation.setUserId(userId);
-            entity.setPropertySetUserRelationshipDto(relation);
+            propertySet.setPropertySetUserRelationshipDto(relation);
 
-            Response resp = createEntityByUser(userId, entity);
+            Response resp = createEntityByUser(userId, propertySet);
             if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + resp.asString());
             }
@@ -68,8 +69,9 @@ public class PropertySetSteps extends BasicSteps {
         relation.setUserId(userId);
         propertySetCreateDto.setPropertySetUserRelationshipDto(relation);
 
-        Response resp = createEntity(propertySetCreateDto);
+        Response resp = createEntityByUser(userId, propertySetCreateDto);
         setSessionResponse(resp);
+        setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET, propertySetCreateDto);
     }
 
 
@@ -307,8 +309,8 @@ public class PropertySetSteps extends BasicSteps {
         PropertySetDto originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY_SET);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
-        given().spec(spec).get(propertyLocation).then()
-                .body("property_set_type", is(originalProperty.getPropertySetType()))
+        given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).get(propertyLocation).then()
+                .body("property_set_type", is(lowerCase(originalProperty.getPropertySetType().toString())))
                 .body("description", is(originalProperty.getPropertySetDescription()))
                 .body("name", is(originalProperty.getPropertySetName()))
                 .body("customer_id", is(originalProperty.getCustomerId()));

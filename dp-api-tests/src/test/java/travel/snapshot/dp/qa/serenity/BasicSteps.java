@@ -225,7 +225,7 @@ public class BasicSteps {
             default:
         }
         String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        Response response = given().spec(spec).basePath(url)
+        Response response = given().spec(spec).basePath(url).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(data)
                 .when().post();
         setSessionResponse(response);

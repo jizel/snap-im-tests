@@ -1,0 +1,13 @@
+{
+
+  "name": "ps3_name",
+  "description": "ps3_description",
+  "parent_property_set_id": null,
+  "property_set_type": "hotel_type",
+  "is_active": null,
+  "property_set_id": null,
+  "property_set_user_relationship": {
+    "is_active": null,
+    "user_id": "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+  }
+}

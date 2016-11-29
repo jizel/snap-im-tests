@@ -25,7 +25,7 @@ Feature: Review multiproperty property set
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
-      | ps1_name        | ps1_description        | branch          |
+      | ps1_name        | ps1_description        | brand           |
 
     Given Get token for user "snapshotUser" with password "Password1"
     Given Set access token from session for customer steps defs
