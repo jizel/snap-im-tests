@@ -17,7 +17,7 @@ Feature: Properties property sets get
   Scenario: Getting properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
-      | ps1_name        | ps1_description        | branch          |
+      | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     When Property set with name "ps1_name" for property with code "p1_code" is got
     Then Response code is "200"
@@ -28,60 +28,60 @@ Feature: Properties property sets get
   Scenario Outline: Getting list of properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
-      | list_ps1_name   | list_ps1_description   | branch          |
-      | list_ps2_name   | list_ps2_description   | branch          |
-      | list_ps3_name   | list_ps3_description   | branch          |
-      | list_ps4_name   | list_ps4_description   | branch          |
-      | list_ps5_name   | list_ps5_description   | branch          |
-      | list_ps6_name   | list_ps6_description   | branch          |
-      | list_ps7_name   | list_ps7_description   | branch          |
-      | list_ps8_name   | list_ps8_description   | branch          |
-      | list_ps9_name   | list_ps9_description   | branch          |
-      | list_ps10_name  | list_ps10_description  | branch          |
-      | list_ps11_name  | list_ps11_description  | branch          |
-      | list_ps12_name  | list_ps12_description  | branch          |
-      | list_ps13_name  | list_ps13_description  | branch          |
-      | list_ps14_name  | list_ps14_description  | branch          |
-      | list_ps15_name  | list_ps15_description  | branch          |
-      | list_ps16_name  | list_ps16_description  | branch          |
-      | list_ps17_name  | list_ps17_description  | branch          |
-      | list_ps18_name  | list_ps18_description  | branch          |
-      | list_ps19_name  | list_ps19_description  | branch          |
-      | list_ps20_name  | list_ps20_description  | branch          |
-      | list_ps21_name  | list_ps21_description  | branch          |
-      | list_ps22_name  | list_ps22_description  | branch          |
-      | list_ps23_name  | list_ps23_description  | branch          |
-      | list_ps24_name  | list_ps24_description  | branch          |
-      | list_ps25_name  | list_ps25_description  | branch          |
-      | list_ps26_name  | list_ps26_description  | branch          |
-      | list_ps27_name  | list_ps27_description  | branch          |
-      | list_ps28_name  | list_ps28_description  | branch          |
-      | list_ps29_name  | list_ps29_description  | branch          |
-      | list_ps30_name  | list_ps30_description  | branch          |
-      | list_ps31_name  | list_ps31_description  | branch          |
-      | list_ps32_name  | list_ps32_description  | branch          |
-      | list_ps33_name  | list_ps33_description  | branch          |
-      | list_ps34_name  | list_ps34_description  | branch          |
-      | list_ps35_name  | list_ps35_description  | branch          |
-      | list_ps36_name  | list_ps36_description  | branch          |
-      | list_ps37_name  | list_ps37_description  | branch          |
-      | list_ps38_name  | list_ps38_description  | branch          |
-      | list_ps39_name  | list_ps39_description  | branch          |
-      | list_ps40_name  | list_ps40_description  | branch          |
-      | list_ps41_name  | list_ps41_description  | branch          |
-      | list_ps42_name  | list_ps42_description  | branch          |
-      | list_ps43_name  | list_ps43_description  | branch          |
-      | list_ps44_name  | list_ps44_description  | branch          |
-      | list_ps45_name  | list_ps45_description  | branch          |
-      | list_ps46_name  | list_ps46_description  | branch          |
-      | list_ps47_name  | list_ps47_description  | branch          |
-      | list_ps48_name  | list_ps48_description  | branch          |
-      | list_ps49_name  | list_ps49_description  | branch          |
-      | list_ps50_name  | list_ps50_description  | branch          |
-      | list_ps51_name  | list_ps51_description  | branch          |
-      | list_ps52_name  | list_ps52_description  | branch          |
-      | list_ps53_name  | list_ps53_description  | branch          |
-      | list_ps54_name  | list_ps54_description  | branch          |
+      | list_ps1_name   | list_ps1_description   | brand           |
+      | list_ps2_name   | list_ps2_description   | brand           |
+      | list_ps3_name   | list_ps3_description   | brand           |
+      | list_ps4_name   | list_ps4_description   | brand           |
+      | list_ps5_name   | list_ps5_description   | brand           |
+      | list_ps6_name   | list_ps6_description   | brand           |
+      | list_ps7_name   | list_ps7_description   | brand           |
+      | list_ps8_name   | list_ps8_description   | brand           |
+      | list_ps9_name   | list_ps9_description   | brand           |
+      | list_ps10_name  | list_ps10_description  | brand           |
+      | list_ps11_name  | list_ps11_description  | brand           |
+      | list_ps12_name  | list_ps12_description  | brand           |
+      | list_ps13_name  | list_ps13_description  | brand           |
+      | list_ps14_name  | list_ps14_description  | brand           |
+      | list_ps15_name  | list_ps15_description  | brand           |
+      | list_ps16_name  | list_ps16_description  | brand           |
+      | list_ps17_name  | list_ps17_description  | brand           |
+      | list_ps18_name  | list_ps18_description  | brand           |
+      | list_ps19_name  | list_ps19_description  | brand           |
+      | list_ps20_name  | list_ps20_description  | brand           |
+      | list_ps21_name  | list_ps21_description  | brand           |
+      | list_ps22_name  | list_ps22_description  | brand           |
+      | list_ps23_name  | list_ps23_description  | brand           |
+      | list_ps24_name  | list_ps24_description  | brand           |
+      | list_ps25_name  | list_ps25_description  | brand           |
+      | list_ps26_name  | list_ps26_description  | brand           |
+      | list_ps27_name  | list_ps27_description  | brand           |
+      | list_ps28_name  | list_ps28_description  | brand           |
+      | list_ps29_name  | list_ps29_description  | brand           |
+      | list_ps30_name  | list_ps30_description  | brand           |
+      | list_ps31_name  | list_ps31_description  | brand           |
+      | list_ps32_name  | list_ps32_description  | brand           |
+      | list_ps33_name  | list_ps33_description  | brand           |
+      | list_ps34_name  | list_ps34_description  | brand           |
+      | list_ps35_name  | list_ps35_description  | brand           |
+      | list_ps36_name  | list_ps36_description  | brand           |
+      | list_ps37_name  | list_ps37_description  | brand           |
+      | list_ps38_name  | list_ps38_description  | brand           |
+      | list_ps39_name  | list_ps39_description  | brand           |
+      | list_ps40_name  | list_ps40_description  | brand           |
+      | list_ps41_name  | list_ps41_description  | brand           |
+      | list_ps42_name  | list_ps42_description  | brand           |
+      | list_ps43_name  | list_ps43_description  | brand           |
+      | list_ps44_name  | list_ps44_description  | brand           |
+      | list_ps45_name  | list_ps45_description  | brand           |
+      | list_ps46_name  | list_ps46_description  | brand           |
+      | list_ps47_name  | list_ps47_description  | brand           |
+      | list_ps48_name  | list_ps48_description  | brand           |
+      | list_ps49_name  | list_ps49_description  | brand           |
+      | list_ps50_name  | list_ps50_description  | brand           |
+      | list_ps51_name  | list_ps51_description  | brand           |
+      | list_ps52_name  | list_ps52_description  | brand           |
+      | list_ps53_name  | list_ps53_description  | brand           |
+      | list_ps54_name  | list_ps54_description  | brand           |
 
     Given Relation between property with code "p1_code" and property set with name "list_ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "p1_code" and property set with name "list_ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
@@ -159,18 +159,18 @@ Feature: Properties property sets get
   Scenario Outline: Filtering list of properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
-      | list_ps1_name   | list_ps1_description   | branch          |
-      | list_ps2_name   | list_ps2_description   | branch          |
-      | list_ps3_name   | list_ps3_description   | branch          |
-      | list_ps4_name   | list_ps4_description   | branch          |
-      | list_ps5_name   | list_ps5_description   | branch          |
-      | list_ps6_name   | list_ps6_description   | branch          |
-      | list_ps7_name   | list_ps7_description   | branch          |
-      | list_ps8_name   | list_ps8_description   | branch          |
-      | list_ps9_name   | list_ps9_description   | branch          |
-      | list_ps10_name  | list_ps10_description  | branch          |
-      | list_ps11_name  | list_ps11_description  | branch          |
-      | list_ps12_name  | list_ps12_description  | branch          |
+      | list_ps1_name   | list_ps1_description   | brand           |
+      | list_ps2_name   | list_ps2_description   | brand           |
+      | list_ps3_name   | list_ps3_description   | brand           |
+      | list_ps4_name   | list_ps4_description   | brand           |
+      | list_ps5_name   | list_ps5_description   | brand           |
+      | list_ps6_name   | list_ps6_description   | brand           |
+      | list_ps7_name   | list_ps7_description   | brand           |
+      | list_ps8_name   | list_ps8_description   | brand           |
+      | list_ps9_name   | list_ps9_description   | brand           |
+      | list_ps10_name  | list_ps10_description  | brand           |
+      | list_ps11_name  | list_ps11_description  | brand           |
+      | list_ps12_name  | list_ps12_description  | brand           |
     Given Relation between property with code "p1_code" and property set with name "list_ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "p1_code" and property set with name "list_ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "p1_code" and property set with name "list_ps3_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
