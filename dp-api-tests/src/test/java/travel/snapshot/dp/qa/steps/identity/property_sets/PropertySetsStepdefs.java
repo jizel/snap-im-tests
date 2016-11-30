@@ -69,9 +69,9 @@ public class PropertySetsStepdefs {
 
     @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
     public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName, String customerId) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         CustomerDto customer= customerSteps.getCustomerById(customerId);
-        propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(p, propertySetName, customer);
+        propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(property, propertySetName, customer);
     }
 
     @When("^The following property set is created for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")

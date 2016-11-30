@@ -19,7 +19,7 @@ Feature: Properties validation
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}   | \w{101}    |
       | /timezone              | String | true     | (America/New_York\|Europe/Prague)                           | UTC+1:00 | UTC+001:00 |
       | /is_demo_property      | Bool   | true     | (true\|false)                                               | /null    |            |
-#      | /is_active             | String | false    | (0\|1)                                                      | x        |            |
+      | /is_active             | String | false    | (true\|false)                                                      | x        |            |
       | /address/address_line1 | String | true     | \w{100}                                                     | /null    | \w{101}    |
       | /address/address_line2 | String | false    | \w{100}                                                     | /null    | \w{101}    |
       | /address/city          | String | true     | \w{50}                                                      | /null    | \w{51}     |
@@ -27,6 +27,7 @@ Feature: Properties validation
       | /address/country       | String | true     | US                                                          | xx       | USA        |
 
   # --- happy path ---
+  Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
 
   @Smoke
   Scenario: Object creation - correct values

@@ -9,7 +9,7 @@ public class DbUtilsSteps {
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
     static final String DELETE_CUSTOMER_USER = "delete  from Customer_User";
-    static final String DELETE_USER_PROPERTY = "delete  from User_Property";
+    static final String DELETE_USER_PROPERTY = "delete  from user_property";
     static final String DELETE_USER_PROPERTYSET = "delete  from User_PropertySet";
     static final String DELETE_PROPERTY_PROPERTYSET = "delete  from Property_PropertySet";
     static final String DELETE_PROPERTY = "delete  from Property";
@@ -30,10 +30,15 @@ public class DbUtilsSteps {
     static final String DELETE_COMMERCIAL_SUBSCRIPTION = "delete from Commercial_Subscription";
     static final String DELETE_CUSTOMER_HIERARCHY_PATH = "delete from customer_hierarchy_path";
     static final String DELETE_PROPERTY_SET_HIERARCHY_PATH = "delete from propertyset_hierarchy_path";
+    static final String DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID = "delete  from user_property where user_id = ? and property_id = ?";
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID, customerId, propertyId);
+    }
+
+    public void deletePropertyUserFromDb(String userId, String propertyId) {
+        dbHelper.identityDb().update(DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID, userId, propertyId);
     }
 
     public void cleanDatabase() {
@@ -60,6 +65,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_API_SUBSCRIPTIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION_VERSIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION);
+        dbHelper.identityDb().update(DELETE_USER_PROPERTY);
     }
 
 

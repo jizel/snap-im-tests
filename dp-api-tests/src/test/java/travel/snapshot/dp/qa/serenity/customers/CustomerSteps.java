@@ -153,7 +153,7 @@ public class CustomerSteps extends BasicSteps {
         customerUser.put("is_primary", Boolean.valueOf(isPrimary));
 
 
-        return given().spec(spec)
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
                 .body(customerUser)
                 .when().post("/{customerId}/users", customerId);
     }
@@ -189,15 +189,15 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfCustomersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
-        setSessionResponse(response);
+    public Response listOfCustomersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
+       return listOfCustomersIsGotByUserWith(DEFAULT_SNAPSHOT_USER_ID,limit, cursor, filter, sort, sortDesc);
     }
 
     @Step
-    public void listOfCustomersIsGotByUserWith(String  userId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public Response listOfCustomersIsGotByUserWith(String  userId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntitiesByUser(userId, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
+        return response;
     }
 
     @Step
@@ -383,24 +383,24 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void relationExistsBetweenUserAndCustomerWithPrimary(UserDto user, String customerId, String isPrimary) {
-        CustomerDto c = getCustomerById(customerId);
+        CustomerDto customer = getCustomerByIdByUser(customerId, user.getUserId());
 
-        CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(c.getCustomerId(), user.getUserName());
+        CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(customer.getCustomerId(), user.getUserId());
         if (existingCustomerUser != null) {
 
-            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
+            Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("CustomerUser cannot be deleted " + deleteResponse.getBody().asString());
             }
         }
-        Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), c.getCustomerId(), isPrimary);
-        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+        Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), customer.getCustomerId(), isPrimary);
+        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerUser cannot be created " + createResponse.getBody().asString());
         }
     }
 
-    private CustomerUserRelationshipDto getUserForCustomer(String customerId, String userName) {
-        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + userName, null, null);
+    private CustomerUserRelationshipDto getUserForCustomer(String customerId, String userId) {
+        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null);
         return Arrays.asList(customerUserResponse.as(CustomerUserRelationshipDto[].class)).stream().findFirst().orElse(null);
     }
 
@@ -479,7 +479,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void userDoesntExistForCustomer(UserDto user, String customerId) {
         CustomerDto customer = getCustomerById(customerId);
-        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(customer.getCustomerId(), user.getUserName());
+        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(customer.getCustomerId(), user.getUserId());
         assertNull("User should not be present in customer", userForCustomer);
     }
 

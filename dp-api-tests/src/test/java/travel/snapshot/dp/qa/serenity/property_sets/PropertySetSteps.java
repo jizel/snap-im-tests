@@ -54,7 +54,7 @@ public class PropertySetSteps extends BasicSteps {
             relation.setUserId(userId);
             entity.setPropertySetUserRelationshipDto(relation);
 
-            Response resp = createEntity(entity);
+            Response resp = createEntityByUser(userId, entity);
             if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + resp.asString());
             }
@@ -252,18 +252,18 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenPropertyAndPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
+    public void relationExistsBetweenPropertyAndPropertySetForCustomer(PropertyDto property, String propertySetName, CustomerDto customer) {
+        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
 
-        PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
+        PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), property.getPropertyId());
         if (existingPropertySetUser != null) {
 
-            Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
+            Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, property.getPropertyId());
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertySetProperty cannot be deleted");
             }
         }
-        Response createResponse = addPropertyToPropertySet(p.getPropertyId(), propertySet.getPropertySetId());
+        Response createResponse = addPropertyToPropertySet(property.getPropertyId(), propertySet.getPropertySetId());
         if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail(String.format("PropertySetProperty cannot be created. Status: %d, %s", createResponse.getStatusCode(), createResponse.asString()));
         }
