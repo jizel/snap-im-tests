@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
 
 import cucumber.api.Transform;
@@ -213,44 +216,32 @@ public class UserStepdefs {
         usersSteps.setUserPasswordByUsername(username, password);
     }
 
-    @When("^Activating user with username \"([^\"]*)\"$")
-    public void activatingUserWithUsername(String username) throws Throwable {
-        usersSteps.activateUser(username);
+    @When("^User with userName \"([^\"]*)\" is activated$")
+    public void userWithCodeIsActivated(String name) {
+        UserDto user = usersSteps.getUserByUsername(name);
+        assertThat(user, is(notNullValue()));
+        usersSteps.setUserIsActive(user.getUserId(), true);
     }
 
-    @When("^Deactivating user with username \"([^\"]*)\"$")
-    public void deactivatingUserWithUsername(String username) throws Throwable {
-        usersSteps.inactivateUser(username);
+    @When("^User with userName \"([^\"]*)\" is inactivated$")
+    public void userWithIdIsInactivated(String name) {
+        UserDto user = usersSteps.getUserByUsername(name);
+        assertThat(user, is(notNullValue()));
+        usersSteps.setUserIsActive(user.getUserId(), false);
     }
 
-    @When("^User with not existing id \"([^\"]*)\" is inactivated$")
-    public void userWithNotExistingIdIsInactivated(String id) throws Throwable {
-        usersSteps.inactivateNotExistingUser(id);
-    }
-
-    @When("^User with not existing id \"([^\"]*)\" is activated$")
-    public void userWithNotExistingIdIsActivated(String id) throws Throwable {
-        usersSteps.activateNotExistingUser(id);
-    }
-
-    @When("^User with id \"([^\"]*)\" is activated$")
-    public void userWithCodeIsActivated(String name) throws Throwable {
-        usersSteps.activateUserWithName(name);
-    }
-
-    @When("^User with id \"([^\"]*)\" is inactivated$")
-    public void userWithIdIsInactivated(String name) throws Throwable {
-        usersSteps.inactivateUserWithName(name);
-    }
-
-    @Then("^User with id \"([^\"]*)\" is active$")
+    @Then("^User with userName \"([^\"]*)\" is active$")
     public void userWithIdIsActive(String name) throws Throwable {
-        usersSteps.isActiveSetTo(true, name);
+        UserDto user = usersSteps.getUserByUsername(name);
+        assertThat(user, is(notNullValue()));
+        assertThat("User is not active!", user.getIsActive(), is(true));
     }
 
-    @Then("^User with id \"([^\"]*)\" is not active$")
+    @Then("^User with userName \"([^\"]*)\" is not active$")
     public void userWithIdIsNotActive(String name) throws Throwable {
-        usersSteps.isActiveSetTo(false, name);
+        UserDto user = usersSteps.getUserByUsername(name);
+        assertThat(user, is(notNullValue()));
+        assertThat("User is active but should be inactive.", user.getIsActive(), is(false));
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and customer id \"([^\"]*)\" is added$")

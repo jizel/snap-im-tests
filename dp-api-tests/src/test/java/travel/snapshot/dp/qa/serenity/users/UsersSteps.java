@@ -1,17 +1,20 @@
 package travel.snapshot.dp.qa.serenity.users;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -107,21 +110,35 @@ public class UsersSteps extends BasicSteps {
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
+//    Delete?
     @Step
     public void updateUserWithUserName(String userName, UserDto updatedUser) throws Throwable {
         UserDto original = getUserByUsername(userName);
         Response originalResponse = getEntity(original.getUserId());
 
-        Map<String, Object> userData = retrieveData(UserDto.class, updatedUser);
+        Map<String, Object> userData = retrieveDataOld(UserDto.class, updatedUser);
 
         Response response = updateEntity(original.getUserId(), userData, originalResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
     @Step
+    public void updateUser(String userId, UserUpdateDto updatedUser) {
+        try {
+            String updatedUserString = retrieveData(updatedUser).toString();
+            assertThat("Empty user update", updatedUserString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
+
+            Response response = updateEntityWithEtag(userId, updatedUserString);
+            setSessionResponse(response);
+        }catch(JsonProcessingException jsonException){
+            fail("Error while converting objetc to JSON: " + jsonException);
+        }
+    }
+
+    @Step
     public void userWithUserNameHasData(String userName, UserDto user) throws Throwable {
-        Map<String, Object> originalData = retrieveData(UserDto.class, getUserByUsername(userName));
-        Map<String, Object> expectedData = retrieveData(UserDto.class, user);
+        Map<String, Object> originalData = retrieveDataOld(UserDto.class, getUserByUsername(userName));
+        Map<String, Object> expectedData = retrieveDataOld(UserDto.class, user);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -137,7 +154,7 @@ public class UsersSteps extends BasicSteps {
     public void updateUserWithUserNameIfUpdatedBefore(String userName, UserDto updatedUser) throws Throwable {
         UserDto original = getUserByUsername(userName);
 
-        Map<String, Object> userData = retrieveData(UserDto.class, updatedUser);
+        Map<String, Object> userData = retrieveDataOld(UserDto.class, updatedUser);
 
         Response response = updateEntity(original.getUserId(), userData, "fake-etag");
         setSessionResponse(response);
@@ -321,53 +338,23 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void activateUserWithName(String username) {
-        UserDto user = getUserByUsername(username);
-        String id = user.getUserId();
-        Response response = activateUser(id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+    public void setUserIsActive(String userId, Boolean isActive){
+        UserUpdateDto userUpdate = new UserCreateDto();
+        userUpdate.setIsActive(isActive);
+        updateUser(userId, userUpdate);
     }
 
     @Step
-    public void inactivateUserWithName(String username) {
-        UserDto user = getUserByUsername(username);
-        String id = user.getUserId();
-        Response response = inactivateUser(id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-    }
-
-    public Response activateUser(String id) {
-        return given().spec(spec).basePath(USERS_PATH)
-                .when().post("/{id}/active", id);
-    }
-
-    public Response inactivateUser(String id) {
-        return given().spec(spec).basePath(USERS_PATH)
-                .when().post("/{id}/inactive", id);
-    }
-
-    public void inactivateNotExistingUser(String id) {
-        Response response = inactivateUser(id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-
-    public void activateNotExistingUser(String id) {
-        Response response = inactivateUser(id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    public Boolean getUserIsActive(String userId){
+        return getUserById(userId).getIsActive();
     }
 
     @Step
-    public void isActiveSetTo(boolean activeFlag, String name) {
-        UserDto user = getUserByUsername(name);
-
-        if (activeFlag) {
-            assertNotNull("user should be returned", user);
-            assertEquals("user should have name=" + name, name, user.getUserName());
-            assertEquals("is_active parameter should be set to 0", Integer.valueOf(1), user.getIsActive());
-        } else {
-            assertNotNull("user should be returned", user);
-            assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), user.getIsActive());
-        }
+    public UserDto getUserById(String userId) {
+        Response response = getEntity(userId);
+        UserDto user = response.as(UserDto.class);
+        setSessionResponse(response);
+        return user;
     }
 
     @Step

@@ -31,7 +31,7 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void followingUserGroupIsCreated(UserGroupDto userGroup) throws JsonProcessingException {
-        JSONObject removeNulls = retrieveDataNew(userGroup);
+        JSONObject removeNulls = retrieveData(userGroup);
         JSONObject getRegexExample = RegexValueConverter.transform(removeNulls);
         Response response = createEntity(getRegexExample.toString());
         setSessionResponse(response);
@@ -63,7 +63,7 @@ public class UserGroupsSteps extends BasicSteps {
         UserGroupUpdateDto userGroupUpdate = new UserGroupUpdateDto();
         userGroupUpdate.setDescription("updatedDescription");
 
-        Response updateResponse = updateEntity(userGroupId, retrieveDataNew(userGroupUpdate).toString(), tempResponse.getHeader(HEADER_ETAG));
+        Response updateResponse = updateEntity(userGroupId, retrieveData(userGroupUpdate).toString(), tempResponse.getHeader(HEADER_ETAG));
 
         Response resp = getEntity(userGroupId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
@@ -134,7 +134,7 @@ public class UserGroupsSteps extends BasicSteps {
     public void updateUserGroup(String userGroupId, UserGroupUpdateDto userGroupUpdateDto) throws JsonProcessingException {
         Response tempResponse = getEntity(userGroupId);
 
-        JSONObject dataForUpdate = retrieveDataNew(userGroupUpdateDto);
+        JSONObject dataForUpdate = retrieveData(userGroupUpdateDto);
 
         Response updateResponse = updateEntity(userGroupId, RegexValueConverter.transform(dataForUpdate).toString(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(updateResponse);
@@ -142,8 +142,8 @@ public class UserGroupsSteps extends BasicSteps {
 
     public void checkUserGroupData(String userGroupId, UserGroupUpdateDto userGroupUpdateDto) throws JsonProcessingException {
         UserGroupDto fromDatabase = getEntity(userGroupId).as(UserGroupDto.class);
-        JSONObject fromDatabaseJson = retrieveDataNew(fromDatabase);
-        JSONObject updatedData = retrieveDataNew(userGroupUpdateDto);
+        JSONObject fromDatabaseJson = retrieveData(fromDatabase);
+        JSONObject updatedData = retrieveData(userGroupUpdateDto);
 
         Iterator<?> userGroupFromDBKeys = fromDatabaseJson.keys();
         Iterator<?> updatedDataKeys = updatedData.keys();
@@ -227,7 +227,7 @@ public class UserGroupsSteps extends BasicSteps {
         UserGroupPropertyRelationshipUpdateDto relation = new UserGroupPropertyRelationshipDto();
         relation.setIsActive(activity);
 
-        JSONObject obj = retrieveDataNew(relation);
+        JSONObject obj = retrieveData(relation);
 
         Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, obj, tempReponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
@@ -238,7 +238,7 @@ public class UserGroupsSteps extends BasicSteps {
         UserGroupPropertySetRelationshipDto relation = new UserGroupPropertySetRelationshipDto();
         relation.setIsActive(b);
 
-        JSONObject obj = retrieveDataNew(relation);
+        JSONObject obj = retrieveData(relation);
 
         Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, obj, tempReponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
@@ -248,7 +248,7 @@ public class UserGroupsSteps extends BasicSteps {
         RoleIdDto roleObject = new RoleIdDto();
         roleObject.setRoleId(roleId);
 
-        JSONObject roleInJson = retrieveDataNew(roleObject);
+        JSONObject roleInJson = retrieveData(roleObject);
 
         Response response = createSecondLevelRelationship(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleInJson.toString());
         setSessionResponse(response);

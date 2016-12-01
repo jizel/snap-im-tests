@@ -5,8 +5,8 @@ Feature: Customers create update delete
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
       | userId                               | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -38,6 +38,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_phone_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
 
+#    TODO: error codes for updating customer
   Scenario Outline: Create foreign customers
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is 201
@@ -97,20 +98,19 @@ Feature: Customers create update delete
     And Custom code is "41202"
 
 
-#  @Smoke
-#  Scenario: Customer is activated
-#    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
-#    Then Response code is "204"
-#    And Body is empty
-#    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is active
-#
-#  #error codes
-#  Scenario: Customer is inactivated
-#    Given Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
-#    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is inactivated
-#    Then Response code is "204"
-#    And Body is empty
-#    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is not active
+  @Smoke
+  Scenario: Customer is activated
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
+    Then Response code is "204"
+    And Body is empty
+    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is active
+
+  Scenario: Customer is inactivated
+    Given Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is inactivated
+    Then Response code is "204"
+    And Body is empty
+    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is not active
 
   Scenario Outline: Validate that customer regions belong to the correct country
     When A customer with following country "<country>", region "<region>", vatId "<vatId>" is created

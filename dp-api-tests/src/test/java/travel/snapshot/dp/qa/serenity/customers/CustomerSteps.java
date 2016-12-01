@@ -3,7 +3,9 @@ package travel.snapshot.dp.qa.serenity.customers;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -109,16 +111,6 @@ public class CustomerSteps extends BasicSteps {
         return from(inputStream).getObject("", CustomerDto.class);
     }
 
-    private Response activateCustomer(String id) {
-        return given().spec(spec)
-                .when().post("/{id}/active", id);
-    }
-
-    private Response inactivateCustomer(String id) {
-        return given().spec(spec)
-                .when().post("/{id}/inactive", id);
-    }
-
     private CustomerPropertyRelationshipDto getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         //TODO add type to query
         setAccessTokenParamFromSession();
@@ -201,19 +193,16 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerWithId(String customerId, CustomerUpdateDto updatedCustomer) throws Throwable {
-        Response tempResponse = getEntity(customerId, null);
+    public void updateCustomer(String customerId, CustomerUpdateDto updatedCustomer) {
+        try {
+            String updatedCustomerString = retrieveData(updatedCustomer).toString();
+            assertThat("Empty customer update", updatedCustomerString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
 
-        ObjectMapper mapper = new ObjectMapper();
-        String customerData = mapper.writeValueAsString(updatedCustomer);
-
-        String s = NullStringObjectValueConverter.transform(customerData).toString();
-        if (s.equalsIgnoreCase("{}")) {
-            fail("Empty update, check parameters!");
+            Response response = updateEntityWithEtag(customerId, updatedCustomerString);
+            setSessionResponse(response);
+        }catch(JsonProcessingException jsonException){
+            fail("Error while converting objetc to JSON: " + jsonException);
         }
-
-        Response response = updateEntity(customerId, s, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
     }
 
     @Step
@@ -225,7 +214,7 @@ public class CustomerSteps extends BasicSteps {
         String customerData = mapper.writeValueAsString(updatedCustomer);
 
         String customerDataString = NullStringObjectValueConverter.transform(customerData).toString();
-        if (customerDataString.equalsIgnoreCase("{}")) {
+        if (customerDataString.equalsIgnoreCase(CURLY_BRACES_EMPTY)) {
             fail("Empty update, check parameters!");
         }
 
@@ -241,20 +230,13 @@ public class CustomerSteps extends BasicSteps {
         }
 
         JSONObject addressJson = new JSONObject();
-        JSONObject regexGenerated = RegexValueConverter.transform(retrieveDataNew(updatedAddress));
+        JSONObject regexGenerated = RegexValueConverter.transform(retrieveData(updatedAddress));
         addressJson.putOpt("address", regexGenerated);
 
         Response response = updateEntity(customerId, addressJson.toString(), temp.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
-    @Step
-    public void activateCustomerWithCode(String code) {
-//        Does not work - to be removed and replaced when testing DP-1319
-        CustomerDto customer = getCustomerById(code);
-        Response response = activateCustomer(customer.getCustomerId());
-        setSessionResponse(response);
-    }
 
     @Step
     public void isActiveSetTo(boolean activeFlag, String code) {
@@ -270,11 +252,15 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void inactivateCustomerWithCode(String code) {
-        //        Does not work - to be removed and replaced when testing DP-1319
-        CustomerDto customer = getCustomerById(code);
-        Response response = inactivateCustomer(customer.getCustomerId());
-        setSessionResponse(response);
+    public void setCustomerIsActive(String customerId, Boolean isActive){
+        CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
+        customerUpdate.setIsActive(isActive);
+        updateCustomer(customerId, customerUpdate);
+    }
+
+    @Step
+    public Boolean getCustomerIsActive(String customerId){
+        return getCustomerById(customerId).getIsActive();
     }
 
     @Step
@@ -311,8 +297,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void customerWithIdHasData(String customerId, String userId, CustomerDto data) throws Throwable {
-        JSONObject customerFromDB = retrieveDataNew(getCustomerByIdByUser(customerId, userId));
-        JSONObject updatedData = retrieveDataNew(data);
+        JSONObject customerFromDB = retrieveData(getCustomerByIdByUser(customerId, userId));
+        JSONObject updatedData = retrieveData(data);
 
         Iterator<?> customerFromDBKeys = customerFromDB.keys();
         Iterator<?> updatedDataKeys = updatedData.keys();
@@ -577,8 +563,8 @@ public class CustomerSteps extends BasicSteps {
         updateData.setNotes("UpdatedNotes");
 
         Response tempResp = getEntity(customerId);
-        Response firstUpdate = updateEntity(customerId, retrieveDataNew(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
-        Response secondUpdate = updateEntity(customerId, retrieveDataNew(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
+        Response firstUpdate = updateEntity(customerId, retrieveData(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
+        Response secondUpdate = updateEntity(customerId, retrieveData(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
         setSessionResponse(secondUpdate);
     }
 

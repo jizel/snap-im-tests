@@ -1,7 +1,8 @@
 @Identity
 Feature: Properties create update delete
 
-  #TODO add etag things to get/update/create
+  # TODO add etag things to get/update/create
+  # TODO: check error codes for creating/updating property
   Background:
     Given Database is cleaned
     Given The following customers exist with random address
@@ -49,16 +50,6 @@ Feature: Properties create update delete
     Then Response code is "204"
     And Body is empty
     And Property with code "p1_code" is not active
-
-  Scenario: Activating non existing properties
-    When Property with non existing property id "11111111-1111-1111-1111-111111111111" is inactivated
-    Then Response code is "404"
-    And Custom code is "40402"
-
-  Scenario: Deactivating non existing properties
-    When Property with non existing property id "11111111-1111-1111-1111-111111111111" is activated
-    Then Response code is "404"
-    And Custom code is "40402"
 
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property

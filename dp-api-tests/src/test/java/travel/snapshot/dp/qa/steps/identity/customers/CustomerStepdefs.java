@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -270,20 +273,18 @@ public class CustomerStepdefs {
         Field field = ReflectionUtils.findField(CustomerBaseDto.class, updatedField);
         field.setAccessible(true);
         field.set(customer, updatedValue);
-        customerSteps.updateCustomerWithId(customerId, customer);
+        customerSteps.updateCustomer(customerId, customer);
     }
 
-    /*@When("^Customer with id \"([^\"]*)\" is activated$")
+    @When("^Customer with id \"([^\"]*)\" is activated$")
     public void customerWithIdIsActivated(String customerId) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        customerSteps.setCustomerIsActive(customerId, true);
     }
 
     @When("^Customer with id \"([^\"]*)\" is inactivated$")
     public void customerWithIdIsInactivated(String customerId) throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
-    }*/
+        customerSteps.setCustomerIsActive(customerId, false);
+    }
 
     @When("Customers commercial subscriptions for customer id \"([^\"]*)\" is got")
     public void Customers_commercial_subscriptions_for_customer_id_is_got(String customerId) {
@@ -389,13 +390,13 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGotWithEtagByUser(customerId, userId);
     }
 
-    /*@Then("^Customer with id \"([^\"]*)\" is active$")
+    @Then("^Customer with id \"([^\"]*)\" is active$")
     public void customerWithIdIsActive(String customerId) throws Throwable {
-        customerSteps.checkCustomerActivity(customerId, true);
+        assertThat("Customer is not active", customerSteps.getCustomerIsActive(customerId), is(true));
     }
 
     @Then("^Customer with id \"([^\"]*)\" is not active$")
     public void customerWithIdIsNotActive(String customerId) throws Throwable {
-        customerSteps.checkCustomerActivity(customerId, false);
-    }*/
+        assertThat("Customer is active but shouldn't be", customerSteps.getCustomerIsActive(customerId), is(false));
+    }
 }

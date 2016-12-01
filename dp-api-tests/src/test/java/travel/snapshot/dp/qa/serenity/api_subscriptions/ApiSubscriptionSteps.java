@@ -104,7 +104,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
             fail("Api subscription with id " + apiSubscriptionId + " not found!");
         }
 
-        JSONObject object = retrieveDataNew(updateData);
+        JSONObject object = retrieveData(updateData);
 
         Response resp = updateEntity(apiSubscriptionId, object.toString(), originalApi.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
