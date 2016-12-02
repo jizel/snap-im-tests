@@ -1,19 +1,17 @@
 package travel.snapshot.dp.qa.steps.configuration.general;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.configuration.ConfigurationSteps;
+
+import java.util.List;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -147,8 +145,8 @@ public class GeneralConfigurationStepdefs {
 
     @Then("^Body contains configurationValue$")
     public void Body_contains_configurationValue(List<ConfigurationRecordDto> configurations) throws Throwable {
-        ConfigurationRecordDto c = configurations.get(0);
-        configurationSteps.bodyContainsConfiguration(null, c.getValue().toString(), c.getType().toString());
+        ConfigurationRecordDto configuration = configurations.get(0);
+        configurationSteps.bodyContainsConfiguration(configuration.getKey(), configuration.getValue().toString(), configuration.getType().toString());
     }
 
     @When("^Configuration with from identifier \"([^\"]*)\" is updated$")

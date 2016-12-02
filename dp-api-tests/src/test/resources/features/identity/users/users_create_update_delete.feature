@@ -7,9 +7,9 @@ Feature: Users create update delete
       | customerId                           | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | snapshot | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
+      | 55529079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot1 | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 66629079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser2 | Snapshot2 | User2    | snapshotUser2@snapshot.travel | Europe/Prague | cs-CZ   |
 
   Scenario Outline: Creating users
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
@@ -145,3 +145,20 @@ Feature: Users create update delete
     Then Response code is 201
     And Body contains entity with attribute "user_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
     And Body contains entity with attribute "user_name" value "snaphostUser1"
+
+  Scenario Outline: Send POST request with empty body to all user endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                   |
+      | identity/users/                                                                                       |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac                                                   |
+#      Fails because of DP-1579
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/password/                                         |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/partners/                                         |
+#  Uncomment when partner tests (create partner) are implemented
+#      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/partners/77729079-48f0-4f00-9bec-e2329a8bdaac     |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/                                        |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/                                       |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/                                    |

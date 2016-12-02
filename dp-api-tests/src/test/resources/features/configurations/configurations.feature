@@ -33,7 +33,7 @@ Feature: Configurations create update delete
   Scenario Outline: Checking error codes for adding configuration key:value
     Given The following configurations exist for configuration type identifier "conf_id_1"
       | key              | value      | type   |
-      | given_test_key_1 | text value | string |
+      | given_test_key_1 | text_value | STRING |
     When Configuration is created for configuration type "conf_id_1"
       | key   | value   | type   |
       | <key> | <value> | <type> |
@@ -243,7 +243,6 @@ Feature: Configurations create update delete
     And Content type is "application/json"
     And There are <returned> configuration types returned
     And There are following configurations returned in order: <expected_identifiers>
-
     Examples:
       | limit | cursor | returned | filter                                   | sort       | sort_desc  | expected_identifiers               |
       | 1     | 0      | 1        | identifier=='filter_conf_id_*'           | identifier |            | filter_conf_id_1                   |
@@ -253,3 +252,13 @@ Feature: Configurations create update delete
       | /null | /null  | 1        | identifier==id_1_filter                  | /null      | /null      | id_1_filter                        |
       | /null | /null  | 1        | identifier=='id_*' and description==spec | identifier | /null      | id_2_filter                        |
       | /null | /null  | 1        | description==spec                        | /null      | /null      | id_2_filter                        |
+
+    Scenario Outline: Send POST request with empty body to all configurations endpoints
+      When Empty POST request is sent to "<url>" on module "configurations"
+      Then Response code is "422"
+      And Custom code is "42201"
+      Examples:
+      | url                              |
+      | configurations/                  |
+      | configurations/conf_id_1         |
+      | configurations/conf_id_1/records |

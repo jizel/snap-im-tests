@@ -132,3 +132,13 @@ Feature: Users customer roles CRUD
       | 5     | 2      | 4        | 6     | name=='user_filter_role_*' | name  |           | user_filter_role_3, user_filter_role_4, user_filter_role_5, user_filter_role_6                     |
       | 5     | 2      | 4        | 6     | name=='user_filter_role_*' |       | name      | user_filter_role_4, user_filter_role_3, user_filter_role_2, user_filter_role_1                     |
       | /null | /null  | 1        | 1     | name=='user_filter_role_6' | /null | /null     | user_filter_role_6                                                                                 |
+
+  Scenario Outline: Send POST request with empty body to all user-customer endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                                                              |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/1234fd9a-a05d-42d8-8e84-42e904ace123                                               |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles                                         |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles/a318fd9a-a05d-42d8-8e84-42e904ace123    |

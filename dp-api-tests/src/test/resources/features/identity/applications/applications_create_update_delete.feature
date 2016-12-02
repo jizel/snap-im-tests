@@ -71,3 +71,23 @@ Feature: Applications create update delete
       | Updated App Name |             | http://www.snapshot.travel |
     Then Response code is "412"
     And Custom code is "41202"
+
+  Scenario Outline: Send POST request with empty body to all applications endpoints
+    When The following applications exist
+      | applicationName            | description               | website                    | applicationId                        |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given Application versions are created for application with id "a318fd9a-a05d-42d8-8e84-42e904ace123"
+      | versionId                            | apiManagerId | versionName | status   | description            |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                                                    |
+      | identity/applications/                                                                                                                 |
+      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123                                                                             |
+      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions                                                        |
+      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions/b595fc9d-f5ca-45e7-a15d-c8a97108d884                   |
+#      Fails because of DP-1583
+      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions                                                    |
+      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions/b595fc9d-f5ca-45e7-a15d-c8a97108d884/api_subscriptions |

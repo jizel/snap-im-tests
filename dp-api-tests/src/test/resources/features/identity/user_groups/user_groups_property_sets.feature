@@ -94,6 +94,16 @@ Feature: User groups property sets
     And Body is empty
     And Relation between user group "922913b0-877c-45f3-b650-df8022608d61" and property set "fb141231-4d8c-4d75-9433-5d01cc665556" is not activate
 
+  Scenario Outline: Send POST request with empty body to all user group-property endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                                |
+#      Failed because of DP-1582
+      | identity/user_groups/922913b0-877c-45f3-b650-df8022608d61/property_sets/fb141231-4d8c-4d75-9433-5d01cc665556       |
+      | identity/user_groups/922913b0-877c-45f3-b650-df8022608d61/property_sets/fb141231-4d8c-4d75-9433-5d01cc665556/roles |
+
 #  TODO: Getting list of relationships, sort, filter, sortdesc
 
 #  TODO: Getting list of relationships, limit, cursor

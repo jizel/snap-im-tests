@@ -92,7 +92,7 @@ public class ConfigurationSteps extends BasicSteps {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
-            switch (type) {
+            switch (type.toLowerCase()) {
                 case "string":
                 case "date":
                 case "datetime": {
@@ -291,14 +291,12 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void followingConfigurationsExist(List<ConfigurationRecordDto> configurations, String identifier) {
-        configurations.forEach(c -> {
-            if (isConfigurationExist(c.getKey(), identifier)) {
-                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, c.getKey());
+        configurations.forEach(configuration -> {
+            if (isConfigurationExist(configuration.getKey(), identifier)) {
+                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, configuration.getKey());
             }
-            Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue().toString(), c.getType().toString());
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Configuration cannot be created");
-            }
+            Response createResponse = createValueForKey(identifier, configuration.getKey(), configuration.getValue().toString(), configuration.getType().toString());
+            assertThat("Configuration cannot be created", createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
         });
         Serenity.setSessionVariable(SESSION_CONFIGURATIONS).to(configurations);
     }

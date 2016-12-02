@@ -205,12 +205,22 @@ public class BasicSteps {
         if (!"POST".equals(method)) {
             throw new Exception("Cannot use this method for other methods than POST");
         }
+        setBaseUriForModule(module);
+        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
+        Response response = given().spec(spec).basePath(url).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .body(data)
+                .when().post();
+        setSessionResponse(response);
+
+    }
+
+    protected void setBaseUriForModule(String module) {
         switch (module) {
             case "identity": {
                 spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
                 break;
             }
-            case "configuration": {
+            case "configurations": {
                 spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));
                 break;
             }
@@ -224,12 +234,6 @@ public class BasicSteps {
             }
             default:
         }
-        String data = getRequestDataFromFile(this.getClass().getResourceAsStream(filename));
-        Response response = given().spec(spec).basePath(url).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .body(data)
-                .when().post();
-        setSessionResponse(response);
-
     }
 
     protected Response getEntity(String id) {
@@ -364,6 +368,29 @@ public class BasicSteps {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    @Step
+    public void sendBlankPost(String url, String module){
+        sendPostWithBody(url,module,"");
+    }
+
+    @Step
+    public void sendPostWithBody(String url, String module, String body){
+        setBaseUriForModule(module);
+        Response response = given().spec(spec).basePath(url).body(body).when().post();
+
+//        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
+        if(response.getStatusCode() == 412){
+            RequestSpecification requestSpecification = given().spec(spec).basePath(url);
+            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get().getHeader(HEADER_ETAG);
+            assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
+            requestSpecification.header(HEADER_IF_MATCH, etag);
+
+            response = requestSpecification.body(body).when().post();
+        }
+
+        setSessionResponse(response);
     }
 
     /**

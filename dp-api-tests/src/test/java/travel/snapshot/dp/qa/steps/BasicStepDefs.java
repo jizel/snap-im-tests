@@ -57,6 +57,11 @@ public class BasicStepDefs {
         basicSteps.useFileForSendDataTo(filename, method, url, module);
     }
 
+    @When("^Empty POST request is sent to \"([^\"]*)\" on module \"([^\"]*)\"$")
+    public void emptyPOSTRequestIsSentToOn(String url, String module) throws Throwable {
+        basicSteps.sendBlankPost(url, module);
+    }
+
     @Then("^Body contains entity with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
     public void Body_contains_entity_with_attribute_value(String atributeName, String value) throws Throwable {
         basicSteps.bodyContainsEntityWith(atributeName, value);
