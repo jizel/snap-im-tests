@@ -9,7 +9,7 @@ public class DbUtilsSteps {
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
     static final String DELETE_CUSTOMER_USER = "delete  from Customer_User";
-    static final String DELETE_USER_PROPERTY = "delete  from user_property";
+    static final String DELETE_USER_PROPERTY = "delete  from User_Property";
     static final String DELETE_USER_PROPERTYSET = "delete  from User_PropertySet";
     static final String DELETE_PROPERTY_PROPERTYSET = "delete  from Property_PropertySet";
     static final String DELETE_PROPERTY = "delete  from Property";
@@ -23,14 +23,14 @@ public class DbUtilsSteps {
     static final String DELETE_API_SUBSCRIPTIONS = "delete  from Api_Subscription";
     static final String DELETE_APPLICATION = "delete from Application";
     static final String DELETE_APPLICATION_VERSIONS = "delete from Version";
-    static final String DELETE_USER_GROUPS = "delete from user_group";
-    static final String DELETE_USER_GROUPS_PROPERTIES = "delete from user_group_property";
-    static final String DELETE_USER_GROUPS_PROPERTYSET = "delete from user_group_property_set";
+    static final String DELETE_USER_GROUPS = "delete from User_Group";
+    static final String DELETE_USER_GROUPS_PROPERTIES = "delete from User_Group_Property";
+    static final String DELETE_USER_GROUPS_PROPERTYSET = "delete from User_Group_Property_Set";
     static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
     static final String DELETE_COMMERCIAL_SUBSCRIPTION = "delete from Commercial_Subscription";
-    static final String DELETE_CUSTOMER_HIERARCHY_PATH = "delete from customer_hierarchy_path";
-    static final String DELETE_PROPERTY_SET_HIERARCHY_PATH = "delete from propertyset_hierarchy_path";
-    static final String DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID = "delete  from user_property where user_id = ? and property_id = ?";
+    static final String DELETE_CUSTOMER_HIERARCHY_PATH = "delete from Customer_Hierarchy_Path";
+    static final String DELETE_PROPERTY_SET_HIERARCHY_PATH = "delete from PropertySet_Hierarchy_Path";
+    static final String DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID = "delete  from User_Property where user_id = ? and property_id = ?";
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
