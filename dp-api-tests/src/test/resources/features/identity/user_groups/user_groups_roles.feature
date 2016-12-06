@@ -32,16 +32,16 @@ Feature: User groups roles
 
   Scenario Outline: Create relationship UserGroup-Role invalid
     When Relation between user group "<userGroupId>" and role "<roleId>" is created
-    Then Response code is 400
+    Then Response code is 422
     And Custom code is <error_code>
     Examples:
       | userGroupId                          | roleId                               | error_code | # note                            |
-      | NotExisting                          | /null                                | 53         | # Empty body, invalid userGroupId |
-      | NotExisting                          | NotExisting                          | 63         | # Not in UUID                     |
-      | NotExisting                          | b7b40d08-de38-4246-bb69-ad39c31c025c | 63         | # UserGroup not found             |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | /null                                | 53         | # Empty body                      |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | NotExisting                          | 63         | # Not valid RoleId                |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | b7b40d08-de38-4246-bb69-ad39c31c025c | 63         | # Role not found                  |
+      | NotExisting                          | /null                                | 422        | # Empty body, invalid userGroupId |
+      | NotExisting                          | NotExisting                          | 422        | # Not in UUID                     |
+      | NotExisting                          | b7b40d08-de38-4246-bb69-ad39c31c025c | 422        | # UserGroup not found             |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | /null                                | 422        | # Empty body                      |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | NotExisting                          | 422        | # Not valid RoleId                |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | b7b40d08-de38-4246-bb69-ad39c31c025c | 422        | # Role not found                  |
 
   Scenario: Delete relationship UserGroup-Role
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted
@@ -99,18 +99,18 @@ Feature: User groups roles
     And Custom code is <error_code>
     Examples:
       | limit | cursor | filter    | sort        | sort_desc   | error_code |
-      | -1    | /null  | /null     | /null       | /null       | 63         |
-      | text  | /null  | /null     | /null       | /null       | 63         |
-      | 9999  | /null  | /null     | /null       | /null       | 63         |
-      | /null | -1     | /null     | /null       | /null       | 63         |
-      | /null | text   | /null     | /null       | /null       | 63         |
-      | /null | /null  | -1        | /null       | /null       | 63         |
-      | /null | /null  | ==        | /null       | /null       | 63         |
-      | /null | /null  | role_id== | /null       | /null       | 63         |
-      | /null | /null  | /null     | -1          | /null       | 63         |
-      | /null | /null  | /null     | 0           | /null       | 63         |
-      | /null | /null  | /null     | nonExistent | /null       | 63         |
-      | /null | /null  | /null     | /null       | -1          | 63         |
-      | /null | /null  | /null     | /null       | 0           | 63         |
-      | /null | /null  | /null     | /null       | nonExistent | 63         |
-      | /null | /null  | /null     | role_id     | role_id     | 64         |
+      | -1    | /null  | /null     | /null       | /null       | 40002      |
+      | text  | /null  | /null     | /null       | /null       | 40002      |
+      | 9999  | /null  | /null     | /null       | /null       | 40002      |
+      | /null | -1     | /null     | /null       | /null       | 40002      |
+      | /null | text   | /null     | /null       | /null       | 40002      |
+      | /null | /null  | -1        | /null       | /null       | 40002      |
+      | /null | /null  | ==        | /null       | /null       | 40002      |
+      | /null | /null  | role_id== | /null       | /null       | 40002      |
+      | /null | /null  | /null     | -1          | /null       | 40002      |
+      | /null | /null  | /null     | 0           | /null       | 40002      |
+      | /null | /null  | /null     | nonExistent | /null       | 40002      |
+      | /null | /null  | /null     | /null       | -1          | 40002      |
+      | /null | /null  | /null     | /null       | 0           | 40002      |
+      | /null | /null  | /null     | /null       | nonExistent | 40002      |
+      | /null | /null  | /null     | role_id     | role_id     | 42202      |

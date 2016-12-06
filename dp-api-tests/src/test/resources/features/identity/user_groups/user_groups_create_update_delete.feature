@@ -78,16 +78,16 @@ Feature: User groups create update delete
     And Custom code is <error_code>
     Examples:
       | userGroupId | customerId                           | name          | isActive | description | response_code | error_code | #note                        |
-      | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 400           | 63         | # UUID format                |
-      | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 400           | 63         | # UUID format                |
-      | /null       | /null                                | /null         | /null    | /null       | 400           | 53         | # customerId is mandatory    |
-      | /null       |                                      | /null         | /null    | /null       | 400           | 53         | # customerId cannot be empty |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null         | /null    | /null       | 400           | 53         | # name is mandatory          |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |               | /null    | /null       | 400           | 61         | # name cannot be empty       |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | \w{256}       | /null    | /null       | 400           | 63         | # too long name              |
-      | /null       | NotExisting                          | userGroupName | /null    | /null       | 400           | 63         | # customerId not in UUID     |
+      | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
+      | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
+      | /null       | /null                                | /null         | /null    | /null       | 422           | 42201      | # customerId is mandatory    |
+      | /null       |                                      | /null         | /null    | /null       | 422           | 42201      | # customerId cannot be empty |
+      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null         | /null    | /null       | 422           | 42201      | # name is mandatory          |
+      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |               | /null    | /null       | 422           | 42201      | # name cannot be empty       |
+      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | \w{256}       | /null    | /null       | 422           | 42201      | # too long name              |
+      | /null       | NotExisting                          | userGroupName | /null    | /null       | 422           | 42201      | # customerId not in UUID     |
       | /null       | 11a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 404           | 40402      | # customerId not found       |
-      | /null       | NotExisting                          | userGroupName | /null    | \w{501}     | 400           | 63         | # too long description       |
+      | /null       | NotExisting                          | userGroupName | /null    | \w{501}     | 422           | 42201      | # too long description       |
 
 
   Scenario Outline: Updating user group with valid data

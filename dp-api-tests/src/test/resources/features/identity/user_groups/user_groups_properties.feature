@@ -47,10 +47,10 @@ Feature: User groups properties
     And Custom code is "<code>"
     Examples:
       | property_id                          | is_active | error_response | code  | #note                         |
-      | NotValidFormat                       | /null     | 400            | 63    | # property_id not in UUID     |
+      | NotValidFormat                       | /null     | 422            | 42201 | # property_id not in UUID     |
       | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | /null     | 422            | 42202 | # notExisting property_id     |
-      |                                      | /null     | 400            | 63    | # property_id cannot be empty |
-      | /null                                | /null     | 400            | 53    | # property_id cannot be empty |
+      |                                      | /null     | 422            | 42201 | # property_id cannot be empty |
+      | /null                                | /null     | 422            | 42201 | # property_id cannot be empty |
 
   Scenario: Delete userGroup-property relationship - valid
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is deleted
@@ -60,8 +60,8 @@ Feature: User groups properties
 
   Scenario Outline: Delete userGroup-property not existent relationship
     When Relation between user group "<userGroupId>" and property "<propertyId>" is deleted
-    Then Response code is 204
-    And Body is empty
+    Then Response code is 412
+    And Body contains entity with attribute "message" value "Precondition failed: ETag not present."
     Examples:
       | userGroupId                          | propertyId                           |
       | notExistent                          | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 |
