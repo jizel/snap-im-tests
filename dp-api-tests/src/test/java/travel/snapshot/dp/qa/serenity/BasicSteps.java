@@ -29,6 +29,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -381,7 +382,7 @@ public class BasicSteps {
         Response response = given().spec(spec).basePath(url).body(body).when().post();
 
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
-        if(response.getStatusCode() == 412){
+        if(response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED){
             RequestSpecification requestSpecification = given().spec(spec).basePath(url);
             String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get().getHeader(HEADER_ETAG);
             assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
