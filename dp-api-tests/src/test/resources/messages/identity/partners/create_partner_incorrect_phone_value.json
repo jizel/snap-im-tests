@@ -1,0 +1,13 @@
+{
+    "company_name": "Partner name test 1",
+    "phone": "+420abc456789",
+    "email": "test1@tenants.biz",
+    "website": "http://www.snapshot.travel",
+    "address": {
+    	"address_line1": "string",
+    	"city": "string",
+    	"zip_code": "string",
+    	"country": "CZ"
+    },
+    "status": "active"
+}

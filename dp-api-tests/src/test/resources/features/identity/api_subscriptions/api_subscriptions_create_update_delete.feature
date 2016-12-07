@@ -3,9 +3,12 @@ Feature: Api subscription create update delete
 
   Background:
     Given Database is cleaned
+    Given The following partner exist
+      | partnerId                            | name         | email                   | website                    |
+      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationId                        | applicationName            | description               | website                    |
-      | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel |
+      | applicationId                        | applicationName            | description               | website                    | partnerId                            | isInternal |
+      | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
       | versionId                            | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
@@ -33,8 +36,8 @@ Feature: Api subscription create update delete
       | versionId                            | apiManagerId | versionName | status   | description            |
       | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | code | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | c2t  | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "2238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -57,8 +60,8 @@ Feature: Api subscription create update delete
   Scenario: Trying to create application subscription with the same versionID
     Given Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is activated
     When Trying to create second api subscription with the same versionID
-    Then Response code is 400
-    And Custom code is 62
+    Then Response code is 409
+    And Custom code is 40902
 
 
   @Smoke
@@ -99,11 +102,11 @@ Feature: Api subscription create update delete
     And Custom code is <customCode>
     Examples:
       | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             | responseCode | customCode | error_note                                                                                           |
-      | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # The value is invalid. Param 'api_subscription_id' is not universally unique identifier (UUID)      |
-      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # The value is invalid. Param 'application_version_id' is not universally unique identifier (UUID)   |
-      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 400          | 63         | # The value is invalid. Param 'commercialSubscriptionId' is not universally unique identifier (UUID) |
-      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 400          | 63         | # The body parameter 'application_version_id' cannot be empty.                                       |
-      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 400          | 63         | # The body parameter 'commercialSubscriptionId' cannot be empty.                                     |
+      | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42201      | # The value is invalid. Param 'api_subscription_id' is not universally unique identifier (UUID)      |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42201      | # The value is invalid. Param 'application_version_id' is not universally unique identifier (UUID)   |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 422          | 42201      | # The value is invalid. Param 'commercialSubscriptionId' is not universally unique identifier (UUID) |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42201      | # The body parameter 'application_version_id' cannot be empty.                                       |
+      | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 422          | 42201      | # The body parameter 'commercialSubscriptionId' cannot be empty.                                     |
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42202      | # Version with identifier 1d491c7d-4c70-4be7-ab47-73f36701bcf4 was not found.                        |
 
   Scenario Outline: Send POST request with empty body to all api subcriptions endpoints

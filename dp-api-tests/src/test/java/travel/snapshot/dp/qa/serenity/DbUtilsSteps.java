@@ -33,6 +33,8 @@ public class DbUtilsSteps {
     static final String DELETE_PROPERTY_SET_HIERARCHY_PATH = "delete from PropertySet_Hierarchy_Path";
     static final String DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID = "delete  from User_Property where user_id = ? and property_id = ?";
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from Crossreferences";
+    static final String DELETE_PARTNER = "delete from Partner";
+
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
@@ -69,8 +71,12 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_APPLICATION_VERSIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
+<<<<<<< ff566035dc106e4252e3ab64ed22c15ebb1217dd
 
         dbHelper.ttiDb().update(DELETE_TTI_CROSSREFERENCES);
+=======
+        dbHelper.identityDb().update(DELETE_PARTNER);
+>>>>>>> DP-1036 Fixed application relations to Partner
     }
 
 

@@ -114,7 +114,7 @@ Feature: Eventing identity module
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     And The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | propertyName | propertyCode    | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | dact_prop_event | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     And Property with code "dact_prop_event" is stored in session under key "EVENTING_PROPERTY"
@@ -141,7 +141,7 @@ Feature: Eventing identity module
     And Notification in session entity_type is "Customer"
 
     And The following properties exist with random address and billing address
-      | salesforceId   | propertyName | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | propertyName | propertyCode        | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -204,13 +204,13 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given Switch for user customer role tests
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId |
+      | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
-      | applicationId                         | roleName            | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123  | event_role_create_1 | optional description 1 |
+      | applicationId                        | roleName            | description            |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | event_role_create_1 | optional description 1 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Create"
@@ -223,13 +223,13 @@ Feature: Eventing identity module
     Given Switch for user customer role tests
 
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId |
+      | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
-      | applicationId                         | roleName            | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123  | event_role_delete   | optional description 1 |
+      | applicationId                        | roleName          | description            |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | event_role_delete | optional description 1 |
     Given Role with name "event_role_delete" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is stored in session under key "EVENTING_ROLE"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
@@ -247,13 +247,13 @@ Feature: Eventing identity module
     Given Switch for user customer role tests
 
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId |
+      | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
-      | applicationId                         | roleName            | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123  | event_role_update   | optional description 1 |
+      | applicationId                        | roleName          | description            |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | event_role_update | optional description 1 |
     Given Role with name "event_role_update" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is stored in session under key "EVENTING_ROLE"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
@@ -274,8 +274,8 @@ Feature: Eventing identity module
       | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
-      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userId                               | userType | userName     | firstName | lastName | email                        | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1 | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given All property sets are deleted for customers with ids: a792d2b2-3836-4207-a705-42bbecf3d881
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
@@ -294,8 +294,8 @@ Feature: Eventing identity module
       | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
-      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userId                               | userType | userName     | firstName | lastName | email                        | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1 | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName           | propertySetDescription | propertySetType |
@@ -311,3 +311,73 @@ Feature: Eventing identity module
     And Notification in session id stands for property set in session on key "EVENTING_PROPERTY_SET"
     And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
 
+  Scenario: Eventing partner created
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given Subscription with name "Test" for topic "Notifications.crud" is created
+    When The following partner exist
+      | name                 | email          | website                    | vatId      | notes        |
+      | Partner company name | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Partner"
+    And Notification in session operation is "Create"
+    And Notification in session id stands for partner with name "Partner company name"
+    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+
+  Scenario: Eventing partner updated
+    Given Partner with name "Partner company name" is deleted
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given Subscription with name "Test" for topic "Notifications.crud" is created
+    Given The following partner exist
+      | name                 | email          | website                    | vatId      | notes        | partnerId                            |
+      | Partner company name | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
+    When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
+      | name | email | website | vatId      | notes |
+      |      |       |         | CZ12345678 |       |
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Partner"
+    # At this moment returns "Create" - needs to be investigated
+    And Notification in session operation is "Update"
+    And Notification in session id stands for partner with name "Partner company name"
+    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+
+  Scenario: Eventing partner deleted
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given Subscription with name "Test" for topic "Notifications.crud" is created
+    Given The following partner exist
+      | name                 | email          | website                    | vatId      | notes        |
+      | Partner company name | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
+    When Partner with name "Company name 1" is deleted
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Partner"
+    # At this moment returns "Create" - needs to be investigated
+    And Notification in session operation is "Delete"
+    And Notification in session id stands for partner with name "Partner company name"
+    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+
+  Scenario: Eventing partner activated
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given Subscription with name "Test" for topic "Notifications.crud" is created
+    Given The following partner exist
+      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
+    When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Partner"
+    # At this moment returns "Create" - needs to be investigated
+    And Notification in session operation is "Activate"
+    And Notification in session id stands for partner with name "Partner company name"
+    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+
+  Scenario: Eventing partner deactivated
+    Given Subscription with name "Test" for topic "Notifications.crud" does not exist
+    Given Subscription with name "Test" for topic "Notifications.crud" is created
+    Given The following partner exist
+      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
+    When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is inactivated
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Partner"
+    # At this moment returns "Create" - needs to be investigated
+    And Notification in session operation is "Deactivate"
+    And Notification in session id stands for partner with name "Partner company name"
+    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
