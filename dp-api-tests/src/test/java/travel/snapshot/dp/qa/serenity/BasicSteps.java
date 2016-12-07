@@ -89,6 +89,7 @@ public class BasicSteps {
     protected static final String HEADER_ETAG = "ETag";
     protected static final String SECOND_LEVEL_OBJECT_APPLICATIONS = "applications";
     protected static final String SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS = "commercial_subscriptions";
+    protected static final String CURLY_BRACES_EMPTY = "{}";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
@@ -267,6 +268,11 @@ public class BasicSteps {
 
     protected Response updateEntity(String entityId, String data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
+    }
+
+    protected Response updateEntityWithEtag(String entityId, String data) {
+        String etag = getEntity(entityId, null).getHeader(HEADER_ETAG);
+        return updateEntity(entityId, data, etag);
     }
 
     protected Response updateEntityByUser(String userId, String entityId, String data, String etag) {
@@ -521,13 +527,13 @@ public class BasicSteps {
         return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
     }
 
-    protected JSONObject retrieveDataNew(Object value) throws JsonProcessingException {
+    protected JSONObject retrieveData(Object value) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String customerData = mapper.writeValueAsString(value);
         return NullStringObjectValueConverter.transform(customerData);
     }
 
-    protected <T> Map<String, Object> retrieveData(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
+    protected <T> Map<String, Object> retrieveDataOld(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
         Map<String, Object> data = new HashMap<>();
         for (PropertyDescriptor descriptor : Introspector.getBeanInfo(c).getPropertyDescriptors()) {
             Method getter = descriptor.getReadMethod();

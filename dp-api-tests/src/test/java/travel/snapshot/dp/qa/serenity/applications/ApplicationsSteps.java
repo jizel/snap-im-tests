@@ -74,7 +74,7 @@ public class ApplicationsSteps extends BasicSteps {
         ApplicationDto original = getApplicationById(applicationId);
         Response tempResponse = getEntity(original.getApplicationId(), null);
 
-        Map<String, Object> applicationData = retrieveData(ApplicationDto.class, applicationUpdates);
+        Map<String, Object> applicationData = retrieveDataOld(ApplicationDto.class, applicationUpdates);
 
         Response response =
                 updateEntity(original.getApplicationId(), applicationData, tempResponse.getHeader(HEADER_ETAG));
@@ -85,7 +85,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void updateApplicationWithIdIfUpdatedBefore(String applicationId, ApplicationDto application) throws Throwable {
         ApplicationDto original = getApplicationById(applicationId);
 
-        Map<String, Object> customerData = retrieveData(ApplicationDto.class, application);
+        Map<String, Object> customerData = retrieveDataOld(ApplicationDto.class, application);
 
         Response response = updateEntity(original.getApplicationId(), customerData, "fake-etag");
         setSessionResponse(response);
@@ -93,8 +93,8 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationWithIdHasData(String applicationId, ApplicationDto applicationData) throws Throwable {
-        Map<String, Object> originalData = retrieveData(ApplicationDto.class, getApplicationById(applicationId));
-        Map<String, Object> expectedData = retrieveData(ApplicationDto.class, applicationData);
+        Map<String, Object> originalData = retrieveDataOld(ApplicationDto.class, getApplicationById(applicationId));
+        Map<String, Object> expectedData = retrieveDataOld(ApplicationDto.class, applicationData);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -254,7 +254,7 @@ public class ApplicationsSteps extends BasicSteps {
         Response tempResponse =
                 getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, original.getVersionId(), null);
 
-        Map<String, Object> applicationVersionData = retrieveData(VersionDto.class, applicationVersionUpdates);
+        Map<String, Object> applicationVersionData = retrieveDataOld(VersionDto.class, applicationVersionUpdates);
 
         Response response = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
                 original.getVersionId(), applicationVersionData, tempResponse.getHeader(HEADER_ETAG));
@@ -265,8 +265,8 @@ public class ApplicationsSteps extends BasicSteps {
     public void applicationVersionWithIdHasData(String appVersionId, String applicationId,
                                                 VersionDto applicationVersion) throws Throwable {
         Map<String, Object> originalData =
-                retrieveData(VersionDto.class, getApplicationVersionById(applicationId, appVersionId));
-        Map<String, Object> expectedData = retrieveData(VersionDto.class, applicationVersion);
+                retrieveDataOld(VersionDto.class, getApplicationVersionById(applicationId, appVersionId));
+        Map<String, Object> expectedData = retrieveDataOld(VersionDto.class, applicationVersion);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -283,7 +283,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void updateApplicationVersionWithInvalidEtag(String appVersionId, String applicationId,
                                                         VersionDto applicationVersion) throws Throwable {
 
-        Map<String, Object> applicationVersionData = retrieveData(VersionDto.class, applicationVersion);
+        Map<String, Object> applicationVersionData = retrieveDataOld(VersionDto.class, applicationVersion);
 
         Response updateResponse = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
                 applicationVersionData, "invalid");

@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -51,11 +55,6 @@ public class PropertiesStepdefs {
     }
 
     // --- when ---
-
-    @When("^Property with code \"([^\"]*)\" exists$")
-    public void Property_with_code_exists(String code) throws Throwable {
-        propertySteps.getPropertyByCode(code);
-    }
 
     @When("^Property with code \"([^\"]*)\" exists with etag$")
     public void Property_with_code_exists_with_etag(String code) throws Throwable {
@@ -206,32 +205,30 @@ public class PropertiesStepdefs {
 
     @When("^Property with code \"([^\"]*)\" is activated$")
     public void property_With_Code_Is_Activated(String code) throws Throwable {
-        propertySteps.activatePropertyWithCode(code);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(code);
+        assertThat(property, is(notNullValue()));
+        propertySteps.setPropertyIsActive(property.getPropertyId(), true);
     }
 
     @When("^Property with code \"([^\"]*)\" is inactivated$")
     public void property_With_Code_Is_Inactivated(String code) throws Throwable {
-        propertySteps.inactivatePropertyWithCode(code);
-    }
-
-    @When("^Property with non existing property id \"([^\"]*)\" is inactivated$")
-    public void property_With_Non_Existing_Property_Id_Is_Inactivated(String id) throws Throwable {
-        propertySteps.inactivateNotExistingProperty(id);
-    }
-
-    @When("^Property with non existing property id \"([^\"]*)\" is activated$")
-    public void property_With_Non_Existing_Property_Id_Is_Activated(String id) throws Throwable {
-        propertySteps.activateNotExistingProperty(id);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(code);
+        assertThat(property, is(notNullValue()));
+        propertySteps.setPropertyIsActive(property.getPropertyId(), false);
     }
 
     @Then("^Property with code \"([^\"]*)\" is active$")
     public void Customer_with_code_is_active(String code) throws Throwable {
-        propertySteps.isActiveSetTo(true, code);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(code);
+        assertThat(property, is(notNullValue()));
+        assertThat("Property is not active!", property.getIsActive(), is(true));
     }
 
     @Then("^Property with code \"([^\"]*)\" is not active$")
     public void Customer_with_code_is_not_active(String code) throws Throwable {
-        propertySteps.isActiveSetTo(false, code);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(code);
+        assertThat(property, is(notNullValue()));
+        assertThat("Property is active but should be inactive!", property.getIsActive(), is(false));
     }
 
     @Then("^Property \"([^\"]*)\" is not assigned to customer \"([^\"]*)\"$")

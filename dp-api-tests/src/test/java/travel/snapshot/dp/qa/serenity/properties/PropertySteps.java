@@ -1,10 +1,13 @@
 package travel.snapshot.dp.qa.serenity.properties;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -16,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
@@ -64,15 +68,6 @@ public class PropertySteps extends BasicSteps {
     @Step
     public void getPropertyByID(String id) {
         Response resp = getProperty(id, null);
-
-        // store to session
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void getPropertyByCode(String code) {
-        PropertyDto customerFromList = getPropertyByCodeInternal(code);
-        Response resp = getProperty(customerFromList.getPropertyId(), null);
 
         // store to session
         setSessionResponse(resp);
@@ -238,9 +233,19 @@ public class PropertySteps extends BasicSteps {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
         return requestSpecification.body(fields).when().post("/{id}", id);
-
     }
 
+    public void updateProperty(String propertyId, PropertyUpdateDto updatedProperty){
+        try {
+            String updatedPropertyString = retrieveData(updatedProperty).toString();
+            assertThat("Empty property update", updatedPropertyString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
+
+            Response response = updateEntityWithEtag(propertyId, updatedPropertyString);
+            setSessionResponse(response);
+        }catch(JsonProcessingException jsonException){
+            fail("Error while converting object to JSON: " + jsonException);
+        }
+    }
     /**
      * DELETE - remove property object
      *
@@ -410,41 +415,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void activatePropertyWithCode(String code) {
-        PropertyDto property = getPropertyByCodeInternal(code);
-        Response response = activateProperty(property.getPropertyId());
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-    }
-
-    @Step
-    public void inactivatePropertyWithCode(String code) {
-        PropertyDto property = getPropertyByCodeInternal(code);
-        Response response = inactivateProperty(property.getPropertyId());
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
-    }
-
-    public Response activateProperty(String id) {
-        return given().spec(spec).basePath(BASE_PATH__PROPERTIES)
-                .when().post("/{id}/active", id);
-    }
-
-    public Response inactivateProperty(String id) {
-        return given().spec(spec).basePath(BASE_PATH__PROPERTIES)
-                .when().post("/{id}/inactive", id);
-    }
-
-    @Step
-    public void isActiveSetTo(boolean activeFlag, String code) {
-        PropertyDto property = getPropertyByCodeInternal(code);
-
-        if (activeFlag) {
-            assertNotNull("Property should be returned", property);
-            assertEquals("Property should have code=" + code, code, property.getPropertyCode());
-            assertEquals("is_active parameter should be set to 0", Integer.valueOf(1), property.getIsActive());
-        } else {
-            assertNotNull("Property should be returned", property);
-            assertEquals("is_active parameter should be set to 0", Integer.valueOf(0), property.getIsActive());
-        }
+    public void setPropertyIsActive(String propertyId, Boolean isActive) {
+        PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
+        propertyUpdate.setIsActive(isActive);
+        updateProperty(propertyId, propertyUpdate);
     }
 
     @Step
@@ -460,16 +434,6 @@ public class PropertySteps extends BasicSteps {
     public void listOfPropertiesPropertySetsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
-    }
-
-    public void inactivateNotExistingProperty(String id) {
-        Response response = inactivateProperty(id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-
-    public void activateNotExistingProperty(String id) {
-        Response response = inactivateProperty(id);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
     public void listOfCustomersIsGotWith(String propertyCode, String limit, String cursor, String filter, String sort, String sortDesc) {

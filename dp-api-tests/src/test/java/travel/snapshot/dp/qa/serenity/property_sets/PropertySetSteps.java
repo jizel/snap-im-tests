@@ -329,7 +329,7 @@ public class PropertySetSteps extends BasicSteps {
             fail("Property set with " + propName + " not found!");
         }
 
-        JSONObject updatePropSet = retrieveDataNew(propertySetUpdateDto);
+        JSONObject updatePropSet = retrieveData(propertySetUpdateDto);
 
         Response tempResp = getEntity(originalPropertySet.getPropertySetId());
         Response resp = updateEntity(originalPropertySet.getPropertySetId(), updatePropSet.toString(), tempResp.getHeader(HEADER_ETAG));
@@ -338,8 +338,8 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void comparePropertySets(String propName, String customerId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
-        JSONObject propertySetFromDb = retrieveDataNew(getPropertySetByNameForCustomer(propName, customerId));
-        JSONObject udpatedData = retrieveDataNew(propertySetUpdateDto);
+        JSONObject propertySetFromDb = retrieveData(getPropertySetByNameForCustomer(propName, customerId));
+        JSONObject udpatedData = retrieveData(propertySetUpdateDto);
 
         Iterator<?> updatedDataKeys = udpatedData.keys();
 
