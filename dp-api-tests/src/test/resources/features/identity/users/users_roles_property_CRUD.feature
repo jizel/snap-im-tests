@@ -16,8 +16,8 @@ Feature: Users property roles CRUD
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace124 |
 #    Given Default Snapshot user is created for customer "2234fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following properties exist with random address and billing address for user "33e9ddbe-c8f6-44e7-a536-27a0be3e90c3"
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
+      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | 842529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
     Given Relation between user with username "default1" and property with code "p1_code" exists
     Given Switch for user property role tests
     Given The following roles exist
@@ -138,3 +138,13 @@ Feature: Users property roles CRUD
       | 5     | 2      | 4        | 6     | name=='user_filter_role_*' | name  |           | user_filter_role_3, user_filter_role_4, user_filter_role_5, user_filter_role_6                     |
       | 5     | 2      | 4        | 6     | name=='user_filter_role_*' |       | name      | user_filter_role_4, user_filter_role_3, user_filter_role_2, user_filter_role_1                     |
       | /null | /null  | 1        | 1     | name=='user_filter_role_6' | /null | /null     | user_filter_role_6                                                                                 |
+
+  Scenario Outline: Send POST request with empty body to all user-property endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                                                            |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/842529dd-481f-430d-b6b6-686fbb687cab                                            |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles                                      |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |

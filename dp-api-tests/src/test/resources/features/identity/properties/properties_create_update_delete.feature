@@ -12,8 +12,8 @@ Feature: Properties create update delete
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      |propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      |999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
   Scenario: Creating property without parent with random address
@@ -261,3 +261,19 @@ Feature: Properties create update delete
     And Body contains entity with attribute "property_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
     And Body contains entity with attribute "property_code" value "p1_code"
     And Body contains entity with attribute "property_name" value "p1_name"
+
+  Scenario Outline: Send POST request with empty body to all properties endpoints
+    When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
+      | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
+    When Property with code "p1_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                        |
+      | identity/properties/                                                                                       |
+      | identity/properties/999e833e-50e8-4854-a233-289f00b54a09                                                   |
+      | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users/                                            |
+#      Fails because of DP-1577
+      | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0|

@@ -564,3 +564,15 @@ Feature: Customers create update delete
     And Body contains entity with attribute "customer_id" value "1112d2b2-3836-4207-a705-42bbecf3d881"
     And Body contains entity with attribute "salesforce_id" value "salesforceid_1"
     And Body contains entity with attribute "name" value "Company 1"
+
+  Scenario Outline: Send POST request with empty body to all configurations endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                |
+      | identity/customers/                                                                                |
+      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881                                            |
+      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/properties                                 |
+      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users                                      |
+      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users/a63edcc6-6830-457c-89b1-7801730bd0ae |

@@ -77,3 +77,13 @@ Feature: Commercial subscription create update delete
     And Body is empty
     And Etag header is present
     And Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is not activate
+
+
+  Scenario Outline: Send POST request with empty body to all commercial subcriptions endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                    |
+      | identity/commercial_subscriptions/                                     |
+      | identity/commercial_subscriptions/8e238f8e-2c9c-4e32-9a63-40474a9728eb |

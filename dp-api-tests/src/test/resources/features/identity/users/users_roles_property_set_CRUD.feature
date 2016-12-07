@@ -12,8 +12,8 @@ Feature: Users property set roles CRUD
       | 2048b11e-eff2-477c-b322-015bbd931e46 | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | e0aa919b-5b55-4f03-99ba-48c9f8fec42d | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "2048b11e-eff2-477c-b322-015bbd931e46"
-      | propertySetName | propertySetDescription | propertySetType |
-      | ps1_name        | ps1_description        | brand           |
+      | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
+      | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace124 |
@@ -138,4 +138,12 @@ Feature: Users property set roles CRUD
       | /null | /null  | 1        | 1     | name=='user_filter_role_6' | /null | /null     | user_filter_role_6                                                                                 |
 
 
-
+  Scenario Outline: Send POST request with empty body to all user-property set endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                                                               |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0                                            |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/roles                                      |
+      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |

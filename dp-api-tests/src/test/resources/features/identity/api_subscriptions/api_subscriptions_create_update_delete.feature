@@ -106,3 +106,11 @@ Feature: Api subscription create update delete
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 400          | 63         | # The body parameter 'commercialSubscriptionId' cannot be empty.                                     |
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42202      | # Version with identifier 1d491c7d-4c70-4be7-ab47-73f36701bcf4 was not found.                        |
 
+  Scenario Outline: Send POST request with empty body to all api subcriptions endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                            |
+      | identity/api_subscriptions/                                     |
+      | identity/api_subscriptions/5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |

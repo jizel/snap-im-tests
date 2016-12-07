@@ -8,7 +8,7 @@ Feature: User groups properties
     Given The following users exist for customer "5be73595-bf57-4b10-8725-dad80531dbc3" as primary "false"
       | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot  | User1    | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
+    Given Default Snapshot user is created for customer "5be73595-bf57-4b10-8725-dad80531dbc3"
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 5be73595-bf57-4b10-8725-dad80531dbc3 | userGroup_1 | false    |
@@ -80,6 +80,16 @@ Feature: User groups properties
     Then Response code is 204
     And Body is empty
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is not activate
+
+  Scenario Outline: Send POST request with empty body to all user group-property endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                             |
+#      Failed because of DP-1580
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/896c2eac-4ef8-45d1-91fc-79a5933a0ed3       |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/896c2eac-4ef8-45d1-91fc-79a5933a0ed3/roles |
 
 #    TODO: Getting list of relationships, sort, filter, sortdesc
 

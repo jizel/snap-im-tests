@@ -32,7 +32,7 @@ Feature: Configurations types create update delete
       | json_data                                                          | method | error_code | custom_code |
       | { "identifier":"", "description":"identifier is empty"}            | POST   | 422        | 42201       |
       | { "description":"identifier is missing"}                           | POST   | 422        | 42201       |
-      | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 422        | 42201       |
+      | { "identifier": "conf_id_1", "description":"duplicate identifier"} | POST   | 409        | 40902       |
 
   @Smoke
   Scenario: Deleting Configuration Type

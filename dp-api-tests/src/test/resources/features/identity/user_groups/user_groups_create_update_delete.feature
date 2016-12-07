@@ -151,3 +151,21 @@ Feature: User groups create update delete
       | /null      | /null    | \w{501}     | 400            | 63         | # long description       |
       | /null      | /null    | \w{2048}    | 400            | 63         | # very long description  |
       | \w{65}     | \w{256}  | \w{501}     | 400            | 63         | # long all params        |
+
+  Scenario Outline: Send POST request with empty body to all user groups endpoints
+    Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"
+      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                  |
+      | identity/user_groups/                                                                                |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c                                            |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/users/                                     |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/                                |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/property_sets/                             |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/roles/                                     |
+#      Fails because of DP-1581
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/users/5d829079-48f0-4f00-9bec-e2329a8bdaac |

@@ -11,8 +11,8 @@ Feature: Property sets create update delete
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Default Snapshot user is created for customer "49ae92d9-2d80-47d9-994b-77f5f598336a"
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertySetName | propertySetDescription | propertySetType |
-      | ps1_name        | ps1_description        | brand           |
+      | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
+      | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 49ae92d9-2d80-47d9-994b-77f5f598336a |
@@ -76,3 +76,16 @@ Feature: Property sets create update delete
       | /messages/identity/property_sets/create_property_set-missing_name.json         | POST   | identity | /identity/property_sets | 422        | 42201       | Semantic validation errors in the request body.                                                                   |
       | /messages/identity/property_sets/create_property_set-missing_customer_id.json  | POST   | identity | /identity/property_sets | 422        | 42201       | Semantic validation errors in the request body.                                                                   |
       | /messages/identity/property_sets/create_property_set-nonexistent_customer.json | POST   | identity | /identity/property_sets | 422        | 42202       | Reference does not exist. The entity Customer with ID 5d829079-48f0-4f00-9bec-e2329a8bdaac cannot be found.       |
+
+  Scenario Outline: Send POST request with empty body to all property set endpoints
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                           |
+      | identity/property_sets/                                                                                       |
+      | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0                                                   |
+      | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/users/                                            |
+#      Fail because of DP-1578
+      | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/users/5d829079-48f0-4f00-9bec-e2329a8bdaac        |
+      | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/properties/                                       |

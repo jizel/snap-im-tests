@@ -93,3 +93,15 @@ Feature: Roles create update delete user property
       | applicationId                        | updated_applicationId | roleName    | updated_roleName | updated_roleDescription | responseCode | customCode |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                         | 400          | 40002      |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                         | 400          | 40002      |
+
+  Scenario Outline: Send POST request with empty body to all user property roles endpoints
+    Given The following roles exist
+      | roleId                               | applicationId                        | roleName    | description            |
+      | 7e0982a4-cab3-47fb-b3ff-3951fa10967c | a318fd9a-a05d-42d8-8e84-42e904ace123 | testPOST1   | optional description 1 |
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                               |
+      | identity/user_property_roles                                      |
+      | identity/user_property_roles/7e0982a4-cab3-47fb-b3ff-3951fa10967c |

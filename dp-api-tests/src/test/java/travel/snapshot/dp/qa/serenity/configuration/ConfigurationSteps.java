@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.serenity.configuration;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
+import lombok.NonNull;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -85,14 +87,14 @@ public class ConfigurationSteps extends BasicSteps {
         return requestSpecification.body(map).when().post("/{id}/records/{key}", identifier, key);
     }
 
-    private JsonNode stringToJsonField(String type, String value) {
+    private JsonNode stringToJsonField(@NonNull String type, String value) {
         if (value == null) {
             return null;
         }
         ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = null;
         try {
-            switch (type) {
+            switch (lowerCase(type)) {
                 case "string":
                 case "date":
                 case "datetime": {
@@ -291,14 +293,12 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void followingConfigurationsExist(List<ConfigurationRecordDto> configurations, String identifier) {
-        configurations.forEach(c -> {
-            if (isConfigurationExist(c.getKey(), identifier)) {
-                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, c.getKey());
+        configurations.forEach(configuration -> {
+            if (isConfigurationExist(configuration.getKey(), identifier)) {
+                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, configuration.getKey());
             }
-            Response createResponse = createValueForKey(identifier, c.getKey(), c.getValue().toString(), c.getType().toString());
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Configuration cannot be created");
-            }
+            Response createResponse = createValueForKey(identifier, configuration.getKey(), configuration.getValue().toString(), configuration.getType().toString());
+            assertThat("Configuration cannot be created", createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
         });
         Serenity.setSessionVariable(SESSION_CONFIGURATIONS).to(configurations);
     }
