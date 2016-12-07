@@ -26,6 +26,7 @@ public class DbUtilsSteps {
     static final String DELETE_USER_GROUPS = "delete from User_Group";
     static final String DELETE_USER_GROUPS_PROPERTIES = "delete from User_Group_Property";
     static final String DELETE_USER_GROUPS_PROPERTYSET = "delete from User_Group_Property_Set";
+    static final String DELETE_USER_GROUPS_USER = "delete from User_Group_User";
     static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
     static final String DELETE_COMMERCIAL_SUBSCRIPTION = "delete from Commercial_Subscription";
     static final String DELETE_CUSTOMER_HIERARCHY_PATH = "delete from Customer_Hierarchy_Path";
@@ -52,6 +53,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_PROPERTY_PROPERTYSET);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTIES);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTYSET);
+        dbHelper.identityDb().update(DELETE_USER_GROUPS_USER);
         dbHelper.identityDb().update(DELETE_PROPERTY);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET);
         dbHelper.identityDb().update(UPDATE_PROPERTY_SET);

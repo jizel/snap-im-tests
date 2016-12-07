@@ -336,23 +336,35 @@ public class BasicSteps {
 
     protected Response createSecondLevelRelationshipByUser(String userId, String firstLevelId, String secondLevelId, Object jsonBody) {
         RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(jsonBody);
-        Response response = requestSpecification.post(String.format("/" + firstLevelId + "/" + secondLevelId));
-        return response;
+        return requestSpecification.post("/" + firstLevelId + "/" + secondLevelId);
     }
 
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
+        return getSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, etag);
+    }
+    protected Response getSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
+        }
+        if (isNotBlank(userId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
+        return deleteSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, queryParams);
+    }
+
+    protected Response deleteSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
         String etag = getSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, null).getHeader(HEADER_ETAG);
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        if (isNotBlank(userId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
         if (queryParams != null) {
             requestSpecification.parameters(queryParams);
@@ -374,9 +386,15 @@ public class BasicSteps {
     }
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
+        return updateSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, object, etag);
+    }
+    protected Response updateSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        if(isNotBlank(userId)){
+            requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }

@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -18,12 +19,17 @@ import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.user_groups.UserGroupsSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vlcek on 5/9/2016.
  */
 public class UserGroupsdefs {
+
+    private static final String USER_ID = "userId";
+    private static final String USER_GROUP_ID = "userGroupId";
 
     @Steps
     private UserGroupsSteps userGroupSteps;
@@ -257,11 +263,91 @@ public class UserGroupsdefs {
         userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroupId, propertySetId, false);
     }
 
+    @Given("^User \"([^\"]*)\" is added to userGroup \"([^\"]*)\"$")
+    public void userIsAddedToUserGroupWithId(String userName, String userGroupName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        userGroupSteps.addUserToUserGroup(ids.get(USER_ID), ids.get(USER_GROUP_ID), true);
+    }
+
+    @Given("^User \"([^\"]*)\" is added to userGroup \"([^\"]*)\" as isActive \"([^\"]*)\"$")
+    public void userIsAddedToUserGroupWithIdAsIsActive(String userName, String userGroupName, Boolean isActive) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        userGroupSteps.addUserToUserGroup(ids.get(USER_ID), ids.get(USER_GROUP_ID), isActive);
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is got$")
+    public void relationBetweenUserGroupAndUserIsGot(String userGroupName, String userName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        userGroupSteps.getUserGroupsUser(ids.get(USER_GROUP_ID), ids.get(USER_ID));
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and user with id \"([^\"]*)\" is created with isActive \"([^\"]*)\"$")
+    public void relationBetweenUserGroupAndUserWithIdIsCreatedWithIsActive(String userGroupName, String userId, Boolean isActive) throws Throwable {
+        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
+        assertThat("UserGroup with name " + userGroupName + " not found. ", userGroup, is(not(nullValue())));
+
+        userGroupSteps.addUserToUserGroup(userId, userGroup.getUserGroupId(), isActive);
+    }
+
+    @When("^User \"([^\"]*)\" is removed from userGroup \"([^\"]*)\"$")
+    public void userIsRemovedFromUserGroup(String userName, String userGroupName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        userGroupSteps.relationshipGroupUserIsDeleted(ids.get(USER_GROUP_ID), ids.get(USER_ID));
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is activated$")
+    public void relationBetweenUserGroupAndUserIsActivated(String userGroupName, String userName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        userGroupSteps.setUserGroupUserActivity(ids.get(USER_GROUP_ID), ids.get(USER_ID), true);
+    }
+
+    @When("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is deactivated$")
+    public void relationBetweenUserGroupAndUserIsDeActivated(String userGroupName, String userName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        userGroupSteps.setUserGroupUserActivity(ids.get(USER_GROUP_ID), ids.get(USER_ID), false);
+    }
+
+    @And("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is active$")
+    public void relationBetweenUserGroupAndUserIsActive(String userGroupName, String userName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        Boolean isActive = userGroupSteps.getUserGroupUserRelationIsActive(ids.get(USER_GROUP_ID), ids.get(USER_ID));
+        assertThat("User is not active", isActive, is(true));
+    }
+
+    @And("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is not active$")
+    public void relationBetweenUserGroupAndUserIsNotActive(String userGroupName, String userName) throws Throwable {
+        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
+
+        Boolean isActive = userGroupSteps.getUserGroupUserRelationIsActive(ids.get(USER_GROUP_ID), ids.get(USER_ID));
+        assertThat("User is not active", isActive, is(false));
+    }
+
     @Given("^The following user group is created by user \"([^\"]*)\"$")
     public void theFollowingUserGroupIsCreatedByUser(String userName, List<UserGroupDto> userGroups) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(userName);
         assertThat("User with username " + userName + " is null. ", user, is(not(nullValue())));
 
         userGroupSteps.followingUserGroupIsCreatedByUser(user.getUserId(), userGroups.get(0));
+    }
+
+//    Help methods
+    private Map<String, String> getNonNullIdsFromNames(String userGroupName, String userName) {
+        UserDto user = usersSteps.getUserByUsername(userName);
+        assertThat("User with username " + userName + " is null. ", user, is(not(nullValue())));
+        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
+        assertThat("UserGroup with name " + userGroupName + " not found. ", user, is(not(nullValue())));
+
+        Map<String, String> userGroupUserIds = new HashMap<>();
+        userGroupUserIds.put(USER_ID, user.getUserId());
+        userGroupUserIds.put(USER_GROUP_ID, userGroup.getUserGroupId());
+
+        return userGroupUserIds;
     }
 }
