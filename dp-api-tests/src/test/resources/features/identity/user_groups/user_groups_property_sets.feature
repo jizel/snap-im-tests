@@ -50,10 +50,10 @@ Feature: User groups property sets
     And Custom code is "<code>"
     Examples:
       | property_set_id                      | is_active | error_response | code  | #note                             |
-      | NotValidFormat                       | /null     | 400            | 63    | # property_set_id not in UUID     |
+      | NotValidFormat                       | /null     | 422            | 42201 | # property_set_id not in UUID     |
       | d11352e6-44ff-45bb-bd51-28f62ca8f33c | /null     | 422            | 42202 | # notExisting property_set_id     |
-      |                                      | /null     | 400            | 63    | # property_set_id cannot be empty |
-      | /null                                | /null     | 400            | 53    | # property_set_id cannot be empty |
+      |                                      | /null     | 422            | 42201 | # property_set_id cannot be empty |
+      | /null                                | /null     | 422            | 42201 | # property_set_id cannot be empty |
 
 
   Scenario: Create duplicate relationship userGroup-propertySet
@@ -71,8 +71,8 @@ Feature: User groups property sets
 
   Scenario Outline: Delete userGroup-propertySet not existent relationship
     When Relation between user group "<userGroupId>" and property set "<propertyId>" is deleted
-    Then Response code is 204
-    And Body is empty
+    Then Response code is 412
+    And Body contains entity with attribute "message" value "Precondition failed: ETag not present."
     Examples:
       | userGroupId                          | propertyId                           |
       | notExistent                          | fb141231-4d8c-4d75-9433-5d01cc665556 |
