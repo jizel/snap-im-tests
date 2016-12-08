@@ -87,7 +87,6 @@ Feature: User groups properties
     And Custom code is "42201"
     Examples:
       | url                                                                                                             |
-#      Failed because of DP-1580
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/896c2eac-4ef8-45d1-91fc-79a5933a0ed3       |
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/896c2eac-4ef8-45d1-91fc-79a5933a0ed3/roles |
 

@@ -275,7 +275,7 @@ public class UserGroupsSteps extends BasicSteps {
         UserGroupUserRelationshipUpdateDto relation = new UserGroupUserRelationshipUpdateDto();
         relation.setIsActive(isActive);
 
-        JSONObject jsonRelation = retrieveDataNew(relation);
+        JSONObject jsonRelation = retrieveData(relation);
 
         Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, jsonRelation, etag);
         setSessionResponse(resp);

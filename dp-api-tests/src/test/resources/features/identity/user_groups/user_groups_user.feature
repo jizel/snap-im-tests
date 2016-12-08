@@ -33,7 +33,7 @@ Feature: User groups user relationship feature
     And Body contains entity with attribute "is_active" value "false"
 
   @Smoke
-  Scenario: Getting exiting relationship between user group and user
+  Scenario: Getting existing relationship between user group and user
     Given User "snapshotUser1" is added to userGroup "userGroup_1"
     When Relation between user group "userGroup_1" and user "snapshotUser1" is got
     Then Response code is 200
@@ -124,3 +124,15 @@ Feature: User groups user relationship feature
     And Custom code is 40402
 #    Use correct msg when DP-1581 is fixed and it's clear what msg should be used
     And Body contains entity with attribute "message" value "Current msg is wrong - DP-1581"
+
+  Scenario Outline: Send POST request with empty body to all user groups endpoints
+    Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"
+      | userId                               | userType | userName  | firstName | lastName | email                | timezone      | culture |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapUser1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given User "snapUser1" is added to userGroup "userGroup_1"
+    When Empty POST request is sent to "<url>" on module "identity"
+    Then Response code is "422"
+    And Custom code is "42201"
+    Examples:
+      | url                                                                                                  |
+      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/users/5d829079-48f0-4f00-9bec-e2329a8bdaac |

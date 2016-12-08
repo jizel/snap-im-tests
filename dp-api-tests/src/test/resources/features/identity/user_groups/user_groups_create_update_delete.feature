@@ -167,5 +167,3 @@ Feature: User groups create update delete
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/                                |
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/property_sets/                             |
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/roles/                                     |
-#      Fails because of DP-1581
-      | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/users/5d829079-48f0-4f00-9bec-e2329a8bdaac |
