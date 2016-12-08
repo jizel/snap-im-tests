@@ -12,6 +12,8 @@ import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -193,6 +195,15 @@ public class UserGroupsSteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
+    public void addUserToUserGroup(String userId, String userGroupId, Boolean isActive) {
+        UserGroupUserRelationshipDto relation = new UserGroupUserRelationshipDto();
+        relation.setUserId(userId);
+        relation.setIsActive(isActive);
+
+        Response resp = createSecondLevelRelationship(userGroupId, SECOND_LEVEL_OBJECT_USERS, relation);
+        setSessionResponse(resp);
+    }
+
     public void getUserGroupsProperty(String userGroupId, String propertyId) {
         Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(resp);
@@ -203,6 +214,11 @@ public class UserGroupsSteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
+    public void getUserGroupsUser(String userGroupId, String userId){
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        setSessionResponse(resp);
+    }
+
     public void relationshipGroupPropertyIsDeleted(String userGroupId, String propertyId) {
         Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         setSessionResponse(resp);
@@ -210,6 +226,11 @@ public class UserGroupsSteps extends BasicSteps {
 
     public void relationshipGroupPropertySetIsDeleted(String userGroupId, String propertySetId) {
         Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        setSessionResponse(resp);
+    }
+
+    public void relationshipGroupUserIsDeleted(String userGroupId, String userId) {
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
         setSessionResponse(resp);
     }
 
@@ -246,6 +267,17 @@ public class UserGroupsSteps extends BasicSteps {
         JSONObject obj = retrieveData(relation);
 
         Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, obj, tempReponse.getHeader(HEADER_ETAG));
+        setSessionResponse(resp);
+    }
+
+    public void setUserGroupUserActivity(String userGroupId, String userId, Boolean isActive) throws JsonProcessingException {
+        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
+        UserGroupUserRelationshipUpdateDto relation = new UserGroupUserRelationshipUpdateDto();
+        relation.setIsActive(isActive);
+
+        JSONObject jsonRelation = retrieveDataNew(relation);
+
+        Response resp = updateSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, jsonRelation, etag);
         setSessionResponse(resp);
     }
 
@@ -286,5 +318,15 @@ public class UserGroupsSteps extends BasicSteps {
     public void checkuserGroupPropertySetRelationActivity(String userGroupId, String propertySetId, boolean b) {
         UserGroupPropertySetRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null).as(UserGroupPropertySetRelationshipDto.class);
         assertEquals(relationship.getIsActive(), b);
+    }
+
+    public Boolean getUserGroupUserRelationIsActive(String userGroupId, String userId){
+        UserGroupUserRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null).as(UserGroupUserRelationshipDto.class);
+        return relationship.getIsActive();
+    }
+
+    public UserGroupDto getUserGroupByName(String userGroupName) {
+        UserGroupDto[] userGroups = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "name==" + userGroupName, null, null).as(UserGroupDto[].class);
+        return Arrays.stream(userGroups).findFirst().orElse(null);
     }
 }
