@@ -274,7 +274,7 @@ public class PropertySetSteps extends BasicSteps {
     private Response addPropertyToPropertySet(String propertyId, String propertySetId) {
         Map<String, Object> propertySetProperty = new HashMap<>();
         propertySetProperty.put("property_id", propertyId);
-        return given().spec(spec)
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(propertySetProperty)
                 .when().post("/{propertySetId}/properties", propertySetId);
     }

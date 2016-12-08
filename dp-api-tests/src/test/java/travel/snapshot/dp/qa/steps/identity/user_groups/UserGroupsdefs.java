@@ -1,18 +1,24 @@
 package travel.snapshot.dp.qa.steps.identity.user_groups;
 
-import net.thucydides.core.annotations.Steps;
-
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.RoleIdDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.user_groups.UserGroupsSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
+
+import java.util.List;
 
 /**
  * Created by vlcek on 5/9/2016.
@@ -21,6 +27,9 @@ public class UserGroupsdefs {
 
     @Steps
     private UserGroupsSteps userGroupSteps;
+
+    @Steps
+    private UsersSteps usersSteps;
 
     // ------------------------- GIVEN ------------------------------
 
@@ -246,5 +255,13 @@ public class UserGroupsdefs {
     @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is not activate$")
     public void relationBetweenUserGroupAndPropertySetIsNotActivate(String userGroupId, String propertySetId) throws Throwable {
         userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroupId, propertySetId, false);
+    }
+
+    @Given("^The following user group is created by user \"([^\"]*)\"$")
+    public void theFollowingUserGroupIsCreatedByUser(String userName, List<UserGroupDto> userGroups) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(userName);
+        assertThat("User with username " + userName + " is null. ", user, is(not(nullValue())));
+
+        userGroupSteps.followingUserGroupIsCreatedByUser(user.getUserId(), userGroups.get(0));
     }
 }
