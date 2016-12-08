@@ -37,10 +37,15 @@ public class UserGroupsSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void followingUserGroupsExist(List<UserGroupDto> user_groups) {
-        user_groups.forEach(ug ->
+    public void followingUserGroupIsCreatedByUser(String userId, UserGroupDto userGroup) {
+        Response createResponse = createEntityByUser(userId, userGroup);
+        setSessionResponse(createResponse);
+    }
+
+    public void followingUserGroupsExist(List<UserGroupDto> userGroups) {
+        userGroups.forEach(userGroup ->
         {
-            Response createResponse = createEntity(ug);
+            Response createResponse = createEntity(userGroup);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("User group cannot be created: " + createResponse.getStatusCode() + " " + createResponse.getBody().asString());
             }
