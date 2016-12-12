@@ -67,6 +67,11 @@ public class BasicStepDefs {
         basicSteps.bodyContainsEntityWith(atributeName, value);
     }
 
+    @Then("^Body contains entity with attribute \"([^\"]*)\" and integer value (\\d+)$")
+    public void Body_contains_entity_with_attribute_value(String atributeName, Integer value) throws Throwable {
+        basicSteps.bodyContainsEntityWith(atributeName, value);
+    }
+
     @Then("^Body contains entity with attribute \"([^\"]*)\"$")
     public void Body_contains_entity_with_attribute(String atributeName) throws Throwable {
         basicSteps.bodyContainsEntityWith(atributeName);

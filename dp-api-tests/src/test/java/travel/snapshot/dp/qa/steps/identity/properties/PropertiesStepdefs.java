@@ -16,6 +16,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -79,9 +80,9 @@ public class PropertiesStepdefs {
 
     // --- when ---
 
-    @When("^Property with code \"([^\"]*)\" exists with etag$")
+    @When("^Property with code \"([^\"]*)\" is requested$")
     public void Property_with_code_exists_with_etag(String code) throws Throwable {
-        propertySteps.getPropertyByCodeUsingEtag(code);
+        propertySteps.getPropertyByCodeInternal(code);
     }
 
     @When("^Property with code \"([^\"]*)\" exists for etag, forced new etag through update$")
@@ -311,6 +312,25 @@ public class PropertiesStepdefs {
         PropertyUserRelationshipDto userPropertyRelation = propertySteps.getUserForProperty(ids.get(PROPERTY_ID), ids.get(USER_ID));
         assertThat(userPropertyRelation, is(notNullValue()));
         assertThat(userPropertyRelation.getIsActive(), is(isActive));
+    }
+
+    @When("^Add ttiId to booking.com id \"([^\"]*)\" mapping to property with code \"([^\"]*)\"$")
+    public void addTtiIdAndBookingComIdMappingToPropertyWithCode(Integer bookingComId, String propertyCode) throws Throwable {
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        assertThat(property, is(notNullValue()));
+
+        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
+        ttiCrossreference.setCode(bookingComId);
+        propertySteps.assignTtiToProperty(property.getPropertyId(), ttiCrossreference);
+    }
+
+    @When("^Add ttiId to booking.com id mapping to property with code \"([^\"]*)\" without booking.com code$")
+    public void addTtiIdToBookingComIdMappingToPropertyWithCodeWithoutCode(String propertyCode) throws Throwable {
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        assertThat(property, is(notNullValue()));
+
+        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
+        propertySteps.assignTtiToProperty(property.getPropertyId(), ttiCrossreference);
     }
 
     // TODO reuse existing code

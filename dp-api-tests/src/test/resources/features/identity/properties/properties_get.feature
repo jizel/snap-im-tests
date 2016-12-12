@@ -16,7 +16,7 @@ Feature: Properties get
 
   @Smoke
   Scenario: Getting property
-    When Property with code "p1_code" exists
+    When Property with code "p1_code" is requested
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -32,7 +32,7 @@ Feature: Properties get
 
 
   Scenario: Getting property with etag
-    When Property with code "p1_code" exists with etag
+    When Property with code "p1_code" is requested
     Then Response code is "304"
     And Body is empty
 
