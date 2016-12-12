@@ -146,8 +146,6 @@ Feature: Users create update delete
       | url                                                                                                   |
       | identity/users/                                                                                       |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac                                                   |
-#      Fails because of DP-1579
-      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/password/                                         |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/partners/                                         |
 #  Uncomment when partner tests (create partner) are implemented
 #      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/partners/77729079-48f0-4f00-9bec-e2329a8bdaac     |

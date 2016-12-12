@@ -100,7 +100,6 @@ Feature: User groups property sets
     And Custom code is "42201"
     Examples:
       | url                                                                                                                |
-#      Failed because of DP-1582
       | identity/user_groups/922913b0-877c-45f3-b650-df8022608d61/property_sets/fb141231-4d8c-4d75-9433-5d01cc665556       |
       | identity/user_groups/922913b0-877c-45f3-b650-df8022608d61/property_sets/fb141231-4d8c-4d75-9433-5d01cc665556/roles |
 
