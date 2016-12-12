@@ -41,8 +41,11 @@ Feature: Review
     Examples:
       | url                                         | granularity | property                             | since      | until      |
       | /analytics/                                 | dd          | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
+      | /analytics/                                 |             | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
       | /analytics/rating_score                     | MONTHS      | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
+      | /analytics/rating_score                     |             | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
       | /analytics/travellers/                      | W33K        | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
+      | /analytics/travellers/                      |             | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
       | /analytics/travellers/overall_bubble_rating | WEEKS       | 99000199-9999-4999-a999-999999999999 | 2015-10-03 | 2015-12-03 |
       | /analytics/travellers/number_of_reviews     | m0nth       | 99000199-9999-4999-a999-999999999999 | 2015-10-03 | 2015-12-03 |
       | /analytics/travellers/aspects_of_business   | years       | 99000199-9999-4999-a999-999999999999 | 2015-10-03 | 2015-12-03 |
