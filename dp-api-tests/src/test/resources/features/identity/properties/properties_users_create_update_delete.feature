@@ -24,6 +24,15 @@ Feature: Properties users create update delete
     When User with username "default3" is added to property with code "p2_code"
     Then Response code is "201"
 
+  Scenario: Updating User - Property relationship
+    Given Check is active attribute is "false" for relation between user "default2" and property with code "p2_code"
+    When Set is active to "true" for relation between user "default2" and property with code "p2_code"
+    Then Response code is "204"
+    And Check is active attribute is "true" for relation between user "default2" and property with code "p2_code"
+    When Set is active to "false" for relation between user "default2" and property with code "p2_code"
+    Then Response code is "204"
+    And Check is active attribute is "false" for relation between user "default2" and property with code "p2_code"
+
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 

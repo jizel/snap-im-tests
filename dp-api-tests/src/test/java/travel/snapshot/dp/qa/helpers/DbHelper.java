@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.helpers;
 
+import static travel.snapshot.dp.qa.helpers.PropertiesHelper.getProperty;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
@@ -7,8 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
-
-import static travel.snapshot.dp.qa.helpers.PropertiesHelper.getProperty;
 
 
 /**

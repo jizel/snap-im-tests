@@ -333,7 +333,7 @@ public class PropertySteps extends BasicSteps {
     public void relationExistsBetweenUserAndProperty(UserDto user, String propertyCode) {
         PropertyDto property = getPropertyByCodeInternalByUser(user.getUserId(), propertyCode);
 
-        PartnerUserRelationshipDto existingPropertyUser = getUserForProperty(property.getPropertyId(), user.getUserId());
+        PropertyUserRelationshipDto existingPropertyUser = getUserForProperty(property.getPropertyId(), user.getUserId());
         if (existingPropertyUser != null) {
             // Delete second level entities does not work for properties/users because the endpoint is not implemented. Using DB delete instead.
             dbSteps.deletePropertyUserFromDb(user.getUserId(), property.getPropertyId());
@@ -353,12 +353,14 @@ public class PropertySteps extends BasicSteps {
                 .when().post("/{propertyId}/users", propertyId);
     }
 
-    private PartnerUserRelationshipDto getUserForProperty(String propertyId, String userId) {
+    @Step
+    public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
         Response customerUserResponse = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
-        return Arrays.asList(customerUserResponse.as(PartnerUserRelationshipDto[].class)).stream().findFirst().orElse(null);
+        return Arrays.stream(customerUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
     }
 
-    private CustomerDto getCustomerForProperty(String propertyId, String customerId) {
+    @Step
+    public CustomerDto getCustomerForProperty(String propertyId, String customerId) {
         Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null);
         return Arrays.asList(customerResponse.as(CustomerDto[].class)).stream().findFirst().orElse(null);
     }
@@ -375,15 +377,15 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void userIsDeletedFromProperty(UserDto u, String propertyCode) {
+    public void userIsDeletedFromProperty(UserDto user, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
+        Response deleteResponse = deleteSecondLevelEntity(p.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
         setSessionResponse(deleteResponse);
     }
 
     public void userDoesntExistForProperty(UserDto u, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        PartnerUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), u.getUserId());
+        PropertyUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), u.getUserId());
         assertNull("User should not be present in property", userForProperty);
     }
 

@@ -12,6 +12,7 @@ Feature: Property sets users create update delete
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       | 8d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
@@ -21,6 +22,16 @@ Feature: Property sets users create update delete
   Scenario: Adding user to property set
     When User with username "default3" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Then Response code is "204"
+
+  Scenario: Updating Property Set - User relationship
+#    This is now blocked by DP-1612 - if not fixed used the reversed endpoint that works for this test
+    Given Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
+    When Relation between user "default0" and property set "ps1_name" is activated
+    Then Response code is "204"
+    And Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
+    When Relation between user "default0" and property set "ps1_name" is inactivated
+    Then Response code is "204"
+    And Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
 
 
   @Smoke
