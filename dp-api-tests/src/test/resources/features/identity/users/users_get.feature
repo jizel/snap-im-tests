@@ -34,22 +34,24 @@ Feature: Users get
     Then Response code is "304"
     And Body is empty
 
-  Scenario: Get token for deleted user
-    Given The password of user "default4" is "Password01"
-    Given User with userName "default4" is deleted
-    When Get token for user "default4" with password "Password01"
-    Then Response code is 401
-
-  Scenario Outline: Checking error codes for work with tokens
-    When Get token for user "<username>" with password "<password>"
-    Then Response code is "<response_code>"
-    Examples:
-      | username | password         | response_code |
-      | default3 | Password01       | 200           |
-      | default3 | NonValidPassword | 401           |
-      | default4 |                  | 401           |
-      |          | NonExistingUser  | 401           |
-      |          |                  | 401           |
+##  The oauth related tests are outdated since the whole authorization mechanism is
+##  now keykloack-driven, hence some old endpoints may not work
+#  Scenario: Get token for deleted user
+#    Given The password of user "default4" is "Password01"
+#    Given User with userName "default4" is deleted
+#    When Get token for user "default4" with password "Password01"
+#    Then Response code is 401
+#
+#  Scenario Outline: Checking error codes for work with tokens
+#    When Get token for user "<username>" with password "<password>"
+#    Then Response code is "<response_code>"
+#    Examples:
+#      | username | password         | response_code |
+#      | default3 | Password01       | 200           |
+#      | default3 | NonValidPassword | 401           |
+#      | default4 |                  | 401           |
+#      |          | NonExistingUser  | 401           |
+#      |          |                  | 401           |
 
   Scenario: Getting user with not current etag
     When User with username "default1" is got for etag, updated and got with previous etag

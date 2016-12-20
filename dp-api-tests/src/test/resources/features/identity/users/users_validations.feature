@@ -5,19 +5,23 @@ Feature: Users validations
     Given Database is cleaned
     Given the location "identity/users" for object "user"
     Given unique identifier "user_id" for object "user"
+    Given The following customers exist with random address
+      | customerId                           | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given the following "user" object definition
-      | path           | type    | required | correct                                                     | invalid      | longer     |
+      | path                        | type       | required | correct                                                     | invalid      | longer     |
       #---------------------------------------------------------------------------------------------------------------------------------------------------------
-      | /first_name    | String  | true     | \w{255}                                                     | /null        | \w{256}    |
-      | /last_name     | String  | true     | \w{255}                                                     | /null        | \w{256}    |
-      | /user_type     | String  | true     | (snapshot\|customer\|partner\|guest)                        | nonexisstent | \w{256}    |
-      | /user_name     | String  | true     | \w{64}                                                      | /null        | \w{65}     |
-      | /salesforce_id | String  | false    | \w{32}                                                      | /null        | \w{33}     |
-      | /email         | String  | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | \w{101}    |
-      | /phone         | String  | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
-      | /timezone      | String  | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
-      | /culture       | String  | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
-      | /comment       | String  | false    | \w{255}                                                     | /null        | \w{256}    |
+      | /first_name                 | String     | true     | \w{255}                                                     | /null        | \w{256}    |
+      | /last_name                  | String     | true     | \w{255}                                                     | /null        | \w{256}    |
+      | /user_type                  | String     | true     | (snapshot\|customer\|partner\|guest)                        | nonexisstent | \w{256}    |
+      | /user_name                  | String     | true     | \w{64}                                                      | /null        | \w{65}     |
+      | /salesforce_id              | String     | false    | \w{32}                                                      | /null        | \w{33}     |
+      | /email                      | String     | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | \w{101}    |
+      | /phone                      | String     | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
+      | /timezone                   | String     | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
+      | /culture                    | String     | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
+      | /comment                    | String     | false    | \w{255}                                                     | /null        | \w{256}    |
+      | /user_customer_relationship | JSON       | true     | {"is_primary":false,"customer_id":"55656571-a3be-4f8b-bc05-02c0797912a6"}|  /null   |  \w{100}    |
       #| /is_active     | Integer | false    | (1\|0)                                                      | 2            |            |
 
   # --- happy path ---
@@ -27,13 +31,11 @@ Feature: Users validations
     When create "user" object with correct field values
     Then Response code is "201"
     And location header is set and points to the same object
-    And returned "user" object matches
 
   @Smoke
   Scenario: Object update - correct values
     When update "user" object with correct field values
     Then Response code is "204"
-    And returned "user" object matches
 
   Scenario: Object update - correct values one by one
     When update "user" objects each with one correct field value
@@ -47,7 +49,7 @@ Feature: Users validations
       | /last_name  | 204          |
 
   Scenario: Object filtering
-    When create 50 "user" objects
+    When create 5 "user" objects
     Then filtering by top-level fields returns matching "user" objects
 
   # --- error handling ---
@@ -55,33 +57,33 @@ Feature: Users validations
     When create "user" objects each with one invalid field value
     Then there are following responses
       | testedField | responseCode | customCode |
-      | /phone      | 400          | 59         |
-      | /email      | 400          | 59         |
-      | /timezone   | 400          | 59         |
-      | /culture    | 400          | 63         |
-      | /user_type  | 400          | 63         |
+      | /phone      | 422          | 42201      |
+      | /email      | 422          | 42201      |
+      | /timezone   | 422          | 42201      |
+      | /culture    | 422          | 42201      |
+      | /user_type  | 422          | 42201      |
 
   Scenario: Object creation - missing values
     When create "user" objects each with one missing field
     Then there are following responses
       | testedField | responseCode | customCode |
-      | /first_name | 400          | 53         |
-      | /last_name  | 400          | 53         |
-      | /user_type  | 400          | 53         |
-      | /user_name  | 400          | 53         |
-      | /email      | 400          | 53         |
-      | /timezone   | 400          | 53         |
-      | /culture    | 400          | 53         |
+      | /first_name | 422          | 42201      |
+      | /last_name  | 422          | 42201      |
+      | /user_type  | 422          | 42201      |
+      | /user_name  | 422          | 42201      |
+      | /email      | 422          | 42201      |
+      | /timezone   | 422          | 42201      |
+      | /culture    | 422          | 42201      |
 
   Scenario: Object update - invalid values
     When update "user" objects each with one invalid field value
     Then there are following responses
       | testedField | responseCode | customCode |
-      | /phone      | 400          | 59         |
-      | /email      | 400          | 59         |
-      | /timezone   | 400          | 59         |
-      | /culture    | 400          | 63         |
-      | /user_type  | 400          | 63         |
+      | /phone      | 422          | 42201      |
+      | /email      | 422          | 42201      |
+      | /timezone   | 422          | 42201      |
+      | /culture    | 422          | 42201      |
+      | /user_type  | 422          | 42201      |
 
 #   TODO when field lengths are stabilized
 #

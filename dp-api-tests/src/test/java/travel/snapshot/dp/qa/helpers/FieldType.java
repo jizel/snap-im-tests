@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.helpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.util.RawValue;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -12,6 +13,12 @@ import java.util.Optional;
  */
 public enum FieldType {
 
+    JSON {
+        @Override
+        public JsonNode getJsonNode(String value) {
+            return factory.rawValueNode(new RawValue(value));
+        }
+    },
     STRING,
     INTEGER,
     BOOL {

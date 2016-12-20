@@ -46,23 +46,23 @@ Feature: Users create update delete
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
       | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
-    Then Response code is "400"
-    And Custom code is "<custom_code>"
+    Then Response code is "422"
+    And Custom code is "42201"
     Examples:
-      | userType | userName | firstName | lastName | email                  | timezone      | culture | custom_code |
-      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snpsnapshot.travel     | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel    | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel | Europe/Prague | cs-CZ   | 59          |
-      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel | Europe/Prague | cs-CZ   | 59          |
-      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      |           | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      |          | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     |                        | Europe/Prague | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs-CZ   | 61          |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         | 61          |
+      | userType | userName | firstName | lastName | email                  | timezone      | culture |
+      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snpsnapshot.travel     | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel    | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel | Europe/Prague | cs-CZ   |
+      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | snp      |           | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      |          | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     |                        | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs-CZ   |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         |
 
   Scenario Outline: Checking error codes for creating user with invalid json
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
@@ -70,7 +70,7 @@ Feature: Users create update delete
     And Custom code is "<custom_code>"
     Examples:
       | json_input_file                                             | method | module   | url             | error_code | custom_code |
-      | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 400        | 40002       |
+      | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 422        | 42201       |
 
   @Smoke
   Scenario: Deleting user
@@ -79,10 +79,10 @@ Feature: Users create update delete
     And Body is empty
     And User with same id doesn't exist
 
-  Scenario: Checking deleting user is idempotent
+  Scenario: Deleting nonexistent user
     When Nonexistent user is deleted
-    Then Response code is "204"
-    And Body is empty
+    Then Response code is "412"
+    And Custom code is "41201"
 
   Scenario Outline: Updating user
     When User with userName "snapshotUser2" is updated with data
@@ -105,7 +105,7 @@ Feature: Users create update delete
       | firstName   |
       | NOT_APPLIED |
     Then Response code is "412"
-    And Custom code is "57"
+    And Custom code is "41202"
 
 #    TODO: Check error codes for user update
 
