@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
+import static java.util.Collections.singletonMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -29,6 +30,7 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.CustomerUtils;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
@@ -43,6 +45,10 @@ import java.util.List;
  */
 public class CustomerStepdefs {
 
+    public static final String DEFAULT_CUSTOMER_EMAIL = "customer1@snapshot.travel";
+    public static final Boolean DEFAULT_CUSTOMER_IS_DEMO = true;
+    public static final String DEFAULT_CUSTOMER_TIMEZONE = "Europe/Prague";
+
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Steps
@@ -56,6 +62,9 @@ public class CustomerStepdefs {
 
     @Steps
     private ReviewMultipropertyCustomerSteps reviewMultipropertyCustomerSteps;
+
+    @Steps
+    private BasicSteps basicSteps;
 
     // ---------------------------- GIVEN ------------------------------
 
@@ -74,7 +83,7 @@ public class CustomerStepdefs {
 
     @Given("^The following customers exist with random address$")
     public void The_following_tenants_exist(List<CustomerCreateDto> customers) throws Throwable {
-        customerSteps.followingCustomersExist(customers);
+        customerSteps.followingCustomersExistWithRandomAddress(customers);
     }
 
     @Given("^Relation between property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
@@ -104,7 +113,7 @@ public class CustomerStepdefs {
 
     @When("^Customer is created with random address$")
     public void customer_is_created(List<CustomerCreateDto> customers) throws Throwable {
-        customerSteps.followingCustomerIsCreated(customers.get(0));
+        customerSteps.followingCustomerIsCreatedWithRandomAddress(customers.get(0));
     }
 
     @When("^File \"([^\"]*)\" is used for \"([^\"]*)\"$")
@@ -438,5 +447,27 @@ public class CustomerStepdefs {
     @When("^Nonexistent user is removed from customer with id \"([^\"]*)\"$")
     public void nonexistentUserIsRemovedFromCustomerWithId(String customerId) throws Throwable {
         customerSteps.userIsDeletedFromCustomer(NON_EXISTENT_ID, customerId);
+    }
+
+    @When("^Customer code of customer with Id \"([^\"]*)\" is updated with \"([^\"]*)\"$")
+    public void customerCodeOfCustomerWithIdIsUpdatedWith(String customerId, String customerCode) throws Throwable {
+        customerSteps.invalidCustomerUpdate(customerId, singletonMap("customer_code", customerCode));
+    }
+
+    @When("^Customer is created with code$")
+    public void customerIsCreatedWithCode(List<CustomerDto> customers) throws Throwable {
+        customerSteps.followingCustomerIsCreatedWithRandomAddress(customers.get(0));
+    }
+
+    @Given("^Customer \"([^\"]*)\" is created with address$")
+    public void customerIsCreatedWithAddress(String companyName, List<AddressDto> addresses) throws Throwable {
+        CustomerCreateDto customer = new CustomerCreateDto();
+        customer.setCompanyName(companyName);
+        customer.setEmail(DEFAULT_CUSTOMER_EMAIL);
+        customer.setIsDemoCustomer(DEFAULT_CUSTOMER_IS_DEMO);
+        customer.setTimezone(DEFAULT_CUSTOMER_TIMEZONE);
+        customer.setAddress(addresses.get(0));
+
+        customerSteps.followingCustomerIsCreated(customer);
     }
 }

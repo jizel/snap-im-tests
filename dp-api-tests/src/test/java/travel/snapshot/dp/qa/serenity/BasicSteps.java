@@ -223,6 +223,13 @@ public class BasicSteps {
 
     }
 
+    public String getAttributeValue(String attributeName) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, notNullValue());
+
+        return response.getBody().jsonPath().get(attributeName).toString();
+    }
+
     protected void setBaseUriForModule(String module) {
         switch (module) {
             case "identity": {
@@ -584,11 +591,11 @@ public class BasicSteps {
 
     // --- session access ---
 
-    protected Response getSessionResponse() {
+    public Response getSessionResponse() {
         return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
     }
 
-    protected void setSessionResponse(Response response) {
+    public void setSessionResponse(Response response) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
