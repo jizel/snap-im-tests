@@ -11,9 +11,9 @@ Feature: Customers users create update delete
     Given Default Snapshot user is created for customer "58dd58d4-a56e-4cf5-a3a6-068fe37fef40"
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given All users are removed for customers with ids: 40ebf861-7549-46f1-a99f-249716c83b33, 58dd58d4-a56e-4cf5-a3a6-068fe37fef40
 
@@ -23,7 +23,7 @@ Feature: Customers users create update delete
   @Smoke
   Scenario: Adding user to customer with isPrimary set
     When User with username "default3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40 " with isPrimary "true"
-    Then Response code is "204"
+    Then Response code is "201"
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
@@ -31,7 +31,7 @@ Feature: Customers users create update delete
   @Smoke
   Scenario: Removing user from customer
     When User with username "default2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "204"
+    Then Response code is "201"
     And Body is empty
     And User with username "default2" isn't there for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
 
