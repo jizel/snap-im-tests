@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.properties;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
@@ -53,9 +54,6 @@ public class PropertySteps extends BasicSteps {
 
     public void followingPropertiesExist(List<PropertyCreateDto> properties, String userId) {
         properties.forEach(property -> {
-            PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
-            relation.setUserId(userId);
-            property.setPropertyUserRelationshipDto(relation);
             property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
             Response createResponse = createProperty(userId, property);
@@ -66,10 +64,14 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void getPropertyByID(String id) {
+    public void getProperty(String id) {
         Response resp = getProperty(id, null);
+        setSessionResponse(resp);
+    }
 
-        // store to session
+    @Step
+    public void getPropertyByUser(String userId, String propertyId) {
+        Response resp = getEntityByUser(userId, propertyId);
         setSessionResponse(resp);
     }
 
@@ -133,9 +135,6 @@ public class PropertySteps extends BasicSteps {
     @Step
     public void followingPropertyIsCreated(PropertyCreateDto property, String userId) {
         PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
-        relation.setUserId(userId);
-        property.setPropertyUserRelationshipDto(relation);
-        property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
         Response response = createProperty(userId, property);
         setSessionResponse(response);
@@ -143,9 +142,6 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void followingPropertyIsCreatedWithAddress(PropertyCreateDto property, AddressDto address, String userId) {
-        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
-        relation.setUserId(userId);
-        property.setPropertyUserRelationshipDto(relation);
         property.setAddress(address);
 
         Response response = createProperty(userId, property);
@@ -286,12 +282,12 @@ public class PropertySteps extends BasicSteps {
      */
     public PropertyDto getPropertyByCodeInternal(String code) {
         PropertyDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null).as(PropertyDto[].class);
-        return Arrays.asList(properties).stream().findFirst().orElse(null);
+        return stream(properties).findFirst().orElse(null);
     }
 
     public PropertyDto getPropertyByCodeInternalByUser(String userId, String code) {
         PropertyDto[] properties = getEntitiesByUser(userId, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null).as(PropertyDto[].class);
-        return Arrays.stream(properties).findFirst().orElse(null);
+        return stream(properties).findFirst().orElse(null);
     }
 
     /**

@@ -7,7 +7,6 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionBaseDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -77,7 +76,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
 
     @Step
     public void setCommSubscriptionIsActiveField(String commSubscriptionId, Boolean isActive) {
-        CommercialSubscriptionBaseDto comSub = new CommercialSubscriptionBaseDto();
+        CommercialSubscriptionDto comSub = new CommercialSubscriptionDto();
         comSub.setIsActive(isActive);
 
         updateCommSubscriptionWithId(commSubscriptionId, comSub);

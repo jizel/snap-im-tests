@@ -7,7 +7,6 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
@@ -38,7 +37,7 @@ public class PropertySetsStepdefs {
     private PropertySteps propertySteps;
 
     @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
-    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String userId, List<PropertySetCreateDto> propertySets) throws Throwable {
+    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String userId, List<PropertySetDto> propertySets) throws Throwable {
         propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId);
     }
 
@@ -75,7 +74,7 @@ public class PropertySetsStepdefs {
     }
 
     @When("^The following property set is created for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
-    public void theFollowingPropertySetIsCreatedForCustomerWithIdAndUser(String customerId, String userId, List<PropertySetCreateDto> propertySets) throws Throwable {
+    public void theFollowingPropertySetIsCreatedForCustomerWithIdAndUser(String customerId, String userId, List<PropertySetDto> propertySets) throws Throwable {
         propertySetSteps.followingPropertySetIsCreated(propertySets.get(0), customerId, userId);
     }
 
