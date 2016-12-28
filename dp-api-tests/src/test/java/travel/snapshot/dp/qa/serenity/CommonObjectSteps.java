@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author konkol
@@ -43,7 +44,7 @@ public class CommonObjectSteps extends BasicSteps {
     private static final String SERENITY__PREFIX_OBJECT_ID_FIELD = "object_id_field:";
     private static final String SERENITY__PREFIX_OBJECT_SENT = "object_sent:";
     private static final String SERENITY__PREFIX_OBJECT_RECEIVED = "object_received:";
-
+    private static final String SERENITY__USER_CUSTOMER_RELATION = "user_customer_relationship";
     private final Logger logger = LoggerFactory.getLogger(CommonObjectSteps.class);
     private final JsonNodeFactory factory;
 
@@ -79,6 +80,7 @@ public class CommonObjectSteps extends BasicSteps {
 
         // create a completely new object for update
         ObjectNode updateObject = getCorrectObject(objectName);
+        updateObject.remove(SERENITY__USER_CUSTOMER_RELATION);
 
         // update old record by id
         // store response for HTTP status comparison
@@ -175,6 +177,11 @@ public class CommonObjectSteps extends BasicSteps {
 
         List<ObjectField> definition = getObjectDefinition(objectName);
         for (ObjectField field : definition) {
+            String fieldType = field.getType();
+            // skip processing any relationship fields since the system does not expose them for filtering
+            if(fieldType.equals("JSON")) {
+                continue;
+            }
             // filter only top-level fields, ignore inner objects
             if (field.isTopLevel()) {
                 for (Map.Entry<String, JsonNode> entry : objects.entrySet()) {
@@ -378,7 +385,7 @@ public class CommonObjectSteps extends BasicSteps {
                 .filter((field) -> !isNullField(field.getCorrect()))
                 .forEach((field) -> applyNodeOperation(root, field, (n, f) -> n.set(
                         getJsonProperty(f),
-                        getJsonNode(f, generateFieldValue(f.getCorrect())))));
+                        getJsonNode(f, generateFieldValue(f.getType(), f.getCorrect())))));
         return root;
     }
 
@@ -457,6 +464,7 @@ public class CommonObjectSteps extends BasicSteps {
                 applyNodeOperation(correctObject, field, op);
 
                 // #4 update object server-side
+                correctObject.remove(SERENITY__USER_CUSTOMER_RELATION);
                 Response updatedObjectResponse = restUpdateObject(getObjectLocation(objectName),
                         objectID, etag, OBJECT_MAPPER.writeValueAsString(correctObject));
 
@@ -519,6 +527,10 @@ public class CommonObjectSteps extends BasicSteps {
      */
     private String generateFieldValue(String regex) {
         return new Generex(regex).random();
+    }
+
+    private String generateFieldValue(String type, String regex) {
+        return type.equals("String") ? new Generex(regex).random() : regex;
     }
 
 }
