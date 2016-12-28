@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.steps.identity.property_sets;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -10,19 +14,27 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/18/2015.
  */
 public class PropertySetsStepdefs {
+
+    private static final String USER_ID = "userId";
+    private static final String PROPERTY_SET_ID = "propertySetId";
+    private static final String BACKGROUND_CUSTOMER = "1238fd9a-a05d-42d8-8e84-42e904ace123";
 
     @Steps
     private PropertySetSteps propertySetSteps;
@@ -35,6 +47,23 @@ public class PropertySetsStepdefs {
 
     @Steps
     private PropertySteps propertySteps;
+
+    // Help methods
+
+    public Map<String, String> getValidUserPropertySetIdsFromNames(String username, String propertySetName) {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+        PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, BACKGROUND_CUSTOMER);
+        assertThat(propertySet, is(notNullValue()));
+
+        Map<String, String> userPropertyIds = new HashMap<>();
+        userPropertyIds.put(USER_ID, user.getUserId());
+        userPropertyIds.put(PROPERTY_SET_ID, propertySet.getPropertySetId());
+        return userPropertyIds;
+    }
+
+//    End of help methods section
+
 
     @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
     public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String userId, List<PropertySetDto> propertySets) throws Throwable {
@@ -227,5 +256,31 @@ public class PropertySetsStepdefs {
     @Then("^Updated property set with name \"([^\"]*)\" for customer \"([^\"]*)\" has following data$")
     public void updatedPropertySetWithNameForCustomerWithCodeHasFollowingData(String propName, String customerId, List<PropertySetUpdateDto> propSet) throws Throwable {
         propertySetSteps.comparePropertySets(propName, customerId, propSet.get(0));
+    }
+
+    @When("^Relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is activated$")
+    public void relationBetweenUserAndPropertySetIsActivated(String username, String propertySetName) throws Throwable {
+        Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
+        UserPropertySetRelationshipUpdateDto userPropertySetRelation = new UserPropertySetRelationshipUpdateDto();
+        userPropertySetRelation.setIsActive(true);
+
+        propertySetSteps.updateUserPropertySetRelation(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
+    }
+
+    @When("^Relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is inactivated$")
+    public void relationBetweenUserAndPropertySetIsInactivated(String username, String propertySetName) throws Throwable {
+        Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
+        UserPropertySetRelationshipUpdateDto userPropertySetRelation = new UserPropertySetRelationshipUpdateDto();
+        userPropertySetRelation.setIsActive(false);
+
+        propertySetSteps.updateUserPropertySetRelation(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
+    }
+
+    @Given("^Check is active attribute is \"([^\"]*)\" for relation between user \"([^\"]*)\" and property set \"([^\"]*)\"$")
+    public void checkIsActiveAttributeIsForRelationBetweenUserAndPropertySet(Boolean isActive, String username, String propertySetName) throws Throwable {
+        Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
+        PropertyUserRelationshipDto propertySetUserRelation = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        assertThat(propertySetUserRelation, is(notNullValue()));
+        assertThat(propertySetUserRelation, is(isActive));
     }
 }

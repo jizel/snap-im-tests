@@ -2,8 +2,11 @@ package travel.snapshot.dp.qa.steps.identity.customers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -18,8 +21,10 @@ import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.CustomerUtils;
@@ -81,7 +86,7 @@ public class CustomerStepdefs {
 
     @Given("^Relation between user with username \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
     public void Relation_between_user_with_username_and_customer_with_id_exists_with_isPrimary(String username,
-                                                                                                 String customerId, String isPrimary) throws Throwable {
+                                                                                                 String customerId, Boolean isPrimary) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerId, isPrimary);
     }
@@ -171,16 +176,27 @@ public class CustomerStepdefs {
 
     @When("^User with username \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
     public void User_with_username_is_added_to_customer_with_id_with_isPrimary(String username, String customerId,
-                                                                                 String isPrimary) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        customerSteps.userIsAddedToCustomerWithIsPrimary(u, customerId, isPrimary);
+                                                                                 Boolean isPrimary) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        customerSteps.userIsAddedToCustomerWithIsPrimary(user, customerId, isPrimary);
     }
 
     @When("^User with username \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_customer_with_id(String username, String customerId)
             throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
-        customerSteps.userIsDeletedFromCustomer(user, customerId);
+        assertThat(user, is(notNullValue()));
+        customerSteps.userIsDeletedFromCustomer(user.getUserId(), customerId);
+    }
+
+    @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\"$")
+    public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimary(String username, String customerId, Boolean isPrimary) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+
+        UserCustomerRelationshipUpdateDto userCustomerRelationshipUpdate = new UserCustomerRelationshipUpdateDto();
+        userCustomerRelationshipUpdate.setIsPrimary(isPrimary);
+        customerSteps.updateUserCustomerRelationship(user.getUserId(), customerId, userCustomerRelationshipUpdate);
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
@@ -398,5 +414,29 @@ public class CustomerStepdefs {
     @Then("^Customer with id \"([^\"]*)\" is not active$")
     public void customerWithIdIsNotActive(String customerId) throws Throwable {
         assertThat("Customer is active but shouldn't be", customerSteps.getCustomerIsActive(customerId), is(false));
+    }
+
+    @And("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is primary$")
+    public void relationBetweenUserAndCustomerWithIdHasIsPrimarySetTo(String username, String customerId) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+
+        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, user.getUserId());
+        assertThat(existingCustomerUser, is(notNullValue()));
+        assertThat(existingCustomerUser.getIsPrimary(), is(true));
+    }
+
+    @And("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is not primary$")
+    public void relationBetweenUserAndCustomerWithIdIsNotPrimary(String username, String customerId) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+
+        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, user.getUserId());
+        assertThat(existingCustomerUser.getIsPrimary(), is(false));
+    }
+
+    @When("^Nonexistent user is removed from customer with id \"([^\"]*)\"$")
+    public void nonexistentUserIsRemovedFromCustomerWithId(String customerId) throws Throwable {
+        customerSteps.userIsDeletedFromCustomer(NON_EXISTENT_ID, customerId);
     }
 }

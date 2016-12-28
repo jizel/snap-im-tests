@@ -10,35 +10,41 @@ Feature: Customers users create update delete
 
     Given Default Snapshot user is created for customer "58dd58d4-a56e-4cf5-a3a6-068fe37fef40"
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-      | snapshot | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userType | userName  | firstName | lastName | email                | timezone      | culture |
+      | snapshot | snapUser1 | Snapshot1 | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | snapUser2 | Snapshot2 | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshot | snapUser3 | Snapshot3 | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given All users are removed for customers with ids: 40ebf861-7549-46f1-a99f-249716c83b33, 58dd58d4-a56e-4cf5-a3a6-068fe37fef40
 
-    Given Relation between user with username "default1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "default2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user with username "snapUser1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user with username "snapUser2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
 
   @Smoke
   Scenario: Adding user to customer with isPrimary set
-    When User with username "default3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40 " with isPrimary "true"
+    When User with username "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40 " with isPrimary "true"
     Then Response code is "201"
 
+  Scenario: Updating User Customer relationship
+    When User with username "snapUser1" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "false"
+    Then Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is not primary
+    When Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updated with isPrimary "true"
+    Then Response code is "204"
+    And Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is primary
+    
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
   @Smoke
   Scenario: Removing user from customer
-    When User with username "default2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "201"
+    When User with username "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
+    Then Response code is "204"
     And Body is empty
-    And User with username "default2" isn't there for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-
+    And User with username "snapUser2" isn't there for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
 
   Scenario: Checking error code for removing user from customer
     When Nonexistent user is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "204"
+    Then Response code is "412"
 
 
   Scenario Outline: Filtering list of users for customer

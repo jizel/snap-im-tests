@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 import cucumber.api.Transform;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -14,18 +15,25 @@ import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/18/2015.
  */
 public class PropertiesStepdefs {
+
+    private static final String USER_ID = "userId";
+    private static final String PROPERTY_ID = "propertyId";
 
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -35,6 +43,21 @@ public class PropertiesStepdefs {
     private UsersSteps usersSteps;
     @Steps
     private CustomerSteps customerSteps;
+
+    // Help methods
+
+    public Map<String, String> getValidUserPropertyIdsFromNameAndCode(String username, String propertyCode) {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        assertThat(property, is(notNullValue()));
+
+        Map<String, String> userPropertyIds = new HashMap<>();
+        userPropertyIds.put(USER_ID, user.getUserId());
+        userPropertyIds.put(PROPERTY_ID, property.getPropertyId());
+        return userPropertyIds;
+    }
+//    End of help methods section
 
     // --- given ---
 
@@ -121,8 +144,8 @@ public class PropertiesStepdefs {
 
     @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        propertySteps.userIsDeletedFromProperty(u, propertyCode);
+        UserDto user = usersSteps.getUserByUsername(username);
+        propertySteps.userIsDeletedFromProperty(user, propertyCode);
     }
 
     @When("^Nonexistent user is removed from property with code \"([^\"]*)\"$")
@@ -260,7 +283,7 @@ public class PropertiesStepdefs {
                                                                                                                          @Transform(NullEmptyStringConverter.class) String sortDesc) {
         propertySteps.listOfPropertiesPropertySetsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
     }
-
+    
     @When("^Property with code \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void propertyWithCodeIsRequestedByUser(String propertyCode, String userName) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(userName);
@@ -270,6 +293,24 @@ public class PropertiesStepdefs {
 
 //        Sets the session response
         propertySteps.getPropertyByUser(user.getUserId(), propertyCode);
+    }
+
+    @When("^Set is active to \"([^\"]*)\" for relation between user \"([^\"]*)\" and property with code \"([^\"]*)\"$")
+    public void isActiveSetToForRelationBetweenUserAndPropertyWithCode(Boolean isActive, String username, String propertyCode) throws Throwable {
+        Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        UserPropertyRelationshipUpdateDto userPropertyRelationship = new UserPropertyRelationshipUpdateDto();
+        userPropertyRelationship.setIsActive(isActive);
+
+        usersSteps.updateUserPropertyRelationship(ids.get(USER_ID), ids.get(PROPERTY_ID), userPropertyRelationship);
+    }
+
+
+    @And("^Check is active attribute is \"([^\"]*)\" for relation between user \"([^\"]*)\" and property with code \"([^\"]*)\"$")
+    public void isActiveAttributeIsForRelationBetweenUserAndPropertyWithCode(Boolean isActive, String username, String propertyCode) throws Throwable {
+        Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        PropertyUserRelationshipDto userPropertyRelation = propertySteps.getUserForProperty(ids.get(PROPERTY_ID), ids.get(USER_ID));
+        assertThat(userPropertyRelation, is(notNullValue()));
+        assertThat(userPropertyRelation.getIsActive(), is(isActive));
     }
 
     // TODO reuse existing code

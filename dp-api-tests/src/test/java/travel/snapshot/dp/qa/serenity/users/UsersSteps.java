@@ -10,10 +10,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -393,6 +395,18 @@ public class UsersSteps extends BasicSteps {
         String path = buildPathForRoles(entityName, userName, entityId);
         Response resp = getEntities(path, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(resp);
+    }
+
+    @Step
+    public void updateUserPropertyRelationship(String userId, String propertyId, UserPropertyRelationshipUpdateDto userPropertyRelationship) {
+        try {
+            JSONObject jsonUpdate = retrieveData(userPropertyRelationship);
+            String etag = getSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).getHeader(HEADER_ETAG);
+            Response response = updateSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
+            setSessionResponse(response);
+        } catch(JsonProcessingException exception){
+            fail("Exception thrown while getting JSON from UserPropertyRelationshipUpdateDto object");
+        }
     }
 
 

@@ -61,6 +61,7 @@ public class BasicSteps {
     public static final String OAUTH_PARAMETER_NAME = "access_token";
     public static final String HEADER_XAUTH_USER_ID = "X-Auth-UserId";
     public static final String DEFAULT_SNAPSHOT_USER_ID = "11111111-0000-4000-a000-000000000000";
+    public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
