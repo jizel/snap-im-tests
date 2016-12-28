@@ -22,6 +22,7 @@ import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -79,23 +80,6 @@ public class PropertySteps extends BasicSteps {
     public void bodyContainsPropertyWith(String atributeName, String value) {
         Response response = getSessionResponse();
         response.then().body(atributeName, is(parseRawType(value)));
-    }
-
-    @Step
-    public void getPropertyByCodeUsingEtag(String code) {
-        PropertyDto propertyFromList = getPropertyByCodeInternal(code);
-        if (propertyFromList == null) {
-            fail("No matching property with code: [" + code + "] found.");
-        }
-
-        // we first need to get current ETag of a property
-        Response responseWithETag = getProperty(propertyFromList.getPropertyId(), null);
-
-        // try to get the property with current ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
-
-        // store to session
-        setSessionResponse(resp);
     }
 
     @Step
@@ -452,6 +436,12 @@ public class PropertySteps extends BasicSteps {
     public void listOfApiSubscriptionsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response resp = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_API_SUBSCRIPTION, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(resp);
+    }
+
+    public Response assignTtiToProperty(String propertyId, TtiCrossreferenceDto ttiCrossreference) {
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).body(ttiCrossreference).when().post(propertyId + "/tti");
+        setSessionResponse(response);
+        return response;
     }
 
     // TODO reuse existing code

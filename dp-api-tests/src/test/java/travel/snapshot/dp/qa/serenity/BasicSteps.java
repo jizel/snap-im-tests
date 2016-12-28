@@ -182,6 +182,12 @@ public class BasicSteps {
         response.then().body(attributeName, isOneOf(attributeValue, Boolean.valueOf(attributeValue)));
     }
 
+    @Step
+    public void bodyContainsEntityWith(String attributeName, Integer attributeValue) {
+        Response response = getSessionResponse();
+        response.then().body(attributeName, is(attributeValue));
+    }
+
     public void bodyContainsEntityWith(String attributeName) {
         Response response = getSessionResponse();
         response.then().body(attributeName, notNullValue());
