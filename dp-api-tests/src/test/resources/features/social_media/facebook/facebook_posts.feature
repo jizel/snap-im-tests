@@ -45,7 +45,7 @@ Feature: facebook posts
 
     Examples:
       | url                       | response_code | custom_code |
-      | /analytics/facebook/posts | 400           | 52          |
+      | /analytics/facebook/posts | 400           | 40002       |
 
 
   @Smoke
