@@ -6,7 +6,7 @@ Feature: facebook
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is 400
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | url                                 | granularity | property                              | since       | until       |
@@ -180,9 +180,9 @@ Feature: facebook
 
   Scenario Outline: Checking error codes for analytics data
     When Get facebook "<url>" with missing property header
-    Then Response code is 422
+    Then Response code is 400
     And Content type is "application/json"
-    And Custom code is "42201"
+    And Custom code is "40002"
 
     Examples:
       | url                                 |
@@ -239,7 +239,7 @@ Feature: facebook
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 63
+    And Custom code is 40002
 
     Examples:
       | url                                 | granularity | since | until            | property                             |
@@ -250,4 +250,3 @@ Feature: facebook
       | /analytics/facebook/unlikes         | month       | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/followers       | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook                 | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
-
