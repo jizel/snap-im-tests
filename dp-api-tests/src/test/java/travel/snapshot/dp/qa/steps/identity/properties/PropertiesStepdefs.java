@@ -68,7 +68,7 @@ public class PropertiesStepdefs {
 
     @When("^Nonexistent property id sent$")
     public void Nonexistent_property_id_sent() throws Throwable {
-        propertySteps.getPropertyByID("nonexistent_id");
+        propertySteps.getProperty("nonexistent_id");
     }
 
     @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -259,6 +259,17 @@ public class PropertiesStepdefs {
                                                                                                                          @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                          @Transform(NullEmptyStringConverter.class) String sortDesc) {
         propertySteps.listOfPropertiesPropertySetsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    @When("^Property with code \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
+    public void propertyWithCodeIsRequestedByUser(String propertyCode, String userName) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(userName);
+        assertThat(user, is(notNullValue()));
+        PropertyDto property = propertySteps.getPropertyByCodeInternalByUser(user.getUserId(), propertyCode);
+        assertThat(String.format("User %s doesn't see property %s or the property doesn't exist", userName), property, is(notNullValue()));
+
+//        Sets the session response
+        propertySteps.getPropertyByUser(user.getUserId(), propertyCode);
     }
 
     // TODO reuse existing code

@@ -242,6 +242,10 @@ public class BasicSteps {
         return getEntity(id, null);
     }
 
+    protected Response getEntityByUser(String userId, String entityId) {
+        return getEntityByUser(userId, entityId, null);
+    }
+
     protected Response createEntity(Object entity) {
         return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entity);
     }

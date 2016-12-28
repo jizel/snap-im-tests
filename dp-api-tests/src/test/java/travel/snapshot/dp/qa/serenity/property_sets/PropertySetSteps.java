@@ -13,11 +13,9 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -48,12 +46,9 @@ public class PropertySetSteps extends BasicSteps {
 
     // --- steps ---
 
-    public void followingPropertySetsExist(List<PropertySetCreateDto> propertySets, String customerId, String userId) {
+    public void followingPropertySetsExist(List<PropertySetDto> propertySets, String customerId, String userId) {
         propertySets.forEach(propertySet -> {
             propertySet.setCustomerId(customerId);
-            PropertySetUserRelationshipDto relation = new PropertySetUserRelationshipDto();
-            relation.setUserId(userId);
-            propertySet.setPropertySetUserRelationshipDto(relation);
 
             Response resp = createEntityByUser(userId, propertySet);
             if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -63,15 +58,12 @@ public class PropertySetSteps extends BasicSteps {
 
     }
 
-    public void followingPropertySetIsCreated(PropertySetCreateDto propertySetCreateDto, String customerId, String userId) {
-        propertySetCreateDto.setCustomerId(customerId);
-        PropertySetUserRelationshipDto relation = new PropertySetUserRelationshipDto();
-        relation.setUserId(userId);
-        propertySetCreateDto.setPropertySetUserRelationshipDto(relation);
+    public void followingPropertySetIsCreated(PropertySetDto PropertySetDto, String customerId, String userId) {
+        PropertySetDto.setCustomerId(customerId);
 
-        Response resp = createEntityByUser(userId, propertySetCreateDto);
+        Response resp = createEntityByUser(userId, PropertySetDto);
         setSessionResponse(resp);
-        setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET, propertySetCreateDto);
+        setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET, PropertySetDto);
     }
 
 

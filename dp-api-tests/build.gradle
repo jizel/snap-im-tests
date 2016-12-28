@@ -1,4 +1,5 @@
 def serenityVersion = "1.1.26"
+def apiVersion = "1.37.21-4"
 
 repositories {
     mavenLocal()
@@ -51,13 +52,14 @@ dependencies {
     compile 'org.json:json:20150729'
     compile 'com.google.code.gson:gson:2.4'
 
-    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: '1.37.21-2'
-    compile group: 'travel.snapshot.dp.api', name: 'review-api', version: '1.37.21-2'
-    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: '1.37.21-2'
-    compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: '1.37.21-2'
-    compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: '1.37.21-2'
-    compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: '1.37.21-2'
-    compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: '1.37.21-2'
+    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'review-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'identity-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'social-media-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'configuration-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'rate-shopper-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: "$apiVersion"
+    compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: "$apiVersion"
 
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.6'
 
