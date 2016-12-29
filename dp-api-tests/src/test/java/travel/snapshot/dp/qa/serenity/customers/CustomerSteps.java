@@ -59,13 +59,23 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void followingCustomersExist(List<CustomerCreateDto> customers) {
+    public void followingCustomersExistWithRandomAddress(List<CustomerCreateDto> customers) {
         customers.forEach(t -> {
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Customer cannot be created " + createResponse.getBody().asString());
             }
+            setSessionResponse(createResponse);
+        });
+        Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
+    }
+
+    @Step
+    public void followingCustomersExist(List<CustomerCreateDto> customers) {
+        customers.forEach(customer -> {
+            Response createResponse = createEntity(customer);
+            assertThat("Customer cannot be created " + createResponse.getBody().asString(), createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
             setSessionResponse(createResponse);
         });
         Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
@@ -81,8 +91,15 @@ public class CustomerSteps extends BasicSteps {
 
 
     @Step
-    public void followingCustomerIsCreated(CustomerCreateDto customer) {
+    public void followingCustomerIsCreatedWithRandomAddress(CustomerCreateDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
+        Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
+        Response response = createEntity(customer);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void followingCustomerIsCreated(CustomerCreateDto customer) {
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
         Response response = createEntity(customer);
         setSessionResponse(response);
@@ -296,6 +313,12 @@ public class CustomerSteps extends BasicSteps {
 
         Response resp = getEntityByUser(userId, customerId, tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
+    }
+
+    @Step
+    public void invalidCustomerUpdate(String customerId, Map<String, Object> updateMap) {
+        Response response = updateEntity(customerId, updateMap, getEntity(customerId).getHeader(HEADER_ETAG));
+        setSessionResponse(response);
     }
 
     public void customerWithIdHasData(String customerId, String userId, CustomerDto data) throws Throwable {

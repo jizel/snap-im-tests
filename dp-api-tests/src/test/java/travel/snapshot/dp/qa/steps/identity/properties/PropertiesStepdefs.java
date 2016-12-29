@@ -12,11 +12,13 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -332,6 +334,40 @@ public class PropertiesStepdefs {
         TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
         propertySteps.assignTtiToProperty(property.getPropertyId(), ttiCrossreference);
     }
+
+    @Given("^Property \"([^\"]*)\" is created with address for user \"([^\"]*)\" and customer with id \"([^\"]*)\"$")
+    public void propertyIsCreatedWithAddress(String propertyName, String username, String customerId, List<AddressDto> addresses) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is((notNullValue())));
+
+        propertySteps.createDefaultMinimalPropertyWithAddress(propertyName, user.getUserId(), customerId, addresses.get(0));
+    }
+
+    @When("^Property with code \"([^\"]*)\" is updated with data$")
+    public void propertyIsUpdatedWithData(String propertyCode, List<PropertyUpdateDto> propertyUpdates) throws Throwable {
+        PropertyDto originalProperty = propertySteps.getPropertyByCodeInternal(propertyCode);
+        assertThat(originalProperty, is(notNullValue()));
+        propertySteps.updateProperty(originalProperty.getPropertyId(), propertyUpdates.get(0));
+    }
+
+    @When("^Property \"([^\"]*)\" is requested$")
+    public void propertyIsRequested(String propertyName) throws Throwable {
+        PropertyDto property = propertySteps.getPropertyByName(propertyName);
+        assertThat(property, is(notNullValue()));
+//        Sets session response
+        propertySteps.getProperty(property.getPropertyId());
+    }
+
+    @When("^Property \"([^\"]*)\" is updated with address for user \"([^\"]*)\" and customer with id \"([^\"]*)\"$")
+    public void propertyIsUpdatedWithAddressForUserAndCustomerWithId(String propertyName, String username, String customerId, List<AddressUpdateDto> addresses) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is((notNullValue())));
+        PropertyDto property = propertySteps.getPropertyByName(propertyName);
+        assertThat(property, is((notNullValue())));
+
+        propertySteps.updatePropertyAddress(property.getPropertyId(), addresses.get(0));
+    }
+
 
     // TODO reuse existing code
 

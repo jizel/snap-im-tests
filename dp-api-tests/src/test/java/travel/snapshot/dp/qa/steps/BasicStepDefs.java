@@ -1,8 +1,14 @@
 package travel.snapshot.dp.qa.steps;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
+
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.commons.lang3.StringUtils;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 public class BasicStepDefs {
@@ -96,4 +102,16 @@ public class BasicStepDefs {
     public void responseContainsPropertiesWithAttribute(int count, String attributeName) throws Throwable {
         basicSteps.responseContainsNoOfAttributes(count, attributeName);
     }
+
+    @And("^The \"([^\"]*)\" attribute in response contains only CAPITAL latin characters or numbers$")
+    public void theAttributeInResponseContainsOnlyCAPITALLatinCharactersOrNumbers(String attributeName) throws Throwable {
+        String attributeValue = basicSteps.getAttributeValue(attributeName);
+
+        assertThat("Attribute " + attributeName + " is blank", isNotBlank(attributeValue), is(true));
+        assertThat("Attribute " + attributeName + " contains white spaces: " + attributeValue,
+                StringUtils.containsWhitespace(attributeValue), is(false));
+        assertThat("Attribute " + attributeName + " is not sequence of capital latin letters and digits. It is: "+ attributeValue,
+                attributeValue.matches("[A-Z0-9]+"), is(true));
+    }
+
 }

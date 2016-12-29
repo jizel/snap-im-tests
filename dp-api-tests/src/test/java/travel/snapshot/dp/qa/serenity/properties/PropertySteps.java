@@ -16,6 +16,7 @@ import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
@@ -44,6 +45,10 @@ public class PropertySteps extends BasicSteps {
     private static final String SERENITY_SESSION__CREATED_PROPERTY = "created_property";
     private static final String SERENITY_SESSION__PROPERTY_ID = "property_id";
     private static final String BASE_PATH__PROPERTIES = "/identity/properties";
+
+    public static final String DEFAULT_PROPERTY_EMAIL = "property1@snapshot.travel";
+    public static final Boolean DEFAULT_PROPERTY_IS_DEMO = true;
+    public static final String DEFAULT_PROPERTY_TIMEZONE = "Europe/Prague";
 
     @Steps
     private DbUtilsSteps dbSteps;
@@ -122,6 +127,18 @@ public class PropertySteps extends BasicSteps {
 
         Response response = createProperty(userId, property);
         setSessionResponse(response);
+    }
+
+    @Step
+    public void createDefaultMinimalProperty(String propertyName, String userId, String customerId) {
+        PropertyCreateDto property = buildDefaultMinimalProperty(propertyName, customerId);
+        followingPropertyIsCreated(property, userId);
+    }
+
+    @Step
+    public void createDefaultMinimalPropertyWithAddress(String propertyName, String userId, String customerId, AddressDto address) {
+        PropertyCreateDto property = buildDefaultMinimalProperty(propertyName, customerId);
+        followingPropertyIsCreatedWithAddress(property, address, userId);
     }
 
     @Step
@@ -274,6 +291,11 @@ public class PropertySteps extends BasicSteps {
         return stream(properties).findFirst().orElse(null);
     }
 
+    public PropertyDto getPropertyByName(String propertyName) {
+        PropertyDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, String.format("name=='%s'", propertyName), null, null).as(PropertyDto[].class);
+        return stream(properties).findFirst().orElse(null);
+    }
+
     /**
      * Parses provided string for predefined prefixes, returning a Java type where applicable.
      *
@@ -404,6 +426,13 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
+    public void updatePropertyAddress(String propertyId, AddressUpdateDto addressUpdate) {
+        PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
+        propertyUpdate.setAddress(addressUpdate);
+        updateProperty(propertyId, propertyUpdate);
+    }
+
+    @Step
     public void propertyPropertySetWithNameIsGot(String propertySetName, String propertyCode) {
         PropertyDto property = getPropertyByCodeInternal(propertyCode);
 
@@ -438,10 +467,21 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
+
     public Response assignTtiToProperty(String propertyId, TtiCrossreferenceDto ttiCrossreference) {
         Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).body(ttiCrossreference).when().post(propertyId + "/tti");
         setSessionResponse(response);
         return response;
+    }
+
+    public PropertyCreateDto buildDefaultMinimalProperty(String propertyName, String customerId){
+        PropertyCreateDto property = new PropertyCreateDto();
+        property.setPropertyName(propertyName);
+        property.setAnchorCustomerId(customerId);
+        property.setEmail(DEFAULT_PROPERTY_EMAIL);
+        property.setTimezone(DEFAULT_PROPERTY_TIMEZONE);
+        property.setIsDemoProperty(DEFAULT_PROPERTY_IS_DEMO);
+        return property;
     }
 
     // TODO reuse existing code
