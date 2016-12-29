@@ -26,7 +26,7 @@ Feature: Customers multiproperty
     #Even though user "snapshot" do not have relation with customer he should have access to all property sets
     #Given Relation between user with username "snapshot" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with isPrimary "true"
 
-    Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" and user "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" and user "everything"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |

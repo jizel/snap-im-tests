@@ -22,7 +22,7 @@ Feature: Properties tti code - DP-757
      And Notification in session operation is "Create"
     Then Response code is "201"
     Then Body contains entity with attribute "code" and integer value 1234
-      And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
+    And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
 
     Scenario: Duplicate booking.com id send to property with defined tti_id (tti_id doesn't exist in OTA)
       When Add ttiId to booking.com id "1234" mapping to property with code "p1_code"
@@ -54,6 +54,7 @@ Feature: Properties tti code - DP-757
       Then Response code is "422"
       And Custom code is 42201
 
+#      Fails because of DP-1631
     Scenario: Map property with nonexistent ttiCode - new ttiCode is created and added to property
       Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
         |propertyId                           | salesforceId   | propertyName      | propertyCode| website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

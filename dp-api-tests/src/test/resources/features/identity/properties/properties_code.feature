@@ -114,23 +114,23 @@ For manually created property code the following rules hold
       And Custom code is 42201
 
 
-      Scenario: Property can be updated by user and then should be never re-generated again
-        Given Property "Brno Hilton" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-          | addressLine1 | city | zipCode | country |
-          | line 1       | Brno | 60200   | CZ      |
-        Then Response code is "201"
-        Then Body contains entity with attribute "property_code" value "CZBRQBRN"
-        When Property with code "CZBRQBRN" is updated with data
-        | propertyCode |
-        | updated_code |
-        Then Response code is "204"
-        When Property "Brno Hilton" is requested
-        Then Body contains entity with attribute "property_code" value "updated_code"
-        When Property "Brno Hilton" is updated with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-          | addressLine1 | city   | zipCode | country |
-          | updated line | London | 55544   | GB      |
-        Then Response code is "204"
-        When Property "Brno Hilton" is requested
-#        The code was not changed (re-generated) by address update
-        Then Body contains entity with attribute "property_code" value "updated_code"
+     Scenario: Property can be updated by user and then should be never re-generated again
+       Given Property "Brno Hilton" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+         | addressLine1 | city | zipCode | country |
+         | line 1       | Brno | 60200   | CZ      |
+       Then Response code is "201"
+       Then Body contains entity with attribute "property_code" value "CZBRQBRN"
+       When Property with code "CZBRQBRN" is updated with data
+         | propertyCode |
+         | updated_code |
+       Then Response code is "204"
+       When Property "Brno Hilton" is requested
+       Then Body contains entity with attribute "property_code" value "updated_code"
+       When Property "Brno Hilton" is updated with address
+         | addressLine1 | city   | zipCode | country |
+         | updated line | London | 55544   | GB      |
+       Then Response code is "204"
+       When Property "Brno Hilton" is requested
+#           The code was not changed (re-generated) by address update
+       Then Body contains entity with attribute "property_code" value "updated_code"
 

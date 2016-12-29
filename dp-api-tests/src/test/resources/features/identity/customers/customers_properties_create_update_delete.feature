@@ -21,7 +21,6 @@ Feature: Customers properties create update delete
     Given Relation between property with code "p1_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p2_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
     Given The password of user "defaultSnapshotuser" is "Password01"
     Given Get token for user "defaultSnapshotuser" with password "Password01"

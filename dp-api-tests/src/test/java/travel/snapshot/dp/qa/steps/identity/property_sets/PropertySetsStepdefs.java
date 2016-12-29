@@ -66,8 +66,9 @@ public class PropertySetsStepdefs {
 
 
     @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
-    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String userId, List<PropertySetDto> propertySets) throws Throwable {
-        propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId);
+    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, List<PropertySetDto> propertySets) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        propertySetSteps.followingPropertySetsExist(propertySets, customerId, user.getUserId());
     }
 
     @Given("^All property sets are deleted for customers with ids: (.*)$")
@@ -98,8 +99,11 @@ public class PropertySetsStepdefs {
     @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
     public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName, String customerId) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        CustomerDto customer= customerSteps.getCustomerById(customerId);
-        propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(property, propertySetName, customer);
+        assertThat(property, is(notNullValue()));
+        PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
+        assertThat(propertySet, is(notNullValue()));
+
+        propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(property.getPropertyId(), propertySet.getPropertySetId(), customerId);
     }
 
     @When("^The following property set is created for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")

@@ -27,6 +27,21 @@ Feature: Properties create update delete
     And Body contains property with attribute "email" value "pn1@tenants.biz"
 
   @Smoke
+  Scenario: Updating property
+    When Property with code "p1_code" is updated with data
+      | salesforceId   | propertyName | propertyCode | website                  | email            | isDemoProperty | description  |
+      | updated_sf_id  | updated_name | updated_code | https://www.upddated.com | updated@email.cz | false          | updated_desc |
+    Then Response code is "204"
+    When Property with code "updated_code" is requested
+    Then Response code is "200"
+    Then Body contains entity with attribute "name" value "updated_name"
+    Then Body contains entity with attribute "salesforce_id" value "updated_sf_id"
+    Then Body contains entity with attribute "website" value "https://www.upddated.com"
+    Then Body contains entity with attribute "email" value "updated@email.cz"
+    Then Body contains entity with attribute "is_demo_property" value "false"
+    Then Body contains entity with attribute "description" value "updated_desc"
+
+  @Smoke
   Scenario: Deleting Property
     When Property with code "p1_code" is deleted
     Then Response code is "204"

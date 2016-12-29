@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.steps;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
 
 import cucumber.api.java.en.And;
@@ -9,7 +10,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 public class BasicStepDefs {
 
@@ -17,6 +20,8 @@ public class BasicStepDefs {
 
     @Steps
     private BasicSteps basicSteps;
+    @Steps
+    private UsersSteps usersSteps;
 
     @Then("^Response code is (\\d+)$")
     public void response_code_is(int responseCode) throws Throwable {
@@ -114,4 +119,15 @@ public class BasicStepDefs {
                 attributeValue.matches("[A-Z0-9]+"), is(true));
     }
 
+    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" by user \"([^\"]*)\"$")
+    public void getRequestIsSentToOnModule(String url, String module, String username) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+        basicSteps.sendGetRequestToUrlByUser(user.getUserId(), url, module);
+    }
+
+    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" without X-Auth-UserId header$")
+    public void getRequestIsSentToOnModuleWithoutXAuthUserIdHeader(String url, String module) throws Throwable {
+        basicSteps.sendGetRequestToUrlWithoutUserHeader(url, module);
+    }
 }

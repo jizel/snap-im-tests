@@ -10,7 +10,7 @@ Feature: Property sets create update delete
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Default Snapshot user is created for customer "49ae92d9-2d80-47d9-994b-77f5f598336a"
-    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"

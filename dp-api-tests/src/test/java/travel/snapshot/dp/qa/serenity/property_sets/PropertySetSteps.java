@@ -1,8 +1,11 @@
 package travel.snapshot.dp.qa.serenity.property_sets;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonMap;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,6 +39,7 @@ public class PropertySetSteps extends BasicSteps {
     private static final String SERENITY_SESSION__PROPERTY_SETS = "property_sets";
     private static final String SERENITY_SESSION__CREATED_PROPERTY_SET = "created_property_set";
     private static final String SERENITY_SESSION__PROPERTY_SET_ID = "property_set_id";
+    private static final String PROPERTY_ID_KEY = "property_id";
 
     private static final String BASE_PATH__PROPERTY_SETS = "/identity/property_sets";
 
@@ -71,7 +75,13 @@ public class PropertySetSteps extends BasicSteps {
     public PropertySetDto getPropertySetByNameForCustomer(String propertySetName, String customerId) {
         String filter = String.format("name==%s and customer_id==%s", propertySetName, customerId);
         PropertySetDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
-        return Arrays.asList(properties).stream().findFirst().orElse(null);
+        return stream(properties).findFirst().orElse(null);
+    }
+
+    public PropertySetDto getPropertySetByName(String propertySetName) {
+        String filter = String.format("name==%s", propertySetName);
+        PropertySetDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
+        return stream(properties).findFirst().orElse(null);
     }
 
     public void deleteAllPropertySetsForCustomer(List<CustomerDto> customers) {
@@ -248,28 +258,27 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenPropertyAndPropertySetForCustomer(PropertyDto property, String propertySetName, CustomerDto customer) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
-
-        PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySet.getPropertySetId(), property.getPropertyId());
+    @Step
+    public void relationExistsBetweenPropertyAndPropertySetForCustomer(String propertyId, String propertySetId, String customerId) {
+        PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySetId, propertyId);
         if (existingPropertySetUser != null) {
-
-            Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, property.getPropertyId());
-            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-                fail("PropertySetProperty cannot be deleted");
-            }
+            Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+            assertThat("PropertySetProperty cannot be deleted", deleteResponse.getStatusCode(), not(HttpStatus.SC_NO_CONTENT));
         }
-        Response createResponse = addPropertyToPropertySet(property.getPropertyId(), propertySet.getPropertySetId());
-        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+        Response createResponse = addPropertyToPropertySet(propertyId, propertySetId);
+        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail(String.format("PropertySetProperty cannot be created. Status: %d, %s", createResponse.getStatusCode(), createResponse.asString()));
         }
     }
 
-    private Response addPropertyToPropertySet(String propertyId, String propertySetId) {
-        Map<String, Object> propertySetProperty = new HashMap<>();
-        propertySetProperty.put("property_id", propertyId);
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .body(propertySetProperty)
+    public Response addPropertyToPropertySet(String propertyId, String propertySetId) {
+        return addPropertyToPropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, propertySetId);
+    }
+
+    @Step
+    public Response addPropertyToPropertySetByUser(String userId, String propertyId, String propertySetId) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
+                .body(singletonMap(PROPERTY_ID_KEY, propertyId))
                 .when().post("/{propertySetId}/properties", propertySetId);
     }
 
