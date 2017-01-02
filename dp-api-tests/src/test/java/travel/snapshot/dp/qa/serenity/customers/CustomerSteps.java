@@ -89,7 +89,6 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-
     @Step
     public void followingCustomerIsCreatedWithRandomAddress(CustomerCreateDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
@@ -201,11 +200,11 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public Response listOfCustomersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-       return listOfCustomersIsGotByUserWith(DEFAULT_SNAPSHOT_USER_ID,limit, cursor, filter, sort, sortDesc);
+        return listOfCustomersIsGotByUserWith(DEFAULT_SNAPSHOT_USER_ID, limit, cursor, filter, sort, sortDesc);
     }
 
     @Step
-    public Response listOfCustomersIsGotByUserWith(String  userId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public Response listOfCustomersIsGotByUserWith(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntitiesByUser(userId, limit, cursor, filter, sort, sortDesc);
         setSessionResponse(response);
         return response;

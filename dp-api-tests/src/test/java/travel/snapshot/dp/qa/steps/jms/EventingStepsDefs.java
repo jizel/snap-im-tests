@@ -1,16 +1,12 @@
 package travel.snapshot.dp.qa.steps.jms;
 
-import net.thucydides.core.annotations.Steps;
-
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import net.thucydides.core.annotations.Steps;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
+import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
@@ -39,6 +35,9 @@ public class EventingStepsDefs {
 
     @Steps
     private PropertySetSteps propertySetSteps;
+
+    @Steps
+    private PartnerSteps partnerSteps;
 
     /*@When("^Send an ETL message and receiving verify it$")
     public void send_an_ETL_message_and_receiving_verify_it() throws Throwable {
@@ -212,5 +211,11 @@ public class EventingStepsDefs {
     public void Notification_in_session_id_stands_for_user_in_session_on_key(String sessionKey) throws Throwable {
         UserDto u = steps.getSessionVariable(sessionKey);
         steps.notificationContainsId(u.getUserId());
+    }
+
+    @Then("^Notification in session id stands for partner with name \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_partner_with_name(String partnerName) throws Throwable {
+        PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
+        steps.notificationContainsId(partner.getPartnerId());
     }
 }
