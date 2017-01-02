@@ -4,14 +4,13 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.text.html.HTMLDocument;
+import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.*;
@@ -90,26 +89,24 @@ public class PartnerSteps extends BasicSteps {
 
         Response tempResponse = getEntity(partnerId, null);
 
-        Map<String, Object> partnerData = retrieveData(PartnerDto.class, updatedPartner);
+        JSONObject partnerData = retrieveData(updatedPartner);
 
-        Response response = updateEntity(partnerId, partnerData, tempResponse.getHeader(HEADER_ETAG));
+        Response response = updateEntity(partnerId, partnerData.toString(), tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(response);
     }
 
     @Step
     public void partnerWithIdHasData(String partnerId, PartnerDto partnerData) throws Exception {
-        Map<String, Object> originalData = retrieveData(PartnerDto.class, getPartnerById(partnerId));
-        Map<String, Object> expectedData = retrieveData(PartnerDto.class, partnerData);
-
-        expectedData.forEach((key, value) -> {
+        JSONObject originalData = retrieveData(getPartnerById(partnerId));
+        JSONObject expectedData = retrieveData(partnerData);
+        for (String key : expectedData.keySet()){
+            Object value = expectedData.get(key);
             if (value == null) {
-                assertFalse("Partner JSON should not contains attributes with null values",
-                        originalData.containsKey(key));
+                assertFalse("Partner JSON should not contain attributes with null values",
+                    originalData.has(key));
                 return;
             }
-            assertTrue("Partner has no data for attribute " + key, originalData.containsKey(key));
-            assertEquals(value, originalData.get(key));
-        });
+        }
     }
 
     @Step
@@ -192,10 +189,10 @@ public class PartnerSteps extends BasicSteps {
     }
 
     private Response activatePartner(String partnerId) {
-        return given().spec(spec).when().post("/{id}/activate", partnerId);
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().post("/{id}/activate", partnerId);
     }
 
     private Response inactivatePartner(String partnerId) {
-        return given().spec(spec).when().post("/{id}/inactivate", partnerId);
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().post("/{id}/inactivate", partnerId);
     }
 }
