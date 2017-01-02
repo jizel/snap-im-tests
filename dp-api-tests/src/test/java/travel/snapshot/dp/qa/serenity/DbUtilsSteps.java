@@ -71,12 +71,9 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_APPLICATION_VERSIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
-<<<<<<< ff566035dc106e4252e3ab64ed22c15ebb1217dd
-
         dbHelper.ttiDb().update(DELETE_TTI_CROSSREFERENCES);
-=======
         dbHelper.identityDb().update(DELETE_PARTNER);
->>>>>>> DP-1036 Fixed application relations to Partner
+
     }
 
 
