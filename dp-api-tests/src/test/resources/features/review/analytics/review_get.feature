@@ -30,6 +30,8 @@ Feature: Review
 
     Given Relation between user with username "snapUser1" and property with code "p1_code" exists
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Default partner is created
+    Given Default application is created
 
 
   Scenario Outline: Get trip advisor analytics data from API for a given wrong granularity
@@ -52,9 +54,9 @@ Feature: Review
 
   Scenario Outline: Checking error codes for analytics data without property
     When Get trip advisor "<url>" with missing property header
-    Then Response code is 422
+    Then Response code is 400
     And Content type is "application/json"
-    And Custom code is "42201"
+    And Custom code is "40002"
 
     Examples:
       | url                                         |
@@ -174,14 +176,13 @@ Feature: Review
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Custom code is 40002
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | url                     | granularity | until      | since      | property                             | message                                                                                                                                                               |
-      | /analytics/rating_score | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /analytics/rating_score | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /analytics/rating_score | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | url                     | granularity | until      | since      | property                             |
+      | /analytics/rating_score | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/rating_score | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
     #  Change expected message when DP-1495 is fixed
@@ -189,14 +190,13 @@ Feature: Review
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Custom code is 40002
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | url         | granularity | until      | since      | property                             | message                                                                                                                                                             |
-      | /analytics/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /analytics/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /analytics/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | url         | granularity | until      | since      | property                             |
+      | /analytics/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /analytics/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
 # NEW
@@ -279,28 +279,27 @@ Feature: Review
   Scenario Outline: Get analytics data from TA API that has wrong time interval for smaller review endpoints
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
     Then Response code is 400
-    And Custom code is 63
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
     And Body does not contain property with attribute "properties"
 
     Examples:
-      | url                              | granularity | until      | since      | message                                                                                                                                                               |
-      | /analytics/popularity_index_rank | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /analytics/popularity_index_rank | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /analytics/popularity_index_rank | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | url                              | granularity | until      | since      |
+      | /analytics/popularity_index_rank | day         | 2015-12-02 | 2015-12-03 |
+      | /analytics/popularity_index_rank | week        | 2015-11-12 | 2015-12-03 |
+      | /analytics/popularity_index_rank | month       | 2015-08-26 | 2015-12-03 |
 
-      | /analytics/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /analytics/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /analytics/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | /analytics/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 |
+      | /analytics/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 |
+      | /analytics/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 |
 
-      | /analytics/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /analytics/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /analytics/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | /analytics/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 |
+      | /analytics/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 |
+      | /analytics/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 |
 
-      | /analytics/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /analytics/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /analytics/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | /analytics/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 |
+      | /analytics/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 |
+      | /analytics/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 |
 
   Scenario Outline: Get new specific analytics data from API for a given granularity for smaller review endpoints
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
@@ -360,7 +359,7 @@ Feature: Review
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "<limit>" and cursor "<cursor>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | url                              | granularity | since      | until      | limit        | cursor       |

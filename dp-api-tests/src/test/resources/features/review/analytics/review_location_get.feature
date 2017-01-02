@@ -25,6 +25,8 @@ Feature: Review locaitons
 
     Given Relation between user with username "snapshotUser" and property with code "p1_code" exists
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Default partner is created
+    Given Default application is created
 
 # /locations/
 #---------------------------------------------------------------------------------------------------------------------
@@ -77,7 +79,9 @@ Feature: Review locaitons
       | 10          | 0      | not_here==  | /null         | /null         | 40002       |
       | 10          | 0      | random==CZ* | /null         | /null         | 40002       |
 
-  #TODO DP-935 - X-Total-Count header is missing
+  # TODO DP-935 - X-Total-Count header is missing
+  # Bug at line 97: https://conhos.atlassian.net/browse/DP-1641
+  @Bug
   Scenario Outline: Filtering list of locations
     When List of locations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -88,10 +92,11 @@ Feature: Review locaitons
     Examples:
       | limit | cursor | returned | filter                                  | sort          | sort_desc     | expected_names                                  |
       | 5     | 0      | 5        | location_name=='town_99*'               | location_name |               | town 99, town 990, town 991, town 992, town 993 |
-      | 5     | 0      | 5        | location_name=='town_99*'               |               | location_name | town 993, town 992, town 991, town 990, town 99 |
+      | 5     | 0      | 5        | location_name=='town_99*'               |               | location_name | town 999, town 998, town 997, town 996, town 995 |
       | 5     | 2      | 5        | location_name=='town_99*'               | location_name |               | town 991, town 992, town 993, town 994, town 995|
       | 5     | 2      | 5        | location_name=='town_99*'               |               | location_name | town 997, town 996, town 995, town 994, town 993|
       | /null | /null  | 1        | location_name==town_999                 |               |               | town 999                                        |
+      | /null | /null  | 1        | location_id==999                         |               |               | town 999                                        |
       | /null | /null  | 1        | location_name==town_99*;location_id==99 |               |               | town 99                                         |
       | /null | /null  | 1        | location_id==99                         |               |               | town 99                                         |
 
@@ -122,8 +127,8 @@ Feature: Review locaitons
     Examples:
       | url       | property                             | response_code | custom_code |
       | /location | 11111111-1111-4111-a111-111111111111 | 404           | 40402       |
-      | /location | null                                 | 400           | 40402       |
-      | /location | /null                                | 400           | 40402       |
+      | /location | null                                 | 400           | 40002       |
+      | /location | /null                                | 400           | 40002       |
 
 
   #/location/<location_id>/properties

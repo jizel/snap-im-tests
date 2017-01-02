@@ -68,7 +68,7 @@
             "room": 2.0,
             "service": 1.55,
             "value": 5.1,
-            "cleanliness": 1.0
+            "cleanliness": 1.5
           },
           "data_incomplete": true
         },
@@ -79,7 +79,7 @@
             "room": 1.74,
             "service": 1.225,
             "value": 5.35,
-            "cleanliness": 1.1
+            "cleanliness": 1.28333
           },
           "data_incomplete": true
         },
@@ -90,7 +90,7 @@
             "room": 0.7,
             "service": 1.65,
             "value": 5.4,
-            "cleanliness": 0.94
+            "cleanliness": 1.175
           },
           "data_incomplete": true
         },
@@ -154,7 +154,7 @@
             "location": 3.4,
             "room": 2.2,
             "service": 1.9,
-            "cleanliness": 0.7
+            "cleanliness": 1.4
           },
           "data_incomplete": true
         },
@@ -176,7 +176,7 @@
             "room": 1.55,
             "service": 1.2,
             "value": 5.0,
-            "cleanliness": 0.96667
+            "cleanliness": 1.45
           },
           "data_incomplete": true
         },
@@ -187,7 +187,7 @@
             "room": 0.525,
             "service": 1.65,
             "value": 5.43333,
-            "cleanliness": 0.84286
+            "cleanliness": 1.18
           },
           "data_incomplete": true
         },
@@ -267,7 +267,7 @@
             "room": 2.14,
             "service": 1.64,
             "value": 4.94,
-            "cleanliness": 1.01667
+            "cleanliness": 1.525
           },
           "data_incomplete": true
         },
@@ -289,7 +289,7 @@
             "room": 0.56667,
             "service": 1.75,
             "value": 5.33333,
-            "cleanliness": 0.73333
+            "cleanliness": 1.1
           },
           "data_incomplete": true
         },
@@ -352,8 +352,7 @@
           "value": {
             "location": 3.4,
             "service": 1.9,
-            "value": 5.3,
-            "cleanliness": 0.0
+            "value": 5.3
           },
           "data_incomplete": true
         },
@@ -364,7 +363,7 @@
             "room": 2.1,
             "service": 1.71667,
             "value": 4.95714,
-            "cleanliness": 1.1375
+            "cleanliness": 1.51667
           },
           "data_incomplete": true
         },
@@ -375,7 +374,7 @@
             "room": 2.0,
             "service": 1.41667,
             "value": 5.4,
-            "cleanliness": 1.1
+            "cleanliness": 1.32
           },
           "data_incomplete": true
         },
@@ -452,8 +451,7 @@
             "sleep_quality": 5.2,
             "room": 2.2,
             "service": 1.9,
-            "value": 5.3,
-            "cleanliness": 0.0
+            "value": 5.3
           },
           "data_incomplete": true
         },
@@ -464,7 +462,7 @@
             "room": 2.06667,
             "service": 1.74,
             "value": 5.01667,
-            "cleanliness": 1.31429
+            "cleanliness": 1.53333
           },
           "data_incomplete": true
         },
@@ -475,7 +473,7 @@
             "room": 1.9,
             "service": 1.43333,
             "value": 5.4,
-            "cleanliness": 0.26
+            "cleanliness": 1.3
           },
           "data_incomplete": true
         },
@@ -486,7 +484,7 @@
             "room": 0.72857,
             "service": 1.62,
             "value": 5.38571,
-            "cleanliness": 1.0125
+            "cleanliness": 1.15714
           },
           "data_incomplete": true
         },
@@ -554,7 +552,7 @@
             "room": 2.15,
             "service": 1.65,
             "value": 4.8,
-            "cleanliness": 0.5
+            "cleanliness": 1.5
           },
           "data_incomplete": true
         },
@@ -576,7 +574,7 @@
             "room": 0.5,
             "service": 1.7,
             "value": 5.5,
-            "cleanliness": 0.4
+            "cleanliness": 0.8
           },
           "data_incomplete": true
         },

@@ -31,6 +31,8 @@ Feature: Review travelers
     Given Relation between user with username "snapshotUser" and property with code "p1_code" exists
 #    Relation with type 'anchor' doesn't exist anymore (was replaced with anchorCustomerId - Story DP-1232). Replaced with type 'owner'. Other types (data_owner, owner, asset_management, management, chain, membership) need to be covered too.
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Default partner is created
+    Given Default application is created
 
 
   Scenario Outline: Get amount of specific analytics data from API for a given granularity for travelers overall bubble rating
@@ -213,41 +215,39 @@ Feature: Review travelers
   Scenario Outline: Get analytics data from TA API that has wrong time interval
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
-    And Custom code is 63
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | url                               | granularity | until      | since      | property                             | message                                                                                                                                                               |
-      | /travellers/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /travellers/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /travellers/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | url                               | granularity | until      | since      | property                             |
+      | /travellers/overall_bubble_rating | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/number_of_reviews     | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business   | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
-      | /travellers/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /travellers/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /travellers/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
+      | /travellers/overall_bubble_rating | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/number_of_reviews     | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business   | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
-      | /travellers/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
-      | /travellers/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
-      | /travellers/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | /travellers/overall_bubble_rating | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/number_of_reviews     | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/aspects_of_business   | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
   Scenario Outline: Get travellers analytics data from TA API has wrong time interval
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
-    And Custom code is 63
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     #  Change expected message when DP-1495 is fixed
     Examples:
-      | url          | granularity | until      | since      | property                             | message                                                                                                                                                               |
-      | /travellers/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | /travellers/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-12) |
-      | /travellers/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-08-26) |
+      | url          | granularity | until      | since      | property                             |
+      | /travellers/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/ | week        | 2015-11-12 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
+      | /travellers/ | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
 
-  #todo - return separate travelers for all enpoints (forgoten)
+#  #todo - return separate travelers for all enpoints (forgoten)
 #  Scenario Outline: Get error codes specific traveler
 #    When Get trip advisor travellers "<url>" data for "<traveler>" with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
 #    Then Response code is 404

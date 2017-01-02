@@ -36,7 +36,6 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void followingApplicationIsCreated(ApplicationDto application) {
 
-        Serenity.setSessionVariable(SESSION_CREATED_APPLICATION).to(application);
         ApplicationDto existingApplication = getApplicationById(application.getApplicationId());
         if (existingApplication != null) {
             deleteEntityWithEtag(existingApplication.getApplicationId());

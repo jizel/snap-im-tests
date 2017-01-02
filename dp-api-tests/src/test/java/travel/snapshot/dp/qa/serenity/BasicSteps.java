@@ -55,13 +55,18 @@ import java.util.Map;
  * Created by sedlacek on 9/23/2015.
  */
 public class BasicSteps {
-
+    public static final String SNAPSHOT_WEBSITE = "http://www.snapshot.travel";
     public static final String HEADER_IF_MATCH = "If-Match";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
     public static final String OAUTH_PARAMETER_NAME = "access_token";
     public static final String HEADER_XAUTH_USER_ID = "X-Auth-UserId";
+    public static final String HEADER_XAUTH_APPLICATION_ID = "X-Auth-AppId";
     public static final String DEFAULT_SNAPSHOT_USER_ID = "11111111-0000-4000-a000-000000000000";
+    public static final String DEFAULT_SNAPSHOT_APPLICATION_ID = "11111111-0000-4000-a000-111111111111";
+    public static final String DEFAULT_SNAPSHOT_PARTNER_ID = "11111111-0000-4000-a000-222222222222";
+    public static final String DEFAULT_SNAPSHOT_PARTNER_VAT_ID = "11111111-0000-4000-a000-333333333333";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
+    public static final String APPLICATION_ID = "";
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
@@ -459,17 +464,21 @@ public class BasicSteps {
     }
 
     protected Response getEntitiesByUser(String userId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
-        RequestSpecification requestSpecification = given().spec(spec);
+        return getEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, url, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getEntitiesByUserForApp(String userId, String appId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
         }
         if (url == null) {
             url = "";
         }
+        RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, appId);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
-
         return requestSpecification.when().get(url);
     }
 
@@ -597,6 +606,10 @@ public class BasicSteps {
 
     public void setSessionResponse(Response response) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+    }
+
+    public void setApplicationId(String value) {
+        Serenity.setSessionVariable(APPLICATION_ID).to(value);
     }
 
     public Map<String, Response> getSessionResponseMap() {

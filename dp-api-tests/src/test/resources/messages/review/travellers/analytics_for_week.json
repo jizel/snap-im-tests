@@ -65,7 +65,7 @@
             "room": 0.5,
             "service": 1.7,
             "value": 5.5,
-            "cleanliness": 0.5
+            "cleanliness": 1.0
           },
           "data_incomplete": true
         },
@@ -136,7 +136,7 @@
             "room": 0.5,
             "service": 1.7,
             "value": 5.5,
-            "cleanliness": 0.66667
+            "cleanliness": 1.0
           },
           "data_incomplete": true
         },
@@ -199,7 +199,7 @@
             "room": 0.45,
             "service": 1.75,
             "value": 5.3,
-            "cleanliness": 0.4
+            "cleanliness": 0.8
           },
           "data_incomplete": true
         },
@@ -410,8 +410,7 @@
             "sleep_quality": 4.4,
             "room": 0.5,
             "service": 1.7,
-            "value": 5.5,
-            "cleanliness": 0.0
+            "value": 5.5
           },
           "data_incomplete": true
         },
