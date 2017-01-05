@@ -122,7 +122,7 @@ Feature: Eventing identity module relationships
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
       | propertySetName                | propertySetDescription | propertySetType |
       | add_propset_user_event_propset | ps1_description        | brand           |
 
@@ -151,7 +151,7 @@ Feature: Eventing identity module relationships
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
       | propertySetName                | propertySetDescription | propertySetType |
       | del_propset_user_event_propset | ps1_description        | brand           |
 
@@ -181,7 +181,7 @@ Feature: Eventing identity module relationships
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
       | propertySetName                | propertySetDescription | propertySetType |
       | add_propset_user_event_propset | ps1_description        | brand           |
 
@@ -206,7 +206,7 @@ Feature: Eventing identity module relationships
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
       | propertySetName                | propertySetDescription | propertySetType |
       | del_propset_user_event_propset | ps1_description        | brand           |
 

@@ -288,11 +288,6 @@ public class BasicSteps {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityWithEtag(String entityId, String data) {
-        String etag = getEntity(entityId, null).getHeader(HEADER_ETAG);
-        return updateEntity(entityId, data, etag);
-    }
-
     protected Response updateEntityByUser(String userId, String entityId, String data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
@@ -303,6 +298,15 @@ public class BasicSteps {
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         return requestSpecification.body(data).when().post("/{id}", entityId);
+    }
+
+    protected Response updateEntityWithEtag(String entityId, String data) {
+        return updateEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data);
+    }
+
+    protected Response updateEntityWithEtagByUser(String userId, String entityId, String data) {
+        String etag = getEntity(entityId, null).getHeader(HEADER_ETAG);
+        return updateEntityByUser(userId, entityId, data, etag);
     }
 
 
@@ -325,6 +329,12 @@ public class BasicSteps {
     protected void deleteEntityWithEtag(String entityId) {
         String etag = getEntity(entityId).getHeader(HEADER_ETAG);
         Response response = deleteEntity(entityId, etag);
+        setSessionResponse(response);
+    }
+
+    protected void deleteEntityWithEtagByUser(String userId, String entityId) {
+        String etag = getEntity(entityId).getHeader(HEADER_ETAG);
+        Response response = deleteEntityByUser(userId, entityId, etag);
         setSessionResponse(response);
     }
 
@@ -439,6 +449,26 @@ public class BasicSteps {
 
         setSessionResponse(response);
     }
+
+    @Step
+    public void sendGetRequestToUrl(String url, String module) {
+       sendGetRequestToUrlByUser(DEFAULT_SNAPSHOT_USER_ID, url, module);
+    }
+
+    @Step
+    public void sendGetRequestToUrlByUser(String userId, String url, String module) {
+        setBaseUriForModule(module);
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).basePath(url).when().get();
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void sendGetRequestToUrlWithoutUserHeader(String url, String module) {
+        setBaseUriForModule(module);
+        Response response = given().spec(spec).basePath(url).when().get();
+        setSessionResponse(response);
+    }
+
 
     /**
      * getting entities over rest api, if limit and cursor is null or empty, it's not added to query

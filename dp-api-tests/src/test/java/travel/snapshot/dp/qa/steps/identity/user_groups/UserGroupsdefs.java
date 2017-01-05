@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.identity.user_groups;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import cucumber.api.Transform;
@@ -45,13 +46,15 @@ public class UserGroupsdefs {
     }
 
     @Given("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" exists with isActive \"([^\"]*)\"$")
-    public void relationBetweenUserGroupAndPropertyExistsWithIsActive(String userGroupId, String propertyId, Boolean isActive) throws Throwable {
-        userGroupSteps.relationshipGroupPropertyExist(userGroupId, propertyId, isActive);
+    public void relationBetweenUserGroupAndPropertyExistsWithIsActive(String userGroupName, String propertyId, Boolean isActive) throws Throwable {
+        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
+        assertThat(userGroup, is(notNullValue()));
+        userGroupSteps.relationshipGroupPropertyExist(userGroup.getUserGroupId(), propertyId, isActive);
     }
 
     @Given("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" exists with isActive \"([^\"]*)\"$")
-    public void relationBetweenUserGroupAndPropertySetExistsWithIsActive(String userGroupId, String propertyId, Boolean isActive) throws Throwable {
-        userGroupSteps.relationshipGroupPropertySetExist(userGroupId, propertyId, isActive);
+    public void relationBetweenUserGroupAndPropertySetExistsWithIsActive(String userGroupId, String propertySetId, Boolean isActive) throws Throwable {
+        userGroupSteps.relationshipGroupPropertySetExist(userGroupId, propertySetId, isActive);
     }
 
     // ------------------------- WHEN ------------------------------

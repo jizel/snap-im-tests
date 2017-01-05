@@ -15,7 +15,7 @@ Feature: Properties property sets get
     Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
 
   Scenario: Getting properties property sets
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
@@ -23,10 +23,9 @@ Feature: Properties property sets get
     Then Response code is "200"
     And Content type is "application/json"
     And Body contains entity with attribute "property_set_id"
-    And Body contains entity with attribute "property_set_name"
 
   Scenario Outline: Getting list of properties property sets
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | brand           |
       | list_ps2_name   | list_ps2_description   | brand           |
@@ -157,7 +156,7 @@ Feature: Properties property sets get
       | 5     | 10     | 5        | 54    |
 
   Scenario Outline: Filtering list of properties property sets
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetName | propertySetDescription | propertySetType |
       | list_ps1_name   | list_ps1_description   | brand           |
       | list_ps2_name   | list_ps2_description   | brand           |

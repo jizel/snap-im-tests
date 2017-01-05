@@ -23,7 +23,7 @@ Feature: Review multiproperty property set
 
     Given Relation between user with username "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snapshotUser"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
 

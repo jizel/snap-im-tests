@@ -37,6 +37,7 @@ Feature: Properties users create update delete
   #validate different type of users
 
   @Smoke
+#    Fails because of DP-1630
   Scenario: Removing user from property
     When User with username "default2" is removed from property with code "p1_code"
     Then Response code is "204"

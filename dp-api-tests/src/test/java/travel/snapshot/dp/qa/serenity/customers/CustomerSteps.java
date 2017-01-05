@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.serenity.customers;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
@@ -130,8 +131,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     private CustomerPropertyRelationshipDto getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
-        //TODO add type to query
-        setAccessTokenParamFromSession();
         String filter = String.format("property_id==%s;relationship_type==%s", propertyId, type);
         CustomerPropertyRelationshipDto[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(CustomerPropertyRelationshipDto[].class);
         return stream(customerProperties).findFirst().orElse(null);
@@ -369,16 +368,10 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void propertyIsUpdateForCustomerWithType(PropertyDto p, String customerId, String type, String fieldName, String value) {
-        CustomerDto customer = getCustomerById(customerId);
+        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(customerId, p.getPropertyId(), type);
+        String etag = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null).header(HEADER_ETAG);
 
-        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(customer.getCustomerId(), p.getPropertyId(), type);
-        Response customerPropertyResponseWithEtag = getSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null);
-        String etag = customerPropertyResponseWithEtag.header(HEADER_ETAG);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put(fieldName, value);
-
-        Response updateResponse = updateSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, etag);
+        Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), singletonMap(fieldName, value), etag);
         setSessionResponse(updateResponse);
     }
 

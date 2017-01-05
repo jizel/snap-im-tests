@@ -9,7 +9,8 @@ Feature: Property sets properties create update delete
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |
@@ -22,9 +23,10 @@ Feature: Property sets properties create update delete
   @Smoke
   Scenario: Adding property to property set
     When Property with code "p2_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-    Then Response code is "204"
+    Then Response code is "201"
 
 
+#    Fails because of DP-1630 - remove this scenario of solution a) is picked, keep otherwise
   @Smoke
   Scenario: Removing property from property set
     When Property with code "p2_code" is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
