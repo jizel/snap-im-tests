@@ -19,7 +19,7 @@ For manually created property code the following rules hold
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapUser | Snap  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given  Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given  Default Snapshot user is created
 
 #    ----------< Automatically generated property code tests >-----------------
 
@@ -52,8 +52,7 @@ For manually created property code the following rules hold
       Examples:
         | propertyName | addressLine1 | city       | zipCode | country | resultCode |
         | Čéšký hotel  | line 1       | Brno       | 60200   | CZ      | CZBRQCES   |
-        #      Non unique cities cause fail - see DP-1222
-        | 21st Prop.   | line 2       | New York   | 11414   | US      | USXGO21S   |
+        | 21st Prop.   | line 2       | New York   | 11414   | US      | USNYC21S   |
         | Union Prop.  | line 2,5     | Union City | 9307    | US      | USUCGUNI   |
         | Beijing Hotel| line 3       | Beijing    | 23456   | CN      | CNBJSBEI   |
 

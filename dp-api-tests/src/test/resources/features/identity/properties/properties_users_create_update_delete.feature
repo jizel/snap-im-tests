@@ -17,7 +17,7 @@ Feature: Properties users create update delete
     Given The following properties exist with random address and billing address for user "6d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given Default Snapshot user is created
 
   @Smoke
   Scenario: Adding user to property

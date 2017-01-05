@@ -10,7 +10,7 @@ Feature: Customers create update delete
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
       | userId                               | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created for customer "a792d2b2-3836-4207-a705-42bbecf3d881"
+    Given Default Snapshot user is created
 
   @Smoke
   Scenario: Creating Customer

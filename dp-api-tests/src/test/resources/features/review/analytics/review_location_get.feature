@@ -10,7 +10,7 @@ Feature: Review locaitons
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
       | userId                               | userType | userName     | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser | Snapshot  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given Default Snapshot user is created
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

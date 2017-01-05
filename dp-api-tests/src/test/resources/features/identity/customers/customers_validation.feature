@@ -27,7 +27,7 @@ Feature: Customers validation
     Given The following customers exist with random address
       | customerId                           | companyName          | email                   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-    Given Default Snapshot user is created for customer "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e"
+    Given Default Snapshot user is created
 
   # --- happy path ---
 

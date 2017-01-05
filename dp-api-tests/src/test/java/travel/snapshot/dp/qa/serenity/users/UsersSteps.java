@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -59,6 +60,13 @@ public class UsersSteps extends BasicSteps {
         relation.setIsPrimary(isPrimary);
         user.setUserCustomerRelationship(relation);
 
+        Response response = createEntity(user);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void followingSnapshotUserIsCreated(UserCreateDto user) {
+        user.setUserType(SNAPSHOT);
         Response response = createEntity(user);
         setSessionResponse(response);
     }

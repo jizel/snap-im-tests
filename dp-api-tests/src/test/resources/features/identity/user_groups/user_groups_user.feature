@@ -5,7 +5,7 @@ Feature: User groups user relationship feature
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given Default Snapshot user is created for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
+    Given Default Snapshot user is created
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
       | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -116,7 +116,7 @@ Feature: User groups user relationship feature
       | userName     | userType | firstName | lastName | email                        | timezone          | culture | userId                                |
       | userGuest    | guest    | FNU2      | LNU2     | userGuest@snapshot.travel    | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
       | userPartner1 | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
-#   | snaphostUser2| snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel| Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
+      | snaphostUser2| snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel| Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
 
   Scenario: Snapshot type user - Creator of User Group won't automatically become
     When Relation between user group "userGroup_1" and user "snapshotUser1" is got
