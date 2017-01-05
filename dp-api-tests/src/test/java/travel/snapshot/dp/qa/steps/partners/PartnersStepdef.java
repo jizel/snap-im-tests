@@ -20,6 +20,18 @@ public class PartnersStepdef {
     @Steps
     private PartnerSteps partnerSteps;
 
+    @Given("^Default partner is created$")
+    public void defaultPartnerIsCreated() throws Throwable {
+        PartnerDto defaultPartner = new PartnerDto();
+        defaultPartner.setPartnerId(partnerSteps.DEFAULT_SNAPSHOT_PARTNER_ID);
+        defaultPartner.setName("Somepartner");
+        defaultPartner.setWebsite(partnerSteps.SNAPSHOT_WEBSITE);
+        defaultPartner.setIsActive(true);
+        defaultPartner.setEmail("somemail@snapshot.travel");
+        defaultPartner.setVatId(partnerSteps.DEFAULT_SNAPSHOT_PARTNER_VAT_ID);
+        partnerSteps.followingPartnerIsCreated(defaultPartner);
+    }
+
     @Given("^The following partner exist$")
     public void theFollowingPartnerExist(List<PartnerDto> partners) throws Throwable {
         partnerSteps.partnerExists(partners);
