@@ -12,7 +12,7 @@ Feature: Customers properties get
       | userId                               | userType | userName     | firstName | lastName     | email                                | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1           | customer  | property     | customerProperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created for customer "58dd58d4-a56e-4cf5-a3a6-068fe37fef40"
+    Given Default Snapshot user is created
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |

@@ -58,8 +58,8 @@ public class UserStepdefs {
         usersSteps.followingUserIsCreated(users.get(0), customerId, isPrimary);
     }
 
-    @Given("^Default Snapshot user is created for customer \"([^\"]*)\"$")
-    public void defaultSnapshotUserIsCreated(String customerId) throws Throwable {
+    @Given("^Default Snapshot user is created$")
+    public void defaultSnapshotUserIsCreated() throws Throwable {
         UserCreateDto defaultSnapshotUser = new UserCreateDto();
         defaultSnapshotUser.setUserId(usersSteps.DEFAULT_SNAPSHOT_USER_ID);
         defaultSnapshotUser.setUserType(SNAPSHOT);
@@ -70,7 +70,7 @@ public class UserStepdefs {
         defaultSnapshotUser.setTimezone("Europe/Prague");
         defaultSnapshotUser.setCulture("cs-CZ");
 
-        usersSteps.followingUserIsCreated(defaultSnapshotUser, customerId, true);
+        usersSteps.followingSnapshotUserIsCreated(defaultSnapshotUser);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")
@@ -384,5 +384,10 @@ public class UserStepdefs {
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set id \"([^\"]*)\" is added$")
     public void roleWithIdForUserNameAndPropertySetIdIsAdded(String roleId, String userName, String propSerId) throws Throwable {
         userRolesSteps.roleExistsBetweenUserAndPropertySet(roleId, userName, propSerId);
+    }
+
+    @When("^Following snapshot user is created without customer$")
+    public void followingSnapshotUserIsCreatedWithoutCustomer(List<UserCreateDto> users) throws Throwable {
+       usersSteps.followingSnapshotUserIsCreated(users.get(0));
     }
 }

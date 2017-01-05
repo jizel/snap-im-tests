@@ -8,7 +8,7 @@ Feature: User groups property sets
     Given The following users exist for customer "67adbc2d-f6ad-4e6a-9ed8-8ba93c430481" as primary "false"
       | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot  | User1    | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created for customer "67adbc2d-f6ad-4e6a-9ed8-8ba93c430481"
+    Given Default Snapshot user is created
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive |
       | 922913b0-877c-45f3-b650-df8022608d61 | 67adbc2d-f6ad-4e6a-9ed8-8ba93c430481 | userGroup_1 | false    |

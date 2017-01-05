@@ -10,7 +10,7 @@ Feature: Customers property sets
     Given The following users exist for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" as primary "false"
       | userId                               | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
       | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124"
+    Given Default Snapshot user is created
 
     #Get token for snapshot user and set it to session (?access_token={token})
     Given The password of user "snapshotuser" is "Password01"

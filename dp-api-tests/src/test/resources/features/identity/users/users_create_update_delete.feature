@@ -138,6 +138,15 @@ Feature: Users create update delete
     And Body contains entity with attribute "user_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
     And Body contains entity with attribute "user_name" value "snaphostUser1"
 
+  Scenario: Snapshot user can be created without relationship to customer (DP-1427)
+    When Following snapshot user is created without customer
+      | userName      | firstName | lastName | email                         | timezone      | culture |
+      | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Then Response code is "201"
+    And Body contains entity with attribute "user_type" value "snapshot"
+    And Body does not contain property with attribute "user_customer_relationship"
+
+
   Scenario Outline: Send POST request with empty body to all user endpoints
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"

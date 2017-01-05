@@ -27,7 +27,7 @@ Feature: Properties validation
       | /address/country       | String | true     | US                                                          | xx       | USA        |
 
   # --- happy path ---
-  Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
+  Given Default Snapshot user is created
 
   @Smoke
   Scenario: Object creation - correct values
