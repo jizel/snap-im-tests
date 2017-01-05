@@ -139,7 +139,7 @@ public class PartnerSteps extends BasicSteps {
 
     @Step
     public void listOfPartnersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -157,7 +157,7 @@ public class PartnerSteps extends BasicSteps {
     @Step
     public void getApplicationsForPartnerId(String partnerId) {
         Response partnerApplications = getSecondLevelEntities(partnerId, "", LIMIT_TO_ALL,
-                CURSOR_FROM_FIRST, null, null, null);
+                CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerApplications);
     }
 
@@ -165,25 +165,25 @@ public class PartnerSteps extends BasicSteps {
     public void listOfPartnerApplicationsIsGotWith(String partnerId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
         Response partnerApplications = getSecondLevelEntities(partnerId, "", limit,
-                cursor, filter, sort, sortDesc);
+                cursor, filter, sort, sortDesc, null);
         setSessionResponse(partnerApplications);
     }
 
     @Step
     public void getUsersForPartnerId(String partnerId) {
         Response partnerUsers = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL,
-                CURSOR_FROM_FIRST, null, null, null);
+                CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerUsers);
     }
 
     public PartnerDto getPartnerByName(String name) {
         String filter = String.format("name =='%s'", name);
-        PartnerDto[] partners = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PartnerDto[].class);
+        PartnerDto[] partners = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PartnerDto[].class);
         return Arrays.asList(partners).stream().findFirst().orElse(null);
     }
 
     public PartnerDto getPartnerById(String partnerId) {
-        PartnerDto[] partners = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "partner_id==" + partnerId, null, null)
+        PartnerDto[] partners = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "partner_id==" + partnerId, null, null, null)
                 .as(PartnerDto[].class);
         return Arrays.asList(partners).stream().findFirst().orElse(null);
     }

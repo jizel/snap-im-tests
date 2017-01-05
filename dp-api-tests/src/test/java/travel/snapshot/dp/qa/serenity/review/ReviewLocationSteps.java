@@ -23,7 +23,7 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
 
     @Step
     public void listOfLocationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -41,7 +41,7 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
 
     @Step
     public void listOfLocationPropertiesIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String id) {
-        Response response = getSecondLevelEntities(id, "properties", limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(id, "properties", limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

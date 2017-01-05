@@ -55,7 +55,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
     public void createExistingApiSubscription() {
-        ApiSubscriptionDto[] apiSubsriptions = getEntities(null, null, null, null, null).as(ApiSubscriptionDto[].class);
+        ApiSubscriptionDto[] apiSubsriptions = getEntities(null, null, null, null, null, null, null).as(ApiSubscriptionDto[].class);
         ApiSubscriptionDto selected = Arrays.asList(apiSubsriptions).stream().findFirst().orElse(null);
         if (selected == null) {
             fail("There are no api subscription to recreate");
@@ -79,7 +79,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
 
     public void apiSubscriptionInListOfAll(String apiSubscriptionId, Boolean presence) {
         String filter = API_SUBSCRIPTIONS_ID + "=='" + apiSubscriptionId + "'";
-        ApiSubscriptionDto[] apiSubsriptions = getEntities(LIMIT_TO_ONE, null, filter, null, null).as(ApiSubscriptionDto[].class);
+        ApiSubscriptionDto[] apiSubsriptions = getEntities(null, LIMIT_TO_ONE, null, filter, null, null, null).as(ApiSubscriptionDto[].class);
         ApiSubscriptionDto apiSub = Arrays.asList(apiSubsriptions).stream().findFirst().orElse(null);
 
         if ((apiSub == null) && (presence)) {
@@ -116,7 +116,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
     public void listApiSubscriptiosIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

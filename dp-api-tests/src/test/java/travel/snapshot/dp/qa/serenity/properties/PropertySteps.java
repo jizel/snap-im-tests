@@ -120,7 +120,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void getListOfPropertiesWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
 
         // store to session
         setSessionResponse(response);
@@ -128,7 +128,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void getListOfPropertiesByUserWith(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntitiesByUser(userId, limit, cursor, filter, sort, sortDesc);
+        Response response = getEntitiesByUser(userId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -285,19 +285,19 @@ public class PropertySteps extends BasicSteps {
      */
     @Step
     public PropertyDto getPropertyByCodeInternal(String code) {
-        PropertyDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null).as(PropertyDto[].class);
+        PropertyDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null, null).as(PropertyDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
 
     @Step
     public PropertyDto getPropertyByCodeInternalByUser(String userId, String code) {
-        PropertyDto[] properties = getEntitiesByUser(userId, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null).as(PropertyDto[].class);
+        PropertyDto[] properties = getEntitiesByUser(userId, null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null, null).as(PropertyDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
 
     @Step
     public PropertyDto getPropertyByName(String propertyName) {
-        PropertyDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, String.format("name=='%s'", propertyName), null, null).as(PropertyDto[].class);
+        PropertyDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, String.format("name=='%s'", propertyName), null, null, null).as(PropertyDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
 
@@ -305,7 +305,7 @@ public class PropertySteps extends BasicSteps {
     public void removeAllUsersFromPropertiesWithCodes(List<String> propertyCodes) {
         propertyCodes.forEach(c -> {
             PropertyDto property = getPropertyByCodeInternal(c);
-            Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+            Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
             PartnerUserRelationshipDto[] propertyUsers = customerUsersResponse.as(PartnerUserRelationshipDto[].class);
             for (PartnerUserRelationshipDto pu : propertyUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
@@ -350,7 +350,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public CustomerDto getCustomerForProperty(String propertyId, String customerId) {
-        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null);
+        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
         return stream(customerResponse.as(CustomerDto[].class)).findFirst().orElse(null);
     }
 
@@ -490,7 +490,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void listOfCustomersIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -522,7 +522,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void listOfApiSubscriptionsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response resp = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_API_SUBSCRIPTION, limit, cursor, filter, sort, sortDesc);
+        Response resp = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_API_SUBSCRIPTION, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(resp);
     }
 

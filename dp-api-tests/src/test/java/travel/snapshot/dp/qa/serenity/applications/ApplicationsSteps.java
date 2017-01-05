@@ -123,7 +123,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void listOfApplicationsIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -149,7 +149,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     public ApplicationDto getApplicationById(String applicationId) {
         ApplicationDto[] applications =
-                getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_id==" + applicationId, null, null)
+                getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_id==" + applicationId, null, null, null)
                         .as(ApplicationDto[].class);
         return Arrays.asList(applications).stream().findFirst().orElse(null);
     }
@@ -168,7 +168,7 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void getApplicationsRolesForApplicationId(String applicationId) {
         Response customerUsersResponse = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ALL,
-                CURSOR_FROM_FIRST, null, null, null);
+                CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(customerUsersResponse);
     }
 
@@ -176,7 +176,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void listOfApplicationsRolesIsGotWith(String applicationId, String limit, String cursor, String filter,
                                                  String sort, String sortDesc) {
         Response response =
-                getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc);
+                getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -330,7 +330,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void listOfApplicationVersionsIsGotWith(String applicationId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
         Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, limit, cursor, filter,
-                sort, sortDesc);
+                sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -349,7 +349,7 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void getCommSubscriptionForApplicationId(String applicationId) {
         Response appCommSubscriptionResponse = getSecondLevelEntities(applicationId, "", LIMIT_TO_ALL,
-                CURSOR_FROM_FIRST, null, null, null);
+                CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(appCommSubscriptionResponse);
     }
 
@@ -357,7 +357,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void listOfApplicationCommSubscriptionsIsGotWith(String applicationId, String limit, String cursor, String filter,
                                                             String sort, String sortDesc) {
         Response response = getSecondLevelEntities(applicationId, "", limit, cursor, filter,
-                sort, sortDesc);
+                sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -369,13 +369,13 @@ public class ApplicationsSteps extends BasicSteps {
     public VersionDto getApplicationVersionByName(String applicationId, String versionName) {
         VersionDto[] applicationVersion =
                 getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
-                        "name=='" + versionName + "'", null, null).as(VersionDto[].class);
+                        "name=='" + versionName + "'", null, null, null).as(VersionDto[].class);
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 
     public VersionDto getApplicationVersionById(String applicationId, String versionId) {
         VersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
-                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null).as(VersionDto[].class);
+                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null, null).as(VersionDto[].class);
         return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
     }
 

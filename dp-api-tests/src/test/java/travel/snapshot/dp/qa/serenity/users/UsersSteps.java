@@ -164,7 +164,7 @@ public class UsersSteps extends BasicSteps {
 
 
     public UserDto getUserByUsername(String username) {
-        UserDto[] users = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null).as(UserDto[].class);
+        UserDto[] users = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null, null).as(UserDto[].class);
         return Arrays.asList(users).stream().findFirst().orElse(null);
     }
 
@@ -205,7 +205,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void listOfUsersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

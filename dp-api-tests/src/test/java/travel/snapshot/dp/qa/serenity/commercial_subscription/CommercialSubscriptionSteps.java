@@ -112,7 +112,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     @Step
     public void listOfCommSubscriptionsIsGotWith(String limit, String cursor, String filter, String sort,
                                                  String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -133,8 +133,8 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     }
 
     public CommercialSubscriptionDto getSubscriptionById(String commSubscriptionId) {
-        CommercialSubscriptionDto[] comSubscription = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST,
-                "commercial_subscription_id==" + commSubscriptionId, null, null).as(CommercialSubscriptionDto[].class);
+        CommercialSubscriptionDto[] comSubscription = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
+                "commercial_subscription_id==" + commSubscriptionId, null, null, null).as(CommercialSubscriptionDto[].class);
         return Arrays.asList(comSubscription).stream().findFirst().orElse(null);
     }
 

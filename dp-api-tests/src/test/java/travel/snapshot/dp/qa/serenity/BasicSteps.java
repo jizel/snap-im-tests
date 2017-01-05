@@ -481,16 +481,9 @@ public class BasicSteps {
      *
      * @param sortDesc @return
      */
-    protected Response getEntities(String limit, String cursor, String filter, String sort, String sortDesc) {
-        return getEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, null, limit, cursor, filter, sort, sortDesc, null);
-    }
 
     protected Response getEntities(String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         return getEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, url, limit, cursor, filter, sort, sortDesc, queryParams);
-    }
-
-    protected Response getEntitiesByUser(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        return getEntitiesByUser(userId, null, limit, cursor, filter, sort, sortDesc, null);
     }
 
     protected Response getEntitiesByUser(String userId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
@@ -581,10 +574,6 @@ public class BasicSteps {
 
     protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         return getSecondLevelEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
-    }
-
-    protected Response getSecondLevelEntities(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc) {
-        return getSecondLevelEntities(firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, null);
     }
 
     protected Response getSecondLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
