@@ -85,7 +85,18 @@ public class UserStepdefs {
 
     @When("^User with userName \"([^\"]*)\" is deleted$")
     public void User_with_name_name_is_deleted(String username) throws Throwable {
-        usersSteps.deleteUserWithUserName(username);
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+
+        usersSteps.deleteUser(user.getUserId());
+    }
+
+    @When("^User with \"([^\"]*)\" is deleted with ETAG \"([^\"]*)\"$")
+    public void userWithIsDeletedWithOutdatedETAG(String username, String etag) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+
+        usersSteps.deleteUserWithEtag(user.getUserId(), etag);
     }
 
     @Then("^User with same id doesn't exist$")
@@ -95,7 +106,7 @@ public class UserStepdefs {
 
     @When("^Nonexistent user is deleted$")
     public void Nonexistent_user_is_deleted() throws Throwable {
-        usersSteps.deleteUserWithId("nonexistent");
+        usersSteps.deleteUser("nonexistent");
     }
 
     @When("^User with userName \"([^\"]*)\" is updated with data$")

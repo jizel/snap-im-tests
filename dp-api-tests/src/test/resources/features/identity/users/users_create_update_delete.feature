@@ -84,6 +84,16 @@ Feature: Users create update delete
     Then Response code is "412"
     And Custom code is "41201"
 
+  Scenario: Deleting user with invalid ETAG
+    When User with "snapshotUser1" is deleted with ETAG "invalid_etag"
+    Then Response code is "412"
+    And Custom code is 41202
+
+  Scenario: Deleting user without ETAG
+    When User with "snapshotUser1" is deleted with ETAG ""
+    Then Response code is "412"
+    And Custom code is 41201
+
   Scenario Outline: Updating user
     When User with userName "snapshotUser2" is updated with data
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
