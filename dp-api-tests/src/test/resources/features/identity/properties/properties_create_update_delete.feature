@@ -25,6 +25,7 @@ Feature: Properties create update delete
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
+    And Body contains entity with attribute "is_active" value "false"
 
   @Smoke
   Scenario: Updating property
@@ -65,6 +66,13 @@ Feature: Properties create update delete
     Then Response code is "204"
     And Body is empty
     And Property with code "p1_code" is not active
+
+  Scenario: Timezone parameter is optional (DP-1332)
+    When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | anchorCustomerId                     |
+      | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is "201"
+    And Body does not contain property with attribute "timezone"
 
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
@@ -269,7 +277,7 @@ Feature: Properties create update delete
     And Body contains entity with attribute "property_name" value "p1_name"
 
   Scenario Outline: Send POST request with empty body to all properties endpoints
-    When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     When Property with code "p1_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"

@@ -6,13 +6,18 @@ Feature: Applications create update delete
 
   @Smoke
   Scenario: Create application
+    Given The following partner is created
+      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application is created
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | applicationName            | description               | website                    | applicationId                        | partnerId                            | isInternal |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Application test company 1"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
+#  DP-1332
+    And Body contains entity with attribute "is_active" value "false"
 
   Scenario Outline: Checking error codes for creating applications
     Given Application is created
