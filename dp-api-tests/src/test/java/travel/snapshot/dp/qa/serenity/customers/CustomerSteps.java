@@ -132,7 +132,7 @@ public class CustomerSteps extends BasicSteps {
 
     private CustomerPropertyRelationshipDto getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
         String filter = String.format("property_id==%s;relationship_type==%s", propertyId, type);
-        CustomerPropertyRelationshipDto[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(CustomerPropertyRelationshipDto[].class);
+        CustomerPropertyRelationshipDto[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(CustomerPropertyRelationshipDto[].class);
         return stream(customerProperties).findFirst().orElse(null);
     }
 
@@ -169,7 +169,7 @@ public class CustomerSteps extends BasicSteps {
 
 
     public CustomerDto getCustomerById(String id) {
-        CustomerDto[] customers = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + id, null, null).as(CustomerDto[].class);
+        CustomerDto[] customers = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + id, null, null, null).as(CustomerDto[].class);
         return stream(customers).findFirst().orElse(null);
     }
 
@@ -204,7 +204,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public Response listOfCustomersIsGotByUserWith(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntitiesByUser(userId, limit, cursor, filter, sort, sortDesc);
+        Response response = getEntitiesByUser(userId, limit, cursor, filter, sort, sortDesc, null, null);
         setSessionResponse(response);
         return response;
     }
@@ -404,7 +404,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public CustomerUserRelationshipDto getUserForCustomer(String customerId, String userId) {
-        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null);
+        Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
         return stream(customerUserResponse.as(CustomerUserRelationshipDto[].class)).findFirst().orElse(null);
     }
 
@@ -453,14 +453,14 @@ public class CustomerSteps extends BasicSteps {
     public void listOfCustomerPropertiesIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
         CustomerDto c = getCustomerById(customerId);
         setAccessTokenParamFromSession();
-        Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     @Step
     public void listOfCustomerPropertySetsIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
         setAccessTokenParamFromSession();
-        Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -498,7 +498,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void getCommSubscriptionForCustomerId(String customerId) {
         Response appCommSubscriptionResponse = getSecondLevelEntities(customerId,
-                "", LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                "", LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(appCommSubscriptionResponse);
     }
 
@@ -506,13 +506,13 @@ public class CustomerSteps extends BasicSteps {
     public void listOfCustomerCommSubscriptionsIsGotWith(String customerId, String limit, String cursor, String filter,
                                                          String sort, String sortDesc) {
         Response response = getSecondLevelEntities(customerId, "", limit,
-                cursor, filter, sort, sortDesc);
+                cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     public List<CustomerDto> getCustomersForIds(List<String> customerIds) {
         String filter = "customer_id=in=(" + StringUtils.join(customerIds, ',') + ")";
-        CustomerDto[] customers = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(CustomerDto[].class);
+        CustomerDto[] customers = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null).as(CustomerDto[].class);
         return Arrays.asList(customers);
     }
 
@@ -520,7 +520,7 @@ public class CustomerSteps extends BasicSteps {
         customerIds.forEach(customerId -> {
             CustomerDto customer = getCustomerById(customerId);
             if (customer != null) {
-                Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 CustomerUserRelationshipDto[] customerUsers = customerUsersResponse.as(CustomerUserRelationshipDto[].class);
                 for (CustomerUserRelationshipDto cu : customerUsers) {
                     Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
@@ -534,7 +534,7 @@ public class CustomerSteps extends BasicSteps {
 
     public void listOfUsersIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
         CustomerDto customer = getCustomerById(customerId);
-        Response response = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -550,7 +550,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void listOfCustomerApiSubscriptionsIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_API_SUBSCRIPTION, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_API_SUBSCRIPTION, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

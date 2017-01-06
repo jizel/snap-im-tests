@@ -77,12 +77,12 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void listUserGroupsIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     public void listGroupRoleIsGot(String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -130,7 +130,7 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkUserGroupExistency(String userGroupId, boolean existency) {
-        UserGroupDto[] userGroup = getEntities(null, null, "user_group_id=='" + userGroupId + "'", null, null).as(UserGroupDto[].class);
+        UserGroupDto[] userGroup = getEntities(null, null, null, "user_group_id=='" + userGroupId + "'", null, null, null).as(UserGroupDto[].class);
         if (existency) {
             assertNotNull(Arrays.asList(userGroup).stream().findFirst().orElse(null));
             return;
@@ -292,7 +292,7 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkUserGroupRoleRelationExistency(String userGroupId, String roleId, Boolean existency) {
-        RoleIdDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null).as(RoleIdDto[].class);
+        RoleIdDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null).as(RoleIdDto[].class);
         Boolean found = false;
         for (RoleIdDto role : listOfRoles) {
             if (role.getRoleId().equalsIgnoreCase(roleId)) {
@@ -326,7 +326,7 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public UserGroupDto getUserGroupByName(String userGroupName) {
-        UserGroupDto[] userGroups = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, "name==" + userGroupName, null, null).as(UserGroupDto[].class);
+        UserGroupDto[] userGroups = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "name==" + userGroupName, null, null, null).as(UserGroupDto[].class);
         return Arrays.stream(userGroups).findFirst().orElse(null);
     }
 }

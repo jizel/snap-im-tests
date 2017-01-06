@@ -118,7 +118,7 @@ public class RoleBaseSteps extends BasicSteps {
 
     public RoleDto getRoleByNameForApplicationInternal(String name, String applicationId) {
         String filter = String.format("name=='%s' and application_id=='%s'", name, applicationId);
-        RoleDto[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(RoleDto[].class);
+        RoleDto[] roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(RoleDto[].class);
         return Arrays.asList(roles).stream().findFirst().orElse(null);
     }
 
@@ -129,7 +129,7 @@ public class RoleBaseSteps extends BasicSteps {
 
     public RoleDto getRoleByName(String name) {
         String filter = String.format("name=='%s'", name);
-        RoleDto[] roles = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(RoleDto[].class);
+        RoleDto[] roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(RoleDto[].class);
         return Arrays.asList(roles).stream().findFirst().orElse(null);
     }
 
@@ -181,7 +181,7 @@ public class RoleBaseSteps extends BasicSteps {
 
     @Step
     public void listOfRolesIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

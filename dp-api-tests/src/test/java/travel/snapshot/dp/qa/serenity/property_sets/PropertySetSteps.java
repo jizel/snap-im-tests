@@ -74,20 +74,20 @@ public class PropertySetSteps extends BasicSteps {
 
     public PropertySetDto getPropertySetByNameForCustomer(String propertySetName, String customerId) {
         String filter = String.format("name==%s and customer_id==%s", propertySetName, customerId);
-        PropertySetDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
+        PropertySetDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
 
     public PropertySetDto getPropertySetByName(String propertySetName) {
         String filter = String.format("name==%s", propertySetName);
-        PropertySetDto[] properties = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
+        PropertySetDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
 
     public void deleteAllPropertySetsForCustomer(List<CustomerDto> customers) {
         customers.forEach(c -> {
             String filter = "customer_id==" + c.getCustomerId();
-            Response entities = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null);
+            Response entities = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null);
             PropertySetDto[] propertySets = entities.as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
                 deleteEntityWithEtag(propertySet.getPropertySetId());
@@ -100,7 +100,7 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void listOfPropertySetsIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -141,9 +141,9 @@ public class PropertySetSteps extends BasicSteps {
     public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, CustomerDto c) {
         propertySetNames.forEach(n -> {
             String filter = String.format("name==%s and customer_id==%s", n, c.getCustomerId());
-            PropertySetDto[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
+            PropertySetDto[] propertySets = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
-                Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 PropertyUserRelationshipDto[] propertyUsers = propertyUsersResponse.as(PropertyUserRelationshipDto[].class);
                 for (PropertyUserRelationshipDto pu : propertyUsers) {
                     Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
@@ -212,13 +212,13 @@ public class PropertySetSteps extends BasicSteps {
 
     public void listOfPropertiesIsGotWith(String propertySetName, CustomerDto customer, String limit, String cursor, String filter, String sort, String sortDesc) {
         PropertySetDto p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
-        Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     public void listOfUsersIsGotWith(String propertySetName, CustomerDto customer, String limit, String cursor, String filter, String sort, String sortDesc) {
         PropertySetDto p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
-        Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -247,9 +247,9 @@ public class PropertySetSteps extends BasicSteps {
     public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, CustomerDto customer) {
         propertySetNames.forEach(psn -> {
             String filter = String.format("name==%s and customer_id==%s", psn, customer.getCustomerId());
-            PropertySetDto[] propertySets = getEntities(LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null).as(PropertySetDto[].class);
+            PropertySetDto[] propertySets = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
-                Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null);
+                Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 PropertySetPropertyRelationshipDto[] propertyPropertySets = propertyPropertySetResponse.as(PropertySetPropertyRelationshipDto[].class);
                 for (PropertySetPropertyRelationshipDto pps : propertyPropertySets) {
                     Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
@@ -286,7 +286,7 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     private PropertySetPropertyRelationshipDto getPropertyForPropertySet(String propertySetId, String propertyId) {
-        Response propertySetPropertiesResponse = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_id==" + propertyId, null, null);
+        Response propertySetPropertiesResponse = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_id==" + propertyId, null, null, null);
         return Arrays.asList(propertySetPropertiesResponse.as(PropertySetPropertyRelationshipDto[].class)).stream().findFirst().orElse(null);
     }
 

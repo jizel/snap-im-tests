@@ -193,7 +193,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void listOfConfigurationTypesisGot(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(limit, cursor, filter, sort, sortDesc);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -311,7 +311,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void listOfConfigurationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String identifier) {
-        Response response = getSecondLevelEntities(identifier, SECOND_LEVEL_OBJECT_RECORDS, limit, cursor, filter, sort, sortDesc);
+        Response response = getSecondLevelEntities(identifier, SECOND_LEVEL_OBJECT_RECORDS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -339,7 +339,7 @@ public class ConfigurationSteps extends BasicSteps {
     @Step
     public void configurationTypeHasDescription(String identifier, String description) {
         String filter = String.format("identifier==%s", identifier);
-        Response response = getEntities(LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null);
+        Response response = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null);
         ConfigurationTypeDto ct = Arrays.asList(response.as(ConfigurationTypeDto[].class)).get(0);
 
         assertEquals(description, ct.getDescription());
