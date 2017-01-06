@@ -21,10 +21,10 @@ Feature: Property sets users create update delete
   @Smoke
   Scenario: Adding user to property set
     When User with username "default3" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-    Then Response code is "204"
+    Then Response code is "201"
 
-  Scenario: Updating Property Set - User relationship
-#    This is now blocked by DP-1612 - if not fixed used the reversed endpoint that works for this test
+  Scenario: Updating Property Set-User relationship
+    When User with username "default0" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
     When Relation between user "default0" and property set "ps1_name" is activated
     Then Response code is "204"

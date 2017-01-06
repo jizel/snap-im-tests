@@ -285,6 +285,6 @@ public class PropertySetsStepdefs {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         PropertyUserRelationshipDto propertySetUserRelation = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
         assertThat(propertySetUserRelation, is(notNullValue()));
-        assertThat(propertySetUserRelation, is(isActive));
+        assertThat(propertySetUserRelation.getIsActive(), is(isActive));
     }
 }

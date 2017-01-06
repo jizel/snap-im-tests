@@ -159,7 +159,7 @@ public class PropertySetSteps extends BasicSteps {
     public void relationExistsBetweenUserAndPropertySetForCustomer(UserDto user, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
-        PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), user.getUserId());
+        PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(user.getUserId(), propertySet.getPropertySetId());
         if (existingPropertySetUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
@@ -176,15 +176,18 @@ public class PropertySetSteps extends BasicSteps {
     private Response addUserToPropertySet(String userId, String propertySetId) {
         Map<String, Object> propertySetUser = new HashMap<>();
         propertySetUser.put("user_id", userId);
-        return given().spec(spec)
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(propertySetUser)
                 .when().post("/{propertySetId}/users", propertySetId);
     }
 
     @Step
-    public PropertyUserRelationshipDto getUserForPropertySet(String propertySetId, String userId) {
-        Response propertySetUserResponse = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
-        return Arrays.stream(propertySetUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
+    public PropertyUserRelationshipDto getUserForPropertySet(String userId, String propertySetId) {
+//        Response propertySetUserResponse = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
+//        return Arrays.stream(propertySetUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
+
+        Response propertySetUserResponse = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        return propertySetUserResponse.as(PropertyUserRelationshipDto.class);
     }
 
     public void userIsAddedToPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
