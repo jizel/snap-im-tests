@@ -220,17 +220,17 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void relationshipGroupPropertyIsDeleted(String userGroupId, String propertyId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(resp);
     }
 
     public void relationshipGroupPropertySetIsDeleted(String userGroupId, String propertySetId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
         setSessionResponse(resp);
     }
 
     public void relationshipGroupUserIsDeleted(String userGroupId, String userId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(resp);
     }
 
@@ -306,7 +306,7 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void deleteUserGroupRoleRelationship(String userGroupId, String roleId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleId, null);
         setSessionResponse(resp);
     }
 

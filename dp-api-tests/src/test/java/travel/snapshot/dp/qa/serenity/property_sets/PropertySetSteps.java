@@ -25,11 +25,7 @@ import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDt
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -55,10 +51,11 @@ public class PropertySetSteps extends BasicSteps {
         propertySets.forEach(propertySet -> {
             propertySet.setCustomerId(customerId);
 
-            Response resp = createEntityByUser(userId, propertySet);
+            Response resp = createEntity(propertySet);
             if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + resp.asString());
             }
+            addUserToPropertySet(userId, propertySet.getPropertySetId());
         });
 
     }
@@ -146,7 +143,7 @@ public class PropertySetSteps extends BasicSteps {
                 Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 PropertyUserRelationshipDto[] propertyUsers = propertyUsersResponse.as(PropertyUserRelationshipDto[].class);
                 for (PropertyUserRelationshipDto pu : propertyUsers) {
-                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
+                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
                     }
@@ -162,13 +159,13 @@ public class PropertySetSteps extends BasicSteps {
         PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(user.getUserId(), propertySet.getPropertySetId());
         if (existingPropertySetUser != null) {
 
-            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
+            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId(), null);
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertySetUser cannot be deleted");
             }
         }
         Response createResponse = addUserToPropertySet(user.getUserId(), propertySet.getPropertySetId());
-        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
+        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("PropertySetUser cannot be created");
         }
     }
@@ -187,7 +184,14 @@ public class PropertySetSteps extends BasicSteps {
 //        return Arrays.stream(propertySetUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
 
         Response propertySetUserResponse = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
-        return propertySetUserResponse.as(PropertyUserRelationshipDto.class);
+        PropertyUserRelationshipDto result = null;
+        try {
+            result = propertySetUserResponse.as(PropertyUserRelationshipDto.class);
+        } catch (Exception e) {
+            // Stupid java does not want to accept the exact UnrecognizedPropertyException here, therefore I have to use the generic one
+            result = null;
+        }
+        return result;
     }
 
     public void userIsAddedToPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
@@ -200,7 +204,7 @@ public class PropertySetSteps extends BasicSteps {
     public void userIsRemovedFromPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
-        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId());
+        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId(), null);
         setSessionResponse(deleteResponse);
     }
 
@@ -252,7 +256,7 @@ public class PropertySetSteps extends BasicSteps {
                 Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 PropertySetPropertyRelationshipDto[] propertyPropertySets = propertyPropertySetResponse.as(PropertySetPropertyRelationshipDto[].class);
                 for (PropertySetPropertyRelationshipDto pps : propertyPropertySets) {
-                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId());
+                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set property cannot be deleted: " + deleteResponse.asString());
                     }
@@ -265,7 +269,7 @@ public class PropertySetSteps extends BasicSteps {
     public void relationExistsBetweenPropertyAndPropertySetForCustomer(String propertyId, String propertySetId, String customerId) {
         PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySetId, propertyId);
         if (existingPropertySetUser != null) {
-            Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+            Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
             assertThat("PropertySetProperty cannot be deleted", deleteResponse.getStatusCode(), not(HttpStatus.SC_NO_CONTENT));
         }
         Response createResponse = addPropertyToPropertySet(propertyId, propertySetId);
@@ -305,8 +309,7 @@ public class PropertySetSteps extends BasicSteps {
 
     public void propertyIsRemovedFromPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-
-        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId());
+        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId(), null);
         setSessionResponse(deleteResponse);
     }
 

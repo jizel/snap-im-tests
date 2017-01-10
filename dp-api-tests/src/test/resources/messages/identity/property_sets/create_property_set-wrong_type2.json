@@ -6,9 +6,5 @@
   "property_set_type": "branch",
   "is_active": null,
   "customer_id": "49ae92d9-2d80-47d9-994b-77f5f598336a",
-  "property_set_id": null,
-  "property_set_user_relationship": {
-    "is_active": null,
-    "user_id": "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-  }
+  "property_set_id": null
 }

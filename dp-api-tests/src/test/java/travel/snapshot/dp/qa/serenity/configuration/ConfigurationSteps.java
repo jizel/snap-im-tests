@@ -295,7 +295,7 @@ public class ConfigurationSteps extends BasicSteps {
     public void followingConfigurationsExist(List<ConfigurationRecordDto> configurations, String identifier) {
         configurations.forEach(configuration -> {
             if (isConfigurationExist(configuration.getKey(), identifier)) {
-                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, configuration.getKey());
+                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, configuration.getKey(), null);
             }
             Response createResponse = createValueForKey(identifier, configuration.getKey(), configuration.getValue().toString(), configuration.getType().toString());
             assertThat("Configuration cannot be created", createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
@@ -323,7 +323,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfiguration(String key, String identifier) {
-        Response resp = deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        Response resp = deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
         setSessionResponse(resp);
     }
 
