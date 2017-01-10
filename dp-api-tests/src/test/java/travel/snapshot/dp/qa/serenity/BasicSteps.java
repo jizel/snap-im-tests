@@ -577,11 +577,18 @@ public class BasicSteps {
     }
 
     protected Response getSecondLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        return getSecondLevelEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getSecondLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
         }
-        requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        if (isBlank(appId)){
+            fail("Application ID to be send in request header is null.");
+        }
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, appId);
 
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
