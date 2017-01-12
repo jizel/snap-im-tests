@@ -28,8 +28,8 @@ Feature: Review locaitons
     Given Default partner is created
     Given Default application is created
 
-# /locations/
-#---------------------------------------------------------------------------------------------------------------------
+  # /locations/
+  # ---------------------------------------------------------------------------------------------------------------------
 
   Scenario Outline: Getting a list of items
     When List of locations is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
@@ -80,8 +80,6 @@ Feature: Review locaitons
       | 10          | 0      | random==CZ* | /null         | /null         | 40002       |
 
   # TODO DP-935 - X-Total-Count header is missing
-  # Bug at line 97: https://conhos.atlassian.net/browse/DP-1641
-  @Bug
   Scenario Outline: Filtering list of locations
     When List of locations is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -95,7 +93,7 @@ Feature: Review locaitons
       | 5     | 0      | 5        | location_name=='town_99*'               |               | location_name | town 999, town 998, town 997, town 996, town 995 |
       | 5     | 2      | 5        | location_name=='town_99*'               | location_name |               | town 991, town 992, town 993, town 994, town 995|
       | 5     | 2      | 5        | location_name=='town_99*'               |               | location_name | town 997, town 996, town 995, town 994, town 993|
-      | /null | /null  | 1        | location_name==town_999                 |               |               | town 999                                        |
+      | /null | /null  | 1        | location_name=='town 999'                 |               |               | town 999                                        |
       | /null | /null  | 1        | location_id==999                         |               |               | town 999                                        |
       | /null | /null  | 1        | location_name==town_99*;location_id==99 |               |               | town 99                                         |
       | /null | /null  | 1        | location_id==99                         |               |               | town 99                                         |
