@@ -41,7 +41,7 @@ For manually created property code the following rules hold
       | الدولي العاشر ليونيكود   |
       | 2初ぞあ Japan            |
 
-
+    # DP-1222 Fixed only in master branch
     Scenario Outline: Correct customer code is returned according to customers address
       Given Property "<propertyName>" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
         | addressLine1   | city   | zipCode   | country   |

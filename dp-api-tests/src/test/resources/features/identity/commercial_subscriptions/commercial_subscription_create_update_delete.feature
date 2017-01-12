@@ -9,9 +9,12 @@ Feature: Commercial subscription create update delete
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 2a2f76f3-3537-4d5a-971a-7a36f61095bd | partner | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following partner is created
+      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following applications exist
       | applicationId                        | applicationName            | description               | website                    | partnerId                            | isInternal |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 2a2f76f3-3537-4d5a-971a-7a36f61095bd | true       |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel | abc8fd9a-a05d-42d8-8e84-42e904ace123 | true       |
 
     Given The following properties exist with random address and billing address for user "2a2f76f3-3537-4d5a-971a-7a36f61095bd"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -32,6 +35,7 @@ Feature: Commercial subscription create update delete
     And Body contains entity with attribute "customer_id" value "1238fd9a-a05d-42d8-8e84-42e904ace123"
     And Body contains entity with attribute "property_id" value "742529dd-481f-430d-b6b6-686fbb687cab"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
+    And Body contains entity with attribute "is_active" value "false"
 
 
   Scenario Outline: Checking error codes for creating commercial subscription

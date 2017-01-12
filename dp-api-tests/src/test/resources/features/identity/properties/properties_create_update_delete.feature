@@ -25,6 +25,7 @@ Feature: Properties create update delete
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
+    And Body contains entity with attribute "is_active" value "false"
 
   @Smoke
   Scenario: Updating property
@@ -66,46 +67,49 @@ Feature: Properties create update delete
     And Body is empty
     And Property with code "p1_code" is not active
 
+  Scenario: Timezone parameter is optional (DP-1332)
+    When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | anchorCustomerId                     |
+      | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is "201"
+    And Body does not contain property with attribute "timezone"
+
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 3238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 4238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 4 | c4@tenants.biz | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 5238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 5 | c5@tenants.biz | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      | 6238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 6 | c6@tenants.biz | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 3239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 4239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 4 | c4@tenants.biz | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 5239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 5 | c5@tenants.biz | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 6239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 6 | c6@tenants.biz | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
     Given Relation between property with code "p1_code" and customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "3238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "4238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "5238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "6238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "3239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "4239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "5239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "6239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
 
     Given Customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
     Given Customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" is activated
-    Given Customer with id "3238fd9a-a05d-42d8-8e84-42e904ace123" is activated
-    Given Customer with id "4238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    Given Customer with id "3239fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    Given Customer with id "4239fd9a-a05d-42d8-8e84-42e904ace123" is activated
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
 
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customers returned
-    And There are customers with following codes returned in order: <expected_names>
-    #And Total count is "<total>"
-
+    And There are customers with following ids returned in order: <expected_ids>
+    And Total count is "<total>"
 #    Expected names are incorrect - fix
     Examples:
-      | limit | cursor | returned | total | filter                   | sort          | sort_desc     | expected_names                 |
-      | 5     | 0      | 4        | 6     | customer_id=='*238fd9a*' | customer_code |               | c3test, c4test                 |
-      | 5     | 0      | 4        | 6     | customer_id=='*238fd9a*' |               | customer_code | c4test, c3test, c2test,        |
-      | 5     | 2      | 2        | 6     | customer_id=='*238fd9a*' | customer_code |               | c3test, c4test                 |
-      | 5     | 2      | 2        | 6     | customer_id=='*238fd9a*' |               | customer_code | c2test,                        |
-      | /null | /null  | 1        | 1     | customer_id=='3238fd9a*' | /null         | /null         | c3test                         |
-      | /null | /null  | 1        | 1     | name=='Given company 2'  | /null         | /null         | c2test                         |
-
+      | limit | cursor | returned | total | filter                   | sort          | sort_desc     | expected_ids                 |
+      | 5     | 0      | 2        | 2     | customer_id=='*238fd9a*' | customer_id   |               |  1238fd9a-a05d-42d8-8e84-42e904ace123, 2238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | 5     | 0      | 2        | 2     | customer_id=='*238fd9a*' |               | valid_from    |  1238fd9a-a05d-42d8-8e84-42e904ace123, 2238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | 5     | 2      | 1        | 2     | customer_id=='*238fd9a*' | customer_id   |               |  1238fd9a-a05d-42d8-8e84-42e904ace123               |
+      | 5     | 2      | 1        | 2     | customer_id=='*238fd9a*' |               | valid_from    |  1238fd9a-a05d-42d8-8e84-42e904ace123               |
+      | /null | /null  | 1        | 1     | customer_id=='3239fd9a*' | /null         | /null         |  3239fd9a-a05d-42d8-8e84-42e904ace123                |
 
   Scenario Outline: Checking error codes for getting list of customers from properties
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2030-02-31"
@@ -233,7 +237,7 @@ Feature: Properties create update delete
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"
-    And Body contains entity with attribute "message" value "The associate Region with ID <region> was not found."
+    And Body contains entity with attribute "message" value "Reference does not exist. The entity Region with ID <region> cannot be found."
 
     Examples:
       | country | region           | code       | email           | response_code | custom_code |
@@ -269,7 +273,7 @@ Feature: Properties create update delete
     And Body contains entity with attribute "property_name" value "p1_name"
 
   Scenario Outline: Send POST request with empty body to all properties endpoints
-    When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     When Property with code "p1_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
@@ -281,5 +285,4 @@ Feature: Properties create update delete
       | identity/properties/                                                                                       |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09                                                   |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users/                                            |
-#      Fails because of DP-1577
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0|

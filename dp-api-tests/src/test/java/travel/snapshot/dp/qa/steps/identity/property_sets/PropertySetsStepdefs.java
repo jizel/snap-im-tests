@@ -108,9 +108,9 @@ public class PropertySetsStepdefs {
         propertySetSteps.relationExistsBetweenPropertyAndPropertySetForCustomer(property.getPropertyId(), propertySet.getPropertySetId(), customerId);
     }
 
-    @When("^The following property set is created for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
-    public void theFollowingPropertySetIsCreatedForCustomerWithIdAndUser(String customerId, String userId, List<PropertySetDto> propertySets) throws Throwable {
-        propertySetSteps.followingPropertySetIsCreated(propertySets.get(0), customerId, userId);
+    @When("^The following property set is created for customer with id \"([^\"]*)\"$")
+    public void theFollowingPropertySetIsCreatedForCustomerWithId(String customerId, List<PropertySetDto> propertySets) throws Throwable {
+        propertySetSteps.followingPropertySetIsCreated(propertySets.get(0), customerId);
     }
 
     @When("^List of property sets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")

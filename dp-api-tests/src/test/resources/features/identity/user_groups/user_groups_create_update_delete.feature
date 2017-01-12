@@ -22,8 +22,8 @@ Feature: User groups create update delete
   @Smoke
   Scenario: Create user group
     When The following user group is created
-      | userGroupId                          | customerId                           | name                | isActive | description          |
-      | b8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_created_1 | false    | userGroupDescription |
+      | userGroupId                          | customerId                           | name                | description          |
+      | b8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_created_1 | userGroupDescription |
     Then Response code is "201"
     And Content type is "application/json"
     And Etag header is present

@@ -23,6 +23,7 @@ Feature: Users create update delete
     And Body contains entity with attribute "email" value "<email>"
     And Body contains entity with attribute "timezone" value "<timezone>"
     And Body contains entity with attribute "culture" value "<culture>"
+    And Body contains entity with attribute "is_active" value "false"
     And Etag header is present
     Examples:
       | userType | userName | firstName | lastName | email                           | timezone      | culture |

@@ -162,7 +162,7 @@ public class CustomerSteps extends BasicSteps {
         customerUser.put("is_primary", Boolean.valueOf(isPrimary));
 
 
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(customerUser)
                 .when().post("/{customerId}/users", customerId);
     }
@@ -348,6 +348,17 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
+    public void idsAreInResponseInOrder(List<String> ids) {
+        Response response = getSessionResponse();
+        CustomerDto[] customers = response.as(CustomerDto[].class);
+        int i = 0;
+        for (CustomerDto customer : customers) {
+            contains("Customer on index=" + i + " is not expected", ids.get(i), customer.getCustomerId());
+            i++;
+        }
+    }
+
+    @Step
     public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo) {
         CustomerDto c = getCustomerById(customerId);
 
@@ -385,18 +396,18 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenUserAndCustomerWithPrimary(UserDto user, String customerId, Boolean isPrimary) {
-        CustomerDto customer = getCustomerByIdByUser(customerId, user.getUserId());
+    public void relationExistsBetweenUserAndCustomerWithPrimary(String userId, String customerId, Boolean isPrimary) {
+        CustomerDto customer = getCustomerByIdByUser(customerId, userId);
 
-        CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(customer.getCustomerId(), user.getUserId());
+        CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(customer.getCustomerId(), userId);
         if (existingCustomerUser != null) {
 
-            Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId(), null);
+            Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, userId, null);
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("CustomerUser cannot be deleted " + deleteResponse.getBody().asString());
             }
         }
-        Response createResponse = addUserToCustomerWithIsPrimary(user.getUserId(), customer.getCustomerId(), isPrimary);
+        Response createResponse = addUserToCustomerWithIsPrimary(userId, customer.getCustomerId(), isPrimary);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerUser cannot be created " + createResponse.getBody().asString());
         }

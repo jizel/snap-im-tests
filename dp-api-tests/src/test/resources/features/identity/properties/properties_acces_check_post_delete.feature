@@ -13,7 +13,7 @@ Feature: Properties access check feature - POST and DELETE
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
  #      Creating default user just to be able to get property by code. Access checks are always steps 'by user'
-    Given Default Snapshot user is created for customer "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given Default Snapshot user is created
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName       | firstName | lastName | email                | timezone      | culture | isActive |
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -104,17 +104,17 @@ Feature: Properties access check feature - POST and DELETE
 
 
 #    Fails because of DP-1630 - remove this scenario completely if solution a) is picked in the issue
-#    Scenario: Delete user from property by user who has access to it
-#      Given Relation between user with username "userWithNoProp" and property with code "p1_code" exists
-#      When User with username "userWithNoProp" is removed from property with code "p1_code" by user "userWithProp"
-#      Then Response code is "204"
-#      And Body is empty
-#      And User with username "userWithNoProp" isn't there for property with code "p1_code"
+    Scenario: Delete user from property by user who has access to it
+      Given Relation between user with username "userWithNoProp" and property with code "p1_code" exists
+      When User with username "userWithNoProp" is removed from property with code "p1_code" by user "userWithProp"
+      Then Response code is "204"
+      And Body is empty
+      And User with username "userWithNoProp" isn't there for property with code "p1_code"
 
-#    Fails because of DP-1630 - remove this scenario completely if solution a) is picked in the issue
-#  Scenario: Delete user from property by user who does not have access to it
-#      When User with username "userWithNoProp" is removed from property with code "p1_code" by user "userWithNoProp"
-#      Then Response code is "404"
+    Fails because of DP-1630 - remove this scenario completely if solution a) is picked in the issue
+  Scenario: Delete user from property by user who does not have access to it
+      When User with username "userWithNoProp" is removed from property with code "p1_code" by user "userWithNoProp"
+      Then Response code is "404"
 
 
 #    properties/p_id/property_sets
@@ -185,7 +185,7 @@ Feature: Properties access check feature - POST and DELETE
     Then Response code is "404"
     And Custom code is 40402
 
-#    Bug?
+# Should work in master, but in 1.37 access checks were not yet implemented
   Scenario: Update Property-Customer relationship by user without access to the customer
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
@@ -208,7 +208,7 @@ Feature: Properties access check feature - POST and DELETE
     Then Response code is "404"
     And Custom code is 40402
 
-#    Bug?
+# Should work in master, but in 1.37 access checks were not yet implemented
   Scenario: Delete Property-Customer relationship by user without access to the customer
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
@@ -219,7 +219,7 @@ Feature: Properties access check feature - POST and DELETE
     And Custom code is 40402
 
 
-#    properties/p_id/tti
+#   properties/p_id/tti
 
   Scenario: Add tti to booking.com mapping to property with defined tti_id by use who has access to the property
     When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithProp"

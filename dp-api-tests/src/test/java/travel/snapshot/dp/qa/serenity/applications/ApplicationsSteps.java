@@ -46,7 +46,15 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void followingApplicationsExist(List<ApplicationDto> applications) {
-        applications.forEach(application -> {
+        applications.forEach((application) -> {
+            String partnerId = application.getPartnerId();
+            Boolean isInternal = application.getIsInternal();
+            if (partnerId == null) {
+                application.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
+            }
+            if (isInternal == null) {
+                application.setIsInternal(true);
+            }
             Response createResponse = createEntity(application);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Application cannot be created: " + createResponse.asString());

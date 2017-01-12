@@ -5,10 +5,13 @@ Feature: Roles create update delete user customer
     Given Switch for user customer role tests
 
     Given Database is cleaned
+    Given The following partner is created
+      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | applicationName            | description               | website                    | applicationId                        | partnerId                            | isInternal |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
+      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Given The following roles exist
       | applicationId                        | roleName    | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
@@ -25,7 +28,7 @@ Feature: Roles create update delete user customer
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Created role name 1"
-    And Body contains entity with attribute "role_description" value "optional description 1"
+    And Body contains entity with attribute "description" value "optional description 1"
     And "Location" header is set and contains the same role
     And Etag header is present
 

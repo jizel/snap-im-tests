@@ -3,9 +3,12 @@ Feature: Properties get
 
   Background:
     Given Database is cleaned
+    Given The following partner exist
+      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following applications exist
-      | applicationId                        | applicationName            | description               | website                    |
-      | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel |
+      | applicationId                        | applicationName            | description               | website                    | partnerId                            | isInternal |
+      | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
       | versionId                            | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
@@ -13,6 +16,7 @@ Feature: Properties get
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given Default Snapshot user is created
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -41,7 +45,7 @@ Feature: Properties get
       | /null | 0      | /null                                                              | /null                      | /null                      | 2           | 2     |                                                                            |
       | /null | 1      | /null                                                              | /null                      | /null                      | 2           | 1     |                                                                            |
       | /null | 20     | /null                                                              | /null                      | /null                      | 2           | 0     |                                                                            |
-      | /null | /null  | is_active=='1'                                                     | /null                      | /null                      | 0           | 0     |                                                                            |
+      | /null | /null  | is_active=='true'                                                  | /null                      | /null                      | 0           | 0     |                                                                            |
       | /null | /null  | api_subscription_id=='5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f'        | /null                      | /null                      | 1           | 1     |                                                                            |
       | /null | /null  | api_subscription_id=='*810c*'                                      | /null                      | /null                      | 2           | 2     |                                                                            |
       | /null | /null  | application_version_id=='b595fc9d-f5ca-45e7-a15d-c8a97108d884'     | /null                      | /null                      | 1           | 1     |                                                                            |
@@ -56,10 +60,10 @@ Feature: Properties get
       | /null | /null  | commercial_subscription_id=='*4e32*'                               | /null                      | commercial_subscription_id | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
       | /null | /null  | commercial_subscription_id=='*4e32*'                               | /null                      | api_subscription_id        | 2           | 2     | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
       | /null | /null  | commercial_subscription_id=='*4e32*'                               | /null                      | application_version_id     | 2           | 2     | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
-      | /null | /null  | commercial_subscription_id=='*4e32*' and is_active=='0'            | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
-      | /null | /null  | commercial_subscription_id=='*4e32*' and is_active=='1'            | /null                      | /null                      | 0           | 0     |                                                                            |
-      | /null | /null  | commercial_subscription_id=='*4e32*' or is_active=='0'             | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
-      | /null | /null  | commercial_subscription_id=='*4e32*' or is_active=='1'             | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
+      | /null | /null  | commercial_subscription_id=='*4e32*' and is_active=='false'        | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
+      | /null | /null  | commercial_subscription_id=='*4e32*' and is_active=='true'         | /null                      | /null                      | 0           | 0     |                                                                            |
+      | /null | /null  | commercial_subscription_id=='*4e32*' or is_active=='false'         | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
+      | /null | /null  | commercial_subscription_id=='*4e32*' or is_active=='true'          | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
 
 
   Scenario Outline: Getting property's api subscriptions - negative scenarios
@@ -68,13 +72,13 @@ Feature: Properties get
     And Custom code is "<custom_code>"
     Examples:
       | limit | cursor | filter                  | sort      | sort_desc | error_code | custom_code |
-      | 0     | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | -1    | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | karel | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | /null | -1     | /null                   | /null     | /null     | 400        | 63          |
-      | /null | karel  | /null                   | /null     | /null     | 400        | 63          |
-      | /null | /null  | /null                   | is_active | is_active | 400        | 64          |
-      | /null | /null  | /null                   | @{}\€$    | /null     | 400        | 63          |
-      | /null | /null  | /null                   | /null     | @{}\€$    | 400        | 63          |
-      | /null | /null  | customer_id=='*'        | /null     | /null     | 400        | 63          |
-      | /null | /null  | anotherNonExistent=='*' | /null     | /null     | 400        | 63          |
+      | 0     | /null  | /null                   | /null     | /null     | 400        | 40002      |
+      | -1    | /null  | /null                   | /null     | /null     | 400        | 40002      |
+      | karel | /null  | /null                   | /null     | /null     | 400        | 40002      |
+      | /null | -1     | /null                   | /null     | /null     | 400        | 40002      |
+      | /null | karel  | /null                   | /null     | /null     | 400        | 40002      |
+      | /null | /null  | /null                   | is_active | is_active | 400        | 40002      |
+      | /null | /null  | /null                   | @{}\€$    | /null     | 400        | 40002      |
+      | /null | /null  | /null                   | /null     | @{}\€$    | 400        | 40002      |
+      | /null | /null  | customer_id=='*'        | /null     | /null     | 400        | 40002      |
+      | /null | /null  | anotherNonExistent=='*' | /null     | /null     | 400        | 40002      |

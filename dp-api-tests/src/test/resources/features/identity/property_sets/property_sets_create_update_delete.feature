@@ -19,12 +19,13 @@ Feature: Property sets create update delete
 
   @Smoke
   Scenario Outline: Creating property set for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-    When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
       | propertySetName   | propertySetDescription   | propertySetType   |
       | <propertySetName> | <propertySetDescription> | <propertySetType> |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "<propertySetName>"
     And Body contains entity with attribute "property_set_type" value "<propertySetType>"
+    And Body contains entity with attribute "is_active" value "false"
     And "Location" header is set and contains the same property set
     And Etag header is present
     Examples:
@@ -62,6 +63,13 @@ Feature: Property sets create update delete
       | ps1_name        | ps1_updated2            | ps1_updated_description  | geolocation     |
       | ps1_name        | ps2_updated2            | ps1_updated_description2 | hotel_type      |
 
+
+  Scenario: Property_set_type is mandatory (DP-1332)
+    When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
+      | propertySetName | propertySetDescription |
+      | ps1_name        | ps1_desc               |
+    Then Response code is "422"
+    And Custom code is 42201
 
   Scenario Outline: Checking error codes for creating property set
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
