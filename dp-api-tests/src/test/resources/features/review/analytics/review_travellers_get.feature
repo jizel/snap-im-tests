@@ -238,7 +238,6 @@ Feature: Review travelers
     And Custom code is 40002
     And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
-    #  Change expected message when DP-1495 is fixed
     Examples:
       | url          | granularity | until      | since      | property                             |
       | /travellers/ | day         | 2015-12-02 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |

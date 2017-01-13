@@ -13,6 +13,8 @@ Feature: Review multiproperty property set
       | userId                               | userType | userName     | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser | Snapshot  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Default Snapshot user is created
+    Given Default partner is created
+    Given Default application is created
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -20,8 +22,6 @@ Feature: Review multiproperty property set
       | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Given The password of user "snapshotUser" is "Password1"
-
-    Given Relation between user with username "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snapshotUser"
       | propertySetName | propertySetDescription | propertySetType |
@@ -37,12 +37,6 @@ Feature: Review multiproperty property set
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p2_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p3_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
-
-    Given Relation between user with username "snapshotUser" and property with code "p1_code" exists
-    Given Relation between user with username "snapshotUser" and property with code "p2_code" exists
-    Given Relation between user with username "snapshotUser" and property with code "p3_code" exists
-
-    Given Relation between user with username "snapshotUser" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
 
     Given Set access token for review steps defs
 
@@ -258,25 +252,24 @@ Feature: Review multiproperty property set
   Scenario Outline: Get analytics data from TA API that has wrong time interval
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 400
-    And Custom code is 63
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
-    #  Change expected message when DP-1495 is fixed
+    #  DP-1495 fixed. Details now specified in details field which cannot be parsed. Add details checking when such parsing functions is ready. Not a prio now.
     Examples:
-      | metric                | property_set_name | granularity | until      | since      | message                                                                                                                                                           |
-      | popularity_index_rank | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | popularity_index_rank | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
-      | popularity_index_rank | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
+      | metric                | property_set_name | granularity | until      | since      | details                                                                                                                                                           |
+      | popularity_index_rank | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | popularity_index_rank | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | popularity_index_rank | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
 
-      | aspects_of_business   | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | aspects_of_business   | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
-      | aspects_of_business   | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
+      | aspects_of_business   | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | aspects_of_business   | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | aspects_of_business   | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
 
-      | number_of_reviews     | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | number_of_reviews     | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
-      | number_of_reviews     | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
+      | number_of_reviews     | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | number_of_reviews     | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | number_of_reviews     | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
 
-      | overall_bubble_rating | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
-      | overall_bubble_rating | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
-      | overall_bubble_rating | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The value is invalid. Param '' The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
+      | overall_bubble_rating | ps1_name          | day         | 2015-12-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-12-02) |
+      | overall_bubble_rating | ps1_name          | week        | 2015-11-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-11-02) |
+      | overall_bubble_rating | ps1_name          | month       | 2015-10-02 | 2015-12-03 | The date specified in the 'since' query parameter (2015-12-03) is after the date specified in the 'until' query parameter (2015-10-02) |
