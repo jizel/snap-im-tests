@@ -198,7 +198,7 @@ public class ApplicationsSteps extends BasicSteps {
         VersionDto existingAppVersion =
                 getApplicationVersionByName(applicationId, applicationVersion.getVersionName());
         if (existingAppVersion != null) {
-            deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId());
+            deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId(), null);
         }
         Response response = createApplicationVersion(applicationVersion, applicationId);
         setSessionResponse(response);
@@ -210,7 +210,7 @@ public class ApplicationsSteps extends BasicSteps {
         applicationVersions.forEach(t -> {
             VersionDto existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
             if (existingAppVersion != null) {
-                deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId());
+                deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId(), null);
             }
             Response createResponse = createApplicationVersion(t, applicationId);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -227,7 +227,7 @@ public class ApplicationsSteps extends BasicSteps {
             return;
         }
 
-        Response response = deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
+        Response response = deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
         setSessionResponse(response);
         Serenity.setSessionVariable(SESSION_APPLICATION_VERSION_ID).to(appVersionId);
     }
@@ -242,7 +242,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void deleteAppVersionWithId(String id, String versionId) {
-        Response response = deleteSecondLevelEntity(id, SECOND_LEVEL_OBJECT_VERSIONS, versionId);
+        Response response = deleteSecondLevelEntity(id, SECOND_LEVEL_OBJECT_VERSIONS, versionId, null);
         setSessionResponse(response);
     }
 

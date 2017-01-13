@@ -3,6 +3,7 @@ Feature: Property sets users create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -13,7 +14,6 @@ Feature: Property sets users create update delete
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       | 8d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default0"
-    Given Default Snapshot user is created
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |
@@ -43,10 +43,7 @@ Feature: Property sets users create update delete
     And User with username "default2" isn't there for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
 
 
-  Scenario: Checking error code for removing user from property set
-    When Nonexistent user is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-    Then Response code is "204"
-
+# Fails at line 72 due to DP-1657
   Scenario Outline: Filtering list of users for property set
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName             | firstName         | lastName       | email                            | phone        | timezone          | culture |
@@ -68,9 +65,9 @@ Feature: Property sets users create update delete
     And There are <returned> users returned
     And There are property set users with following usernames returned in order: <expected_usernames>
     Examples:
-      | limit | cursor | returned | filter                           | sort      | sort_desc | expected_usernames                                                                                           |
-      | 5     | 0      | 5        | user_name=='filter_psu_default*' | user_name |           | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5 |
-      | 5     | 0      | 5        | user_name=='filter_psu_default*' |           | user_name | filter_psu_default_6, filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2 |
-      | 5     | 2      | 4        | user_name=='filter_psu_default*' | user_name |           | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6                       |
-      | 5     | 2      | 4        | user_name=='filter_psu_default*' |           | user_name | filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1                       |
-      | /null | /null  | 1        | user_name==filter_psu_default_6  | /null     | /null     | filter_psu_default_6                                                                                         |
+      | limit | cursor | returned | filter           | sort      | sort_desc   | expected_usernames                                                                                           |
+      | 5     | 0      | 5        | is_active==false | is_active |             | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5 |
+      | 5     | 0      | 5        | is_active==false |           | is_active   | filter_psu_default_6, filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2  |
+      | 5     | 2      | 4        | is_active==false | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6                        |
+      | 5     | 2      | 4        | is_active==false |           | property_id | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
+      | 1     | 0      | 1        | is_active==false |           |             | filter_psu_default_6                                                                                          |

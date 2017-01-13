@@ -65,6 +65,7 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_APPLICATION_ID = "11111111-0000-4000-a000-111111111111";
     public static final String DEFAULT_SNAPSHOT_PARTNER_ID = "11111111-0000-4000-a000-222222222222";
     public static final String DEFAULT_SNAPSHOT_PARTNER_VAT_ID = "11111111-0000-4000-a000-333333333333";
+    public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     public static final String APPLICATION_ID = "";
     protected static final String SESSION_RESPONSE = "response";
@@ -315,8 +316,10 @@ public class BasicSteps {
     }
 
 
-    protected Response deleteEntity(String entityId, String etag) {
-        return deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+    public Response deleteEntity(String entityId, String etag) {
+        Response response = deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+        setSessionResponse(response);
+        return response;
     }
 
     protected Response deleteEntityByUser(String userId, String entityId, String etag) {
@@ -331,10 +334,9 @@ public class BasicSteps {
         return requestSpecification.when().delete("/{id}", entityId);
     }
 
-    protected void deleteEntityWithEtag(String entityId) {
+    protected Response deleteEntityWithEtag(String entityId) {
         String etag = getEntity(entityId).getHeader(HEADER_ETAG);
-        Response response = deleteEntity(entityId, etag);
-        setSessionResponse(response);
+        return deleteEntity(entityId, etag);
     }
 
     protected void deleteEntityWithEtagByUser(String userId, String entityId) {
@@ -404,10 +406,6 @@ public class BasicSteps {
         }
         return requestSpecification
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
-    }
-
-    protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
-        return deleteSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, null);
     }
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {

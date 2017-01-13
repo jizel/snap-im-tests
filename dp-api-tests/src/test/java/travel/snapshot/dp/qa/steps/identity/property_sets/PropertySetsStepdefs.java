@@ -3,7 +3,9 @@ package travel.snapshot.dp.qa.steps.identity.property_sets;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 
+import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -134,7 +136,8 @@ public class PropertySetsStepdefs {
 
     @When("^Nonexistent property set id is deleted$")
     public void Nonexistent_property_set_id_is_deleted() throws Throwable {
-        propertySetSteps.deletePropertySetWithId("nonexistent");
+        propertySetSteps.deleteEntity("nonexistent", DEFAULT_SNAPSHOT_ETAG);
+
     }
 
     @When("^User with username \"([^\"]*)\" is added to property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")

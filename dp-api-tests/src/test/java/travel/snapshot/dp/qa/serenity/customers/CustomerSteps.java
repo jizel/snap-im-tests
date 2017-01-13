@@ -391,7 +391,7 @@ public class CustomerSteps extends BasicSteps {
         CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(customer.getCustomerId(), user.getUserId());
         if (existingCustomerUser != null) {
 
-            Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId());
+            Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId(), null);
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("CustomerUser cannot be deleted " + deleteResponse.getBody().asString());
             }
@@ -472,7 +472,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void userIsDeletedFromCustomer(String userId, String customerId) {
-        Response deleteResponse = deleteSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId);
+        Response deleteResponse = deleteSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(deleteResponse);
     }
 
@@ -523,7 +523,7 @@ public class CustomerSteps extends BasicSteps {
                 Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 CustomerUserRelationshipDto[] customerUsers = customerUsersResponse.as(CustomerUserRelationshipDto[].class);
                 for (CustomerUserRelationshipDto cu : customerUsers) {
-                    Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId());
+                    Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set cannot be deleted: " + deleteResponse.getBody().asString());
                     }

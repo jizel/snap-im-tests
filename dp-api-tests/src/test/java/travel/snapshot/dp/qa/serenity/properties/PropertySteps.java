@@ -308,7 +308,7 @@ public class PropertySteps extends BasicSteps {
             Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
             PartnerUserRelationshipDto[] propertyUsers = customerUsersResponse.as(PartnerUserRelationshipDto[].class);
             for (PartnerUserRelationshipDto pu : propertyUsers) {
-                Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId());
+                Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
                 }
