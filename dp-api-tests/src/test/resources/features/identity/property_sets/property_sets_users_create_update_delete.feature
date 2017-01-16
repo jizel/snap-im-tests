@@ -20,11 +20,11 @@ Feature: Property sets users create update delete
 
   @Smoke
   Scenario: Adding user to property set
-    When User with username "default3" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When User with username "default3" is added to property set with name "ps1_name"
     Then Response code is "201"
 
   Scenario: Updating Property Set-User relationship
-    When User with username "default0" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When User with username "default0" is added to property set with name "ps1_name"
     Given Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
     When Relation between user "default0" and property set "ps1_name" is activated
     Then Response code is "204"
@@ -37,11 +37,14 @@ Feature: Property sets users create update delete
   @Smoke
   Scenario: Removing user from property set
     Given Relation between user with username "default2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    When User with username "default2" is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When User "default2" is removed from property set "ps1_name"
     Then Response code is "204"
     And Body is empty
-    And User with username "default2" isn't there for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    And User with "default2" isn't there for property set "ps1_name"
 
+  Scenario: Removing invalid user from property set
+    When Nonexistent user is removed from property set with name "ps1_name"
+    Then Response code is "412"
 
 # Fails at line 72 due to DP-1657
   Scenario Outline: Filtering list of users for property set
@@ -59,7 +62,7 @@ Feature: Property sets users create update delete
     Given Relation between user with username "filter_psu_default_4" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between user with username "filter_psu_default_5" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between user with username "filter_psu_default_6" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    When List of users for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of users for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned

@@ -20,9 +20,10 @@ public class DbUtilsSteps {
     static final String DELETE_USER = "delete  from User";
     static final String DELETE_ADDRESS = "delete  from Address";
     static final String DELETE_ROLE = "delete  from Role";
+    static final String DELETE_USER_GROUP_ROLE = "delete  from User_Group_Role";
     static final String DELETE_API_SUBSCRIPTIONS = "delete  from Api_Subscription";
     static final String DELETE_APPLICATION = "delete from Application";
-    static final String DELETE_APPLICATION_VERSIONS = "delete from Version";
+    static final String DELETE_APPLICATION_VERSIONS = "delete from Application_Version";
     static final String DELETE_USER_GROUPS = "delete from User_Group";
     static final String DELETE_USER_GROUPS_PROPERTIES = "delete from User_Group_Property";
     static final String DELETE_USER_GROUPS_PROPERTYSET = "delete from User_Group_Property_Set";
@@ -66,6 +67,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_USER);
         dbHelper.identityDb().update(DELETE_ADDRESS);
         dbHelper.identityDb().update(DELETE_ROLE);
+        dbHelper.identityDb().update(DELETE_USER_GROUP_ROLE);
         dbHelper.identityDb().update(DELETE_API_SUBSCRIPTIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION_VERSIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION);

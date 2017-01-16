@@ -55,7 +55,7 @@ public class UserStepdefs {
 
     @When("^The following users is created for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
     public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
-        usersSteps.followingUserIsCreated(users.get(0), customerId, isPrimary);
+        usersSteps.createUserWithCustomer(users.get(0), customerId, isPrimary);
     }
 
     @Given("^Default Snapshot user is created$")
@@ -70,7 +70,7 @@ public class UserStepdefs {
         defaultSnapshotUser.setTimezone("Europe/Prague");
         defaultSnapshotUser.setCulture("cs-CZ");
 
-        usersSteps.followingSnapshotUserIsCreated(defaultSnapshotUser);
+        usersSteps.createUser(defaultSnapshotUser);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")
@@ -399,6 +399,8 @@ public class UserStepdefs {
 
     @When("^Following snapshot user is created without customer$")
     public void followingSnapshotUserIsCreatedWithoutCustomer(List<UserCreateDto> users) throws Throwable {
-       usersSteps.followingSnapshotUserIsCreated(users.get(0));
+        UserCreateDto user = users.get(0);
+        user.setUserType(SNAPSHOT);
+        usersSteps.createUser(user);
     }
 }

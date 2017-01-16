@@ -16,18 +16,18 @@ Feature: User groups properties
       | propertyId                           | propertyName        | propertyCode        | email          | timezone      | anchorCustomerId                     | isDemoProperty |
       | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 | property_userGroup1 | property_userGroup1 | p1@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
 
-    Given Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" exists with isActive "false"
+    Given Relation between user group "userGroup_1" and property with code "property_userGroup1" exists with isActive "false"
 
   @Smoke
   Scenario: Getting relationship between user group and property
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is got
+    When Relation between user group "userGroup_1" and property with code "property_userGroup1" is requested
     Then Response code is 200
     And Content type is "application/json"
     And Body contains entity with attribute "property_id" value "896c2eac-4ef8-45d1-91fc-79a5933a0ed3"
     And Body contains entity with attribute "is_active" value "false"
 
   Scenario: Getting relationship between user group and property - invalid
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "notExistent" is got
+    When Relation between user group "userGroup_1" and non existent property is requested
     Then Response code is 404
     And Custom code is 40402
 
@@ -72,14 +72,14 @@ Feature: User groups properties
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is activated
     Then Response code is 204
     And Body is empty
-    And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is activate
+    And Relation between user group "userGroup_1" and property with code "property_userGroup1" is active
 
   Scenario: Deactivate relationship userGroup-property
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is activated
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is deactivated
     Then Response code is 204
     And Body is empty
-    And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is not activate
+    And Relation between user group "userGroup_1" and property with code "property_userGroup1" is not active
 
   Scenario Outline: Send POST request with empty body to all user group-property endpoints
     When Empty POST request is sent to "<url>" on module "identity"

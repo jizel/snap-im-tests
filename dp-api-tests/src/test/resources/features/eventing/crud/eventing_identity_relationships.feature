@@ -132,7 +132,7 @@ Feature: Eventing identity module relationships
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When Property with code "add_propset_prop_event_prop" is added to property set with name "add_propset_prop_event_propset" for customer with id "add_propset_prop_event_customer"
+    When Property with code "add_propset_prop_event_prop" is added to property set "add_propset_prop_event_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
     And Notification in session operation is "Create"
@@ -163,7 +163,7 @@ Feature: Eventing identity module relationships
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When Property with code "del_propset_prop_event_prop" is removed from property set with name "del_propset_prop_event_propset" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When Property with code "del_propset_prop_event_prop" is removed from property set "del_propset_prop_event_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
     And Notification in session operation is "Delete"
@@ -187,7 +187,7 @@ Feature: Eventing identity module relationships
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When User with username "add_propset_user_event_user" is added to property set with name "add_propset_user_event_propset" for customer with id "add_propset_user_event_customer"
+    When User with username "add_propset_user_event_user" is added to property set with name "add_propset_user_event_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "User"
     And Notification in session operation is "Create"
@@ -216,7 +216,7 @@ Feature: Eventing identity module relationships
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
 
-    When User with username "del_propset_user_event_user" is removed from property set with name "del_propset_user_event_propset" for customer with id "del_propset_user_event_customer"
+    When User "del_propset_user_event_user" is removed from property set "del_propset_user_event_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "User"
     And Notification in session operation is "Delete"
@@ -237,7 +237,7 @@ Feature: Eventing identity module relationships
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When User with username "add_cust_user_event_user" is added to customer with id "add_cust_user_event_customer" with isPrimary "true"
+    When User "add_cust_user_event_user" is added to customer with id "add_cust_user_event_customer" with isPrimary "true"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "User"
     And Notification in session operation is "Create"

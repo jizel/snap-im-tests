@@ -295,7 +295,7 @@ Feature: Eventing identity module
     Given Property set with name "event_propset_del_propset" for Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is stored in session under key "EVENTING_PROPERTY_SET"
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When Property set with name "event_propset_del_propset" for Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    When Property set "event_propset_del_propset" is deleted
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "PropertySet"
     And Notification in session operation is "Delete"

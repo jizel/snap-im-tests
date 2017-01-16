@@ -38,7 +38,7 @@ Feature: Properties access check feature - GET
       Given The following user groups exist
         | userGroupId                          | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
-      When Relation between user group "userGroup_1" and property "999e833e-50e8-4854-a233-289f00b54a09" exists with isActive "true"
+      When Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "404"
       When User "userWithNoProp" is added to userGroup "userGroup_1"
@@ -51,7 +51,7 @@ Feature: Properties access check feature - GET
         | ps1_name        | brand           |
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "404"
-      When Property with code "p1_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+      When Property with code "p1_code" is added to property set "ps1_name"
       And Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "200"
 
@@ -67,7 +67,7 @@ Feature: Properties access check feature - GET
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "404"
-      When Property with code "p1_code" is added to property set with name "childPS2" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+      When Property with code "p1_code" is added to property set "childPS2"
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "200"
 
@@ -78,8 +78,8 @@ Feature: Properties access check feature - GET
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
         | propertySetId                        | propertySetName | propertySetType |
         | fb141231-4d8c-4d75-9433-5d01cc665556 | ps1_name        | brand           |
-      When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property set "fb141231-4d8c-4d75-9433-5d01cc665556" exists with isActive "true"
-      And Property with code "p1_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+      When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "true"
+      And Property with code "p1_code" is added to property set "ps1_name"
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "404"
       When User "userWithNoProp" is added to userGroup "userGroup_1"
@@ -129,73 +129,10 @@ Feature: Properties access check feature - GET
          | /null | 0      | tti_id=='*23*'                                             | /null          | /null               | 2           |
          | /null | 0      | is_demo_property=='true'                                   | email          | /null               | 5           |
          | /null | 0      | email=='*@snapshot.travel'                                 | property_id   | /null                | 4           |
-#       Fails because of DP-1639, uncomment when fixed
-#         | /null | 0      | property_id=='999e833e-*'                                 | salesforce_id  | /null               | 1           |
+         | /null | 0      | property_id=='999e833e-*'                                  | salesforce_id  | /null               | 1           |
 
 
-#      -----------------------------< Second level entities accessibility check >------------------------------------
-
-#    properties/p_id/property_sets
-
-    Scenario: Second level entities - User sees only property sets he should for property he owns
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-        | propertySetName | propertySetType |
-        | prop_set1       | brand           |
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
-        | propertySetName | propertySetType |
-        | prop_set2       | brand           |
-      When Property with code "p1_code" is added to property set with name "prop_set1" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-      When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
-      Then Response code is "200"
-      When Property set with name "prop_set2" for property with code "p1_code" is requested by user "userWithProp"
-      Then Response code is "404"
-      When List of all property sets is got for property with code "p1_code" by user "userWithProp"
-      Then Response code is "200"
-      And Total count is "1"
-
-
-    Scenario: Second level entities - User doesn't see property sets for property when he doesn't have access to the property and the property set all at once
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
-        | propertySetName | propertySetType | propertySetId                        |
-        | prop_set1       | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 |
-      When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithNoProp"
-      Then Response code is "404"
-      When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
-      Then Response code is "404"
-      When List of all property sets is got for property with code "p1_code" by user "userWithProp"
-      Then Response code is "200"
-      And Total count is "0"
-
-
-#    properties/p_id/customers
-
-    Scenario: Second level entities - User sees only customers of the same property he owns
-      Given The following customers exist with random address
-        | customerId                           | companyName     | email              | salesforceId | vatId      | isDemoCustomer | timezone      |
-        | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@snapshot.travel | sfid_2       | CZ20000001 | true           | Europe/Prague |
-        | 4568fd9a-a05d-42d8-8e84-42e904ace123 | Given company 3 | c3@snapshot.travel | sfid_3       | CZ30000001 | true           | Europe/Prague |
-      Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
-      Given Relation between property with code "p1_code" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
-      When List of all customers for property with code "p1_code" is got by user "userWithProp"
-      Then Response code is "200"
-#      Bug?
-      And Total count is "1"
-      When List of all customers for property with code "p1_code" is got by user "userWithNoProp"
-      Then Response code is "404"
-
-
-#    properties/p_id/users
-
-    Scenario: Second level entities - User sees only users of the same property he owns
-      When List of all users for property with code "p1_code" is got by user "userWithProp"
-      Then Response code is "200"
-      And Total count is "1"
-      Given Relation between user with username "userWithNoProp" and property with code "p1_code" exists
-      When List of all users for property with code "p1_code" is got by user "userWithProp"
-      Then Response code is "200"
-      And Total count is "2"
-
-#    General negative scenarios
+#      -----------------------------< Second level entities General negative scenarios >------------------------------------
 
     Scenario Outline: User with no access rights to property sends GET request to all general second level endpoints
       When GET request is sent to "<url>" on module "identity" by user "userWithNoProp"

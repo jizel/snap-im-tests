@@ -1,27 +1,24 @@
 package travel.snapshot.dp.qa.serenity.roles;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
-
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class RoleBaseSteps extends BasicSteps {
@@ -60,8 +57,8 @@ public class RoleBaseSteps extends BasicSteps {
 
     @Step
     public void followingRolesExist(List<RoleDto> roles) {
-        roles.forEach(r -> {
-            Response createResponse = createRole(r);
+        roles.forEach(role -> {
+            Response createResponse = createEntity(role);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Role cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
             }
@@ -130,7 +127,7 @@ public class RoleBaseSteps extends BasicSteps {
     public RoleDto getRoleByName(String name) {
         String filter = String.format("name=='%s'", name);
         RoleDto[] roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(RoleDto[].class);
-        return Arrays.asList(roles).stream().findFirst().orElse(null);
+        return stream(roles).findFirst().orElse(null);
     }
 
 

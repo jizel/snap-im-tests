@@ -107,7 +107,7 @@ Feature: Customers get
       | List test Given company 58 | list_c58@tenants.biz | list_salesforceid_given_58 | CZ22000059 | true           | +420123456789 | http://www.snapshot.travel | Europe/Sofia |
 
 
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null" by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null" by user "snapshotUser"
     Then Response code is "200"
     And Content type is "application/json"
     And Total count is "<total>"
@@ -129,7 +129,7 @@ Feature: Customers get
     #TODO test filter, sort with different values
 
   Scenario Outline: Checking error codes for getting list of customers
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "snapshotUser"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
@@ -168,7 +168,7 @@ Feature: Customers get
       | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_salesforceid_given_6 | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
       | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_salesforceid_given_7 | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
 
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "snapshotUser"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> customers returned

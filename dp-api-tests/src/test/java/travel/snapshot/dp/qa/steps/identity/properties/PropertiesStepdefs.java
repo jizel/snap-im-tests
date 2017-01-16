@@ -61,9 +61,9 @@ public class PropertiesStepdefs {
 
     public Map<String, String> getValidUserPropertyIdsFromNameAndCode(String username, String propertyCode) {
         UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
+        assertThat("User " + username + " is null", user, is(notNullValue()));
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
+        assertThat("Property with code " + propertyCode + " is null", property, is(notNullValue()));
 
         Map<String, String> userPropertyIds = new HashMap<>();
         userPropertyIds.put(USER_ID, user.getUserId());
@@ -386,7 +386,6 @@ public class PropertiesStepdefs {
         assertThat(user, is(notNullValue()));
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         assertThat(property, is(notNullValue()));
-        assertThat(String.format("User %s doesn't see property %s or the property doesn't exist", username, property.getPropertyName()), property, is(notNullValue()));
 
 //        Sets the session response
         propertySteps.getPropertyByUser(user.getUserId(), property.getPropertyId());

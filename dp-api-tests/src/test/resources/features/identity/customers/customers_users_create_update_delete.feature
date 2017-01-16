@@ -22,11 +22,11 @@ Feature: Customers users create update delete
 
   @Smoke
   Scenario: Adding user to customer with isPrimary set
-    When User with username "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40 " with isPrimary "true"
+    When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40 " with isPrimary "true"
     Then Response code is "201"
 
   Scenario: Updating User Customer relationship
-    When User with username "snapUser1" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "false"
+    When User "snapUser1" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "false"
     Then Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is not primary
     When Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updated with isPrimary "true"
     Then Response code is "204"
