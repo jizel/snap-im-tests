@@ -55,6 +55,7 @@ Feature: Api subscription create update delete
     And Body contains entity with attribute "api_subscription_id" value "6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f"
     And Body contains entity with attribute "application_version_id " value "e318fd9a-a05d-42d8-8e84-22e904ace111"
     And Body contains entity with attribute "commercial_subscription_id" value "8e238f8e-2c9c-4e32-9a63-40474a9728eb"
+    And Body contains entity with attribute "is_active" value "false"
 
 
   Scenario: Trying to create application subscription with the same versionID

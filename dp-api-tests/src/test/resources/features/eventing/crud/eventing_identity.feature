@@ -279,7 +279,7 @@ Feature: Eventing identity module
     Given All property sets are deleted for customers with ids: a792d2b2-3836-4207-a705-42bbecf3d881
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
-    When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>"
       | propertySetName   | propertySetDescription | propertySetType |
       | ps1_event_created | ps1_description        | brand           |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -297,7 +297,7 @@ Feature: Eventing identity module
       | userId                               | userType | userName     | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1 | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-    When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>"
       | propertySetName           | propertySetDescription | propertySetType |
       | event_propset_del_propset | description            | brand           |
 
