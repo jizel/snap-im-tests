@@ -172,7 +172,6 @@ Feature: User groups get
       | customer_id=='45a5f9e4-5351-4e41-9d20-fdb4609e9353' | /null       | /null       | 26       |                              |
       | customer_id=='NotExistentShit'                      | /null       | /null       | 0        |                              |
       | is_active==false                                    | /null       | /null       | 26       |                              |
-#  Fails because of DP-1590
       | is_active==true                                     | /null       | /null       | 0        |                              |
       | description=='ug1'                                  | /null       | /null       | 1        |                              |
       | description=='ug1*'                                 | /null       | /null       | 11       |                              |
