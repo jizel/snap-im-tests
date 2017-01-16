@@ -171,7 +171,6 @@ Feature: Review
       | /analytics/ | month       | 1800-12-03 | 1880-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
-#  Change expected message when DP-1495 is fixed
   Scenario Outline: Get analytics data from TA API that has wrong time interval for /analytics/rating_score
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
@@ -185,7 +184,6 @@ Feature: Review
       | /analytics/rating_score | month       | 2015-08-26 | 2015-12-03 | 99000199-9999-4999-a999-999999999999 |
 
 
-    #  Change expected message when DP-1495 is fixed
   Scenario Outline: Get specific analytics data from TA API has wrong time interval for /analytics/
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
@@ -275,7 +273,6 @@ Feature: Review
       | /analytics/overall_bubble_rating | week        | /multiproperty/property/bubble_for_week.json  | 2015-11-12 | 2015-12-03 |
       | /analytics/overall_bubble_rating | month       | /multiproperty/property/bubble_for_month.json | 2015-08-26 | 2015-12-03 |
 
-  #  Change expected message when DP-1495 is fixed
   Scenario Outline: Get analytics data from TA API that has wrong time interval for smaller review endpoints
     When Get review "<url>" data with "<granularity>" granularity with since "<since>" until "<until>" limit "/null" and cursor "/null"
     Then Response code is 400

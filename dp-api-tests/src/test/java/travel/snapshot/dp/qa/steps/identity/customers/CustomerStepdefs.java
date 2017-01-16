@@ -97,7 +97,8 @@ public class CustomerStepdefs {
     public void Relation_between_user_with_username_and_customer_with_id_exists_with_isPrimary(String username,
                                                                                                  String customerId, Boolean isPrimary) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
-        customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user, customerId, isPrimary);
+        assertThat(user, is(notNullValue()));
+        customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user.getUserId(), customerId, isPrimary);
     }
 
     // ---------------------------- WHEN ------------------------------
