@@ -348,6 +348,17 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
+    public void idsAreInResponseInOrder(List<String> ids) {
+        Response response = getSessionResponse();
+        CustomerDto[] customers = response.as(CustomerDto[].class);
+        int i = 0;
+        for (CustomerDto customer : customers) {
+            contains("Customer on index=" + i + " is not expected", ids.get(i), customer.getCustomerId());
+            i++;
+        }
+    }
+
+    @Step
     public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo) {
         CustomerDto c = getCustomerById(customerId);
 

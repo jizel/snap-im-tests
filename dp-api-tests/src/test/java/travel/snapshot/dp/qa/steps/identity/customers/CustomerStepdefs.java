@@ -400,6 +400,11 @@ public class CustomerStepdefs {
         customerSteps.emailsAreInResponseInOrder(emails);
     }
 
+    @Then("^There are customers with following ids returned in order: ([^\"]*)$")
+    public void thereAreCustomersWithFollowingIdsReturnedInOrder(List<String> ids) throws Throwable {
+        customerSteps.idsAreInResponseInOrder(ids);
+    }
+
     @Then("^Customer with id \"([^\"]*)\" doesn't exist$")
     public void customerWithIdDoesnTExist(String customerId) throws Throwable {
         customerSteps.customerWithIdDoesNotExist(customerId);

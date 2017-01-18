@@ -72,13 +72,13 @@ Feature: Properties get
     And Custom code is "<custom_code>"
     Examples:
       | limit | cursor | filter                  | sort      | sort_desc | error_code | custom_code |
-      | 0     | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | -1    | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | karel | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | /null | -1     | /null                   | /null     | /null     | 400        | 63          |
-      | /null | karel  | /null                   | /null     | /null     | 400        | 63          |
-      | /null | /null  | /null                   | is_active | is_active | 400        | 64          |
-      | /null | /null  | /null                   | @{}\€$    | /null     | 400        | 63          |
-      | /null | /null  | /null                   | /null     | @{}\€$    | 400        | 63          |
-      | /null | /null  | customer_id=='*'        | /null     | /null     | 400        | 63          |
-      | /null | /null  | anotherNonExistent=='*' | /null     | /null     | 400        | 63          |
+      | 0     | /null  | /null                   | /null     | /null     | 400        | 40002      |
+      | -1    | /null  | /null                   | /null     | /null     | 400        | 40002      |
+      | karel | /null  | /null                   | /null     | /null     | 400        | 40002      |
+      | /null | -1     | /null                   | /null     | /null     | 400        | 40002      |
+      | /null | karel  | /null                   | /null     | /null     | 400        | 40002      |
+      | /null | /null  | /null                   | is_active | is_active | 400        | 40002      |
+      | /null | /null  | /null                   | @{}\€$    | /null     | 400        | 40002      |
+      | /null | /null  | /null                   | /null     | @{}\€$    | 400        | 40002      |
+      | /null | /null  | customer_id=='*'        | /null     | /null     | 400        | 40002      |
+      | /null | /null  | anotherNonExistent=='*' | /null     | /null     | 400        | 40002      |
