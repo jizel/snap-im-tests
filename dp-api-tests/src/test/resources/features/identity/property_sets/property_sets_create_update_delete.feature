@@ -41,10 +41,10 @@ Feature: Property sets create update delete
     And Body is empty
     And Property set with same id doesn't exist
 
+  @Bug # DP-1704
   Scenario: Checking error code for deleting property
     When Nonexistent property set id is deleted
-    Then Response code is "412"
-    And Body contains entity with attribute "message" value "Precondition failed: ETag invalid."
+    Then Response code is "404"
 
   Scenario Outline: Updating property set
 #  Property sets for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" were deleted in background, so we don't need to clean here.
