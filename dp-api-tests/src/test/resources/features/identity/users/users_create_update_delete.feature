@@ -65,6 +65,26 @@ Feature: Users create update delete
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs-CZ   |
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         |
 
+
+# DP-1504
+  @Bug
+  Scenario Outline: Create user with same name or email
+    When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
+      | userType   | userName   | firstName   | lastName   | email               | timezone      | culture   |
+      | customer   | snp        |  Snap       |   Shot     | snp@snapshot.travel | Europe/Prague | cs-CZ     |
+    Then Response code is "201"
+    When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
+      | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
+      | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
+    Then Response code is "403"
+    Examples:
+      | userType | userName | firstName | lastName | email                  | timezone      | culture |
+      # Same name
+      | customer | snp      | Snap7     | Shot7    | snp@snapshot.com       | Europe/Prague | cs-CZ   |
+      # Same email
+      | customer | snp1     | Snap1     | Shot1    | snp@snapshot.travel    | Europe/Prague | cs-CZ   |
+
+
   Scenario Outline: Checking error codes for creating user with invalid json
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
