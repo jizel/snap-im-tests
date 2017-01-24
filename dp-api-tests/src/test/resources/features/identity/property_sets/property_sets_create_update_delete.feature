@@ -41,7 +41,8 @@ Feature: Property sets create update delete
     And Body is empty
     And Property set with same id doesn't exist
 
-  @Bug # DP-1704
+  # DP-1704
+  @Bug
   Scenario: Checking error code for deleting property
     When Nonexistent property set id is deleted
     Then Response code is "404"
