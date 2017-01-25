@@ -140,20 +140,19 @@ Feature: Properties property sets get
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> property sets returned
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total |
-      | /null |        | 50       | 54    |
-      | /null | /null  | 50       | 54    |
-      |       |        | 50       | 54    |
-      |       | /null  | 50       | 54    |
-      | 15    |        | 15       | 54    |
-      |       | 1      | 50       | 54    |
-      | 20    | 0      | 20       | 54    |
-      | 10    | 0      | 10       | 54    |
-      | 5     | 10     | 5        | 54    |
+      | limit | cursor | total |
+      | /null |        | 54    |
+      | /null | /null  | 54    |
+      |       |        | 54    |
+      |       | /null  | 54    |
+      | 15    |        | 54    |
+      |       | 1      | 54    |
+      | 20    | 0      | 54    |
+      | 10    | 0      | 54    |
+      | 5     | 10     | 54    |
 
   Scenario Outline: Filtering list of properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
@@ -186,17 +185,15 @@ Feature: Properties property sets get
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> property sets returned
-    And There are property sets with following names returned in order: <expected_names>
+    And There are <returned> property set properties returned
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter              | sort  | sort_desc | expected_names                                                               |
-      | 5     | 0      | 5        | 12    | name=='list_*'      | name  |           | list_ps1_name, list_ps10_name, list_ps11_name, list_ps12_name, list_ps2_name |
-      | 5     | 0      | 5        | 12    | name=='list_*'      |       | name      | list_ps9_name, list_ps8_name, list_ps7_name, list_ps6_name, list_ps5_name    |
-      | 5     | 2      | 5        | 12    | name=='list_*'      | name  |           | list_ps11_name, list_ps12_name, list_ps2_name, list_ps3_name, list_ps4_name  |
-      | 5     | 2      | 5        | 12    | name=='list_*'      |       | name      | list_ps7_name, list_ps6_name, list_ps5_name, list_ps4_name, list_ps3_name    |
-      | /null | /null  | 1        | 1     | name==list_ps4_name | /null | /null     | list_ps4_name                                                                |
+      | limit | cursor | returned | total |  filter           |   sort         |  sort_desc  |
+      | 5     | 0      | 5        | 12    | is_active==false  | property_id  |               |
+      | 5     | 0      | 5        | 12    | is_active==false  |              | property_id   |
+      | 5     | 2      | 5        | 12    | is_active==false  | property_id  |               |
+      | 5     | 2      | 0        | 12     | is_active==true  |              | property_id    |
 
   Scenario Outline: Checking error codes for getting list of property property sets
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"

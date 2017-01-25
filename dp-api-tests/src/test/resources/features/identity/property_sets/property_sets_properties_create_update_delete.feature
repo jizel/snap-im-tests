@@ -63,7 +63,7 @@ Feature: Property sets properties create update delete
     When List of properties for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> property set properties  returned
+    And There are <returned> property set properties returned
     And There are properties with following names returned in order: <expected_names>
     Examples:
       | limit | cursor | returned | filter           | sort          | sort_desc       | expected_names                                                      |

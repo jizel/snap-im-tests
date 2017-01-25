@@ -250,7 +250,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.comparePropertySetOnHeaderWithStored(header);
     }
 
-    @Then("^There are (\\d+) property set properties  returned$")
+    @Then("^There are (\\d+) property set properties returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
         propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, count);
     }
