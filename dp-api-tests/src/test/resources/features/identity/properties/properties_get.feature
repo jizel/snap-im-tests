@@ -121,7 +121,7 @@ Feature: Properties get
       | salesforceid_58 | p58_name     | p58_code     | http://www.snapshot.travel | p58@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_59 | p59_name     | p59_code     | http://www.snapshot.travel | p59@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
-    When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
+    When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "<sort>" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> properties returned
@@ -129,14 +129,14 @@ Feature: Properties get
     And Total count is "<total>"
 
     Examples:
-      | description   | limit | cursor | returned | total | link_header                                                                                                 |
-      | default limit |       | /null  | 50       | 60    | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
-      | default limit | /null |        | 50       | 60    | </identity/properties?limit=50&cursor=50>; rel="next"                                                       |
-      | limit at 15   | 15    |        | 15       | 60    | </identity/properties?limit=15&cursor=15>; rel="next"                                                       |
-      | offset by 1   |       | 1      | 50       | 60    | </identity/properties?limit=50&cursor=51>; rel="next", </identity/properties?limit=50&cursor=0>; rel="prev" |
-      | limit by 20   | 20    | 0      | 20       | 60    | </identity/properties?limit=20&cursor=20>; rel="next"                                                       |
-      | limit by 10   | 10    | 0      | 10       | 60    | </identity/properties?limit=10&cursor=10>; rel="next"                                                       |
-      | l:5 o:5       | 5     | 10     | 5        | 60    | </identity/properties?limit=5&cursor=15>; rel="next", </identity/properties?limit=5&cursor=5>; rel="prev"   |
+      | description   | limit | cursor | sort  | returned | total | link_header                                                                                                          |
+      | default limit |       | /null  | /null | 50       | 60    | </identity/properties?limit=50&cursor=50>; rel="next"                                                                |
+      | default limit | /null |        | name  | 50       | 60    | </identity/properties?limit=50&cursor=50&sort=name>; rel="next"                                                      |
+      | limit at 15   | 15    |        | /null | 15       | 60    | </identity/properties?limit=15&cursor=15>; rel="next"                                                                |
+      | offset by 1   |       | 1      | /null | 50       | 60    | </identity/properties?limit=50&cursor=0>; rel="prev", </identity/properties?limit=50&cursor=51>; rel="next"          |
+      | limit by 20   | 20    | 0      | /null | 20       | 60    | </identity/properties?limit=20&cursor=20>; rel="next"                                                                |
+      | limit by 10   | 10    | 0      | /null | 10       | 60    | </identity/properties?limit=10&cursor=10>; rel="next"                                                                |
+      | l:5 o:5       | 5     | 10     | name  | 5        | 60    | </identity/properties?limit=5&cursor=5&sort=name>; rel="prev", </identity/properties?limit=5&cursor=15&sort=name>; rel="next"  |
 
 
   Scenario Outline: Checking error codes for lists of properties
