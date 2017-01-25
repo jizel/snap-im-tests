@@ -2,6 +2,8 @@ Feature: Eventing identity module
 
   Background:
     Given Database is cleaned
+    Given Default partner is created
+    Given Default application is created
 
   Scenario: Eventing customer created
   Customer clean if existed, then subscription is clean and recreated,
@@ -203,38 +205,31 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given Switch for user customer role tests
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
       | applicationId                        | roleName            | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | event_role_create_1 | optional description 1 |
+      | 11111111-0000-4000-a000-111111111111 | event_role_create_1 | optional description 1 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Create"
-    And Notification in session id stands for role with name "event_role_create_1" for application id  "a318fd9a-a05d-42d8-8e84-42e904ace123"
+    And Notification in session id stands for role with name "event_role_create_1" for application id  "11111111-0000-4000-a000-111111111111"
     And Subscription with name "Test" for topic "Notifications.crud" is unsubscribed
 
   Scenario: Eventing role deleted
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given Switch for user customer role tests
-
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
       | applicationId                        | roleName          | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | event_role_delete | optional description 1 |
-    Given Role with name "event_role_delete" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is stored in session under key "EVENTING_ROLE"
+      | 11111111-0000-4000-a000-111111111111 | event_role_delete | optional description 1 |
+    Given Role with name "event_role_delete" for application id "11111111-0000-4000-a000-111111111111" is stored in session under key "EVENTING_ROLE"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Create"
-    When Role with name "event_role_delete" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    When Role with name "event_role_delete" for application id "11111111-0000-4000-a000-111111111111" is deleted
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Delete"
@@ -245,20 +240,16 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given Switch for user customer role tests
-
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
       | applicationId                        | roleName          | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | event_role_update | optional description 1 |
-    Given Role with name "event_role_update" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is stored in session under key "EVENTING_ROLE"
+      | 11111111-0000-4000-a000-111111111111 | event_role_update | optional description 1 |
+    Given Role with name "event_role_update" for application id "11111111-0000-4000-a000-111111111111" is stored in session under key "EVENTING_ROLE"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Create"
-    When Role with name "event_role_update" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
+    When Role with name "event_role_update" for application id "11111111-0000-4000-a000-111111111111" is updated with data
       | applicationId | roleName          | description |
       |               | Updated Role Name | updated 1   |
 

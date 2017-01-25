@@ -3,9 +3,8 @@ Feature: Commercial subscription get
 
   Background:
     Given Database is cleaned
-    Given The following applications exist
-      | applicationId                        | applicationName            | description               | website                    |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel |
+    Given Default partner is created
+    Given Default application is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -17,7 +16,7 @@ Feature: Commercial subscription get
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
 
 
   @Smoke
@@ -27,7 +26,7 @@ Feature: Commercial subscription get
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "commercial_subscription_id" value "8e238f8e-2c9c-4e32-9a63-40474a9728eb"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
+    And Body contains entity with attribute "application_id" value "11111111-0000-4000-a000-111111111111"
     And Body contains entity with attribute "customer_id" value "1238fd9a-a05d-42d8-8e84-42e904ace123"
     And Body contains entity with attribute "property_id" value "742529dd-481f-430d-b6b6-686fbb687cab"
 
@@ -47,16 +46,16 @@ Feature: Commercial subscription get
   Scenario Outline: Getting list of commercial subscription
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | applicationId                        | customerId                           | propertyId                           |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e1 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e2 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e3 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e4 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e5 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e6 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e7 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e9 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a972810 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e1 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e2 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e3 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e4 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e5 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e6 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e7 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e8 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728e9 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2c9c-4e32-9a63-40474a972810 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
 
     When List of commercial subscriptions is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
@@ -105,15 +104,15 @@ Feature: Commercial subscription get
   Scenario Outline: Filtering list of commercial subscriptions
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | applicationId                        | customerId                           | propertyId                           |
-      | 8e238f8e-2a9c-4e32-9a61-40474a9728e1 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2a9c-4e32-9a62-40474a9728e2 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2a9c-4e32-9a63-40474a9728e3 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-8c9c-4e32-9a63-40474a9728e4 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-8c9c-4e32-9a63-40474a9728e5 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-8c9c-4e32-9a63-40474a9728e6 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-3b9c-4e32-9a63-40474a9728e7 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-3b9c-4e32-9a63-40474a9728e8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-3b9c-4e32-9a63-40474a9728e9 | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2a9c-4e32-9a61-40474a9728e1 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2a9c-4e32-9a62-40474a9728e2 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-2a9c-4e32-9a63-40474a9728e3 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-8c9c-4e32-9a63-40474a9728e4 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-8c9c-4e32-9a63-40474a9728e5 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-8c9c-4e32-9a63-40474a9728e6 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-3b9c-4e32-9a63-40474a9728e7 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-3b9c-4e32-9a63-40474a9728e8 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
+      | 8e238f8e-3b9c-4e32-9a63-40474a9728e9 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
     When List of commercial subscriptions is got with limit "/null" and cursor "/null" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"

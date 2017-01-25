@@ -3,13 +3,9 @@ Feature: Customers properties get
 
   Background:
     Given Database is cleaned
-    Given The following partner exist
-      | name           | email          | website                    | vatId      | notes        | partnerId                            |
-      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The following applications exist
-      | applicationId                        | applicationName            | description               | website                    | partnerId                            | isInternal |
-      | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
+    Given Default partner is created
+    Given Default application is created
+    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
       | versionId                            | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
       | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
@@ -25,7 +21,7 @@ Feature: Customers properties get
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
