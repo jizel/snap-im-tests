@@ -279,7 +279,7 @@ public class PropertiesStepdefs {
 
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")
     public void each_customer_is_a_customer_of_property_with_code(String propertyCode) throws Throwable {
-        CustomerDto[] allCustomers = customerSteps.listOfCustomersIsGotWith(null, "0", null, null, null).as(CustomerDto[].class);
+        CustomerDto[] allCustomers = customerSteps.listOfCustomersIsGotWith(null, null, null, null, null).as(CustomerDto[].class);
         propertySteps.allCustomersAreCustomersOfProperty(allCustomers, propertyCode);
     }
 
