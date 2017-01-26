@@ -193,7 +193,7 @@ Feature: Properties property sets get
       | 5     | 0      | 5        | 12    | is_active==false  | property_id  |               |
       | 5     | 0      | 5        | 12    | is_active==false  |              | property_id   |
       | 5     | 2      | 5        | 12    | is_active==false  | property_id  |               |
-      | 5     | 2      | 0        | 12     | is_active==true  |              | property_id    |
+      | 5     | 2      | 0        | 0     | is_active==true   |              | property_id    |
 
   Scenario Outline: Checking error codes for getting list of property property sets
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
