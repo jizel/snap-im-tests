@@ -1,9 +1,17 @@
 package travel.snapshot.dp.qa.steps.jms;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import net.thucydides.core.annotations.Steps;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
@@ -217,5 +225,11 @@ public class EventingStepsDefs {
     public void Notification_in_session_id_stands_for_partner_with_name(String partnerName) throws Throwable {
         PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
         steps.notificationContainsId(partner.getPartnerId());
+    }
+
+    @Then("^Stored notification has key \"([^\"]*)\" and value \"([^\"]*)\"$")
+    public void storedNotificationHasKeyAndValue(String key, String expectedValue) throws Throwable {
+        String returnedValue = steps.getNotificationValue(key);
+        assertThat("Value " + expectedValue + " was expected for key " + key + " but actual value is: " + returnedValue, returnedValue, is(expectedValue));
     }
 }

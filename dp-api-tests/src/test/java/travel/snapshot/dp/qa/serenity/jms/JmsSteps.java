@@ -1,11 +1,13 @@
 package travel.snapshot.dp.qa.serenity.jms;
 
+import static org.junit.Assert.*;
+
 import com.google.gson.Gson;
-
 import com.jayway.restassured.path.json.JsonPath;
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -16,12 +18,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.Topic;
-
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by sedlacek on 11/25/2015.
@@ -115,5 +111,10 @@ public class JmsSteps extends BasicSteps {
         Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
         String value = (String) notification.get("parent_id");
         assertEquals(entityId, value);
+    }
+
+    public String getNotificationValue(String key) {
+        Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
+        return (String) notification.get(key);
     }
 }
