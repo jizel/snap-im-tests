@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.commercial_subscription;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -27,7 +28,7 @@ public class CommercialSubscriptionStepdef {
 
     @When("^Commercial subscription is created$")
     public void Commercial_subscription_is_created(List<CommercialSubscriptionDto> comSubcsriptions) {
-        commSubscriptionSteps.comSubscriptionIsCreated(comSubcsriptions.get(0));
+        commSubscriptionSteps.commercialSubscriptionIsCreated(comSubcsriptions.get(0));
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is deleted$")
