@@ -427,7 +427,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setUserGroupUserActivityByUser(String performerId, String userGroupId, String userId, Boolean isActive) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntityEtag(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
         UserGroupUserRelationshipUpdateDto relation = new UserGroupUserRelationshipUpdateDto();
         relation.setIsActive(isActive);
 

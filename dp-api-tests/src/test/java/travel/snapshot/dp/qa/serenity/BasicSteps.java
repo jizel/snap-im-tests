@@ -311,7 +311,7 @@ public class BasicSteps {
     }
 
     protected Response updateEntityWithEtagByUser(String userId, String entityId, String data) {
-        String etag = getEntity(entityId, null).getHeader(HEADER_ETAG);
+        String etag = getEntityEtag(entityId);
         return updateEntityByUser(userId, entityId, data, etag);
     }
 
@@ -337,12 +337,12 @@ public class BasicSteps {
     }
 
     protected Response deleteEntityWithEtag(String entityId) {
-        String etag = getEntity(entityId).getHeader(HEADER_ETAG);
+        String etag = getEntityEtag(entityId);
         return deleteEntity(entityId, etag);
     }
 
     protected void deleteEntityWithEtagByUser(String userId, String entityId) {
-        String etag = getEntity(entityId).getHeader(HEADER_ETAG);
+        String etag = getEntityEtag(entityId);
         Response response = deleteEntityByUser(userId, entityId, etag);
         setSessionResponse(response);
     }
@@ -353,6 +353,17 @@ public class BasicSteps {
 
     protected Response getEntity(String entityId, String etag) {
         return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+    }
+
+    protected String getEntityEtag(String entityId){
+        return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
+    }
+
+    protected String getEntityEtagByUser(String userId, String entityId) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+
+        return requestSpecification.when().head("/{id}", entityId).getHeader(HEADER_ETAG);
     }
 
     protected Response getEntityByUser(String userId, String entityId, String etag) {
@@ -390,13 +401,25 @@ public class BasicSteps {
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
+    protected String getSecondLevelEntityEtag(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+        return getSecondLevelEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected String getSecondLevelEntityEtagByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isNotBlank(userId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        }
+        return requestSpecification.when().head("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId).getHeader(HEADER_ETAG);
+    }
+
     protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
         return deleteSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, queryParams);
     }
 
     protected Response deleteSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
-        String etag = getSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntityEtag(firstLevelId, secondLevelObjectName, secondLevelId);
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
@@ -445,7 +468,7 @@ public class BasicSteps {
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
         if(response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED){
             RequestSpecification requestSpecification = given().spec(spec).basePath(url);
-            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get().getHeader(HEADER_ETAG);
+            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().head().getHeader(HEADER_ETAG);
             assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
             requestSpecification.header(HEADER_IF_MATCH, etag);
 

@@ -96,7 +96,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void deleteUser(String userId) {
-        String etag = getEntity(userId).getHeader(HEADER_ETAG);
+        String etag = getEntityEtag(userId);
         deleteUserWithEtag(userId, etag);
     }
 
@@ -403,7 +403,7 @@ public class UsersSteps extends BasicSteps {
     public void updateUserPropertyRelationship(String userId, String propertyId, UserPropertyRelationshipUpdateDto userPropertyRelationship) {
         try {
             JSONObject jsonUpdate = retrieveData(userPropertyRelationship);
-            String etag = getSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).getHeader(HEADER_ETAG);
+            String etag = getSecondLevelEntityEtag(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
             Response response = updateSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){

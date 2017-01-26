@@ -415,7 +415,7 @@ public class PropertySetSteps extends BasicSteps {
     public void updateUserPropertySetRelationByUser(String performerId, String userId, String propertySetId, UserPropertySetRelationshipUpdateDto userPropertySetRelationshipUpdate) {
         try {
             JSONObject jsonUpdate = retrieveData(userPropertySetRelationshipUpdate);
-            String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
+            String etag = getSecondLevelEntityEtag(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId);
             Response response = updateSecondLevelEntityByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){
