@@ -111,7 +111,7 @@ Feature: Properties access check feature - POST and DELETE
       And Body is empty
       And User with username "userWithNoProp" isn't there for property with code "p1_code"
 
-    Fails because of DP-1630 - remove this scenario completely if solution a) is picked in the issue
+#    Fails because of DP-1630 - remove this scenario completely if solution a) is picked in the issue
   Scenario: Delete user from property by user who does not have access to it
       When User with username "userWithNoProp" is removed from property with code "p1_code" by user "userWithNoProp"
       Then Response code is "404"
