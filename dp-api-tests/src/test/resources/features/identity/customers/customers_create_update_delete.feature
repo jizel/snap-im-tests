@@ -8,8 +8,8 @@ Feature: Customers create update delete
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
-      | userId                               | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
-      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | userId                               | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Default Snapshot user is created
 
   @Smoke
@@ -69,7 +69,7 @@ Feature: Customers create update delete
   #TODO update with error fields, bad values, missing fields
   #TODO update nonexistent field
   Scenario Outline: Updating customer
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user "Snapshotuser"
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"

@@ -36,7 +36,7 @@ Feature: Property sets create update delete
 
   @Smoke
   Scenario: Deleting Property set
-    When Property set with name "ps1_name" for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" is deleted
+    When Property set "ps1_name" is deleted
     Then Response code is "204"
     And Body is empty
     And Property set with same id doesn't exist
@@ -49,13 +49,13 @@ Feature: Property sets create update delete
 
   Scenario Outline: Updating property set
 #  Property sets for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" were deleted in background, so we don't need to clean here.
-    When Property set with name "<propertySetName>" for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" is updated with following data
+    When Property set "<propertySetName>" is updated with following data
       | propertySetName           | propertySetDescription   | propertySetType   |
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated property set with name "<updated_propertySetName>" for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" has following data
+    And Updated property set "<updated_propertySetName>" has following data
       | propertySetName           | propertySetDescription   | propertySetType   |
       | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
     Examples:

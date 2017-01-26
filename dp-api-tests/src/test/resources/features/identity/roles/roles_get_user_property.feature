@@ -3,12 +3,16 @@ Feature: Roles get user property
 
   Background:
     Given Switch for user property role tests
+    Given Default partner is created
 
     Given Database is cleaned
+    Given The following partner exist
+      | partnerId                            | name         | email                   | website                    |
+      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | applicationName            | description               | website                    | applicationId                        | partnerId                           | isInternal |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
+      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
 
     Given The following roles exist
       | applicationId                        | roleName    | description            |
@@ -24,7 +28,7 @@ Feature: Roles get user property
     And Etag header is present
     And Body contains entity with attribute "role_id"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-    And Body contains entity with attribute "role_description" value "optional description 1"
+    And Body contains entity with attribute "description" value "optional description 1"
     And Body contains entity with attribute "name" value "Role name 1"
     And Body doesn't contain entity with attribute "non_existent"
 

@@ -3,13 +3,9 @@ Feature: Api subscription get
 
   Background:
     Given Database is cleaned
-    Given The following partner exist
-      | partnerId                            | name         | email                   | website                    |
-      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
-    Given The following applications exist
-      | applicationId                        | applicationName            | description               | website                    | partnerId                            |
-      | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | e595fc9d-f5ca-45e7-a15d-c8a97108d884 |
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
+    Given Default partner is created
+    Given Default application is created
+    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
       | versionId                            | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
       | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
@@ -24,7 +20,7 @@ Feature: Api subscription get
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+      | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
@@ -54,7 +50,7 @@ Feature: Api subscription get
     And Custom code is 40402
 
   Scenario Outline: Getting list of api subscriptions with valid query parameters
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
+    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
       | versionId                            | apiManagerId | versionName    | status   | description             |
       | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1 List | inactive | Versions description 1  |
       | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2 List | inactive | Versions description 2  |
@@ -125,26 +121,26 @@ Feature: Api subscription get
       | d94a9119-6936-466c-8cfd-693acebd39ac | salesforceid_20 | p20_list     | p20_list     | http://www.snapshot.travel | p20@tenants.biz | true           | Europe/Prague | e0ddefaf-05d4-4330-ae67-1310af0d0b45 |
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
-      | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | 23fe2b58-de46-4330-b361-482f07286cce | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 309a2a7f-c400-4f39-b203-54869feebd5b | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | 4701c194-e39d-46fd-b70f-44dd15a82278 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 00c7dece-b9a9-4bbc-a445-304723bc887e | 59f91161-ae55-4369-b963-0db1410b00d7 | b9e2b6cc-4453-4935-a8c5-8763ae7873d7 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 02db47f4-0726-400f-89bd-e2fd6d8c8226 | b7306a7d-851c-4f59-856d-907eff0aa9b7 | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 7cf28741-d8cd-44ec-b757-d3e52fc77139 | ddea7528-fefa-4a93-8b4d-de6b27db3e30 | ac1e411c-1c68-4178-9871-62b4728c6c9d | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | cdfcd25e-60d6-4a1c-bcfa-ebfece98fac5 | 65bf60db-9da1-419b-88b7-2b232872c786 | a5fb70c4-4be6-4eb4-bb54-87e56d86e751 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 5d32c412-5bba-4779-90a9-4aca694750da | 2c441da4-0669-425f-aa00-62aa1375fb43 | d320aaad-d465-4be5-97f5-41254bf19038 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 976d87bd-0ca6-459a-9e95-deb71cc2d6c5 | c2e72a45-36a3-4973-be6d-32134e4801fc | 4faa9765-c16c-4a63-9df9-8c60cb5303cf | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | c4944f0a-bfe0-47f7-a154-ce68c61cb47a | b377a0fb-76c6-48ef-b594-b3fe53575927 | ad51c66f-330b-4201-8374-92f138a7629d | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 17c8557e-855c-489a-aea3-56e0ca5fb52d | 16d55fcb-b2a1-4209-9fc3-103dedb5ed47 | 24284ba4-6d29-4a5a-9187-363e168fac9a | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | ee158cc0-56cd-4f5d-8f6e-5ea9096a1de8 | eff32916-1ed9-420e-abdf-92ac2c8a732b | 3ad7fec4-e484-497d-bcc4-ebe587a2d836 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 06ece0dd-e109-435b-b843-94d4b5a37e2e | b053ddd4-12dd-469c-ad2e-0b6765075367 | f7c51321-1dde-4d98-a999-35a3b6379196 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 14b6de03-4749-44b9-90bd-233e7478ceb7 | 873d6310-90cb-452b-8627-28c00e3fbbe8 | 62bcf845-fc26-46fb-9480-7e539c10dbbc | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 4986841e-df90-42e3-a964-be7a8bb9fddc | 1b825c33-17f1-43bc-b3ab-22549137a0dd | ad7cfddb-ecf3-401d-a93e-d68bc4b4e3da | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 496ed083-917d-47ec-811d-394c59410f7b | 3822afa6-5b94-4294-951a-24fd05963e08 | 6d455567-b952-4503-97de-9c608b6a8c28 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 05b188b8-2646-4b85-88e4-87c84d03ba2f | c5eb2185-b558-45a1-bb51-8f1bce3fa0a6 | 691a104c-47f4-4dab-9c22-040c00b10c03 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 13e77a71-9f3e-403b-aa18-14b93fb101a7 | 96b3106a-82cc-4fa0-a35c-5e9e32194304 | 202ed76e-e3c4-4359-9461-b4ccb7cb9a20 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 2e8a2b25-c7d7-46ba-a161-1b4dfcb2189c | faf0b7b5-5f1e-48e9-9ded-529e59baec6c | 98b50129-72f8-4b55-af15-9507db2cca95 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 5f1c295b-d75f-48db-9203-c377b45702e6 | e0ddefaf-05d4-4330-ae67-1310af0d0b45 | d94a9119-6936-466c-8cfd-693acebd39ac | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+      | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | 23fe2b58-de46-4330-b361-482f07286cce | 11111111-0000-4000-a000-111111111111 |
+      | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | 11111111-0000-4000-a000-111111111111 |
+      | 309a2a7f-c400-4f39-b203-54869feebd5b | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | 4701c194-e39d-46fd-b70f-44dd15a82278 | 11111111-0000-4000-a000-111111111111 |
+      | 00c7dece-b9a9-4bbc-a445-304723bc887e | 59f91161-ae55-4369-b963-0db1410b00d7 | b9e2b6cc-4453-4935-a8c5-8763ae7873d7 | 11111111-0000-4000-a000-111111111111 |
+      | 02db47f4-0726-400f-89bd-e2fd6d8c8226 | b7306a7d-851c-4f59-856d-907eff0aa9b7 | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | 11111111-0000-4000-a000-111111111111 |
+      | 7cf28741-d8cd-44ec-b757-d3e52fc77139 | ddea7528-fefa-4a93-8b4d-de6b27db3e30 | ac1e411c-1c68-4178-9871-62b4728c6c9d | 11111111-0000-4000-a000-111111111111 |
+      | cdfcd25e-60d6-4a1c-bcfa-ebfece98fac5 | 65bf60db-9da1-419b-88b7-2b232872c786 | a5fb70c4-4be6-4eb4-bb54-87e56d86e751 | 11111111-0000-4000-a000-111111111111 |
+      | 5d32c412-5bba-4779-90a9-4aca694750da | 2c441da4-0669-425f-aa00-62aa1375fb43 | d320aaad-d465-4be5-97f5-41254bf19038 | 11111111-0000-4000-a000-111111111111 |
+      | 976d87bd-0ca6-459a-9e95-deb71cc2d6c5 | c2e72a45-36a3-4973-be6d-32134e4801fc | 4faa9765-c16c-4a63-9df9-8c60cb5303cf | 11111111-0000-4000-a000-111111111111 |
+      | c4944f0a-bfe0-47f7-a154-ce68c61cb47a | b377a0fb-76c6-48ef-b594-b3fe53575927 | ad51c66f-330b-4201-8374-92f138a7629d | 11111111-0000-4000-a000-111111111111 |
+      | 17c8557e-855c-489a-aea3-56e0ca5fb52d | 16d55fcb-b2a1-4209-9fc3-103dedb5ed47 | 24284ba4-6d29-4a5a-9187-363e168fac9a | 11111111-0000-4000-a000-111111111111 |
+      | ee158cc0-56cd-4f5d-8f6e-5ea9096a1de8 | eff32916-1ed9-420e-abdf-92ac2c8a732b | 3ad7fec4-e484-497d-bcc4-ebe587a2d836 | 11111111-0000-4000-a000-111111111111 |
+      | 06ece0dd-e109-435b-b843-94d4b5a37e2e | b053ddd4-12dd-469c-ad2e-0b6765075367 | f7c51321-1dde-4d98-a999-35a3b6379196 | 11111111-0000-4000-a000-111111111111 |
+      | 14b6de03-4749-44b9-90bd-233e7478ceb7 | 873d6310-90cb-452b-8627-28c00e3fbbe8 | 62bcf845-fc26-46fb-9480-7e539c10dbbc | 11111111-0000-4000-a000-111111111111 |
+      | 4986841e-df90-42e3-a964-be7a8bb9fddc | 1b825c33-17f1-43bc-b3ab-22549137a0dd | ad7cfddb-ecf3-401d-a93e-d68bc4b4e3da | 11111111-0000-4000-a000-111111111111 |
+      | 496ed083-917d-47ec-811d-394c59410f7b | 3822afa6-5b94-4294-951a-24fd05963e08 | 6d455567-b952-4503-97de-9c608b6a8c28 | 11111111-0000-4000-a000-111111111111 |
+      | 05b188b8-2646-4b85-88e4-87c84d03ba2f | c5eb2185-b558-45a1-bb51-8f1bce3fa0a6 | 691a104c-47f4-4dab-9c22-040c00b10c03 | 11111111-0000-4000-a000-111111111111 |
+      | 13e77a71-9f3e-403b-aa18-14b93fb101a7 | 96b3106a-82cc-4fa0-a35c-5e9e32194304 | 202ed76e-e3c4-4359-9461-b4ccb7cb9a20 | 11111111-0000-4000-a000-111111111111 |
+      | 2e8a2b25-c7d7-46ba-a161-1b4dfcb2189c | faf0b7b5-5f1e-48e9-9ded-529e59baec6c | 98b50129-72f8-4b55-af15-9507db2cca95 | 11111111-0000-4000-a000-111111111111 |
+      | 5f1c295b-d75f-48db-9203-c377b45702e6 | e0ddefaf-05d4-4330-ae67-1310af0d0b45 | d94a9119-6936-466c-8cfd-693acebd39ac | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
       | 1c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 |
@@ -213,7 +209,7 @@ Feature: Api subscription get
 
 
   Scenario Outline: Filtering list of api subscriptions
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
+    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
       | versionId                            | apiManagerId | versionName        | status   | description            |
       | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1filtering | inactive | Versions description 1 |
       | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2filtering | inactive | Versions description 2 |
@@ -239,11 +235,11 @@ Feature: Api subscription get
       | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | salesforceid_5 | p5_list      | p5_list      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague | b7306a7d-851c-4f59-856d-907eff0aa9b7 |
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
-      | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | 23fe2b58-de46-4330-b361-482f07286cce | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 309a2a7f-c400-4f39-b203-54869feebd5b | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | 4701c194-e39d-46fd-b70f-44dd15a82278 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 00c7dece-b9a9-4bbc-a445-304723bc887e | 59f91161-ae55-4369-b963-0db1410b00d7 | b9e2b6cc-4453-4935-a8c5-8763ae7873d7 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | 02db47f4-0726-400f-89bd-e2fd6d8c8226 | b7306a7d-851c-4f59-856d-907eff0aa9b7 | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+      | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | 23fe2b58-de46-4330-b361-482f07286cce | 11111111-0000-4000-a000-111111111111 |
+      | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | 11111111-0000-4000-a000-111111111111 |
+      | 309a2a7f-c400-4f39-b203-54869feebd5b | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | 4701c194-e39d-46fd-b70f-44dd15a82278 | 11111111-0000-4000-a000-111111111111 |
+      | 00c7dece-b9a9-4bbc-a445-304723bc887e | 59f91161-ae55-4369-b963-0db1410b00d7 | b9e2b6cc-4453-4935-a8c5-8763ae7873d7 | 11111111-0000-4000-a000-111111111111 |
+      | 02db47f4-0726-400f-89bd-e2fd6d8c8226 | b7306a7d-851c-4f59-856d-907eff0aa9b7 | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
       | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
       | 17eb138c-23c1-43d8-bc88-d6fbbd7e4359 | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 |

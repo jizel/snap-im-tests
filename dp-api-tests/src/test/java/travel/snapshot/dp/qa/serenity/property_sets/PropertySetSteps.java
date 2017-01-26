@@ -19,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
@@ -50,12 +51,17 @@ public class PropertySetSteps extends BasicSteps {
     public void followingPropertySetsExist(List<PropertySetDto> propertySets, String customerId, String userId) {
         propertySets.forEach(propertySet -> {
             propertySet.setCustomerId(customerId);
-
             Response resp = createEntity(propertySet);
             if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + resp.asString());
             }
             addUserToPropertySet(userId, propertySet.getPropertySetId());
+            Response response = createEntity(propertySet);
+            if (response.getStatusCode() != HttpStatus.SC_CREATED) {
+                fail("Property set cannot be created: " + response.asString());
+            }
+            PropertySetDto propertySetResponse = response.as(PropertySetDto.class);
+            addUserToPropertySet(userId, propertySetResponse.getPropertySetId());
         });
 
     }
@@ -68,6 +74,18 @@ public class PropertySetSteps extends BasicSteps {
         setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET, PropertySetDto);
     }
 
+    @Step
+    public PropertySetDto getPropertySet(String id) {
+        Response response = getEntity(id, null);
+        setSessionResponse(response);
+        return response.as(PropertySetDto.class);
+    }
+
+    @Step
+    public void getPropertySetByUser(String userId, String propertySetId) {
+        Response response = getEntityByUser(userId, propertySetId);
+        setSessionResponse(response);
+    }
 
     public PropertySetDto getPropertySetByNameForCustomer(String propertySetName, String customerId) {
         String filter = String.format("name==%s and customer_id==%s", propertySetName, customerId);
@@ -96,8 +114,15 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
+    @Step
     public void listOfPropertySetsIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void listOfPropertySetsIsGotByUser(String userId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntitiesByUser(userId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -114,14 +139,15 @@ public class PropertySetSteps extends BasicSteps {
         }
     }
 
-    public void propertySetWithNameForCustomerIsDeleted(CustomerDto c, String propertySetName) {
-        PropertySetDto existingPropertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-        if (existingPropertySet == null) {
-            return;
-        }
-        String propertySetId = existingPropertySet.getPropertySetId();
+    @Step
+    public void deletePropertySet(String propertySetId){
         deleteEntityWithEtag(propertySetId);
         setSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID, propertySetId);
+    }
+
+    @Step
+    public void deletePropertySetByUser(String userId, String propertySetId){
+        deleteEntityWithEtagByUser(userId, propertySetId);
     }
 
     public void propertySetIdInSessionDoesntExist() {
@@ -156,7 +182,7 @@ public class PropertySetSteps extends BasicSteps {
     public void relationExistsBetweenUserAndPropertySetForCustomer(UserDto user, String propertySetName, CustomerDto c) {
         PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
-        PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(user.getUserId(), propertySet.getPropertySetId());
+        PropertySetUserRelationshipDto existingPropertySetUser = getUserForPropertySet(user.getUserId(), propertySet.getPropertySetId());
         if (existingPropertySetUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, user.getUserId(), null);
@@ -170,23 +196,29 @@ public class PropertySetSteps extends BasicSteps {
         }
     }
 
-    private Response addUserToPropertySet(String userId, String propertySetId) {
-        Map<String, Object> propertySetUser = new HashMap<>();
-        propertySetUser.put("user_id", userId);
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .body(propertySetUser)
+    @Step
+    public Response addUserToPropertySet(String userId, String propertySetId) {
+        return addUserToPropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertySetId);
+    }
+
+    public Response addUserToPropertySetByUser(String performerId, String userId, String propertySetId) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, performerId)
+                .body(singletonMap("user_id", userId))
                 .when().post("/{propertySetId}/users", propertySetId);
     }
 
     @Step
-    public PropertyUserRelationshipDto getUserForPropertySet(String userId, String propertySetId) {
-//        Response propertySetUserResponse = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
-//        return Arrays.stream(propertySetUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
+    public PropertySetUserRelationshipDto getUserForPropertySet(String userId, String propertySetId) {
+        return getUserForPropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertySetId);
+    }
 
-        Response propertySetUserResponse = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
-        PropertyUserRelationshipDto result = null;
+    @Step
+    public PropertySetUserRelationshipDto getUserForPropertySetByUser(String performerId, String userId, String propertySetId) {
+        Response propertySetUserResponse = getSecondLevelEntityByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        setSessionResponse(propertySetUserResponse);
+        PropertySetUserRelationshipDto result;
         try {
-            result = propertySetUserResponse.as(PropertyUserRelationshipDto.class);
+            result = propertySetUserResponse.as(PropertySetUserRelationshipDto.class);
         } catch (Exception e) {
             // Stupid java does not want to accept the exact UnrecognizedPropertyException here, therefore I have to use the generic one
             result = null;
@@ -194,35 +226,36 @@ public class PropertySetSteps extends BasicSteps {
         return result;
     }
 
-    public void userIsAddedToPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-
-        Response response = addUserToPropertySet(u.getUserId(), propertySet.getPropertySetId());
-        setSessionResponse(response);
-    }
-
-    public void userIsRemovedFromPropertySetForCustomer(UserDto u, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-
-        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, u.getUserId(), null);
+    @Step
+    public void removeUserFromPropertySet(String userId, String propertySetId) {
+        Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(deleteResponse);
     }
 
-    public void userDoesntExistForPropertySetForCustomer(UserDto user, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-        PropertyUserRelationshipDto existingPropertySetUser = getUserForPropertySet(propertySet.getPropertySetId(), user.getUserId());
-        assertNull("User should not be present in propertyset", existingPropertySetUser);
+    @Step
+    public void removeUserFromPropertySetByUser(String performerId, String userId, String propertySetId) {
+        Response deleteResponse = deleteSecondLevelEntityByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        setSessionResponse(deleteResponse);
     }
 
-    public void listOfPropertiesIsGotWith(String propertySetName, CustomerDto customer, String limit, String cursor, String filter, String sort, String sortDesc) {
-        PropertySetDto p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
-        Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
+    @Step
+    public void listOfPropertiesIsGotWith(String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
-    public void listOfUsersIsGotWith(String propertySetName, CustomerDto customer, String limit, String cursor, String filter, String sort, String sortDesc) {
-        PropertySetDto p = getPropertySetByNameForCustomer(propertySetName, customer.getCustomerId());
-        Response response = getSecondLevelEntities(p.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
+    @Step
+    public void listOfPropertiesForPropertySetIsGotByUser(String userId, String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
+        setSessionResponse(response);
+    }
+
+    public void listOfUsersIsGotWith(String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        listOfUsersForPropertySetIsGotByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, limit, cursor, filter, sort, sortDesc);
+    }
+
+    public void listOfUsersForPropertySetIsGotByUser(String userId, String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -266,7 +299,7 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenPropertyAndPropertySetForCustomer(String propertyId, String propertySetId, String customerId) {
+    public void relationExistsBetweenPropertyAndPropertySet(String propertyId, String propertySetId) {
         PropertySetPropertyRelationshipDto existingPropertySetUser = getPropertyForPropertySet(propertySetId, propertyId);
         if (existingPropertySetUser != null) {
             Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
@@ -289,9 +322,19 @@ public class PropertySetSteps extends BasicSteps {
                 .when().post("/{propertySetId}/properties", propertySetId);
     }
 
-    private PropertySetPropertyRelationshipDto getPropertyForPropertySet(String propertySetId, String propertyId) {
-        Response propertySetPropertiesResponse = getSecondLevelEntities(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_id==" + propertyId, null, null, null);
-        return Arrays.asList(propertySetPropertiesResponse.as(PropertySetPropertyRelationshipDto[].class)).stream().findFirst().orElse(null);
+    @Step
+    public PropertySetPropertyRelationshipDto getPropertyForPropertySet(String propertySetId, String propertyId) {
+        return getPropertyForPropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, propertyId);
+    }
+
+    @Step
+    public PropertySetPropertyRelationshipDto getPropertyForPropertySetByUser(String userId, String propertySetId, String propertyId) {
+        Response propertySetPropertiesResponse = getSecondLevelEntityByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES,  propertyId, null);
+        setSessionResponse(propertySetPropertiesResponse);
+        if (propertySetPropertiesResponse.getStatusCode() == HttpStatus.SC_OK) {
+            return propertySetPropertiesResponse.as(PropertySetPropertyRelationshipDto.class);
+        }
+        return null;
     }
 
     public void propertiesDoesntExistForPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
@@ -300,16 +343,16 @@ public class PropertySetSteps extends BasicSteps {
         assertNull("Property should not be present in propertyset", existingPropertySetProperty);
     }
 
-    public void propertyIsAddedToPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
 
-        Response response = addPropertyToPropertySet(p.getPropertyId(), propertySet.getPropertySetId());
-        setSessionResponse(response);
+    @Step
+    public void removePropertyFromPropertySet(String propertyId, String propertySetId) {
+        Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        setSessionResponse(deleteResponse);
     }
 
-    public void propertyIsRemovedFromPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-        Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, p.getPropertyId(), null);
+    @Step
+    public void removePropertyFromPropertySetByUser(String userId, String propertyId, String propertySetId) {
+        Response deleteResponse = deleteSecondLevelEntityByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(deleteResponse);
     }
 
@@ -331,23 +374,24 @@ public class PropertySetSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void updatePropertySet(String propName, String customerId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
-
-        PropertySetDto originalPropertySet = getPropertySetByNameForCustomer(propName, customerId);
-        if (originalPropertySet == null) {
-            fail("Property set with " + propName + " not found!");
-        }
-
-        JSONObject updatePropSet = retrieveData(propertySetUpdateDto);
-
-        Response tempResp = getEntity(originalPropertySet.getPropertySetId());
-        Response resp = updateEntity(originalPropertySet.getPropertySetId(), updatePropSet.toString(), tempResp.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-
+    public void updatePropertySet(String propertySetId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
+      updatePropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, propertySetUpdateDto);
     }
 
-    public void comparePropertySets(String propName, String customerId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
-        JSONObject propertySetFromDb = retrieveData(getPropertySetByNameForCustomer(propName, customerId));
+    public void updatePropertySetByUser(String userId, String propertySetId, PropertySetUpdateDto propertySetUpdate){
+        String etag = getEntity(propertySetId).getHeader(HEADER_ETAG);
+        try {
+            JSONObject jsonUpdatePropSet = retrieveData(propertySetUpdate);
+            Response resp = updateEntityByUser(userId, propertySetId, jsonUpdatePropSet.toString(), etag);
+            setSessionResponse(resp);
+
+        } catch(JsonProcessingException exception){
+            fail("Exception thrown while getting JSON from PropertySetUpdateDto object");
+        }
+    }
+
+    public void comparePropertySets(String propertySetId, PropertySetUpdateDto propertySetUpdateDto) throws JsonProcessingException {
+        JSONObject propertySetFromDb = retrieveData(getPropertySet(propertySetId));
         JSONObject udpatedData = retrieveData(propertySetUpdateDto);
 
         Iterator<?> updatedDataKeys = udpatedData.keys();
@@ -364,13 +408,25 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public void updateUserPropertySetRelation(String userId, String propertySetId, UserPropertySetRelationshipUpdateDto userPropertySetRelationshipUpdate) {
+        updateUserPropertySetRelationByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertySetId, userPropertySetRelationshipUpdate);
+    }
+
+    @Step
+    public void updateUserPropertySetRelationByUser(String performerId, String userId, String propertySetId, UserPropertySetRelationshipUpdateDto userPropertySetRelationshipUpdate) {
         try {
             JSONObject jsonUpdate = retrieveData(userPropertySetRelationshipUpdate);
             String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
-            Response response = updateSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){
             fail("Exception thrown while getting JSON from UserPropertyRelationshipUpdateDto object");
         }
+    }
+
+    @Step
+    public Response getChildPropertySetsByUser(String userId, String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams){
+        Response response = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc, queryParams);
+        setSessionResponse(response);
+        return response;
     }
 }

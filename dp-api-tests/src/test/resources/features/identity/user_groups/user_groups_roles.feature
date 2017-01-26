@@ -2,6 +2,7 @@ Feature: User groups roles
 
   Background:
     Given Database is cleaned
+    Given Default partner is created
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -9,26 +10,30 @@ Feature: User groups roles
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
+    Given Default application is created
+    Given The following partner exist
+      | partnerId                            | name         | email                   | website                    |
+      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName                       | website                    | applicationId                        |
-      | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | applicationName                       | website                    | applicationId                        | partnerId                            | isInternal |
+      | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given Switch for user customer role tests
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role1 |
+      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 11111111-0000-4000-a000-111111111111 | UG role1 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists
 
   @Smoke
   Scenario: Create relationship UserGroup-Role
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
-      | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role1 |
+      | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role2 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is created
     Then Response code is 201
     And Body contains entity with attribute "role_id" value "65e928fc-fbe5-4863-95af-8ec1f24baa0d"
-    And Body contains entity with attribute "name" value "UG role1"
+    And Body contains entity with attribute "name" value "UG role2"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-    And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
+    And Relation between user group "userGroup_1" and role with id "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
 
   Scenario Outline: Create relationship UserGroup-Role invalid
     When Relation between user group "<userGroupId>" and role "<roleId>" is created
@@ -58,17 +63,17 @@ Feature: User groups roles
   Scenario Outline: Get list of userGroup's role - valid
     Given The following roles exist
       | roleId                               | applicationId                        | roleName        |
-      | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role1 |
-      | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role2 |
-      | 540be550-1702-4e2e-b094-394de63f6c48 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role3 |
-      | 7b570693-daf5-4208-8d09-370ff9a950b6 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role4 |
-      | f40a9bf7-aa5e-473a-be31-2011324942fc | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role5 |
+      | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | 11111111-0000-4000-a000-111111111111 | UG_filter_role1 |
+      | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | 11111111-0000-4000-a000-111111111111 | UG_filter_role2 |
+      | 540be550-1702-4e2e-b094-394de63f6c48 | 11111111-0000-4000-a000-111111111111 | UG_filter_role3 |
+      | 7b570693-daf5-4208-8d09-370ff9a950b6 | 11111111-0000-4000-a000-111111111111 | UG_filter_role4 |
+      | f40a9bf7-aa5e-473a-be31-2011324942fc | 11111111-0000-4000-a000-111111111111 | UG_filter_role5 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "5184fb6b-0ebd-4726-9481-4858a15a37a0" exists
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "19e8d1c2-c4f7-44d7-b436-dd4e9249065d" exists
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "540be550-1702-4e2e-b094-394de63f6c48" exists
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "7b570693-daf5-4208-8d09-370ff9a950b6" exists
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "f40a9bf7-aa5e-473a-be31-2011324942fc" exists
-    When List of relationships userGroups-Roles for userGroup "a8b40d08-de38-4246-bb69-ad39c31c025c" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of relationships userGroups-Roles for userGroup "userGroup_1" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is 200
     And Content type is "application/json"
     And There are "<returned>" relationships returned
@@ -94,7 +99,7 @@ Feature: User groups roles
       | /null | /null  | role_id=='5*' or role_id=='19*'  | /null   | /null     | 3        |                                                            |                                                |
 
   Scenario Outline: Get list of userGroup's role - invalid
-    When List of relationships userGroups-Roles for userGroup "a8b40d08-de38-4246-bb69-ad39c31c025c" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of relationships userGroups-Roles for userGroup "userGroup_1" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is 400
     And Custom code is <error_code>
     Examples:

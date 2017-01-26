@@ -5,25 +5,21 @@ Feature: Applications roles get
     Given Database is cleaned
 #    TODO: Do application tests for all supported role types
     Given Switch for user customer role tests
+    Given Default partner is created
+    Given Default application is created
 
   @Smoke
   Scenario: Getting applications roles
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following roles exist
       | applicationId                        | roleName    | description        |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Test_Role_1 | Test description 1 |
-    When Applications roles for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got
+      | 11111111-0000-4000-a000-111111111111 | Test_Role_1 | Test description 1 |
+    When Applications roles for application id "11111111-0000-4000-a000-111111111111" is got
     Then Response code is "200"
     And Content type is "application/json"
     And Body contains entity with attribute "role_id"
     And Body contains entity with attribute "role_name"
 
   Scenario Outline: Getting list of applications roles
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace111 |
     Given The following roles exist
       | applicationId                        | roleName     | description         |
       | a318fd9a-a05d-42d8-8e84-42e904ace111 | Test_Role_1  | Test description 1  |
@@ -99,9 +95,6 @@ Feature: Applications roles get
 
   Scenario Outline: Filtering list of applications roles
     Given Switch for user customer role tests
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace111 |
     Given The following roles exist
       | applicationId                        | roleName     | description         |
       | a318fd9a-a05d-42d8-8e84-42e904ace111 | Test_Role_11 | Test description 11 |

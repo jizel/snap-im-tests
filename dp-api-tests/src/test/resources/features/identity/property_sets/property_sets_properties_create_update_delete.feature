@@ -23,14 +23,14 @@ Feature: Property sets properties create update delete
 
   @Smoke
   Scenario: Adding property to property set
-    When Property with code "p2_code" is added to property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When Property with code "p2_code" is added to property set "ps1_name"
     Then Response code is "201"
 
 
 #    Fails because of DP-1630
   @Smoke
   Scenario: Removing property from property set
-    When Property with code "p2_code" is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    When Property with code "p2_code" is removed from property set "ps1_name"
     Then Response code is "204"
     And Body is empty
     And Property with code "p2_code" isn't there for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
@@ -39,7 +39,7 @@ Feature: Property sets properties create update delete
   Scenario: Removing propertySet with valid properties
     Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    When Property set with name "toDelete" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    When Property set "toDelete" is deleted
     Then Response code is "204"
     And Body is empty
     And Property set with same id doesn't exist
@@ -47,8 +47,8 @@ Feature: Property sets properties create update delete
 
 #    Fails because of DP-1630
   Scenario: Checking error code for removing property from property set
-    When Nonexistent property is removed from property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-    Then Response code is "204"
+    When Nonexistent property is removed from property set "ps1_name"
+    Then Response code is "412"
 
 
   Scenario Outline: Filtering list of properties for property set
@@ -60,10 +60,20 @@ Feature: Property sets properties create update delete
     Given Relation between property with code "filtering_prop_code_1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "filtering_prop_code_2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "filtering_prop_code_3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    Given Relation between property with code "filtering_prop_code_4" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "filtering_prop_code_5" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "filtering_prop_code_6" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+>>>>>>> 3360750... DP-1330: Customer POST DELETE, Property Set and User Groups access check tests
     When List of properties for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+=======
+    When List of properties for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+>>>>>>> 7f842ef... DP-1330: property set access checks implemented
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> property set properties  returned
+    And There are <returned> property set properties returned
     And There are properties with following names returned in order: <expected_names>
     Examples:
       | limit | cursor | returned | filter           | sort          | sort_desc       | expected_names                                                      |

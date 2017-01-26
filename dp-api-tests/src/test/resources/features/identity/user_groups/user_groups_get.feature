@@ -12,7 +12,7 @@ Feature: User groups get
 
   @Smoke
   Scenario: Getting user group
-    When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is got
+    When User group "userGroup_1" is requested
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -39,7 +39,7 @@ Feature: User groups get
     And Body contains entity with attribute "description" value "updatedDescription"
 
   Scenario: Getting nonExistent user group
-    When User group with id "nonExistentUserGroup" is got
+    When User group with non existent UserGroupId is got
     Then Response code is "404"
     And Custom code is 40402
 

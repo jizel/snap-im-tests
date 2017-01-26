@@ -331,7 +331,9 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        return requestSpecification.when().delete("/{id}", entityId);
+        Response response = requestSpecification.when().delete("/{id}", entityId);
+        setSessionResponse(response);
+        return response;
     }
 
     protected Response deleteEntityWithEtag(String entityId) {

@@ -14,14 +14,13 @@ Feature: Users property set roles CRUD
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace124 |
+    Given Default partner is created
+    Given Default application is created
     Given Switch for user property set role tests
     Given The following roles exist
       | roleId                               | roleName    | description            | applicationId                        |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
 
 
   @Smoke
@@ -45,7 +44,7 @@ Feature: Users property set roles CRUD
     Given Switch for user property role tests
     Given The following roles exist
       | roleId                               | roleName        | description            | applicationId                        |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is added
     Then Response code is "422"
     And Custom code is 42202
@@ -57,7 +56,7 @@ Feature: Users property set roles CRUD
     Given Switch for user customer role tests
     Given The following roles exist
       | roleId                               | roleName        | description            | applicationId                        |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is added
     Then Response code is "422"
     And Custom code is 42202
@@ -108,12 +107,12 @@ Feature: Users property set roles CRUD
     Given Switch for user property set role tests
     Given The following roles exist
       | roleName           | description            | applicationId                        |
-      | user_filter_role_1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-      | user_filter_role_2 | optional description 2 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-      | user_filter_role_3 | optional description 3 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-      | user_filter_role_4 | optional description 4 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-      | user_filter_role_5 | optional description 5 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
-      | user_filter_role_6 | optional description 6 | a318fd9a-a05d-42d8-8e84-42e904ace124 |
+      | user_filter_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | user_filter_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+      | user_filter_role_3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
+      | user_filter_role_4 | optional description 4 | 11111111-0000-4000-a000-111111111111 |
+      | user_filter_role_5 | optional description 5 | 11111111-0000-4000-a000-111111111111 |
+      | user_filter_role_6 | optional description 6 | 11111111-0000-4000-a000-111111111111 |
 
     Given Role with name "user_filter_role_1" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_2" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
