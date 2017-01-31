@@ -136,3 +136,10 @@ Feature: User groups user relationship feature
     Examples:
       | url                                                                                                  |
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/users/5d829079-48f0-4f00-9bec-e2329a8bdaac |
+
+  Scenario: Duplicate adding of User to User Group returns correct response - DP-1661
+    Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
+    Then Response code is "201"
+    Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
+    Then Response code is "409"
+    And Custom code is 40902

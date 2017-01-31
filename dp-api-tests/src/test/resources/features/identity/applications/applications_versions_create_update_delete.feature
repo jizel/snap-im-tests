@@ -3,12 +3,13 @@ Feature: Applications versions create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
 
   @Smoke
   Scenario: Create applications versions
-    When Application versions are created for application with id "11111111-0000-4000-a000-111111111111"
+    When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
       | apiManagerId | versionName | status   | description            |
       | 123          | Version 1   | inactive | Versions description 1 |
     Then Response code is "201"

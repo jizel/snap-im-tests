@@ -97,6 +97,13 @@ Feature: Customers properties create update delete
       | valid_to          | invalid    | 400         | 40002       |
       | relationship_type | invalid    | 400         | 40002       |
 
+  Scenario: Duplicate adding of customer property throws correct error - DP-1661
+    When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"
+    Then Response code is "201"
+    When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"
+    Then Response code is "409"
+    And Custom code is 40907
+
   #error codes
 
   #Scenario Outline: Checking error codes for updating customer

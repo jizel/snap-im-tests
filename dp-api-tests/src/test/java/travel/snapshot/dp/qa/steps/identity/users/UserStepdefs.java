@@ -403,4 +403,14 @@ public class UserStepdefs {
         user.setUserType(SNAPSHOT);
         usersSteps.createUser(user);
     }
+
+    @When("^Property set \"([^\"]*)\" is added to user \"([^\"]*)\"$")
+    public void propertySetIsAddedToUser(String propertySetName, String username) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
+        assertThat(user, is(notNullValue()));
+        assertThat(propertySet, is(notNullValue()));
+
+        usersSteps.addPropertySetToUser(propertySet.getPropertySetId(), user.getUserId());
+    }
 }
