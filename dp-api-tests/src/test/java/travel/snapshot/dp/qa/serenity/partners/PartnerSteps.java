@@ -123,18 +123,20 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void partnerWithIdIsGotWithExpiredEtag(String partnerId) {
-        Response tempResponse = getEntity(partnerId, null);
+    public void partnerWithIdIsGotAfterUpdate(String partnerId) {
+        String eTag = getEntity(partnerId, null).getHeader(HEADER_ETAG);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("name", "Partner test company 1");
         mapForUpdate.put("notes", "Updated Notes");
         mapForUpdate.put("website", "http://www.snapshot.travel");
 
-        Response updateResponse = updateEntity(partnerId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+        Response updateResponse = updateEntity(partnerId, mapForUpdate, eTag);
         if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Partner cannot be updated: " + updateResponse.asString());
         }
+        Response resp = getEntity(partnerId, eTag);
+        setSessionResponse(resp);
     }
 
     @Step
