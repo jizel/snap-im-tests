@@ -2,6 +2,7 @@ Feature: Partners get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
 
   Scenario: Getting partner
     Given The following partner is created

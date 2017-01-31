@@ -3,6 +3,7 @@ Feature: Applications create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
 
   @Smoke
   Scenario: Create application
