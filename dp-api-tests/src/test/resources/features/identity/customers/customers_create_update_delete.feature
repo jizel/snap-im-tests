@@ -113,12 +113,12 @@ Feature: Customers create update delete
     And Body is empty
     And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is not active
 
-  Scenario: Headquaters timezone parameter is optional (DP-1332)
+  Scenario: Headquarters timezone parameter is not optional (DP-1695)
     When Customer is created with random address
       | companyName           | email          | salesforceId           | vatId      | isDemoCustomer | phone         | website                    |
       | Creation test company | s1@tenants.biz | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel |
-    Then Response code is "201"
-    And Body does not contain property with attribute "headquarters_timezone"
+    Then Response code is "422"
+    And Custom code is 42201
 
   Scenario Outline: Validate that customer regions belong to the correct country
     When A customer with following country "<country>", region "<region>", vatId "<vatId>" is created

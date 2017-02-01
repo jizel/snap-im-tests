@@ -67,12 +67,12 @@ Feature: Properties create update delete
     And Body is empty
     And Property with code "p1_code" is not active
 
-  Scenario: Timezone parameter is optional (DP-1332)
+  Scenario: Timezone parameter is mandatory (DP-1696)
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | anchorCustomerId                     |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Then Response code is "201"
-    And Body does not contain property with attribute "timezone"
+    Then Response code is "422"
+    And Custom code is 42201
 
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
