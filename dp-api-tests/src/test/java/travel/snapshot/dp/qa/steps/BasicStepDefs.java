@@ -130,4 +130,9 @@ public class BasicStepDefs {
     public void getRequestIsSentToOnModuleWithoutXAuthUserIdHeader(String url, String module) throws Throwable {
         basicSteps.sendGetRequestToUrlWithoutUserHeader(url, module);
     }
+
+    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with empty X-Auth-UserId header$")
+    public void getRequestIsSentToOnModuleWithEmptyXAuthUserIdHeader(String url, String module) throws Throwable {
+        basicSteps.sendGetRequestToUrlByUser("", url, module);
+    }
 }
