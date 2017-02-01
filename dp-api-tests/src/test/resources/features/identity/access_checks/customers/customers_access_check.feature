@@ -173,6 +173,9 @@ Feature: Customers access check feature - GET
       When GET request is sent to "<url>" on module "identity" without X-Auth-UserId header
       Then Response code is "403"
       And Custom code is "40301"
+      When GET request is sent to "<url>" on module "identity" with empty X-Auth-UserId header
+      Then Response code is "403"
+      And Custom code is "40301"
       Examples:
         | url                                                                              |
         | identity/customers                                                               |
