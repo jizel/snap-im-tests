@@ -399,8 +399,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void propertyIsUpdateForCustomerWithType(PropertyDto property, String customerId, String type, String fieldName, String value) {
         CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(customerId, property.getPropertyId(), type);
-        String etag = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), null).header(HEADER_ETAG);
-
+        String etag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId());
         Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), singletonMap(fieldName, value), etag);
         setSessionResponse(updateResponse);
     }
@@ -551,7 +550,7 @@ public class CustomerSteps extends BasicSteps {
     public void updateUserCustomerRelationshipByUser(String performerId, String userId, String customerId, UserCustomerRelationshipUpdateDto userCustomerRelationshipUpdate) {
         try {
             JSONObject jsonUpdate = retrieveData(userCustomerRelationshipUpdate);
-            String etag = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
+            String etag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_USERS, userId);
             Response response = updateSecondLevelEntityByUser(performerId, customerId, SECOND_LEVEL_OBJECT_USERS, userId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){

@@ -431,7 +431,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void updatePropertyPropertySetRelationshipByUser(String userId, String propertyId, String propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) {
-        String etag = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
             Response response = updateSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, jsonUpdate, etag);
@@ -445,7 +445,7 @@ public class PropertySteps extends BasicSteps {
     public void updatePropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
         PropertyCustomerRelationshipDto customerPropertyRelationship = getPropertyCustomerRelationship(propertyId, customerId);
         assertThat(customerPropertyRelationship, is(notNullValue()));
-        String etag = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId());
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
             Response response = updateSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), jsonUpdate, etag);
