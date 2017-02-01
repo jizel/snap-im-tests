@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.serenity.partners;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -9,16 +13,16 @@ import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import javax.swing.text.html.HTMLDocument;
-import java.util.*;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PartnerSteps extends BasicSteps {
 
     private static final String PARTNERS_PATH = "/identity/partners";
     private static final String SESSION_PARTNER_ID = "partner_id";
+    private static final String USER_ID_KEY = "user_id";
 
     public PartnerSteps() {
         super();
@@ -174,6 +178,12 @@ public class PartnerSteps extends BasicSteps {
         Response partnerUsers = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerUsers);
+    }
+
+    @Step
+    public void createPartnerUserRelationship(String partnerId, String userId){
+        Response response = createSecondLevelRelationship(partnerId, SECOND_LEVEL_OBJECT_USERS, singletonMap(USER_ID_KEY, userId));
+        setSessionResponse(response);
     }
 
     public PartnerDto getPartnerByName(String name) {
