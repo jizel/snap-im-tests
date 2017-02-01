@@ -50,6 +50,7 @@ public class PropertySteps extends BasicSteps {
     private static final String SERENITY_SESSION__PROPERTY_ID = "property_id";
     private static final String BASE_PATH__PROPERTIES = "/identity/properties";
     private static final String USER_ID_KEY = "user_id";
+    private static final String PROPERTY_SET_ID_KEY = "property_set_id";
 
     public static final String DEFAULT_PROPERTY_EMAIL = "property1@snapshot.travel";
     public static final Boolean DEFAULT_PROPERTY_IS_DEMO = true;
@@ -398,6 +399,20 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
+    public Response addPropertySetToProperty(String propertySetId, String propertyId) {
+        Response response =  addPropertySetToPropertyByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, propertySetId);
+        setSessionResponse(response);
+        return response;
+    }
+
+    @Step
+    public Response addPropertySetToPropertyByUser(String userId, String propertySetId, String propertyId) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
+                .body(singletonMap(PROPERTY_SET_ID_KEY, propertySetId))
+                .when().post("/{propertyId}/property_sets", propertyId);
+    }
+
+    @Step
     public Response listOfUsersIsGotWith(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
         return listOfUsersIsGotByUserWith(DEFAULT_SNAPSHOT_USER_ID, propertyId, limit, cursor, filter, sort, sortDesc);
     }
@@ -427,6 +442,11 @@ public class PropertySteps extends BasicSteps {
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setAddress(addressUpdate);
         updateProperty(propertyId, propertyUpdate);
+    }
+
+    @Step
+    public void updatePropertyPropertySetRelationship(String propertyId, String propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) {
+        updatePropertyPropertySetRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, propertySetId, relationshipUpdate);
     }
 
     @Step
