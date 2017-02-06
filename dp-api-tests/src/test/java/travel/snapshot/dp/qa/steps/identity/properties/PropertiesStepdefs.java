@@ -490,6 +490,17 @@ public class PropertiesStepdefs {
         propertySteps.updatePropertyPropertySetRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), propertySet.getPropertySetId(), relationshitpUpdates.get(0));
     }
 
+    @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is updated with empty body$")
+    public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsUpdatedWithEmptyBody(String propertyCode, String propertySetName) throws Throwable {
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        assertThat(property,is(notNullValue()));
+        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
+        assertThat(propertySet, is(notNullValue()));
+
+        PropertySetPropertyRelationshipUpdateDto relationshipUpdate = new PropertySetPropertyRelationshipUpdateDto();
+        propertySteps.updatePropertyPropertySetRelationship(property.getPropertyId(), propertySet.getPropertySetId(), relationshipUpdate);
+    }
+
     @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
     public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsDeletedByUser(String propertyCode, String propertySetName, String username) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
