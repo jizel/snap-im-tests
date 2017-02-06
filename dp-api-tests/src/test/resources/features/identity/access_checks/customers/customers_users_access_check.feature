@@ -50,7 +50,6 @@ Feature: Customers users access check feature (second level endpoints)
 
     Scenario: Updating User Customer relationship by user who cannot access the customer
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "false" by user "userWithCust2"
-#      DP-1710
       Then Response code is "404"
       And Custom code is 40402
 
