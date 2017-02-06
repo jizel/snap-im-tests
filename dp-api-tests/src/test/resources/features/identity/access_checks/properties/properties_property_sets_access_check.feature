@@ -47,7 +47,6 @@ Feature: Properties-Property Sets access check feature
       | true     |
     Then Response code is "204"
 
-#  DP-1710
   Scenario: Update property - propertySet relationship by user does not have access to the them
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
       | propertySetName | propertySetDescription | propertySetType |
