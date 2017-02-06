@@ -3,6 +3,7 @@ Feature: Customers commercial subscriptions
   Background:
     Given Database is cleaned
     Given Default partner is created
+    Given Default Snapshot user is created
 
   Scenario: Getting customers commercial subscriptions
     Given Default application is created

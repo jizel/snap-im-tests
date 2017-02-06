@@ -60,9 +60,6 @@ Feature: Property sets properties create update delete
     Given Relation between property with code "filtering_prop_code_1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "filtering_prop_code_2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     Given Relation between property with code "filtering_prop_code_3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "filtering_prop_code_4" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "filtering_prop_code_5" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "filtering_prop_code_6" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
     When List of properties for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"

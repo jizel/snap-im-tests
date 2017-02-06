@@ -99,7 +99,7 @@ public class PartnersStepdef {
 
     @When("^Partner with id \"([^\"]*)\" is got for etag, updated and got with previous etag$")
     public void Partner_with_id_is_got_for_etag_updated_and_got_with_previous_etag(String partnerId) {
-        partnerSteps.partnerWithIdIsGotWithExpiredEtag(partnerId);
+        partnerSteps.partnerWithIdIsGotAfterUpdate(partnerId);
     }
 
     @When("^Nonexistent partner id is got$")

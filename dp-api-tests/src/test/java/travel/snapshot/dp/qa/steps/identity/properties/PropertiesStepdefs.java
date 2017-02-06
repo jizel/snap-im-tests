@@ -212,6 +212,11 @@ public class PropertiesStepdefs {
         propertySteps.userIsDeletedFromProperty("nonexistent", propertyCode);
     }
 
+    @When("^I query list of users for nonexistent property$")
+    public void i_query_list_of_users_for_nonexistent_property() throws Throwable {
+        propertySteps.listOfUsersIsGotWith(BasicSteps.NON_EXISTENT_ID, null, null, null, null, null);
+}
+
     @When("^List of users for property with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_users_for_property_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertyCode,
                                                                                                                     @Transform(NullEmptyStringConverter.class) String limit,
