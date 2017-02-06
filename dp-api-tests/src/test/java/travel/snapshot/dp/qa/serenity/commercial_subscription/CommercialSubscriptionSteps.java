@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.serenity.commercial_subscription;
 
 import static org.junit.Assert.*;
-
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -46,15 +45,15 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     }
 
     @Step
-    public void comSubscriptionIsCreated(CommercialSubscriptionDto commercialSubscription) {
+    public void commercialSubscriptionIsCreated(CommercialSubscriptionDto commercialSubscription) {
         Response resp = createEntity(commercialSubscription);
         setSessionResponse(resp);
     }
 
     @Step
-    public void deleteCommSubscriptionWithId(String commSubcriptionId) {
-        deleteEntityWithEtag(commSubcriptionId);
-        Serenity.setSessionVariable(SESSION_COMMERCIAL_SUBSCRIPTION_ID).to(commSubcriptionId);
+    public void deleteCommSubscriptionWithId(String subscriptionId) {
+        deleteEntityWithEtag(subscriptionId);
+        Serenity.setSessionVariable(SESSION_COMMERCIAL_SUBSCRIPTION_ID).to(subscriptionId);
     }
 
     @Step
