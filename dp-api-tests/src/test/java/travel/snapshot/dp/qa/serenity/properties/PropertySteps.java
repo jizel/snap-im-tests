@@ -399,20 +399,6 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public Response addPropertySetToProperty(String propertySetId, String propertyId) {
-        Response response =  addPropertySetToPropertyByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, propertySetId);
-        setSessionResponse(response);
-        return response;
-    }
-
-    @Step
-    public Response addPropertySetToPropertyByUser(String userId, String propertySetId, String propertyId) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
-                .body(singletonMap(PROPERTY_SET_ID_KEY, propertySetId))
-                .when().post("/{propertyId}/property_sets", propertyId);
-    }
-
-    @Step
     public Response listOfUsersIsGotWith(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
         return listOfUsersIsGotByUserWith(DEFAULT_SNAPSHOT_USER_ID, propertyId, limit, cursor, filter, sort, sortDesc);
     }

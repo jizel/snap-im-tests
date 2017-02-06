@@ -520,15 +520,4 @@ public class PropertiesStepdefs {
 
         propertySteps.deletePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId);
     }
-
-    @When("^Property set \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
-    public void propertySetIsAddedToPropertyWithCode(String propertySetName, String propertyCode) throws Throwable {
-//        Creating property-property set relationship via this endpoint not implemented now but lets keep this step for future use
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
-        propertySteps.addPropertySetToProperty(propertySet.getPropertySetId(), property.getPropertyId());
-    }
 }
