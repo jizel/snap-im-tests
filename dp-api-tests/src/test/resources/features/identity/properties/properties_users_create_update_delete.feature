@@ -36,8 +36,8 @@ Feature: Properties users create update delete
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
+  # Fails because of DP-1630
   @Smoke
-#    Fails because of DP-1630
   Scenario: Removing user from property
     When User with username "default2" is removed from property with code "p1_code"
     Then Response code is "204"
@@ -83,3 +83,9 @@ Feature: Properties users create update delete
       | 5     | 2      | 4        | 6     | user_name=='filter_pu_default*' | user_name |           | filter_pu_default_3, filter_pu_default_4, filter_pu_default_5, filter_pu_default_6                      |
       | 5     | 2      | 4        | 6     | user_name=='filter_pu_default*' |           | user_name | filter_pu_default_4, filter_pu_default_3, filter_pu_default_2, filter_pu_default_1                      |
       | /null | /null  | 1        | 1     | user_name==filter_pu_default_6  | /null     | /null     | filter_pu_default_6                                                                                     |
+
+# DP-1677
+  @Bug
+  Scenario: Listing users of non-existent property
+    When I query list of users for nonexistent property
+    Then Response code is "404"

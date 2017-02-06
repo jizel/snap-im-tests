@@ -8,6 +8,7 @@ Feature: Customer code feature
 
   Background:
     Given Database is cleaned
+    And Default Snapshot user is created
 
 
   Scenario Outline: Correct customer code is returned when none is sent for all company names
@@ -39,7 +40,6 @@ Feature: Customer code feature
     Given Customer is created with random address
       | customerId                           | companyName     | email              | isDemoCustomer | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Company 1       | c1@snaphsot.travel | true           | Europe/Prague |
-    And Default Snapshot user is created
     When Customer code of customer with Id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with "updatedCustomerCode"
     Then Response code is "422"
     And Custom code is 42201

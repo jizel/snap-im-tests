@@ -46,7 +46,6 @@ Feature: Property sets users create update delete
     When Nonexistent user is removed from property set with name "ps1_name"
     Then Response code is "412"
 
-# Fails at line 72 due to DP-1657
   Scenario Outline: Filtering list of users for property set
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName             | firstName         | lastName       | email                            | phone        | timezone          | culture |
@@ -68,9 +67,26 @@ Feature: Property sets users create update delete
     And There are <returned> users returned
     And There are property set users with following usernames returned in order: <expected_usernames>
     Examples:
-      | limit | cursor | returned | filter           | sort      | sort_desc   | expected_usernames                                                                                           |
-      | 5     | 0      | 5        | is_active==false | is_active |             | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5 |
+      | limit | cursor | returned | filter           | sort      | sort_desc   | expected_usernames                                                                                            |
+      | 5     | 0      | 5        | is_active==false | is_active |             | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5  |
       | 5     | 0      | 5        | is_active==false |           | is_active   | filter_psu_default_6, filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2  |
       | 5     | 2      | 4        | is_active==false | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6                        |
-      | 5     | 2      | 4        | is_active==false |           | property_id | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
+      | 5     | 2      | 4        | is_active==false |           | user_id     | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
       | 1     | 0      | 1        | is_active==false |           |             | filter_psu_default_6                                                                                          |
+      | 2     | 0      | 2        | user_id=='0*'    | user_id   |             | filter_psu_default_1, filter_psu_default_2                                                                    |
+      | 5     | 0      | 1        | user_id=='018*'  | user_id   |             | filter_psu_default_2                                                                                          |
+
+  Scenario Outline: Filtering list of users for property set - negative scenarios
+    Given Relation between user with username "default0" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "default1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "default2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user with username "default3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    When List of users for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    Then Response code is "400"
+    Examples:
+      | limit | cursor | filter              | sort      | sort_desc   |
+      | 5     | 0      | property_id==123    |           | is_active   |
+      | 5     | 2      | property_set_id==xx | is_active |             |
+      | 5     | 2      | name==J*            | user_id   |             |
+      | 0     | 0      | user_id=='0*'       | /null     |             |
+      | 5     | c      | /null               | /null     |             |

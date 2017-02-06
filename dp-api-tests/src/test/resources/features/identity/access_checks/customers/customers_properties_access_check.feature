@@ -65,7 +65,6 @@ Feature: Customers properties access check feature (second level endpoints)
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 888e833e-50e8-4854-a233-289f00b54a09 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 00000000-0000-4000-8000-123000000abc |
     Given Relation between property with code "p2_code" and customer with id "12300000-0000-4000-a000-000000000000" exists with type "chain" from "2015-01-01" to "2050-12-31"
-#      DP-1710
     When Property with code "p2_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust1" with
       | type  | validFrom    |
       | owner | Jun 30, 2016 |
@@ -77,7 +76,6 @@ Feature: Customers properties access check feature (second level endpoints)
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 888e833e-50e8-4854-a233-289f00b54a09 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 00000000-0000-4000-8000-123000000abc |
     Given Relation between property with code "p2_code" and customer with id "12300000-0000-4000-a000-000000000000" exists with type "chain" from "2015-01-01" to "2050-12-31"
-#      DP-1710
     When Property with code "p2_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust2" with
       | type  | validFrom    |
       | owner | Jun 30, 2016 |

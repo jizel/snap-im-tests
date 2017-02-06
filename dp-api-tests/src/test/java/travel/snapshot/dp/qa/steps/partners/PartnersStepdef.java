@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.steps.partners;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -8,8 +12,10 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
 
@@ -19,6 +25,9 @@ public class PartnersStepdef {
 
     @Steps
     private PartnerSteps partnerSteps;
+
+    @Steps
+    private UsersSteps userSteps;
 
     @Given("^Default partner is created$")
     public void defaultPartnerIsCreated() throws Throwable {
@@ -99,7 +108,7 @@ public class PartnersStepdef {
 
     @When("^Partner with id \"([^\"]*)\" is got for etag, updated and got with previous etag$")
     public void Partner_with_id_is_got_for_etag_updated_and_got_with_previous_etag(String partnerId) {
-        partnerSteps.partnerWithIdIsGotWithExpiredEtag(partnerId);
+        partnerSteps.partnerWithIdIsGotAfterUpdate(partnerId);
     }
 
     @When("^Nonexistent partner id is got$")
@@ -153,4 +162,13 @@ public class PartnersStepdef {
     }
 
 
+    @When("^user \"([^\"]*)\" is added to partner \"([^\"]*)\"$")
+    public void userIsAddedToPartner(String username, String partnerName) throws Throwable {
+        UserDto user = userSteps.getUserByUsername(username);
+        PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
+        assertThat(user, is(notNullValue()));
+        assertThat(partner, is(notNullValue()));
+
+        partnerSteps.createPartnerUserRelationship(partner.getPartnerId(), user.getUserId());
+    }
 }

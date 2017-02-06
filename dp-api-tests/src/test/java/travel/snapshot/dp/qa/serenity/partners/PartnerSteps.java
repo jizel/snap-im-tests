@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.serenity.partners;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -9,16 +13,16 @@ import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import javax.swing.text.html.HTMLDocument;
-import java.util.*;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PartnerSteps extends BasicSteps {
 
     private static final String PARTNERS_PATH = "/identity/partners";
     private static final String SESSION_PARTNER_ID = "partner_id";
+    private static final String USER_ID_KEY = "user_id";
 
     public PartnerSteps() {
         super();
@@ -123,18 +127,20 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void partnerWithIdIsGotWithExpiredEtag(String partnerId) {
-        Response tempResponse = getEntity(partnerId, null);
+    public void partnerWithIdIsGotAfterUpdate(String partnerId) {
+        String eTag = getEntity(partnerId, null).getHeader(HEADER_ETAG);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("name", "Partner test company 1");
         mapForUpdate.put("notes", "Updated Notes");
         mapForUpdate.put("website", "http://www.snapshot.travel");
 
-        Response updateResponse = updateEntity(partnerId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+        Response updateResponse = updateEntity(partnerId, mapForUpdate, eTag);
         if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("Partner cannot be updated: " + updateResponse.asString());
         }
+        Response resp = getEntity(partnerId, eTag);
+        setSessionResponse(resp);
     }
 
     @Step
@@ -174,6 +180,12 @@ public class PartnerSteps extends BasicSteps {
         Response partnerUsers = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerUsers);
+    }
+
+    @Step
+    public void createPartnerUserRelationship(String partnerId, String userId){
+        Response response = createSecondLevelRelationship(partnerId, SECOND_LEVEL_OBJECT_USERS, singletonMap(USER_ID_KEY, userId));
+        setSessionResponse(response);
     }
 
     public PartnerDto getPartnerByName(String name) {

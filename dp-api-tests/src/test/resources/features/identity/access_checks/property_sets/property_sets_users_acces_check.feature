@@ -48,8 +48,7 @@ Feature: Property sets Users access check feature
   Scenario: Try to add user to property by user who cannot access the property
     When User with username "userWithNoPropSet" is added to property set with name "ps1_name" by user "userWithNoPropSet"
     Then Response code is "404"
-
-#    DP-1716
+    
   Scenario: Try to add user from different customer to property set
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
@@ -58,7 +57,8 @@ Feature: Property sets Users access check feature
       | userId                               | userType | userName            | firstName | lastName | email                    | timezone      | culture | isActive |
       | 34529079-48f0-4f00-9bec-e2329a8bdaac | customer | userFromCustomer2   | Customer1 | User1    | usercus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     When User with username "userFromCustomer2" is added to property set with name "ps1_name" by user "userWithPropSet"
-    Then Response code is "404"
+    Then Response code is "422"
+    And Custom code is 42202
 
   Scenario: Updating Property Set-User relationship by user with access to the property set
     Given Check is active attribute is "false" for relation between user "userWithPropSet" and property set "ps1_name"

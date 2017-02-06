@@ -568,14 +568,14 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void getCommSubscriptionForCustomerId(String customerId) {
         Response appCommSubscriptionResponse = getSecondLevelEntities(customerId,
-                "", LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
+                SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(appCommSubscriptionResponse);
     }
 
     @Step
     public void listOfCustomerCommSubscriptionsIsGotWith(String customerId, String limit, String cursor, String filter,
                                                          String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(customerId, "", limit,
+        Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS, limit,
                 cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }

@@ -31,7 +31,7 @@ Feature: Customers users create update delete
     When Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updated with isPrimary "true"
     Then Response code is "204"
     And Relation between user "snapUser1" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is primary
-    
+
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
@@ -48,7 +48,7 @@ Feature: Customers users create update delete
 
 
   Scenario Outline: Filtering list of users for customer
-    Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
+    Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | userType | userName            | firstName        | lastName      | email                           | phone        | timezone      | culture |
       | customer | filter_cu_default_1 | FilterCUDefault1 | FilterCUUser1 | filter_cu_user1@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
       | customer | filter_cu_default_2 | FilterCUDefault2 | FilterCUUser2 | filter_cu_user2@snapshot.travel | +42010111213 | Europe/Prague | cs-CZ   |
@@ -78,10 +78,9 @@ Feature: Customers users create update delete
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                                 | sort      | sort_desc | expected_usernames                                                                                      |
-      | 5     | 0      | 5        | 6     | user_name=='filter_cu_default*'             | user_name |           | filter_cu_default_1, filter_cu_default_2, filter_cu_default_3, filter_cu_default_4, filter_cu_default_5 |
-      | 5     | 0      | 5        | 6     | user_name=='filter_cu_default*'             |           | user_name | filter_cu_default_6, filter_cu_default_5, filter_cu_default_4, filter_cu_default_3, filter_cu_default_2 |
-      | 5     | 2      | 4        | 6     | user_name=='filter_cu_default*'             | user_name |           | filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6                      |
-      | 5     | 2      | 4        | 6     | user_name=='filter_cu_default*'             |           | user_name | filter_cu_default_4, filter_cu_default_3, filter_cu_default_2, filter_cu_default_1                      |
-      | /null | /null  | 1        | 1     | user_name==filter_cu_default_6              | /null     | /null     | filter_cu_default_6                                                                                     |
-      | /null | /null  | 2        | 2     | user_name==*_cu_default_* and is_primary==1 | user_name | /null     | filter_cu_default_1, other_cu_default_8                                                                 |
+      | limit | cursor | returned | total | filter                         | sort      | sort_desc | expected_usernames                                                                                                                              |
+      | /null | 0      | 8        | 8     | is_primary=='false'            | /null     |           | filter_cu_default_2, filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6, other_cu_default_7, other_cu_default_9 |
+      | 5     | 0      | 5        | 8     | is_primary=='false'            | /null     |           | filter_cu_default_2, filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6, other_cu_default_7, other_cu_default_9 |
+      | 5     | 0      | 3        | 3     | is_primary=='true'             |           | /null     | filter_cu_default_2, other_cu_default_8                                                                                                         |
+      | 5     | 2      | 5        | 8     | is_primary=='false'            | /null     |           | filter_cu_default_3, filter_cu_default_4, filter_cu_default_5, filter_cu_default_6, other_cu_default_7, other_cu_default_9                      |
+      | /null | /null  | 8        | 8     | is_primary=='false'            | /null     | /null     | filter_cu_default_1, other_cu_default_8                                                                                                         |
