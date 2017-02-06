@@ -49,7 +49,7 @@ Feature: Customers properties create update delete
       | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 422        | 42201       |
       | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 422        | 42201       |
       | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
-      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 400        | 42201       |
+      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 409        | 40907       |
       | notexistent property | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
 
 
