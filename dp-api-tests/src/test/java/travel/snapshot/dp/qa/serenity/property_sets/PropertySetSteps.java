@@ -51,19 +51,15 @@ public class PropertySetSteps extends BasicSteps {
     public void followingPropertySetsExist(List<PropertySetDto> propertySets, String customerId, String userId) {
         propertySets.forEach(propertySet -> {
             propertySet.setCustomerId(customerId);
-            Response resp = createEntity(propertySet);
-            if (resp.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Property set cannot be created: " + resp.asString());
+            Response createResponse = createEntity(propertySet);
+            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+                fail("Property set cannot be created: " + createResponse.asString());
             }
-            addUserToPropertySet(userId, propertySet.getPropertySetId());
-            Response response = createEntity(propertySet);
-            if (response.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Property set cannot be created: " + response.asString());
+            Response addUserResponse = addUserToPropertySet(userId, propertySet.getPropertySetId());
+            if (addUserResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+                fail("Property set cannot be created: " + addUserResponse.asString());
             }
-            PropertySetDto propertySetResponse = response.as(PropertySetDto.class);
-            addUserToPropertySet(userId, propertySetResponse.getPropertySetId());
         });
-
     }
 
     public void followingPropertySetIsCreated(PropertySetDto PropertySetDto, String customerId) {

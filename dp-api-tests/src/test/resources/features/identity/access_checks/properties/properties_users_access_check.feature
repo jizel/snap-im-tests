@@ -38,7 +38,6 @@ Feature: Properties-Users access check feature
     When User "userWithNoProp" is added to property with code "p1_code" by user "userWithNoProp"
     Then Response code is "404"
 
-#    DP-1716
   Scenario: Try to add user from different customer to property
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
@@ -47,7 +46,8 @@ Feature: Properties-Users access check feature
       | userId                               | userType | userName            | firstName | lastName | email                    | timezone      | culture | isActive |
       | 34529079-48f0-4f00-9bec-e2329a8bdaac | customer | userFromCustomer2   | Customer1 | User1    | usercus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     When User "userFromCustomer2" is added to property with code "p1_code" by user "userWithProp"
-    Then Response code is "404"
+    Then Response code is "422"
+    And Custom code is 42202
 
     Scenario: Delete user from property by user who has access to it
       Given Relation between user with username "userWithNoProp" and property with code "p1_code" exists
