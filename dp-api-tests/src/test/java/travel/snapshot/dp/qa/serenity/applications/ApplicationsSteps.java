@@ -369,9 +369,9 @@ public class ApplicationsSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    private Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
-
-        return given().spec(spec).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
+    @Step
+    public Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
     }
 
     public VersionDto getApplicationVersionByName(String applicationId, String versionName) {
