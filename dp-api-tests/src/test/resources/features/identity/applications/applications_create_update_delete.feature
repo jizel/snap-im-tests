@@ -98,6 +98,7 @@ Feature: Applications create update delete
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions                                                    |
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions/b595fc9d-f5ca-45e7-a15d-c8a97108d884/api_subscriptions |
 
+
   Scenario: Application ID and name is unique when creating role - DP-1661
     Given Default partner is created
     Given The following applications exist
@@ -114,11 +115,9 @@ Feature: Applications create update delete
     Then Response code is "409"
     And Custom code is 40912
 
-  Scenario: Application with non-existing partner id is created - DP-1732
+  Scenario: Trying to create application with non-existing partner id - DP-1732
       When Application is created
         | applicationName | description            | website                    | applicationId                        | partnerId                            | isInternal |
         | App Name 2      | Different name same ID | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 00011123-0000-4000-a000-222222222222 | false      |
       Then Response code is "422"
       And Custom code is 42202
-
-
