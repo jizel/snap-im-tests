@@ -221,3 +221,15 @@ Feature: Configurations types create update delete
       | /null | /null  | 1        | key==known_key_3                | /null     | /null     | known_key_3                                                       |
       | /null | /null  | 2        | key==list_key_* and value==same | key       | /null     | list_key_5, list_key_6                                            |
       | /null | /null  | 1        | value==special                  | /null     | /null     | other_key_10                                                      |
+
+  # DP-1571
+  @Bug
+  Scenario: Sending valid json to configuration resource
+    Given The following configuration types exist
+      | identifier   | description                 |
+      | social_media | Description of social media |
+    When POST request is sent to "/configurations/social_media/records" on module "configurations" with
+      | key              | iamKey          |
+      | value            | iamValue        |
+      | type             | string          |
+    Then Response code is "201"
