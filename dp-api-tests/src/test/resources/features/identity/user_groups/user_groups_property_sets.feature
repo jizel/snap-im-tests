@@ -59,7 +59,7 @@ Feature: User groups property sets
   Scenario: Create duplicate relationship userGroup-propertySet
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists with isActive "false"
     Then Response code is "409"
-    And Custom code is "40901"
+    And Custom code is "40902"
 
 
   Scenario: Delete userGroup-propertySet relationship - valid
