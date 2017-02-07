@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.applications;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
 import static org.junit.Assert.*;
 
 import com.jayway.restassured.response.Response;
@@ -35,11 +36,6 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void followingApplicationIsCreated(ApplicationDto application) {
-
-        ApplicationDto existingApplication = getApplicationById(application.getApplicationId());
-        if (existingApplication != null) {
-            deleteEntityWithEtag(existingApplication.getApplicationId());
-        }
         Response response = createEntity(application);
         setSessionResponse(response);
     }
@@ -200,19 +196,6 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationVersionsAreCreated(String applicationId, VersionDto applicationVersion) {
-
-        Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
-        VersionDto existingAppVersion =
-                getApplicationVersionByName(applicationId, applicationVersion.getVersionName());
-        if (existingAppVersion != null) {
-            deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId(), null);
-        }
-        Response response = createApplicationVersion(applicationVersion, applicationId);
-        setSessionResponse(response);
-    }
-
-    @Step
     public void followingApplicationVersionsExists(String applicationId, List<VersionDto> applicationVersions) {
 
         applicationVersions.forEach(t -> {
@@ -369,22 +352,23 @@ public class ApplicationsSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    private Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
-
-        return given().spec(spec).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
+    @Step
+    public Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
+        Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
     }
 
     public VersionDto getApplicationVersionByName(String applicationId, String versionName) {
         VersionDto[] applicationVersion =
                 getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
                         "name=='" + versionName + "'", null, null, null).as(VersionDto[].class);
-        return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
+        return stream(applicationVersion).findFirst().orElse(null);
     }
 
     public VersionDto getApplicationVersionById(String applicationId, String versionId) {
         VersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
                 LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null, null).as(VersionDto[].class);
-        return Arrays.asList(applicationVersion).stream().findFirst().orElse(null);
+        return stream(applicationVersion).findFirst().orElse(null);
     }
 
 }

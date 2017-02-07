@@ -49,7 +49,7 @@ Feature: Customers properties create update delete
       | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 422        | 42201       |
       | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 422        | 42201       |
       | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
-      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 400        | 42201       |
+      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 409        | 40907       |
       | notexistent property | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
 
 
@@ -96,6 +96,13 @@ Feature: Customers properties create update delete
       | valid_to          | 2014-12-31 | 400         | 40002       |
       | valid_to          | invalid    | 400         | 40002       |
       | relationship_type | invalid    | 400         | 40002       |
+
+  Scenario: Duplicate adding of customer property throws correct error - DP-1661
+    When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"
+    Then Response code is "201"
+    When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"
+    Then Response code is "409"
+    And Custom code is 40907
 
   #error codes
 

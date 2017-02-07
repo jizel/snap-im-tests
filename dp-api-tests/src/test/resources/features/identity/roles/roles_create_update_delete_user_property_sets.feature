@@ -2,10 +2,11 @@
 Feature: Roles create update delete user property set
 
   Background:
-    Given Switch for user property set role tests
-    Given Default partner is created
-
     Given Database is cleaned
+    Given Switch for user property set role tests
+    Given Default Snapshot user is created
+    Given Default partner is created
+    Given Default application is created
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        | partnerId                           | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
@@ -15,9 +16,6 @@ Feature: Roles create update delete user property set
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
-    Given The following roles don't exist
-      | applicationId                        | roleName          |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Updated role name |
 
 
   @Smoke
@@ -106,3 +104,36 @@ Feature: Roles create update delete user property set
       | url                                                                   |
       | identity/user_property_set_roles                                      |
       | identity/user_property_set_roles/7e0982a4-cab3-47fb-b3ff-3951fa10967c |
+
+  Scenario: Role ID and name is unique when creating role - DP-1661
+    When Role is created
+      | roleId                               | roleName           | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_prop_set_role | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+    Then Response code is "201"
+    And Body contains entity with attribute "name" value "user_prop_set_role"
+    When Role is created
+      | roleId                               | roleName             | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_prop_set_role2  | Same ID different name | 11111111-0000-4000-a000-111111111111 |
+    Then Response code is "409"
+    And Custom code is 40902
+    When Role is created
+      | roleName           | description            | applicationId                        |
+      | user_prop_set_role | Same name different ID | 11111111-0000-4000-a000-111111111111 |
+    Then Response code is "409"
+    And Custom code is 40907
+
+  Scenario: Role ID is unique for all applications, role name just for one
+    Given Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+    Given The following applications exist
+      | applicationName  | description               | website                    | applicationId                        | partnerId                           | isInternal |
+      | OtherApplication | Application description 1 | http://www.snapshot.travel | 1118fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
+    When Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same ID different app  | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is "409"
+    When Role is created
+      | roleId                               | roleName         | description             | applicationId                        |
+      | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is "201"

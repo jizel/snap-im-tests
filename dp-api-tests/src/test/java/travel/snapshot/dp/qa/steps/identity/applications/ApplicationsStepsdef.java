@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.steps.identity.applications;
 
+import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -10,9 +11,7 @@ import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.VersionDto;
-import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 
 import java.util.List;
@@ -147,10 +146,11 @@ public class ApplicationsStepsdef {
         applicationSteps.roleNamesInResponseInOrder(roleNames);
     }
 
-    @When("^Application versions are created for application with id \"([^\"]*)\"$")
+    @When("^Application version is created for application with id \"([^\"]*)\"$")
     public void Application_versions_are_created_for_application_with_id(String applicationId,
                                                                          List<VersionDto> applicationVersions) {
-        applicationSteps.followingApplicationVersionsAreCreated(applicationId, applicationVersions.get(0));
+        Response response = applicationSteps.createApplicationVersion(applicationVersions.get(0), applicationId);
+        applicationSteps.setSessionResponse(response);
     }
 
     @Given("^The following application versions for application with id \"([^\"]*)\" exists$")

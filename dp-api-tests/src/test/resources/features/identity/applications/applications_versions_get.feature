@@ -3,6 +3,7 @@ Feature: Applications versions get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     
@@ -178,3 +179,19 @@ Feature: Applications versions get
       | 5     | 3      | 5        | 12    | name=='Version*'                                   | description | /null       | Version 12, Version 2, Version 3, Version 4, Version 5   |
       | /null | /null  | 1        | 1     | description=='*description 2'                      | /null       | /null       | Version 2                                                |
       | /null | /null  | 1        | 1     | name=='Version*' and description=='*description 2' | /null       | /null       | Version 2                                                |
+
+    Scenario: Duplicate creation of application version returns correct response - DP-1661
+      When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
+        | versionId                            | apiManagerId | versionName | status   | description            |
+        | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 |
+      Then Response code is 201
+      When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
+        | versionId                            | apiManagerId | versionName | status   | description            |
+        | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Same ID App | inactive | Versions description 1 |
+      Then Response code is 409
+      And Custom code is 40902
+      When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
+        | apiManagerId | versionName | status   | description            |
+        | 123          | Version 123 | inactive | Versions description 1 |
+      Then Response code is 409
+      And Custom code is 40912

@@ -3,6 +3,7 @@ Feature: Api subscription create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -63,6 +64,12 @@ Feature: Api subscription create update delete
     When Trying to create second api subscription with the same versionID
     Then Response code is 409
     And Custom code is 40902
+
+  Scenario: Trying to create the same API subscription twice returns correct response - DP-1684
+    When The following api subscriptions is created
+      | applicationVersionId                 | commercialSubscriptionId             |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
+    Then Response code is 409
 
 
   @Smoke

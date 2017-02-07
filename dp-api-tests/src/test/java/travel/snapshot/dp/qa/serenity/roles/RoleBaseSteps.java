@@ -67,24 +67,9 @@ public class RoleBaseSteps extends BasicSteps {
 
     @Step
     public void followingRoleIsCreated(RoleDto role) {
-        RoleDto existingRole = getRoleByNameForApplicationInternal(role.getRoleName(), role.getApplicationId());
-
         setSessionVariable(SESSION_CREATED_ROLE, role);
-
-        if (existingRole != null) {
-            deleteRole(existingRole.getRoleId());
-        }
-
-        Response response = createRole(role);
-        if (response.getStatusCode() != HttpStatus.SC_CREATED) {
-            fail("Role cannot be created: " + response.asString());
-        }
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-
-
-    private Response createRole(RoleDto r) {
-        return given().spec(spec).body(r).when().post();
+        Response response = createEntity(role);
+        setSessionResponse(response);
     }
 
     private Response updateRole(String id, Map<String, Object> role, String etag) {
@@ -104,13 +89,7 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     private Response getRole(String id, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-
-        if (!StringUtils.isBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
-        }
-
-        return requestSpecification.when().get("/{id}", id);
+        return getEntity(id, etag);
     }
 
     public RoleDto getRoleByNameForApplicationInternal(String name, String applicationId) {
