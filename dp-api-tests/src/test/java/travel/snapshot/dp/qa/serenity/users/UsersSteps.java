@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity.users;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -410,6 +411,21 @@ public class UsersSteps extends BasicSteps {
             fail("Exception thrown while getting JSON from UserPropertyRelationshipUpdateDto object");
         }
     }
+
+    @Step
+    public Response addPropertySetToUser(String propertySetId, String userId){
+        Response response =  addPropertySetToUserByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, userId);
+        setSessionResponse(response);
+        return response;
+    }
+
+    @Step
+    public Response addPropertySetToUserByUser(String performerId, String propertySetId, String userId){
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, performerId)
+                .body(singletonMap("property_set_id", propertySetId))
+                .when().post("/{userId}/property_sets", userId);
+    }
+
 
 
     private String buildPathForRoles(String entityName, String userName, String entityId) {

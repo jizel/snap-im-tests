@@ -8,6 +8,7 @@ Feature: Applications UserProperty roles get
     Given The following users is created for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     Given Switch for user property role tests
@@ -151,3 +152,36 @@ Feature: Applications UserProperty roles get
       | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002          |
       | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002          |
       | 10          | 0      | code== | /null       | /null       | 400           | 40002          |
+
+  Scenario: Role ID and name is unique when creating role
+    When Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+    Then Response code is "201"
+    And Body contains entity with attribute "name" value "user_cust_role"
+    When Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role2  | Same ID different name | 11111111-0000-4000-a000-111111111111 |
+    Then Response code is "409"
+    And Custom code is 40902
+    When Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different ID | 11111111-0000-4000-a000-111111111111 |
+    Then Response code is "409"
+    And Custom code is 40902
+
+  Scenario: Role ID is unique for all applications, role name just for one
+    Given Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+    Given The following applications exist
+      | applicationName            | description               | website                    | applicationId                        | partnerId                           | isInternal |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
+    When Role is created
+      | roleId                               | roleName         | description            | applicationId                        |
+      | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same ID different app  | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is "409"
+    When Role is created
+      | roleId                               | roleName         | description             | applicationId                        |
+      | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Response code is "201"

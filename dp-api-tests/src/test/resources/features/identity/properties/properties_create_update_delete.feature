@@ -285,3 +285,15 @@ Feature: Properties create update delete
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09                                                   |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users/                                            |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0|
+
+    Scenario: Creating duplicate property returns correct error  - DP-1661
+      When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+        |propertyId                           | salesforceId  | propertyName | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
+        |00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      Then Response code is "201"
+      When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+        |propertyId                           | salesforceId  | propertyName | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
+        |00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      Then Response code is "409"
+      And Custom code is 40902
+

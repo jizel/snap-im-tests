@@ -88,5 +88,15 @@ Feature: Partners create update delete
       | Partner test   | test123@abc.com | /null             | /null         | Updated test description |
       | Partner test 1 | /null           | http://google.com | CZ12345678    | Last notes update        |
 
+  Scenario: Create duplicate partner throws correct error - DP-1661
+    Given The following partner exist
+      | partnerId                            | name           | email          | website                    | vatId      | notes        |
+      | abc00011-a05d-42d8-8e84-42e904ace123 | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
+    When The following partner is created
+      | partnerId                            | name           | email          | website                    | vatId      | notes        |
+      | abc00011-a05d-42d8-8e84-42e904ace123 | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
+    Then Response code is "409"
+    And Custom code is 40902
+
 
 

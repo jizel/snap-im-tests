@@ -90,6 +90,16 @@ Feature: User groups properties
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/896c2eac-4ef8-45d1-91fc-79a5933a0ed3       |
       | identity/user_groups/a8b40d08-de38-4246-bb69-ad39c31c025c/properties/896c2eac-4ef8-45d1-91fc-79a5933a0ed3/roles |
 
+  Scenario: Duplicate relationship creation between user group and property - DP-1661
+    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | propertyId                           | propertyName        | propertyCode        | email          | timezone      | anchorCustomerId                     | isDemoProperty |
+      | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | property_userGroup2 | property_userGroup2 | p2@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
+    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "true"
+    Then Response code is 201
+    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "true"
+    Then Response code is 409
+    And Custom code is 40902
+
 #    TODO: Getting list of relationships, sort, filter, sortdesc
 
 #    TODO: Getting list of relationships, limit, cursor

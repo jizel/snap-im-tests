@@ -11,9 +11,9 @@ Feature: Users property roles CRUD
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 33e9ddbe-c8f6-44e7-a536-27a0be3e90c3 | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | f5e630d0-dfe2-4466-b7ea-491265a329d2 | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
-#    Given Default Snapshot user is created
     Given The following properties exist with random address and billing address for user "33e9ddbe-c8f6-44e7-a536-27a0be3e90c3"
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 842529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1234fd9a-a05d-42d8-8e84-42e904ace123 |

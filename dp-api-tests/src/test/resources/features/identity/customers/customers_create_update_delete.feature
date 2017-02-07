@@ -584,3 +584,13 @@ Feature: Customers create update delete
       | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/properties                                 |
       | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users                                      |
       | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users/a63edcc6-6830-457c-89b1-7801730bd0ae |
+
+    Scenario: Customer ID must be unique when creating customer - DP-1661
+      Given The following customers exist with random address
+        | customerId                           | companyName       | email              | salesforceId   | vatId      | isDemoCustomer | timezone      |
+        | 00011222-3836-4207-a705-42bbecf3d881 | Original Customer | oc@snapshot.travel | original_sf_id | CZ10000001 | true           | Europe/Prague |
+      When Customer is created with random address
+        | customerId                           | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
+        | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
+      Then Response code is "409"
+      And Custom code is 40902
