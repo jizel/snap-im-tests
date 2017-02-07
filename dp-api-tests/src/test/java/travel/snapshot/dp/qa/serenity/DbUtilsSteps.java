@@ -54,6 +54,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_PARTNER_USER);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
         dbHelper.identityDb().update(DELETE_USER_PROPERTYSET);
+        dbHelper.identityDb().update(DELETE_API_SUBSCRIPTIONS);
         dbHelper.identityDb().update(DELETE_COMMERCIAL_SUBSCRIPTION);
         dbHelper.identityDb().update(DELETE_PROPERTY_PROPERTYSET);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTIES);
@@ -70,7 +71,6 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_ADDRESS);
         dbHelper.identityDb().update(DELETE_ROLE);
         dbHelper.identityDb().update(DELETE_USER_GROUP_ROLE);
-        dbHelper.identityDb().update(DELETE_API_SUBSCRIPTIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION_VERSIONS);
         dbHelper.identityDb().update(DELETE_APPLICATION);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
