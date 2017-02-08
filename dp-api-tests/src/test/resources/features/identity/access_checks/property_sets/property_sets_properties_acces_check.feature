@@ -79,7 +79,7 @@ Feature: Property sets Properties access check feature
     Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithPropSet"
     Then Response code is "204"
     And Body is empty
@@ -89,7 +89,7 @@ Feature: Property sets Properties access check feature
     Given The following properties exist with random address and billing address for user "1d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithNoPropSet"
     Then Response code is "404"
     And Custom code is 40402
@@ -98,7 +98,7 @@ Feature: Property sets Properties access check feature
     Given The following properties exist with random address and billing address for user "1d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithPropSet"
 #    DP-1330
     Then Response code is "404"

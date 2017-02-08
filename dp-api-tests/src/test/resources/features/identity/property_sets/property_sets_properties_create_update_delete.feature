@@ -37,8 +37,8 @@ Feature: Property sets properties create update delete
 
   @Smoke
   Scenario: Removing propertySet with valid properties
-    Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps2_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps2_name" exists
     When Property set "toDelete" is deleted
     Then Response code is "204"
     And Body is empty
@@ -57,9 +57,9 @@ Feature: Property sets properties create update delete
       | salesforceid_1 | filtering_prop_name_1 | filtering_prop_code_1 | http://www.snapshot.travel | filtering_p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_2 | filtering_prop_name_2 | filtering_prop_code_2 | http://www.snapshot.travel | filtering_p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_3 | filtering_prop_name_3 | filtering_prop_code_3 | http://www.snapshot.travel | filtering_p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between property with code "filtering_prop_code_1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "filtering_prop_code_2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "filtering_prop_code_3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "filtering_prop_code_1" and property set with name "ps1_name" exists
+    Given Relation between property with code "filtering_prop_code_2" and property set with name "ps1_name" exists
+    Given Relation between property with code "filtering_prop_code_3" and property set with name "ps1_name" exists
     When List of properties for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"

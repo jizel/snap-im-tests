@@ -195,7 +195,8 @@ public class PropertiesStepdefs {
     public void User_with_username_is_removed_from_property_with_code(String username, String propertyCode) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         assertThat(user, is(notNullValue()));
-        propertySteps.userIsDeletedFromProperty(user.getUserId(), propertyCode);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        propertySteps.userIsDeletedFromProperty(user.getUserId(), property.getPropertyId());
     }
 
     @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\" by user \"([^\"]*)\"$")

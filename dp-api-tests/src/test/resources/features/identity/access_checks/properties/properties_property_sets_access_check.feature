@@ -41,7 +41,7 @@ Feature: Properties-Property Sets access check feature
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When  Relation between property with code "p1_code" and property set "ps1_name" is updated by user "userWithProp" with
       | isActive |
       | true     |
@@ -51,7 +51,7 @@ Feature: Properties-Property Sets access check feature
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When  Relation between property with code "p1_code" and property set "ps1_name" is updated by user "userWithNoProp" with
       | isActive |
       | true     |
@@ -61,7 +61,7 @@ Feature: Properties-Property Sets access check feature
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithProp"
     Then Response code is "204"
 
@@ -69,7 +69,7 @@ Feature: Properties-Property Sets access check feature
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithNoProp"
     Then Response code is "404"
     And Custom code is 40402
@@ -78,7 +78,7 @@ Feature: Properties-Property Sets access check feature
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithProp"
     Then Response code is "404"
     And Custom code is 40402
