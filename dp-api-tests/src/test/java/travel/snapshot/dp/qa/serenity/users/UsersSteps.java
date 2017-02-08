@@ -1,5 +1,10 @@
 package travel.snapshot.dp.qa.serenity.users;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
@@ -9,15 +14,7 @@ import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import java.util.*;
 
 public class UsersSteps extends BasicSteps {
 
@@ -109,27 +106,21 @@ public class UsersSteps extends BasicSteps {
     }
 
 //    Delete?
+
     @Step
-    public void updateUserWithUserName(String userName, UserDto updatedUser) throws Throwable {
-        UserDto original = getUserByUsername(userName);
-        Response originalResponse = getEntity(original.getUserId());
-
-        Map<String, Object> userData = retrieveDataOld(UserDto.class, updatedUser);
-
-        Response response = updateEntity(original.getUserId(), userData, originalResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
+    public void updateUser(String userId, UserUpdateDto updatedUser) throws Throwable {
+        updateUserByUser(DEFAULT_SNAPSHOT_USER_ID, userId, updatedUser);
     }
 
     @Step
-    public void updateUser(String userId, UserUpdateDto updatedUser) {
+    public void updateUserByUser(String performerId, String targetId, UserUpdateDto updatedUser) throws Throwable {
         try {
-            String updatedUserString = retrieveData(updatedUser).toString();
-            assertThat("Empty user update", updatedUserString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
-
-            Response response = updateEntityWithEtag(userId, updatedUserString);
-            setSessionResponse(response);
-        }catch(JsonProcessingException jsonException){
-            fail("Error while converting objetc to JSON: " + jsonException);
+            Response originalResponse = getEntity( targetId );
+            JSONObject userData = retrieveData( updatedUser );
+            Response response = updateEntityByUser( performerId, targetId, userData.toString(), originalResponse.getHeader( HEADER_ETAG ) );
+            setSessionResponse( response );
+        } catch(JsonProcessingException jsonException) {
+            fail("Error while converting object to JSON: " + jsonException);
         }
     }
 
@@ -201,7 +192,11 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void listOfUsersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+        listOfUsersIsGotByUser(limit, cursor, filter, sort, sortDesc, DEFAULT_SNAPSHOT_USER_ID);
+    }
+
+    public void listOfUsersIsGotByUser(String limit, String cursor, String filter, String sort, String sortDesc, String requestorId) {
+        Response response = getEntitiesByUser(requestorId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -336,7 +331,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void setUserIsActive(String userId, Boolean isActive){
+    public void setUserIsActive(String userId, Boolean isActive) throws Throwable {
         UserUpdateDto userUpdate = new UserCreateDto();
         userUpdate.setIsActive(isActive);
         updateUser(userId, userUpdate);
@@ -419,13 +414,59 @@ public class UsersSteps extends BasicSteps {
                 .when().post("/{userId}/property_sets", userId);
     }
 
-
-
     private String buildPathForRoles(String entityName, String userName, String entityId) {
         UserDto user = getUserByUsername(userName);
         if (user == null) {
             return String.format("%s/%s/%s/%s", userName, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
         }
         return String.format("%s/%s/%s/%s", user.getUserId(), entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
+    }
+
+    public void createUserForCustomerByUser(String performerId, String customerId, UserCreateDto user, Boolean isPrimary) {
+        UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+        relation.setCustomerId(customerId);
+        relation.setIsPrimary(isPrimary);
+        user.setUserCustomerRelationship(relation);
+        Response createResp = createEntityByUser(performerId, user);
+        setSessionResponse(createResp);
+    }
+
+    public void deleteUserByUser(String performerId, String targetId) {
+        String etag = getEntityEtag(targetId);
+        deleteEntityByUser( performerId, targetId, etag);
+    }
+
+    public void getUserCustomerRelationByUser(String requestorId, String customerId, String targetUserId) {
+        Response response = getSecondLevelEntityByUser( requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, null);
+        setSessionResponse(response);
+    }
+
+    public void listUserCustomersByUser(String requestorId, String targetUserId) {
+        Response response = getSecondLevelEntitiesByUser(requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, null, null, null, null);
+        setSessionResponse(response);
+    }
+
+    public void listUserCustomerRolesByUser(String requestorId, String targetUserId, String customerId) {
+        Response response = getThirdLevelEntitiesByUser(requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        setSessionResponse(response);
+    }
+
+    public String resolveUserId(String userName) {
+        String userId;
+        try {
+            userId = UUID.fromString(userName).toString();
+        } catch (IllegalArgumentException exception) {
+            UserDto user = getUserByUsername(userName);
+            assertThat(String.format("User with username \"%s\" does not exist", userName), user, is(notNullValue()));
+            userId = user.getUserId();
+        }
+        return userId;
+    }
+
+    public Map<String, String> getUsersIds(String requestorName, String targetName) {
+        Map<String, String> userIdMap = new HashMap<String, String>();
+        userIdMap.put(REQUESTOR_ID, resolveUserId(requestorName));
+        userIdMap.put(TARGET_ID, resolveUserId(targetName));
+        return userIdMap;
     }
 }
