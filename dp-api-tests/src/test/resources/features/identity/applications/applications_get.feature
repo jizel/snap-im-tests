@@ -3,6 +3,8 @@ Feature: Applications get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
+    Given Default partner is created
 
   @Smoke
   Scenario: Getting applications
@@ -112,10 +114,10 @@ Feature: Applications get
       |       |        | 50       | 52    | </identity/applications?limit=50&cursor=50>; rel="next"                                                         |
       |       | /null  | 50       | 52    | </identity/applications?limit=50&cursor=50>; rel="next"                                                         |
       | 15    |        | 15       | 52    | </identity/applications?limit=15&cursor=15>; rel="next"                                                         |
-      |       | 1      | 50       | 52    | </identity/applications?limit=50&cursor=51>; rel="next", </identity/applications?limit=50&cursor=0>; rel="prev" |
+      |       | 1      | 50       | 52    | </identity/applications?limit=50&cursor=0>; rel="prev", </identity/applications?limit=50&cursor=51>; rel="next" |
       | 20    | 0      | 20       | 52    | </identity/applications?limit=20&cursor=20>; rel="next"                                                         |
       | 10    | 0      | 10       | 52    | </identity/applications?limit=10&cursor=10>; rel="next"                                                         |
-      | 5     | 10     | 5        | 52    | </identity/applications?limit=5&cursor=15>; rel="next", </identity/applications?limit=5&cursor=5>; rel="prev"   |
+      | 5     | 10     | 5        | 52    | </identity/applications?limit=5&cursor=5>; rel="prev", </identity/applications?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of applications
     When List of applications is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
