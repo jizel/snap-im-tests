@@ -44,7 +44,7 @@ Feature: Customers users create update delete
 
   Scenario: Checking error code for removing user from customer
     When Nonexistent user is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "412"
+    Then Response code is "404"
 
 
   Scenario Outline: Filtering list of users for customer

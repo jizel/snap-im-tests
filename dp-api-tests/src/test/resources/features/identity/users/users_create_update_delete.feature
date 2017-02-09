@@ -103,8 +103,8 @@ Feature: Users create update delete
 
   Scenario: Deleting nonexistent user
     When Nonexistent user is deleted
-    Then Response code is "412"
-    And Custom code is "41201"
+    Then Response code is "404"
+    And Custom code is "40402"
 
   Scenario: Deleting user with invalid ETAG
     When User with "snapshotUser1" is deleted with ETAG "invalid_etag"

@@ -325,6 +325,9 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
+        else {
+            requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
+        }
         Response response = requestSpecification.when().delete("/{id}", entityId);
         setSessionResponse(response);
         return response;
@@ -416,6 +419,9 @@ public class BasicSteps {
         String etag = getSecondLevelEntityEtag(firstLevelId, secondLevelObjectName, secondLevelId);
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
+        }
+        else {
+            requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
         }
         if (isNotBlank(userId)) {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);

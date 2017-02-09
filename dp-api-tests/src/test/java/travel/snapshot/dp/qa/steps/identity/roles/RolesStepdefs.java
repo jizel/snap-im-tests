@@ -11,6 +11,10 @@ import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 
 public class RolesStepdefs {
 
@@ -49,12 +53,15 @@ public class RolesStepdefs {
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is deleted$")
     public void role_with_name_for_application_id_is_deleted(String roleName, String applicationId) throws Throwable {
-        roleBaseSteps.deleteRoleWithNameForApplication(roleName, applicationId);
+//        TODO: Remove applicationId from this step, refactor all usages
+        RoleDto role = roleBaseSteps.getRoleByName(roleName);
+        assertThat(role, is(notNullValue()));
+        roleBaseSteps.deleteRole(role.getRoleId());
     }
 
     @When("^Nonexistent role id is deleted$")
     public void Nonexistent_role_id_is_deleted() throws Throwable {
-        roleBaseSteps.deleteRoleWithId("nonexistent");
+        roleBaseSteps.deleteRole("nonexistent");
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data$")

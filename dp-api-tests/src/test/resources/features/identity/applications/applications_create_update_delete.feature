@@ -47,7 +47,7 @@ Feature: Applications create update delete
 
   Scenario: Checking error code for deleting application
     When Nonexistent application id is deleted
-    Then Response code is "204"
+    Then Response code is "404"
 
   Scenario Outline: Updating application
     Given Application is created

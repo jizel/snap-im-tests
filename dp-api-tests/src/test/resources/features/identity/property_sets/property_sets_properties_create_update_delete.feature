@@ -45,10 +45,9 @@ Feature: Property sets properties create update delete
     And Property set with same id doesn't exist
 
 
-#    Fails because of DP-1630
   Scenario: Checking error code for removing property from property set
     When Nonexistent property is removed from property set "ps1_name"
-    Then Response code is "412"
+    Then Response code is "404"
 
 
   Scenario Outline: Filtering list of properties for property set

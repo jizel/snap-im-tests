@@ -49,7 +49,7 @@ Feature: Partners create update delete
 
   Scenario: Checking error code for deleting partner
     When Nonexistent partner id is deleted
-    Then Response code is "204"
+    Then Response code is "404"
 
 
   Scenario: Activate partner

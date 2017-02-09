@@ -60,8 +60,7 @@ Feature: User groups create update delete
 
   Scenario: Delete non-existing user group
     When User group with id "NonExistentUserGroup" is deleted
-    Then Response code is 204
-    And Body is empty
+    Then Response code is 404
 
 
   Scenario: Cascade delete (customer is deleted, all his user groups as well)

@@ -1,9 +1,5 @@
 package travel.snapshot.dp.qa.steps.partners;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -14,10 +10,15 @@ import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 public class PartnersStepdef {
 
@@ -52,8 +53,10 @@ public class PartnersStepdef {
     }
 
     @When("^Partner with name \"([^\"]*)\" is deleted$")
-    public void Partner_with_name_is_deleted(String partnerId) {
-        partnerSteps.deletePartnerWithName(partnerId);
+    public void Partner_with_name_is_deleted(String partnerName) {
+        PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
+        assertThat(partner, is(notNullValue()));
+        partnerSteps.deletePartner(partner.getPartnerId());
     }
 
     @Then("^Partner with same id does not exist$")
@@ -63,7 +66,7 @@ public class PartnersStepdef {
 
     @When("^Nonexistent partner id is deleted$")
     public void Nonexistent_partner_id_is_deleted() {
-        partnerSteps.deletePartnerWithName("nonexistentName");
+        partnerSteps.deletePartner(BasicSteps.NON_EXISTENT_ID);
     }
 
     @When("^Partner with id \"([^\"]*)\" is activated$")

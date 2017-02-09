@@ -46,7 +46,7 @@ Feature: Properties users create update delete
 
   Scenario: Checking error code for removing user from property
     When Nonexistent user is removed from property with code "p1_code"
-    Then Response code is "204"
+    Then Response code is "404"
 
   Scenario Outline: Filtering list of users for property
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"

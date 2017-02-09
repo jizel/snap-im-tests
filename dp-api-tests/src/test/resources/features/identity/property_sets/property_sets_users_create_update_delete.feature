@@ -44,7 +44,7 @@ Feature: Property sets users create update delete
 
   Scenario: Removing invalid user from property set
     When Nonexistent user is removed from property set with name "ps1_name"
-    Then Response code is "412"
+    Then Response code is "404"
 
   Scenario Outline: Filtering list of users for property set
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"

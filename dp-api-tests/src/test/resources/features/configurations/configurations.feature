@@ -68,6 +68,14 @@ Feature: Configurations create update delete
     And Body is empty
     And Configuration with key "given_test_key_1" doesn't exist for configuration type "conf_id_1"
 
+  Scenario: Delete nonexistent configuration key:value - DP-1773
+    Given The following configurations exist for configuration type identifier "conf_id_1"
+      | key              | value      | type   |
+      | given_test_key_1 | text value | string |
+    When Configuration with identifier "nonexistent" is deleted from identifier "conf_id_1"
+    Then Response code is "404"
+
+
   #TODO Etag
   Scenario Outline: update configuration value for key
     Given The following configurations exist for configuration type identifier "conf_id_1"
