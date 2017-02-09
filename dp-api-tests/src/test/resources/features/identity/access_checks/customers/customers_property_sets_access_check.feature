@@ -1,6 +1,6 @@
 @Identity
 Feature: Customers property sets access check feature (second level endpoints)
-  - Checking when certain user should and should not have access to certain customers
+  - Checking when certain user should and should not have access to certain customer property sets
   - 404 is returned for unauthorized users (403 when the X-Auth-UserId header is missing)
   - All rules apply also to second level entities in both ways (e.g. customers/c_id/properties, properties/p_id/customers) - reversed endpoints should be covered in other features (properties)
 
@@ -19,21 +19,21 @@ Feature: Customers property sets access check feature (second level endpoints)
       | userId                               | userType | userName      | firstName | lastName | email                | timezone      | culture | isActive |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithCust2 | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithCust1"
-      | propertySetName | propertySetType |
-      | prop_set1       | brand           |
-      | prop_set2       | brand           |
-    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithCust2"
-      | propertySetName | propertySetType |
-      | prop_set3       | brand           |
+      | propertySetId                        | propertySetName | propertySetType |
+      | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
+      | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
+    Given The following property sets exist for customer with id "00000000-0000-4000-8000-123000000abc" and user "userWithCust2"
+      | propertySetId                        | propertySetName | propertySetType |
+      | c729e3b0-69bf-4c57-91bd-30230d2c1bd2 | prop_set3       | brand           |
 
 
   Scenario: Second level entities - User sees only property sets he should for customer he sees
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
-#  DP-1677
     And Total count is "2"
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
-    Then Response code is "404"
+    Then Response code is "200"
+    And Total count is "0"
     When List of all property sets for customer with id "00000000-0000-4000-8000-123000000abc" is requested by user "userWithCust2"
     Then Response code is "200"
     And Total count is "1"
