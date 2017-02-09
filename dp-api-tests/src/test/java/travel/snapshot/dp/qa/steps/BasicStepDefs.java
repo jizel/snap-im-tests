@@ -5,14 +5,19 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import gherkin.formatter.model.DataTableRow;
 import net.thucydides.core.annotations.Steps;
 import org.apache.commons.lang3.StringUtils;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
+
+import java.util.HashMap;
 
 public class BasicStepDefs {
 
@@ -71,6 +76,16 @@ public class BasicStepDefs {
     @When("^Empty POST request is sent to \"([^\"]*)\" on module \"([^\"]*)\"$")
     public void emptyPOSTRequestIsSentToOn(String url, String module) throws Throwable {
         basicSteps.sendBlankPost(url, module);
+    }
+
+    @When("^POST request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with$")
+    public void post_request_is_sent_to_on_module_with(String url, String module, DataTable contents) throws Throwable {
+        HashMap<String, String> contentsMap = new HashMap<String, String>();
+        for (DataTableRow row: contents.getGherkinRows()) {
+            contentsMap.put(row.getCells().get(0), row.getCells().get(1));
+        }
+        String body = new ObjectMapper().writeValueAsString(contentsMap);
+        basicSteps.sendPostWithBody(url, module, body);
     }
 
     @Then("^Body contains entity with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
