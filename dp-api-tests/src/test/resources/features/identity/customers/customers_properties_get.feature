@@ -28,7 +28,6 @@ Feature: Customers properties get
     Given The password of user "snapshotUser" is "Password01"
     Given Get token for user "snapshotUser" with password "Password01"
 
-  # DP-1722
   @Smoke
   Scenario: Getting customerProperty
     When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "CHAIN"
@@ -47,7 +46,6 @@ Feature: Customers properties get
     Then Response code is "304"
     And Body is empty
 
-  # DP-1722
   Scenario: Getting customerProperty with not current etag
   CustomerProperty is got, etag is saved to tmp, then customerProperty valid_to is updated to "2016-12-31" so etag should change and is got again with previous etag
     When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "chain" for etag, updated and got with previous etag
@@ -155,7 +153,6 @@ Feature: Customers properties get
       | 10    | 0      | 10       |
       | 5     | 5      | 5        |
 
-  # DP-1722
   @Bug
   Scenario Outline: Checking error codes for getting list of customerProperties
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -224,13 +221,15 @@ Feature: Customers properties get
     And There are <returned> customerProperties returned
     And Total count is "<total>"
     Examples:
-      | limit | cursor | returned | total | filter               | sort  | sort_desc |
-      | 5     | 0      | 5        | 11     | /null                | /null |           |
-      | 5     | 2      | 5        | 11     | /null                | /null |           |
-      | 5     | 4      | 5        | 11     | /null                | /null |           |
-      | 10    | 0      | 10       | 11     | /null                | /null |           |
-      | 10    | 0      | 10       | 11     | /null                | /null |           |
-      | 5     | 2      | 4        | 6      | valid_from<2015-06-15|       | valid_to  |
+      | limit | cursor | returned | total  | filter                   | sort  | sort_desc |
+      | 5     | 0      | 5        | 11     | /null                    | /null |           |
+      | 5     | 2      | 5        | 11     | /null                    | /null |           |
+      | 5     | 4      | 5        | 11     | /null                    | /null |           |
+      | 10    | 0      | 10       | 11     | /null                    | /null |           |
+      | 10    | 0      | 10       | 11     | /null                    | /null |           |
+      | 5     | 2      | 4        | 6      | valid_from<2015-06-15    |       | valid_to  |
+# DP-1722
+      | 5     | 0      | 5        | 8      | relationship_type==chain | /null |           |
   #add all fields
 
     #TODO add test for wrong parameters in url
