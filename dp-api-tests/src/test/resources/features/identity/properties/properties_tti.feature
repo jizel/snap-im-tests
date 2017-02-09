@@ -35,11 +35,22 @@ Feature: Properties tti code - DP-757
       Then Response code is "201"
       Then Body contains entity with attribute "code" and integer value 1234
 
-    Scenario: Duplicate booking.com id send to property with defined tti_id (tti_id exists in OTA)
+    Scenario: Duplicate booking.com id send to properties with defined tti_id (tti_id exists in OTA)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
         | propertyId                           | ttiId | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
         | 888e833e-50e8-4854-a233-289f00b54a09 | 998   | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Add ttiId to booking.com id "123" mapping to property with code "p2_code"
+      Then Response code is "201"
+      When Add ttiId to booking.com id "123" mapping to property with code "p1_code"
+      Then Response code is "409"
+      And Custom code is 40901
+      And Body contains entity with attribute "message" value "The field code must be unique."
+
+    Scenario: Duplicate booking.com id send to property without defined tti_id (the original property has ttiId)
+      Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+        | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 888e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      When Add ttiId to booking.com id "123" mapping to property with code "p1_code"
       Then Response code is "201"
       When Add ttiId to booking.com id "123" mapping to property with code "p2_code"
       Then Response code is "409"
@@ -75,3 +86,14 @@ Feature: Properties tti code - DP-757
       And Stored notification has key "propertyId" and value "888e833e-50e8-4854-a233-289f00b54a09"
       And Response code is "204"
       And Subscription with name "Test" for topic "Notifications.tti" is unsubscribed
+
+    Scenario: Duplicate booking.com id send to properties without defined tti_id
+      Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+        | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+        | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      When Add ttiId to booking.com id "1234" mapping to property with code "p2_code"
+      Then Response code is "201"
+      When Add ttiId to booking.com id "1234" mapping to property with code "p3_code"
+      Then Response code is "409"
+      And Body contains entity with attribute "message" value "The field code must be unique."
