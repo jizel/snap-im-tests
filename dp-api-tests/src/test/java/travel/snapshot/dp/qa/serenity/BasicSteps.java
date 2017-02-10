@@ -348,15 +348,15 @@ public class BasicSteps {
         return given().spec(spec).when().delete(url + "/{id}", id);
     }
 
-    protected Response getEntity(String entityId, String etag) {
+    public Response getEntity(String entityId, String etag) {
         return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
     }
 
-    protected String getEntityEtag(String entityId){
+    public String getEntityEtag(String entityId){
         return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    protected String getEntityEtagByUser(String userId, String entityId) {
+    public String getEntityEtagByUser(String userId, String entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
 

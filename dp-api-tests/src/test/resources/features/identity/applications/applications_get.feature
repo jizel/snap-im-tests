@@ -25,8 +25,7 @@ Feature: Applications get
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
-    Then Response code is "304"
-    And Body is empty
+    Then Response code is "200"
 
   Scenario: Getting application with expired etag
     Given The following applications exist
