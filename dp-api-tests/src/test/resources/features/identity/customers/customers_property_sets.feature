@@ -124,14 +124,14 @@ Feature: Customers property sets
       | 10    | 0      | parent==blabla | /null           | /null           | 400           | 40002       |
 
   Scenario Outline: Filtering list of property sets
-    Given The following property sets exist for customer with id "5e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "snapshotUser"
+    Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "snapshotUser"
       | propertySetName      | propertySetDescription | propertySetType |
       | list_ps1_name        | list_ps1_description   | brand           |
       | list_ps2_name        | list_ps2_description   | brand           |
       | list_ps3_name        | list_ps3_description   | brand           |
-      | list_ps4_name        | list_ps4_description   | chain           |
-      | list_ps5_name        | list_ps5_description   | chain           |
-      | second_list_ps6_name | list_ps6_description   | chain           |
+      | list_ps4_name        | list_ps4_description   | hotel_type      |
+      | list_ps5_name        | list_ps5_description   | hotel_type      |
+      | second_list_ps6_name | list_ps6_description   | hotel_type      |
       | second_list_ps7_name | list_ps7_description   | brand           |
       | second_list_ps8_name | list_ps8_description   | brand           |
 

@@ -3,6 +3,7 @@ Feature: Customers properties get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
@@ -27,6 +28,7 @@ Feature: Customers properties get
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
       | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
 
+#  DP-1775
   Scenario Outline: Getting customer's api subscriptions - positive scenarios
     When List of api subscriptions is got for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -68,13 +70,13 @@ Feature: Customers properties get
     And Custom code is "<custom_code>"
     Examples:
       | limit | cursor | filter                  | sort      | sort_desc | error_code | custom_code |
-      | 0     | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | -1    | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | karel | /null  | /null                   | /null     | /null     | 400        | 63          |
-      | /null | -1     | /null                   | /null     | /null     | 400        | 63          |
-      | /null | karel  | /null                   | /null     | /null     | 400        | 63          |
-      | /null | /null  | /null                   | is_active | is_active | 400        | 64          |
-      | /null | /null  | /null                   | @{}\€$    | /null     | 400        | 63          |
-      | /null | /null  | /null                   | /null     | @{}\€$    | 400        | 63          |
-      | /null | /null  | customer_id=='*'        | /null     | /null     | 400        | 63          |
-      | /null | /null  | anotherNonExistent=='*' | /null     | /null     | 400        | 63          |
+      | 0     | /null  | /null                   | /null     | /null     | 400        | 40002       |
+      | -1    | /null  | /null                   | /null     | /null     | 400        | 40002       |
+      | karel | /null  | /null                   | /null     | /null     | 400        | 40002       |
+      | /null | -1     | /null                   | /null     | /null     | 400        | 40002       |
+      | /null | karel  | /null                   | /null     | /null     | 400        | 40002       |
+      | /null | /null  | /null                   | is_active | is_active | 400        | 40002       |
+      | /null | /null  | /null                   | @{}\€$    | /null     | 400        | 40002       |
+      | /null | /null  | /null                   | /null     | @{}\€$    | 400        | 40002       |
+      | /null | /null  | customer_id=='*'        | /null     | /null     | 400        | 40002       |
+      | /null | /null  | anotherNonExistent=='*' | /null     | /null     | 400        | 40002       |
