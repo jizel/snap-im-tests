@@ -18,7 +18,7 @@ Feature: Applications versions get
     And Etag header is present
     And Body contains entity with attribute "application_version_id"
     And Body contains entity with attribute "name" value "Version 123"
-    And Body contains entity with attribute "api_manager_id" value "123"
+    And Body contains entity with attribute "api_key" value "123"
     And Body contains entity with attribute "status" value "inactive"
     And Body contains entity with attribute "description" value "Versions description 1"
 
@@ -27,22 +27,7 @@ Feature: Applications versions get
       | versionId                            | apiManagerId | versionName | status   | description            |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is got with etag
-    Then Response code is "304"
-    And Body is empty
-
-  Scenario: Getting application with not current etag
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 |
-    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is got with etag, updated and got with previous etag
     Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "application_version_id"
-    And Body contains entity with attribute "name" value "Version 123"
-    And Body contains entity with attribute "api_manager_id" value "123"
-    And Body contains entity with attribute "status" value "inactive"
-    And Body contains entity with attribute "description" value "UpdatedDescription"
 
   Scenario: Checking error code for nonexistent application versions
     When Nonexistent application version id is got for application id "11111111-0000-4000-a000-111111111111"

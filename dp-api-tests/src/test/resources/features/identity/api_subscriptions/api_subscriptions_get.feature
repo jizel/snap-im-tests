@@ -40,8 +40,7 @@ Feature: Api subscription get
 
   Scenario: Getting customer api subscription with etag
     When Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is got with etag
-    Then Response code is 304
-    And Body is empty
+    Then Response code is 200
 
 
   Scenario: Checking error code for getting nonExisting api subscription
@@ -192,14 +191,15 @@ Feature: Api subscription get
       | -1    | /null  | /null            | /null       | /null       | 40002      | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
       | text  | /null  | /null            | /null       | /null       | 40002      | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
       | 9999  | /null  | /null            | /null       | /null       | 40002      | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
-      #| 0     | /null  | /null            | /null       | /null       |40002         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
+      | 0     | /null  | /null            | /null       | /null       |40002         | # The value is invalid. The limit should be more than 0 and less than or equal to 200.                                                                                                                      |
       | /null | -1     | /null            | /null       | /null       | 40002      | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
       | /null | text   | /null            | /null       | /null       | 40002      | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
       | /null | /null  | -1               | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=-1                                                                                               |
       | /null | /null  | ==               | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter===                                                                                               |
       | /null | /null  | code==           | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=code==                                                                                           |
       | /null | /null  | is_active==      | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=is_active==                                                                                      |
-      | /null | /null  | is_active=='NOT' | /null       | /null       | 40002      | # The value is invalid. Cannot cast 'NOT' to type int                                                                                                                                                       |
+#  DP-1782
+      | /null | /null  | is_active=='NOT' | /null       | /null       | 40002      | # The value is invalid. Cannot cast 'NOT' to type boolean                                                                                                                                                   |
       | /null | /null  | /null            | -1          | /null       | 40002      | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
       | /null | /null  | /null            | 0           | /null       | 40002      | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
       | /null | /null  | /null            | nonExistent | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'sort' has illegal value; allowed values: [application_version_id, is_active, api_subscription_id, api_version], provided value: 'nonExistent'"    |
@@ -227,7 +227,7 @@ Feature: Api subscription get
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "7d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1 | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2 | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
@@ -260,6 +260,7 @@ Feature: Api subscription get
       | api_subscription_id=='1*'                                      | /null                      | /null                      | 1        |                                                                                                                                                                                                                                    |
       | api_subscription_id=='*359'                                    | /null                      | /null                      | 5        |                                                                                                                                                                                                                                    |
       | api_subscription_id=='*43d8*'                                  | /null                      | /null                      | 5        |                                                                                                                                                                                                                                    |
+#  DP-1788
       | api_subscription_id=='*359'                                    | application_version_id     | /null                      | 5        | 37eb138c-23c1-43d8-bc88-d6fbbd7e4359, a7eb138c-23c1-43d8-bc88-d6fbbd7e4359, 17eb138c-23c1-43d8-bc88-d6fbbd7e4359, 27eb138c-23c1-43d8-bc88-d6fbbd7e4359, 47eb138c-23c1-43d8-bc88-d6fbbd7e4359                                       |
       | api_subscription_id=='*359'                                    | is_active                  | /null                      | 5        | 17eb138c-23c1-43d8-bc88-d6fbbd7e4359, 27eb138c-23c1-43d8-bc88-d6fbbd7e4359, 37eb138c-23c1-43d8-bc88-d6fbbd7e4359, 47eb138c-23c1-43d8-bc88-d6fbbd7e4359, a7eb138c-23c1-43d8-bc88-d6fbbd7e4359                                       |
       | api_subscription_id=='*359'                                    | commercial_subscription_id | /null                      | 5        | 47eb138c-23c1-43d8-bc88-d6fbbd7e4359, a7eb138c-23c1-43d8-bc88-d6fbbd7e4359, 37eb138c-23c1-43d8-bc88-d6fbbd7e4359, 27eb138c-23c1-43d8-bc88-d6fbbd7e4359, 17eb138c-23c1-43d8-bc88-d6fbbd7e4359                                       |

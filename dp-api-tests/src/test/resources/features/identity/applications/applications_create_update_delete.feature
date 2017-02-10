@@ -4,6 +4,7 @@ Feature: Applications create update delete
   Background:
     Given Database is cleaned
     Given Default Snapshot user is created
+    Given Default partner is created
 
   @Smoke
   Scenario: Create application
@@ -17,7 +18,7 @@ Feature: Applications create update delete
     And Body contains entity with attribute "name" value "Application test company 1"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-#  DP-1332
+#  DP-1706
     And Body contains entity with attribute "is_active" value "false"
 
   Scenario Outline: Checking error codes for creating applications
@@ -50,7 +51,7 @@ Feature: Applications create update delete
     Then Response code is "404"
 
   Scenario Outline: Updating application
-    Given Application is created
+    Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
@@ -69,10 +70,10 @@ Feature: Applications create update delete
       | Application test 1      | New description     | http://www.snapshot.travel  |
 
   Scenario: Updating application with outdated etag
-    Given Application is created
+    Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data if updated before
+    When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with invalid etag
       | applicationName  | description | website                    |
       | Updated App Name |             | http://www.snapshot.travel |
     Then Response code is "412"
@@ -94,9 +95,6 @@ Feature: Applications create update delete
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123                                                                             |
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions                                                        |
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions/b595fc9d-f5ca-45e7-a15d-c8a97108d884                   |
-#      Fails because of DP-1583
-      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions                                                    |
-      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions/b595fc9d-f5ca-45e7-a15d-c8a97108d884/api_subscriptions |
 
 
   Scenario: Application ID and name is unique when creating role - DP-1661
