@@ -93,6 +93,8 @@ public class BasicSteps {
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
     protected RequestSpecification spec = null;
+    public static final String REQUESTOR_ID = "requestorId";
+    public static final String TARGET_ID = "targetId";
 
     public BasicSteps() {
 
@@ -593,6 +595,26 @@ public class BasicSteps {
 
     protected Response getSecondLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         return getSecondLevelEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getThirdLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        return getThirdLevelEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, firstLevelId, secondLevelObjectName, secondLevelId, thirdLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getThirdLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        if (isBlank(appId)){
+            fail("Application ID to be send in request header is null.");
+        }
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, appId);
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
+        requestSpecification.parameters(params);
+
+        return requestSpecification.when().get("{firstId}/{secondLevelName}/{secondId}/{thirdLevelName}", firstLevelId, secondLevelObjectName, secondLevelId, thirdLevelObjectName);
+
     }
 
     protected Response getSecondLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
