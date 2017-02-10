@@ -59,7 +59,6 @@ Feature: Properties-Customers access check feature
       | type  |
       | owner |
     Then Response code is "404"
-#  DP-1711
     And Custom code is 40402
 
   Scenario: Delete Property-Customer relationship by user who has access to them

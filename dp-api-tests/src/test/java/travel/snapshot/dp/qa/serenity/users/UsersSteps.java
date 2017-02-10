@@ -1,23 +1,11 @@
 package travel.snapshot.dp.qa.serenity.users;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.UserCreateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserUpdateDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -25,6 +13,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 public class UsersSteps extends BasicSteps {
 
