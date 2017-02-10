@@ -122,10 +122,10 @@ Feature: Customers get
       |       |        | 50       | 59    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
       |       | /null  | 50       | 59    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
       | 15    |        | 15       | 59    | </identity/customers?limit=15&cursor=15>; rel="next"                                                      |
-      |       | 1      | 50       | 59    | </identity/customers?limit=50&cursor=51>; rel="next", </identity/customers?limit=50&cursor=0>; rel="prev" |
+      |       | 1      | 50       | 59    | </identity/customers?limit=50&cursor=0>; rel="prev", </identity/customers?limit=50&cursor=51>; rel="next" |
       | 20    | 0      | 20       | 59    | </identity/customers?limit=20&cursor=20>; rel="next"                                                      |
       | 10    | 0      | 10       | 59    | </identity/customers?limit=10&cursor=10>; rel="next"                                                      |
-      | 5     | 10     | 5        | 59    | </identity/customers?limit=5&cursor=15>; rel="next", </identity/customers?limit=5&cursor=5>; rel="prev"   |
+      | 5     | 10     | 5        | 59    | </identity/customers?limit=5&cursor=5>; rel="prev", </identity/customers?limit=5&cursor=15>; rel="next"   |
 
     #TODO test filter, sort with different values
 
