@@ -46,6 +46,7 @@ Feature: Customers properties create update delete
       | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            | /null      | 422        | 42201       |
       | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 422        | 42201       |
       | from after to date   | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 422        | 42201       |
+#  DP-1779
       | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 422        | 42201       |
       | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 422        | 42201       |
       | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
@@ -91,11 +92,12 @@ Feature: Customers properties create update delete
     And Custom code is "<custom_code>"
     Examples:
       | field             | value      | status_code | custom_code |
-      | valid_from        | 2016-01-01 | 400         | 40002       |
-      | valid_from        | invalid    | 400         | 40002       |
-      | valid_to          | 2014-12-31 | 400         | 40002       |
-      | valid_to          | invalid    | 400         | 40002       |
-      | relationship_type | invalid    | 400         | 40002       |
+      | valid_from        | 2016-01-01 | 422         | 42201       |
+#  DP-1779
+      | valid_from        | invalid    | 422         | 42201       |
+      | valid_to          | 2014-12-31 | 422         | 42201       |
+      | valid_to          | invalid    | 422         | 42201       |
+      | relationship_type | invalid    | 422         | 42201       |
 
   Scenario: Duplicate adding of customer property throws correct error - DP-1661
     When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"

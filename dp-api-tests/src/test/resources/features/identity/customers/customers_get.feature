@@ -13,7 +13,7 @@ Feature: Customers get
 
   @Smoke
   Scenario: Getting customer
-    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -22,14 +22,8 @@ Feature: Customers get
     And Body contains entity with attribute "email" value "c1@tenants.biz"
     And Body contains entity with attribute "vat_id" value "CZ10000001"
 
-  Scenario: Getting customer with etag
-    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got with etag by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
-    Then Response code is "304"
-    And Body is empty
-
   Scenario: Getting customer with not current etag
-  Customer is got, etag is saved to tmp, then customer vat_id is updated to "CZnotvalidvatid" so etag should change and is got again with previous etag
-
+#  Customer is got, etag is saved to tmp, then customer vat_id is updated to "CZnotvalidvatid" so etag should change and is got again with previous etag
     When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got for etag, updated and got with previous etag by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
     Then Response code is "200"
     And Content type is "application/json"
@@ -40,7 +34,7 @@ Feature: Customers get
     And Body contains entity with attribute "vat_id" value "CZ99999999"
 
   Scenario: Checking error code for getting customer
-    When Customer with customerId "NotExistent" is got by user with id "a63edcc6-6830-457c-89b1-7801730bd0ae"
+    When Customer with customerId "NotExistent" is got
     Then Response code is "404"
     And Custom code is "40402"
 

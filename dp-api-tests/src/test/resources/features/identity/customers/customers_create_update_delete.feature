@@ -69,7 +69,7 @@ Feature: Customers create update delete
   #TODO update with error fields, bad values, missing fields
   #TODO update nonexistent field
   Scenario Outline: Updating customer
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user "Snapshotuser"
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user "SnapshotUser"
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
