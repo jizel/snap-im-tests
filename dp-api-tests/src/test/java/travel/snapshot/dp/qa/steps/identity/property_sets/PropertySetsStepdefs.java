@@ -100,11 +100,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, customer);
     }
 
-    @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
-    public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName, String customerId) throws Throwable {
+    @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" exists$")
+    public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         assertThat(property, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
+        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
         assertThat(propertySet, is(notNullValue()));
 
         propertySetSteps.relationExistsBetweenPropertyAndPropertySet(property.getPropertyId(), propertySet.getPropertySetId());

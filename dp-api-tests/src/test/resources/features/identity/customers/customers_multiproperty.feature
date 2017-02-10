@@ -52,13 +52,13 @@ Feature: Customers multiproperty
   Scenario Outline: Accessing customer's property_sets with everything user with each property in just one ps
   Property set 1 and property set 2 properties are disjuncted, everything user has access just for properties from ps1
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" exists
 
-    Given Relation between property with code "p5_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p6_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p5_code" and property set with name "ps2_name" exists
+    Given Relation between property with code "p6_code" and property set with name "ps2_name" exists
 
       #user everything should get properties from ps1
       #limited should get only property set 2
@@ -90,13 +90,13 @@ Feature: Customers multiproperty
   Scenario Outline: Accessing customer's property_sets with everything user with one property in both sets
   There are same properties in property set 1 and 2, everything user has access to all properties, both property sets should be returned
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" exists
 
-    Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p1_code" and property set with name "ps2_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps2_name" exists
 
     #user everything should get both property sets
     #user limited should get only one property set

@@ -19,7 +19,7 @@ Feature: Properties property sets create update delete
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snapUser"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | 00002111-cdaf-439a-8bef-3140f56c657e | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
 
   Scenario: Update Property - Property Set relationship with empty body - DP-1679
     When  Relation between property with code "p1_code" and property set "ps1_name" is updated with empty body

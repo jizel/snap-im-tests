@@ -18,7 +18,7 @@ Feature: Properties property sets get
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetName | propertySetDescription | propertySetType |
       | ps1_name        | ps1_description        | brand           |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Property set with name "ps1_name" for property with code "p1_code" is got
     Then Response code is "200"
     And Content type is "application/json"
@@ -82,60 +82,60 @@ Feature: Properties property sets get
       | list_ps53_name  | list_ps53_description  | brand           |
       | list_ps54_name  | list_ps54_description  | brand           |
 
-    Given Relation between property with code "p1_code" and property set with name "list_ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps3_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps4_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps5_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps6_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps7_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps8_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps9_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps10_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps11_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps12_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps13_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps14_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps15_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps16_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps17_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps18_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps19_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps20_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps21_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps22_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps23_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps24_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps25_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps26_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps27_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps28_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps29_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps30_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps31_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps32_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps33_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps34_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps35_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps36_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps37_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps38_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps39_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps40_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps41_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps42_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps43_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps44_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps45_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps46_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps47_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps48_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps49_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps50_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps51_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps52_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps53_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps54_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps1_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps2_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps3_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps4_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps5_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps6_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps7_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps8_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps9_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps10_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps11_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps12_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps13_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps14_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps15_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps16_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps17_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps18_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps19_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps20_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps21_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps22_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps23_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps24_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps25_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps26_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps27_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps28_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps29_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps30_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps31_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps32_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps33_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps34_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps35_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps36_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps37_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps38_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps39_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps40_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps41_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps42_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps43_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps44_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps45_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps46_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps47_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps48_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps49_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps50_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps51_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps52_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps53_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps54_name" exists
 
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
@@ -169,18 +169,18 @@ Feature: Properties property sets get
       | list_ps10_name  | list_ps10_description  | brand           |
       | list_ps11_name  | list_ps11_description  | brand           |
       | list_ps12_name  | list_ps12_description  | brand           |
-    Given Relation between property with code "p1_code" and property set with name "list_ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps2_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps3_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps4_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps5_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps6_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps7_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps8_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps9_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps10_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps11_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between property with code "p1_code" and property set with name "list_ps12_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps1_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps2_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps3_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps4_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps5_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps6_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps7_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps8_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps9_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps10_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps11_name" exists
+    Given Relation between property with code "p1_code" and property set with name "list_ps12_name" exists
 
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
