@@ -70,8 +70,8 @@ Feature: User groups user relationship feature
 
   Scenario: Delete nonexistent relationship between User and UserGroup
     When User "snapshotUser1" is removed from userGroup "userGroup_1"
-    Then Response code is 412
-    And Body contains entity with attribute "message" value "Precondition failed: ETag not present."
+    Then Response code is 404
+    And Custom code is 40402
 
   Scenario: Activate relationship userGroup-user
     Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "false"

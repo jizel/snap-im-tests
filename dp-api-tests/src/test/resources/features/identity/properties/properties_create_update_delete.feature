@@ -51,7 +51,7 @@ Feature: Properties create update delete
 
   Scenario: Checking error code for deleting property
     When Nonexistent property id is deleted
-    Then Response code is "412"
+    Then Response code is "404"
 
   @Smoke
   Scenario: Property is activated

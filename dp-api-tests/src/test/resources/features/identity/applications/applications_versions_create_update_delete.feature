@@ -46,7 +46,7 @@ Feature: Applications versions create update delete
 
   Scenario: Checking error code for deleting application version
     When Nonexistent application version for application with id "11111111-0000-4000-a000-111111111111" is deleted
-    Then Response code is "41202"
+    Then Response code is "404"
 
   Scenario Outline: Updating application
     Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists

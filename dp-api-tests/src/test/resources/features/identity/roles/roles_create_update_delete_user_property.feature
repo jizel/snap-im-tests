@@ -52,9 +52,9 @@ Feature: Roles create update delete user property
     And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
 
-  Scenario: Checking error code for deleting role
+  Scenario: Checking error code for deleting role - DP-1704
     When Nonexistent role id is deleted
-    Then Response code is "204"
+    Then Response code is "404"
 
 
   Scenario Outline: Updating role
