@@ -251,12 +251,12 @@ Feature: Customers properties get
   Scenario: Relation between user and customer does not exist
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
-    When Relation between user with username "b63edcc6-6830-457c-89b1-7801730bd0ae" and customer "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
+    When Relation between user "b63edcc6-6830-457c-89b1-7801730bd0ae" and customer "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
     Then Response code is 404
 
   Scenario: No relation between user and property, 0 properties visible for user
-    Given Relation between user with username "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
@@ -264,8 +264,8 @@ Feature: Customers properties get
     And Total count is "0"
 
   Scenario: Relation between user and property, 3 property visible for user
-    Given Relation between user with username "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "custProp1" and property with code "p1_code" exists
+    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "custProp1" and property with code "p1_code" exists
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
@@ -273,10 +273,10 @@ Feature: Customers properties get
     And Total count is "3"
 
   Scenario: Relation between user and all properties, 4 properties visible for user
-    Given Relation between user with username "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "custProp1" and property with code "p1_code" exists
-    Given Relation between user with username "custProp1" and property with code "p2_code" exists
-    Given Relation between user with username "custProp1" and property with code "p3_code" exists
+    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "custProp1" and property with code "p1_code" exists
+    Given Relation between user "custProp1" and property with code "p2_code" exists
+    Given Relation between user "custProp1" and property with code "p3_code" exists
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""

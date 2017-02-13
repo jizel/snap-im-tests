@@ -559,9 +559,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void userDoesntExistForCustomer(UserDto user, String customerId) {
-        CustomerDto customer = getCustomerById(customerId);
-        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(customer.getCustomerId(), user.getUserId());
+    public void userDoesntExistForCustomer(String userId, String customerId) {
+        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(customerId, userId);
         assertNull("User should not be present in customer", userForCustomer);
     }
 

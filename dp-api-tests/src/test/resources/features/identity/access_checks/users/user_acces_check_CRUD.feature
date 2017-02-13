@@ -40,12 +40,12 @@ Feature: Users can create, update and delete only users of the same customer
     Then Response code is "204"
 
   Scenario: User can update only users within his customer
-    When User with userName "User1OfC2" is updated with data by user with id "12329079-48f0-4f00-9bec-e2329a8bdaac"
+    When User "User1OfC2" is updated with data by user with id "12329079-48f0-4f00-9bec-e2329a8bdaac"
       | userType | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | Vasya     | Pupkin   | vpupkin@snapshot.com | Europe/Prague | cs-CZ   | false    |
     Then Response code is "404"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
-    When User with userName "User1OfC2" is updated with data by user with id "12329079-48f0-4f00-9bec-e2329a8bdaac"
+    When User "User1OfC2" is updated with data by user with id "12329079-48f0-4f00-9bec-e2329a8bdaac"
       | userType | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | Vasya     | Pupkin   | vpupkin@snapshot.com | Europe/Prague | cs-CZ   | false    |
     Then Response code is "204"

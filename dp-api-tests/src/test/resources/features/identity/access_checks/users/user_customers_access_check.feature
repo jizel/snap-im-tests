@@ -20,7 +20,7 @@
   Scenario: User can view customer-user relations of only his customer
     When Relation between user "user1OfC2" and customer "12300000-0000-4000-a000-000000000001" is requested by user "user1OfC1"
     Then Response code is "404"
-    When Relation between customer "12300000-0000-4000-a000-000000000001" and user with username "user1OfC2" is requested by user with username "user1OfC1"
+    When Relation between customer "12300000-0000-4000-a000-000000000001" and user "user1OfC2" is requested by user "user1OfC1"
     Then Response code is "404"
     Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
     When User "user1OfC1" requests list of customer for user "user2OfC1"

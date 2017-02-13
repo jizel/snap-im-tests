@@ -17,7 +17,7 @@ Feature: Users get
 
   @Smoke
   Scenario: Getting user
-    When User with username "default1" is got
+    When User "default1" is got
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -31,7 +31,7 @@ Feature: Users get
     And Body contains entity with attribute "culture" value "cs-CZ"
 
   Scenario: Getting user with etag
-    When User with username "default1" is got with etag
+    When User "default1" is got with etag
     Then Response code is "304"
     And Body is empty
 
@@ -39,7 +39,7 @@ Feature: Users get
 ##  now keykloack-driven, hence some old endpoints may not work
 #  Scenario: Get token for deleted user
 #    Given The password of user "default4" is "Password01"
-#    Given User with userName "default4" is deleted
+#    Given User "default4" is deleted
 #    When Get token for user "default4" with password "Password01"
 #    Then Response code is 401
 #
@@ -55,7 +55,7 @@ Feature: Users get
 #      |          |                  | 401           |
 
   Scenario: Getting user with not current etag
-    When User with username "default1" is got for etag, updated and got with previous etag
+    When User "default1" is got for etag, updated and got with previous etag
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present

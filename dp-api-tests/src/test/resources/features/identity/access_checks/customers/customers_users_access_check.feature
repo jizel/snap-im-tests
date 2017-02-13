@@ -26,7 +26,7 @@ Feature: Customers users access check feature (second level endpoints)
     And Total count is "1"
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
     Then Response code is "404"
-    Given Relation between user with username "userWithCust2" and customer with id "12300000-0000-4000-a000-000000000000" exists with isPrimary "true"
+    Given Relation between user "userWithCust2" and customer with id "12300000-0000-4000-a000-000000000000" exists with isPrimary "true"
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
     And Total count is "2"
@@ -57,7 +57,7 @@ Feature: Customers users access check feature (second level endpoints)
       When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1"
       Then Response code is "204"
       And Body is empty
-      And User with username "userWithCust1" isn't there for customer with id "12300000-0000-4000-a000-000000000000"
+      And User "userWithCust1" isn't there for customer with id "12300000-0000-4000-a000-000000000000"
 
     Scenario: Deleting User Customer relationship by user who cannot access the customer
       When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust2"

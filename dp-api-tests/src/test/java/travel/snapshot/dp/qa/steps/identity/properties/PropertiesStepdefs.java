@@ -48,13 +48,12 @@ public class PropertiesStepdefs {
     // Help methods
 
     public Map<String, String> getValidUserPropertyIdsFromNameAndCode(String username, String propertyCode) {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat("User " + username + " is null", user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(username);
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         assertThat("Property with code " + propertyCode + " is null", property, is(notNullValue()));
 
         Map<String, String> userPropertyIds = new HashMap<>();
-        userPropertyIds.put(USER_ID, user.getUserId());
+        userPropertyIds.put(USER_ID, userId);
         userPropertyIds.put(PROPERTY_ID, property.getPropertyId());
         return userPropertyIds;
     }
@@ -78,7 +77,7 @@ public class PropertiesStepdefs {
         propertySteps.removeAllUsersFromPropertiesWithCodes(propertyCodes);
     }
 
-    @Given("^Relation between user with username \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
+    @Given("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
     public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
 
@@ -179,21 +178,20 @@ public class PropertiesStepdefs {
         propertySteps.deleteProperty("nonexistent_id");
     }
 
-    @When("^User with username \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
     public void User_with_username_is_added_to_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        propertySteps.userIsAddedToProperty(u, propertyCode);
+        String userId = usersSteps.resolveUserId(username);
+        propertySteps.userIsAddedToProperty(userId, propertyCode);
     }
 
-    @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(username);
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        propertySteps.userIsDeletedFromProperty(user.getUserId(), property.getPropertyId());
+        propertySteps.userIsDeletedFromProperty(userId, property.getPropertyId());
     }
 
-    @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void userWithUsernameIsRemovedFromPropertyWithCodeByUser(String username, String propertyCode, String performerName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         UserDto performer = usersSteps.getUserByUsername(performerName);
@@ -285,10 +283,10 @@ public class PropertiesStepdefs {
         propertySteps.propertyIdInSessionDoesntExist();
     }
 
-    @Then("^User with username \"([^\"]*)\" isn't there for property with code \"([^\"]*)\"$")
+    @Then("^User \"([^\"]*)\" isn't there for property with code \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        propertySteps.userDoesntExistForProperty(u, propertyCode);
+        String userId = usersSteps.resolveUserId(username);
+        propertySteps.userDoesntExistForProperty(userId, propertyCode);
     }
 
     @Then("^There are property users with following usernames returned in order: (.*)$")

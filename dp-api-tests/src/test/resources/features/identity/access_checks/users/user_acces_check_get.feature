@@ -29,7 +29,7 @@ Feature: User access check feature - GET
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "12329079-48f0-4f00-9bec-e2329a8bdaac"
     Then Response code is "200"
     And There are "4" users returned
-    Given Relation between user with username "user1OfC1" and customer "12300000-0000-4000-a000-000000000001" is deleted
+    Given Relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000001" is deleted
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "12329079-48f0-4f00-9bec-e2329a8bdaac"
     Then Response code is "200"
     And There are "2" users returned
@@ -38,7 +38,7 @@ Feature: User access check feature - GET
     Given The following properties exist with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
       |propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       |999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    And Relation between user with username "user1OfC2" and property with code "p1_code" exists
+    And Relation between user "user1OfC2" and property with code "p1_code" exists
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "12329079-48f0-4f00-9bec-e2329a8bdaac"
     Then Response code is "200"
     And There are "2" users returned
@@ -47,7 +47,7 @@ Feature: User access check feature - GET
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
       | propertySetName | propertySetType | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
-    And Relation between user with username "user1OfC2" and property set with name "ps1_name" for customer with id "12300000-0000-4000-a000-000000000000" exists
+    And Relation between user "user1OfC2" and property set with name "ps1_name" for customer with id "12300000-0000-4000-a000-000000000000" exists
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "12329079-48f0-4f00-9bec-e2329a8bdaac"
     Then Response code is "200"
     And There are "2" users returned
