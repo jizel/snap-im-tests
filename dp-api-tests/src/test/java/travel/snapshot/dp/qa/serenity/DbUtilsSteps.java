@@ -36,6 +36,9 @@ public class DbUtilsSteps {
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
+    static final String DELETE_CUSTOMER_WITH_DELETED = "delete from Customer_With_Deleted";
+    static final String DELETE_PROPERTY_WITH_DELETED = "delete from Property_With_Deleted";
+
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
@@ -65,9 +68,11 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_PROPERTY_SET);
         dbHelper.identityDb().update(DELETE_USER_GROUPS);
         dbHelper.identityDb().update(DELETE_PROPERTY);
+        dbHelper.identityDb().update(DELETE_PROPERTY_WITH_DELETED);
         dbHelper.identityDb().update(UPDATE_CUSTOMER);
         dbHelper.identityDb().update(DELETE_CUSTOMER);
         dbHelper.identityDb().update(DELETE_USER);
+        dbHelper.identityDb().update(DELETE_CUSTOMER_WITH_DELETED);
         dbHelper.identityDb().update(DELETE_ADDRESS);
         dbHelper.identityDb().update(DELETE_ROLE);
         dbHelper.identityDb().update(DELETE_USER_GROUP_ROLE);

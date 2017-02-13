@@ -10,6 +10,7 @@ Feature: Users create update delete
       | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 55529079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot1 | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 66629079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser2 | Snapshot2 | User2    | snapshotUser2@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given Default Snapshot user is created
 
   Scenario Outline: Creating users
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
