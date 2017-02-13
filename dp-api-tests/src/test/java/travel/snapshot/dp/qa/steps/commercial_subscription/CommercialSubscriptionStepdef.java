@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.steps.commercial_subscription;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -99,11 +98,11 @@ public class CommercialSubscriptionStepdef {
 
     @Then("^Commercial subscription with id \"([^\"]*)\" is activate$")
     public void commercialSubscriptionWithIdIsActivate(String commSubscriptionId) throws Throwable {
-        commSubscriptionSteps.checkIsActive(commSubscriptionId, 1);
+        commSubscriptionSteps.checkIsActive(commSubscriptionId, true);
     }
 
     @Then("^Commercial subscription with id \"([^\"]*)\" is not activate$")
     public void commercialSubscriptionWithIdIsNotActivate(String commSubscriptionId) throws Throwable {
-        commSubscriptionSteps.checkIsActive(commSubscriptionId, 0);
+        commSubscriptionSteps.checkIsActive(commSubscriptionId, false);
     }
 }

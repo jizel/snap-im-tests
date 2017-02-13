@@ -1,20 +1,24 @@
 package travel.snapshot.dp.qa.serenity.partners;
 
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+
 import static java.util.Collections.singletonMap;
 import static org.junit.Assert.*;
 
@@ -59,38 +63,22 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void activatePartnerWithId(String partnerId) {
-        Response response = activatePartner(partnerId);
-        setSessionResponse(response);
+    public void setPartnerIsActive(String partnerId, boolean isActive){
+        PartnerUpdateDto partnerUpdate = new PartnerUpdateDto();
+        partnerUpdate.setIsActive(isActive);
+        updatePartner(partnerId, partnerUpdate);
     }
 
     @Step
-    public void partnerIsSetToActive(boolean isActive, String partnerId) {
-        PartnerDto partner = getPartnerById(partnerId);
-        if (isActive) {
-            assertNotNull("Partner should be returned", partner);
-            assertEquals("Status should be set to inactive", "active", partner.getIsActive());
-        } else {
-            assertNotNull("Partner should be returned", partner);
-            assertEquals("Status should be set to inactive", "inactive", partner.getIsActive());
+    public void updatePartner(String partnerId, PartnerUpdateDto updatedPartner) {
+        String etag = getEntityEtag(partnerId);
+        try {
+            JSONObject partnerData = retrieveData(updatedPartner);
+            Response response = updateEntity(partnerId, partnerData.toString(), etag);
+            setSessionResponse(response);
+        }catch(JsonProcessingException jsonException){
+            fail("Exception while parsing to JSON: " + jsonException);
         }
-    }
-
-    @Step
-    public void inactivatePartnerWithId(String partnerId) {
-        Response response = inactivatePartner(partnerId);
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void updatePartnerWithId(String partnerId, PartnerDto updatedPartner) throws Exception {
-
-        Response tempResponse = getEntity(partnerId, null);
-
-        JSONObject partnerData = retrieveData(updatedPartner);
-
-        Response response = updateEntity(partnerId, partnerData.toString(), tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
     }
 
     @Step
@@ -156,7 +144,7 @@ public class PartnerSteps extends BasicSteps {
 
     @Step
     public void getApplicationsForPartnerId(String partnerId) {
-        Response partnerApplications = getSecondLevelEntities(partnerId, "", LIMIT_TO_ALL,
+        Response partnerApplications = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_APPLICATIONS, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerApplications);
     }
@@ -164,7 +152,7 @@ public class PartnerSteps extends BasicSteps {
     @Step
     public void listOfPartnerApplicationsIsGotWith(String partnerId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
-        Response partnerApplications = getSecondLevelEntities(partnerId, "", limit,
+        Response partnerApplications = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_APPLICATIONS, limit,
                 cursor, filter, sort, sortDesc, null);
         setSessionResponse(partnerApplications);
     }
@@ -185,20 +173,12 @@ public class PartnerSteps extends BasicSteps {
     public PartnerDto getPartnerByName(String name) {
         String filter = String.format("name =='%s'", name);
         PartnerDto[] partners = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PartnerDto[].class);
-        return Arrays.asList(partners).stream().findFirst().orElse(null);
+        return stream(partners).findFirst().orElse(null);
     }
 
     public PartnerDto getPartnerById(String partnerId) {
         PartnerDto[] partners = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "partner_id==" + partnerId, null, null, null)
                 .as(PartnerDto[].class);
-        return Arrays.asList(partners).stream().findFirst().orElse(null);
-    }
-
-    private Response activatePartner(String partnerId) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().post("/{id}/activate", partnerId);
-    }
-
-    private Response inactivatePartner(String partnerId) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().post("/{id}/inactivate", partnerId);
+        return stream(partners).findFirst().orElse(null);
     }
 }
