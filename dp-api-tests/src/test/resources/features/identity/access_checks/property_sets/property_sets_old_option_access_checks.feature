@@ -51,12 +51,12 @@ Feature: Property sets old option access check feature - DP-1576
       And Total count is "1"
 
     Scenario: Single property is deleted from property set, user loses implicit access, when added he gains access again
-      When User with username "userWithImplicitPropSet" is removed from property with code "p1_code"
+      When User "userWithImplicitPropSet" is removed from property with code "p1_code"
       Then Response code is "204"
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"
       And Total count is "0"
-      When User with username "userWithImplicitPropSet" is added to property with code "p1_code"
+      When User "userWithImplicitPropSet" is added to property with code "p1_code"
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"
       And Total count is "1"

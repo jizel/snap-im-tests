@@ -54,13 +54,12 @@ public class PropertySetsStepdefs {
     // Help methods
 
     public Map<String, String> getValidUserPropertySetIdsFromNames(String username, String propertySetName) {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(username);
         PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
         assertThat(propertySet, is(notNullValue()));
 
         Map<String, String> userPropertyIds = new HashMap<>();
-        userPropertyIds.put(USER_ID, user.getUserId());
+        userPropertyIds.put(USER_ID, userId);
         userPropertyIds.put(PROPERTY_SET_ID, propertySet.getPropertySetId());
         return userPropertyIds;
     }
@@ -87,11 +86,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
     }
 
-    @Given("^Relation between user with username \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
+    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
     public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String customerId) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
+        String userId = usersSteps.resolveUserId(username);
         CustomerDto customer= customerSteps.getCustomerById(customerId);
-        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(u, propertySetName, customer);
+        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetName, customer);
     }
 
     @Given("^All properties are removed from property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
@@ -160,7 +159,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.deleteEntity(NON_EXISTENT_ID, DEFAULT_SNAPSHOT_ETAG);
     }
 
-    @When("^User with username \"([^\"]*)\" is added to property set with name \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\"$")
     public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         Response response = propertySetSteps.addUserToPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
@@ -168,7 +167,7 @@ public class PropertySetsStepdefs {
     }
 
 
-    @When("^User with username \"([^\"]*)\" is added to property set with name \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void userWithUsernameIsAddedToPropertySetWithNameByUser(String username, String propertySetName, String performerName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         UserDto performer = usersSteps.getUserByUsername(performerName);

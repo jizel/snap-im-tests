@@ -95,7 +95,7 @@ Feature: Users create update delete
 
   @Smoke
   Scenario: Deleting user
-    When User with userName "snapshotUser1" is deleted
+    When User "snapshotUser1" is deleted
     Then Response code is "204"
     And Body is empty
     And User with same id doesn't exist
@@ -106,23 +106,23 @@ Feature: Users create update delete
     And Custom code is "41201"
 
   Scenario: Deleting user with invalid ETAG
-    When User with "snapshotUser1" is deleted with ETAG "invalid_etag"
+    When User "snapshotUser1" is deleted with ETAG "invalid_etag"
     Then Response code is "412"
     And Custom code is 41202
 
   Scenario: Deleting user without ETAG
-    When User with "snapshotUser1" is deleted with ETAG ""
+    When User "snapshotUser1" is deleted with ETAG ""
     Then Response code is "412"
     And Custom code is 41201
 
   Scenario Outline: Updating user
-    When User with userName "snapshotUser2" is updated with data
+    When User "snapshotUser2" is updated with data
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated user with userName "snapshotUser2" has data
+    And Updated user "snapshotUser2" has data
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
 
@@ -132,7 +132,7 @@ Feature: Users create update delete
       | guest    | FNUp2     | LNUp2    | EMUp2@snapshot.travel | America/New_York | en-US   | /null    |
 
   Scenario: Updating user with outdated ETag
-    When User with userName "snapshotUser2" is updated with data if updated before
+    When User "snapshotUser2" is updated with data if updated before
       | firstName   |
       | NOT_APPLIED |
     Then Response code is "412"
@@ -142,17 +142,17 @@ Feature: Users create update delete
 
   @Smoke
   Scenario: User is activated
-    When User with userName "snapshotUser1" is activated
+    When User "snapshotUser1" is activated
     Then Response code is "204"
     And Body is empty
-    And User with userName "snapshotUser1" is active
+    And User "snapshotUser1" is active
 
   Scenario: User is inactivated
-    Given User with userName "snapshotUser1" is activated
-    When User with userName "snapshotUser1" is inactivated
+    Given User "snapshotUser1" is activated
+    When User "snapshotUser1" is inactivated
     Then Response code is "204"
     And Body is empty
-    And User with userName "snapshotUser1" is not active
+    And User "snapshotUser1" is not active
 
   @Bug
   Scenario: Creating user with same name as previously deleted user - DP-1380
@@ -160,7 +160,7 @@ Feature: Users create update delete
       | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is 201
-    When User with userName "snaphostUser1" is deleted
+    When User "snaphostUser1" is deleted
     Then Response code is 204
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |

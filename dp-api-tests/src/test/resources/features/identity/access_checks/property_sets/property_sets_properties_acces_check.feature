@@ -39,7 +39,7 @@ Feature: Property sets Properties access check feature
       Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-      Given Relation between user with username "userWithNoPropSet" and property with code "p1_code" exists
+      Given Relation between user "userWithNoPropSet" and property with code "p1_code" exists
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "404"
       And Custom code is 40402

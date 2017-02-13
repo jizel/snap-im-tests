@@ -81,20 +81,16 @@ public class UserStepdefs {
         usersSteps.compareUserOnHeaderWithStored(header);
     }
 
-    @When("^User with userName \"([^\"]*)\" is deleted$")
+    @When("^User \"([^\"]*)\" is deleted$")
     public void User_with_name_name_is_deleted(String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        usersSteps.deleteUser(user.getUserId());
+        String userId = usersSteps.resolveUserId(username);
+        usersSteps.deleteUser(userId);
     }
 
-    @When("^User with \"([^\"]*)\" is deleted with ETAG \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is deleted with ETAG \"([^\"]*)\"$")
     public void userWithIsDeletedWithOutdatedETAG(String username, String etag) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        usersSteps.deleteUserWithEtag(user.getUserId(), etag);
+        String userId = usersSteps.resolveUserId(username);
+        usersSteps.deleteUserWithEtag(userId, etag);
     }
 
     @Then("^User with same id doesn't exist$")
@@ -107,7 +103,7 @@ public class UserStepdefs {
         usersSteps.deleteUser("nonexistent");
     }
 
-    @When("^User with userName \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?$")
+    @When("^User \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?$")
     public void User_with_user_name_updated_with_data(String userName, String performerName, List<UserDto> users) throws Throwable {
         String targetId = usersSteps.resolveUserId(userName);
         if (performerName == null) {
@@ -118,27 +114,27 @@ public class UserStepdefs {
         }
     }
 
-    @Then("^Updated user with userName \"([^\"]*)\" has data$")
+    @Then("^Updated user \"([^\"]*)\" has data$")
     public void Updated_user_with_user_name_has_data(String userName, List<UserDto> users) throws Throwable {
         usersSteps.userWithUserNameHasData(userName, users.get(0));
     }
 
-    @When("^User with userName \"([^\"]*)\" is updated with data if updated before$")
+    @When("^User \"([^\"]*)\" is updated with data if updated before$")
     public void User_with_user_name_is_updated_with_data_if_updated_before(String userName, List<UserDto> users) throws Throwable {
         usersSteps.updateUserWithUserNameIfUpdatedBefore(userName, users.get(0));
     }
 
-    @When("^User with username \"([^\"]*)\" is got$")
+    @When("^User \"([^\"]*)\" is got$")
     public void User_with_username_is_got(String username) throws Throwable {
         usersSteps.userWithUsernameIsGot(username);
     }
 
-    @When("^User with username \"([^\"]*)\" is got with etag$")
+    @When("^User \"([^\"]*)\" is got with etag$")
     public void User_with_username_is_got_with_etag(String username) throws Throwable {
         usersSteps.userWithUsernameIsGotWithEtag(username);
     }
 
-    @When("^User with username \"([^\"]*)\" is got for etag, updated and got with previous etag$")
+    @When("^User \"([^\"]*)\" is got for etag, updated and got with previous etag$")
     public void User_with_username_is_got_for_etag_updated_and_got_with_previous_etag(String username) throws Throwable {
         usersSteps.userWithUsernameIsGotWithEtagAfterUpdate(username);
     }
@@ -177,7 +173,7 @@ public class UserStepdefs {
         usersSteps.usernamesAreInResponseInOrder(usernames);
     }
 
-    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
+    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_added_to_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
         RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleIsAddedToUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
@@ -185,25 +181,25 @@ public class UserStepdefs {
 
 
 
-    @Given("^Relation between role with name \"([^\"]*)\" for application id \"([^\"]*)\" and user with username \"([^\"]*)\" exists with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
+    @Given("^Relation between role with name \"([^\"]*)\" for application id \"([^\"]*)\" and user \"([^\"]*)\" exists with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Relation_between_role_with_name_for_application_i_and_user_with_username_exists_with_relationship_type_and_entity_with_id(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
         RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
-    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
+    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
         RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
-    @Then("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is not there for user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
+    @Then("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is not there for user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_not_there_for_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
         RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
         usersSteps.roleDoesntExistForUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
-    @When("^Nonexistent role is removed from user with username \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
+    @When("^Nonexistent role is removed from user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Nonexistent_role_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String username, String relationshipType, String entityId) throws Throwable {
         RoleDto role = new RoleDto();
         role.setRoleId(BasicStepDefs.NONEXISTENT_ID);
@@ -236,31 +232,29 @@ public class UserStepdefs {
         usersSteps.setUserPasswordByUsername(username, password);
     }
 
-    @When("^User with userName \"([^\"]*)\" is activated$")
+    @When("^User \"([^\"]*)\" is activated$")
     public void userWithCodeIsActivated(String name) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(name);
-        assertThat(user, is(notNullValue()));
-        usersSteps.setUserIsActive(user.getUserId(), true);
+        String userId = usersSteps.resolveUserId(name);
+        usersSteps.setUserIsActive(userId, true);
     }
 
-    @When("^User with userName \"([^\"]*)\" is inactivated$")
+    @When("^User \"([^\"]*)\" is inactivated$")
     public void userWithIdIsInactivated(String name) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(name);
-        assertThat(user, is(notNullValue()));
-        usersSteps.setUserIsActive(user.getUserId(), false);
+        String userId = usersSteps.resolveUserId(name);
+        usersSteps.setUserIsActive(userId, false);
     }
 
-    @Then("^User with userName \"([^\"]*)\" is active$")
+    @Then("^User \"([^\"]*)\" is active$")
     public void userWithIdIsActive(String name) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(name);
-        assertThat(user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(name);
+        UserDto user = usersSteps.getUserById(userId);
         assertThat("User is not active!", user.getIsActive(), is(true));
     }
 
-    @Then("^User with userName \"([^\"]*)\" is not active$")
+    @Then("^User \"([^\"]*)\" is not active$")
     public void userWithIdIsNotActive(String name) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(name);
-        assertThat(user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(name);
+        UserDto user = usersSteps.getUserById(userId);
         assertThat("User is active but should be inactive.", user.getIsActive(), is(false));
     }
 

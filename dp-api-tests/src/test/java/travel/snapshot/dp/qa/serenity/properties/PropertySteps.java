@@ -361,9 +361,9 @@ public class PropertySteps extends BasicSteps {
         assertNull("Customer should not be link with property", cust);
     }
 
-    public void userIsAddedToProperty(UserDto u, String propertyCode) {
+    public void userIsAddedToProperty(String userId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        Response response = addUserToProperty(u.getUserId(), p.getPropertyId());
+        Response response = addUserToProperty(userId, p.getPropertyId());
         setSessionResponse(response);
     }
 
@@ -381,9 +381,9 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(deleteResponse);
     }
 
-    public void userDoesntExistForProperty(UserDto u, String propertyCode) {
+    public void userDoesntExistForProperty(String userId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        PropertyUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), u.getUserId());
+        PropertyUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), userId);
         assertNull("User should not be present in property", userForProperty);
     }
 

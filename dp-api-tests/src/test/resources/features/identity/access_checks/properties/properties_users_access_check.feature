@@ -23,7 +23,7 @@ Feature: Properties-Users access check feature
     When List of all users for property with code "p1_code" is got by user "userWithProp"
     Then Response code is "200"
     And Total count is "1"
-    Given Relation between user with username "userWithNoProp" and property with code "p1_code" exists
+    Given Relation between user "userWithNoProp" and property with code "p1_code" exists
     When List of all users for property with code "p1_code" is got by user "userWithProp"
     Then Response code is "200"
     And Total count is "2"
@@ -50,12 +50,12 @@ Feature: Properties-Users access check feature
     And Custom code is 42202
 
     Scenario: Delete user from property by user who has access to it
-      Given Relation between user with username "userWithNoProp" and property with code "p1_code" exists
-      When User with username "userWithNoProp" is removed from property with code "p1_code" by user "userWithProp"
+      Given Relation between user "userWithNoProp" and property with code "p1_code" exists
+      When User "userWithNoProp" is removed from property with code "p1_code" by user "userWithProp"
       Then Response code is "204"
       And Body is empty
-      And User with username "userWithNoProp" isn't there for property with code "p1_code"
+      And User "userWithNoProp" isn't there for property with code "p1_code"
 
     Scenario: Delete user from property by user who does not have access to it
-      When User with username "userWithProp" is removed from property with code "p1_code" by user "userWithNoProp"
+      When User "userWithProp" is removed from property with code "p1_code" by user "userWithNoProp"
       Then Response code is "404"
