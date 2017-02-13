@@ -2,6 +2,7 @@ Feature: Partners create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
 
   Scenario: Create partner
     When The following partner is created
