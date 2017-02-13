@@ -35,6 +35,7 @@ import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,12 +60,16 @@ public class PropertySteps extends BasicSteps {
     @Steps
     private DbUtilsSteps dbSteps;
 
+    @Steps
+    private UsersSteps usersSteps;
+
     public PropertySteps() {
         super();
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
 
-    public void followingPropertiesExist(List<PropertyCreateDto> properties, String userId) {
+    public void followingPropertiesExist(List<PropertyCreateDto> properties, String userName) {
+        String userId = usersSteps.resolveUserId(userName);
         properties.forEach(property -> {
             property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 

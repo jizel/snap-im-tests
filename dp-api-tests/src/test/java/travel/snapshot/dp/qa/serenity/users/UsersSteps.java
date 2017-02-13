@@ -446,16 +446,16 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void listUserCustomerRolesByUser(String requestorId, String targetUserId, String customerId) {
-        Response response = getThirdLevelEntitiesByUser(requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+    public void listRolesForRelationByUser(String requestorId, String targetUserId, String secondLevelName, String secondLevelId) {
+        Response response = getThirdLevelEntitiesByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
         setSessionResponse(response);
     }
 
     public String resolveUserId(String userName) {
         String userId;
-        try {
-            userId = UUID.fromString(userName).toString();
-        } catch (IllegalArgumentException exception) {
+        if (isUUID(userName)) {
+            userId = userName;
+        } else {
             UserDto user = getUserByUsername(userName);
             assertThat(String.format("User with username \"%s\" does not exist", userName), user, is(notNullValue()));
             userId = user.getUserId();
@@ -468,5 +468,16 @@ public class UsersSteps extends BasicSteps {
         userIdMap.put(REQUESTOR_ID, resolveUserId(requestorName));
         userIdMap.put(TARGET_ID, resolveUserId(targetName));
         return userIdMap;
+    }
+
+    public void userAssignsRoleToRelation(String requestorId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
+        Response response = createThirdLevelEntityByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
+        setSessionResponse(response);
+    }
+
+    public void userDeletesRoleFromRelation(String requestorId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
+        String eTag = getThirdLevelEntityEtag(targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+        Response response = deleteThirdLevelEntityByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId, eTag);
+        setSessionResponse(response);
     }
 }

@@ -1,5 +1,10 @@
 package travel.snapshot.dp.qa.serenity.roles;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -14,9 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -260,5 +262,17 @@ public class RoleBaseSteps extends BasicSteps {
                 .body("application_id", is(originalRole.getApplicationId()))
                 .body("role_description", is(originalRole.getDescription()))
                 .body("name", is(originalRole.getRoleName()));
+    }
+
+    public String resolveRoleId(String roleName) {
+        String roleId;
+        if (isUUID(roleName)) {
+            roleId = roleName;
+        } else {
+            RoleDto role = getRoleByName(roleName);
+            assertThat(String.format("Role with name \"%s\" does not exist", roleName), role, is(notNullValue()));
+            roleId = role.getRoleId();
+        }
+        return roleId;
     }
 }

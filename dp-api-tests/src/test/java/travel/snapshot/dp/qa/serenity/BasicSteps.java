@@ -17,6 +17,7 @@ import net.thucydides.core.annotations.Step;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import travel.snapshot.dp.api.validation.UUIDValidator;
 import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.StringUtil;
@@ -32,10 +33,7 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -95,6 +93,7 @@ public class BasicSteps {
     protected RequestSpecification spec = null;
     public static final String REQUESTOR_ID = "requestorId";
     public static final String TARGET_ID = "targetId";
+    public static final String ROLE_ID = "role_id" ;
 
     public BasicSteps() {
 
@@ -384,6 +383,25 @@ public class BasicSteps {
         return requestSpecification.post("/" + firstLevelId + "/" + secondLevelId);
     }
 
+    protected Response createThirdLevelEntity(String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
+        return createThirdLevelEntityByUser( DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, jsonBody);
+    }
+
+    protected Response createThirdLevelEntityByUser(String userId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(jsonBody);
+        return requestSpecification.post("/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType);
+    }
+
+    protected Response deleteThirdLevelEntity(String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, String thirdLevelId, String eTag) {
+        return deleteThirdLevelEntityByUser( DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, thirdLevelId, eTag);
+    }
+
+    protected Response deleteThirdLevelEntityByUser(String userId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, String thirdLevelId, String eTag) {
+        String url = "/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType + "/" + thirdLevelId;
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_IF_MATCH, eTag);
+        return requestSpecification.delete("/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType + "/" + thirdLevelId);
+    }
+
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, String etag) {
         return getSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, etag);
     }
@@ -408,6 +426,18 @@ public class BasicSteps {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
         return requestSpecification.when().head("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId).getHeader(HEADER_ETAG);
+    }
+
+    protected String getThirdLevelEntityEtag(String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String thirdLevelId) {
+        return getThirdLevelEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, thirdLevelObjectName, thirdLevelId);
+    }
+
+    protected String getThirdLevelEntityEtagByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String thirdLevelId) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isNotBlank(userId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        }
+        return requestSpecification.when().head("/{firstLevelId}/{secondLevelName}/{secondLevelId}/{thirdLevelName}/{thirdLevelId}", firstLevelId, secondLevelObjectName, secondLevelId, thirdLevelObjectName, thirdLevelId).getHeader(HEADER_ETAG);
     }
 
     protected Response deleteSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
@@ -712,5 +742,23 @@ public class BasicSteps {
     public void responseContainsNoOfAttributes(int count, String attributeName) {
         Response response = getSessionResponse();
         response.then().body(attributeName + ".size()", is(count));
+    }
+
+    public Boolean isUUID(String param) {
+        UUIDValidator validator = new UUIDValidator();
+        return validator.isValid(param, null);
+    }
+
+    public String resolveObjectName(String name) {
+        String objectName = null;
+        switch (name) {
+            case "customer":     objectName = SECOND_LEVEL_OBJECT_CUSTOMERS;
+                                 break;
+            case "property":     objectName = SECOND_LEVEL_OBJECT_PROPERTIES;
+                                 break;
+            case "property set": objectName = SECOND_LEVEL_OBJECT_PROPERTY_SETS;
+                                 break;
+        }
+        return objectName;
     }
 }
