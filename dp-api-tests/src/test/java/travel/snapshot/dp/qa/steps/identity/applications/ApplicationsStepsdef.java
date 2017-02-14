@@ -7,10 +7,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.VersionDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 
@@ -62,9 +59,10 @@ public class ApplicationsStepsdef {
     }
 
     @When("^Application with id \"([^\"]*)\" is updated with data$")
-    public void Application_With_Id_Is_Updated_With_Data(String applicationId, List<ApplicationDto> applications)
+    public void Application_With_Id_Is_Updated_With_Data(String applicationId, List<ApplicationUpdateDto> applications)
             throws Throwable {
-        applicationSteps.updateApplicationWithId(applicationId, applications.get(0));
+        String etag = applicationSteps.getEntityEtag(applicationId);
+        applicationSteps.updateApplication(applicationId, applications.get(0), etag);
     }
 
     @Then("^Updated application with id \"([^\"]*)\" has data$")
@@ -73,10 +71,10 @@ public class ApplicationsStepsdef {
         applicationSteps.applicationWithIdHasData(applicationId, applicationData.get(0));
     }
 
-    @When("^Application with id \"([^\"]*)\" is updated with data if updated before$")
+    @When("^Application with id \"([^\"]*)\" is updated with invalid etag$")
     public void Application_with_id_is_updated_with_data_if_updated_before(String applicationId,
-                                                                           List<ApplicationDto> applicationData) throws Throwable {
-        applicationSteps.updateApplicationWithIdIfUpdatedBefore(applicationId, applicationData.get(0));
+                                                                           List<ApplicationUpdateDto> applications) throws Throwable {
+        applicationSteps.updateApplication(applicationId, applications.get(0), "Invalid_etag");
     }
 
     @When("^Application with id \"([^\"]*)\" is got$")
@@ -118,32 +116,6 @@ public class ApplicationsStepsdef {
     public void There_are_applications_with_following_names_returned_in_order(List<String> applications)
             throws Throwable {
         applicationSteps.namesInResponseInOrder(applications);
-    }
-
-    @When("^Applications roles for application id \"([^\"]*)\" is got$")
-    public void Applications_roles_for_application_id_is_got(String applicationId) {
-        applicationSteps.getApplicationsRolesForApplicationId(applicationId);
-    }
-
-    @When("^List of applications roles is got for application with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_applications_roles_is_got_for_application_id_and_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String applicationId, @Transform(NullEmptyStringConverter.class) String limit,
-            @Transform(NullEmptyStringConverter.class) String cursor,
-            @Transform(NullEmptyStringConverter.class) String filter,
-            @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        applicationSteps.listOfApplicationsRolesIsGotWith(applicationId, limit, cursor, filter, sort, sortDesc);
-    }
-
-    @Then("^There are (\\d+) applications roles returned$")
-    public void There_are_applications_roles_returned(int count) throws Throwable {
-        applicationSteps.numberOfEntitiesInResponse(RoleDto.class, count);
-    }
-
-    @Then("^There are applications roles with following names returned in order: (.*)")
-    public void There_are_applications_roles_with_following_names_returned_in_order(List<String> roleNames)
-            throws Throwable {
-        applicationSteps.roleNamesInResponseInOrder(roleNames);
     }
 
     @When("^Application version is created for application with id \"([^\"]*)\"$")
@@ -202,12 +174,6 @@ public class ApplicationsStepsdef {
     public void Application_version_with_id_for_application_with_id_is_got_with_etag(String appVersionId,
                                                                                      String applicationId) {
         applicationSteps.applicationVersionWithIdIsGotWithEtag(appVersionId, applicationId);
-    }
-
-    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag, updated and got with previous etag$")
-    public void Application_version_with_id_for_application_with_id_is_got_with_not_current_etag(String appVersionId,
-                                                                                                 String applicationId) {
-        applicationSteps.applicationVersionWithIdIsGotWithEtagAfterUpdate(appVersionId, applicationId);
     }
 
     @When("^Nonexistent application version id is got for application id \"([^\"]*)\"$")

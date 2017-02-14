@@ -594,3 +594,16 @@ Feature: Customers create update delete
         | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
       Then Response code is "409"
       And Custom code is 40902
+
+      Scenario: CustomerId and parentId must be different - DP-1528
+        When Customer is created with random address
+          | customerId                           | parentId                             | companyName               | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+          | a792d2b2-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Already existing custoemr | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+        Then Response code is "409"
+        And Custom code is 40902
+        When Customer is created with random address
+          | customerId                           | parentId                             | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
+          | 00011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
+        Then Response code is "422"
+        And Custom code is 42202
+        Then Customer with id "00011222-3836-4207-a705-42bbecf3d881" doesn't exist
