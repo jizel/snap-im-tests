@@ -5,7 +5,7 @@ Feature: Applications commercial subscriptions
     Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
-    Given The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
+    Given The following properties exist with random address and billing address
       | propertyId                          | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       |c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 

@@ -1,15 +1,12 @@
 package travel.snapshot.dp.qa.serenity.applications;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.junit.Assert.*;
-
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
 import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -18,6 +15,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.junit.Assert.*;
 
 public class ApplicationsSteps extends BasicSteps {
 
@@ -73,14 +74,9 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationWithId(String applicationId, ApplicationDto applicationUpdates) throws Throwable {
-        ApplicationDto original = getApplicationById(applicationId);
-        Response tempResponse = getEntity(original.getApplicationId(), null);
-
-        Map<String, Object> applicationData = retrieveDataOld(ApplicationDto.class, applicationUpdates);
-
-        Response response =
-                updateEntity(original.getApplicationId(), applicationData, tempResponse.getHeader(HEADER_ETAG));
+    public void updateApplication(String applicationId, ApplicationUpdateDto applicationUpdate, String etag) throws Throwable {
+        JSONObject update = retrieveData(applicationUpdate);
+        Response response = updateEntity(applicationId, update.toString(), etag);
         setSessionResponse(response);
     }
 
@@ -119,9 +115,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationWithIdIsGotWithEtag(String applicationId) {
-
-        Response tempResponse = getEntity(applicationId, null);
-        Response resp = getEntity(applicationId, tempResponse.getHeader(HEADER_ETAG));
+        Response resp = getEntity(applicationId, getEntityEtag(applicationId));
         setSessionResponse(resp);
     }
 
@@ -165,32 +159,6 @@ public class ApplicationsSteps extends BasicSteps {
         int i = 0;
         for (ApplicationDto a : apps) {
             assertEquals("Application on index=" + i + " is not expected", applications.get(i), a.getApplicationName());
-            i++;
-        }
-    }
-
-    @Step
-    public void getApplicationsRolesForApplicationId(String applicationId) {
-        Response customerUsersResponse = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ALL,
-                CURSOR_FROM_FIRST, null, null, null, null);
-        setSessionResponse(customerUsersResponse);
-    }
-
-    @Step
-    public void listOfApplicationsRolesIsGotWith(String applicationId, String limit, String cursor, String filter,
-                                                 String sort, String sortDesc) {
-        Response response =
-                getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, null);
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void roleNamesInResponseInOrder(List<String> roleNames) {
-        Response response = getSessionResponse();
-        RoleDto[] roles = response.as(RoleDto[].class);
-        int i = 0;
-        for (RoleDto r : roles) {
-            assertEquals("Application role on index=" + i + " is not expected", roleNames.get(i), r.getRoleName());
             i++;
         }
     }
@@ -289,29 +257,6 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void applicationVersionWithIdIsGotWithEtag(String appVersionId, String applicationId) {
         Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
-                tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void applicationVersionWithIdIsGotWithEtagAfterUpdate(String appVersionId, String applicationId) {
-        Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("name", "Version 123");
-        mapForUpdate.put("api_manager_id", "123");
-        mapForUpdate.put("status", "inactive");
-        mapForUpdate.put("release_date", "2016-02-22");
-        mapForUpdate.put("description", "UpdatedDescription");
-
-        Response updateResponse = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
-                mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
-
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Application version cannot be updated: " + updateResponse.asString());
-        }
-
         Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
                 tempResponse.getHeader(HEADER_ETAG));
         setSessionResponse(resp);
