@@ -3,6 +3,7 @@ Feature: Commercial subscription get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     Given The following customers exist with random address

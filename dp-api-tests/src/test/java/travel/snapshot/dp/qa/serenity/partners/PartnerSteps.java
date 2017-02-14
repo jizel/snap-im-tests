@@ -1,9 +1,5 @@
 package travel.snapshot.dp.qa.serenity.partners;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Collections.singletonMap;
-import static org.junit.Assert.*;
-
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -17,6 +13,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.junit.Assert.*;
 
 public class PartnerSteps extends BasicSteps {
 
@@ -45,13 +45,7 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void deletePartnerWithName(String partnerName) {
-        PartnerDto partner = getPartnerByName(partnerName);
-        if (partner == null) {
-            return;
-        }
-
-        String partnerId = partner.getPartnerId();
+    public void deletePartner(String partnerId) {
         deleteEntityWithEtag(partnerId);
         Serenity.setSessionVariable(SESSION_PARTNER_ID).to(partnerId);
     }

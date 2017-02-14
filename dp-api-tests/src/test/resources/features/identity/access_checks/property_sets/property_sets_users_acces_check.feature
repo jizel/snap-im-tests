@@ -24,7 +24,7 @@ Feature: Property sets Users access check feature
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "1"
-      Given Relation between user with username "userWithNoPropSet" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "2"
@@ -42,11 +42,11 @@ Feature: Property sets Users access check feature
 
 
   Scenario: Add user to property set by user who can access the property set
-    When User with username "userWithNoPropSet" is added to property set with name "ps1_name" by user "userWithPropSet"
+    When User "userWithNoPropSet" is added to property set with name "ps1_name" by user "userWithPropSet"
     Then Response code is "201"
 
   Scenario: Try to add user to property by user who cannot access the property
-    When User with username "userWithNoPropSet" is added to property set with name "ps1_name" by user "userWithNoPropSet"
+    When User "userWithNoPropSet" is added to property set with name "ps1_name" by user "userWithNoPropSet"
     Then Response code is "404"
     
   Scenario: Try to add user from different customer to property set
@@ -56,7 +56,7 @@ Feature: Property sets Users access check feature
     Given The following users exist for customer "2348fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName            | firstName | lastName | email                    | timezone      | culture | isActive |
       | 34529079-48f0-4f00-9bec-e2329a8bdaac | customer | userFromCustomer2   | Customer1 | User1    | usercus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    When User with username "userFromCustomer2" is added to property set with name "ps1_name" by user "userWithPropSet"
+    When User "userFromCustomer2" is added to property set with name "ps1_name" by user "userWithPropSet"
     Then Response code is "422"
     And Custom code is 42202
 

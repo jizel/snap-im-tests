@@ -68,13 +68,12 @@ Feature: Customers validation
       | /email                 | 422          | 42201      |
       | /phone                 | 422          | 42201      |
       | /headquarters_timezone | 422          | 42201      |
-      | /address/country       | 400          | 40002      |
+      | /address/country       | 422          | 42202      |
 
   Scenario: Object creation - missing values
     When create "customer" objects each with one missing field
     Then there are following responses
       | testedField            | responseCode | customCode |
-      | /customer_code         | 422          | 42201      |
       | /name                  | 422          | 42201      |
       | /email                 | 422          | 42201      |
       | /headquarters_timezone | 422          | 42201      |
@@ -91,7 +90,7 @@ Feature: Customers validation
       | /website         | 422          | 42201      |
       | /email           | 422          | 42201      |
       | /phone           | 422          | 42201      |
-      | /address/country | 400          | 40002      |
+      | /address/country | 422          | 42202      |
 
   Scenario Outline: Object update - customer - invalid values
     When Update customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", field "<updated_field>", its value "<value>"
@@ -114,31 +113,31 @@ Feature: Customers validation
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
       | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
       | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
-    Then Response code is 400
+    Then Response code is 422
     And Custom code is "<custom_code>"
     Examples:
       | country | city    | zipCode | region  | addressLine1 | addressLine2 | custom_code |
-      | /null   | \w{256} | /null   | /null   | /null        | /null        | 40002       |
-      | XX      | /null   | /null   | /null   | /null        | /null        | 40002       |
-      | USA     | /null   | /null   | /null   | /null        | /null        | 40002       |
-      | /null   | /null   | \w{101} | /null   | /null        | /null        | 40002       |
-      | /null   | /null   | /null   | \w{101} | /null        | /null        | 40002       |
-      | /null   | /null   | /null   | /null   | \w{501}      | /null        | 40002       |
-      | /null   | /null   | /null   | /null   | /null        | \w{501}      | 40002       |
+      | /null   | \w{256} | /null   | /null   | /null        | /null        | 42201       |
+      | XX      | /null   | /null   | /null   | /null        | /null        | 42202       |
+      | USA     | /null   | /null   | /null   | /null        | /null        | 42202       |
+      | /null   | /null   | \w{101} | /null   | /null        | /null        | 42201       |
+      | /null   | /null   | /null   | \w{101} | /null        | /null        | 42201       |
+      | /null   | /null   | /null   | /null   | \w{501}      | /null        | 42201       |
+      | /null   | /null   | /null   | /null   | /null        | \w{501}      | 42201       |
 
 
   Scenario Outline: Object update - customer's address - empty values
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
       | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
       | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
-    Then Response code is 400
+    Then Response code is 422
     And Custom code is "<custom_code>"
     Examples:
       | country | city  | zipCode | region | addressLine1 | addressLine2 | custom_code |
-      |         | /null | /null   | /null  | /null        | /null        | 61          |
-      | /null   |       | /null   | /null  | /null        | /null        | 61          |
-      | /null   | /null |         | /null  | /null        | /null        | 61          |
-      | /null   | /null | /null   | /null  |              | /null        | 61          |
+      |         | /null | /null   | /null  | /null        | /null        | 42201       |
+      | /null   |       | /null   | /null  | /null        | /null        | 42201       |
+      | /null   | /null |         | /null  | /null        | /null        | 42201       |
+      | /null   | /null | /null   | /null  |              | /null        | 42201       |
 
 
   Scenario Outline: Object update - customer's address - valid values

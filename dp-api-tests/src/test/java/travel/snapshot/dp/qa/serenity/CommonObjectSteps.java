@@ -1,11 +1,5 @@
 package travel.snapshot.dp.qa.serenity;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
-
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,11 +13,7 @@ import net.thucydides.core.annotations.Step;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.helpers.FieldType;
-import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.helpers.ObjectField;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.helpers.ResponseEntry;
+import travel.snapshot.dp.qa.helpers.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,7 +22,12 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * @author konkol
@@ -207,7 +202,7 @@ public class CommonObjectSteps extends BasicSteps {
                                 returnedObjects.stream().map((node) -> node.at(pointer).asText()).collect(Collectors.toList()),
                                 everyItem(is(filterValue)));
                     } else {
-                        Assert.fail("Search result is not an array.");
+                        fail("Search result is not an array.");
                     }
                 }
             }
@@ -229,7 +224,10 @@ public class CommonObjectSteps extends BasicSteps {
         // is_active is special field (cannot be updated by update method, just by special api call), should not be part of generic objects
         ((ObjectNode) returnedObject).remove("is_active");
 
-        Assert.assertThat(originalObject, is(returnedObject));
+        // customer_code is always generated
+        ((ObjectNode) returnedObject).remove("customer_code");
+
+        assertThat(originalObject, is(returnedObject));
     }
 
     // --- rest ---
@@ -255,7 +253,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restGetObject(String objectLocation, String id) {
-        return given().spec(spec).basePath(objectLocation + "/" + id)
+        return given().spec(spec).basePath(objectLocation + "/" + id).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .when().get();
     }
 
@@ -282,7 +280,7 @@ public class CommonObjectSteps extends BasicSteps {
      */
     private Response restUpdateObject(String objectLocation, String id, String etag, String json) {
         return given().spec(spec).basePath(objectLocation + "/" + id)
-                .header(HEADER_IF_MATCH, etag)
+                .header(HEADER_IF_MATCH, etag).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(json)
                 .when().post();
     }
@@ -295,7 +293,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restFilterObject(String objectLocation, String query) {
-        return given().spec(spec).basePath(objectLocation).param("limit", LIMIT_TO_ALL).param("filter", query)
+        return given().spec(spec).basePath(objectLocation).param("limit", LIMIT_TO_ALL).param("filter", query).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .when().get();
     }
 

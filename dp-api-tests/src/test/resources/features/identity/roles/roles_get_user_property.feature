@@ -2,10 +2,10 @@
 Feature: Roles get user property
 
   Background:
-    Given Switch for user property role tests
-    Given Default partner is created
-
     Given Database is cleaned
+    Given Switch for user property role tests
+    Given Default Snapshot user is created
+    Given Default partner is created
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -132,10 +132,10 @@ Feature: Roles get user property
       | default limit | /null | /null  | 50       | 57    | </identity/user_property_roles?limit=50&cursor=50>; rel="next"                                                                |
       | default limit |       |        | 50       | 57    | </identity/user_property_roles?limit=50&cursor=50>; rel="next"                                                                |
       | limit at 15   | 15    |        | 15       | 57    | </identity/user_property_roles?limit=15&cursor=15>; rel="next"                                                                |
-      | offset by 1   |       | 1      | 50       | 57    | </identity/user_property_roles?limit=50&cursor=51>; rel="next", </identity/user_property_roles?limit=50&cursor=0>; rel="prev" |
+      | offset by 1   |       | 1      | 50       | 57    | </identity/user_property_roles?limit=50&cursor=0>; rel="prev", </identity/user_property_roles?limit=50&cursor=51>; rel="next" |
       | limit by 20   | 20    | 0      | 20       | 57    | </identity/user_property_roles?limit=20&cursor=20>; rel="next"                                                                |
       | limit by 10   | 10    | 0      | 10       | 57    | </identity/user_property_roles?limit=10&cursor=10>; rel="next"                                                                |
-      | l:5 o:5       | 5     | 10     | 5        | 57    | </identity/user_property_roles?limit=5&cursor=15>; rel="next", </identity/user_property_roles?limit=5&cursor=5>; rel="prev"   |
+      | l:5 o:5       | 5     | 10     | 5        | 57    | </identity/user_property_roles?limit=5&cursor=5>; rel="prev", </identity/user_property_roles?limit=5&cursor=15>; rel="next"   |
 
 
   Scenario Outline: Checking error codes for lists of roles

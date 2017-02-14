@@ -17,8 +17,8 @@ Feature: Customers users create update delete
 
     Given All users are removed for customers with ids: 40ebf861-7549-46f1-a99f-249716c83b33, 58dd58d4-a56e-4cf5-a3a6-068fe37fef40
 
-    Given Relation between user with username "snapUser1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "snapUser2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "snapUser1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "snapUser2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
 
   @Smoke
   Scenario: Adding user to customer with isPrimary set
@@ -37,14 +37,14 @@ Feature: Customers users create update delete
 
   @Smoke
   Scenario: Removing user from customer
-    When User with username "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
+    When User "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
     Then Response code is "204"
     And Body is empty
-    And User with username "snapUser2" isn't there for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
+    And User "snapUser2" isn't there for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
 
   Scenario: Checking error code for removing user from customer
     When Nonexistent user is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
-    Then Response code is "412"
+    Then Response code is "404"
 
 
   Scenario Outline: Filtering list of users for customer
@@ -60,15 +60,15 @@ Feature: Customers users create update delete
       | customer | other_cu_default_8  | FilterCUDefault8 | FilterCUUser8 | filter_cu_user8@snapshot.travel | +42010111213 | Europe/Prague | sk-SK   |
       | partner  | other_cu_default_9  | FilterCUDefault9 | FilterCUUser9 | filter_cu_user9@snapshot.travel | +42010111213 | Europe/Prague | sk-SK   |
 
-    Given Relation between user with username "filter_cu_default_1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "filter_cu_default_2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
-    Given Relation between user with username "filter_cu_default_3" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
-    Given Relation between user with username "filter_cu_default_4" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
-    Given Relation between user with username "filter_cu_default_5" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
-    Given Relation between user with username "filter_cu_default_6" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
-    Given Relation between user with username "other_cu_default_7" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
-    Given Relation between user with username "other_cu_default_8" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "other_cu_default_9" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "filter_cu_default_1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "filter_cu_default_2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "filter_cu_default_3" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "filter_cu_default_4" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "filter_cu_default_5" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "filter_cu_default_6" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "other_cu_default_7" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
+    Given Relation between user "other_cu_default_8" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "other_cu_default_9" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
 
     When List of users for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"

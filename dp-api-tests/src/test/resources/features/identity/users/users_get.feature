@@ -3,6 +3,7 @@ Feature: Users get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName  | email                    | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 728c45dd-a964-4f78-afe0-88d108c682ed | UserCustomer | userCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -16,7 +17,7 @@ Feature: Users get
 
   @Smoke
   Scenario: Getting user
-    When User with username "default1" is got
+    When User "default1" is got
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -30,7 +31,7 @@ Feature: Users get
     And Body contains entity with attribute "culture" value "cs-CZ"
 
   Scenario: Getting user with etag
-    When User with username "default1" is got with etag
+    When User "default1" is got with etag
     Then Response code is "304"
     And Body is empty
 
@@ -38,7 +39,7 @@ Feature: Users get
 ##  now keykloack-driven, hence some old endpoints may not work
 #  Scenario: Get token for deleted user
 #    Given The password of user "default4" is "Password01"
-#    Given User with userName "default4" is deleted
+#    Given User "default4" is deleted
 #    When Get token for user "default4" with password "Password01"
 #    Then Response code is 401
 #
@@ -54,7 +55,7 @@ Feature: Users get
 #      |          |                  | 401           |
 
   Scenario: Getting user with not current etag
-    When User with username "default1" is got for etag, updated and got with previous etag
+    When User "default1" is got for etag, updated and got with previous etag
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -140,19 +141,19 @@ Feature: Users get
     And Content type is "application/json"
     And There are <returned> users returned
     And Link header is '<link_header>'
-    And Total count is "<total>"
+    And Total count is "64"
 
     Examples:
-      | limit | cursor | returned | total | link_header                                                                                       |
-      | /null |        | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      | /null | /null  | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      |       |        | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      |       | /null  | 50       | 63    | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
-      | 15    |        | 15       | 63    | </identity/users?limit=15&cursor=15>; rel="next"                                                  |
-      |       | 1      | 50       | 63    | </identity/users?limit=50&cursor=51>; rel="next", </identity/users?limit=50&cursor=0>; rel="prev" |
-      | 20    | 0      | 20       | 63    | </identity/users?limit=20&cursor=20>; rel="next"                                                  |
-      | 10    | 0      | 10       | 63    | </identity/users?limit=10&cursor=10>; rel="next"                                                  |
-      | 5     | 10     | 5        | 63    | </identity/users?limit=5&cursor=15>; rel="next", </identity/users?limit=5&cursor=5>; rel="prev"   |
+      | limit | cursor | returned | link_header                                                                                       |
+      | /null |        | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      | /null | /null  | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      |       |        | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      |       | /null  | 50       | </identity/users?limit=50&cursor=50>; rel="next"                                                  |
+      | 15    |        | 15       | </identity/users?limit=15&cursor=15>; rel="next"                                                  |
+      |       | 1      | 50       | </identity/users?limit=50&cursor=0>; rel="prev", </identity/users?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | </identity/users?limit=20&cursor=20>; rel="next"                                                  |
+      | 10    | 0      | 10       | </identity/users?limit=10&cursor=10>; rel="next"                                                  |
+      | 5     | 10     | 5        | </identity/users?limit=5&cursor=5>; rel="prev", </identity/users?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of users
     When List of users is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -222,10 +223,10 @@ Feature: Users get
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  |           | user_name | filter_default_4, filter_default_3, filter_default_2, filter_default_1                   |
       | /null | /null  | 1        | 1     | user_name==filter_default_6                   | /null     | /null     | filter_default_6                                                                         |
       | /null | /null  | 2        | 2     | user_name==other_default_* and culture==sk-SK | user_name | /null     | other_default_8, other_default_9                                                         |
-      | /null | /null  | 1        | 1     | user_type==snapshot                           | /null     | /null     | other_default_9                                                                          |
+      | /null | /null  | 2        | 2     | user_type==snapshot                           | /null     | /null     | defaultSnapshotUser, other_default_9                                                     |
       | /null | /null  | 1        | 1     | email==filter_user4@snapshot.travel           | /null     | /null     | filter_default_4                                                                         |
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |
       | /null | /null  | 1        | 1     | phone==+42010111218                           | /null     | /null     | other_default_7                                                                          |
-      | 5     | /null  | 5        | 13     | is_active=='false'                            | user_name |           | default1, default2, default3, default4, filter_default_1                             |
+      | 5     | /null  | 5        | 14    | is_active=='false'                            | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
       | /null | /null  | 0        | 0     | is_active=='true'                             | user_name |           |                                                                                          |
   #add all fields

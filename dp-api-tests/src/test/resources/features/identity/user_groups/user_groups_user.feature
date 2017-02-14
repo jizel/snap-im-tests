@@ -70,8 +70,8 @@ Feature: User groups user relationship feature
 
   Scenario: Delete nonexistent relationship between User and UserGroup
     When User "snapshotUser1" is removed from userGroup "userGroup_1"
-    Then Response code is 412
-    And Body contains entity with attribute "message" value "Precondition failed: ETag not present."
+    Then Response code is 404
+    And Custom code is 40402
 
   Scenario: Activate relationship userGroup-user
     Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "false"
@@ -100,7 +100,7 @@ Feature: User groups user relationship feature
       When Relation between user group "userGroup_2" and user "snapshotUser1" is got
       Then Response code is 200
 
-  Scenario Outline: Creator of User Group automatically becomes it's member
+  Scenario Outline: Creator of User Group does not automatically become it's member but he can access it - DP-1769
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
       | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
       | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
@@ -109,21 +109,45 @@ Feature: User groups user relationship feature
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
     Then Response code is "201"
     When Relation between user group "userGroup_2" and user "<userName>" is got
-    Then Response code is 200
-    And Body contains entity with attribute "user_id" value "<userId>"
-    And Body contains entity with attribute "is_active" value "true"
-    Examples:
-      | userName     | userType | firstName | lastName | email                        | timezone          | culture | userId                                |
-      | userGuest    | guest    | FNU2      | LNU2     | userGuest@snapshot.travel    | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
-      | userPartner1 | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
-      | snaphostUser2| snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel| Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
-
-  Scenario: Snapshot type user - Creator of User Group won't automatically become
-    When Relation between user group "userGroup_1" and user "snapshotUser1" is got
     Then Response code is 404
-    And Custom code is 40402
-#    Use correct msg when DP-1581 is fixed and it's clear what msg should be used
-    And Body contains entity with attribute "message" value "Current msg is wrong - DP-1581"
+    When User group "userGroup_2" is requested by user "<userName>"
+    Then Response code is "200"
+    When List of user groups is got with limit "/null" and cursor "/null" and filter "/null" and sort "/null" and sort_desc "/null" by user "<userName>"
+    Then Response code is "200"
+    And There are "1" user groups returned
+    Examples:
+      | userName      | userType | firstName | lastName | email                         | timezone          | culture | userId                                |
+      | userPartner1  | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userGuest     | guest    | FNU2      | LNU2     | userGuest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
+      | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userCustomer1 | customer | FNU4      | LNU4     | userCustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
+
+  Scenario Outline: Creator of User Group does not automatically become it's member but he can see all of it's members - DP-1769
+    Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
+      | userType   | userName | firstName | lastName | email                   | timezone          | culture |
+      | guest      | member1  | FNU5      | LNU5     | member1@snapshot.travel | America/New_York  | en-US   |
+      | customer   | member2  | FNU6      | LNU6     | member2@snapshot.travel | America/New_York  | en-US   |
+    Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
+      | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
+      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
+    Given The following user group is created by user "<userName>"
+      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
+    Then Response code is "201"
+    Given User "member1" is added to userGroup "userGroup_2"
+    Given User "member2" is added to userGroup "userGroup_2"
+    When List of all users for user group "userGroup_2" is requested by user "<userName>"
+    Then Response code is 200
+    And Total count is "2"
+    When Relation between user group "userGroup_2" and user "member1" is requested by user "<userName>"
+    Then Response code is 200
+    Examples:
+      | userName      | userType | firstName | lastName | email                         | timezone          | culture | userId                                |
+      | userPartner1  | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userGuest     | guest    | FNU2      | LNU2     | userGuest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
+      | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userCustomer1 | customer | FNU4      | LNU4     | userCustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
+
 
   Scenario Outline: Send POST request with empty body to all user groups endpoints
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"

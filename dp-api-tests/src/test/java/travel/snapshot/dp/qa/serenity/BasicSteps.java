@@ -1,19 +1,5 @@
 package travel.snapshot.dp.qa.serenity;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.isOneOf;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +36,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -101,6 +93,8 @@ public class BasicSteps {
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
     protected RequestSpecification spec = null;
+    public static final String REQUESTOR_ID = "requestorId";
+    public static final String TARGET_ID = "targetId";
 
     public BasicSteps() {
 
@@ -331,6 +325,9 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
+        else {
+            requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
+        }
         Response response = requestSpecification.when().delete("/{id}", entityId);
         setSessionResponse(response);
         return response;
@@ -423,6 +420,9 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
+        else {
+            requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
+        }
         if (isNotBlank(userId)) {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
@@ -438,7 +438,7 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        return requestSpecification.body(object).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+        return requestSpecification.body(object).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
@@ -601,6 +601,26 @@ public class BasicSteps {
 
     protected Response getSecondLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         return getSecondLevelEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, firstLevelId, secondLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getThirdLevelEntitiesByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        return getThirdLevelEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, firstLevelId, secondLevelObjectName, secondLevelId, thirdLevelObjectName, limit, cursor, filter, sort, sortDesc, queryParams);
+    }
+
+    protected Response getThirdLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        if (isBlank(userId)){
+            fail("User ID to be send in request header is null.");
+        }
+        if (isBlank(appId)){
+            fail("Application ID to be send in request header is null.");
+        }
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, appId);
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
+        requestSpecification.parameters(params);
+
+        return requestSpecification.when().get("{firstId}/{secondLevelName}/{secondId}/{thirdLevelName}", firstLevelId, secondLevelObjectName, secondLevelId, thirdLevelObjectName);
+
     }
 
     protected Response getSecondLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {

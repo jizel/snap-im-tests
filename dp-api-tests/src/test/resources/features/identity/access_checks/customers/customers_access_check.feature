@@ -91,8 +91,8 @@ Feature: Customers access check feature - GET
          | 23445678-0000-4000-a000-000000000000 | Company 3   | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
          | 34545678-0000-4000-a000-000000000000 | Company 4   | c4@tenants.biz | salesforceid_4 | CZ10000004 | false          | +420987654321 | http://www.snapshot.travel | Europe/Prague |
          | 45645678-0000-4000-a000-000000000000 | Company 5   | c5@tenants.biz | salesforceid_5 | CZ10000005 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
-       Given Relation between user with username "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
-       Given Relation between user with username "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
+       Given Relation between user "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
+       Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
        When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1"
        Then Response code is "200"
        And There are <returned> customers returned
@@ -132,6 +132,7 @@ Feature: Customers access check feature - GET
     When Customer with customer id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
     Then Response code is 204
     And Body is empty
+    And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist
 
   Scenario: Deleting Customer by user without access to it
     When Customer with customer id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust2"

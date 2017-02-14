@@ -1,10 +1,5 @@
 package travel.snapshot.dp.qa.serenity.roles;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -15,10 +10,15 @@ import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class RoleBaseSteps extends BasicSteps {
@@ -83,11 +83,6 @@ public class RoleBaseSteps extends BasicSteps {
 
     }
 
-
-    private Response deleteRole(String id) {
-        return given().spec(spec).when().delete("/{id}", id);
-    }
-
     private Response getRole(String id, String etag) {
         return getEntity(id, etag);
     }
@@ -95,7 +90,7 @@ public class RoleBaseSteps extends BasicSteps {
     public RoleDto getRoleByNameForApplicationInternal(String name, String applicationId) {
         String filter = String.format("name=='%s' and application_id=='%s'", name, applicationId);
         RoleDto[] roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(RoleDto[].class);
-        return Arrays.asList(roles).stream().findFirst().orElse(null);
+        return stream(roles).findFirst().orElse(null);
     }
 
     public RoleDto getRoleByNameForApplicationInternalUsingCustomerRole(String name, String applicationId) {
@@ -127,24 +122,11 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public void deleteRoleWithId(String roleId) {
-        Response resp = deleteRole(roleId);
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void deleteRoleWithNameForApplication(String name, String applicationId) {
-        RoleDto r = getRoleByNameForApplicationInternal(name, applicationId);
-
-        if (r == null) {
-            return;
-        }
-
-        String roleId = r.getRoleId();
-        Response resp = deleteRole(roleId);
-
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-        Serenity.setSessionVariable(SESSION_ROLE_ID).to(roleId);
+    public Response deleteRole(String roleId) {
+        Response response = deleteEntityWithEtag(roleId);
+        setSessionResponse(response);
+        setSessionVariable(SESSION_ROLE_ID, roleId);
+        return response;
     }
 
     @Step

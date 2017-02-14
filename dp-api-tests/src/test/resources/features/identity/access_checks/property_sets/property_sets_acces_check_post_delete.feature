@@ -40,13 +40,12 @@ Feature: Property sets access check feature - POST and DELETE
     When Property set "ps1_name" is requested by user "userWithPropSet"
     Then Response code is "200"
 
-#  DP-1683
   Scenario: Deleting Property set by user who can access it
     When Property set "ps1_name" is deleted by user "userWithPropSet"
     Then Response code is "204"
     And Body is empty
     And Property set with same id doesn't exist
-#  DP-1683
+
   Scenario: Deleting Property set by user without access to it
     When Property set "ps1_name" is deleted by user "userWithNoPropSet"
     Then Response code is "404"

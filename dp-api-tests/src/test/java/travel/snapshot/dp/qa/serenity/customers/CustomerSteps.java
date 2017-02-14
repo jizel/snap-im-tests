@@ -559,9 +559,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void userDoesntExistForCustomer(UserDto user, String customerId) {
-        CustomerDto customer = getCustomerById(customerId);
-        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(customer.getCustomerId(), user.getUserId());
+    public void userDoesntExistForCustomer(String userId, String customerId) {
+        CustomerUserRelationshipDto userForCustomer = getUserForCustomer(customerId, userId);
         assertNull("User should not be present in customer", userForCustomer);
     }
 
@@ -648,7 +647,7 @@ public class CustomerSteps extends BasicSteps {
         }
     }
 
-    public void relationExistsBetweenUserAndCustomerIsDeleted(String userId, String customerId) {
+    public void relationBetweenUserAndCustomerIsDeleted(String userId, String customerId) {
         Response resp = deleteSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(resp);
     }
@@ -670,6 +669,10 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(secondUpdate);
     }
 
+    public void getCustomerUserRelationByUser(String requestorId, String customerId, String targetUserId) {
+        Response response = getSecondLevelEntityByUser( requestorId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null);
+        setSessionResponse(response);
+    }
     /*public void checkCustomerActivity(String customerId, boolean activity) {
         CustomerDto customer = getEntity(customerId).as(CustomerDto.class);
         assertEquals(customer.getIsActive(), activity);

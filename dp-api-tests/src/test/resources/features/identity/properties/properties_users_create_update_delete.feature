@@ -21,7 +21,7 @@ Feature: Properties users create update delete
 
   @Smoke
   Scenario: Adding user to property
-    When User with username "default3" is added to property with code "p2_code"
+    When User "default3" is added to property with code "p2_code"
     Then Response code is "201"
 
   Scenario: Updating User - Property relationship
@@ -38,15 +38,15 @@ Feature: Properties users create update delete
 
   @Smoke
   Scenario: Removing user from property
-    When User with username "default2" is removed from property with code "p1_code"
+    When User "default2" is removed from property with code "p1_code"
     Then Response code is "204"
     And Body is empty
-    And User with username "default2" isn't there for property with code "p1_code"
+    And User "default2" isn't there for property with code "p1_code"
 
 
   Scenario: Checking error code for removing user from property
     When Nonexistent user is removed from property with code "p1_code"
-    Then Response code is "204"
+    Then Response code is "404"
 
   Scenario Outline: Filtering list of users for property
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -61,12 +61,12 @@ Feature: Properties users create update delete
       | customer | other_cu_default_8  | FilterPUDefault8 | FilterPUUser8 | filter_pu_user8@snapshot.travel | +42010111213 | Europe/Prague | sk-SK   |
       | snapshot | other_cu_default_9  | FilterPUDefault9 | FilterPUUser9 | filter_pu_user9@snapshot.travel | +42010111213 | Europe/Prague | sk-SK   |
 
-    Given Relation between user with username "filter_pu_default_1" and property with code "p1_code" exists
-    Given Relation between user with username "filter_pu_default_2" and property with code "p1_code" exists
-    Given Relation between user with username "filter_pu_default_3" and property with code "p1_code" exists
-    Given Relation between user with username "filter_pu_default_4" and property with code "p1_code" exists
-    Given Relation between user with username "filter_pu_default_5" and property with code "p1_code" exists
-    Given Relation between user with username "filter_pu_default_6" and property with code "p1_code" exists
+    Given Relation between user "filter_pu_default_1" and property with code "p1_code" exists
+    Given Relation between user "filter_pu_default_2" and property with code "p1_code" exists
+    Given Relation between user "filter_pu_default_3" and property with code "p1_code" exists
+    Given Relation between user "filter_pu_default_4" and property with code "p1_code" exists
+    Given Relation between user "filter_pu_default_5" and property with code "p1_code" exists
+    Given Relation between user "filter_pu_default_6" and property with code "p1_code" exists
 
     When List of users for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -92,8 +92,8 @@ Feature: Properties users create update delete
 
 
   Scenario: Duplicate adding of user to property fails with correct error - DP-1661
-    When User with username "default3" is added to property with code "p2_code"
+    When User "default3" is added to property with code "p2_code"
     Then Response code is "201"
-    When User with username "default3" is added to property with code "p2_code"
+    When User "default3" is added to property with code "p2_code"
     Then Response code is "409"
     And Custom code is 40902

@@ -3,6 +3,7 @@ Feature: Api subscription get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
@@ -97,7 +98,7 @@ Feature: Api subscription get
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "6d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1  | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz  | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2  | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz  | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |

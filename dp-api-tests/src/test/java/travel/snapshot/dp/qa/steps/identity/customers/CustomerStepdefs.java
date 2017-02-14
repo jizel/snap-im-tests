@@ -5,6 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -41,6 +43,7 @@ import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -96,12 +99,11 @@ public class CustomerStepdefs {
         customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(property, customerId, type, validFrom, validTo);
     }
 
-    @Given("^Relation between user with username \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
+    @Given("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
     public void Relation_between_user_with_username_and_customer_with_id_exists_with_isPrimary(String username,
                                                                                                  String customerId, Boolean isPrimary) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(user.getUserId(), customerId, isPrimary);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(userId, customerId, isPrimary);
     }
 
     // ---------------------------- WHEN ------------------------------
@@ -246,12 +248,11 @@ public class CustomerStepdefs {
         customerSteps.setSessionResponse(response);
     }
 
-    @When("^User with username \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_customer_with_id(String username, String customerId)
             throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.userIsDeletedFromCustomer(user.getUserId(), customerId);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.userIsDeletedFromCustomer(userId, customerId);
     }
 
 
@@ -335,8 +336,10 @@ public class CustomerStepdefs {
     }
 
     @When("^Relation between user with username \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
-    public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String userId, String customerId) throws Throwable {
-        customerSteps.relationExistsBetweenUserAndCustomerIsDeleted(userId, customerId);
+    public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String username, String customerId) throws Throwable {
+        UserDto user = usersSteps.getUserByUsername(username);
+        assertThat(user, is(notNullValue()));
+        customerSteps.relationBetweenUserAndCustomerIsDeleted(user.getUserId(), customerId);
     }
 
     @When("^Customer with customerId \"([^\"]*)\" is got$")
@@ -472,11 +475,16 @@ public class CustomerStepdefs {
         customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, count);
     }
 
-    @Then("^User with username \"([^\"]*)\" isn't there for customer with id \"([^\"]*)\"$")
+    @Then("^There are (\\d+) customerUsers returned$")
+    public void There_are_returned_customerUsers_returned(int count) throws Throwable {
+        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipDto.class, count);
+    }
+
+    @Then("^User \"([^\"]*)\" isn't there for customer with id \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_customer_with_code(String username, String customerId)
             throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        customerSteps.userDoesntExistForCustomer(user, customerId);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.userDoesntExistForCustomer(userId, customerId);
     }
 
     @Then("^\"([^\"]*)\" header is set and contains the same customerProperty$")
@@ -594,5 +602,11 @@ public class CustomerStepdefs {
         customer.setAddress(addresses.get(0));
 
         customerSteps.followingCustomerIsCreated(customer);
+    }
+
+    @When("^Relation between customer \"([^\"]*)\" and user \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
+    public void relationBetweenCustomerAndUserWithUsernameIsRequestedByUserWithUsername(String customerId, String targetUserName, String requestorUserName) throws Throwable {
+        Map<String, String> userIdsMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
+        customerSteps.getCustomerUserRelationByUser(userIdsMap.get(REQUESTOR_ID), customerId, userIdsMap.get(TARGET_ID));
     }
 }

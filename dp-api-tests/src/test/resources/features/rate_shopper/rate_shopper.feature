@@ -2,6 +2,10 @@ Feature: Rate shopper
 
 # GET /rate_shopper/analytics/market
 
+#  Background:
+#    Given Database is cleaned
+#    Given Default Snapshot user is created
+
   Scenario Outline: Checking error codes for missing parameters
     When Getting BAR values for a given market for "<propertyId>" since "<since>" until "<until>"
     Then Response code is "400"
@@ -16,6 +20,7 @@ Feature: Rate shopper
 
   Scenario Outline: Checking correct currency parameter returned for market
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -41,7 +46,7 @@ Feature: Rate shopper
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-    And The following properties exist with random address and billing address
+    And The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
       | propertyId                           | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 3     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
 
@@ -77,6 +82,7 @@ Feature: Rate shopper
 
   Scenario Outline: Checking correct currency parameter returned for property
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |

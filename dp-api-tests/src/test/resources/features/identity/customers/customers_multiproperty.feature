@@ -3,6 +3,7 @@ Feature: Customers multiproperty
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -24,7 +25,7 @@ Feature: Customers multiproperty
     Given The password of user "random" is "Password01"
 
     #Even though user "snapshot" do not have relation with customer he should have access to all property sets
-    #Given Relation between user with username "snapshot" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with isPrimary "true"
+    #Given Relation between user "snapshot" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with isPrimary "true"
 
     Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" and user "everything"
       | propertySetName | propertySetDescription | propertySetType |
@@ -51,24 +52,24 @@ Feature: Customers multiproperty
   Scenario Outline: Accessing customer's property_sets with everything user with each property in just one ps
   Property set 1 and property set 2 properties are disjuncted, everything user has access just for properties from ps1
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" exists
 
-    Given Relation between property with code "p5_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p6_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p5_code" and property set with name "ps2_name" exists
+    Given Relation between property with code "p6_code" and property set with name "ps2_name" exists
 
       #user everything should get properties from ps1
       #limited should get only property set 2
       #random user has no access to properties
-    Given Relation between user with username "everything" and property with code "p1_code" exists
-    Given Relation between user with username "everything" and property with code "p2_code" exists
-    Given Relation between user with username "everything" and property with code "p3_code" exists
-    Given Relation between user with username "everything" and property with code "p4_code" exists
+    Given Relation between user "everything" and property with code "p1_code" exists
+    Given Relation between user "everything" and property with code "p2_code" exists
+    Given Relation between user "everything" and property with code "p3_code" exists
+    Given Relation between user "everything" and property with code "p4_code" exists
 
-    Given Relation between user with username "limited" and property with code "p5_code" exists
-    Given Relation between user with username "limited" and property with code "p6_code" exists
+    Given Relation between user "limited" and property with code "p5_code" exists
+    Given Relation between user "limited" and property with code "p6_code" exists
 
     Given Get token for user "<username>" with password "<password>"
     When List of property sets for customer "a792d2b2-3836-4207-a705-42bbecf3d881" is got with limit "100" and cursor "0" and filter "/null" and sort "<order>" and sort_desc "/null"
@@ -89,24 +90,24 @@ Feature: Customers multiproperty
   Scenario Outline: Accessing customer's property_sets with everything user with one property in both sets
   There are same properties in property set 1 and 2, everything user has access to all properties, both property sets should be returned
 
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p2_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p3_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p4_code" and property set with name "ps1_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p3_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p4_code" and property set with name "ps1_name" exists
 
-    Given Relation between property with code "p1_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
-    Given Relation between property with code "p2_code" and property set with name "ps2_name" for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists
+    Given Relation between property with code "p1_code" and property set with name "ps2_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps2_name" exists
 
     #user everything should get both property sets
     #user limited should get only one property set
     #user random should get 0 property sets
-    Given Relation between user with username "everything" and property with code "p1_code" exists
-    Given Relation between user with username "everything" and property with code "p2_code" exists
-    Given Relation between user with username "everything" and property with code "p3_code" exists
-    Given Relation between user with username "everything" and property with code "p4_code" exists
+    Given Relation between user "everything" and property with code "p1_code" exists
+    Given Relation between user "everything" and property with code "p2_code" exists
+    Given Relation between user "everything" and property with code "p3_code" exists
+    Given Relation between user "everything" and property with code "p4_code" exists
 
-    Given Relation between user with username "limited" and property with code "p1_code" exists
-    Given Relation between user with username "limited" and property with code "p2_code" exists
+    Given Relation between user "limited" and property with code "p1_code" exists
+    Given Relation between user "limited" and property with code "p2_code" exists
 
     Given Get token for user "<username>" with password "<password>"
 

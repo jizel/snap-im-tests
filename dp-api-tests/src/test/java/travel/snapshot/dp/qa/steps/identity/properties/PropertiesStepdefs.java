@@ -1,9 +1,5 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
@@ -12,19 +8,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
@@ -35,6 +19,10 @@ import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -60,13 +48,12 @@ public class PropertiesStepdefs {
     // Help methods
 
     public Map<String, String> getValidUserPropertyIdsFromNameAndCode(String username, String propertyCode) {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat("User " + username + " is null", user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(username);
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         assertThat("Property with code " + propertyCode + " is null", property, is(notNullValue()));
 
         Map<String, String> userPropertyIds = new HashMap<>();
-        userPropertyIds.put(USER_ID, user.getUserId());
+        userPropertyIds.put(USER_ID, userId);
         userPropertyIds.put(PROPERTY_ID, property.getPropertyId());
         return userPropertyIds;
     }
@@ -79,12 +66,18 @@ public class PropertiesStepdefs {
         propertySteps.followingPropertiesExist(properties, userId);
     }
 
+
+    @Given("^The following properties exist with random address and billing address$")
+    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddress(List<PropertyCreateDto> properties) throws Throwable {
+        propertySteps.followingPropertiesExist(properties, usersSteps.DEFAULT_SNAPSHOT_USER_ID);
+    }
+
     @Given("^All users are removed for properties with codes: (.*)$")
     public void All_users_are_removed_for_properties_with_codes(List<String> propertyCodes) throws Throwable {
         propertySteps.removeAllUsersFromPropertiesWithCodes(propertyCodes);
     }
 
-    @Given("^Relation between user with username \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
+    @Given("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
     public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
 
@@ -185,20 +178,20 @@ public class PropertiesStepdefs {
         propertySteps.deleteProperty("nonexistent_id");
     }
 
-    @When("^User with username \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
     public void User_with_username_is_added_to_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        propertySteps.userIsAddedToProperty(u, propertyCode);
+        String userId = usersSteps.resolveUserId(username);
+        propertySteps.userIsAddedToProperty(userId, propertyCode);
     }
 
-    @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
     public void User_with_username_is_removed_from_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        propertySteps.userIsDeletedFromProperty(user.getUserId(), propertyCode);
+        String userId = usersSteps.resolveUserId(username);
+        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
+        propertySteps.userIsDeletedFromProperty(userId, property.getPropertyId());
     }
 
-    @When("^User with username \"([^\"]*)\" is removed from property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void userWithUsernameIsRemovedFromPropertyWithCodeByUser(String username, String propertyCode, String performerName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         UserDto performer = usersSteps.getUserByUsername(performerName);
@@ -290,10 +283,10 @@ public class PropertiesStepdefs {
         propertySteps.propertyIdInSessionDoesntExist();
     }
 
-    @Then("^User with username \"([^\"]*)\" isn't there for property with code \"([^\"]*)\"$")
+    @Then("^User \"([^\"]*)\" isn't there for property with code \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_property_with_code(String username, String propertyCode) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        propertySteps.userDoesntExistForProperty(u, propertyCode);
+        String userId = usersSteps.resolveUserId(username);
+        propertySteps.userDoesntExistForProperty(userId, propertyCode);
     }
 
     @Then("^There are property users with following usernames returned in order: (.*)$")

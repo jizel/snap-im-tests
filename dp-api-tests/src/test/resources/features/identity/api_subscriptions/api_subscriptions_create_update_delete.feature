@@ -98,8 +98,8 @@ Feature: Api subscription create update delete
 
   Scenario: Delete non-existing api subscription
     When Api subscription with id "non-existing-api-subscription" is deleted
-    Then Response code is 204
-    And  Body is empty
+    Then Response code is 404
+    And Custom code is 40402
 
 
   Scenario Outline: Create api subscription with invalid data

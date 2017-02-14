@@ -28,7 +28,6 @@ Feature: Customers properties get
     Given The password of user "snapshotUser" is "Password01"
     Given Get token for user "snapshotUser" with password "Password01"
 
-  # DP-1722
   @Smoke
   Scenario: Getting customerProperty
     When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "CHAIN"
@@ -47,7 +46,6 @@ Feature: Customers properties get
     Then Response code is "304"
     And Body is empty
 
-  # DP-1722
   Scenario: Getting customerProperty with not current etag
   CustomerProperty is got, etag is saved to tmp, then customerProperty valid_to is updated to "2016-12-31" so etag should change and is got again with previous etag
     When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "chain" for etag, updated and got with previous etag
@@ -155,7 +153,6 @@ Feature: Customers properties get
       | 10    | 0      | 10       |
       | 5     | 5      | 5        |
 
-  # DP-1722
   @Bug
   Scenario Outline: Checking error codes for getting list of customerProperties
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -224,13 +221,15 @@ Feature: Customers properties get
     And There are <returned> customerProperties returned
     And Total count is "<total>"
     Examples:
-      | limit | cursor | returned | total | filter               | sort  | sort_desc |
-      | 5     | 0      | 5        | 11     | /null                | /null |           |
-      | 5     | 2      | 5        | 11     | /null                | /null |           |
-      | 5     | 4      | 5        | 11     | /null                | /null |           |
-      | 10    | 0      | 10       | 11     | /null                | /null |           |
-      | 10    | 0      | 10       | 11     | /null                | /null |           |
-      | 5     | 2      | 4        | 6      | valid_from<2015-06-15|       | valid_to  |
+      | limit | cursor | returned | total  | filter                   | sort  | sort_desc |
+      | 5     | 0      | 5        | 11     | /null                    | /null |           |
+      | 5     | 2      | 5        | 11     | /null                    | /null |           |
+      | 5     | 4      | 5        | 11     | /null                    | /null |           |
+      | 10    | 0      | 10       | 11     | /null                    | /null |           |
+      | 10    | 0      | 10       | 11     | /null                    | /null |           |
+      | 5     | 2      | 4        | 6      | valid_from<2015-06-15    |       | valid_to  |
+# DP-1722
+      | 5     | 0      | 5        | 8      | relationship_type==chain | /null |           |
   #add all fields
 
     #TODO add test for wrong parameters in url
@@ -251,12 +250,12 @@ Feature: Customers properties get
   Scenario: Relation between user and customer does not exist
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
-    When Relation between user with username "b63edcc6-6830-457c-89b1-7801730bd0ae" and customer "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
+    When Relation between user "b63edcc6-6830-457c-89b1-7801730bd0ae" and customer "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
     Then Response code is 404
 
   Scenario: No relation between user and property, 0 properties visible for user
-    Given Relation between user with username "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
@@ -264,8 +263,8 @@ Feature: Customers properties get
     And Total count is "0"
 
   Scenario: Relation between user and property, 3 property visible for user
-    Given Relation between user with username "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "custProp1" and property with code "p1_code" exists
+    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "custProp1" and property with code "p1_code" exists
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
@@ -273,10 +272,10 @@ Feature: Customers properties get
     And Total count is "3"
 
   Scenario: Relation between user and all properties, 4 properties visible for user
-    Given Relation between user with username "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user with username "custProp1" and property with code "p1_code" exists
-    Given Relation between user with username "custProp1" and property with code "p2_code" exists
-    Given Relation between user with username "custProp1" and property with code "p3_code" exists
+    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
+    Given Relation between user "custProp1" and property with code "p1_code" exists
+    Given Relation between user "custProp1" and property with code "p2_code" exists
+    Given Relation between user "custProp1" and property with code "p3_code" exists
     Given The password of user "custProp1" is "Password01"
     Given Get token for user "custProp1" with password "Password01"
     When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""

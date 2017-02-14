@@ -42,7 +42,7 @@ For manually created property code the following rules hold
       | 2初ぞあ Japan            |
 
     # DP-1222 Fixed only in master branch
-    Scenario Outline: Correct customer code is returned according to customers address
+    Scenario Outline: Correct property code is returned according to customers address
       Given Property "<propertyName>" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
         | addressLine1   | city   | zipCode   | country   |
         | <addressLine1> | <city> | <zipCode> | <country> |
@@ -89,7 +89,8 @@ For manually created property code the following rules hold
       | ليونيكود     |
 
 
-    Scenario: Property code does not have to be unique
+
+    Scenario: Property code has to be unique
       When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
         | propertyCode   | propertyName | email              | isDemoProperty | timezone      | anchorCustomerId                     |
         | nonunique      | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -97,7 +98,8 @@ For manually created property code the following rules hold
       When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
         | propertyCode   | propertyName | email              | isDemoProperty | timezone      | anchorCustomerId                     |
         | nonunique      | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-      Then Body contains entity with attribute "property_code" value "nonunique"
+      Then Response code is "409"
+      And Custom code is 40912
 
 
     Scenario: Maximum property code length is 50 characters
@@ -119,6 +121,7 @@ For manually created property code the following rules hold
          | line 1       | Brno | 60200   | CZ      |
        Then Response code is "201"
        Then Body contains entity with attribute "property_code" value "CZBRQBRN"
+#     DP-1790
        When Property with code "CZBRQBRN" is updated with data
          | propertyCode |
          | updated_code |
@@ -132,4 +135,3 @@ For manually created property code the following rules hold
        When Property "Brno Hilton" is requested
 #           The code was not changed (re-generated) by address update
        Then Body contains entity with attribute "property_code" value "updated_code"
-
