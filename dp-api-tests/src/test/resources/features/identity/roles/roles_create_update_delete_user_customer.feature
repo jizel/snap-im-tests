@@ -2,8 +2,8 @@
 Feature: Roles create update delete user customer
 
   Background:
-    Given Switch for user customer role tests
     Given Database is cleaned
+    Given Switch for user customer role tests
     Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
@@ -16,9 +16,6 @@ Feature: Roles create update delete user customer
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
-#    Given The following roles don't exist
-#      | applicationId                        | roleName          |
-#      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Updated role name |
 
   @Smoke
   Scenario: Creating role
@@ -38,12 +35,12 @@ Feature: Roles create update delete user customer
     And Custom code is "<custom_code>"
     Examples:
       | json_input_file                                                    | method | module   | url                           | error_code | custom_code |
-      | /messages/identity/roles/create_role_missing_application_id.json   | POST   | identity | /identity/user_customer_roles | 422        | 53          |
-      | /messages/identity/roles/create_role_missing_role_name.json        | POST   | identity | /identity/user_customer_roles | 422        | 53          |
-      | /messages/identity/roles/create_role_not_existing_application.json | POST   | identity | /identity/user_customer_roles | 422        | 63          |
-      | /messages/identity/roles/create_role_not_recognized_field.json     | POST   | identity | /identity/user_customer_roles | 422        | 56          |
-      | /messages/identity/roles/create_role_not_unique_role_name.json     | POST   | identity | /identity/user_customer_roles | 422        | 62          |
-      | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/user_customer_roles | 422        | 51          |
+      | /messages/identity/roles/create_role_missing_application_id.json   | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_missing_role_name.json        | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_existing_application.json | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_recognized_field.json     | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_unique_role_name.json     | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
+      | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/user_customer_roles | 400        | 40001       |
 
 
   @Smoke
@@ -58,7 +55,7 @@ Feature: Roles create update delete user customer
     When Nonexistent role id is deleted
     Then Response code is "404"
 
-
+#  DP-1793
   Scenario Outline: Updating role
     When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
       | applicationId   | roleName           | description       |
@@ -66,22 +63,22 @@ Feature: Roles create update delete user customer
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated role with name "<updated_roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" has data
-      | applicationId   | roleName           | description       |
+    And Updated role with name "<updated_roleName>" has data
+      | applicationId   | roleName           | description   |
       | <applicationId> | <updated_roleName> | <description> |
     Examples:
-      | applicationId | roleName    | updated_roleName  | description                    |
-      |               | Role name 1 | Updated role name |                                |
-      |               | Role name 1 | Updated role name | Updated optional description   |
-      |               | Role name 1 | Role name 1       | Updated optional description 1 |
+      | applicationId                        | roleName    | updated_roleName  | description                    |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | Updated role name |                                |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | Updated role name | Updated optional description   |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | Role name 1       | Updated optional description 1 |
 
 
   Scenario: Updating role with outdated etag
-    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data if updated before
-      | applicationId | roleName          | description |
-      |               | Updated role name |             |
+    When Role with name "Role name 1" is updated with data if updated before
+      | roleName          | description |
+      | Updated role name |             |
     Then Response code is "412"
-    And Custom code is "57"
+    And Custom code is "41202"
 
 
   Scenario Outline: Updating with invalid data
@@ -91,9 +88,10 @@ Feature: Roles create update delete user customer
     Then Response code is "<responseCode>"
     And Custom code is "<customCode>"
     Examples:
-      | applicationId                        | updated_applicationId | roleName    | updated_roleName | updated_description | responseCode | customCode |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 |                       | Role name 3 | Role name 2      |                     | 400          | 40002      |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | NonExistent           | Role name 3 |                  |                     | 400          | 40002      |
+      | applicationId                        | updated_applicationId                | roleName    | updated_roleName | updated_description | responseCode | customCode |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | a000111a-a05d-42d8-8e84-42e904ace123 | Role name 3 | Role name 5      |                     | 422          | 42202      |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | nonUUID                              | Role name 3 | Role name 5      |                     | 422          | 42201      |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 |                  | empty name          | 422          | 42201      |
 
   Scenario Outline: Send POST request with empty body to all user customer roles endpoints
     Given The following roles exist
