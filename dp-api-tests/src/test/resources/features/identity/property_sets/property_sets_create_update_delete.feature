@@ -98,3 +98,14 @@ Feature: Property sets create update delete
 #      Fail because of DP-1578
       | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/users/5d829079-48f0-4f00-9bec-e2329a8bdaac        |
       | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/properties/                                       |
+
+  Scenario: Parent-child relationship should not contain loops - DP-1395
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
+      | propertySetName | propertySetType | parentId                             | propertySetId                        |
+      | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | 000111b0-69bf-4c57-91bd-30230d2c1bd0 |
+      | childPS2        | brand           | 000111b0-69bf-4c57-91bd-30230d2c1bd0 | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
+    When Property set "ps1_name" is updated with following data
+      | parentId                             |
+      | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
+    Then Response code is "409"
+    Then Custom code is 40911
