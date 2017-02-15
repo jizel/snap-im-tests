@@ -1,20 +1,21 @@
 package travel.snapshot.dp.qa.serenity.commercial_subscription;
 
-import static org.junit.Assert.*;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
-import org.junit.Assert;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Arrays.stream;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CommercialSubscriptionSteps extends BasicSteps {
 
@@ -134,11 +135,11 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     public CommercialSubscriptionDto getSubscriptionById(String commSubscriptionId) {
         CommercialSubscriptionDto[] comSubscription = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
                 "commercial_subscription_id==" + commSubscriptionId, null, null, null).as(CommercialSubscriptionDto[].class);
-        return Arrays.asList(comSubscription).stream().findFirst().orElse(null);
+        return stream(comSubscription).findFirst().orElse(null);
     }
 
-    public void checkIsActive(String commSubscriptionId, int isActive) {
+    public void checkIsActive(String commSubscriptionId, boolean isActive) {
         CommercialSubscriptionDto comSub = getSubscriptionById(commSubscriptionId);
-        Assert.assertEquals(comSub.getIsActive(), isActive);
+        assertEquals(comSub.getIsActive(), isActive);
     }
 }
