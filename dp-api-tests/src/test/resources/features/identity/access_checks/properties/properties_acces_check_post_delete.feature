@@ -24,10 +24,10 @@ Feature: Properties access check feature - POST and DELETE
 
   Scenario: User with access updates property
     When Property with code "p1_code" is updated with data by user "userWithProp"
-      | salesforceId   | propertyName | propertyCode | website                  | email            | isDemoProperty |
-      | updated_sf_id  | updated_name | updated_code | https://www.upddated.com | updated@email.cz | false          |
+      | salesforceId   | propertyName | website                  | email            | isDemoProperty |
+      | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
     Then Response code is "204"
-    When Property with code "updated_code" is requested by user "userWithProp"
+    When Property with code "p1_code" is requested by user "userWithProp"
     Then Response code is "200"
     And Body contains entity with attribute "name" value "updated_name"
     And Body contains entity with attribute "salesforce_id" value "updated_sf_id"
@@ -37,8 +37,8 @@ Feature: Properties access check feature - POST and DELETE
 
   Scenario: User without access tries to update property
     When Property with code "p1_code" is updated with data by user "userWithNoProp"
-      | salesforceId   | propertyName | propertyCode | website                  | email            | isDemoProperty |
-      | updated_sf_id  | updated_name | updated_code | https://www.upddated.com | updated@email.cz | false          |
+      | salesforceId   | propertyName | website                  | email            | isDemoProperty |
+      | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
     Then Response code is "404"
     When Property with code "p1_code" is requested by user "userWithProp"
     Then Response code is "200"
