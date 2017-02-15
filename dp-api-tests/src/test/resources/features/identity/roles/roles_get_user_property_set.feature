@@ -25,15 +25,14 @@ Feature: Roles get user property set
     And Etag header is present
     And Body contains entity with attribute "role_id"
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-    And Body contains entity with attribute "role_description" value "optional description 1"
+    And Body contains entity with attribute "description" value "optional description 1"
     And Body contains entity with attribute "name" value "Role name 1"
     And Body doesn't contain entity with attribute "non_existent"
 
 
   Scenario: Getting role with etag
     When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
-    Then Response code is "304"
-    And Body is empty
+    Then Response code is "200"
 
 
   Scenario: Getting role with expired etag
@@ -42,19 +41,19 @@ Feature: Roles get user property set
     #   3. vat_id update changes etag
     #   4. previously stored (expired) tag is tested
 
-    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got for etag, forced new etag through update
+    When Role with name "Role name 1" is got for etag, forced new etag through update
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-    And Body contains entity with attribute "role_description" value "updated because of etag"
+    And Body contains entity with attribute "description" value "updated because of etag"
     And Body contains entity with attribute "name" value "Role name 1"
 
 
   Scenario: Checking error code for nonexistent role
     When Nonexistent role id got
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
 
   Scenario Outline: Getting list of roles
@@ -168,6 +167,7 @@ Feature: Roles get user property set
       | invalid field  in sort      | 10    | 0      | /null       | role_n | /null     | 400           | 40002       |
       | invalid field  in sort_desc | 10    | 0      | /null       | /null  | aaa       | 400           | 40002       |
 
+ #  DP-1753
   Scenario Outline: Filtering list of roles
     Given The following roles exist
       | applicationId                        | roleName           | description             |

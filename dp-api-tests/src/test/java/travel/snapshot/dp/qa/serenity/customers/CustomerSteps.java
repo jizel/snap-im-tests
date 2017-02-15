@@ -1,16 +1,5 @@
 package travel.snapshot.dp.qa.serenity.customers;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
@@ -18,17 +7,7 @@ import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.DateUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -36,11 +15,14 @@ import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.path.json.JsonPath.from;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -235,19 +217,11 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void updateCustomer(String customerId, CustomerUpdateDto updatedCustomer) {
-        try {
-            String updatedCustomerString = retrieveData(updatedCustomer).toString();
-            assertThat("Empty customer update", updatedCustomerString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
-
-            Response response = updateEntityWithEtag(customerId, updatedCustomerString);
-            setSessionResponse(response);
-        }catch(JsonProcessingException jsonException){
-            fail("Error while converting objetc to JSON: " + jsonException);
-        }
+        updateCustomerByUser(customerId, DEFAULT_SNAPSHOT_USER_ID, updatedCustomer);
     }
 
     @Step
-    public void updateCustomerWithIdByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) throws Throwable {
+    public void updateCustomerByUser(String customerId, String userId, CustomerUpdateDto updatedCustomer) {
         try {
             String updatedCustomerString = retrieveData(updatedCustomer).toString();
             assertThat("Empty property update", updatedCustomerString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
