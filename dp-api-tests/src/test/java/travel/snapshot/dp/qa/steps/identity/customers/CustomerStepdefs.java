@@ -152,7 +152,7 @@ public class CustomerStepdefs {
     public void customerWithIdIsUpdatedWithData(String customerId, String username, List<CustomerUpdateDto> customersData) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         assertThat(user, is(notNullValue()));
-        customerSteps.updateCustomerWithIdByUser(customerId, user.getUserId(), customersData.get(0));
+        customerSteps.updateCustomerByUser(customerId, user.getUserId(), customersData.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")

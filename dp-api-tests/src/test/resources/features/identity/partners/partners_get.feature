@@ -3,6 +3,8 @@ Feature: Partners get
   Background:
     Given Database is cleaned
     Given Default Snapshot user is created
+#    Given Default partner is created
+#    Given Default application is created
 
   Scenario: Getting partner
     Given The following partner is created
@@ -25,8 +27,7 @@ Feature: Partners get
       | name           | email          | website                    | vatId      | notes        | partnerId                            |
       | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
-    Then Response code is "304"
-    And Body is empty
+    Then Response code is "200"
 
   #DP-1608 Partial update doesn't work, incorrect mandatory fields
   @Bug
@@ -49,7 +50,7 @@ Feature: Partners get
   Scenario: Checking error code for nonexistent partner
     When Nonexistent partner id is got
     Then Response code is "404"
-    And Custom code is "152"
+    And Custom code is "40402"
 
   Scenario Outline: Getting list of partners
     Given The following partner exist
@@ -132,23 +133,23 @@ Feature: Partners get
 
     Examples:
       | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
-      | /null       | -1     | /null  | /null       | /null       | 400           | 63          |
-      |             | -1     | /null  | /null       | /null       | 400           | 63          |
-      | /null       | text   | /null  | /null       | /null       | 400           | 63          |
-      |             | text   | /null  | /null       | /null       | 400           | 63          |
-      | -1          |        | /null  | /null       | /null       | 400           | 63          |
-      | -1          | /null  | /null  | /null       | /null       | 400           | 63          |
-      | 201         | /null  | /null  | /null       | /null       | 400           | 63          |
-      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 63          |
-      | text        |        | /null  | /null       | /null       | 400           | 63          |
-      | text        | /null  | /null  | /null       | /null       | 400           | 63          |
-      | 10          | -1     | /null  | /null       | /null       | 400           | 63          |
-      | text        | 0      | /null  | /null       | /null       | 400           | 63          |
-      | 10          | text   | /null  | /null       | /null       | 400           | 63          |
-      | 10          | 0      | /null  | notes       | notes       | 400           | 64          |
-      | 10          | 0      | /null  | /null       | nonexistent | 400           | 63          |
-      | 10          | 0      | /null  | nonexistent | /null       | 400           | 63          |
-      | 10          | 0      | code== | /null       | /null       | 400           | 63          |
+      | /null       | -1     | /null  | /null       | /null       | 400           | 40002       |
+      |             | -1     | /null  | /null       | /null       | 400           | 40002       |
+      | /null       | text   | /null  | /null       | /null       | 400           | 40002       |
+      |             | text   | /null  | /null       | /null       | 400           | 40002       |
+      | -1          |        | /null  | /null       | /null       | 400           | 40002       |
+      | -1          | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | 201         | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | text        |        | /null  | /null       | /null       | 400           | 40002       |
+      | text        | /null  | /null  | /null       | /null       | 400           | 40002       |
+      | 10          | -1     | /null  | /null       | /null       | 400           | 40002       |
+      | text        | 0      | /null  | /null       | /null       | 400           | 40002       |
+      | 10          | text   | /null  | /null       | /null       | 400           | 40002       |
+      | 10          | 0      | /null  | notes       | notes       | 400           | 40002       |
+      | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
+      | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
+      | 10          | 0      | code== | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of partners
     Given The following partner exist

@@ -62,8 +62,8 @@ public class PropertiesStepdefs {
     // --- given ---
 
     @Given("^The following properties exist with random address and billing address for user \"([^\"]*)\"$")
-    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddressForUser(String userId, List<PropertyCreateDto> properties) throws Throwable {
-        propertySteps.followingPropertiesExist(properties, userId);
+    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyCreateDto> properties) throws Throwable {
+        propertySteps.followingPropertiesExist(properties, userName);
     }
 
 

@@ -420,5 +420,4 @@ public class PropertySetsStepdefs {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         propertySetSteps.getChildPropertySetsByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), null, null, null, null, null, null);
     }
-
 }

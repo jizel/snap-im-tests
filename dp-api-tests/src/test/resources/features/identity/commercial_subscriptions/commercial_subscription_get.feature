@@ -34,8 +34,7 @@ Feature: Commercial subscription get
 
   Scenario: Getting commercial subscription with etag
     When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is got with etag
-    Then Response code is "304"
-    And Body is empty
+    Then Response code is "200"
 
 
   Scenario: Checking error code for nonexistent commercial subscription
@@ -127,7 +126,7 @@ Feature: Commercial subscription get
       | commercial_subscription_id=='*2a9c*'                                      | /null                      | /null                      | 3        |                                                                                                                  |
       | commercial_subscription_id=='*2a9c*' or commercial_subscription_id=='*8'  | /null                      | /null                      | 4        |                                                                                                                  |
       | commercial_subscription_id=='*2a9c*' and commercial_subscription_id=='*1' | /null                      | /null                      | 1        |                                                                                                                  |
-      | application_id=='a318fd9a*'                                               | /null                      | /null                      | 10       |                                                                                                                  |
+      | application_id=='11111111*'                                               | /null                      | /null                      | 10       |                                                                                                                  |
       | is_active=='1'                                                            | /null                      | /null                      | 0        |                                                                                                                  |
       | customer_id=='123*'                                                       | /null                      | /null                      | 10       |                                                                                                                  |
       | property_id=='*cab'                                                       | /null                      | /null                      | 10       |                                                                                                                  |

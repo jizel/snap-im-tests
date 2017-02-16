@@ -7,6 +7,7 @@ import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPS
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -446,9 +447,24 @@ public class UserStepdefs {
         usersSteps.listUserCustomersByUser(userIdMap.get(REQUESTOR_ID), userIdMap.get(TARGET_ID));
     }
 
-    @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for customer \"([^\"]*)\"$")
-    public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String customerId) throws Throwable {
+    @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"$")
+    public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelName, String secondLevelId) throws Throwable {
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
-        usersSteps.listUserCustomerRolesByUser(userIdMap.get(REQUESTOR_ID), userIdMap.get(TARGET_ID), customerId);
+        usersSteps.listRolesForRelationByUser(userIdMap.get(REQUESTOR_ID), userIdMap.get(TARGET_ID), secondLevelName, secondLevelId);
+    }
+
+    @When("^User \"([^\"]*)\" assigns role \"([^\"]*)\" to relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"$")
+    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId) throws Throwable {
+        Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
+        String roleId = roleBaseSteps.resolveRoleId(roleName);
+        usersSteps.userAssignsRoleToRelation(userIdsMap.get(REQUESTOR_ID), userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
+
+    }
+
+    @When("^User \"([^\"]*)\" deletes role \"([^\"]*)\" from relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"$")
+    public void userDeletesRoleFromUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId) throws Throwable {
+        Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
+        String roleId = roleBaseSteps.resolveRoleId(roleName);
+        usersSteps.userDeletesRoleFromRelation(userIdsMap.get(REQUESTOR_ID), userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
     }
 }

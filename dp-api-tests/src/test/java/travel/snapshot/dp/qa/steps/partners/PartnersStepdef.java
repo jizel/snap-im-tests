@@ -8,6 +8,7 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -71,27 +72,27 @@ public class PartnersStepdef {
 
     @When("^Partner with id \"([^\"]*)\" is activated$")
     public void Partner_with_id_is_activated(String partnerId) {
-        partnerSteps.activatePartnerWithId(partnerId);
+        partnerSteps.setPartnerIsActive(partnerId, true);
     }
 
     @When("Partner with id \"([^\"]*)\" is active")
     public void Partner_with_id_is_active(String partnerId) {
-        partnerSteps.partnerIsSetToActive(true, partnerId);
+        assertThat("Partner should be active but it is not", partnerSteps.getPartnerById(partnerId).getIsActive(), is(true));
     }
 
     @When("Partner with id \"([^\"]*)\" is not active")
     public void Partner_with_id_is_not_active(String partnerId) {
-        partnerSteps.partnerIsSetToActive(false, partnerId);
+        assertThat("Partner should be inactive but it's still active", partnerSteps.getPartnerById(partnerId).getIsActive(), is(false));
     }
 
     @When("^Partner with id \"([^\"]*)\" is inactivated$")
     public void Partner_with_id_is_inactivated(String partnerId) {
-        partnerSteps.inactivatePartnerWithId(partnerId);
+        partnerSteps.setPartnerIsActive(partnerId, false);
     }
 
     @When("^Partner with id \"([^\"]*)\" is updated with data$")
-    public void Partner_with_id_is_updated_with_data(String partnerId, List<PartnerDto> updatedPartner) throws Exception {
-        partnerSteps.updatePartnerWithId(partnerId, updatedPartner.get(0));
+    public void Partner_with_id_is_updated_with_data(String partnerId, List<PartnerUpdateDto> updatedPartner) throws Exception {
+        partnerSteps.updatePartner(partnerId, updatedPartner.get(0));
     }
 
     @Then("^Updated partner with id \"([^\"]*)\" has data$")
