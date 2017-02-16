@@ -20,16 +20,10 @@ Feature: Property sets properties create update delete
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
-
-  @Smoke
-  Scenario: Adding property to property set
-    When Property with code "p2_code" is added to property set "ps1_name"
-    Then Response code is "201"
-
-
-#    Fails because of DP-1630
   @Smoke
   Scenario: Removing property from property set
+    When Property with code "p2_code" is added to property set "ps1_name"
+    Then Response code is "201"
     When Property with code "p2_code" is removed from property set "ps1_name"
     Then Response code is "204"
     And Body is empty

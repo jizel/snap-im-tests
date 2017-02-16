@@ -175,18 +175,15 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenUserAndPropertySetForCustomer(String userId, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-
-        PropertySetUserRelationshipDto existingPropertySetUser = getUserForPropertySet(userId, propertySet.getPropertySetId());
+    public void relationExistsBetweenUserAndPropertySetForCustomer(String userId, String propertySetId) {
+        PropertySetUserRelationshipDto existingPropertySetUser = getUserForPropertySet(userId, propertySetId);
         if (existingPropertySetUser != null) {
-
-            Response deleteResponse = deleteSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, userId, null);
+            Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertySetUser cannot be deleted");
             }
         }
-        Response createResponse = addUserToPropertySet(userId, propertySet.getPropertySetId());
+        Response createResponse = addUserToPropertySet(userId, propertySetId);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("PropertySetUser cannot be created");
         }

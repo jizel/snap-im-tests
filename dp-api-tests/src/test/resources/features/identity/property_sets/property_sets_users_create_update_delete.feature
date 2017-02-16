@@ -23,6 +23,8 @@ Feature: Property sets users create update delete
     When User "default3" is added to property set with name "ps1_name"
     Then Response code is "201"
 
+  # DP-1807
+  @Bug
   Scenario: Updating Property Set-User relationship
     When User "default0" is added to property set with name "ps1_name"
     Given Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
@@ -36,7 +38,7 @@ Feature: Property sets users create update delete
 
   @Smoke
   Scenario: Removing user from property set
-    Given Relation between user "default2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user "default2" and property set with name "ps1_name" exists
     When User "default2" is removed from property set "ps1_name"
     Then Response code is "204"
     And Body is empty
@@ -55,12 +57,12 @@ Feature: Property sets users create update delete
       | customer | filter_psu_default_4 | FilterPSUDefault4 | FilterPSUUser4 | filter_psu_user4@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | partner  | filter_psu_default_5 | FilterPSUDefault5 | FilterPSUUser5 | filter_psu_user5@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_psu_default_6 | FilterPSUDefault6 | FilterPSUUser6 | filter_psu_user6@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
-    Given Relation between user "filter_psu_default_1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "filter_psu_default_2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "filter_psu_default_3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "filter_psu_default_4" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "filter_psu_default_5" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "filter_psu_default_6" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user "filter_psu_default_1" and property set with name "ps1_name" exists
+    Given Relation between user "filter_psu_default_2" and property set with name "ps1_name" exists
+    Given Relation between user "filter_psu_default_3" and property set with name "ps1_name" exists
+    Given Relation between user "filter_psu_default_4" and property set with name "ps1_name" exists
+    Given Relation between user "filter_psu_default_5" and property set with name "ps1_name" exists
+    Given Relation between user "filter_psu_default_6" and property set with name "ps1_name" exists
     When List of users for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
@@ -70,17 +72,17 @@ Feature: Property sets users create update delete
       | limit | cursor | returned | filter           | sort      | sort_desc   | expected_usernames                                                                                            |
       | 5     | 0      | 5        | is_active==false | is_active |             | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5  |
       | 5     | 0      | 5        | is_active==false |           | is_active   | filter_psu_default_6, filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2  |
-      | 5     | 2      | 4        | is_active==false | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6                        |
-      | 5     | 2      | 4        | is_active==false |           | user_id     | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
+      | 5     | 2      | 5        | is_active==false | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6, default0              |
+      | 5     | 2      | 5        | is_active==false |           | user_id     | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
       | 1     | 0      | 1        | is_active==false |           |             | filter_psu_default_6                                                                                          |
-      | 2     | 0      | 2        | user_id=='0*'    | user_id   |             | filter_psu_default_1, filter_psu_default_2                                                                    |
-      | 5     | 0      | 1        | user_id=='018*'  | user_id   |             | filter_psu_default_2                                                                                          |
+      | 2     | 0      | 1        | user_id=='*aac'  | user_id   |             | default0                                                                                                      |
+      | 5     | 0      | 1        | user_id=='5d829*'| user_id   |             | default0                                                                                                      |
 
   Scenario Outline: Filtering list of users for property set - negative scenarios
-    Given Relation between user "default0" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "default1" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "default2" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
-    Given Relation between user "default3" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+    Given Relation between user "default0" and property set with name "ps1_name" exists
+    Given Relation between user "default1" and property set with name "ps1_name" exists
+    Given Relation between user "default2" and property set with name "ps1_name" exists
+    Given Relation between user "default3" and property set with name "ps1_name" exists
     When List of users for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "400"
     Examples:
