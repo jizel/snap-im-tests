@@ -2,11 +2,11 @@ Feature: User groups roles
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given Default partner is created
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given Default Snapshot user is created
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
@@ -37,23 +37,25 @@ Feature: User groups roles
 
   Scenario Outline: Create relationship UserGroup-Role invalid
     When Relation between user group "<userGroupId>" and role "<roleId>" is created
-    Then Response code is 422
-    And Custom code is <error_code>
+    Then Response code is <error_code>
+    And Custom code is <custom_code>
     Examples:
-      | userGroupId                          | roleId                               | error_code | # note                            |
-      | NotExisting                          | /null                                | 422        | # Empty body, invalid userGroupId |
-      | NotExisting                          | NotExisting                          | 422        | # Not in UUID                     |
-      | NotExisting                          | b7b40d08-de38-4246-bb69-ad39c31c025c | 422        | # UserGroup not found             |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | /null                                | 422        | # Empty body                      |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | NotExisting                          | 422        | # Not valid RoleId                |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | b7b40d08-de38-4246-bb69-ad39c31c025c | 422        | # Role not found                  |
+      | userGroupId                          | roleId                               |error_code | custom_code | # note                            |
+      | NotExisting                          | /null                                | 422       | 42201      | # Empty body, invalid userGroupId |
+      | NotExisting                          | NotExisting                          | 422       | 42201      | # Not in UUID                     |
+      | NotExisting                          | b7b40d08-de38-4246-bb69-ad39c31c025c | 404       | 40402      | # UserGroup not found             |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | /null                                | 422       | 42201      | # Empty body                      |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | NotExisting                          | 422       | 42201      | # Not valid RoleId                |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | b7b40d08-de38-4246-bb69-ad39c31c025c | 404       | 40402      | # Role not found                  |
 
+#  DP-1805
   Scenario: Delete relationship UserGroup-Role
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted
     Then Response code is 204
     And Body is empty
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is not established
 
+#  DP-1805
   Scenario: Delete relationship UserGroup-Role invalid
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is deleted
     Then Response code is 204
@@ -118,4 +120,4 @@ Feature: User groups roles
       | /null | /null  | /null     | /null       | -1          | 40002      |
       | /null | /null  | /null     | /null       | 0           | 40002      |
       | /null | /null  | /null     | /null       | nonExistent | 40002      |
-      | /null | /null  | /null     | role_id     | role_id     | 42202      |
+      | /null | /null  | /null     | role_id     | role_id     | 40002      |

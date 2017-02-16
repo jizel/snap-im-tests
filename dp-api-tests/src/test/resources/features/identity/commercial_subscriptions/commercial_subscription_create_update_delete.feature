@@ -10,7 +10,6 @@ Feature: Commercial subscription create update delete
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 2a2f76f3-3537-4d5a-971a-7a36f61095bd | partner | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     Given The following properties exist with random address and billing address for user "2a2f76f3-3537-4d5a-971a-7a36f61095bd"

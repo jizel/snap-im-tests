@@ -3,12 +3,11 @@ Feature: Customers users create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-
-    Given Default Snapshot user is created
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | userType | userName  | firstName | lastName | email                | timezone      | culture |
       | snapshot | snapUser1 | Snapshot1 | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |

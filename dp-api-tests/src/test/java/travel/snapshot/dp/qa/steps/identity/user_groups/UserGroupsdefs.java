@@ -1,12 +1,5 @@
 package travel.snapshot.dp.qa.steps.identity.user_groups;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -29,6 +22,10 @@ import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 /**
  * Created by vlcek on 5/9/2016.
@@ -297,6 +294,12 @@ public class UserGroupsdefs {
         userGroupSteps.relationshipGroupPropertySetExist(userGroup.getUserGroupId(), propertySet.getPropertySetId(), isActive);
     }
 
+    @When("^Relation between user group \"([^\"]*)\" and property set with id \"([^\"]*)\" is created with isActive \"([^\"]*)\"$")
+    public void relationBetweenUserGroupAndPropertySetWithIdIsCreatedWithIsActive(String userGroupName, String propertySetId, Boolean isActive) throws Throwable {
+        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
+        assertThat(userGroup, is(notNullValue()));
+        userGroupSteps.relationshipGroupPropertySetExist(userGroup.getUserGroupId(), propertySetId, isActive);
+    }
 
     @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is created with isActive \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void relationBetweenUserGroupAndPropertySetIsCreatedWithIsActiveByUser(String userGroupName, String propertySetName, Boolean isActive, String username) throws Throwable {
@@ -328,6 +331,11 @@ public class UserGroupsdefs {
         assertThat(userGroup, is(notNullValue()));
 
         userGroupSteps.relationshipGroupPropertySetIsDeleted(userGroup.getUserGroupId(), propertySetId);
+    }
+
+    @When("^Relation between user group with id \"([^\"]*)\" and property set \"([^\"]*)\" is deleted$")
+    public void relationBetweenUserGroupWithIdAndPropertySetIsDeleted(String userGroupId, String propertySetId) throws Throwable {
+        userGroupSteps.relationshipGroupPropertySetIsDeleted(userGroupId, propertySetId);
     }
 
 
@@ -692,6 +700,5 @@ public class UserGroupsdefs {
 
         userGroupSteps.listOfUserGroupPropertySetRolesIsGotByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySet.getPropertySetId());
     }
-
 
 }
