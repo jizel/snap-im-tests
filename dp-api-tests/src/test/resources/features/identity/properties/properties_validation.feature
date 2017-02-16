@@ -60,33 +60,36 @@ Feature: Properties validation
     When create "property" objects each with one invalid field value
     Then there are following responses
       | testedField      | responseCode | customCode |
-      | /website         | 400          | 59         |
-      | /email           | 400          | 59         |
-      | /timezone        | 400          | 59         |
-      | /address/country | 400          | 63         |
+      | /website         | 422          | 42201      |
+      | /email           | 422          | 42201      |
+      | /timezone        | 422          | 42201      |
+      | /address/country | 422          | 42202      |
+      | /is_active       | 422          | 42201      |
 
   Scenario: Object creation - missing values
     When create "property" objects each with one missing field
     Then there are following responses
-      | testedField            | responseCode | customCode |
-      | /property_code         | 400          | 53         |
-      | /name                  | 400          | 53         |
-      | /email                 | 400          | 53         |
-      | /timezone              | 400          | 53         |
-      | /is_demo_property      | 400          | 53         |
-      | /address/address_line1 | 400          | 53         |
-      | /address/city          | 400          | 53         |
-      | /address/zip_code      | 400          | 53         |
-      | /address/country       | 400          | 53         |
+      | testedField            | responseCode | customCode    |
+      | /property_code         | 201          |               |
+      | /name                  | 422          | 42201         |
+      | /email                 | 422          | 42201         |
+      | /timezone              | 422          | 42201         |
+      | /is_demo_property      | 422          | 42201         |
+      | /address/address_line1 | 422          | 42201         |
+      | /address/city          | 422          | 42201         |
+      | /address/zip_code      | 422          | 42201         |
+      | /address/country       | 422          | 42201         |
+      | /website               | 201          |               |
+      | /is_active             | 201          |               |
 
   Scenario: Object update - invalid values
     When update "property" objects each with one invalid field value
     Then there are following responses
       | testedField      | responseCode | customCode |
-      | /website         | 400          | 59         |
-      | /email           | 400          | 59         |
-      | /timezone        | 400          | 59         |
-      | /address/country | 400          | 63         |
+      | /website         | 422          | 42201      |
+      | /email           | 422          | 42201      |
+      | /timezone        | 422          | 42201      |
+      | /address/country | 422          | 42202      |
 
 #   TODO when field lengths are stabilized
 #

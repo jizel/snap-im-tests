@@ -99,32 +99,6 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void getPropertyWithCodeUsingEtagAfterUpdate(String code) {
-        PropertyDto propertyFromList = getPropertyByCodeInternal(code);
-        if (propertyFromList == null) {
-            fail("No matching property with code: [" + code + "] found.");
-        }
-
-        // we first need to get current ETag of a property
-        Response responseWithETag = getProperty(propertyFromList.getPropertyId(), null);
-
-        // force new ETag on server side
-        Response updateResponse = updateProperty(
-                propertyFromList.getPropertyId(),
-                Collections.singletonMap("website", "http://changed.it"),
-                responseWithETag.getHeader(HEADER_ETAG));
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Property cannot be updated: " + updateResponse.asString());
-        }
-
-        // get with old ETag
-        Response resp = getProperty(propertyFromList.getPropertyId(), responseWithETag.getHeader(HEADER_ETAG));
-
-        // store to session
-        setSessionResponse(resp);
-    }
-
-    @Step
     public void getListOfPropertiesWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
 
@@ -584,6 +558,18 @@ public class PropertySteps extends BasicSteps {
         }
 
         return value;
+    }
+
+    public String resolvePropertyId(String propertyCode) {
+        String propertyId;
+        if (isUUID(propertyCode)) {
+            propertyId = propertyCode;
+        } else {
+            PropertyDto property = getPropertyByCodeInternal(propertyCode);
+            assertThat(String.format("Property with code \"%s\" does not exist", propertyCode), property, is(notNullValue()));
+            propertyId = property.getPropertyId();
+        }
+        return propertyId;
     }
 
 }

@@ -32,6 +32,9 @@ Feature: Properties get
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
       | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
 
+  # DP-1797
+  @Bug
+  @skipped
   Scenario Outline: Getting property's api subscriptions - positive scenarios
     When List of api subscriptions is got for property with id "742529dd-481f-430d-b6b6-686fbb687cab" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
