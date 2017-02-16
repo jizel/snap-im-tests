@@ -7,8 +7,12 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.VersionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 
 import java.util.List;
@@ -19,6 +23,9 @@ public class ApplicationsStepsdef {
 
     @Steps
     private ApplicationsSteps applicationSteps;
+
+    @Steps
+    private ApplicationVersionsSteps applicationVersionSteps;
 
     @When("^Application is created$")
     public void Application_is_created(List<ApplicationDto> applications) {
@@ -221,5 +228,12 @@ public class ApplicationsStepsdef {
     @Then("There are (\\d+) applications commercial subscriptions returned")
     public void There_are_applications_commercial_subscriptions_returned(int count) throws Throwable {
         applicationSteps.numberOfEntitiesInResponse(CommercialSubscriptionDto.class, count);
+    }
+
+    @When("^Application version with id \"([^\"]*)\" is requested directly$")
+    public void applicationVersionIsRequestedDirectly(String versionId) throws Throwable {
+//        Using versionId here instead of name and resolveName method because getting version by name would require additional
+//        parameter applicationId (endpoint /application_version/ without versionId is not implemented)
+        applicationVersionSteps.getApplicationVersion(versionId);
     }
 }
