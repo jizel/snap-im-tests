@@ -5,13 +5,13 @@ Feature: Review multiproperty customer property
   Background:
     # 5 property, 1 customer, 1 user, with all needed relations
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
       | userId                               | userType | userName     | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser | Snapshot  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created
     Given Default partner is created
     Given Default application is created
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -22,7 +22,7 @@ Feature: Review multiproperty customer property
     
     Given The password of user "snapshotUser" is "Password1"
 
-    Given Relation between user with username "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
+    Given Relation between user "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
     Given Get token for user "snapshotUser" with password "Password1"
     Given Set access token from session for customer steps defs
@@ -32,9 +32,9 @@ Feature: Review multiproperty customer property
     Given Relation between property with code "p2_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p3_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
-    Given Relation between user with username "snapshotUser" and property with code "p1_code" exists
-    Given Relation between user with username "snapshotUser" and property with code "p2_code" exists
-    Given Relation between user with username "snapshotUser" and property with code "p3_code" exists
+    Given Relation between user "snapshotUser" and property with code "p1_code" exists
+    Given Relation between user "snapshotUser" and property with code "p2_code" exists
+    Given Relation between user "snapshotUser" and property with code "p3_code" exists
 
 
 #------------

@@ -284,7 +284,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void getCommSubscriptionForApplicationId(String applicationId) {
-        Response appCommSubscriptionResponse = getSecondLevelEntities(applicationId, "", LIMIT_TO_ALL,
+        Response appCommSubscriptionResponse = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(appCommSubscriptionResponse);
     }
@@ -292,7 +292,7 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void listOfApplicationCommSubscriptionsIsGotWith(String applicationId, String limit, String cursor, String filter,
                                                             String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(applicationId, "", limit, cursor, filter,
+        Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS, limit, cursor, filter,
                 sort, sortDesc, null);
         setSessionResponse(response);
     }

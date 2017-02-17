@@ -2,13 +2,13 @@ Feature: User groups properties
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | vatId      | phone         | timezone      | isDemoCustomer |
       | 5be73595-bf57-4b10-8725-dad80531dbc3 | UserGroupsCustomer | ug@tenants.biz | CZ10000001 | +420123456789 | Europe/Prague | true           |
     Given The following users exist for customer "5be73595-bf57-4b10-8725-dad80531dbc3" as primary "false"
       | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot  | User1    | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 5be73595-bf57-4b10-8725-dad80531dbc3 | userGroup_1 | false    |

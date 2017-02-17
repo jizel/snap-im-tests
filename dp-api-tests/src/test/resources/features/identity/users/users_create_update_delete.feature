@@ -3,6 +3,7 @@ Feature: Users create update delete
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -10,7 +11,6 @@ Feature: Users create update delete
       | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 55529079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot1 | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 66629079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser2 | Snapshot2 | User2    | snapshotUser2@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created
 
   Scenario Outline: Creating users
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
@@ -67,7 +67,6 @@ Feature: Users create update delete
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         |
 
 
-# DP-1504
   @Bug
   Scenario Outline: Create user with same name or email
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
@@ -77,7 +76,8 @@ Feature: Users create update delete
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
       | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
-    Then Response code is "403"
+    Then Response code is "409"
+    And Custom code is 40912
     Examples:
       | userType | userName | firstName | lastName | email                  | timezone      | culture |
       # Same name
@@ -114,7 +114,7 @@ Feature: Users create update delete
   Scenario: Deleting user without ETAG
     When User "snapshotUser1" is deleted with ETAG ""
     Then Response code is "412"
-    And Custom code is 41201
+    And Custom code is 41202
 
   Scenario Outline: Updating user
     When User "snapshotUser2" is updated with data
