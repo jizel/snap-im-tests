@@ -3,6 +3,7 @@ Feature: Properties get
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -12,7 +13,6 @@ Feature: Properties get
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Default Snapshot user is created
 
   @Smoke
   Scenario: Getting property
@@ -29,28 +29,6 @@ Feature: Properties get
     And Body contains property with attribute "email" value "p1@tenants.biz"
     And Body contains property with attribute "is_demo_property" value "java.lang.Boolean:true"
     And Body contains property with attribute "timezone" value "Europe/Prague"
-
-
-  Scenario: Getting property with etag
-    When Property with code "p1_code" is requested
-    Then Response code is "304"
-    And Body is empty
-
-
-  Scenario: Getting property with expired etag
-    #   1. property exists
-    #   2. etag value is stored
-    #   3. vat_id update changes etag
-    #   4. previously stored (expired) tag is tested
-
-    When Property with code "p1_code" exists for etag, forced new etag through update
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-
-    # exact value
-    And Body contains property with attribute "property_code" value "p1_code"
-
 
   Scenario: Checking error code for nonexistent property
     When Nonexistent property id sent

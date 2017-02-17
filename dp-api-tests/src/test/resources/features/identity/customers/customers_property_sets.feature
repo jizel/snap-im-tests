@@ -3,6 +3,7 @@ Feature: Customers property sets
 
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55e2cf39-ffb6-4bb8-ad3f-66306c2be124 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -10,8 +11,6 @@ Feature: Customers property sets
     Given The following users exist for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" as primary "false"
       | userId                               | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
       | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created
-
     #Get token for snapshot user and set it to session (?access_token={token})
     Given The password of user "snapshotuser" is "Password01"
     Given Get token for user "snapshotuser" with password "Password01"

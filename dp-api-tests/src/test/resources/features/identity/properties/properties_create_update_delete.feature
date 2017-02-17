@@ -5,13 +5,13 @@ Feature: Properties create update delete
   # TODO: check error codes for creating/updating property
   Background:
     Given Database is cleaned
+    Given Default Snapshot user is created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default Snapshot user is created
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       |propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       |999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -83,13 +83,12 @@ Feature: Properties create update delete
       | 4239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 4 | c4@tenants.biz | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 5239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 5 | c5@tenants.biz | salesforceid_given_5 | CZ10000005 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 6239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 6 | c6@tenants.biz | salesforceid_given_6 | CZ10000006 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "3239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "4239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "5239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
-    Given Relation between property with code "p1_code" and customer with id "6239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-28"
+    Given Relation between property with code "p1_code" and customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-28"
+    Given Relation between property with code "p1_code" and customer with id "3239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-28"
+    Given Relation between property with code "p1_code" and customer with id "4239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-28"
+    Given Relation between property with code "p1_code" and customer with id "5239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-28"
+    Given Relation between property with code "p1_code" and customer with id "6239fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2030-02-28"
 
     Given Customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
     Given Customer with id "2238fd9a-a05d-42d8-8e84-42e904ace123" is activated
@@ -110,8 +109,9 @@ Feature: Properties create update delete
       | 5     | 2      | 2     | customer_id=='*238fd9a*' |               | valid_from    |  1238fd9a-a05d-42d8-8e84-42e904ace123               |
       | /null | /null  | 1     | customer_id=='3239fd9a*' | /null         | /null         |  3239fd9a-a05d-42d8-8e84-42e904ace123                |
 
+  @skipped
   Scenario Outline: Checking error codes for getting list of customers from properties
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2030-02-28"
     Given Customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
 
     When List of customers for property with code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -255,7 +255,9 @@ Feature: Properties create update delete
       | CA      | Yukon region     | propcode18 | mail18@mail.com | 422           | 42202       |
       | CA      | TheGreatYukon    | propcode19 | mail19@mail.com | 422           | 42202       |
 
+  # Soft-delete is planned for demolition in the first quarter of 2017. Once this transition is performed the following testcase will be valid
   @Bug
+  @skipped
   Scenario: Creating property with same name as previously deleted one - DP-1380
     Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                            | salesforceId | propertyName  | propertyCode  | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |

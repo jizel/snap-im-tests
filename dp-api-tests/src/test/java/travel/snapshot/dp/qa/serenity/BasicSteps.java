@@ -94,6 +94,7 @@ public class BasicSteps {
     public static final String REQUESTOR_ID = "requestorId";
     public static final String TARGET_ID = "targetId";
     public static final String ROLE_ID = "role_id" ;
+    public static final String PROPERTY_CODE = "property_code";
 
     public BasicSteps() {
 
@@ -517,6 +518,13 @@ public class BasicSteps {
     public void sendGetRequestToUrlByUser(String userId, String url, String module) {
         setBaseUriForModule(module);
         Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).basePath(url).when().get();
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void sendDeleteToUrl(String url, String module) {
+        setBaseUriForModule(module);
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).basePath(url).when().delete();
         setSessionResponse(response);
     }
 

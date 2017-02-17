@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertNull;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
@@ -14,12 +15,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
@@ -55,12 +54,10 @@ public class PropertySetsStepdefs {
 
     public Map<String, String> getValidUserPropertySetIdsFromNames(String username, String propertySetName) {
         String userId = usersSteps.resolveUserId(username);
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
         Map<String, String> userPropertyIds = new HashMap<>();
         userPropertyIds.put(USER_ID, userId);
-        userPropertyIds.put(PROPERTY_SET_ID, propertySet.getPropertySetId());
+        userPropertyIds.put(PROPERTY_SET_ID, propertySetId);
         return userPropertyIds;
     }
 
@@ -69,9 +66,8 @@ public class PropertySetsStepdefs {
 
     @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
     public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, List<PropertySetDto> propertySets) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user,is(notNullValue()));
-        propertySetSteps.followingPropertySetsExist(propertySets, customerId, user.getUserId());
+        String userId = usersSteps.resolveUserId(username);
+        propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId);
     }
 
     @Given("^All property sets are deleted for customers with ids: (.*)$")
@@ -101,12 +97,9 @@ public class PropertySetsStepdefs {
 
     @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" exists$")
     public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
-        propertySetSteps.relationExistsBetweenPropertyAndPropertySet(property.getPropertyId(), propertySet.getPropertySetId());
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.relationExistsBetweenPropertyAndPropertySet(propertyId, propertySetId);
     }
 
     @When("^The following property set is created for customer with id \"([^\"]*)\"$")
@@ -131,16 +124,14 @@ public class PropertySetsStepdefs {
                                                                                             @Transform(NullEmptyStringConverter.class) String filter,
                                                                                             @Transform(NullEmptyStringConverter.class) String sort,
                                                                                             @Transform(NullEmptyStringConverter.class) String sortDesc, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user,is(notNullValue()));
-        propertySetSteps.listOfPropertySetsIsGotByUser(user.getUserId(), limit, cursor, filter, sort, sortDesc);
+        String userId = usersSteps.resolveUserId(username);
+        propertySetSteps.listOfPropertySetsIsGotByUser(userId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Property set \"([^\"]*)\" is deleted$")
     public void Property_set_with_name_for_customer_with_code_is_deleted(String propertySetName) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        propertySetSteps.deletePropertySet(propertySet.getPropertySetId());
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.deletePropertySet(propertySetId);
     }
 
     @When("^Property set \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
@@ -170,9 +161,8 @@ public class PropertySetsStepdefs {
     @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void userWithUsernameIsAddedToPropertySetWithNameByUser(String username, String propertySetName, String performerName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
-        Response response = propertySetSteps.addUserToPropertySetByUser(performer.getUserId(), ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String performerId = usersSteps.resolveUserId( performerName );
+        Response response = propertySetSteps.addUserToPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
         propertySetSteps.setSessionResponse(response);
     }
 
@@ -184,18 +174,16 @@ public class PropertySetsStepdefs {
 
     @When("^Nonexistent user is removed from property set with name \"([^\"]*)\"$")
     public void Nonexistent_user_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        propertySetSteps.removeUserFromPropertySet(NON_EXISTENT_ID, propertySet.getPropertySetId());
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.removeUserFromPropertySet(NON_EXISTENT_ID, propertySetId);
     }
 
 
     @When("^User \"([^\"]*)\" is removed from property set \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void userIsRemovedFromPropertySetByUser(String username, String propertySetName, String performerName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
-        propertySetSteps.removeUserFromPropertySetByUser(performer.getUserId(), ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String performerId = usersSteps.resolveUserId( performerName );
+        propertySetSteps.removeUserFromPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
     }
 
     @When("^List of properties for property set with name \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -205,9 +193,8 @@ public class PropertySetsStepdefs {
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                                     @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        propertySetSteps.listOfPropertiesIsGotWith(propertySet.getPropertySetId(), limit, cursor, filter, sort, sortDesc);
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.listOfPropertiesIsGotWith(propertySetId, limit, cursor, filter, sort, sortDesc);
     }
 
 
@@ -224,9 +211,8 @@ public class PropertySetsStepdefs {
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        propertySetSteps.listOfUsersIsGotWith(propertySetName, limit, cursor, filter, sort, sortDesc);
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.listOfUsersIsGotWith(propertySetId, limit, cursor, filter, sort, sortDesc);
     }
 
 
@@ -238,50 +224,39 @@ public class PropertySetsStepdefs {
 
     @When("^Nonexistent property is removed from property set \"([^\"]*)\"$")
     public void Nonexistent_property_is_removed_from_property_set_with_name_for_customer_with_code(String propertySetName) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        propertySetSteps.removePropertyFromPropertySet(NON_EXISTENT_ID, propertySet.getPropertySetId());
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.removePropertyFromPropertySet(NON_EXISTENT_ID, propertySetId);
     }
 
     @When("^Property with code \"([^\"]*)\" is added to property set \"([^\"]*)\"$")
     public void Property_with_code_is_added_to_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
-        Response response = propertySetSteps.addPropertyToPropertySet(property.getPropertyId(), propertySet.getPropertySetId());
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        Response response = propertySetSteps.addPropertyToPropertySet(propertyId, propertySetId);
         propertySetSteps.setSessionResponse(response);
     }
 
     @When("^Property with code \"([^\"]*)\" is added to property set \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void propertyWithCodeIsAddedToPropertySetByUser(String propertyCode, String propertySetName, String username) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-
-        Response response = propertySetSteps.addPropertyToPropertySetByUser(ids.get(USER_ID), property.getPropertyId(), ids.get(PROPERTY_SET_ID));
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        Response response = propertySetSteps.addPropertyToPropertySetByUser(ids.get(USER_ID), propertyId, ids.get(PROPERTY_SET_ID));
         propertySetSteps.setSessionResponse(response);
     }
 
     @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\"$")
     public void Property_with_code_is_removed_from_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
-        propertySetSteps.removePropertyFromPropertySet(property.getPropertyId(), propertySet.getPropertySetId());
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.removePropertyFromPropertySet(propertyId, propertySetId);
     }
 
 
     @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void propertyWithCodeIsRemovedFromPropertySetByUser(String propertyCode, String propertySetName, String username) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-
-        propertySetSteps.removePropertyFromPropertySetByUser(ids.get(USER_ID), property.getPropertyId(), ids.get(PROPERTY_SET_ID));
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        propertySetSteps.removePropertyFromPropertySetByUser(ids.get(USER_ID), propertyId, ids.get(PROPERTY_SET_ID));
     }
 
     @Then("^There are (\\d+) property sets returned$")
@@ -308,9 +283,10 @@ public class PropertySetsStepdefs {
 
     @Then("^Property with code \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
     public void Property_with_code_isn_t_there_for_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerId) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        CustomerDto customer= customerSteps.getCustomerById(customerId);
-        propertySetSteps.propertiesDoesntExistForPropertySetForCustomer(p, propertySetName, customer);
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        PropertySetPropertyRelationshipDto existingPropertySetProperty = propertySetSteps.getPropertyForPropertySet( propertySetId, propertyId );
+        assertNull("Property should not be present in propertyset", existingPropertySetProperty);
     }
 
     @Then("^There are properties with following names returned in order: (.*)$")
@@ -335,9 +311,8 @@ public class PropertySetsStepdefs {
 
     @When("^Property set \"([^\"]*)\" is updated with following data$")
     public void propertySetWithNameIsUpdatedWithFollowingData(String propertySetName, List<PropertySetUpdateDto> propSet) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat("Property set " + propertySetName + " not found!", propertySet, is(notNullValue()));
-        propertySetSteps.updatePropertySet(propertySet.getPropertySetId(), propSet.get(0));
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.updatePropertySet(propertySetId, propSet.get(0));
     }
 
     @When("^Property set \"([^\"]*)\" is updated with following data by user \"([^\"]*)\"$")
@@ -348,9 +323,8 @@ public class PropertySetsStepdefs {
 
     @Then("^Updated property set \"([^\"]*)\" has following data$")
     public void updatedPropertySetWithNameForCustomerWithCodeHasFollowingData(String propertySetName, List<PropertySetUpdateDto> propSet) throws Throwable {
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat("Property set " + propertySetName + " not found!", propertySet, is(notNullValue()));
-        propertySetSteps.comparePropertySets(propertySet.getPropertySetId(), propSet.get(0));
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.comparePropertySets(propertySetId, propSet.get(0));
     }
 
     @When("^Relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is activated$")
@@ -382,12 +356,11 @@ public class PropertySetsStepdefs {
     @When("^IsActive for relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is set to \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void relationBetweenUserAndPropertySetIsSetTo(String username, String propertySetName, Boolean isActive, String performerName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
+        String performerId = usersSteps.resolveUserId( performerName );
         UserPropertySetRelationshipUpdateDto userPropertySetRelation = new UserPropertySetRelationshipUpdateDto();
         userPropertySetRelation.setIsActive(isActive);
 
-        propertySetSteps.updateUserPropertySetRelationByUser(performer.getUserId(), ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
+        propertySetSteps.updateUserPropertySetRelationByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
     }
 
     @When("^Property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
@@ -400,19 +373,16 @@ public class PropertySetsStepdefs {
     @When("^Property with code \"([^\"]*)\" for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void propertyWithCodeForPropertySetIsRequestedByUser(String propertyCode, String propertySetName, String username) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-
-        propertySetSteps.getPropertyForPropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), property.getPropertyId());
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        propertySetSteps.getPropertyForPropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), propertyId);
 
     }
 
     @When("^User \"([^\"]*)\" for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void userForPropertySetIsRequestedByUser(String username, String propertySetName, String performerName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
-        propertySetSteps.getUserForPropertySetByUser(performer.getUserId(), ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String performerId = usersSteps.resolveUserId( performerName );
+        propertySetSteps.getUserForPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
     }
 
     @When("^Child property sets of property set \"([^\"]*)\" are requested by user \"([^\"]*)\"$")

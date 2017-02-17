@@ -6,7 +6,10 @@ import static java.util.Collections.singletonMap;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -15,18 +18,18 @@ import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.*;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -49,13 +52,14 @@ public class PropertySetSteps extends BasicSteps {
     // --- steps ---
 
     public void followingPropertySetsExist(List<PropertySetDto> propertySets, String customerId, String userId) {
-        propertySets.forEach(propertySet -> {
+        propertySets.forEach( (PropertySetDto propertySet) -> {
             propertySet.setCustomerId(customerId);
             Response createResponse = createEntity(propertySet);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + createResponse.asString());
             }
-            Response addUserResponse = addUserToPropertySet(userId, propertySet.getPropertySetId());
+            String propertySetId = createResponse.as(PropertySetDto.class).getPropertySetId();
+            Response addUserResponse = addUserToPropertySet(userId, propertySetId);
             if (addUserResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + addUserResponse.asString());
             }
@@ -151,10 +155,6 @@ public class PropertySetSteps extends BasicSteps {
 
         Response response = getEntity(propertySetId, null);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    public void deletePropertySetWithId(String propertySetId) {
-        deleteEntityWithEtag(propertySetId);
     }
 
     public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, CustomerDto c) {
@@ -333,13 +333,6 @@ public class PropertySetSteps extends BasicSteps {
         return null;
     }
 
-    public void propertiesDoesntExistForPropertySetForCustomer(PropertyDto p, String propertySetName, CustomerDto c) {
-        PropertySetDto propertySet = getPropertySetByNameForCustomer(propertySetName, c.getCustomerId());
-        PropertySetPropertyRelationshipDto existingPropertySetProperty = getPropertyForPropertySet(propertySet.getPropertySetId(), p.getPropertyId());
-        assertNull("Property should not be present in propertyset", existingPropertySetProperty);
-    }
-
-
     @Step
     public void removePropertyFromPropertySet(String propertyId, String propertySetId) {
         Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
@@ -424,5 +417,17 @@ public class PropertySetSteps extends BasicSteps {
         Response response = getSecondLevelEntitiesByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc, queryParams);
         setSessionResponse(response);
         return response;
+    }
+
+    public String resolvePropertySetId(String propertySetName) {
+        String propertySetId;
+        if (isUUID(propertySetName)) {
+            propertySetId = propertySetName;
+        } else {
+            PropertySetDto propertySet = getPropertySetByName(propertySetName);
+            assertThat(String.format("Property with code \"%s\" does not exist", propertySetName), propertySet, is(notNullValue()));
+            propertySetId = propertySet.getPropertySetId();
+        }
+        return propertySetId;
     }
 }

@@ -1,13 +1,5 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
-
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -16,6 +8,7 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -26,6 +19,13 @@ import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 public class UserStepdefs {
 
@@ -46,6 +46,9 @@ public class UserStepdefs {
 
     @Steps
     private PropertySetSteps propertySetSteps;
+    @Steps
+    private DbUtilsSteps dbSteps;
+
 
     @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
     public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
@@ -68,8 +71,9 @@ public class UserStepdefs {
         defaultSnapshotUser.setEmail("defaultSnapshotUser1@snapshot.travel");
         defaultSnapshotUser.setTimezone("Europe/Prague");
         defaultSnapshotUser.setCulture("cs-CZ");
+        defaultSnapshotUser.setIsActive(true);
 
-        usersSteps.createUser(defaultSnapshotUser);
+        dbSteps.createDBUser(defaultSnapshotUser);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")

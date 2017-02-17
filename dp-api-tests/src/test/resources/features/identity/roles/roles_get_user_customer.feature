@@ -34,21 +34,6 @@ Feature: Roles get user customer
     Then Response code is "200"
 
 
-  Scenario: Getting role with expired etag
-    #   1. property exists
-    #   2. etag value is stored
-    #   3. vat_id update changes etag
-    #   4. previously stored (expired) tag is tested
-
-    When Role with name "Role name 1" is got for etag, forced new etag through update
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-    And Body contains entity with attribute "description" value "updated because of etag"
-    And Body contains entity with attribute "name" value "Role name 1"
-
-
   Scenario: Checking error code for nonexistent role
     When Nonexistent role id got
     Then Response code is "404"

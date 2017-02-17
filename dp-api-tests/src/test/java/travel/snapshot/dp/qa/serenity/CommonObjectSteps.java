@@ -76,6 +76,8 @@ public class CommonObjectSteps extends BasicSteps {
         // create a completely new object for update
         ObjectNode updateObject = getCorrectObject(objectName);
         updateObject.remove(SERENITY__USER_CUSTOMER_RELATION);
+        // propertyCode can not be changed
+        updateObject.remove(PROPERTY_CODE);
 
         // update old record by id
         // store response for HTTP status comparison
@@ -221,13 +223,10 @@ public class CommonObjectSteps extends BasicSteps {
         // remove the ID field for comparison - original object does not need to have ID included
         ((ObjectNode) returnedObject).remove(getObjectIDField(objectName));
 
-        // is_active is special field (cannot be updated by update method, just by special api call), should not be part of generic objects
-        ((ObjectNode) returnedObject).remove("is_active");
-
         // customer_code is always generated
         ((ObjectNode) returnedObject).remove("customer_code");
 
-        assertThat(originalObject, is(returnedObject));
+        assert(originalObject.equals(returnedObject));
     }
 
     // --- rest ---
@@ -451,6 +450,8 @@ public class CommonObjectSteps extends BasicSteps {
             if (filter.test(field)) {
                 // #1 create correct object server-side
                 ObjectNode correctObject = getCorrectObject(objectName);
+                // remove property_code since it can not be changed
+                correctObject.remove(PROPERTY_CODE);
                 Response correctObjectResponse = restCreateObject(getObjectLocation(objectName),
                         OBJECT_MAPPER.writeValueAsString(correctObject));
 

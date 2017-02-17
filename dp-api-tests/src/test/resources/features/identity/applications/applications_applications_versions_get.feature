@@ -1,5 +1,6 @@
 @Identity
 Feature: Applications versions get
+  - GET tests for endpoints applications/application_id/application_version and applications/application_id/application_version/version_id
 
   Background:
     Given Database is cleaned
@@ -97,16 +98,16 @@ Feature: Applications versions get
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | link_header                                                                                                                                                                                                             |
-      | /null |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                       |
-      | /null | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                       |
-      |       |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                       |
-      |       | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                       |
-      | 15    |        | 15       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=15&cursor=15>; rel="next"                                                                                                       |
-      |       | 1      | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=51>; rel="next", </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=0>; rel="prev" |
-      | 20    | 0      | 20       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=20&cursor=20>; rel="next"                                                                                                       |
-      | 10    | 0      | 10       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=10&cursor=10>; rel="next"                                                                                                       |
-      | 5     | 10     | 5        | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=5&cursor=15>; rel="next", </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=5&cursor=5>; rel="prev"   |
+      | limit | cursor | returned | total | link_header                                                                                                                                                                                                                         |
+      | /null |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      | /null | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      |       |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      |       | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      | 15    |        | 15       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=15&cursor=15>; rel="next"                                                                                                                   |
+      |       | 1      | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=0>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=20&cursor=20>; rel="next"                                                                                                                   |
+      | 10    | 0      | 10       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=10&cursor=10>; rel="next"                                                                                                                   |
+      | 5     | 10     | 5        | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=5&cursor=5>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of application versions
     When List of application versions is got for application id "11111111-0000-4000-a000-111111111111" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
@@ -164,19 +165,3 @@ Feature: Applications versions get
       | 5     | 3      | 5        | 12    | name=='Version*'                                   | description | /null       | Version 12, Version 2, Version 3, Version 4, Version 5   |
       | /null | /null  | 1        | 1     | description=='*description 2'                      | /null       | /null       | Version 2                                                |
       | /null | /null  | 1        | 1     | name=='Version*' and description=='*description 2' | /null       | /null       | Version 2                                                |
-
-    Scenario: Duplicate creation of application version returns correct response - DP-1661
-      When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
-        | versionId                            | apiManagerId | versionName | status   | description            |
-        | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 |
-      Then Response code is 201
-      When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
-        | versionId                            | apiManagerId | versionName | status   | description            |
-        | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Same ID App | inactive | Versions description 1 |
-      Then Response code is 409
-      And Custom code is 40902
-      When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
-        | apiManagerId | versionName | status   | description            |
-        | 123          | Version 123 | inactive | Versions description 1 |
-      Then Response code is 409
-      And Custom code is 40912
