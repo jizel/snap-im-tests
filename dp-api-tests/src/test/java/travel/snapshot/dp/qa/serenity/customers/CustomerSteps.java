@@ -344,9 +344,9 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void idsAreInResponseInOrder(List<String> ids) {
         Response response = getSessionResponse();
-        CustomerDto[] customers = response.as(CustomerDto[].class);
+        PropertyCustomerRelationshipDto[] customers = response.as(PropertyCustomerRelationshipDto[].class);
         int i = 0;
-        for (CustomerDto customer : customers) {
+        for (PropertyCustomerRelationshipDto customer : customers) {
             contains("Customer on index=" + i + " is not expected", ids.get(i), customer.getCustomerId());
             i++;
         }

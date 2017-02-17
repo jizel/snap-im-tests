@@ -30,28 +30,6 @@ Feature: Properties get
     And Body contains property with attribute "is_demo_property" value "java.lang.Boolean:true"
     And Body contains property with attribute "timezone" value "Europe/Prague"
 
-
-  Scenario: Getting property with etag
-    When Property with code "p1_code" is requested
-    Then Response code is "304"
-    And Body is empty
-
-
-  Scenario: Getting property with expired etag
-    #   1. property exists
-    #   2. etag value is stored
-    #   3. vat_id update changes etag
-    #   4. previously stored (expired) tag is tested
-
-    When Property with code "p1_code" exists for etag, forced new etag through update
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-
-    # exact value
-    And Body contains property with attribute "property_code" value "p1_code"
-
-
   Scenario: Checking error code for nonexistent property
     When Nonexistent property id sent
     Then Response code is "404"
