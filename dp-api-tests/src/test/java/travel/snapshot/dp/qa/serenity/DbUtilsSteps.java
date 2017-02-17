@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.serenity;
 
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.DbHelper;
 
 /**
@@ -38,6 +39,7 @@ public class DbUtilsSteps {
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
     static final String DELETE_CUSTOMER_WITH_DELETED = "delete from Customer_With_Deleted";
     static final String DELETE_PROPERTY_WITH_DELETED = "delete from Property_With_Deleted";
+    static final String CREATE_DB_USER = "INSERT INTO User (user_id, user_type, user_name, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '11111111111111111111111111111111');";
 
     private DbHelper dbHelper = new DbHelper();
 
@@ -47,6 +49,10 @@ public class DbUtilsSteps {
 
     public void deletePropertyUserFromDb(String userId, String propertyId) {
         dbHelper.identityDb().update(DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID, userId, propertyId);
+    }
+
+    public void createDBUser(UserDto user) {
+        dbHelper.identityDb().update(CREATE_DB_USER, user.getUserId(), user.getUserType().toString(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getCulture(), user.getIsActive());
     }
 
     public void cleanDatabase() {
