@@ -1,10 +1,5 @@
 package travel.snapshot.dp.qa.steps;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
@@ -18,6 +13,11 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.HashMap;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
 
 public class BasicStepDefs {
 
@@ -149,5 +149,10 @@ public class BasicStepDefs {
     @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with empty X-Auth-UserId header$")
     public void getRequestIsSentToOnModuleWithEmptyXAuthUserIdHeader(String url, String module) throws Throwable {
         basicSteps.sendGetRequestToUrlByUser("", url, module);
+    }
+
+    @When("^DELETE request is sent to \"([^\"]*)\" on module \"([^\"]*)\"$")
+    public void deleteRequestIsSentToOnModule(String url, String module) throws Throwable {
+        basicSteps.sendDeleteToUrl(url, module);
     }
 }

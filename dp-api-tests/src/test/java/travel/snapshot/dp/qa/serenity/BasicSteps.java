@@ -521,6 +521,13 @@ public class BasicSteps {
     }
 
     @Step
+    public void sendDeleteToUrl(String url, String module) {
+        setBaseUriForModule(module);
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).basePath(url).when().delete();
+        setSessionResponse(response);
+    }
+
+    @Step
     public void sendGetRequestToUrlWithoutUserHeader(String url, String module) {
         setBaseUriForModule(module);
         Response response = given().spec(spec).basePath(url).when().get();
