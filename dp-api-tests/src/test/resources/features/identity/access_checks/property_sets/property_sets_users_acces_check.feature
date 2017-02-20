@@ -23,7 +23,7 @@ Feature: Property sets Users access check feature
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "1"
-      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" exists
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "2"

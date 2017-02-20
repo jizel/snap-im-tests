@@ -42,7 +42,7 @@
     Then Response code is "201"
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user2OfC1" and property "4d266045-1cf1-4735-8ef9-216de1370f2e"
     Then Response code is "404"
-    Given Relation between user with username "user1OfC2" and property with code "p1_code" exists
+    Given Relation between user "user1OfC2" and property with code "p1_code" exists
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and property "4d266045-1cf1-4735-8ef9-216de1370f2e"
     Then Response code is "404"
     # The following step fails due to DP-1706.

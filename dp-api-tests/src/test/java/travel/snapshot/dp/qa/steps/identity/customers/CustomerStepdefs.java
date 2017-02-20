@@ -335,7 +335,7 @@ public class CustomerStepdefs {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
     }
 
-    @When("^Relation between user with username \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
+    @When("^Relation between user \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
     public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String username, String customerId) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         assertThat(user, is(notNullValue()));

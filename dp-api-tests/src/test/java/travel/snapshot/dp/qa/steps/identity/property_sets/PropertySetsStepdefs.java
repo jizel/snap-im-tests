@@ -82,11 +82,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
-    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String customerId) throws Throwable {
+    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" exists$")
+    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        CustomerDto customer= customerSteps.getCustomerById(customerId);
-        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetName, customer);
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetId);
     }
 
     @Given("^All properties are removed from property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
@@ -205,7 +205,7 @@ public class PropertySetsStepdefs {
     }
 
     @When("^List of users for property set with name \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_users_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName, String customerId,
+    public void List_of_users_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String limit,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
