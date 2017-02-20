@@ -29,11 +29,12 @@ public class UsersSteps extends BasicSteps {
         spec.basePath(USERS_PATH);
     }
 
-    public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary) {
+    public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary, Boolean isActive) {
         users.forEach(user -> {
             UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
             relation.setCustomerId(customerId);
             relation.setIsPrimary(isPrimary);
+            relation.setIsActive(isActive);
             user.setUserCustomerRelationship(relation);
 
             Response createResp = createEntity(user);
@@ -390,10 +391,16 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void updateUserPropertyRelationship(String userId, String propertyId, UserPropertyRelationshipUpdateDto userPropertyRelationship) {
+        updateUserPropertyRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertyId, userPropertyRelationship);
+    }
+
+    @Step
+    public void updateUserPropertyRelationshipByUser(String performerId, String userId, String propertyId, UserPropertyRelationshipUpdateDto userPropertyRelationship) {
         try {
             JSONObject jsonUpdate = retrieveData(userPropertyRelationship);
+            jsonUpdate.remove(SESSION_USER_ID);
             String etag = getSecondLevelEntityEtag(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
-            Response response = updateSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUser(performerId, userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){
             fail("Exception thrown while getting JSON from UserPropertyRelationshipUpdateDto object");

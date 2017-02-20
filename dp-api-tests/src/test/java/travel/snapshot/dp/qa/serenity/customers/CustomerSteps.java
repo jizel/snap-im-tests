@@ -15,6 +15,7 @@ import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -103,8 +104,8 @@ public class CustomerSteps extends BasicSteps {
         given().spec(spec).get(customerLocation).then()
                 .body("property_id", is(originalCustomerProperty.getPropertyId()))
                 //.body("type", is(originalCustomerProperty.getType()))
-                .body("valid_from", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidFrom())))
-                .body("valid_to", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidTo())));
+                .body("valid_from", is(originalCustomerProperty.getValidFrom().format( DateTimeFormatter.ISO_LOCAL_DATE )))
+                .body("valid_to", is(originalCustomerProperty.getValidTo().format( DateTimeFormatter.ISO_LOCAL_DATE )));
 
     }
 
@@ -609,11 +610,11 @@ public class CustomerSteps extends BasicSteps {
 
         switch (fieldName) {
             case "valid_from": {
-                assertEquals(value, DateUtils.isoDatefromDate(cp.getValidFrom()));
+                assertEquals(value, cp.getValidFrom().format( DateTimeFormatter.ISO_LOCAL_DATE));
                 break;
             }
             case "valid_to": {
-                assertEquals(value, DateUtils.isoDatefromDate(cp.getValidTo()));
+                assertEquals(value, cp.getValidTo().format( DateTimeFormatter.ISO_LOCAL_DATE ));
                 break;
             }
             default:

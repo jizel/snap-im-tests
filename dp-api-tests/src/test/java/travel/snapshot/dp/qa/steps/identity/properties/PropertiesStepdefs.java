@@ -1,12 +1,14 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.xpath.operations.Bool;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -75,21 +77,20 @@ public class PropertiesStepdefs {
         propertySteps.removeAllUsersFromPropertiesWithCodes(propertyCodes);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" exists$")
-    public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode) throws Throwable {
+    @Given("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
+    public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode, Boolean isActive) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
 
-        propertySteps.relationExistsBetweenUserAndProperty(ids.get(USER_ID), ids.get(PROPERTY_ID));
+        propertySteps.relationExistsBetweenUserAndProperty(ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
     // --- when ---
 
-    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName) throws Throwable {
+    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\" by user \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName, Boolean isActive) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        String performerId = usersSteps.resolveUserId(username);
-        Response response = propertySteps.addUserToPropertyByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), performerId);
-        basicSteps.setSessionResponse(response);
+        String performerId = usersSteps.resolveUserId(performerName);
+        propertySteps.addUserToPropertyByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
     @When("^Property with code \"([^\"]*)\" is requested$")
@@ -124,7 +125,8 @@ public class PropertiesStepdefs {
     }
 
     @When("^The following property is created with random address and billing address for user \"([^\"]*)\"$")
-    public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userId, List<PropertyCreateDto> properties) throws Throwable {
+    public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyCreateDto> properties) throws Throwable {
+        String userId = usersSteps.resolveUserId( userName );
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
     }
 
@@ -138,7 +140,7 @@ public class PropertiesStepdefs {
         address.setCountry(country);
         address.setRegion(region);
         property.setAnchorCustomerId(customerId);
-        property.setPropertyName("someProperty");
+        property.setName("someProperty");
         property.setPropertyCode(code);
         property.setEmail(email);
         property.setIsDemoProperty(true);
@@ -164,10 +166,10 @@ public class PropertiesStepdefs {
         propertySteps.deleteProperty("nonexistent_id");
     }
 
-    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"$")
-    public void User_with_username_is_added_to_property_with_code(String username, String propertyCode) throws Throwable {
+    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void User_with_username_is_added_to_property_with_code(String username, String propertyCode, Boolean isActive) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        propertySteps.userIsAddedToProperty(userId, propertyCode);
+        propertySteps.userIsAddedToProperty(userId, propertyCode, isActive);
     }
 
     @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
@@ -473,5 +475,18 @@ public class PropertiesStepdefs {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
 
         propertySteps.deletePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId);
+    }
+
+    @When("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" is (in)?activated$")
+    public void relationBetweenUserAndPropertyWithCodeIsActivated(String userName, String propertyCode, String negation) throws Throwable {
+        Boolean isActive = true;
+        if (negation != null) {
+            isActive = false;
+        }
+        String userId = usersSteps.resolveUserId( userName );
+        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+        PropertyUserRelationshipDto relation = propertySteps.getUserForProperty( propertyId, userId );
+        relation.setIsActive( isActive );
+        usersSteps.updateUserPropertyRelationship( userId, propertyId, relation );
     }
 }

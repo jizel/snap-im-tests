@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.VersionDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
@@ -127,14 +127,14 @@ public class ApplicationsStepsdef {
 
     @When("^Application version is created for application with id \"([^\"]*)\"$")
     public void Application_versions_are_created_for_application_with_id(String applicationId,
-                                                                         List<VersionDto> applicationVersions) {
+                                                                         List<ApplicationVersionDto> applicationVersions) {
         Response response = applicationSteps.createApplicationVersion(applicationVersions.get(0), applicationId);
         applicationSteps.setSessionResponse(response);
     }
 
     @Given("^The following application versions for application with id \"([^\"]*)\" exists$")
     public void The_following_application_versions_exists(String applicationId,
-                                                          List<VersionDto> applicationVersions) {
+                                                          List<ApplicationVersionDto> applicationVersions) {
         applicationSteps.followingApplicationVersionsExists(applicationId, applicationVersions);
     }
 
@@ -155,19 +155,19 @@ public class ApplicationsStepsdef {
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data(String appVersionId,
-                                                                                         String applicationId, List<VersionDto> applicationVersion) throws Throwable {
+                                                                                         String applicationId, List<ApplicationVersionDto> applicationVersion) throws Throwable {
         applicationSteps.updateApplicationVersionWithId(appVersionId, applicationId, applicationVersion.get(0));
     }
 
     @Then("^Updated application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" has data$")
     public void Updated_application_version_with_id_for_application_with_id_has_data(String appVersionId,
-                                                                                     String applicationId, List<VersionDto> applicationVersion) throws Throwable {
+                                                                                     String applicationId, List<ApplicationVersionDto> applicationVersion) throws Throwable {
         applicationSteps.applicationVersionWithIdHasData(appVersionId, applicationId, applicationVersion.get(0));
     }
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data with invalid etag$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data_with_invalid_etag(
-            String appVersionId, String applicationId, List<VersionDto> applicationVersion) throws Throwable {
+            String appVersionId, String applicationId, List<ApplicationVersionDto> applicationVersion) throws Throwable {
         applicationSteps.updateApplicationVersionWithInvalidEtag(appVersionId, applicationId,
                 applicationVersion.get(0));
     }
@@ -200,7 +200,7 @@ public class ApplicationsStepsdef {
 
     @Then("^There are (\\d+) application versions returned$")
     public void There_are_application_versions_returned(int count) throws Throwable {
-        applicationSteps.numberOfEntitiesInResponse(VersionDto.class, count);
+        applicationSteps.numberOfEntitiesInResponse(ApplicationVersionDto.class, count);
     }
 
     @Then("^There are application version with following names returned in order: (.*)")

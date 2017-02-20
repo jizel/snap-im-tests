@@ -20,7 +20,7 @@ import org.springframework.util.ReflectionUtils;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.CustomerBaseDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
@@ -416,7 +416,7 @@ public class CustomerStepdefs {
     public void updateCustomerWithIdFieldItsValue(String customerId, String updatedField, String updatedValue) throws Throwable {
         CustomerUpdateDto customer = new CustomerUpdateDto();
 
-        Field field = ReflectionUtils.findField(CustomerBaseDto.class, updatedField);
+        Field field = ReflectionUtils.findField(CustomerDto.class, updatedField);
         field.setAccessible(true);
         field.set(customer, updatedValue);
         customerSteps.updateCustomer(customerId, customer);
