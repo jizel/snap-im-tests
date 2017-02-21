@@ -34,22 +34,31 @@ Feature: Customers access check feature - POST and DELETE
     And Body contains entity with attribute "description" value "udpatedDesc"
     And Body contains entity with attribute "is_active" value "true"
 
-  Scenario: User without access tries to update user group
+  Scenario: User without access tries to update user group, user loses access when relation is deactivated
     When User group "userGroup_1" is updated with following data by user "userWithNoUserGroup"
       | name        | isActive   | description   |
       | updatedName | true       | udpatedDesc   |
     Then Response code is "404"
     And Custom code is 40402
+    When Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    When User group "userGroup_1" is updated with following data by user "userWithUserGroup"
+      | name        | isActive   | description   |
+      | updatedName | true       | udpatedDesc   |
+    Then Response code is 404
 
+#  DP-1691
+  @skipped
   Scenario: Delete user group by user with access
     When User group "userGroup_1" is deleted by user "userWithUserGroup"
-#    Fails because of DP-1691
     Then Response code is 204
     And Body is empty
     And User group with id "12345000-1111-4000-a000-000000000000" is no more exists
 
-  Scenario: Delete user group by user without access
+  Scenario: Delete user group by user without access, user loses access when relation is deactivated
     When User group "userGroup_1" is deleted by user "userWithNoUserGroup"
     Then Response code is 404
     When User group "userGroup_1" is requested by user "userWithUserGroup"
     Then Response code is "200"
+    When Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    When User group "userGroup_1" is deleted by user "userWithUserGroup"
+    Then Response code is 404

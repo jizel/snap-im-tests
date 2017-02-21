@@ -1,13 +1,5 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
-
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
@@ -44,6 +36,12 @@ import travel.snapshot.dp.qa.steps.BasicStepDefs;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.*;
 
 /**
  * Created by sedlacek on 9/18/2015.

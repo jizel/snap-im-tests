@@ -1,14 +1,5 @@
 package travel.snapshot.dp.qa.serenity.properties;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -17,26 +8,20 @@ import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
-import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
-
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
+
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -446,6 +431,11 @@ public class PropertySteps extends BasicSteps {
         assertThat(customerPropertyRelationship, is(notNullValue()));
 
         Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), null);
+        setSessionResponse(response);
+    }
+    @Step
+    public void deletePropertyUserRelationship(String propertyId, String userId){
+        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(response);
     }
 

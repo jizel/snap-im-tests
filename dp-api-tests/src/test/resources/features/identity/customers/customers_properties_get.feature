@@ -14,7 +14,7 @@ Feature: Customers properties get
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1           | customer  | property     | customerProperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |
       | f7aaed3d-f8ef-41a4-a630-99d07f0ee592 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 |
       | 0a9a76ca-a8f8-445e-85d1-af857b0986e1 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | b13fde13-615a-48fd-a287-ba4a7314193b |
@@ -73,7 +73,7 @@ Feature: Customers properties get
       | userId                               | userType | userName              | firstName | lastName     | email                    | timezone      | culture |
       | 6006cd1a-7d4a-42b1-84f1-93d3628a38e0 | snapshot | gettingListofCustProp | Default   | SnapshotUser | snapshot@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "6006cd1a-7d4a-42b1-84f1-93d3628a38e0"
-      | salesforceId   | propertyName           | propertyCode           | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name                   | propertyCode           | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | list_prop_cust_p1_name | list_prop_cust_p1_code | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | ae3c902f-3386-4956-be84-cd969866c571 |
       | salesforceid_2 | list_prop_cust_p2_name | list_prop_cust_p2_code | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | ae3c902f-3386-4956-be84-cd969866c571 |
       | salesforceid_3 | list_prop_cust_p3_name | list_prop_cust_p3_code | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | ae3c902f-3386-4956-be84-cd969866c571 |
@@ -187,7 +187,7 @@ Feature: Customers properties get
       | userId                               | userType | userName      | firstName | lastName     | email                    | timezone      | culture |
       | 7006cd1a-7d4a-42b1-84f1-93d3628a38e0 | snapshot | FilteringList | Default   | SnapshotUser | snapshot@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "7006cd1a-7d4a-42b1-84f1-93d3628a38e0"
-      | salesforceId   | propertyName                  | propertyCode                  | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name                          | propertyCode                  | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | filter_list_prop_cust_p1_name | filter_list_prop_cust_p1_code | http://www.snapshot.travel | fp1@tenants.biz | true           | Europe/Prague | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 |
       | salesforceid_2 | filter_list_prop_cust_p2_name | filter_list_prop_cust_p2_code | http://www.snapshot.travel | fp2@tenants.biz | true           | Europe/Prague | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 |
       | salesforceid_3 | filter_list_prop_cust_p3_name | filter_list_prop_cust_p3_code | http://www.snapshot.travel | fp3@tenants.biz | true           | Europe/Prague | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 |

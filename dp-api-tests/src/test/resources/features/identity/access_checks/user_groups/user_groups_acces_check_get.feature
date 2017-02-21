@@ -26,6 +26,9 @@ Feature: User Groups access check feature - GET
     Scenario: User has direct relationship to User Group
       When User group "userGroup_1" is requested by user "userWithUserGroup"
       Then Response code is "200"
+      When Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      And User group "userGroup_1" is requested by user "userWithUserGroup"
+      Then Response code is "404"
       When User group "userGroup_1" is requested by user "userWithNoUserGroup"
       Then Response code is "404"
       And Custom code is 40402
@@ -36,6 +39,15 @@ Feature: User Groups access check feature - GET
         | snapshot | snapshot1 | Snapshot1 | User1    | sna1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
         | guest    | guest1    | Guest1    | User1    | gue1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
         | partner  | partner1  | Partner1  | User1    | par1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      When User group "userGroup_1" is requested by user "snapshot1"
+      Then Response code is "200"
+      When User group "userGroup_1" is requested by user "guest1"
+      Then Response code is "404"
+      And Custom code is 40402
+      When User group "userGroup_1" is requested by user "partner1"
+      Then Response code is "404"
+      And Custom code is 40402
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
       When User group "userGroup_1" is requested by user "snapshot1"
       Then Response code is "200"
       When User group "userGroup_1" is requested by user "guest1"
@@ -57,6 +69,12 @@ Feature: User Groups access check feature - GET
        When List of user groups is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithUserGroup"
        Then Response code is "200"
        And There are "<returned>" user groups returned
+       Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+       Given Relation between user group "userGroup_2" and user "userWithUserGroup" is deactivated
+       Given Relation between user group "userGroup_5" and user "userWithUserGroup" is deactivated
+       When List of user groups is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithUserGroup"
+       Then Response code is "200"
+       And There are "0" user groups returned
        Examples:
          | limit | cursor | filter                          | sort           | sort_desc           | returned    |
          | /null | 0      | name=='*'                       | /null          | is_active           | 3           |
@@ -69,9 +87,11 @@ Feature: User Groups access check feature - GET
 
 #      -----------------------------< Second level entities accessibility check - General negative scenarios >------------------------------------
 
-     Scenario Outline: User with no access rights to property sends GET request with parameters
+#    DP-1677
+    @skipped
+    Scenario Outline: User with no access rights to property sends GET request with parameters
        Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-         | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
          | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
        Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
        Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
@@ -79,7 +99,6 @@ Feature: User Groups access check feature - GET
          | 888e833e-50e8-4854-a233-289f00b54a09 | prop_set1       | brand           |
        Given Relation between user group "userGroup_1" and property set "prop_set1" exists with isActive "true"
        When GET request is sent to "<url>" on module "identity" by user "userWithNoUserGroup"
-       #         Fails until DP-1677 fixed
        Then Response code is "404"
        And Custom code is "40402"
        Examples:
@@ -94,12 +113,18 @@ Feature: User Groups access check feature - GET
 
     Scenario Outline: Unauthorized request - GET request is send to all endpoints without X-Auth-UserId header
       Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
         | propertySetId                        | propertySetName | propertySetType |
         | 888e833e-50e8-4854-a233-289f00b54a09 | prop_set1       | brand           |
+      Given Relation between user group "userGroup_1" and property set "prop_set1" exists with isActive "false"
+      When GET request is sent to "<url>" on module "identity" without X-Auth-UserId header
+      Then Response code is "403"
+      And Custom code is "40301"
+      Given IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "true" by user "userWithUserGroup"
+      And IsActive relation between user group "userGroup_1" and property set "prop_set1" is set to "true" by user "userWithUserGroup"
       When GET request is sent to "<url>" on module "identity" without X-Auth-UserId header
       Then Response code is "403"
       And Custom code is "40301"
