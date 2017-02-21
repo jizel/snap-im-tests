@@ -7,7 +7,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
-import travel.snapshot.dp.api.identity.model.VersionDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -164,10 +164,10 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationVersionsExists(String applicationId, List<VersionDto> applicationVersions) {
+    public void followingApplicationVersionsExists(String applicationId, List<ApplicationVersionDto> applicationVersions) {
 
         applicationVersions.forEach(t -> {
-            VersionDto existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
+            ApplicationVersionDto existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
             if (existingAppVersion != null) {
                 deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId(), null);
             }
@@ -181,7 +181,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationVersionIsDeleted(String appVersionId, String applicationId) {
-        VersionDto appVersion = getApplicationVersionById(applicationId, appVersionId);
+        ApplicationVersionDto appVersion = getApplicationVersionById(applicationId, appVersionId);
         if (appVersion == null) {
             return;
         }
@@ -207,12 +207,12 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void updateApplicationVersionWithId(String appVersionId, String applicationId,
-                                               VersionDto applicationVersionUpdates) throws Throwable {
-        VersionDto original = getApplicationVersionById(applicationId, appVersionId);
+                                               ApplicationVersionDto applicationVersionUpdates) throws Throwable {
+        ApplicationVersionDto original = getApplicationVersionById(applicationId, appVersionId);
         Response tempResponse =
                 getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, original.getVersionId(), null);
 
-        Map<String, Object> applicationVersionData = retrieveDataOld(VersionDto.class, applicationVersionUpdates);
+        Map<String, Object> applicationVersionData = retrieveDataOld(ApplicationVersionDto.class, applicationVersionUpdates);
 
         Response response = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
                 original.getVersionId(), applicationVersionData, tempResponse.getHeader(HEADER_ETAG));
@@ -221,10 +221,10 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationVersionWithIdHasData(String appVersionId, String applicationId,
-                                                VersionDto applicationVersion) throws Throwable {
+                                                ApplicationVersionDto applicationVersion) throws Throwable {
         Map<String, Object> originalData =
-                retrieveDataOld(VersionDto.class, getApplicationVersionById(applicationId, appVersionId));
-        Map<String, Object> expectedData = retrieveDataOld(VersionDto.class, applicationVersion);
+                retrieveDataOld(ApplicationVersionDto.class, getApplicationVersionById(applicationId, appVersionId));
+        Map<String, Object> expectedData = retrieveDataOld(ApplicationVersionDto.class, applicationVersion);
 
         expectedData.forEach((k, v) -> {
             if (v == null) {
@@ -239,9 +239,9 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void updateApplicationVersionWithInvalidEtag(String appVersionId, String applicationId,
-                                                        VersionDto applicationVersion) throws Throwable {
+                                                        ApplicationVersionDto applicationVersion) throws Throwable {
 
-        Map<String, Object> applicationVersionData = retrieveDataOld(VersionDto.class, applicationVersion);
+        Map<String, Object> applicationVersionData = retrieveDataOld(ApplicationVersionDto.class, applicationVersion);
 
         Response updateResponse = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
                 applicationVersionData, "invalid");
@@ -273,9 +273,9 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void versionNamesInResponseInOrder(List<String> versionNames) {
         Response response = getSessionResponse();
-        VersionDto[] appVersions = response.as(VersionDto[].class);
+        ApplicationVersionDto[] appVersions = response.as(ApplicationVersionDto[].class);
         int i = 0;
-        for (VersionDto a : appVersions) {
+        for (ApplicationVersionDto a : appVersions) {
             assertEquals("Application version on index=" + i + " is not expected", versionNames.get(i),
                     a.getVersionName());
             i++;
@@ -298,21 +298,21 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public Response createApplicationVersion(VersionDto applicationVersion, String applicationId) {
+    public Response createApplicationVersion(ApplicationVersionDto applicationVersion, String applicationId) {
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
         return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
     }
 
-    public VersionDto getApplicationVersionByName(String applicationId, String versionName) {
-        VersionDto[] applicationVersion =
+    public ApplicationVersionDto getApplicationVersionByName(String applicationId, String versionName) {
+        ApplicationVersionDto[] applicationVersion =
                 getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
-                        "name=='" + versionName + "'", null, null, null).as(VersionDto[].class);
+                        "name=='" + versionName + "'", null, null, null).as(ApplicationVersionDto[].class);
         return stream(applicationVersion).findFirst().orElse(null);
     }
 
-    public VersionDto getApplicationVersionById(String applicationId, String versionId) {
-        VersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
-                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null, null).as(VersionDto[].class);
+    public ApplicationVersionDto getApplicationVersionById(String applicationId, String versionId) {
+        ApplicationVersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
+                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null, null).as(ApplicationVersionDto[].class);
         return stream(applicationVersion).findFirst().orElse(null);
     }
 

@@ -8,7 +8,7 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.RoleIdDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
@@ -462,7 +462,7 @@ public class UserGroupsdefs {
 
     @Then("^There are \"([^\"]*)\" relationships returned$")
     public void thereAreRelationshipsReturned(int numberOfRoles) throws Throwable {
-        userGroupSteps.numberOfEntitiesInResponse(RoleIdDto.class, numberOfRoles);
+        userGroupSteps.numberOfEntitiesInResponse(RoleDto.class, numberOfRoles);
     }
 
     @Then("^There are relationships start with following IDs returned in order: \"([^\"]*)\"$")

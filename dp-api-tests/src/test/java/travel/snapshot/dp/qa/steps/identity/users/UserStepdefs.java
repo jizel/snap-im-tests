@@ -50,9 +50,9 @@ public class UserStepdefs {
     private DbUtilsSteps dbSteps;
 
 
-    @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
-    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
-        usersSteps.followingUsersExist(users, customerId, isPrimary);
+    @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, Boolean isActive, List<UserCreateDto> users) throws Throwable {
+        usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
 
     @When("^The following users is created for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
