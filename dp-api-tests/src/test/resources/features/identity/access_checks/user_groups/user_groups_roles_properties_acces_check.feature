@@ -25,7 +25,7 @@ Feature: User Groups Properties Roles access check feature
 
   Scenario: Get relationship UserGroup property and Role by user
     Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -48,7 +48,7 @@ Feature: User Groups Properties Roles access check feature
 
   Scenario: Create relationship UserGroup property and Role is created by user with access
     Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -69,10 +69,10 @@ Feature: User Groups Properties Roles access check feature
 
   Scenario: Create relationship UserGroup property and Role is created by user without access
     Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following property is created with random address and billing address for user "32129079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 789e833e-50e8-4854-a233-289f00b54a09 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -94,7 +94,7 @@ Feature: User Groups Properties Roles access check feature
 
   Scenario: Delete relationship UserGroup property and Role is updated by user with access
     Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -114,7 +114,7 @@ Feature: User Groups Properties Roles access check feature
 
   Scenario: Delete relationship UserGroup property and Role is updated by user with access
     Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |

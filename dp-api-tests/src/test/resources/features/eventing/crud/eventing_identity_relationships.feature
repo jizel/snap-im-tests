@@ -15,7 +15,7 @@ Feature: Eventing identity module relationships
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | role_add_event_user | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId    | propertyName                      | propertyCode                 | website                    | email           | isDemoProperty | timezone      |
+      | salesforceId    | name                              | propertyCode                 | website                    | email           | isDemoProperty | timezone      |
       | salesforceid_n1 | Eventing property add to customer | cust_prop_add_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague |
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
@@ -41,7 +41,7 @@ Feature: Eventing identity module relationships
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | role_add_event_user | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId    | propertyName                      | propertyCode                    | website                    | email           | isDemoProperty | timezone      |
+      | salesforceId    | name                              | propertyCode                    | website                    | email           | isDemoProperty | timezone      |
       | salesforceid_n1 | Eventing property add to customer | cust_prop_update_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "cust_prop_update_property_event" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "anchor" from "2015-01-01" to "2015-12-31"
@@ -127,7 +127,7 @@ Feature: Eventing identity module relationships
       | add_propset_user_event_propset | ps1_description        | brand           |
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode                | website                    | email          | isDemoProperty | timezone      |
+      | salesforceId   | name         | propertyCode                | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | add_propset_prop_event_prop | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
@@ -156,7 +156,7 @@ Feature: Eventing identity module relationships
       | del_propset_user_event_propset | ps1_description        | brand           |
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode                | website                    | email          | isDemoProperty | timezone      |
+      | salesforceId   | name         | propertyCode                | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | del_propset_prop_event_prop | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
     Given Relation between property with code "del_propset_prop_event_prop" and property set with name "del_propset_prop_event_propset" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
@@ -278,7 +278,7 @@ Feature: Eventing identity module relationships
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode             | website                    | email          | isDemoProperty | timezone      |
+      | salesforceId   | name         | propertyCode             | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | add_prop_user_event_prop | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
     
 
@@ -303,7 +303,7 @@ Feature: Eventing identity module relationships
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode             | website                    | email          | isDemoProperty | timezone      |
+      | salesforceId   | name         | propertyCode             | website                    | email          | isDemoProperty | timezone      |
       | salesforceid_1 | p1_name      | del_prop_user_event_prop | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague |
 
     Given Relation between user with username "del_prop_user_event_user" and property with code "del_prop_user_event_prop" exists

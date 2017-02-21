@@ -1,14 +1,11 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
-import com.jayway.restassured.response.Response;
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import org.apache.xpath.operations.Bool;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -483,10 +480,16 @@ public class PropertiesStepdefs {
         if (negation != null) {
             isActive = false;
         }
-        String userId = usersSteps.resolveUserId( userName );
-        String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        PropertyUserRelationshipDto relation = propertySteps.getUserForProperty( propertyId, userId );
-        relation.setIsActive( isActive );
-        usersSteps.updateUserPropertyRelationship( userId, propertyId, relation );
+        String userId = usersSteps.resolveUserId(userName);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        PropertyUserRelationshipDto relation = propertySteps.getUserForProperty(propertyId, userId);
+        relation.setIsActive(isActive);
+        usersSteps.updateUserPropertyRelationship(userId, propertyId, relation);
+    }
+
+    @Given("^Relation between property with code \"([^\"]*)\" and user \"([^\"]*)\" is deleted$")
+    public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username) throws Throwable {
+        Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        propertySteps.deletePropertyUserRelationship(ids.get(PROPERTY_ID), ids.get(USER_ID));
     }
 }

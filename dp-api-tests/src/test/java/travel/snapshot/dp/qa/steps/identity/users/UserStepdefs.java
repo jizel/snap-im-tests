@@ -51,7 +51,9 @@ public class UserStepdefs {
 
 
     @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
-    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, Boolean isActive, List<UserCreateDto> users) throws Throwable {
+    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, String isActiveString, List<UserCreateDto> users) throws Throwable {
+//        User-customer relationship is by default false but we want true by default in tests.
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
 

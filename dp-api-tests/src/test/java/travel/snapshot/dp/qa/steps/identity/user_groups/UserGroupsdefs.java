@@ -52,14 +52,12 @@ public class UserGroupsdefs {
 
     //    Help methods
     private Map<String, String> getNonNullIdsFromNames(String userGroupName, String userName) {
-        UserDto user = usersSteps.getUserByUsername(userName);
-        assertThat("User with username " + userName + " is null. ", user, is(not(nullValue())));
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat("UserGroup with name " + userGroupName + " not found. ", user, is(not(nullValue())));
+        String userId = usersSteps.resolveUserId(userName);
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
 
         Map<String, String> userGroupUserIds = new HashMap<>();
-        userGroupUserIds.put(USER_ID, user.getUserId());
-        userGroupUserIds.put(USER_GROUP_ID, userGroup.getUserGroupId());
+        userGroupUserIds.put(USER_ID, userId);
+        userGroupUserIds.put(USER_GROUP_ID, userGroupId);
 
         return userGroupUserIds;
     }
@@ -278,10 +276,9 @@ public class UserGroupsdefs {
     @When("^Relation between user group \"([^\"]*)\" and property with code \"([^\"]*)\" is created with isActive \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void relationBetweenUserGroupAndPropertyWithCodeIsCreatedWithIsActiveByUser(String userGroupName, String propertyCode, Boolean isActive, String username) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, username);
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
 
-        userGroupSteps.userGroupPropertyRelationshipIsCreatedByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), property.getPropertyId(), isActive);
+        userGroupSteps.userGroupPropertyRelationshipIsCreatedByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertyId, isActive);
     }
 
     @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is created with isActive \"([^\"]*)\"$")

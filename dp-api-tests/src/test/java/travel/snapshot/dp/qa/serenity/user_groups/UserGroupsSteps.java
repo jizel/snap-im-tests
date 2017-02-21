@@ -1,8 +1,5 @@
 package travel.snapshot.dp.qa.serenity.user_groups;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
@@ -23,6 +20,11 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class UserGroupsSteps extends BasicSteps {
 
@@ -422,7 +424,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setUserGroupUserActivity(String userGroupId, String userId, Boolean isActive) throws JsonProcessingException {
-        setUserGroupUserActivityByUser(DEFAULT_SNAPSHOT_APPLICATION_ID, userGroupId, userId, isActive);
+        setUserGroupUserActivityByUser(DEFAULT_SNAPSHOT_USER_ID, userGroupId, userId, isActive);
     }
 
     @Step
@@ -537,5 +539,17 @@ public class UserGroupsSteps extends BasicSteps {
     public UserGroupDto getUserGroupByName(String userGroupName) {
         UserGroupDto[] userGroups = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "name==" + userGroupName, null, null, null).as(UserGroupDto[].class);
         return Arrays.stream(userGroups).findFirst().orElse(null);
+    }
+
+    public String resolveUserGroupId(String userGroupName) {
+        String userGroupId;
+        if (isUUID(userGroupName)) {
+            userGroupId = userGroupName;
+        } else {
+            UserGroupDto userGroup = getUserGroupByName(userGroupName);
+            assertThat(String.format("User group with name \"%s\" does not exist", userGroupName), userGroup, is(notNullValue()));
+            userGroupId = userGroup.getUserGroupId();
+        }
+        return userGroupId;
     }
 }

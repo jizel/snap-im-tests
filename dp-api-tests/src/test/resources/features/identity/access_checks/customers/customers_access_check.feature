@@ -139,6 +139,15 @@ Feature: Customers access check feature - GET
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
 
+  @skipped
+  Scenario: User loses access to customer when relation is deleted - DP-1811
+    Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is deleted
+    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Then Response code is "404"
+    And Custom code is 40402
+    Given Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" exists with isPrimary "true"
+    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Then Response code is "200"
 
 #      -----------------------------< General negative scenarios for second level endpoints >------------------------------------
 
