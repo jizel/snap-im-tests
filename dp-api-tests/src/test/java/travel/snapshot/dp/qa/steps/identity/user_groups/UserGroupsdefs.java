@@ -70,8 +70,9 @@ public class UserGroupsdefs {
         userGroupSteps.followingUserGroupsExist(userGroups);
     }
 
-    @Given("^Relation between user group \"([^\"]*)\" and property with code \"([^\"]*)\" exists with isActive \"([^\"]*)\"$")
-    public void relationBetweenUserGroupAndPropertyExistsWithIsActive(String userGroupName, String propertyCode, Boolean isActive) throws Throwable {
+    @Given("^Relation between user group \"([^\"]*)\" and property with code \"([^\"]*)\" exists(?: with isActive \"([^\"]*)\")?$")
+    public void relationBetweenUserGroupAndPropertyExistsWithIsActive(String userGroupName, String propertyCode, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
         assertThat(userGroup, is(notNullValue()));
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
@@ -79,13 +80,12 @@ public class UserGroupsdefs {
         userGroupSteps.relationshipGroupPropertyExist(userGroup.getUserGroupId(), property.getPropertyId(), isActive);
     }
 
-    @Given("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" exists with isActive \"([^\"]*)\"$")
-    public void relationBetweenUserGroupAndPropertySetExistsWithIsActive(String userGroupName, String propertySetName, Boolean isActive) throws Throwable {
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(userGroup, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        userGroupSteps.relationshipGroupPropertySetExist(userGroup.getUserGroupId(), propertySet.getPropertySetId(), isActive);
+    @Given("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" exists(?: with isActive \"([^\"]*)\")?$")
+    public void relationBetweenUserGroupAndPropertySetExistsWithIsActive(String userGroupName, String propertySetName, Boolean isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
+        userGroupSteps.relationshipGroupPropertySetExist(userGroupId, propertySetId, isActive);
     }
 
     // ------------------------- WHEN ------------------------------
@@ -358,24 +358,26 @@ public class UserGroupsdefs {
 
     }
 
-    @When("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is activated$")
-    public void relationBetweenUserGroupAndPropertyIsActivated(String userGroupId, String propertyId) throws Throwable {
-        userGroupSteps.setGroupPropertyActivity(userGroupId, propertyId, true);
+    @When("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is (de|in)?activated$")
+    public void relationBetweenUserGroupAndPropertyIsActivated(String userGroupName, String propertyCode, String negation) throws Throwable {
+        String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        Boolean activity = true;
+        if (negation != null) {
+            activity = false;
+        }
+        userGroupSteps.setGroupPropertyActivity(groupId, propertyId, activity);
     }
 
-    @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is activated$")
-    public void relationBetweenUserGroupAndPropertySetIsActivated(String userGroupName, String propertySetName) throws Throwable {
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(userGroup, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
-        userGroupSteps.setGroupPropertySetActivity(userGroup.getUserGroupId(), propertySet.getPropertySetId(), true);
-    }
-
-    @When("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is deactivated$")
-    public void relationBetweenUserGroupAndPropertyIsDeactivated(String userGroupId, String propertyId) throws Throwable {
-        userGroupSteps.setGroupPropertyActivity(userGroupId, propertyId, false);
+    @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is (in|de)?activated$")
+    public void relationBetweenUserGroupAndPropertySetIsActivated(String userGroupName, String propertySetName, String negation) throws Throwable {
+        String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
+        Boolean activity = true;
+        if (negation != null) {
+            activity = false;
+        }
+        userGroupSteps.setGroupPropertySetActivity(groupId, propertySetId, activity);
     }
 
     @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is deactivated$")
