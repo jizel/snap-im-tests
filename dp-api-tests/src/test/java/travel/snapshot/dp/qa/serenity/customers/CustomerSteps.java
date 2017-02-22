@@ -9,10 +9,15 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
+import java.time.LocalDate;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +28,7 @@ import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
@@ -53,6 +59,9 @@ public class CustomerSteps extends BasicSteps {
     private static final String SESSION_CUSTOMER_ID = "customer_id";
     private static final String SESSION_CREATED_CUSTOMER_PROPERTY = "created_customer_property";
     private static final String BASE_PATH_CUSTOMERS = "/identity/customers";
+    private static final String DEFAULT_VALID_FROM = "2015-12-31";
+    private static final String DEFAULT_VALID_TO = "2050-12-31";
+    private static final String DEFAULT_RELATION_TYPE = "chain";
 
     public CustomerSteps() {
         super();
@@ -147,34 +156,49 @@ public class CustomerSteps extends BasicSteps {
         return stream(customerProperties).findFirst().orElse(null);
     }
 
-    private Response addPropertyToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo) {
-        return addPropertyToCustomerWithTypeFromToByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, customerId, type, validFrom, validTo);
+    private Response addPropertyToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+        return addPropertyToCustomerWithTypeFromToByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, customerId, type, validFrom, validTo, isActive);
+    }
+
+    public Response addPropertyToCustomerWithTypeFromToByUser(String userId, String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+        CustomerPropertyRelationshipDto relation = new CustomerPropertyRelationshipDto();
+        if (userId == null) {
+            userId = DEFAULT_SNAPSHOT_USER_ID;
+        }
+        if (propertyId == null) {
+            propertyId = NON_EXISTENT_ID;
+        }
+        if (type == null) {
+            type = DEFAULT_RELATION_TYPE;
+        }
+        if (validFrom == null) {
+            validFrom = DEFAULT_VALID_FROM;
+        }
+        if (validTo == null) {
+            validTo = DEFAULT_VALID_TO;
+        }
+        relation.setType(CustomerPropertyRelationshipType.valueOf(type.toUpperCase()));
+        relation.setValidFrom(LocalDate.parse(validFrom));
+        relation.setValidTo(LocalDate.parse(validTo));
+        relation.setIsActive(isActive);
+        relation.setPropertyId(propertyId);
+        return createSecondLevelRelationshipByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
     }
 
     @Step
-    public Response addPropertyToCustomerWithTypeFromToByUser(String userId, String propertyId, String customerId, String type, String validFrom, String validTo) {
-        Map<String, Object> customerProperty = new HashMap<>();
-            customerProperty.put("property_id", propertyId);
-            customerProperty.put("relationship_type", type);
-            customerProperty.put("valid_from", validFrom);
-            customerProperty.put("valid_to", validTo);
-        return createSecondLevelRelationshipByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerProperty);
+    public Response addUserToCustomer(String userId, String customerId, Boolean isPrimary, Boolean isActive) {
+        return addUserToCustomerByUser(DEFAULT_SNAPSHOT_USER_ID, userId, customerId, isPrimary, isActive);
     }
 
     @Step
-    public Response addUserToCustomerWithIsPrimary(String userId, String customerId, Boolean isPrimary) {
-        return addUserToCustomerWithIsPrimaryByUser(DEFAULT_SNAPSHOT_USER_ID, userId, customerId, isPrimary);
-    }
-
-    @Step
-    public Response addUserToCustomerWithIsPrimaryByUser(String performerId, String userId, String customerId, Boolean isPrimary) {
-        Map<String, Object> customerUser = new HashMap<>();
-        customerUser.put("user_id", userId);
-        customerUser.put("is_primary", isPrimary);
-
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, performerId)
-                .body(customerUser)
-                .when().post("/{customerId}/users", customerId);
+    public Response addUserToCustomerByUser(String performerId, String userId, String customerId, Boolean isPrimary, Boolean isActive) {
+        CustomerUserRelationshipDto relation = new CustomerUserRelationshipDto();
+        relation.setUserId(userId);
+        relation.setIsPrimary(isPrimary);
+        relation.setIsActive(isActive);
+        Response response = createSecondLevelRelationshipByUser(performerId, customerId, SECOND_LEVEL_OBJECT_USERS, relation);
+        setSessionResponse(response);
+        return response;
     }
 
 
@@ -362,8 +386,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo) {
-        Response response = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, dateFrom, dateTo);
+    public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo, Boolean isActive) {
+        Response response = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, dateFrom, dateTo, isActive);
 
         if (response.statusCode() == HttpStatus.SC_CREATED) {
             setSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY, response.as(CustomerPropertyRelationshipDto.class));
@@ -372,8 +396,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo) {
-        Response createResponse = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo);
+    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+        Response createResponse = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo, isActive);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerProperty cannot be created " + createResponse.getBody().asString());
         }
@@ -385,6 +409,11 @@ public class CustomerSteps extends BasicSteps {
         String etag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId());
         Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), singletonMap(fieldName, value), etag);
         setSessionResponse(updateResponse);
+    }
+
+    @Step
+    public void updateCustomerPropertyRelationship(String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
+        updateCustomerPropertyRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, customerId, relationshipUpdate);
     }
 
     @Step
@@ -412,7 +441,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenUserAndCustomerWithPrimary(String userId, String customerId, Boolean isPrimary) {
+    public void relationExistsBetweenUserAndCustomer(String userId, String customerId, Boolean isPrimary, Boolean isActive) {
         CustomerUserRelationshipDto existingCustomerUser = getUserForCustomer(customerId, userId);
         if (existingCustomerUser != null) {
 
@@ -421,7 +450,7 @@ public class CustomerSteps extends BasicSteps {
                 fail("CustomerUser cannot be deleted " + deleteResponse.getBody().asString());
             }
         }
-        Response createResponse = addUserToCustomerWithIsPrimary(userId, customerId, isPrimary);
+        Response createResponse = addUserToCustomer(userId, customerId, isPrimary, isActive);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerUser cannot be created " + createResponse.getBody().asString());
         }
@@ -507,8 +536,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void userIsAddedToCustomerWithIsPrimary(UserDto user, String customerId, Boolean isPrimary) {
-        Response response = addUserToCustomerWithIsPrimary(user.getUserId(), customerId, isPrimary);
+    public void userIsAddedToCustomer(String userId, String customerId, Boolean isPrimary, Boolean isActive) {
+        Response response = addUserToCustomer(userId, customerId, isPrimary, isActive);
         setSessionResponse(response);
     }
 

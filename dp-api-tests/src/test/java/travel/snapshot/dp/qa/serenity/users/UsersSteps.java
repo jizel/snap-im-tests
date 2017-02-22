@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
 import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -490,5 +491,11 @@ public class UsersSteps extends BasicSteps {
         String eTag = getThirdLevelEntityEtag(targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId);
         Response response = deleteThirdLevelEntityByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId, eTag);
         setSessionResponse(response);
+    }
+
+    @Step
+    public UserCustomerRelationshipDto getCustomerForUser(String userId, String customerId) {
+        Response userCustomerResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
+        return stream(userCustomerResponse.as(UserCustomerRelationshipDto[].class)).findFirst().orElse(null);
     }
 }
