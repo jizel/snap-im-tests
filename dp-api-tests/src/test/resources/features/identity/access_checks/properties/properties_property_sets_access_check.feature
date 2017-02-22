@@ -21,13 +21,20 @@ Feature: Properties-Property Sets access check feature
 
 
   Scenario: Second level entities - User sees only property sets he should for property he owns
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
+    Given Relation between user "userWithProp" and property with code "p1_code" is inactivated
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp" with is_active "false"
       | propertySetName | propertySetType |
       | prop_set1       | brand           |
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp" with is_active "false"
       | propertySetName | propertySetType |
       | prop_set2       | brand           |
     When Property with code "p1_code" is added to property set "prop_set1"
+    When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
+    Then Response code is "404"
+    When Relation between property set "prop_set1" and user "userWithProp" is activated
+    When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
+    Then Response code is "404"
+    When Relation between user "userWithProp" and property set "prop_set1" is activated
     When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
     Then Response code is "200"
     When Property set with name "prop_set2" for property with code "p1_code" is requested by user "userWithProp"
