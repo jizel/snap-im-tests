@@ -196,9 +196,7 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public Response addUserToPropertySetByUser(String performerId, String userId, String propertySetId) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, performerId)
-                .body(singletonMap("user_id", userId))
-                .when().post("/{propertySetId}/users", propertySetId);
+        return createSecondLevelRelationshipByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, singletonMap(USER_ID, userId));
     }
 
     @Step

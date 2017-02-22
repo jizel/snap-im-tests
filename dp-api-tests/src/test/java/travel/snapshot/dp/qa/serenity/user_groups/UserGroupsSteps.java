@@ -1,5 +1,11 @@
 package travel.snapshot.dp.qa.serenity.user_groups;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
@@ -18,13 +24,10 @@ import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import java.util.Map;
 
 public class UserGroupsSteps extends BasicSteps {
 
@@ -441,17 +444,15 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void userGroupRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String roleId) {
-        RoleDto roleObject = new RoleDto();
-        roleObject.setRoleId(roleId);
-
-        Response response = createSecondLevelRelationshipByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleObject);
+        Response response = createSecondLevelRelationshipByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
         setSessionResponse(response);
     }
 
     @Step
-    public void relationshipGroupRoleExist(String userGroupId, String roleId) throws JsonProcessingException {
+    public void relationshipGroupRoleExist(String userGroupId, String roleId, Boolean isActive) throws JsonProcessingException {
         RoleDto roleObject = new RoleDto();
         roleObject.setRoleId(roleId);
+        roleObject.setIsActive(isActive);
 
         JSONObject roleInJson = retrieveData(roleObject);
 
@@ -460,11 +461,11 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     @Step
-    public void userGroupPropertyRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        RoleDto roleObject = new RoleDto();
-        roleObject.setRoleId(roleId);
-
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(roleObject).when().post(userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES);
+    public void userGroupPropertyRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertyId, String roleId, Boolean isActive) {
+        Map<String, String> userGroupPropertyRoleRelation = new HashMap<>();
+        userGroupPropertyRoleRelation.put(ROLE_ID, roleId);
+        userGroupPropertyRoleRelation.put(IS_ACTIVE, isActive.toString());
+        Response response = createThirdLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, userGroupPropertyRoleRelation);
         setSessionResponse(response);
     }
 
@@ -479,10 +480,10 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void userGroupPropertyRoleRelationshipIsDeletedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        String url = userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES + roleId;
+        String url = userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES + "/" + roleId;
         String etag = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get(url).getHeader(HEADER_ETAG);
 
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_ETAG, etag).when().delete(url);
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_IF_MATCH, etag).when().delete(url);
         setSessionResponse(response);
     }
 
