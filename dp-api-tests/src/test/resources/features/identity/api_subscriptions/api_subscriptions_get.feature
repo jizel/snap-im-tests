@@ -2,10 +2,10 @@
 Feature: Api subscription get
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
-    Given Default application is created
+    Given Database is cleaned and default entities are created
+
+
+
     Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
       | versionId                            | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |

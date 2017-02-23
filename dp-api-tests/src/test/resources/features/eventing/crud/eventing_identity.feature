@@ -1,9 +1,9 @@
 Feature: Eventing identity module
 
   Background:
-    Given Database is cleaned
-    Given Default partner is created
-    Given Default application is created
+    Given Database is cleaned and default entities are created
+
+
 
   Scenario: Eventing customer created
   Customer clean if existed, then subscription is clean and recreated,

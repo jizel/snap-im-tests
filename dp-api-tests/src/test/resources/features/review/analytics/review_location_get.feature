@@ -2,8 +2,8 @@ Feature: Review locaitons
   Testing of api for review locations with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -25,8 +25,8 @@ Feature: Review locaitons
 
     Given Relation between user "snapshotUser" and property with code "p1_code" exists
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
-    Given Default partner is created
-    Given Default application is created
+
+
 
   # /locations/
   # ---------------------------------------------------------------------------------------------------------------------

@@ -2,8 +2,8 @@
 Feature: Customers validation
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given the location "identity/customers" for object "customer"
     Given unique identifier "customer_id" for object "customer"
     Given the following "customer" object definition

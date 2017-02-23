@@ -2,11 +2,11 @@
 Feature: Roles create update delete user property set
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given Switch for user property set role tests
-    Given Default Snapshot user is created
-    Given Default partner is created
-    Given Default application is created
+
+
+
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        | partnerId                           | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |

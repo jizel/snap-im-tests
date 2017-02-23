@@ -1,5 +1,13 @@
 package travel.snapshot.dp.qa.steps.identity.customers;
 
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
+
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
@@ -12,7 +20,6 @@ import org.springframework.util.ReflectionUtils;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
@@ -36,12 +43,6 @@ import travel.snapshot.dp.qa.steps.BasicStepDefs;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.*;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -92,9 +93,8 @@ public class CustomerStepdefs {
     @Given("^Relation between property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
     public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
                                                                                                     String customerId, String type, String validFrom, String validTo) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(property, customerId, type, validFrom, validTo);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo);
     }
 
     @Given("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")

@@ -9,8 +9,8 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
@@ -27,22 +27,10 @@ public class ApplicationsStepsdef {
     @Steps
     private ApplicationVersionsSteps applicationVersionSteps;
 
+
     @When("^Application is created$")
     public void Application_is_created(List<ApplicationDto> applications) {
         applicationSteps.followingApplicationIsCreated(applications.get(0));
-    }
-
-    @Given("^Default application is created$")
-    public void defaultSnapshotUserIsCreated() throws Throwable {
-
-        ApplicationDto defaultApp = new ApplicationDto();
-        defaultApp.setApplicationName("Test");
-        defaultApp.setDescription("Test");
-        defaultApp.setPartnerId(applicationSteps.DEFAULT_SNAPSHOT_PARTNER_ID);
-        defaultApp.setIsInternal(true);
-        defaultApp.setApplicationId(applicationSteps.DEFAULT_SNAPSHOT_APPLICATION_ID);
-        defaultApp.setWebsite(applicationSteps.SNAPSHOT_WEBSITE);
-        applicationSteps.followingApplicationIsCreated(defaultApp);
     }
 
     @Given("^The following applications exist$")

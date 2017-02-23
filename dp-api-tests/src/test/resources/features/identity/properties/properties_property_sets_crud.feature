@@ -5,8 +5,8 @@ Feature: Properties property sets create update delete
   - Most test cases for this are covered under properties_property_sets_access_check.feature
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |

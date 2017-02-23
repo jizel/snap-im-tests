@@ -2,7 +2,7 @@
 Feature: Users property set roles CRUD
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -14,8 +14,8 @@ Feature: Users property set roles CRUD
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
-    Given Default partner is created
-    Given Default application is created
+
+
     Given Switch for user property set role tests
     Given The following roles exist
       | roleId                               | roleName    | description            | applicationId                        |

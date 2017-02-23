@@ -3,8 +3,8 @@ Feature: Rate shopper
 # GET /rate_shopper/analytics/market
 
 #  Background:
-#    Given Database is cleaned
-#    Given Default Snapshot user is created
+#    Given Database is cleaned and default entities are created
+#
 
   Scenario Outline: Checking error codes for missing parameters
     When Getting BAR values for a given market for "<propertyId>" since "<since>" until "<until>"
@@ -19,8 +19,8 @@ Feature: Rate shopper
       | 98000099-9999-4999-a999-999999999999 | today | /null |
 
   Scenario Outline: Checking correct currency parameter returned for market
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -42,7 +42,7 @@ Feature: Rate shopper
       | 99001499-9999-4999-a999-999999999999 | EUR               |
 
   Scenario Outline: Check minimal, average, and maximal market values
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -81,8 +81,8 @@ Feature: Rate shopper
       | /rate_shopper/analytics/property/invalid?since=2015-12-03&until=2015-12-03 |
 
   Scenario Outline: Checking correct currency parameter returned for property
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -105,7 +105,7 @@ Feature: Rate shopper
 
 
   Scenario Outline: Get BAR values for a given property analytics data from API
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -148,7 +148,7 @@ Feature: Rate shopper
       | 98000099-9999-4999-a999-999999999999 | 40402      | 404        |
 
   Scenario Outline: Getting a list of items
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -178,7 +178,7 @@ Feature: Rate shopper
       | 99000099-9999-4999-a999-999999999999 | 5     | 5      | 5     |
 
   Scenario Outline: Checking error codes for getting list of properties in one market
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -207,7 +207,7 @@ Feature: Rate shopper
       | 99000099-9999-4999-a999-999999999999 | 10          | text   | 400           | 40002       |
 
   Scenario Outline: Given property in future or without fetchDatetime are calculated real time
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
