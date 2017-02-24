@@ -24,7 +24,7 @@
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
     Scenario: Second level entities - User sees only user group-properties relations for user groups and properties he can access if the relation is active
-      Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
+      Given The following property is created with random address and billing address for user "userWithUserGroup"
         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
@@ -46,8 +46,10 @@
       Then Response code is 404
       And Custom code is 40402
 
-    Scenario: Add user group to property relationship by user who can access the property
-      Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
+#        DP-1799
+    @skipped
+    Scenario: Add user group to property relationship by user who can access the property and user group
+      Given The following properties exist with random address and billing address for user "userWithUserGroup"
         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
@@ -55,51 +57,71 @@
       And Body contains entity with attribute "property_id" value "999e833e-50e8-4854-a233-289f00b54a09"
 
 
-    Scenario: Add user group to property by user who cannot access the property (or the relationship is deactivated)
-      Given The following property is created with random address and billing address for user "userWithNoUserGroup"
+    Scenario: Add user group to property by user who cannot access the property, or the user group
+      Given The following properties exist with random address and billing address for user "userWithNoUserGroup"
         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
       Then Response code is "422"
       And Custom code is 42202
-
-    Scenario: Add user group to property by user who cannot access the user group (or the relationship is deactivated)
-      Given The following property is created with random address and billing address for user "32129079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-        | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithNoUserGroup"
       Then Response code is "404"
       And Custom code is 40402
 
-    Scenario: User cannot add user group to property when relationship between him and the property, or the user group, exists but is not active
+#   DP-1799 - rerun when fixed
+    Scenario: Add user group to property by user whose access to the user group - or the property - is inactive
+      Given The following properties exist with random address and billing address for user "userWithUserGroup"
+        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
+      Given Relation between user "userWithUserGroup" and property with code "p1_code" is inactivated
+      When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
+      Then Response code is "422"
+      And Custom code is 42202
+      Given Relation between user "userWithUserGroup" and property with code "p1_code" is activated
+      When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
+      Then Response code is "201"
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
+      Then Response code is "404"
+      And Custom code is 40402
+
+    Scenario: Update user group to property relationship by user who has access
       Given The following property is created with random address and billing address for user "userWithUserGroup"
         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-      Given Relation between user "userWithUserGroup" and property with code "p1_code" exists
-      When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
-      Then Response code is "201"
-
-    Scenario: Update user group to property relationship by user who has access
-      Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-        | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "true" by user "userWithUserGroup"
+      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
+      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
       Then Response code is 204
       And Body is empty
-      And Relation between user group "userGroup_1" and property with code "p1_code" is active
+      And Relation between user group "userGroup_1" and property with code "p1_code" is not active
 
-    Scenario: Update user group to property relationship by user who does not have access to the user group
-      Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
+    Scenario: Update user group to property relationship by user who does not have access to the user group, or the property
+      Given The following property is created with random address and billing address for user "userWithNoUserGroup"
+        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
+      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
+      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithNoUserGroup"
+      Then Response code is 404
+      And Custom code is 40402
+
+    Scenario: Update user group to property relationship by user whose relation with the user group is inactive, or the user group-property relation is inactive
+      Given The following property is created with random address and billing address for user "userWithUserGroup"
         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "true" by user "userWithNoUserGroup"
+      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
+      Then Response code is 404
+      And Custom code is 40402
+      Given Relation between user group "userGroup_1" and property "p1_code" is activated
+      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
+      Then Response code is 204
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
       Then Response code is 404
       And Custom code is 40402
 
     Scenario: Delete userGroup-property relationship by user with access
-      Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
+      Given The following property is created with random address and billing address for user "userWithUserGroup"
         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
@@ -118,3 +140,19 @@
       And Custom code is 40402
       When Relation between user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
       Then Response code is 200
+
+    Scenario: Delete user group to property relationship by user whose relation with the user group is inactive, or the user group-property relation is inactive
+      Given The following property is created with random address and billing address for user "userWithUserGroup"
+        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
+      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
+      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
+      Then Response code is 404
+      And Custom code is 40402
+      Given Relation between user group "userGroup_1" and property "p1_code" is activated
+      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
+      Then Response code is 204
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
+      Then Response code is 404
+      And Custom code is 40402

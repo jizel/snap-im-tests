@@ -1,5 +1,19 @@
 package travel.snapshot.dp.qa.serenity;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,13 +47,10 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.apache.commons.lang3.StringUtils.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -95,6 +106,8 @@ public class BasicSteps {
     public static final String TARGET_ID = "targetId";
     public static final String ROLE_ID = "role_id" ;
     public static final String PROPERTY_CODE = "property_code";
+    public static final String IS_ACTIVE = "is_active";
+    public static final String USER_ID = "user_id";
 
     public BasicSteps() {
 

@@ -28,15 +28,13 @@ Feature: User groups roles
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
       | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role2 |
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is created
+    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" exists
     Then Response code is 201
     And Body contains entity with attribute "role_id" value "65e928fc-fbe5-4863-95af-8ec1f24baa0d"
-    And Body contains entity with attribute "name" value "UG role2"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
     And Relation between user group "userGroup_1" and role with id "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
 
   Scenario Outline: Create relationship UserGroup-Role invalid
-    When Relation between user group "<userGroupId>" and role "<roleId>" is created
+    When Relation between user group "<userGroupId>" and role "<roleId>" exists
     Then Response code is <error_code>
     And Custom code is <custom_code>
     Examples:
