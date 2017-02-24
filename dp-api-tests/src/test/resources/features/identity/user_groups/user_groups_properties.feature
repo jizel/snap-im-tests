@@ -1,8 +1,8 @@
 Feature: User groups properties
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | vatId      | phone         | timezone      | isDemoCustomer |
       | 5be73595-bf57-4b10-8725-dad80531dbc3 | UserGroupsCustomer | ug@tenants.biz | CZ10000001 | +420123456789 | Europe/Prague | true           |

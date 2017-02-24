@@ -1,7 +1,7 @@
 Feature: Eventing identity module relationships
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
 
   Scenario: Adding property to customer
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist

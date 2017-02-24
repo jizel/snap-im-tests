@@ -1,10 +1,10 @@
 Feature: Partners get
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-#    Given Default partner is created
-#    Given Default application is created
+    Given Database is cleaned and default entities are created
+
+#
+#
 
   Scenario: Getting partner
     Given The following partner is created

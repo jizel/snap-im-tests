@@ -1,10 +1,10 @@
 Feature: Partners applications get
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
-    Given Default application is created
+    Given Database is cleaned and default entities are created
+
+
+
 
   # DP-1607 Missing endpoint for identity/partners/{{partner_id}}/applications
 #  TODO: Wait until DP-1607 is resolved. If the endpoint is not implemented delete this feature file!

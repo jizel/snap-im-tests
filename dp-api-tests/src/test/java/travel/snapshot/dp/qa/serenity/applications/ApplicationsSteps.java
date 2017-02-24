@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.serenity.applications;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -15,10 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.junit.Assert.*;
 
 public class ApplicationsSteps extends BasicSteps {
 
@@ -300,7 +300,7 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public Response createApplicationVersion(ApplicationVersionDto applicationVersion, String applicationId) {
         Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_ID).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
     }
 
     public ApplicationVersionDto getApplicationVersionByName(String applicationId, String versionName) {

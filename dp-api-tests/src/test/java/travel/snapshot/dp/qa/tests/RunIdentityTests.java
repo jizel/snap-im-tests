@@ -1,8 +1,8 @@
 package travel.snapshot.dp.qa.tests;
 
+import cucumber.api.CucumberOptions;
 import net.serenitybdd.cucumber.CucumberWithSerenity;
 import org.junit.runner.RunWith;
-import cucumber.api.CucumberOptions;
 
 /**
  * Serenity runner class for running Identity tests (all test features annotated by @Identity tag)

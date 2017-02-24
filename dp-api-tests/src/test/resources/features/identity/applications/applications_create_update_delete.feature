@@ -2,9 +2,9 @@
 Feature: Applications create update delete
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
+    Given Database is cleaned and default entities are created
+
+
 
   @Smoke
   Scenario: Create application
@@ -98,7 +98,7 @@ Feature: Applications create update delete
 
 
   Scenario: Application ID and name is unique when creating role - DP-1661
-    Given Default partner is created
+
     Given The following applications exist
       | applicationName | description          | website                    | applicationId                        | partnerId                            | isInternal |
       | App Name 1      | Original application | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |

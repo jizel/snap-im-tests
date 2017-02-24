@@ -2,8 +2,8 @@
 Feature: Properties get
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following partner exist
       | name           | email          | website                    | vatId      | notes        | partnerId                            |
       | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
