@@ -24,30 +24,34 @@ Feature: Properties-Customers access check feature
     | customerId                           | companyName     | email              | salesforceId | vatId      | isDemoCustomer | timezone      |
     | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@snapshot.travel | sfid_2       | CZ20000001 | true           | Europe/Prague |
     | 4568fd9a-a05d-42d8-8e84-42e904ace123 | Given company 3 | c3@snapshot.travel | sfid_3       | CZ30000001 | true           | Europe/Prague |
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
-    Given Relation between property with code "p1_code" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31" with is_active "false"
+    Given Relation between property with code "p1_code" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31" with is_active "false"
     When List of all customers for property with code "p1_code" is got by user "userWithProp"
+    Then Response code is "404"
+    When Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    And List of all customers for property with code "p1_code" is got by user "userWithProp"
+    # DP-1816
     Then Response code is "200"
     And Total count is "1"
     When List of all customers for property with code "p1_code" is got by user "userWithNoProp"
-#  DP-1677
     Then Response code is "404"
 
 
   Scenario: Update Property-Customer relationship by user who has access to them
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
     When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is updated by user "userWithProp" with
-      | type  | validTo      |
-      | owner | Jun 30, 2060 |
-    Then Response code is "204"
-
-  Scenario: Update Property-Customer relationship by user without access to the property
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
-    When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is updated by user "userWithNoProp" with
-      | type  | validTo      |
-      | owner | Jun 30, 2060 |
+      | type  | validFrom  | validTo      |
+      | owner | 2016-01-01 |2030-12-31    |
     Then Response code is "404"
-    And Custom code is 40402
+    Given Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
+    When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is updated by user "userWithProp" with
+      | type  | validFrom  | validTo      |
+      | owner | 2016-01-01 |2030-12-31    |
+    Then Response code is "404"
+    When Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    And Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is updated by user "userWithProp" with
+      | type  |  validFrom  | validTo      |
+      | owner |  2016-01-01 | 2030-12-31   |
+    Then Response code is "204"
 
   Scenario: Update Property-Customer relationship by user without access to the customer
     Given The following customers exist with random address
@@ -59,11 +63,26 @@ Feature: Properties-Customers access check feature
       | owner |
     Then Response code is "404"
     And Custom code is 40402
+    Given Relation between user "userWithProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
+    And Property customer relationship for property with code "p1_code" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is updated by user "userWithProp" with
+      | type  |
+      | owner |
+    Then Response code is "404"
+    And Custom code is 40402
+    Given Relation between user "userWithProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    And Property customer relationship for property with code "p1_code" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is updated by user "userWithProp" with
+      | type  |
+      | owner |
+    Then Response code is "204"
 
+  # User that has active access to both customer and property, has full access to the property-customer relationship without regard to it's state
   Scenario: Delete Property-Customer relationship by user who has access to them
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"
+    Given Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
+    When Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithProp"
+    Then Response code is "200"
     When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is deleted by user "userWithProp"
     Then Response code is "204"
+
 
   Scenario: Delete Property-Customer relationship by user without access to the property
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2050-12-31"

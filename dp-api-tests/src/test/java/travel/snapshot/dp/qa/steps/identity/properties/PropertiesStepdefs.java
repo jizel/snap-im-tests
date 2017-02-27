@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
+import com.jayway.restassured.response.Response;
+import cucumber.api.PendingException;
+import org.apache.http.HttpStatus;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -474,7 +477,7 @@ public class PropertiesStepdefs {
         propertySteps.deletePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId);
     }
 
-    @When("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" is (in)?activated$")
+    @When("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" is (in)?activated$")
     public void relationBetweenUserAndPropertyWithCodeIsActivated(String userName, String propertyCode, String negation) throws Throwable {
         Boolean isActive = true;
         if (negation != null) {
@@ -491,5 +494,26 @@ public class PropertiesStepdefs {
     public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         propertySteps.deletePropertyUserRelationship(ids.get(PROPERTY_ID), ids.get(USER_ID));
+    }
+
+    @When("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" is (in|de)?activated$")
+    public void relationBetweenPropertyWithCodeAndCustomerWithIdIsActivated(String propertyCode, String customerId, String negation) throws Throwable {
+        Boolean isActive = true;
+        if (negation != null) {
+            isActive = false;
+        }
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        CustomerPropertyRelationshipUpdateDto relation = new CustomerPropertyRelationshipDto();
+        relation.setIsActive(isActive);
+        customerSteps.updateCustomerPropertyRelationship(propertyId, customerId, relation);
+        Response response = customerSteps.getSessionResponse();
+        assert(response.statusCode() == HttpStatus.SC_NO_CONTENT);
+    }
+
+    @When("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
+    public void relationBetweenPropertyAndCustomerWithIdIsRequestedByUser(String propertyCode, String customerId, String userName) throws Throwable {
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String userId = usersSteps.resolveUserId(userName);
+        propertySteps.getPropertyCustomerRelationshipByUser(userId, propertyId, customerId);
     }
 }

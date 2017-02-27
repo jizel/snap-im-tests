@@ -723,7 +723,9 @@ public class BasicSteps {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
 
-        return requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+        Response response = requestSpecification.when().get("{id}/{secondLevelName}", firstLevelId, secondLevelObjectName);
+        setSessionResponse(response);
+        return response;
     }
 
     protected Response getSecondLevelEntitiesForDates(String firstLevelId, String secondLevelObjectName, String limit, String cursor, String since, String until, String granularity, String filter, String sort, String sortDesc) {

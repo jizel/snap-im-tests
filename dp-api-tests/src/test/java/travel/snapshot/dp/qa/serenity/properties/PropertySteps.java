@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.serenity.properties;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
+import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -75,9 +76,9 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void bodyContainsPropertyWith(String atributeName, String value) {
+    public void bodyContainsPropertyWith(String attributeName, String value) {
         Response response = getSessionResponse();
-        response.then().body(atributeName, is(parseRawType(value)));
+        response.then().body(attributeName, is(parseRawType(value)));
     }
 
     @Step
@@ -218,27 +219,6 @@ public class PropertySteps extends BasicSteps {
         return getSessionResponse();
     }
 
-
-    /**
-     * GET - list of property objects
-     *
-     * @param limit  maximum amount of properties
-     * @param cursor offset in the available list of properties
-     * @return server response
-     */
-    private Response getProperties(String limit, String cursor) {
-        RequestSpecification requestSpecification = given().spec(spec)
-                .basePath(BASE_PATH__PROPERTIES);
-
-        if (cursor != null && !"".equals(cursor)) {
-            requestSpecification.parameter("cursor", cursor);
-        }
-        if (limit != null && !"".equals(limit)) {
-            requestSpecification.parameter("limit", limit);
-        }
-        return requestSpecification.when().get();
-    }
-
     /**
      * GET - single property filtered by code from a list of properties
      *
@@ -250,19 +230,6 @@ public class PropertySteps extends BasicSteps {
         PropertyDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null, null).as(PropertyDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
-
-    @Step
-    public PropertyDto getPropertyByCodeInternalByUser(String userId, String code) {
-        PropertyDto[] properties = getEntitiesByUser(userId, null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null, null).as(PropertyDto[].class);
-        return stream(properties).findFirst().orElse(null);
-    }
-
-    @Step
-    public PropertyDto getPropertyByName(String propertyName) {
-        PropertyDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, String.format("name=='%s'", propertyName), null, null, null).as(PropertyDto[].class);
-        return stream(properties).findFirst().orElse(null);
-    }
-
 
     public void removeAllUsersFromPropertiesWithCodes(List<String> propertyCodes) {
         propertyCodes.forEach(c -> {
@@ -310,14 +277,14 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
-        Response customerUserResponse = getSecondLevelEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
-        return stream(customerUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
+        Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        return customerUserResponse.as(PropertyUserRelationshipDto.class);
     }
 
     @Step
     public CustomerDto getCustomerForProperty(String propertyId, String customerId) {
-        Response customerResponse = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
-        return stream(customerResponse.as(CustomerDto[].class)).findFirst().orElse(null);
+        Response customerResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, null);
+        return customerResponse.as(CustomerDto.class);
     }
 
     public void customerDoesNotExistForProperty(String customerId, String propertyCode) {
