@@ -128,10 +128,11 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.responceSortIs(order);
     }
 
-    @Given("^API subscriptions exist for default application and customer (?:with id)? \"([^\"]*)\"$")
-    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String customerId) throws Throwable {
+    @Given("^API subscriptions exist for default application and customer (?:with id)? \"([^\"]*)\"(?: and property \"([^\"]*)\")?$")
+    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String customerId, String propertyCode) throws Throwable {
+        String propertyId = ((propertyCode==null) ? DEFAULT_PROPERTY_ID : propertySteps.resolvePropertyId(propertyCode));
         CommercialSubscriptionDto commercialSubscription = new CommercialSubscriptionDto();
-        commercialSubscription.setPropertyId(DEFAULT_PROPERTY_ID);
+        commercialSubscription.setPropertyId(propertyId);
         commercialSubscription.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
         commercialSubscription.setIsActive(true);
         commercialSubscription.setCustomerId(customerId);

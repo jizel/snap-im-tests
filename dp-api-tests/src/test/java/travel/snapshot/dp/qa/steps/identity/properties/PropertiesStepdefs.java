@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.identity.properties;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertEquals;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -87,9 +88,9 @@ public class PropertiesStepdefs {
     }
 
     @Given("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
-    public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode, Boolean isActive) throws Throwable {
+    public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode, String isActiveString) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         propertySteps.relationExistsBetweenUserAndProperty(ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
@@ -137,6 +138,14 @@ public class PropertiesStepdefs {
     public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
+    }
+
+    @Given("^The following property exists with random address and billing address for user \"([^\"]*)\"$")
+    public void theFollowingPropertyExistsWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
+        propertySteps.followingPropertyIsCreated(properties.get(0), userId);
+        Response response = propertySetSteps.getSessionResponse();
+        assertEquals(String.format("Failed to create property: %s", response.body().toString()), HttpStatus.SC_CREATED, response.statusCode());
     }
 
     @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created with userId \"([^\"]*)\"$")
