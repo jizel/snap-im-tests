@@ -65,10 +65,11 @@ public class PropertySetsStepdefs {
 //    End of help methods section
 
 
-    @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"$")
-    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, List<PropertySetDto> propertySets) throws Throwable {
+    @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, String isActiveString, List<PropertySetDto> propertySets) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId);
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId, isActive);
     }
 
     @Given("^All property sets are deleted for customers with ids: (.*)$")
@@ -83,11 +84,12 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" exists$")
-    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName) throws Throwable {
+    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
+    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String isActiveString) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetId);
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetId, isActive);
     }
 
     @Given("^All properties are removed from property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
@@ -152,19 +154,17 @@ public class PropertySetsStepdefs {
         propertySetSteps.deleteEntity(NON_EXISTENT_ID, DEFAULT_SNAPSHOT_ETAG);
     }
 
-    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\"$")
-    public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName) throws Throwable {
+    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String performerName, String isActiveString) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        Response response = propertySetSteps.addUserToPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
-        propertySetSteps.setSessionResponse(response);
-    }
-
-
-    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void userWithUsernameIsAddedToPropertySetWithNameByUser(String username, String propertySetName, String performerName) throws Throwable {
-        Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        String performerId = usersSteps.resolveUserId( performerName );
-        Response response = propertySetSteps.addUserToPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        Response response;
+        if (performerName != null) {
+            String performerId = usersSteps.resolveUserId(performerName);
+            response = propertySetSteps.addUserToPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), isActive);
+        } else {
+            response = propertySetSteps.addUserToPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), isActive);
+        }
         propertySetSteps.setSessionResponse(response);
     }
 
@@ -404,6 +404,16 @@ public class PropertySetsStepdefs {
             activity = false;
         }
         propertySetSteps.setPropertysetPropertyActivity(propertySetId, propertyId, activity);
+    }
 
+    @When("^Relation between property set \"([^\"]*)\" and user \"([^\"]*)\" is (de|in)?activated$")
+    public void relationBetweenPropertySetAndUserIsActivated(String propertySetName, String userName, String negation) throws Throwable {
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
+        String userId = usersSteps.resolveUserId(userName);
+        Boolean activity = true;
+        if (negation != null) {
+            activity = false;
+        }
+        propertySetSteps.setPropertysetUserActivity(propertySetId, userId, activity);
     }
 }

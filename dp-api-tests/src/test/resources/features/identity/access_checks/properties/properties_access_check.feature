@@ -23,6 +23,7 @@ Feature: Properties access check feature - GET
   Given The following property is created with random address and billing address for user "userWithProp"
     | propertyId                           | salesforceId   | name | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
     | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+   Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
 
     Scenario: Inactive user-property relation does not grant user access to property
       Given Relation between user "userWithNoProp" and property with code "p1_code" exists with is_active "false"

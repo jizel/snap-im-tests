@@ -4,6 +4,7 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
@@ -28,8 +29,8 @@ import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.CustomerUtils;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -90,18 +91,21 @@ public class CustomerStepdefs {
         customerSteps.followingCustomersExistWithRandomAddress(customers);
     }
 
-    @Given("^Relation between property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
+    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" exists(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
-                                                                                                    String customerId, String type, String validFrom, String validTo) throws Throwable {
+                                                                                                    String customerId, String type, String validFrom, String validTo, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo);
+        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo, isActive);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
+    @Given("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" exists(?: with isPrimary \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_user_with_username_and_customer_with_id_exists_with_isPrimary(String username,
-                                                                                                 String customerId, Boolean isPrimary) throws Throwable {
+                                                                                                 String customerId, String isPrimaryString, String isActiveString) throws Throwable {
+        Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.relationExistsBetweenUserAndCustomerWithPrimary(userId, customerId, isPrimary);
+        customerSteps.relationExistsBetweenUserAndCustomer(userId, customerId, isPrimary, isActive);
     }
 
     // ---------------------------- WHEN ------------------------------
@@ -140,46 +144,48 @@ public class CustomerStepdefs {
             @Transform(NullEmptyStringConverter.class) String sort,
             @Transform(NullEmptyStringConverter.class) String sortDesc,
             String username) throws Throwable {
-
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.listOfCustomersIsGotByUserWith(user.getUserId(), limit, cursor, filter, sort, sortDesc);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.listOfCustomersIsGotByUserWith(userId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Customer with id \"([^\"]*)\" is updated with data by user \"([^\"]*)\"$")
     public void customerWithIdIsUpdatedWithData(String customerId, String username, List<CustomerUpdateDto> customersData) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.updateCustomerByUser(customerId, user.getUserId(), customersData.get(0));
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.updateCustomerByUser(customerId, userId, customersData.get(0));
     }
 
-    @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
+    @When("^Property(?: with code)? \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?$")
     public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode,
                                                                                     String customerId, @Transform(NullEmptyStringConverter.class) String type,
                                                                                     @Transform(NullEmptyStringConverter.class) String dateFrom,
-                                                                                    @Transform(NullEmptyStringConverter.class) String dateTo) throws Throwable {
+                                                                                    @Transform(NullEmptyStringConverter.class) String dateTo, String isActiveString, String userName) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        String userId;
+        if (userName != null) {
+            userId = usersSteps.resolveUserId(userName);
+        } else {
+            userId = DEFAULT_SNAPSHOT_USER_ID;
+        }
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (property == null) {
-            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(BasicStepDefs.NONEXISTENT_ID, customerId, type,
-                    dateFrom, dateTo);
+            customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, BasicStepDefs.NONEXISTENT_ID, customerId, type,
+                    dateFrom, dateTo, isActive);
         } else {
-            customerSteps.propertyIsAddedToCustomerWithTypeFromTo(property.getPropertyId(), customerId, type, dateFrom,
-                    dateTo);
+            customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, property.getPropertyId(), customerId, type, dateFrom,
+                    dateTo, isActive);
         }
 
     }
 
-    @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\"(?: from \"([^\"]*)\")?(?: to \"([^\"]*)\")(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")$")
     public void propertyWithCodeIsAddedToCustomerWithIdWithTypeFromToByUser(String propertyCode, String customerId, @Transform(NullEmptyStringConverter.class) String type,
                                                                             @Transform(NullEmptyStringConverter.class) String dateFrom,
                                                                             @Transform(NullEmptyStringConverter.class) String dateTo,
-                                                                            String username) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        Response response = customerSteps.addPropertyToCustomerWithTypeFromToByUser(user.getUserId(), property.getPropertyId(), customerId, type, dateFrom, dateTo);
+                                                                            String username, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String userId = usersSteps.resolveUserId(username) ;
+        Response response = customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         customerSteps.setSessionResponse(response);
     }
 
@@ -192,12 +198,9 @@ public class CustomerStepdefs {
 
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got by user \"([^\"]*)\"$")
     public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerId, String username) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        customerSteps.propertyIsgotForCustomerByUser(user.getUserId(), property.getPropertyId(), customerId);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String userId = usersSteps.resolveUserId(username) ;
+        customerSteps.propertyIsgotForCustomerByUser(userId, propertyId, customerId);
     }
 
     @When("^Nonexistent customerPropety id is got for customer with id \"([^\"]*)\"$")
@@ -217,32 +220,27 @@ public class CustomerStepdefs {
 
     @When("^List of all customer properties is got for customer with id \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void listOfAllCustomerPropertiesIsGotForCustomerWithIdByUser(String customerId, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        customerSteps.listOfCustomerPropertiesIsGotByUser(user.getUserId(), customerId, null, null, null, null, null);
-
-
+        String userId = usersSteps.resolveUserId(username) ;
+        customerSteps.listOfCustomerPropertiesIsGotByUser(userId, customerId, null, null, null, null, null);
     }
 
-    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with isPrimary \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")?$")
     public void User_with_username_is_added_to_customer_with_id_with_isPrimary(String username, String customerId,
-                                                                                 Boolean isPrimary) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.userIsAddedToCustomerWithIsPrimary(user, customerId, isPrimary);
+                                                                                 String isPrimaryString, String isActiveString) throws Throwable {
+        String userId = usersSteps.resolveUserId(username);
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
+        customerSteps.userIsAddedToCustomer(userId, customerId, isPrimary, isActive);
     }
 
 
-    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with isPrimary \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")? by user \"([^\"]*)\"$")
     public void userIsAddedToCustomerWithIdWithIsPrimaryByUser(String username, String customerId,
-                                                               Boolean isPrimary, String performerName) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
-
-        Response response = customerSteps.addUserToCustomerWithIsPrimaryByUser(performer.getUserId(), user.getUserId(), customerId, isPrimary);
+                                                               String isPrimaryString, String isActiveString, String performerName) throws Throwable {
+        Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
+        Response response = customerSteps.addUserToCustomerByUser(userIds.get(REQUESTOR_ID), userIds.get(TARGET_ID), customerId, isPrimary, isActive);
         customerSteps.setSessionResponse(response);
     }
 
@@ -256,35 +254,24 @@ public class CustomerStepdefs {
 
     @When("^User \"([^\"]*)\" is removed from customer with id \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void userIsRemovedFromCustomerWithIdByUser(String username, String customerId, String performerName) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
-
-        customerSteps.userIsDeletedFromCustomerByUser(performer.getUserId(), user.getUserId(), customerId);
+        Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
+        customerSteps.userIsDeletedFromCustomerByUser(userIds.get(REQUESTOR_ID), userIds.get(TARGET_ID), customerId);
     }
 
     @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\"$")
     public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimary(String username, String customerId, Boolean isPrimary) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
+        String userId = usersSteps.resolveUserId(username);
         UserCustomerRelationshipUpdateDto userCustomerRelationshipUpdate = new UserCustomerRelationshipUpdateDto();
         userCustomerRelationshipUpdate.setIsPrimary(isPrimary);
-        customerSteps.updateUserCustomerRelationship(user.getUserId(), customerId, userCustomerRelationshipUpdate);
+        customerSteps.updateUserCustomerRelationship(userId, customerId, userCustomerRelationshipUpdate);
     }
-
 
     @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimaryByUser(String username, String customerId, Boolean isPrimary, String performerName) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        UserDto performer = usersSteps.getUserByUsername(performerName);
-        assertThat(performer, is(notNullValue()));
-
-        UserCustomerRelationshipUpdateDto userCustomerRelationshipUpdate = new UserCustomerRelationshipUpdateDto();
-        userCustomerRelationshipUpdate.setIsPrimary(isPrimary);
-        customerSteps.updateUserCustomerRelationshipByUser(performer.getUserId(), user.getUserId(), customerId, userCustomerRelationshipUpdate);
+        Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
+        UserCustomerRelationshipDto userCustomerRelationship = new UserCustomerRelationshipDto();
+        userCustomerRelationship.setIsPrimary(isPrimary);
+        customerSteps.updateUserCustomerRelationshipByUser(userIds.get(REQUESTOR_ID), userIds.get(TARGET_ID), customerId, userCustomerRelationship);
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
@@ -297,14 +284,9 @@ public class CustomerStepdefs {
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updated by user \"([^\"]*)\" with$")
     public void propertyWithCodeForCustomerWithIdFieldIsUpdatedToValueString(String propertyCode,String customerId,
                                                                              String username, List<CustomerPropertyRelationshipUpdateDto> relationshipUpdates) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        customerSteps.updateCustomerPropertyRelationshipByUser(user.getUserId(), property.getPropertyId(), customerId, relationshipUpdates.get(0));
-
-
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.updateCustomerPropertyRelationshipByUser(userId, propertyId, customerId, relationshipUpdates.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
@@ -335,9 +317,8 @@ public class CustomerStepdefs {
 
     @When("^Relation between user \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
     public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String username, String customerId) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.relationBetweenUserAndCustomerIsDeleted(user.getUserId(), customerId);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.relationBetweenUserAndCustomerIsDeleted(userId, customerId);
     }
 
     @When("^Customer with customerId \"([^\"]*)\" is got$")
@@ -362,10 +343,8 @@ public class CustomerStepdefs {
 
     @When("^Customer with customer id \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
     public void customerWithCustomerIdIsDeletedByUser(String customerId, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user,is(notNullValue()));
-
-        customerSteps.deleteCustomerByUser(user.getUserId(), customerId);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.deleteCustomerByUser(userId, customerId);
     }
 
     @When("^Customer with id \"([^\"]*)\" is updated with outdated etag$")
@@ -385,10 +364,8 @@ public class CustomerStepdefs {
 
     @When("^List of all property sets for customer with id \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void listOfAllPropertySetsForCustomerWithIdIsRequestedByUser(String customerId, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user,is(notNullValue()));
-
-        customerSteps.listOfCustomerPropertySetsIsGotByUser(user.getUserId(), customerId, null, null, null, null, null);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.listOfCustomerPropertySetsIsGotByUser(userId, customerId, null, null, null, null, null);
     }
 
     @When("^List of users for customer with id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -404,10 +381,8 @@ public class CustomerStepdefs {
 
     @When("^List of all users for customer with id \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void listOfAllUsersForCustomerWithIdIsRequestedByUser(String customerId, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user,is(notNullValue()));
-
-        customerSteps.listOfUsersIsGotByUser(user.getUserId(), customerId, null, null, null, null, null);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.listOfUsersIsGotByUser(userId, customerId, null, null, null, null, null);
     }
 
     @When("^Update customer with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")
@@ -536,9 +511,8 @@ public class CustomerStepdefs {
 
     @When("^Customer with customerId \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void customerWithCustomerIdIsGotByUserWithId(String customerId, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        customerSteps.customerWithIdIsGotByUser(user.getUserId(), customerId);
+        String userId = usersSteps.resolveUserId(username);
+        customerSteps.customerWithIdIsGotByUser(userId, customerId);
     }
 
     @When("^Customer with customerId \"([^\"]*)\" is got with etag by user with id \"([^\"]*)\"$")
@@ -558,20 +532,17 @@ public class CustomerStepdefs {
 
     @And("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is primary$")
     public void relationBetweenUserAndCustomerWithIdHasIsPrimarySetTo(String username, String customerId) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
+        String userId = usersSteps.resolveUserId(username);
 
-        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, user.getUserId());
+        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
         assertThat(existingCustomerUser, is(notNullValue()));
         assertThat(existingCustomerUser.getIsPrimary(), is(true));
     }
 
     @And("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is not primary$")
     public void relationBetweenUserAndCustomerWithIdIsNotPrimary(String username, String customerId) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-
-        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, user.getUserId());
+        String userId = usersSteps.resolveUserId(username);
+        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
         assertThat(existingCustomerUser.getIsPrimary(), is(false));
     }
 
@@ -606,5 +577,17 @@ public class CustomerStepdefs {
     public void relationBetweenCustomerAndUserWithUsernameIsRequestedByUserWithUsername(String customerId, String targetUserName, String requestorUserName) throws Throwable {
         Map<String, String> userIdsMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
         customerSteps.getCustomerUserRelationByUser(userIdsMap.get(REQUESTOR_ID), customerId, userIdsMap.get(TARGET_ID));
+    }
+
+    @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is (de|in)?activated$")
+    public void relationBetweenUserAndCustomerWithIdIsActivated(String userName, String customerId, String negation) throws Throwable {
+        Boolean isActive = true;
+        if (negation != null) {
+            isActive = false;
+        }
+        String userId = usersSteps.resolveUserId(userName);
+        UserCustomerRelationshipUpdateDto relation = new UserCustomerRelationshipUpdateDto();
+        relation.setIsActive(isActive);
+        customerSteps.updateUserCustomerRelationship(userId, customerId, relation);
     }
 }

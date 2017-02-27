@@ -1,5 +1,11 @@
 package travel.snapshot.dp.qa.steps.identity.api_subscriptions;
 
+import static java.util.Collections.singletonList;
+import static java.util.UUID.randomUUID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -7,8 +13,10 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.api_subscriptions.ApiSubscriptionSteps;
+import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 
@@ -29,6 +37,9 @@ public class ApiSubscriptionStepsdefs {
 
     @Steps
     private ApiSubscriptionSteps apiSteps;
+
+    @Steps
+    private CommercialSubscriptionSteps commercialSubscriptionSteps;
 
 
     @Given("^The following api subscriptions exist$")
@@ -117,4 +128,22 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.responceSortIs(order);
     }
 
+    @Given("^API subscriptions exist for default application and customer (?:with id)? \"([^\"]*)\"(?: and property \"([^\"]*)\")?$")
+    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String customerId, String propertyCode) throws Throwable {
+        String propertyId = ((propertyCode==null) ? DEFAULT_PROPERTY_ID : propertySteps.resolvePropertyId(propertyCode));
+        CommercialSubscriptionDto commercialSubscription = new CommercialSubscriptionDto();
+        commercialSubscription.setPropertyId(propertyId);
+        commercialSubscription.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        commercialSubscription.setIsActive(true);
+        commercialSubscription.setCustomerId(customerId);
+        String commercialSubscriptionId = randomUUID().toString();
+        commercialSubscription.setCommercialSubscriptionId(commercialSubscriptionId);
+        commercialSubscriptionSteps.comSubscriptionsExists(singletonList(commercialSubscription));
+
+        ApiSubscriptionDto apiSubscription = new ApiSubscriptionDto();
+        apiSubscription.setCommercialSubscriptionId(commercialSubscriptionId);
+        apiSubscription.setApplicationVersionId(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+        apiSubscription.setIsActive(true);
+        apiSteps.followingApiSubscriptionExist(singletonList(apiSubscription));
+    }
 }
