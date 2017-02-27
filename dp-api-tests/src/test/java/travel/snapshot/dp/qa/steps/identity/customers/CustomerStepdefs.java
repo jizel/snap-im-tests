@@ -4,6 +4,7 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;

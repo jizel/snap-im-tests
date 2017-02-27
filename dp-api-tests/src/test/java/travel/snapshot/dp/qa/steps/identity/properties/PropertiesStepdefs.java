@@ -1,16 +1,29 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import com.jayway.restassured.response.Response;
-import cucumber.api.PendingException;
-import org.apache.http.HttpStatus;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.http.HttpStatus;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
@@ -21,10 +34,6 @@ import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -62,13 +71,13 @@ public class PropertiesStepdefs {
     // --- given ---
 
     @Given("^The following properties exist with random address and billing address for user \"([^\"]*)\"$")
-    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyCreateDto> properties) throws Throwable {
+    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
         propertySteps.followingPropertiesExist(properties, userName);
     }
 
 
     @Given("^The following properties exist with random address and billing address$")
-    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddress(List<PropertyCreateDto> properties) throws Throwable {
+    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddress(List<PropertyDto> properties) throws Throwable {
         propertySteps.followingPropertiesExist(properties, usersSteps.DEFAULT_SNAPSHOT_USER_ID);
     }
 
@@ -125,15 +134,15 @@ public class PropertiesStepdefs {
     }
 
     @When("^The following property is created with random address and billing address for user \"([^\"]*)\"$")
-    public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyCreateDto> properties) throws Throwable {
-        String userId = usersSteps.resolveUserId( userName );
+    public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
     }
 
     @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created with userId \"([^\"]*)\"$")
     public void aPropertyForCustomerFromCountryRegionCodeEmailIsCreatedWithUserId(String customerId, String country, String region, String code, String email, String userId) throws Throwable {
         AddressDto address = new AddressDto();
-        PropertyCreateDto property = new PropertyCreateDto();
+        PropertyDto property = new PropertyDto();
         address.setAddressLine1("someAddress");
         address.setCity("someCity");
         address.setZipCode("1234");

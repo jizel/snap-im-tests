@@ -1,5 +1,14 @@
 package travel.snapshot.dp.qa.serenity.properties;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
@@ -9,7 +18,17 @@ import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -18,11 +37,6 @@ import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
 import java.util.Map;
-
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -51,7 +65,7 @@ public class PropertySteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
 
-    public void followingPropertiesExist(List<PropertyCreateDto> properties, String userName) {
+    public void followingPropertiesExist(List<PropertyDto> properties, String userName) {
         String userId = usersSteps.resolveUserId(userName);
         properties.forEach(property -> {
             property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
@@ -96,7 +110,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void followingPropertyIsCreated(PropertyCreateDto property, String userId) {
+    public void followingPropertyIsCreated(PropertyDto property, String userId) {
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
         Response response = createProperty(userId, property);
         setSessionResponse(response);
@@ -104,18 +118,18 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void createDefaultMinimalProperty(String propertyName, String userId, String customerId) {
-        PropertyCreateDto property = buildDefaultMinimalProperty(propertyName, customerId);
+        PropertyDto property = buildDefaultMinimalProperty(propertyName, customerId);
         followingPropertyIsCreated(property, userId);
     }
 
     @Step
     public void createDefaultMinimalPropertyWithAddress(String propertyName, String userId, String customerId, AddressDto address) {
-        PropertyCreateDto property = buildDefaultMinimalProperty(propertyName, customerId);
+        PropertyDto property = buildDefaultMinimalProperty(propertyName, customerId);
         followingPropertyIsCreatedWithAddress(property, address, userId);
     }
 
     @Step
-    public void followingPropertyIsCreatedWithAddress(PropertyCreateDto property, AddressDto address, String userId) {
+    public void followingPropertyIsCreatedWithAddress(PropertyDto property, AddressDto address, String userId) {
         property.setAddress(address);
 
         Response response = createProperty(userId, property);
@@ -479,8 +493,8 @@ public class PropertySteps extends BasicSteps {
         return response;
     }
 
-    public PropertyCreateDto buildDefaultMinimalProperty(String propertyName, String customerId){
-        PropertyCreateDto property = new PropertyCreateDto();
+    public PropertyDto buildDefaultMinimalProperty(String propertyName, String customerId){
+        PropertyDto property = new PropertyDto();
         property.setName(propertyName);
         property.setAnchorCustomerId(customerId);
         property.setEmail(DEFAULT_PROPERTY_EMAIL);
