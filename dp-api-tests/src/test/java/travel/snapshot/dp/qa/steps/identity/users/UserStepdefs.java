@@ -1,14 +1,25 @@
 package travel.snapshot.dp.qa.steps.identity.users;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -19,13 +30,6 @@ import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 public class UserStepdefs {
 
@@ -46,34 +50,18 @@ public class UserStepdefs {
 
     @Steps
     private PropertySetSteps propertySetSteps;
-    @Steps
-    private DbUtilsSteps dbSteps;
 
 
-    @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
-    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
-        usersSteps.followingUsersExist(users, customerId, isPrimary);
+    @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, String isActiveString, List<UserCreateDto> users) throws Throwable {
+//        Cucumber turns is_active to false when not present we want true by default in tests.
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
 
     @When("^The following users is created for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
     public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
         usersSteps.createUserWithCustomer(users.get(0), customerId, isPrimary);
-    }
-
-    @Given("^Default Snapshot user is created$")
-    public void defaultSnapshotUserIsCreated() throws Throwable {
-        UserCreateDto defaultSnapshotUser = new UserCreateDto();
-        defaultSnapshotUser.setUserId(usersSteps.DEFAULT_SNAPSHOT_USER_ID);
-        defaultSnapshotUser.setUserType(SNAPSHOT);
-        defaultSnapshotUser.setUserName("defaultSnapshotUser");
-        defaultSnapshotUser.setFirstName("Default");
-        defaultSnapshotUser.setLastName("SnapshotUser");
-        defaultSnapshotUser.setEmail("defaultSnapshotUser1@snapshot.travel");
-        defaultSnapshotUser.setTimezone("Europe/Prague");
-        defaultSnapshotUser.setCulture("cs-CZ");
-        defaultSnapshotUser.setIsActive(true);
-
-        dbSteps.createDBUser(defaultSnapshotUser);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")

@@ -4,7 +4,7 @@ Feature: Configurations types create update delete
   #TODO add etag things to get/update/create
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following configuration types exist
       | identifier | description                               |
       | conf_id_1  | Description of configuration identifier 1 |

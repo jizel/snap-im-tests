@@ -2,8 +2,8 @@
 Feature: Property sets properties create update delete
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -16,20 +16,14 @@ Feature: Property sets properties create update delete
       | ps2_name        | ps2_description        | brand           |
       | toDelete        | ps3_description        | brand           |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
-
-  @Smoke
-  Scenario: Adding property to property set
-    When Property with code "p2_code" is added to property set "ps1_name"
-    Then Response code is "201"
-
-
-#    Fails because of DP-1630
   @Smoke
   Scenario: Removing property from property set
+    When Property with code "p2_code" is added to property set "ps1_name"
+    Then Response code is "201"
     When Property with code "p2_code" is removed from property set "ps1_name"
     Then Response code is "204"
     And Body is empty
@@ -52,7 +46,7 @@ Feature: Property sets properties create update delete
 
   Scenario Outline: Filtering list of properties for property set
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName          | propertyCode          | website                    | email                    | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name                  | propertyCode          | website                    | email                    | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | filtering_prop_name_1 | filtering_prop_code_1 | http://www.snapshot.travel | filtering_p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_2 | filtering_prop_name_2 | filtering_prop_code_2 | http://www.snapshot.travel | filtering_p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_3 | filtering_prop_name_3 | filtering_prop_code_3 | http://www.snapshot.travel | filtering_p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |

@@ -5,8 +5,8 @@ Feature: Property sets Users access check feature
   - All rules apply also to second level entities in both ways (e.g. properties/p_id/property_sets, property_set/p_set_id/properties) - reversed endpoints should be covered in other features (properties)
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -23,7 +23,7 @@ Feature: Property sets Users access check feature
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "1"
-      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists
+      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" exists
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "2"

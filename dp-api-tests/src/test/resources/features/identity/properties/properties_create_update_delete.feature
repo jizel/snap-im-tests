@@ -4,8 +4,8 @@ Feature: Properties create update delete
   # TODO add etag things to get/update/create
   # TODO: check error codes for creating/updating property
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -13,13 +13,13 @@ Feature: Properties create update delete
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      |propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      |propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       |999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
   Scenario: Creating property without parent with random address
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
@@ -30,7 +30,7 @@ Feature: Properties create update delete
   @Smoke
   Scenario: Updating property
     When Property with code "p1_code" is updated with data
-      | salesforceId   | propertyName | website                  | email            | isDemoProperty | description  |
+      | salesforceId   | name         | website                  | email            | isDemoProperty | description  |
       | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          | updated_desc |
     Then Response code is "204"
     When Property with code "p1_code" is requested
@@ -69,7 +69,7 @@ Feature: Properties create update delete
 
   Scenario: Timezone parameter is mandatory (DP-1696)
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId    | propertyName | propertyCode | website                    | email           | isDemoProperty | anchorCustomerId                     |
+      | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | anchorCustomerId                     |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42201
@@ -260,13 +260,13 @@ Feature: Properties create update delete
   @skipped
   Scenario: Creating property with same name as previously deleted one - DP-1380
     Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                            | salesforceId | propertyName  | propertyCode  | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                            | salesforceId | name          | propertyCode  | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | sl_id_1      | property_name | property_code | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is 201
     When Property with code "property_code" is deleted
     Then Response code is 204
     Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                            | salesforceId | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                            | salesforceId | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | sl_id_1      | property_name | property_code | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is 201
     And Body contains entity with attribute "property_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -290,11 +290,11 @@ Feature: Properties create update delete
 
     Scenario: Creating duplicate property returns correct error  - DP-1661
       When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        |propertyId                           | salesforceId  | propertyName | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
+        |propertyId                           | salesforceId  | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
         |00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "201"
       When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        |propertyId                           | salesforceId  | propertyName | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
+        |propertyId                           | salesforceId  | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
         |00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "409"
       And Custom code is 40902

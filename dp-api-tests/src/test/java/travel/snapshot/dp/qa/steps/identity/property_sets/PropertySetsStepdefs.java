@@ -9,6 +9,7 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -82,11 +83,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" exists$")
-    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String customerId) throws Throwable {
+    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" exists$")
+    public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        CustomerDto customer= customerSteps.getCustomerById(customerId);
-        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetName, customer);
+        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
+        propertySetSteps.relationExistsBetweenUserAndPropertySetForCustomer(userId, propertySetId);
     }
 
     @Given("^All properties are removed from property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
@@ -95,11 +96,12 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, customer);
     }
 
-    @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" exists$")
-    public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName) throws Throwable {
+    @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
+    public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySetSteps.relationExistsBetweenPropertyAndPropertySet(propertyId, propertySetId);
+        propertySetSteps.relationExistsBetweenPropertyAndPropertySet(propertyId, propertySetId, isActive);
     }
 
     @When("^The following property set is created for customer with id \"([^\"]*)\"$")
@@ -205,7 +207,7 @@ public class PropertySetsStepdefs {
     }
 
     @When("^List of users for property set with name \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_users_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName, String customerId,
+    public void List_of_users_for_property_set_with_name_for_customer_with_code_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(String propertySetName,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String limit,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
@@ -228,19 +230,21 @@ public class PropertySetsStepdefs {
         propertySetSteps.removePropertyFromPropertySet(NON_EXISTENT_ID, propertySetId);
     }
 
-    @When("^Property with code \"([^\"]*)\" is added to property set \"([^\"]*)\"$")
-    public void Property_with_code_is_added_to_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName) throws Throwable {
+    @When("^Property(?: with code)? \"([^\"]*)\" is added to property set \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void Property_with_code_is_added_to_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        Response response = propertySetSteps.addPropertyToPropertySet(propertyId, propertySetId);
+        Response response = propertySetSteps.addPropertyToPropertySet(propertyId, propertySetId, isActive);
         propertySetSteps.setSessionResponse(response);
     }
 
-    @When("^Property with code \"([^\"]*)\" is added to property set \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void propertyWithCodeIsAddedToPropertySetByUser(String propertyCode, String propertySetName, String username) throws Throwable {
+    @When("^Property(?: with code)? \"([^\"]*)\" is added to property set \"([^\"]*)\" by user \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void propertyWithCodeIsAddedToPropertySetByUser(String propertyCode, String propertySetName, String username, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        Response response = propertySetSteps.addPropertyToPropertySetByUser(ids.get(USER_ID), propertyId, ids.get(PROPERTY_SET_ID));
+        Response response = propertySetSteps.addPropertyToPropertySetByUser(ids.get(USER_ID), propertyId, ids.get(PROPERTY_SET_ID), isActive);
         propertySetSteps.setSessionResponse(response);
     }
 
@@ -370,7 +374,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.getPropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
     }
 
-    @When("^Property with code \"([^\"]*)\" for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
+    @When("^Property(?: with code)? \"([^\"]*)\" for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void propertyWithCodeForPropertySetIsRequestedByUser(String propertyCode, String propertySetName, String username) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
@@ -389,5 +393,17 @@ public class PropertySetsStepdefs {
     public void childPropertySetsOfPropertySetAreRequestedByUser(String propertySetName, String username) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         propertySetSteps.getChildPropertySetsByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), null, null, null, null, null, null);
+    }
+
+    @When("^Relation between property(?: with code)? \"([^\"]*)\" and property set \"([^\"]*)\" is (de|in)?activated$")
+    public void relationBetweenPropertyWithCodeAndPropertySetIsActivated(String propertyCode, String propertySetName, String negation) throws Throwable {
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
+        Boolean activity = true;
+        if (negation != null) {
+            activity = false;
+        }
+        propertySetSteps.setPropertysetPropertyActivity(propertySetId, propertyId, activity);
+
     }
 }

@@ -7,7 +7,7 @@ Feature: Customer code feature
     - Customer code always contains only CAPITAL english (latin) letters. Even when customer's name contains chinese, arabic or any other characters.
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     And Default Snapshot user is created
 
 

@@ -2,7 +2,7 @@
 Feature: Users customer roles CRUD
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -11,8 +11,8 @@ Feature: Users customer roles CRUD
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given Default partner is created
-    Given Default application is created
+
+
     Given Switch for user customer role tests
     Given The following roles exist
       | roleId                               | roleName    | description            | applicationId                        |

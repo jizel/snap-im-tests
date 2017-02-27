@@ -2,8 +2,8 @@
 Feature: Property sets get
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -151,12 +151,12 @@ Feature: Property sets get
 
     Examples:
       | limit | cursor | returned | total | filter                                          | sort  | sort_desc | expected_codes                                                            |
-      | 5     | 0      | 5        | 11    | name=='list_*'                                  | name  |           | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
-      | 5     | 0      | 5        | 11    | name=='list_*'                                  |       | name      | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
-      | 5     | 2      | 3        | 11    | name=='list_*'                                  | name  |           | list_ps3_name, list_ps4_name, list_ps5_name                               |
-      | 5     | 2      | 3        | 11    | name=='list_*'                                  |       | name      | list_ps3_name, list_ps2_name, list_ps1_name                               |
-      | /null | /null  | 1        | 11    | name==list_ps4_name                             | /null | /null     | list_ps4_name                                                             |
-      | /null | /null  | 2        | 11    | name==list_* and property_set_type==geolocation | name  | /null     | list_ps4_name, list_ps5_name                                              |
-      | /null | /null  | 1        | 11    | description==list_ps8_des*                      | /null | /null     | second_list_ps8_name                                                      |
+      | 5     | 0      | 5        | 5     | name=='list_*'                                  | name  |           | list_ps1_name, list_ps2_name, list_ps3_name, list_ps4_name, list_ps5_name |
+      | 5     | 0      | 5        | 5     | name=='list_*'                                  |       | name      | list_ps5_name, list_ps4_name, list_ps3_name, list_ps2_name, list_ps1_name |
+      | 5     | 2      | 3        | 5     | name=='list_*'                                  | name  |           | list_ps3_name, list_ps4_name, list_ps5_name                               |
+      | 5     | 2      | 3        | 5     | name=='list_*'                                  |       | name      | list_ps3_name, list_ps2_name, list_ps1_name                               |
+      | /null | /null  | 1        | 1     | name==list_ps4_name                             | /null | /null     | list_ps4_name                                                             |
+      | /null | /null  | 2        | 2     | name==list_* and property_set_type==geolocation | name  | /null     | list_ps4_name, list_ps5_name                                              |
+      | /null | /null  | 1        | 1     | description==list_ps8_des*                      | /null | /null     | second_list_ps8_name                                                      |
 
 

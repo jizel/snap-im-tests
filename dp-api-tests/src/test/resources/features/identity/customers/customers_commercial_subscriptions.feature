@@ -1,19 +1,19 @@
 Feature: Customers commercial subscriptions
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
+    Given Database is cleaned and default entities are created
+
+
     Given The following customers exist with random address
       | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | customerId                           |
       | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
-      | propertyId                          | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | propertyId                          | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       |c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
   Scenario: Getting customers commercial subscriptions
-    Given Default application is created
+
     Given The following commercial subscriptions exist
       | applicationId                        | customerId                           | commercialSubscriptionId             | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | c37c3501-d309-4702-ad0b-fd53a98c01fd |
@@ -23,7 +23,7 @@ Feature: Customers commercial subscriptions
     And Body contains entity with attribute "commercial_subscription_id"
 
   Scenario Outline: Getting list of customers commercial subscriptions
-    Given Default application is created
+
     Given The following commercial subscriptions exist
       | applicationId                        | customerId                           | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |

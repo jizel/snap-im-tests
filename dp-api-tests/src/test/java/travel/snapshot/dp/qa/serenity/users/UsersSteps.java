@@ -1,10 +1,5 @@
 package travel.snapshot.dp.qa.serenity.users;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
@@ -14,7 +9,16 @@ import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class UsersSteps extends BasicSteps {
 
@@ -29,11 +33,12 @@ public class UsersSteps extends BasicSteps {
         spec.basePath(USERS_PATH);
     }
 
-    public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary) {
+    public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary, Boolean isActive) {
         users.forEach(user -> {
             UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
             relation.setCustomerId(customerId);
             relation.setIsPrimary(isPrimary);
+            relation.setIsActive(isActive);
             user.setUserCustomerRelationship(relation);
 
             Response createResp = createEntity(user);
@@ -390,10 +395,16 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void updateUserPropertyRelationship(String userId, String propertyId, UserPropertyRelationshipUpdateDto userPropertyRelationship) {
+        updateUserPropertyRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertyId, userPropertyRelationship);
+    }
+
+    @Step
+    public void updateUserPropertyRelationshipByUser(String performerId, String userId, String propertyId, UserPropertyRelationshipUpdateDto userPropertyRelationship) {
         try {
             JSONObject jsonUpdate = retrieveData(userPropertyRelationship);
+            jsonUpdate.remove(SESSION_USER_ID);
             String etag = getSecondLevelEntityEtag(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
-            Response response = updateSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUser(performerId, userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){
             fail("Exception thrown while getting JSON from UserPropertyRelationshipUpdateDto object");

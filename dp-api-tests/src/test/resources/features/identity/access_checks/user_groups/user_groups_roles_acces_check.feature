@@ -9,8 +9,8 @@ Feature: User Group Roles access check feature
   - All rules apply also to second level entities in both ways (e.g. user_groups/ug_id/properties, properties/ug_id/user_groups) - reversed endpoints should be covered in other features (properties)
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -23,6 +23,7 @@ Feature: User Group Roles access check feature
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
+#  DP-1822
   Scenario: Get list of userGroup's roles by user with/without
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -36,12 +37,12 @@ Feature: User Group Roles access check feature
       | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role1 |
       | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role2 |
       | 540be550-1702-4e2e-b094-394de63f6c48 | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG_filter_role3 |
-    When Relation between user group "12345000-1111-4000-a000-000000000000" and role "5184fb6b-0ebd-4726-9481-4858a15a37a0" exists
-    When Relation between user group "12345000-1111-4000-a000-000000000000" and role "19e8d1c2-c4f7-44d7-b436-dd4e9249065d" exists
-    When Relation between user group "12345000-1111-4000-a000-000000000000" and role "540be550-1702-4e2e-b094-394de63f6c48" exists
+    When Relation between user group "userGroup_1" and role "5184fb6b-0ebd-4726-9481-4858a15a37a0" exists with is_active "true"
+    When Relation between user group "userGroup_1" and role "19e8d1c2-c4f7-44d7-b436-dd4e9249065d" exists with is_active "true"
+    When Relation between user group "userGroup_1" and role "540be550-1702-4e2e-b094-394de63f6c48" exists with is_active "false"
     When List of all relationships userGroups-Roles for userGroup "userGroup_1" is requested by user "userWithUserGroup"
     Then Response code is 200
-    And Total count is "3"
+    And Total count is "2"
     When List of all relationships userGroups-Roles for userGroup "userGroup_1" is requested by user "userWithNoUserGroup"
     Then Response code is 404
 
@@ -60,11 +61,9 @@ Feature: User Group Roles access check feature
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     Then Response code is 201
     And Body contains entity with attribute "role_id" value "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8"
-    And Body contains entity with attribute "name" value "role1"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
     And Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is established
 
-  Scenario: Create relationship UserGroup-Role by user without access to the user group
+  Scenario: Create relationship UserGroup-Role by user without access to the user group (or inactive relation)
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -78,8 +77,13 @@ Feature: User Group Roles access check feature
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithNoUserGroup"
     Then Response code is 404
     And Custom code is 40402
+    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
+    Then Response code is 404
+    And Custom code is 40402
 
-  Scenario: Delete relationship UserGroup-Role
+#  DP-1822
+  Scenario: Delete relationship UserGroup-Role is possible only for user who can see the entities (with active relations)
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -90,8 +94,11 @@ Feature: User Group Roles access check feature
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
+    When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists with is_active "false"
+    When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
+    Then Response code is "404"
+    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is activated
     When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithNoUserGroup"
-#  Fails because of DP-1703
     Then Response code is "404"
     When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
     Then Response code is 204

@@ -5,10 +5,10 @@ Feature: Applications versions GET (directly) - DP-1784
   - Behavior might change slightly in the future, refactor tests properly
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
-    Given Default application is created
+    Given Database is cleaned and default entities are created
+
+
+
 
   @Smoke
   Scenario: Getting application versions

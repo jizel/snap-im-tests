@@ -1,9 +1,9 @@
 Feature: Partners users relationship feature
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
+    Given Database is cleaned and default entities are created
+
+
 
     Scenario: Create Partner-User relationship
       Given The following partner exist

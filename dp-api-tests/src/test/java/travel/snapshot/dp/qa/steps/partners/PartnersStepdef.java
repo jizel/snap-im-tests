@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.steps.partners;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -17,10 +21,6 @@ import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-
 public class PartnersStepdef {
 
     org.slf4j.Logger log = LoggerFactory.getLogger(this.getClass());
@@ -30,18 +30,6 @@ public class PartnersStepdef {
 
     @Steps
     private UsersSteps userSteps;
-
-    @Given("^Default partner is created$")
-    public void defaultPartnerIsCreated() throws Throwable {
-        PartnerDto defaultPartner = new PartnerDto();
-        defaultPartner.setPartnerId(partnerSteps.DEFAULT_SNAPSHOT_PARTNER_ID);
-        defaultPartner.setName("Somepartner");
-        defaultPartner.setWebsite(partnerSteps.SNAPSHOT_WEBSITE);
-        defaultPartner.setIsActive(true);
-        defaultPartner.setEmail("somemail@snapshot.travel");
-        defaultPartner.setVatId(partnerSteps.DEFAULT_SNAPSHOT_PARTNER_VAT_ID);
-        partnerSteps.followingPartnerIsCreated(defaultPartner);
-    }
 
     @Given("^The following partner exist$")
     public void theFollowingPartnerExist(List<PartnerDto> partners) throws Throwable {

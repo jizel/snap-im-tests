@@ -1,6 +1,9 @@
 package travel.snapshot.dp.qa.serenity.user_groups;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,7 +11,7 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.RoleIdDto;
+import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
@@ -21,8 +24,10 @@ import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class UserGroupsSteps extends BasicSteps {
 
@@ -165,9 +170,9 @@ public class UserGroupsSteps extends BasicSteps {
             return;
         }
 
-        RoleIdDto[] roles = getSessionResponse().as(RoleIdDto[].class);
+        RoleDto[] roles = getSessionResponse().as(RoleDto[].class);
         int i = 0;
-        for (RoleIdDto r : roles) {
+        for (RoleDto r : roles) {
             if (!r.getRoleId().startsWith(order.get(i))) {
                 fail("Expected ID: " + r.getRoleId() + "but was starting with: " + order.get(i));
             }
@@ -422,7 +427,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setUserGroupUserActivity(String userGroupId, String userId, Boolean isActive) throws JsonProcessingException {
-        setUserGroupUserActivityByUser(DEFAULT_SNAPSHOT_APPLICATION_ID, userGroupId, userId, isActive);
+        setUserGroupUserActivityByUser(DEFAULT_SNAPSHOT_USER_ID, userGroupId, userId, isActive);
     }
 
     @Step
@@ -439,17 +444,15 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void userGroupRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String roleId) {
-        RoleIdDto roleObject = new RoleIdDto();
-        roleObject.setRoleId(roleId);
-
-        Response response = createSecondLevelRelationshipByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleObject);
+        Response response = createSecondLevelRelationshipByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
         setSessionResponse(response);
     }
 
     @Step
-    public void relationshipGroupRoleExist(String userGroupId, String roleId) throws JsonProcessingException {
-        RoleIdDto roleObject = new RoleIdDto();
+    public void relationshipGroupRoleExist(String userGroupId, String roleId, Boolean isActive) throws JsonProcessingException {
+        RoleDto roleObject = new RoleDto();
         roleObject.setRoleId(roleId);
+        roleObject.setIsActive(isActive);
 
         JSONObject roleInJson = retrieveData(roleObject);
 
@@ -458,17 +461,17 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     @Step
-    public void userGroupPropertyRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        RoleIdDto roleObject = new RoleIdDto();
-        roleObject.setRoleId(roleId);
-
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(roleObject).when().post(userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES);
+    public void userGroupPropertyRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertyId, String roleId, Boolean isActive) {
+        Map<String, String> userGroupPropertyRoleRelation = new HashMap<>();
+        userGroupPropertyRoleRelation.put(ROLE_ID, roleId);
+        userGroupPropertyRoleRelation.put(IS_ACTIVE, isActive.toString());
+        Response response = createThirdLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, userGroupPropertyRoleRelation);
         setSessionResponse(response);
     }
 
     @Step
     public void userGroupPropertySetRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        RoleIdDto roleObject = new RoleIdDto();
+        RoleDto roleObject = new RoleDto();
         roleObject.setRoleId(roleId);
 
         Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(roleObject).when().post(userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTY_SETS + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES);
@@ -477,10 +480,10 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void userGroupPropertyRoleRelationshipIsDeletedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        String url = userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES + roleId;
+        String url = userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES + "/" + roleId;
         String etag = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get(url).getHeader(HEADER_ETAG);
 
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_ETAG, etag).when().delete(url);
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_IF_MATCH, etag).when().delete(url);
         setSessionResponse(response);
     }
 
@@ -494,9 +497,9 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkUserGroupRoleRelationExistency(String userGroupId, String roleId, Boolean existency) {
-        RoleIdDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null).as(RoleIdDto[].class);
+        RoleDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null).as(RoleDto[].class);
         Boolean found = false;
-        for (RoleIdDto role : listOfRoles) {
+        for (RoleDto role : listOfRoles) {
             if (role.getRoleId().equalsIgnoreCase(roleId)) {
                 found = true;
             }
@@ -537,5 +540,17 @@ public class UserGroupsSteps extends BasicSteps {
     public UserGroupDto getUserGroupByName(String userGroupName) {
         UserGroupDto[] userGroups = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "name==" + userGroupName, null, null, null).as(UserGroupDto[].class);
         return Arrays.stream(userGroups).findFirst().orElse(null);
+    }
+
+    public String resolveUserGroupId(String userGroupName) {
+        String userGroupId;
+        if (isUUID(userGroupName)) {
+            userGroupId = userGroupName;
+        } else {
+            UserGroupDto userGroup = getUserGroupByName(userGroupName);
+            assertThat(String.format("User group with name \"%s\" does not exist", userGroupName), userGroup, is(notNullValue()));
+            userGroupId = userGroup.getUserGroupId();
+        }
+        return userGroupId;
     }
 }

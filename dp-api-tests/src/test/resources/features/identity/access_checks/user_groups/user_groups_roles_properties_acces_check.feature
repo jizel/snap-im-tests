@@ -9,8 +9,8 @@ Feature: User Groups Properties Roles access check feature
   - All rules apply also to second level entities in both ways (e.g. user_groups/ug_id/properties, properties/ug_id/user_groups) - reversed endpoints should be covered in other features (properties)
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -22,10 +22,8 @@ Feature: User Groups Properties Roles access check feature
       | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithUserGroup   | Customer  | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
-
-  Scenario: Get relationship UserGroup property and Role by user
-    Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+    Given The following property is created with random address and billing address for user "userWithUserGroup"
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -37,53 +35,38 @@ Feature: User Groups Properties Roles access check feature
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
-    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
+
+#  DP-1822
+  Scenario: Get relationship UserGroup property and Role by users with and without access
+    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
+    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" with is_active "true"
     When List of all roles for user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
     Then Response code is "200"
     And Total count is "1"
     When List of all roles for user group "userGroup_1" and property with code "p1_code" is requested by user "userWithNoUserGroup"
     Then Response code is "404"
 
+#  DP-1822
+  Scenario: Get relationship UserGroup property and Role by users with in active relation
+    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
+    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" with is_active "false"
+    When List of all roles for user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
+    Then Response code is "404"
 
-  Scenario: Create relationship UserGroup property and Role is created by user with access
-    Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given The following partner exist
-      | partnerId                            | name         | email                   | website                    |
-      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
-    Given The following applications exist
-      | applicationName                       | website                    | applicationId                        | partnerId                            | isInternal |
-      | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
-    Given Switch for user property role tests
-    Given The following roles exist
-      | roleId                               | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
+
+  Scenario: Create relationship UserGroup property and Role is created by user with (active) access
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
-    Then Response code is "201"
+    Then Response code is "404"
+    Given Relation between user group "userGroup_1" and property "p1_code" is activated
+    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     And Body contains entity with attribute "role_id" value "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8"
-    And Body contains entity with attribute "name" value "role1"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
+    And Body contains entity with attribute "is_active"
 
   Scenario: Create relationship UserGroup property and Role is created by user without access
-    Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given The following property is created with random address and billing address for user "32129079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+   Given The following property is created with random address and billing address for user "32129079-48f0-4f00-9bec-e2329a8bdaac"
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 789e833e-50e8-4854-a233-289f00b54a09 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given The following partner exist
-      | partnerId                            | name         | email                   | website                    |
-      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
-    Given The following applications exist
-      | applicationName                       | website                    | applicationId                        | partnerId                            | isInternal |
-      | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
-    Given Switch for user property role tests
-    Given The following roles exist
-      | roleId                               | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithNoUserGroup"
     Then Response code is "404"
@@ -93,41 +76,21 @@ Feature: User Groups Properties Roles access check feature
     And Custom code is 40402
 
   Scenario: Delete relationship UserGroup property and Role is updated by user with access
-    Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given The following partner exist
-      | partnerId                            | name         | email                   | website                    |
-      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
-    Given The following applications exist
-      | applicationName                       | website                    | applicationId                        | partnerId                            | isInternal |
-      | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
-    Given Switch for user property role tests
-    Given The following roles exist
-      | roleId                               | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
-    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
+    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
-#    Fails because of DP-1703
     Then Response code is "204"
 
-  Scenario: Delete relationship UserGroup property and Role is updated by user with access
-    Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given The following partner exist
-      | partnerId                            | name         | email                   | website                    |
-      | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
-    Given The following applications exist
-      | applicationName                       | website                    | applicationId                        | partnerId                            | isInternal |
-      | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
-    Given Switch for user property role tests
-    Given The following roles exist
-      | roleId                               | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
-    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
+  Scenario: Delete relationship UserGroup property and Role is updated by user without access
+    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithNoUserGroup"
-#    Fails because of DP-1703
+#  DP-1822
+    Then Response code is "404"
+
+  Scenario: Delete relationship UserGroup property and Role is updated by user with inactive access
+    Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
+    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" with is_active "false"
+    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
+#  DP-1822
     Then Response code is "404"

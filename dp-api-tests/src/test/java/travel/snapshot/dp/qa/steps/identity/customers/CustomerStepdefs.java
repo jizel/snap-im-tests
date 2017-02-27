@@ -20,7 +20,6 @@ import org.springframework.util.ReflectionUtils;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.CustomerBaseDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
@@ -94,9 +93,8 @@ public class CustomerStepdefs {
     @Given("^Relation between property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with type \"([^\"]*)\" from \"([^\"]*)\" to \"([^\"]*)\"$")
     public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
                                                                                                     String customerId, String type, String validFrom, String validTo) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(property, customerId, type, validFrom, validTo);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo);
     }
 
     @Given("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" exists with isPrimary \"([^\"]*)\"$")
@@ -335,7 +333,7 @@ public class CustomerStepdefs {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
     }
 
-    @When("^Relation between user with username \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
+    @When("^Relation between user \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
     public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String username, String customerId) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
         assertThat(user, is(notNullValue()));
@@ -416,7 +414,7 @@ public class CustomerStepdefs {
     public void updateCustomerWithIdFieldItsValue(String customerId, String updatedField, String updatedValue) throws Throwable {
         CustomerUpdateDto customer = new CustomerUpdateDto();
 
-        Field field = ReflectionUtils.findField(CustomerBaseDto.class, updatedField);
+        Field field = ReflectionUtils.findField(CustomerDto.class, updatedField);
         field.setAccessible(true);
         field.set(customer, updatedValue);
         customerSteps.updateCustomer(customerId, customer);

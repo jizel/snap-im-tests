@@ -12,8 +12,7 @@ Feature: Customers access check feature - GET
     - In negative tests, ETAG needs to be obtained by different user first
 
   Background:
-  Given Database is cleaned
-  Given Default Snapshot user is created
+  Given Database is cleaned and default entities are created
   Given The following customers exist with random address
     | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
     | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -24,6 +23,15 @@ Feature: Customers access check feature - GET
   Given The following users exist for customer "00000000-0000-4000-8000-123000000abc" as primary "false"
     | userId                               | userType | userName      | firstName | lastName | email                | timezone      | culture | isActive |
     | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithCust2 | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+#  Replace with method to create entity's (customer's) subscriptions
+  Given The following commercial subscriptions exist
+    | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        | isActive |
+    | 00000001-0000-4000-a000-888888888888 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 11111111-0000-4000-a000-111111111111 | true     |
+    | 00000002-0000-4000-a000-888888888888 | 00000000-0000-4000-8000-123000000abc | 11111111-0000-4000-a000-666666666666 | 11111111-0000-4000-a000-111111111111 | true     |
+  Given The following api subscriptions exist
+    | applicationVersionId                 | commercialSubscriptionId             |
+    | 11111111-0000-4000-a000-444444444444 | 00000001-0000-4000-a000-888888888888 |
+    | 11111111-0000-4000-a000-444444444444 | 00000002-0000-4000-a000-888888888888 |
 
 
     Scenario: User has direct relationship to customer
@@ -139,6 +147,15 @@ Feature: Customers access check feature - GET
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
 
+  @skipped
+  Scenario: User loses access to customer when relation is deleted - DP-1811
+    Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is deleted
+    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Then Response code is "404"
+    And Custom code is 40402
+    Given Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" exists with isPrimary "true"
+    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Then Response code is "200"
 
 #      -----------------------------< General negative scenarios for second level endpoints >------------------------------------
 

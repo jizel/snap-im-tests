@@ -5,8 +5,8 @@ Feature: Property sets old option access check feature - DP-1576
       - this implicitly granted access is not propagated to child property sets (in contrast with the explicitly granted access) - need to test
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -15,7 +15,7 @@ Feature: Property sets old option access check feature - DP-1576
       | 00000009-48f0-4f00-9bec-e2329a8bdaac | customer | userWithImplicitPropSet | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 11111119-48f0-4f00-9bec-e2329a8bdaac | customer | userWithExplicitPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following properties exist with random address and billing address for user "00000009-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_1 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -39,7 +39,7 @@ Feature: Property sets old option access check feature - DP-1576
 
     Scenario: When a single property is added to property set, user loses implicit access, when deleted he gains access again
       Given The following properties exist with random address and billing address for user "11111119-48f0-4f00-9bec-e2329a8bdaac"
-        | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Given Relation between property with code "p4_code" and property set with name "ps1_name" exists
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"

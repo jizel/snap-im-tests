@@ -1,5 +1,19 @@
 package travel.snapshot.dp.qa.serenity;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,13 +47,10 @@ import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.apache.commons.lang3.StringUtils.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -55,6 +66,14 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_APPLICATION_ID = "11111111-0000-4000-a000-111111111111";
     public static final String DEFAULT_SNAPSHOT_PARTNER_ID = "11111111-0000-4000-a000-222222222222";
     public static final String DEFAULT_SNAPSHOT_PARTNER_VAT_ID = "11111111-0000-4000-a000-333333333333";
+    public static final String DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID = "11111111-0000-4000-a000-444444444444";
+    public static final String DEFAULT_SNAPSHOT_CUSTOMER_ID = "11111111-0000-4000-a000-555555555555";
+    public static final String DEFAULT_PROPERTY_ID = "11111111-0000-4000-a000-666666666666";
+    public static final String DEFAULT_ADDRESS_ID = "11111111-0000-4000-a000-777777777777";
+    public static final String DEFAULT_COMMERCIAL_SUBSCRIPTION_ID = "11111111-0000-4000-a000-888888888888";
+    public static final String DEFAULT_API_SUBSCRIPTION_ID = "11111111-0000-4000-a000-999999999999";
+    public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
+    public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "default_sf_id";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     public static final String APPLICATION_ID = "";
@@ -95,6 +114,8 @@ public class BasicSteps {
     public static final String TARGET_ID = "targetId";
     public static final String ROLE_ID = "role_id" ;
     public static final String PROPERTY_CODE = "property_code";
+    public static final String IS_ACTIVE = "is_active";
+    public static final String USER_ID = "user_id";
 
     public BasicSteps() {
 
@@ -265,7 +286,11 @@ public class BasicSteps {
     }
 
     protected Response createEntityByUser(String userId, Object entity) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(entity).when().post();
+        return createEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entity);
+    }
+
+    protected Response createEntityByUserForApplication(String userId, String applicationId, Object entity) {
+        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
     }
 
     protected Response updateEntity(String entityId, Map<String, Object> data, String etag) {
@@ -273,6 +298,10 @@ public class BasicSteps {
     }
 
     protected Response updateEntityByUser(String userId, String entityId, Map<String, Object> data, String etag) {
+        return updateEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, data, etag);
+    }
+
+    protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, Map<String, Object> data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
@@ -280,7 +309,7 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         return requestSpecification.body(data).when().post("/{id}", entityId);
     }
 
@@ -289,6 +318,10 @@ public class BasicSteps {
     }
 
     protected Response updateEntityByUser(String userId, String entityId, String data, String etag) {
+        return updateEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, data, etag);
+    }
+
+    protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, String data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
@@ -296,7 +329,7 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         return requestSpecification.body(data).when().post("/{id}", entityId);
     }
 
@@ -317,11 +350,15 @@ public class BasicSteps {
     }
 
     protected Response deleteEntityByUser(String userId, String entityId, String etag) {
+      return deleteEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
+    }
+
+    protected Response deleteEntityByUserForApplication(String userId, String applicationId, String entityId, String etag) {
         if (isBlank(userId)){
             fail("User ID to be send in request header is blank.");
         }
         RequestSpecification requestSpecification = given().spec(spec);
-        requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
         }
@@ -348,22 +385,30 @@ public class BasicSteps {
         return given().spec(spec).when().delete(url + "/{id}", id);
     }
 
-    public Response getEntity(String entityId, String etag) {
-        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
-    }
-
     public String getEntityEtag(String entityId){
         return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
     public String getEntityEtagByUser(String userId, String entityId) {
+        return getEntityEtagByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
+    }
+
+    public String getEntityEtagByUserForApplication(String userId, String applicationId, String entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
-        requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
 
         return requestSpecification.when().head("/{id}", entityId).getHeader(HEADER_ETAG);
     }
 
-    protected Response getEntityByUser(String userId, String entityId, String etag) {
+    public Response getEntity(String entityId, String etag) {
+        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+    }
+
+    public Response getEntityByUser(String userId, String entityId, String etag) {
+        return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
+    }
+
+    public Response getEntityByUserForApplication(String userId, String applicationId, String entityId, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
@@ -371,7 +416,7 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         return requestSpecification.when().get("/{id}", entityId);
     }
 
@@ -379,9 +424,13 @@ public class BasicSteps {
         return createSecondLevelRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelId, jsonBody);
     }
 
-    protected Response createSecondLevelRelationshipByUser(String userId, String firstLevelId, String secondLevelId, Object jsonBody) {
-        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(jsonBody);
-        return requestSpecification.post("/" + firstLevelId + "/" + secondLevelId);
+    protected Response createSecondLevelRelationshipByUser(String userId, String firstLevelId, String secondLevelName, Object jsonBody) {
+        return createSecondLevelRelationshipByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelName, jsonBody);
+    }
+
+    protected Response createSecondLevelRelationshipByUserForApplication(String userId, String applicationId, String firstLevelId, String secondLevelName, Object jsonBody) {
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(jsonBody);
+        return requestSpecification.post("/" + firstLevelId + "/" + secondLevelName);
     }
 
     protected Response createThirdLevelEntity(String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
@@ -548,7 +597,7 @@ public class BasicSteps {
     }
 
     protected Response getEntitiesByUser(String userId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
-        return getEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_ID, url, limit, cursor, filter, sort, sortDesc, queryParams);
+        return getEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, url, limit, cursor, filter, sort, sortDesc, queryParams);
     }
 
     protected Response getEntitiesByUserForApp(String userId, String appId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {

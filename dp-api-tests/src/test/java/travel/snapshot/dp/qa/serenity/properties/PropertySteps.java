@@ -1,15 +1,5 @@
 package travel.snapshot.dp.qa.serenity.properties;
 
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -18,28 +8,20 @@ import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyCreateDto;
-import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -146,7 +128,7 @@ public class PropertySteps extends BasicSteps {
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTIES, "");
         given().spec(spec).get(propertyLocation).then()
                 .body("salesforce_id", is(originalProperty.getSalesforceId()))
-                .body("name", is(originalProperty.getPropertyName()))
+                .body("name", is(originalProperty.getName()))
                 .body("property_code", is(originalProperty.getPropertyCode()))
                 .body("email", is(originalProperty.getEmail()));
 
@@ -296,35 +278,39 @@ public class PropertySteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenUserAndProperty(String userId, String propertyId) {
+    public void relationExistsBetweenUserAndProperty(String userId, String propertyId, Boolean isActive) {
         PropertyUserRelationshipDto existingPropertyUser = getUserForProperty(propertyId, DEFAULT_SNAPSHOT_USER_ID);
         if (existingPropertyUser != null) {
             // Delete second level entities does not work for properties/users because the endpoint is not implemented. Using DB delete instead.
             dbSteps.deletePropertyUserFromDb(userId, propertyId);
         }
-        Response createResponse = addUserToProperty(userId, propertyId);
-        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-            fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
+        addUserToProperty(userId, propertyId, isActive);
+        Response response = getSessionResponse();
+        if (response.getStatusCode() != HttpStatus.SC_CREATED) {
+            fail("PropertyUser cannot be created - status: " + response.getStatusCode() + ", " + response.asString());
         }
     }
 
-    public Response addUserToProperty(String userId, String propertyId) {
-//        Needs to be done as default snapshot user or this method wouldn't be able to add any (nonsnapshot) user that is not already added
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .body(singletonMap(USER_ID_KEY, userId))
-                .when().post("/{propertyId}/users", propertyId);
+    public void addUserToProperty(String userId, String propertyId, Boolean isActive) {
+        addUserToPropertyByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertyId, isActive);
     }
 
     @Step
-    public Response addUserToPropertyByUser(String userId, String propertyId, String performerId) {
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, performerId)
-                .body(singletonMap(USER_ID_KEY, userId))
-                .when().post("/{propertyId}/users", propertyId);
+    public void addUserToPropertyByUser(String performerId, String userId, String propertyId, Boolean isActive) {
+        if (isActive == null) {
+            isActive = true;
+        }
+        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        relation.setUserId(userId);
+        relation.setIsActive(isActive);
+
+        Response resp = createSecondLevelRelationshipByUser(performerId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation);
+        setSessionResponse(resp);
     }
 
     @Step
     public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
-        Response customerUserResponse = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
+        Response customerUserResponse = getSecondLevelEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
         return stream(customerUserResponse.as(PropertyUserRelationshipDto[].class)).findFirst().orElse(null);
     }
 
@@ -340,10 +326,9 @@ public class PropertySteps extends BasicSteps {
         assertNull("Customer should not be link with property", cust);
     }
 
-    public void userIsAddedToProperty(String userId, String propertyCode) {
+    public void userIsAddedToProperty(String userId, String propertyCode, Boolean isActive) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        Response response = addUserToProperty(userId, p.getPropertyId());
-        setSessionResponse(response);
+        addUserToProperty(userId, p.getPropertyId(), isActive);
     }
 
     public void userIsDeletedFromProperty(String userId, String propertyId) {
@@ -448,6 +433,11 @@ public class PropertySteps extends BasicSteps {
         Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), null);
         setSessionResponse(response);
     }
+    @Step
+    public void deletePropertyUserRelationship(String propertyId, String userId){
+        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        setSessionResponse(response);
+    }
 
     @Step
     public Response propertyPropertySetIsGot(String propertyId, String propertySetId) {
@@ -524,7 +514,7 @@ public class PropertySteps extends BasicSteps {
 
     public PropertyCreateDto buildDefaultMinimalProperty(String propertyName, String customerId){
         PropertyCreateDto property = new PropertyCreateDto();
-        property.setPropertyName(propertyName);
+        property.setName(propertyName);
         property.setAnchorCustomerId(customerId);
         property.setEmail(DEFAULT_PROPERTY_EMAIL);
         property.setTimezone(DEFAULT_PROPERTY_TIMEZONE);

@@ -1,5 +1,16 @@
 package travel.snapshot.dp.qa.serenity.customers;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.path.json.JsonPath.from;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
@@ -7,22 +18,30 @@ import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
-import travel.snapshot.dp.qa.helpers.DateUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
-import java.util.*;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.json.JsonPath.from;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonMap;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -103,8 +122,8 @@ public class CustomerSteps extends BasicSteps {
         given().spec(spec).get(customerLocation).then()
                 .body("property_id", is(originalCustomerProperty.getPropertyId()))
                 //.body("type", is(originalCustomerProperty.getType()))
-                .body("valid_from", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidFrom())))
-                .body("valid_to", is(DateUtils.isoDatefromDate(originalCustomerProperty.getValidTo())));
+                .body("valid_from", is(originalCustomerProperty.getValidFrom().format( DateTimeFormatter.ISO_LOCAL_DATE )))
+                .body("valid_to", is(originalCustomerProperty.getValidTo().format( DateTimeFormatter.ISO_LOCAL_DATE )));
 
     }
 
@@ -135,21 +154,11 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public Response addPropertyToCustomerWithTypeFromToByUser(String userId, String propertyId, String customerId, String type, String validFrom, String validTo) {
         Map<String, Object> customerProperty = new HashMap<>();
-        if (propertyId != null) {
             customerProperty.put("property_id", propertyId);
-        }
-        if (type != null) {
             customerProperty.put("relationship_type", type);
-        }
-        if (validFrom != null) {
             customerProperty.put("valid_from", validFrom);
-        }
-        if (validTo != null) {
             customerProperty.put("valid_to", validTo);
-        }
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId)
-                .body(customerProperty)
-                .when().post("/{customerId}/properties", customerId);
+        return createSecondLevelRelationshipByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerProperty);
     }
 
     @Step
@@ -363,8 +372,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(PropertyDto property, String customerId, String type, String validFrom, String validTo) {
-        Response createResponse = addPropertyToCustomerWithTypeFromTo(property.getPropertyId(), customerId, type, validFrom, validTo);
+    public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo) {
+        Response createResponse = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerProperty cannot be created " + createResponse.getBody().asString());
         }
@@ -609,11 +618,11 @@ public class CustomerSteps extends BasicSteps {
 
         switch (fieldName) {
             case "valid_from": {
-                assertEquals(value, DateUtils.isoDatefromDate(cp.getValidFrom()));
+                assertEquals(value, cp.getValidFrom().format( DateTimeFormatter.ISO_LOCAL_DATE));
                 break;
             }
             case "valid_to": {
-                assertEquals(value, DateUtils.isoDatefromDate(cp.getValidTo()));
+                assertEquals(value, cp.getValidTo().format( DateTimeFormatter.ISO_LOCAL_DATE ));
                 break;
             }
             default:

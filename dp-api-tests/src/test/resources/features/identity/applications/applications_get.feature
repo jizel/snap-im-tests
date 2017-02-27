@@ -2,9 +2,9 @@
 Feature: Applications get
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
+    Given Database is cleaned and default entities are created
+
+
 
   @Smoke
   Scenario: Getting applications

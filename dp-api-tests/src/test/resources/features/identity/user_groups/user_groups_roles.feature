@@ -1,16 +1,16 @@
 Feature: User groups roles
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
+    Given Database is cleaned and default entities are created
+
+
     Given The following customers exist with random address
       | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
       | userGroupId                          | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
-    Given Default application is created
+
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -28,15 +28,13 @@ Feature: User groups roles
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
       | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role2 |
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is created
+    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" exists
     Then Response code is 201
     And Body contains entity with attribute "role_id" value "65e928fc-fbe5-4863-95af-8ec1f24baa0d"
-    And Body contains entity with attribute "name" value "UG role2"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
     And Relation between user group "userGroup_1" and role with id "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
 
   Scenario Outline: Create relationship UserGroup-Role invalid
-    When Relation between user group "<userGroupId>" and role "<roleId>" is created
+    When Relation between user group "<userGroupId>" and role "<roleId>" exists
     Then Response code is <error_code>
     And Custom code is <custom_code>
     Examples:

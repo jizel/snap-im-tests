@@ -2,7 +2,7 @@
 Feature: Users validations
 
   Background:
-    Given Database is cleaned
+    Given Database is cleaned and default entities are created
     Given the location "identity/users" for object "user"
     Given unique identifier "user_id" for object "user"
     Given The following customers exist with random address

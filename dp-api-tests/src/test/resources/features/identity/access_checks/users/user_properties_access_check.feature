@@ -3,10 +3,10 @@
     Users must have access only to user-property relations if they have access to both user and property
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
-    Given Default partner is created
-    Given Default application is created
+    Given Database is cleaned and default entities are created
+
+
+
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -22,8 +22,8 @@
     Given The following roles exist
       | roleId                               | applicationId                        | roleName | description      |
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
-    Given The following properties exist with random address and billing address for user "user1OfC1"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+    Given The following properties exist with random address and billing address
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
 
   # DP-1781
@@ -42,7 +42,7 @@
     Then Response code is "201"
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user2OfC1" and property "4d266045-1cf1-4735-8ef9-216de1370f2e"
     Then Response code is "404"
-    Given Relation between user with username "user1OfC2" and property with code "p1_code" exists
+    Given Relation between user "user1OfC2" and property with code "p1_code" exists
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and property "4d266045-1cf1-4735-8ef9-216de1370f2e"
     Then Response code is "404"
     # The following step fails due to DP-1706.

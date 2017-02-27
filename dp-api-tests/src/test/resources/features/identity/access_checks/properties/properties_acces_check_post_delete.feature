@@ -7,8 +7,8 @@ Feature: Properties access check feature - POST and DELETE
   - 404 is returned for unauthorized users
 
   Background:
-    Given Database is cleaned
-    Given Default Snapshot user is created
+    Given Database is cleaned and default entities are created
+
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -17,13 +17,13 @@ Feature: Properties access check feature - POST and DELETE
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoProp | Customer2 | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property is created with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | propertyName | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     | ttiId  |
+      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     | ttiId  |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 654123 |
 
 
   Scenario: User with access updates property
     When Property with code "p1_code" is updated with data by user "userWithProp"
-      | salesforceId   | propertyName | website                  | email            | isDemoProperty |
+      | salesforceId   | name         | website                  | email            | isDemoProperty |
       | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
     Then Response code is "204"
     When Property with code "p1_code" is requested by user "userWithProp"
@@ -36,7 +36,7 @@ Feature: Properties access check feature - POST and DELETE
 
   Scenario: User without access tries to update property
     When Property with code "p1_code" is updated with data by user "userWithNoProp"
-      | salesforceId   | propertyName | website                  | email            | isDemoProperty |
+      | salesforceId   | name         | website                  | email            | isDemoProperty |
       | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
     Then Response code is "404"
     When Property with code "p1_code" is requested by user "userWithProp"
@@ -59,7 +59,7 @@ Feature: Properties access check feature - POST and DELETE
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     When The following property is created with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | propertyName | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "404"
     And Custom code is 40402
