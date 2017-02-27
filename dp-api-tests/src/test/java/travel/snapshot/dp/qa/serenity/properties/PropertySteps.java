@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -260,11 +259,6 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void relationExistsBetweenUserAndProperty(String userId, String propertyId, Boolean isActive) {
-        PropertyUserRelationshipDto existingPropertyUser = getUserForProperty(propertyId, DEFAULT_SNAPSHOT_USER_ID);
-        if (existingPropertyUser != null) {
-            // Delete second level entities does not work for properties/users because the endpoint is not implemented. Using DB delete instead.
-            dbSteps.deletePropertyUserFromDb(userId, propertyId);
-        }
         addUserToProperty(userId, propertyId, isActive);
         Response response = getSessionResponse();
         if (response.getStatusCode() != HttpStatus.SC_CREATED) {

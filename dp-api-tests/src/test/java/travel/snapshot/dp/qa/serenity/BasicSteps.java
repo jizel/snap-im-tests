@@ -564,7 +564,7 @@ public class BasicSteps {
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
         if(response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED){
             RequestSpecification requestSpecification = given().spec(spec).basePath(url);
-            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().head().getHeader(HEADER_ETAG);
+            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).when().head().getHeader(HEADER_ETAG);
             assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
             requestSpecification.header(HEADER_IF_MATCH, etag);
 
