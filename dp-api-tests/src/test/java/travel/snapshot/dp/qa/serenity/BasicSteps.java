@@ -498,6 +498,10 @@ public class BasicSteps {
     }
 
     protected Response deleteSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
+        return deleteSecondLevelEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelObjectName, secondLevelId, queryParams);
+    }
+
+    protected Response deleteSecondLevelEntityByUserForApplication(String userId, String applicationId, String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
         String etag = getSecondLevelEntityEtag(firstLevelId, secondLevelObjectName, secondLevelId);
         if (isNotBlank(etag)) {
@@ -508,6 +512,9 @@ public class BasicSteps {
         }
         if (isNotBlank(userId)) {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
+        }
+        if (isNotBlank(applicationId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         }
         if (queryParams != null) {
             requestSpecification.parameters(queryParams);
