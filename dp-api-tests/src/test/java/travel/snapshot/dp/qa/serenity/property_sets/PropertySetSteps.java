@@ -52,7 +52,7 @@ public class PropertySetSteps extends BasicSteps {
 
     // --- steps ---
 
-    public void followingPropertySetsExist(List<PropertySetDto> propertySets, String customerId, String userId) {
+    public void followingPropertySetsExist(List<PropertySetDto> propertySets, String customerId, String userId, Boolean isActive) {
         propertySets.forEach( (PropertySetDto propertySet) -> {
             propertySet.setCustomerId(customerId);
             Response createResponse = createEntity(propertySet);
@@ -60,9 +60,9 @@ public class PropertySetSteps extends BasicSteps {
                 fail("Property set cannot be created: " + createResponse.asString());
             }
             String propertySetId = createResponse.as(PropertySetDto.class).getPropertySetId();
-            Response addUserResponse = addUserToPropertySet(userId, propertySetId);
+            Response addUserResponse = addUserToPropertySet(userId, propertySetId, isActive);
             if (addUserResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Property set cannot be created: " + addUserResponse.asString());
+                fail("Failed to add user to property set: " + addUserResponse.asString());
             }
         });
     }
@@ -176,7 +176,7 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void relationExistsBetweenUserAndPropertySetForCustomer(String userId, String propertySetId) {
+    public void relationExistsBetweenUserAndPropertySetForCustomer(String userId, String propertySetId, Boolean isActive) {
         PropertySetUserRelationshipDto existingPropertySetUser = getUserForPropertySet(userId, propertySetId);
         if (existingPropertySetUser != null) {
             Response deleteResponse = deleteSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
@@ -184,19 +184,24 @@ public class PropertySetSteps extends BasicSteps {
                 fail("PropertySetUser cannot be deleted");
             }
         }
-        Response createResponse = addUserToPropertySet(userId, propertySetId);
+        Response createResponse = addUserToPropertySet(userId, propertySetId, isActive);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("PropertySetUser cannot be created");
         }
     }
 
     @Step
-    public Response addUserToPropertySet(String userId, String propertySetId) {
-        return addUserToPropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertySetId);
+    public Response addUserToPropertySet(String userId, String propertySetId, Boolean isActive) {
+        return addUserToPropertySetByUser(DEFAULT_SNAPSHOT_USER_ID, userId, propertySetId, isActive);
     }
 
-    public Response addUserToPropertySetByUser(String performerId, String userId, String propertySetId) {
-        return createSecondLevelRelationshipByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, singletonMap(USER_ID, userId));
+    @Step
+    public Response addUserToPropertySetByUser(String performerId, String userId, String propertySetId, Boolean isActive) {
+        PropertySetUserRelationshipDto relation = new PropertySetUserRelationshipDto();
+        relation.setUserId(userId);
+        relation.setIsActive(isActive);
+        return createSecondLevelRelationshipByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, relation);
+
     }
 
     @Step
@@ -427,15 +432,16 @@ public class PropertySetSteps extends BasicSteps {
         }
         return propertySetId;
     }
+
     @Step
     public void setPropertysetPropertyActivity(String propertySetId, String propertyId, boolean activity) throws JsonProcessingException {
-        setGroupPropertyActivityByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, propertyId, activity);
+        setPropertySetPropertyActivityByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, propertyId, activity);
     }
 
     @Step
-    public void setGroupPropertyActivityByUser(String userId, String propertySetId, String propertyId, boolean activity) throws JsonProcessingException {
+    public void setPropertySetPropertyActivityByUser(String userId, String propertySetId, String propertyId, boolean activity) throws JsonProcessingException {
         String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).getHeader(HEADER_ETAG);
-        PropertySetPropertyRelationshipUpdateDto relation = new PropertySetPropertyRelationshipDto();
+        PropertySetPropertyRelationshipUpdateDto relation = new PropertySetPropertyRelationshipUpdateDto();
         relation.setIsActive(activity);
         try {
             JSONObject obj = retrieveData(relation);
@@ -443,6 +449,25 @@ public class PropertySetSteps extends BasicSteps {
             setSessionResponse(resp);
         } catch (JsonProcessingException e){
             fail("Exception while retrieving JSON from PropertySetPropertyRelationshipUpdateDto object: " + e.toString());
+        }
+    }
+
+    @Step
+    public void setPropertysetUserActivity(String propertySetId, String userId, boolean activity) throws JsonProcessingException {
+        setPropertySetUserActivityByUser(DEFAULT_SNAPSHOT_USER_ID, propertySetId, userId, activity);
+    }
+
+    @Step
+    public void setPropertySetUserActivityByUser(String requestorId, String propertySetId, String userId, boolean activity) throws JsonProcessingException {
+        String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
+        UserPropertySetRelationshipUpdateDto relation = new UserPropertySetRelationshipUpdateDto();
+        relation.setIsActive(activity);
+        try {
+            JSONObject obj = retrieveData(relation);
+            Response resp = updateSecondLevelEntityByUser(requestorId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, obj, etag);
+            setSessionResponse(resp);
+        } catch (JsonProcessingException e){
+            fail("Exception while retrieving JSON from PropertySetUserRelationshipUpdateDto object: " + e.toString());
         }
     }
 }

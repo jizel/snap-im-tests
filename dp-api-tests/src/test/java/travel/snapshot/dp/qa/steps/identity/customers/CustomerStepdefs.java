@@ -177,6 +177,18 @@ public class CustomerStepdefs {
 
     }
 
+    @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\"(?: from \"([^\"]*)\")?(?: to \"([^\"]*)\")(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")$")
+    public void propertyWithCodeIsAddedToCustomerWithIdWithTypeFromToByUser(String propertyCode, String customerId, @Transform(NullEmptyStringConverter.class) String type,
+                                                                            @Transform(NullEmptyStringConverter.class) String dateFrom,
+                                                                            @Transform(NullEmptyStringConverter.class) String dateTo,
+                                                                            String username, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String userId = usersSteps.resolveUserId(username) ;
+        Response response = customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
+        customerSteps.setSessionResponse(response);
+    }
+
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\"$")
     public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerId,
                                                                             String type) throws Throwable {

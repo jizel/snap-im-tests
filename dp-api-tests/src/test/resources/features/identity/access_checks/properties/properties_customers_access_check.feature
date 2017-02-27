@@ -83,6 +83,16 @@ Feature: Properties-Customers access check feature
     Then Response code is "200"
     When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is deleted by user "userWithProp"
     Then Response code is "204"
+    Given Relation between user "userWithProp" and property with code "p1_code" is activated
+    Given Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
+    When Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithProp"
+    Then Response code is "200"
+    And Body contains property with attribute "is_active" boolean value "false" 
+    When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is deleted by user "userWithProp"
+    Then Response code is "404"
+    Given Relation between property "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
+    When Property customer relationship for property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is deleted by user "userWithProp"
+    Then Response code is "204"
 
 
   Scenario: Delete Property-Customer relationship by user without access to the property
