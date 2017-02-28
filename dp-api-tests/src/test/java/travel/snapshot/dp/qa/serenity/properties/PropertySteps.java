@@ -286,7 +286,11 @@ public class PropertySteps extends BasicSteps {
     @Step
     public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
         Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
-        return customerUserResponse.as(PropertyUserRelationshipDto.class);
+        if (customerUserResponse.statusCode() == HttpStatus.SC_OK) {
+            return customerUserResponse.as(PropertyUserRelationshipDto.class);
+        } else {
+            return null;
+        }
     }
 
     @Step
@@ -408,9 +412,15 @@ public class PropertySteps extends BasicSteps {
         Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), null);
         setSessionResponse(response);
     }
+
     @Step
     public void deletePropertyUserRelationship(String propertyId, String userId){
-        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        deletePropertyUserRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, userId);
+    }
+
+    @Step
+    public void deletePropertyUserRelationshipByUser(String performerId, String propertyId, String userId){
+        Response response = deleteSecondLevelEntityByUser(performerId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(response);
     }
 

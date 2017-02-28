@@ -523,6 +523,7 @@ public class BasicSteps {
         if (queryParams != null) {
             requestSpecification.parameters(queryParams);
         }
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         return requestSpecification
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
@@ -547,7 +548,6 @@ public class BasicSteps {
             requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        String request = requestSpecification.toString();
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
