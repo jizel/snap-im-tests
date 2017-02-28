@@ -41,7 +41,6 @@ Feature: Configurations types create update delete
     And Body is empty
     And Configuration type with identifier "conf_id_1" doesn't exist
 
-#  DP-1773
   Scenario: Deleting nonexistent configuration type
     When Nonexistent configuration type id is deleted
     Then Response code is "404"
