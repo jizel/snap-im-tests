@@ -449,7 +449,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void getUserCustomerRelationByUser(String requestorId, String customerId, String targetUserId) {
-        Response response = getSecondLevelEntityByUser( requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, null);
+        Response response = getSecondLevelEntityByUser( requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
         setSessionResponse(response);
     }
 

@@ -306,37 +306,37 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void getUserGroupsProperty(String userGroupId, String propertyId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsPropertyByUser(String userId, String userGroupId, String propertyId) {
-        Response resp = getSecondLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        Response resp = getSecondLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsPropertySet(String userGroupId, String propertySetId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsPropertySetByUser(String userId, String userGroupId, String propertySetId) {
-        Response resp = getSecondLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response resp = getSecondLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsUser(String userGroupId, String userId){
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsUserRelationshipByUser(String performerId, String userGroupId, String userId){
-        Response resp = getSecondLevelEntityByUser(performerId, userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response resp = getSecondLevelEntityByUser(performerId, userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
         setSessionResponse(resp);
     }
 
@@ -377,14 +377,14 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkGroupPropertyExistence(String userGroupId, String propertyId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         if (resp.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
             fail("Relationship userGroup-property still exists!");
         }
     }
 
     public void checkGroupPropertySetExistence(String userGroupId, String propertySetId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
         if (resp.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
             fail("Relationship userGroup-propertySet still exists!");
         }
@@ -397,7 +397,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setGroupPropertyActivityByUser(String userId, String userGroupId, String propertyId, boolean activity) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).getHeader(HEADER_ETAG);
         UserGroupPropertyRelationshipUpdateDto relation = new UserGroupPropertyRelationshipDto();
         relation.setIsActive(activity);
         try {
@@ -416,7 +416,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setGroupPropertySetActivityByUser(String userId, String userGroupId, String propertySetId, boolean isActive) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).getHeader(HEADER_ETAG);
         UserGroupPropertySetRelationshipDto relation = new UserGroupPropertySetRelationshipDto();
         relation.setIsActive(isActive);
 
@@ -524,17 +524,17 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkuserGroupPropertyRelationActivity(String userGroupId, String propertyId, boolean activity) {
-        UserGroupPropertyRelationshipDto relation = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).as(UserGroupPropertyRelationshipDto.class);
+        UserGroupPropertyRelationshipDto relation = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).as(UserGroupPropertyRelationshipDto.class);
         assertEquals(relation.getIsActive(), activity);
     }
 
     public void checkuserGroupPropertySetRelationActivity(String userGroupId, String propertySetId, boolean b) {
-        UserGroupPropertySetRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null).as(UserGroupPropertySetRelationshipDto.class);
+        UserGroupPropertySetRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).as(UserGroupPropertySetRelationshipDto.class);
         assertEquals(relationship.getIsActive(), b);
     }
 
     public Boolean getUserGroupUserRelationIsActive(String userGroupId, String userId){
-        UserGroupUserRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null).as(UserGroupUserRelationshipDto.class);
+        UserGroupUserRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId).as(UserGroupUserRelationshipDto.class);
         return relationship.getIsActive();
     }
 

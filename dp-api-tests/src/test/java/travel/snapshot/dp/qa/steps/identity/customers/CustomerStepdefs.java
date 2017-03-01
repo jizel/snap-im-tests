@@ -189,11 +189,10 @@ public class CustomerStepdefs {
         customerSteps.setSessionResponse(response);
     }
 
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\"$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerId,
-                                                                            String type) throws Throwable {
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsgotForCustomerWithType(property, customerId, type);
+    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got$")
+    public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerId) throws Throwable {
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        customerSteps.propertyIsgotForCustomerWithType(propertyId, customerId);
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got by user \"([^\"]*)\"$")
@@ -296,18 +295,11 @@ public class CustomerStepdefs {
         customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(property, customerId, type, fieldName, value);
     }
 
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\" with etag$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type_with_etag(String propertyCode,
-                                                                                      String customerId, String type) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsgotForCustomerWithTypeWithEtag(p, customerId, type);
-    }
-
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\" for etag, updated and got with previous etag$")
     public void Property_with_code_from_customer_with_code_is_got_with_type_for_etag_updated_and_got_with_previous_etag(
             String propertyCode, String customerId, String type) throws Throwable {
-        PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(p, customerId, type);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        customerSteps.propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(propertyId, customerId, type);
     }
 
     @When("^Customer with id \"([^\"]*)\", update address with following data$")

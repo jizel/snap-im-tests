@@ -195,7 +195,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void applicationVersionIdInSessionDoesntExist(String applicationId) {
         String appVersionId = Serenity.sessionVariableCalled(SESSION_APPLICATION_VERSION_ID);
 
-        Response response = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
+        Response response = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -210,7 +210,7 @@ public class ApplicationsSteps extends BasicSteps {
                                                ApplicationVersionDto applicationVersionUpdates) throws Throwable {
         ApplicationVersionDto original = getApplicationVersionById(applicationId, appVersionId);
         Response tempResponse =
-                getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, original.getVersionId(), null);
+                getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, original.getVersionId());
 
         Map<String, Object> applicationVersionData = retrieveDataOld(ApplicationVersionDto.class, applicationVersionUpdates);
 
@@ -250,15 +250,14 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationVersionWithIdIsGot(String appVersionId, String applicationId) {
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
+        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
 
     @Step
     public void applicationVersionWithIdIsGotWithEtag(String appVersionId, String applicationId) {
-        Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
-                tempResponse.getHeader(HEADER_ETAG));
+        Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
+        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
         setSessionResponse(resp);
     }
 

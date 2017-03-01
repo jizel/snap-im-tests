@@ -12,94 +12,105 @@ Feature: Property sets Properties access check feature
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
-      | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-      | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
       | propertySetName | propertySetType | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
 
+    # DP-1818
     Scenario: Second level entities - User sees only properties he should for property set he owns
-      Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
+      Given The following properties exist with random address and billing address for user "userWithPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-      Given The following properties exist with random address and billing address for user "1d829079-48f0-4f00-9bec-e2329a8bdaac"
+      Given The following properties exist with random address and billing address for user "userWithNoPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-      When Property with code "p1_code" is added to property set "ps1_name"
+      When Property with code "p1_code" is added to property set "ps1_name" with is_active "false"
+      When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
+      Then Response code is "404"
+      When List of all properties for property set with name "ps1_name" is requested by user "userWithPropSet"
+      Then Response code is "200"
+      And Total count is "0"
+      When Relation between property "p1_code" and property set "ps1_name" is activated
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       When List of all properties for property set with name "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "1"
 
-
     Scenario: Second level entities - User doesn't see properties for property set when he doesn't have access to the property and the property set all at once
-      Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
+      Given The following properties exist with random address and billing address for user "userWithNoPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-      Given Relation between user "userWithNoPropSet" and property with code "p1_code" exists
+      Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "404"
       And Custom code is 40402
+      When List of all property sets is got for property with code "p1_code" by user "userWithNoPropSet"
+      Then Total count is "0"
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithNoPropSet"
       Then Response code is "404"
       And Custom code is 40402
       When List of all properties for property set with name "ps1_name" is requested by user "userWithNoPropSet"
-      #      Fails until DP-1330 fixed
       Then Response code is "404"
       And Custom code is 40402
+      Given Property with code "p1_code" is added to property set "ps1_name" with is_active "true"
+      When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
+      Then Response code is "200"
 
 
   Scenario: Adding property to property set by user with access to it
-    Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address for user "userWithPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Property with code "p1_code" is added to property set "ps1_name" by user "userWithPropSet"
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
+    When Relation between user "userWithPropSet" and property set "ps1_name" is inactivated
+    And Property with code "p1_code" is added to property set "ps1_name" by user "userWithPropSet"
+    Then Response code is "404"
+    When Relation between user "userWithPropSet" and property set "ps1_name" is activated
+    And Property with code "p1_code" is added to property set "ps1_name" by user "userWithPropSet"
     Then Response code is "201"
 
   Scenario: Adding property to property set by user without access to the property set
-    Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address for user "userWithPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     When Property with code "p1_code" is added to property set "ps1_name" by user "userWithNoPropSet"
     Then Response code is "404"
     And Custom code is 40402
 
   Scenario: Adding property to property set by user without access to the property
-    Given The following properties exist with random address and billing address for user "1d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address for user "userWithNoPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     When Property with code "p1_code" is added to property set "ps1_name" by user "userWithNoPropSet"
     Then Response code is "404"
     And Custom code is 40402
 
-  Scenario: Removing property from property set by user with access
-    Given The following properties exist with random address and billing address for user "0d829079-48f0-4f00-9bec-e2329a8bdaac"
+  Scenario: Removing property from property set by user with and without access
+    Given The following properties exist with random address and billing address for user "userWithPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    # When property set has only one property
+    # Then anyone who has access to property, has implicit access to property set.
+    # And removing explicit access to the property set has no effect
+    Given The following properties exist with random address and billing address for user "userWithNoPropSet"
+      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
+    And Relation between user "userWithPropSet" and property set "ps1_name" is inactivated
+    When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithPropSet"
+    Then Response code is "404"
+    And Relation between user "userWithPropSet" and property set "ps1_name" is activated
     When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithPropSet"
     Then Response code is "204"
     And Body is empty
     And Property with code "p1_code" isn't there for property set with name "ps1_name" for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-
-  Scenario: Removing property from property set by user without access to the property set
-    Given The following properties exist with random address and billing address for user "1d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
-    When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithNoPropSet"
-    Then Response code is "404"
-    And Custom code is 40402
-
-  Scenario: Removing property from property set by user without access to the property
-    Given The following properties exist with random address and billing address for user "1d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
-    When Property with code "p1_code" is removed from property set "ps1_name" by user "userWithPropSet"
-#    DP-1330
-    Then Response code is "404"
-    And Custom code is 40402

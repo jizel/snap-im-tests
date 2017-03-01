@@ -419,7 +419,7 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void updateCustomerPropertyRelationshipByUser(String userId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
         String existingRelationshipId = getCustomerPropertyRelationship(customerId, propertyId).getRelationshipId();
-        String etag = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingRelationshipId, null).header(HEADER_ETAG);
+        String etag = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingRelationshipId).header(HEADER_ETAG);
 
         try {
             JSONObject jsonRelationshipUpdate = retrieveData(relationshipUpdate);
@@ -466,48 +466,32 @@ public class CustomerSteps extends BasicSteps {
     public void propertyIsgotForCustomerByUser(String userId, String propertyId, String customerId) {
         CustomerPropertyRelationshipDto customerPropertyRelationship = getCustomerPropertyRelationship(customerId, propertyId);
         assertThat(customerPropertyRelationship, is(notNullValue()));
-
-        Response response = getSecondLevelEntityByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getRelationshipId(), null);
+        Response response = getSecondLevelEntityByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         setSessionResponse(response);
     }
 
     @Step
-    public void propertyIsgotForCustomerWithType(PropertyDto p, String customerId, String type) {
-        CustomerDto c = getCustomerById(customerId);
+    public void propertyIsgotForCustomerWithType(String propertyId, String customerId) {
         setAccessTokenParamFromSession();
-        CustomerPropertyRelationshipDto tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
-        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
+        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         setSessionResponse(response);
     }
 
-    public void propertyIsgotForCustomerWithTypeWithEtag(PropertyDto p, String customerId, String type) {
-        CustomerDto c = getCustomerById(customerId);
-        CustomerPropertyRelationshipDto tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
-
-        Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
-
-        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
-    }
-
-    public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(PropertyDto p, String customerId, String type) {
-        CustomerDto c = getCustomerById(customerId);
-        CustomerPropertyRelationshipDto tempCustomerProperty = getCustomerPropertyForCustomerWithType(c.getCustomerId(), p.getPropertyId(), type);
-
-        Response tempResponse = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
+    public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(String propertyId, String customerId, String type) {
+        String eTag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
 
         Map<String, Object> mapForUpdate = new HashMap<>();
         mapForUpdate.put("valid_to", "2200-01-01");
 
-        Response updateResponse = updateSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
+        updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, mapForUpdate, eTag);
 
-        Response response = getSecondLevelEntity(c.getCustomerId(), SECOND_LEVEL_OBJECT_PROPERTIES, tempCustomerProperty.getRelationshipId(), null);
+        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
         setSessionResponse(response);
     }
 
     @Step
     public void getCustomerPropertyWithRelationshipId(String customerId, String relationshipId) {
-        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relationshipId, null);
+        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relationshipId);
         setSessionResponse(response);
     }
 
@@ -682,7 +666,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void getCustomerUserRelationByUser(String requestorId, String customerId, String targetUserId) {
-        Response response = getSecondLevelEntityByUser( requestorId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null);
+        Response response = getSecondLevelEntityByUser( requestorId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId);
         setSessionResponse(response);
     }
     /*public void checkCustomerActivity(String customerId, boolean activity) {

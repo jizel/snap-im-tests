@@ -20,6 +20,8 @@ Feature: Properties-Users access check feature
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
+  # DP-1840
+  @skipped
   Scenario: Second level entities - User sees only users of the same property he owns
     When List of all users for property with code "p1_code" is got by user "userWithProp"
     Then Response code is "200"

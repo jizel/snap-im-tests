@@ -211,7 +211,7 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public PropertySetUserRelationshipDto getUserForPropertySetByUser(String performerId, String userId, String propertySetId) {
-        Response propertySetUserResponse = getSecondLevelEntityByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response propertySetUserResponse = getSecondLevelEntityByUser(performerId, propertySetId, SECOND_LEVEL_OBJECT_USERS, userId);
         setSessionResponse(propertySetUserResponse);
         PropertySetUserRelationshipDto result;
         try {
@@ -327,7 +327,7 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public PropertySetPropertyRelationshipDto getPropertyForPropertySetByUser(String userId, String propertySetId, String propertyId) {
-        Response propertySetPropertiesResponse = getSecondLevelEntityByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES,  propertyId, null);
+        Response propertySetPropertiesResponse = getSecondLevelEntityByUser(userId, propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES,  propertyId);
         setSessionResponse(propertySetPropertiesResponse);
         if (propertySetPropertiesResponse.getStatusCode() == HttpStatus.SC_OK) {
             return propertySetPropertiesResponse.as(PropertySetPropertyRelationshipDto.class);
@@ -440,7 +440,7 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public void setPropertySetPropertyActivityByUser(String userId, String propertySetId, String propertyId, boolean activity) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).getHeader(HEADER_ETAG);
         PropertySetPropertyRelationshipUpdateDto relation = new PropertySetPropertyRelationshipUpdateDto();
         relation.setIsActive(activity);
         try {
@@ -459,7 +459,7 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public void setPropertySetUserActivityByUser(String requestorId, String propertySetId, String userId, boolean activity) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId, null).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntity(propertySetId, SECOND_LEVEL_OBJECT_USERS, userId).getHeader(HEADER_ETAG);
         UserPropertySetRelationshipUpdateDto relation = new UserPropertySetRelationshipUpdateDto();
         relation.setIsActive(activity);
         try {

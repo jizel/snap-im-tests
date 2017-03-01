@@ -51,7 +51,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private boolean isConfigurationExist(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
         int statusCode = response.statusCode();
         if (statusCode == HttpStatus.SC_OK) {
             return true;
@@ -286,7 +286,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationDoesntExistForIdentifier(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
@@ -305,7 +305,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void getConfigurationWithKeyForIdentifier(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
         setSessionResponse(response);
     }
 
@@ -347,7 +347,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void updateConfigurationValue(String identifier, String key, String value, String type) {
-        Response tempResponse = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
+        Response tempResponse = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
 
         Response resp = updateValueForKey(identifier, key, value, type, tempResponse.header(HEADER_ETAG));
         setSessionResponse(resp);
@@ -355,7 +355,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationHasValue(String identifier, String key, String value) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
+        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
         response.then().body("value", is(value));
     }
 
