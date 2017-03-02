@@ -126,7 +126,6 @@ Feature: Users create update delete
     And Updated user "snapshotUser2" has data
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
-
     Examples:
       | userType | firstName | lastName | email                 | timezone         | culture | comment  |
       | partner  | FNUp1     | LNUp1    | EMUp1@snapshot.travel | Europe/Prague    | cs-CZ   | VIP user |

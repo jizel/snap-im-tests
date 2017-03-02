@@ -10,7 +10,6 @@ Feature: User Groups Property Sets Roles access check feature
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -23,10 +22,10 @@ Feature: User Groups Property Sets Roles access check feature
       | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithUserGroup   | Customer  | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
-    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
+    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
       | propertySetId                        | propertySetName       | propertySetDescription | propertySetType |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true" by user "userWithUserGroup"
+    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -39,20 +38,23 @@ Feature: User Groups Property Sets Roles access check feature
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
 
 
-  Scenario: Delete relationship UserGroup Property Set and Role is deleted by user with access
+  Scenario: Get all User Group Property Sets roles by user with access
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
+    Then Response code is "201"
     When List of all roles for user group "userGroup_1" and property set "PropertySet_UserGroup" is requested by user "userWithUserGroup"
     Then Response code is "200"
     And Total count is "1"
     When List of all roles for user group "userGroup_1" and property set "PropertySet_UserGroup" is requested by user "userWithNoUserGroup"
     Then Response code is "404"
+    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
+    When List of all roles for user group "userGroup_1" and property set "PropertySet_UserGroup" is requested by user "userWithUserGroup"
+    Then Response code is "404"
 
-    Scenario: Relationship between UserGroup Property Set and Role is created by user with access
+    Scenario: Relationship between UserGroup, Property Set and Role is created by user with access
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     Then Response code is "201"
     And Body contains entity with attribute "role_id" value "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8"
-    And Body contains entity with attribute "name" value "role1"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
+    And Body contains entity with attribute "is_active" value "true"
 
   Scenario: Relationship between UserGroup Property Set and Role is created by user without access
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
@@ -62,16 +64,24 @@ Feature: User Groups Property Sets Roles access check feature
     Then Response code is "404"
     When Relation between user group "userGroup_1", property set "NoPropSet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     Then Response code is "404"
+    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
+    When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
+    Then Response code is "404"
 
     Scenario: Delete relationship UserGroup Property Set and Role is deleted by user with access
       When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
       When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
-#    Fails because of DP-1703
       Then Response code is "204"
 
-    Scenario: Delete relationship UserGroup Property Set and Role is deleted by user with access
+#  DP-1822
+  @skipped
+    Scenario: Delete relationship UserGroup Property Set and Role is deleted by user without access
       When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
       When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithNoUserGroup"
-#    Fails because of DP-1703
       Then Response code is "404"
-
+      When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
+      When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
+      Then Response code is "404"
+      When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated
+      When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
+      Then Response code is "204"

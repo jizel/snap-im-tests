@@ -448,13 +448,17 @@ public class BasicSteps {
     }
 
     protected Response deleteThirdLevelEntity(String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, String thirdLevelId, String eTag) {
-        return deleteThirdLevelEntityByUser( DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, thirdLevelId, eTag);
+        return deleteThirdLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, thirdLevelId, eTag);
     }
 
     protected Response deleteThirdLevelEntityByUser(String userId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, String thirdLevelId, String eTag) {
+        return deleteThirdLevelEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, thirdLevelId, eTag);
+    }
+
+    protected Response deleteThirdLevelEntityByUserForApplication(String userId, String applicationId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, String thirdLevelId, String eTag) {
         String url = "/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType + "/" + thirdLevelId;
-        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_IF_MATCH, eTag);
-        return requestSpecification.delete("/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType + "/" + thirdLevelId);
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_IF_MATCH, eTag).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        return requestSpecification.delete(url);
     }
 
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {

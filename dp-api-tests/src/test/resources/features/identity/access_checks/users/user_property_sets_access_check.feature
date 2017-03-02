@@ -1,12 +1,9 @@
 @Identity
-  Feature: User Propertysets access check feature
-    Users must have access only to user-propertyset relations if they have access to both user and propertyset
+  Feature: User Property sets access check feature
+    - Users must have access only to user-propertyset relations if they have access to both user and propertyset
 
   Background:
     Given Database is cleaned and default entities are created
-
-
-
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -27,29 +24,41 @@
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
       | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
       | 00002111-cdaf-439a-8bef-3140f56c657e | ps1_name        | ps1_description        | brand           |
+    #    Must be here - DP-1846
+    Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
 
   # DP-1781
-  @Bug
-  Scenario: User can view only list of propertyset-user roles of his own customer
-    Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
-    When User "user1OfC1" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
+  @skipped
+  Scenario: User can view only list of propertyset-user roles of his own customer and property set
+    When User "user1OfC2" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "404"
     When User "user1OfC1" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "200"
+    When Relation between property set "ps1_name" and user "user1OfC1" is inactivated
+    When User "user1OfC1" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
+    Then Response code is "404"
 
+# DP-1781
+    @skipped
   Scenario: User can assign and revoke roles to propertyset-users only when he has access to both user and propertyset
     When User "user2OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "404"
+    When Relation between property set "ps1_name" and user "user1OfC1" is inactivated
+    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
+    Then Response code is "404"
+    When Relation between property set "ps1_name" and user "user1OfC1" is activated
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "201"
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user2OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "404"
-    Given User with username "user1OfC2" is added to property set with name "ps1_name"
+    Given User "user1OfC2" is added to property set with name "ps1_name"
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "404"
-    # The following step fails due to DP-1706.
-    # We request the ETag of the user-propertyset-role relationship, but this endpoint does not support neither GET nor HEAD methods yet
     When User "user1OfC2" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "404"
+    When Relation between property set "ps1_name" and user "user1OfC1" is inactivated
+    When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
+    Then Response code is "404"
+    When Relation between property set "ps1_name" and user "user1OfC1" is activated
     When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "204"
