@@ -7,29 +7,27 @@ Feature: Properties users create update delete
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-      | snapshot | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "default1"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     Given The following properties exist with random address and billing address for user "default2"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
 
   @Smoke
   Scenario: Adding user to property
     When User "default3" is added to property with code "p2_code"
     Then Response code is "201"
 
-  # DP-1799
-  @Bug
   Scenario: Updating User - Property relationship
-    Given Check is active attribute is "false" for relation between user "default2" and property with code "p2_code"
-    When Set is active to "true" for relation between user "default2" and property with code "p2_code"
-    Then Response code is "204"
     And Check is active attribute is "true" for relation between user "default2" and property with code "p2_code"
     When Set is active to "false" for relation between user "default2" and property with code "p2_code"
     Then Response code is "204"
@@ -38,7 +36,6 @@ Feature: Properties users create update delete
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
 
-  # DP-1799
   @Smoke
   Scenario: Removing user from property
     When User "default2" is removed from property with code "p1_code"

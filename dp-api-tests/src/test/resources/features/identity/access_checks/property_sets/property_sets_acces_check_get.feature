@@ -11,16 +11,16 @@ Feature: Property sets access check feature - GET
   - All rules apply also to second level entities in both ways (e.g. properties/p_id/property_sets, property_set/p_set_id/properties) - reversed endpoints should be covered in other features (properties)
 
   Background:
-  Given Database is cleaned and default entities are created
+    Given Database is cleaned and default entities are created
 
-  Given The following customers exist with random address
-    | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-    | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given The following customers exist with random address
+      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-  Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-    | userId                               | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
-    | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userId                               | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
       | propertySetName | propertySetType | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
@@ -36,22 +36,21 @@ Feature: Property sets access check feature - GET
       Given The following user groups exist
         | userGroupId                          | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
-      When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "true"
+      When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "false"
       When Property set "ps1_name" is requested by user "userWithNoPropSet"
       Then Response code is "404"
       When User "userWithNoPropSet" is added to userGroup "userGroup_1"
       When Property set "ps1_name" is requested by user "userWithNoPropSet"
+      Then Response code is "404"
+      Given Relation between user group "userGroup_1" and property set "ps1_name" is activated
+      When Property set "ps1_name" is requested by user "userWithNoPropSet"
       Then Response code is "200"
 
-
-    Scenario: User has a relationship to any PropertySet that has a successor which has relationship to this instance
-      Given The following customers exist with random address
-        | customerId                           | companyName     | email          | salesforceId  | vatId       | isDemoCustomer | phone         | website                    | timezone      |
-        | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_2 | CZ20000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-      Given The following property sets exist for customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
+    Scenario: User has access to any child property set if he has access to parent PS
+      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
         | propertySetName | propertySetType | parentId                             | propertySetId                        |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
-      Given The following property sets exist for customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
+      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
         | propertySetName | propertySetType | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Property set "childPS2" is requested by user "userWithPropSet"
@@ -67,10 +66,13 @@ Feature: Property sets access check feature - GET
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
         | propertySetName | propertySetType | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
-      When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "true"
+      When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "false"
       When Property set "childPS2" is requested by user "userWithNoPropSet"
       Then Response code is "404"
       When User "userWithNoPropSet" is added to userGroup "userGroup_1"
+      When Property set "childPS2" is requested by user "userWithNoPropSet"
+      Then Response code is "404"
+      When Relation between user group "userGroup_1" and property set "ps1_name" is activated
       When Property set "childPS2" is requested by user "userWithNoPropSet"
       Then Response code is "200"
 

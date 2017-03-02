@@ -15,6 +15,8 @@ Feature: Property sets Users access check feature
       | userId                               | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "userWithPropSet" and default property exists
+    Given Relation between user "userWithNoPropSet" and default property exists
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
       | propertySetName | propertySetType | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
@@ -24,17 +26,20 @@ Feature: Property sets Users access check feature
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "1"
-      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" exists
+      Given Relation between user "userWithNoPropSet" and property set with name "ps1_name" exists with is_active "false"
       When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Total count is "2"
       When User "userWithNoPropSet" for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
       And Body contains entity with attribute "user_id" value "1d829079-48f0-4f00-9bec-e2329a8bdaac"
+      Given Relation between user "userWithNoPropSet" and property set "ps1_name" is activated
+      When List of all users for property set "ps1_name" is requested by user "userWithPropSet"
+      Then Response code is "200"
+      And Total count is "2"
 
     Scenario: Second level entities - User should not see users when he doesn't have access to the property set
       When List of all users for property set "ps1_name" is requested by user "userWithNoPropSet"
-      #      Fails until DP-1677 fixed
       Then Response code is "404"
       When User "userWithPropSet" for property set "ps1_name" is requested by user "userWithNoPropSet"
       Then Response code is "404"

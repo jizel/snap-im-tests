@@ -285,7 +285,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
-        Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId);
         if (customerUserResponse.statusCode() == HttpStatus.SC_OK) {
             return customerUserResponse.as(PropertyUserRelationshipDto.class);
         } else {
@@ -295,7 +295,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public CustomerDto getCustomerForProperty(String propertyId, String customerId) {
-        Response customerResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, null);
+        Response customerResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
         return customerResponse.as(CustomerDto.class);
     }
 
@@ -392,12 +392,10 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void updatePropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
-        PropertyCustomerRelationshipDto customerPropertyRelationship = getPropertyCustomerRelationship(propertyId, customerId);
-        assertThat(customerPropertyRelationship, is(notNullValue()));
-        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId());
+        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
-            Response response = updateSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException e) {
             fail("Exception thrown when trying to map PropertySetPropertyRelationshipUpdateDto to JSONObject: " +  e);
@@ -406,10 +404,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId) {
-        PropertyCustomerRelationshipDto customerPropertyRelationship = getPropertyCustomerRelationship(propertyId, customerId);
-        assertThat(customerPropertyRelationship, is(notNullValue()));
-
-        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), null);
+        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, null);
         setSessionResponse(response);
     }
 
@@ -431,7 +426,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public Response propertyPropertySetIsGotByUser(String userId, String propertyId, String propertySetId) {
-        Response propertyPropertySet = getSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response propertyPropertySet = getSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
         setSessionResponse(propertyPropertySet);
         return propertyPropertySet;
     }
@@ -467,9 +462,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public PropertyCustomerRelationshipDto getPropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId) {
-        String filter = String.format("customer_id==%s", customerId);
-        PropertyCustomerRelationshipDto[] customerProperties = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertyCustomerRelationshipDto[].class);
-        return stream(customerProperties).findFirst().orElse(null);
+        return getSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId).as(PropertyCustomerRelationshipDto.class);
     }
 
     public void allCustomersAreCustomersOfProperty(CustomerDto[] allCustomers, String propertyCode) {
@@ -492,7 +485,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public Response assignTtiToPropertyByUser(String userId, String propertyId, TtiCrossreferenceDto ttiCrossreference) {
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(ttiCrossreference).when().post(propertyId + "/tti");
+        Response response = createSecondLevelRelationshipByUser(userId, propertyId, SECOND_LEVEL_OBJECT_TTI, ttiCrossreference);
         setSessionResponse(response);
         return response;
     }

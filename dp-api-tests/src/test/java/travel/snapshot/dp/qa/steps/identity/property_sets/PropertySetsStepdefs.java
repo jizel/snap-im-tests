@@ -331,21 +331,12 @@ public class PropertySetsStepdefs {
         propertySetSteps.comparePropertySets(propertySetId, propSet.get(0));
     }
 
-    @When("^Relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is activated$")
-    public void relationBetweenUserAndPropertySetIsActivated(String username, String propertySetName) throws Throwable {
+    @When("^Relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is (in|de)?activated$")
+    public void relationBetweenUserAndPropertySetIsActivated(String username, String propertySetName, String negation) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
+        Boolean isActive = (negation == null);
         UserPropertySetRelationshipUpdateDto userPropertySetRelation = new UserPropertySetRelationshipUpdateDto();
-        userPropertySetRelation.setIsActive(true);
-
-        propertySetSteps.updateUserPropertySetRelation(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
-    }
-
-    @When("^Relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is inactivated$")
-    public void relationBetweenUserAndPropertySetIsInactivated(String username, String propertySetName) throws Throwable {
-        Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserPropertySetRelationshipUpdateDto userPropertySetRelation = new UserPropertySetRelationshipUpdateDto();
-        userPropertySetRelation.setIsActive(false);
-
+        userPropertySetRelation.setIsActive(isActive);
         propertySetSteps.updateUserPropertySetRelation(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
     }
 

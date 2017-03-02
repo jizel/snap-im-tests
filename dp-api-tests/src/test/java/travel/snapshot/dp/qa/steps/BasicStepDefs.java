@@ -136,9 +136,8 @@ public class BasicStepDefs {
 
     @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" by user \"([^\"]*)\"$")
     public void getRequestIsSentToOnModule(String url, String module, String username) throws Throwable {
-        UserDto user = usersSteps.getUserByUsername(username);
-        assertThat(user, is(notNullValue()));
-        basicSteps.sendGetRequestToUrlByUser(user.getUserId(), url, module);
+        String userId = usersSteps.resolveUserId(username);
+        basicSteps.sendGetRequestToUrlByUser(userId, url, module);
     }
 
     @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" without X-Auth-UserId header$")
