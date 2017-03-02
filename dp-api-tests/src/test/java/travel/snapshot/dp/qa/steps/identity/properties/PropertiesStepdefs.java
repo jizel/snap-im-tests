@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -79,7 +80,7 @@ public class PropertiesStepdefs {
 
     @Given("^The following properties exist with random address and billing address$")
     public void theFollowingPropertiesExistWithRandomAddressAndBillingAddress(List<PropertyDto> properties) throws Throwable {
-        propertySteps.followingPropertiesExist(properties, usersSteps.DEFAULT_SNAPSHOT_USER_ID);
+        propertySteps.followingPropertiesExist(properties, DEFAULT_SNAPSHOT_USER_ID);
     }
 
     @Given("^All users are removed for properties with codes: (.*)$")
@@ -96,10 +97,10 @@ public class PropertiesStepdefs {
 
     // --- when ---
 
-    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\" by user \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName, Boolean isActive) throws Throwable {
+        String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        String performerId = usersSteps.resolveUserId(performerName);
         propertySteps.addUserToPropertyByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
@@ -182,12 +183,6 @@ public class PropertiesStepdefs {
     @When("^Nonexistent property id is deleted$")
     public void Nonexistent_property_id_is_deleted() throws Throwable {
         propertySteps.deleteProperty("nonexistent_id");
-    }
-
-    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
-    public void User_with_username_is_added_to_property_with_code(String username, String propertyCode, Boolean isActive) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
-        propertySteps.userIsAddedToProperty(userId, propertyCode, isActive);
     }
 
     @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
@@ -495,23 +490,25 @@ public class PropertiesStepdefs {
         propertySteps.deletePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId);
     }
 
-    @When("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" is (in)?activated$")
-    public void relationBetweenUserAndPropertyWithCodeIsActivated(String userName, String propertyCode, String negation) throws Throwable {
+    @When("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" is (in)?activated(?: by user \"([^\"]*)\")?$")
+    public void relationBetweenUserAndPropertyWithCodeIsActivated(String userName, String propertyCode, String negation, String performerName) throws Throwable {
         Boolean isActive = true;
         if (negation != null) {
             isActive = false;
         }
+        String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         String userId = usersSteps.resolveUserId(userName);
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         PropertyUserRelationshipDto relation = propertySteps.getUserForProperty(propertyId, userId);
         relation.setIsActive(isActive);
-        usersSteps.updateUserPropertyRelationship(userId, propertyId, relation);
+        usersSteps.updateUserPropertyRelationshipByUser(performerId, userId, propertyId, relation);
     }
 
-    @Given("^Relation between property with code \"([^\"]*)\" and user \"([^\"]*)\" is deleted$")
-    public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username) throws Throwable {
+    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and user \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?$")
+    public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username, String performerName) throws Throwable {
+        String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        propertySteps.deletePropertyUserRelationship(ids.get(PROPERTY_ID), ids.get(USER_ID));
+        propertySteps.deletePropertyUserRelationshipByUser(performerId, ids.get(PROPERTY_ID), ids.get(USER_ID));
     }
 
     @When("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" is (in|de)?activated$")

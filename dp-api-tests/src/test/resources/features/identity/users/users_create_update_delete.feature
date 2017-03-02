@@ -180,7 +180,7 @@ Feature: Users create update delete
 
 
   Scenario Outline: Send POST request with empty body to all user endpoints
-    When Empty POST request is sent to "<url>" on module "identity"
+   When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
     And Custom code is "42201"
     Examples:

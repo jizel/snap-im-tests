@@ -438,7 +438,11 @@ public class BasicSteps {
     }
 
     protected Response createThirdLevelEntityByUser(String userId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
-        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(jsonBody);
+        return createThirdLevelEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, jsonBody);
+    }
+
+    protected Response createThirdLevelEntityByUserForApplication(String userId, String applicationId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(jsonBody);
         return requestSpecification.post("/" + firstLevelId + "/" + secondLevelType + "/" + secondLevelId + "/" + thirdLevelType);
     }
 
@@ -498,6 +502,10 @@ public class BasicSteps {
     }
 
     protected Response deleteSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
+        return deleteSecondLevelEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelObjectName, secondLevelId, queryParams);
+    }
+
+    protected Response deleteSecondLevelEntityByUserForApplication(String userId, String applicationId, String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
         String etag = getSecondLevelEntityEtag(firstLevelId, secondLevelObjectName, secondLevelId);
         if (isNotBlank(etag)) {
@@ -509,9 +517,13 @@ public class BasicSteps {
         if (isNotBlank(userId)) {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
+        if (isNotBlank(applicationId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        }
         if (queryParams != null) {
             requestSpecification.parameters(queryParams);
         }
+        requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         return requestSpecification
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
@@ -536,7 +548,6 @@ public class BasicSteps {
             requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        String request = requestSpecification.toString();
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
@@ -553,7 +564,7 @@ public class BasicSteps {
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
         if(response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED){
             RequestSpecification requestSpecification = given().spec(spec).basePath(url);
-            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().head().getHeader(HEADER_ETAG);
+            String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).when().head().getHeader(HEADER_ETAG);
             assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
             requestSpecification.header(HEADER_IF_MATCH, etag);
 

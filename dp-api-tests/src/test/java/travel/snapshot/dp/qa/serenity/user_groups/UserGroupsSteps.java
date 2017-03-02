@@ -140,7 +140,8 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public Response listOfUserGroupPropertyRolesIsGotByUser(String userId, String userGroupId, String propertyId){
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).when().get(userGroupId + "/properties/" + propertyId + "/roles");
+//        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).when().get(userGroupId + "/properties/" + propertyId + "/roles");
+        Response response = getThirdLevelEntitiesByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
         setSessionResponse(response);
         return response;
     }

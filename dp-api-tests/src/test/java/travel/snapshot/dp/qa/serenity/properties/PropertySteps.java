@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -260,11 +259,6 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void relationExistsBetweenUserAndProperty(String userId, String propertyId, Boolean isActive) {
-        PropertyUserRelationshipDto existingPropertyUser = getUserForProperty(propertyId, DEFAULT_SNAPSHOT_USER_ID);
-        if (existingPropertyUser != null) {
-            // Delete second level entities does not work for properties/users because the endpoint is not implemented. Using DB delete instead.
-            dbSteps.deletePropertyUserFromDb(userId, propertyId);
-        }
         addUserToProperty(userId, propertyId, isActive);
         Response response = getSessionResponse();
         if (response.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -292,7 +286,11 @@ public class PropertySteps extends BasicSteps {
     @Step
     public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
         Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
-        return customerUserResponse.as(PropertyUserRelationshipDto.class);
+        if (customerUserResponse.statusCode() == HttpStatus.SC_OK) {
+            return customerUserResponse.as(PropertyUserRelationshipDto.class);
+        } else {
+            return null;
+        }
     }
 
     @Step
@@ -414,9 +412,15 @@ public class PropertySteps extends BasicSteps {
         Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerPropertyRelationship.getRelationshipId(), null);
         setSessionResponse(response);
     }
+
     @Step
     public void deletePropertyUserRelationship(String propertyId, String userId){
-        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        deletePropertyUserRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, userId);
+    }
+
+    @Step
+    public void deletePropertyUserRelationshipByUser(String performerId, String propertyId, String userId){
+        Response response = deleteSecondLevelEntityByUser(performerId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(response);
     }
 

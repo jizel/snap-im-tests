@@ -151,7 +151,7 @@ Feature: Roles get user customer
       | invalid field  in sort      | 10    | 0      | /null       | role_n | /null     | 400           | 40002       |
       | invalid field  in sort_desc | 10    | 0      | /null       | /null  | aaa       | 400           | 40002       |
 
-#  DP-1753
+
   Scenario Outline: Filtering list of roles
     Given The following roles exist
       | applicationId                        | roleName           | description             |
