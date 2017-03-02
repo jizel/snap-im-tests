@@ -571,7 +571,7 @@ public class CustomerStepdefs {
         customerSteps.getCustomerUserRelationByUser(userIdsMap.get(REQUESTOR_ID), customerId, userIdsMap.get(TARGET_ID));
     }
 
-    @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is (de|in)?activated$")
+    @When("^Relation between user \"([^\"]*)\" and customer (?:with id)? \"([^\"]*)\" is (de|in)?activated$")
     public void relationBetweenUserAndCustomerWithIdIsActivated(String userName, String customerId, String negation) throws Throwable {
         Boolean isActive = true;
         if (negation != null) {

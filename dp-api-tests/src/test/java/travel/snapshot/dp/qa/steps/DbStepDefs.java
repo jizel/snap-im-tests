@@ -142,7 +142,7 @@ public class DbStepDefs {
         PropertyDto property = new PropertyDto();
         property.setPropertyId(DEFAULT_PROPERTY_ID);
         property.setEmail("defaultProperty@snapshot.travel");
-        property.setPropertyCode("defaultPropertyCode1");
+        property.setPropertyCode("defaultPropertyCode");
         property.setTimezone(DEFAULT_SNAPSHOT_TIMEZONE);
         property.setIsActive(true);
         property.setWebsite("www.defaultPropertyForTests.com");

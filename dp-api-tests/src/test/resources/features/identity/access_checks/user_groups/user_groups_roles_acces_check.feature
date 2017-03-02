@@ -10,7 +10,6 @@ Feature: User Group Roles access check feature
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -24,7 +23,7 @@ Feature: User Group Roles access check feature
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
-#  DP-1822
+
   Scenario: Get list of userGroup's roles by user with/without
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -43,7 +42,7 @@ Feature: User Group Roles access check feature
     When Relation between user group "userGroup_1" and role "540be550-1702-4e2e-b094-394de63f6c48" exists with is_active "false"
     When List of all relationships userGroups-Roles for userGroup "userGroup_1" is requested by user "userWithUserGroup"
     Then Response code is 200
-    And Total count is "2"
+    And Total count is "3"
     When List of all relationships userGroups-Roles for userGroup "userGroup_1" is requested by user "userWithNoUserGroup"
     Then Response code is 404
 
@@ -96,9 +95,6 @@ Feature: User Group Roles access check feature
       | roleId                               | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists with is_active "false"
-    When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
-    Then Response code is "404"
-    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is activated
     When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithNoUserGroup"
     Then Response code is "404"
     When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"

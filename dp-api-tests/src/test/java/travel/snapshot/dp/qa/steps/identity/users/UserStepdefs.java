@@ -143,7 +143,8 @@ public class UserStepdefs {
                                                                                              @Transform(NullEmptyStringConverter.class) String filter,
                                                                                              @Transform(NullEmptyStringConverter.class) String sort,
                                                                                              @Transform(NullEmptyStringConverter.class) String sortDesc,
-                                                                                             @Transform(NullEmptyStringConverter.class) String userId) throws Throwable {
+                                                                                             @Transform(NullEmptyStringConverter.class) String userName) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
         if (userId != null) {
             usersSteps.listOfUsersIsGotByUser(limit, cursor, filter, sort, sortDesc, userId);
         } else {

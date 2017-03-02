@@ -262,7 +262,7 @@ public class PropertySteps extends BasicSteps {
         addUserToProperty(userId, propertyId, isActive);
         Response response = getSessionResponse();
         if (response.getStatusCode() != HttpStatus.SC_CREATED) {
-            fail("PropertyUser cannot be created - status: " + response.getStatusCode() + ", " + response.asString());
+            fail("Relation between user and property cannot be created - status: " + response.getStatusCode() + ", " + response.asString());
         }
     }
 
