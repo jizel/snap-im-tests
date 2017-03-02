@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 
 import com.jayway.restassured.response.Response;
@@ -95,10 +96,16 @@ public class PropertiesStepdefs {
         propertySteps.relationExistsBetweenUserAndProperty(ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
+    @Given("^Relation between user \"([^\"]*)\" and default property exists$")
+    public void Relation_between_user_and_default_property_exists(String username) throws Throwable {
+        String userId = usersSteps.resolveUserId(username);
+        propertySteps.relationExistsBetweenUserAndProperty(userId, DEFAULT_PROPERTY_ID, true);
+    }
     // --- when ---
 
     @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
-    public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName, Boolean isActive) throws Throwable {
+    public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName, String isActiveString) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         propertySteps.addUserToPropertyByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);

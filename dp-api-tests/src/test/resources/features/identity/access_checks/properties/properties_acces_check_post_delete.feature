@@ -20,6 +20,7 @@ Feature: Properties access check feature - POST and DELETE
     Given The following property is created with random address and billing address for user "userWithProp"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     | ttiId  |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 654123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
   # DP-1816
   Scenario: User with access updates property
@@ -69,6 +70,7 @@ Feature: Properties access check feature - POST and DELETE
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
+    Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
     When The following property is created with random address and billing address for user "userWithNoProp"
       | salesforceId   | name         | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -91,6 +93,7 @@ Feature: Properties access check feature - POST and DELETE
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
+    Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
     When Property with code "p1_code" is updated with data by user "userWithProp"
       | anchorCustomerId                     |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
