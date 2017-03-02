@@ -160,12 +160,7 @@ public class CustomerStepdefs {
                                                                                     @Transform(NullEmptyStringConverter.class) String dateFrom,
                                                                                     @Transform(NullEmptyStringConverter.class) String dateTo, String isActiveString, String userName) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        String userId;
-        if (userName != null) {
-            userId = usersSteps.resolveUserId(userName);
-        } else {
-            userId = DEFAULT_SNAPSHOT_USER_ID;
-        }
+        String userId = ((userName == null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(userName));
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (property == null) {
             customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, BasicStepDefs.NONEXISTENT_ID, customerId, type,

@@ -497,7 +497,7 @@ public class PropertiesStepdefs {
         propertySteps.deletePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId);
     }
 
-    @When("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" is (in)?activated(?: by user \"([^\"]*)\")?$")
+    @When("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" is (in|de)?activated(?: by user \"([^\"]*)\")?$")
     public void relationBetweenUserAndPropertyWithCodeIsActivated(String userName, String propertyCode, String negation, String performerName) throws Throwable {
         Boolean isActive = true;
         if (negation != null) {
