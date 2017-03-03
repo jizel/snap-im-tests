@@ -1,7 +1,8 @@
 package travel.snapshot.dp.qa.serenity.applications;
 
-import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 
 import com.jayway.restassured.response.Response;
@@ -11,7 +12,6 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
@@ -163,123 +163,6 @@ public class ApplicationsSteps extends BasicSteps {
         }
     }
 
-    @Step
-    public void followingApplicationVersionsExists(String applicationId, List<ApplicationVersionDto> applicationVersions) {
-
-        applicationVersions.forEach(t -> {
-            ApplicationVersionDto existingAppVersion = getApplicationVersionByName(applicationId, t.getVersionName());
-            if (existingAppVersion != null) {
-                deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, existingAppVersion.getVersionId(), null);
-            }
-            Response createResponse = createApplicationVersion(t, applicationId);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Application version cannot be created");
-            }
-        });
-        Serenity.setSessionVariable(SESSION_APPLICATIONS).to(applicationVersions);
-    }
-
-    @Step
-    public void applicationVersionIsDeleted(String appVersionId, String applicationId) {
-        ApplicationVersionDto appVersion = getApplicationVersionById(applicationId, appVersionId);
-        if (appVersion == null) {
-            return;
-        }
-
-        Response response = deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
-        setSessionResponse(response);
-        Serenity.setSessionVariable(SESSION_APPLICATION_VERSION_ID).to(appVersionId);
-    }
-
-    @Step
-    public void applicationVersionIdInSessionDoesntExist(String applicationId) {
-        String appVersionId = Serenity.sessionVariableCalled(SESSION_APPLICATION_VERSION_ID);
-
-        Response response = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Step
-    public void deleteAppVersionWithId(String id, String versionId) {
-        Response response = deleteSecondLevelEntity(id, SECOND_LEVEL_OBJECT_VERSIONS, versionId, null);
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void updateApplicationVersionWithId(String appVersionId, String applicationId,
-                                               ApplicationVersionDto applicationVersionUpdates) throws Throwable {
-        ApplicationVersionDto original = getApplicationVersionById(applicationId, appVersionId);
-        Response tempResponse =
-                getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, original.getVersionId());
-
-        Map<String, Object> applicationVersionData = retrieveDataOld(ApplicationVersionDto.class, applicationVersionUpdates);
-
-        Response response = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
-                original.getVersionId(), applicationVersionData, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void applicationVersionWithIdHasData(String appVersionId, String applicationId,
-                                                ApplicationVersionDto applicationVersion) throws Throwable {
-        Map<String, Object> originalData =
-                retrieveDataOld(ApplicationVersionDto.class, getApplicationVersionById(applicationId, appVersionId));
-        Map<String, Object> expectedData = retrieveDataOld(ApplicationVersionDto.class, applicationVersion);
-
-        expectedData.forEach((k, v) -> {
-            if (v == null) {
-                assertFalse("Application JSON should not contains attributes with null values",
-                        originalData.containsKey(k));
-                return;
-            }
-            assertTrue("Application version has no data for attribute " + k, originalData.containsKey(k));
-            assertEquals(v, originalData.get(k));
-        });
-    }
-
-    @Step
-    public void updateApplicationVersionWithInvalidEtag(String appVersionId, String applicationId,
-                                                        ApplicationVersionDto applicationVersion) throws Throwable {
-
-        Map<String, Object> applicationVersionData = retrieveDataOld(ApplicationVersionDto.class, applicationVersion);
-
-        Response updateResponse = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
-                applicationVersionData, "invalid");
-        setSessionResponse(updateResponse);
-    }
-
-    @Step
-    public void applicationVersionWithIdIsGot(String appVersionId, String applicationId) {
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-    }
-
-    @Step
-    public void applicationVersionWithIdIsGotWithEtag(String appVersionId, String applicationId) {
-        Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void listOfApplicationVersionsIsGotWith(String applicationId, String limit, String cursor, String filter,
-                                                   String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, limit, cursor, filter,
-                sort, sortDesc, null);
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void versionNamesInResponseInOrder(List<String> versionNames) {
-        Response response = getSessionResponse();
-        ApplicationVersionDto[] appVersions = response.as(ApplicationVersionDto[].class);
-        int i = 0;
-        for (ApplicationVersionDto a : appVersions) {
-            assertEquals("Application version on index=" + i + " is not expected", versionNames.get(i),
-                    a.getVersionName());
-            i++;
-        }
-    }
 
     @Step
     public void getCommSubscriptionForApplicationId(String applicationId) {
@@ -296,23 +179,25 @@ public class ApplicationsSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    @Step
-    public Response createApplicationVersion(ApplicationVersionDto applicationVersion, String applicationId) {
-        Serenity.setSessionVariable(SESSION_CREATED_APPLICATION_VERSIONS).to(applicationVersion);
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_ID).body(applicationVersion).when().post("/{id}/application_versions", applicationId);
+    public ApplicationDto getApplicationByName(String applicationName) {
+        ApplicationDto[] application =
+                getEntities(null, null, null, "name=='" + applicationName + "'", null, null, null).as(ApplicationDto[].class);
+        return stream(application).findFirst().orElse(null);
     }
 
-    public ApplicationVersionDto getApplicationVersionByName(String applicationId, String versionName) {
-        ApplicationVersionDto[] applicationVersion =
-                getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
-                        "name=='" + versionName + "'", null, null, null).as(ApplicationVersionDto[].class);
-        return stream(applicationVersion).findFirst().orElse(null);
+    public String resolveApplicationVersionId(String applicationName) {
+        if (applicationName == null) return DEFAULT_SNAPSHOT_APPLICATION_ID;
+
+        String applicationVersionId;
+        if (isUUID(applicationName)) {
+            applicationVersionId = applicationName;
+        } else {
+            ApplicationDto application = getApplicationByName(applicationName);
+            assertThat(String.format("Application with name \"%s\" does not exist", applicationName), application , is(notNullValue()));
+            applicationVersionId = application.getApplicationId();
+        }
+        return applicationVersionId;
     }
 
-    public ApplicationVersionDto getApplicationVersionById(String applicationId, String versionId) {
-        ApplicationVersionDto[] applicationVersion = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS,
-                LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_version_id==" + versionId, null, null, null).as(ApplicationVersionDto[].class);
-        return stream(applicationVersion).findFirst().orElse(null);
-    }
 
 }

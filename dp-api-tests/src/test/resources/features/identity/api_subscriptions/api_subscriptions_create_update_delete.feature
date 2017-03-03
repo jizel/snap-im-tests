@@ -10,10 +10,10 @@ Feature: Api subscription create update delete
     Given The following applications exist
       | applicationId                        | applicationName            | description               | website                    | partnerId                            | isInternal |
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
-      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -33,9 +33,9 @@ Feature: Api subscription create update delete
 
   @Smoke
   Scenario: Create api subscription with valid data
-    Given The following application versions for application with id "6f552105-0bae-4410-b4bb-bee31567d4fa" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |

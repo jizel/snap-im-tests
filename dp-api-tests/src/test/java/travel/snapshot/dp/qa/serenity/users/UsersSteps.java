@@ -474,6 +474,8 @@ public class UsersSteps extends BasicSteps {
     }
 
     public String resolveUserId(String userName) {
+        if (userName == null) return DEFAULT_SNAPSHOT_USER_ID;
+
         String userId;
         if (isUUID(userName)) {
             userId = userName;

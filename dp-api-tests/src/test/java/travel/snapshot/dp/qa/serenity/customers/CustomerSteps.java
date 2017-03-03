@@ -213,13 +213,17 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithIdIsGot(String customerId) {
-        Response response = getEntity(customerId, null);
-        setSessionResponse(response);
+        customerWithIdIsGotByUser(DEFAULT_SNAPSHOT_USER_ID, customerId);
     }
 
     @Step
     public void customerWithIdIsGotByUser(String userId, String customerId) {
-        Response response = getEntityByUser(userId, customerId, null);
+        customerWithIdIsGotByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customerId);
+    }
+
+    @Step
+    public void customerWithIdIsGotByUserForApplication(String userId, String applicationId, String customerId) {
+        Response response = getEntityByUserForApplication(userId, applicationId, customerId, null);
         setSessionResponse(response);
     }
 
