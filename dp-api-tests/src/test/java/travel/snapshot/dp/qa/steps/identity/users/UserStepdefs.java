@@ -460,4 +460,10 @@ public class UserStepdefs {
         String roleId = roleBaseSteps.resolveRoleId(roleName);
         usersSteps.userDeletesRoleFromRelation(userIdsMap.get(REQUESTOR_ID), userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
     }
+
+    @When("^User \"([^\"]*)\" creates user with:$")
+    public void userCreatesSnapshotUser(String username, List<UserCreateDto> users) throws Throwable {
+        String userId = usersSteps.resolveUserId(username);
+        usersSteps.createUserByUser(userId, users.get(0));
+    }
 }
