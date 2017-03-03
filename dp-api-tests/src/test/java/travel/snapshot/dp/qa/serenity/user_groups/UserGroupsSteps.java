@@ -1,6 +1,5 @@
 package travel.snapshot.dp.qa.serenity.user_groups;
 
-import static com.jayway.restassured.RestAssured.given;
 import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -12,6 +11,7 @@ import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
@@ -148,7 +148,8 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public Response listOfUserGroupPropertySetRolesIsGotByUser(String userId, String userGroupId, String propertyId){
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).when().get(userGroupId + "/property_sets/" + propertyId + "/roles");
+//        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).when().get(userGroupId + "/property_sets/" + propertyId + "/roles");
+        Response response = getThirdLevelEntitiesByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertyId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
         setSessionResponse(response);
         return response;
     }
@@ -471,29 +472,27 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     @Step
-    public void userGroupPropertySetRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        RoleDto roleObject = new RoleDto();
-        roleObject.setRoleId(roleId);
+    public void userGroupPropertySetRoleRelationshipIsCreatedByUser(String userId, String userGroupId, String propertySetId, String roleId) {
+        RoleRelationshipDto roleRelationship = new RoleRelationshipDto();
+        roleRelationship.setRoleId(roleId);
 
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).body(roleObject).when().post(userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTY_SETS + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES);
+        Response response = createThirdLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, SECOND_LEVEL_OBJECT_ROLES, roleRelationship);
         setSessionResponse(response);
     }
 
     @Step
     public void userGroupPropertyRoleRelationshipIsDeletedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        String url = userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTIES + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES + "/" + roleId;
-        String etag = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get(url).getHeader(HEADER_ETAG);
+        String etag = getThirdLevelEntityEtag(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, roleId);
 
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_IF_MATCH, etag).when().delete(url);
+        Response response = deleteThirdLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
         setSessionResponse(response);
     }
 
     @Step
-    public void userGroupPropertySetRoleRelationshipIsDeletedByUser(String userId, String userGroupId, String propertyId, String roleId) {
-        String url = userGroupId + "/" + SECOND_LEVEL_OBJECT_PROPERTY_SETS + "/" + propertyId + "/" + SECOND_LEVEL_OBJECT_ROLES + roleId;
-        String etag = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().get(url).getHeader(HEADER_ETAG);
+    public void userGroupPropertySetRoleRelationshipIsDeletedByUser(String userId, String userGroupId, String propertySetId, String roleId) {
+        String etag = getThirdLevelEntityEtag(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, SECOND_LEVEL_OBJECT_ROLES, roleId);
 
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_ETAG, etag).when().delete(url);
+        Response response = deleteThirdLevelEntityByUser(userId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
         setSessionResponse(response);
     }
 

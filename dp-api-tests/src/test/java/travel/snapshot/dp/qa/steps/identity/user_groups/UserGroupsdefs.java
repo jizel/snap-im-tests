@@ -84,7 +84,7 @@ public class UserGroupsdefs {
     }
 
     @Given("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" exists(?: with isActive \"([^\"]*)\")?$")
-    public void relationBetweenUserGroupAndPropertySetExistsWithIsActive(String userGroupName, String propertySetName, Boolean isActiveString) throws Throwable {
+    public void relationBetweenUserGroupAndPropertySetExistsWithIsActive(String userGroupName, String propertySetName, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
         String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
@@ -372,21 +372,8 @@ public class UserGroupsdefs {
     public void relationBetweenUserGroupAndPropertySetIsActivated(String userGroupName, String propertySetName, String negation) throws Throwable {
         String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
         String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
-        Boolean activity = true;
-        if (negation != null) {
-            activity = false;
-        }
+        Boolean activity = (negation == null);
         userGroupSteps.setGroupPropertySetActivity(groupId, propertySetId, activity);
-    }
-
-    @When("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is deactivated$")
-    public void relationBetweenUserGroupAndPropertySetIsDeactivated(String userGroupName, String propertySetName) throws Throwable {
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(userGroup, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-
-        userGroupSteps.setGroupPropertySetActivity(userGroup.getUserGroupId(), propertySet.getPropertySetId(), false);
     }
 
     @When("^IsActive for relation between user group \"([^\"]*)\" and property with code \"([^\"]*)\" is set to \"([^\"]*)\" by user \"([^\"]*)\"$")
@@ -649,10 +636,9 @@ public class UserGroupsdefs {
     public void relationBetweenUserGroupPropertyWithCodeAndRoleWithIdIsCreatedByUser(String userGroupName, String propertyCode, String roleId, String username, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, username);
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
 
-        userGroupSteps.userGroupPropertyRoleRelationshipIsCreatedByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), property.getPropertyId(), roleId, isActive);
+        userGroupSteps.userGroupPropertyRoleRelationshipIsCreatedByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertyId, roleId, isActive);
     }
 
     @When("^Relation between user group \"([^\"]*)\", property with code \"([^\"]*)\" and role with id \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
@@ -685,19 +671,17 @@ public class UserGroupsdefs {
     @When("^Relation between user group \"([^\"]*)\", property set \"([^\"]*)\" and role with id \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
     public void relationBetweenUserGroupPropertySetAndRoleWithIdIsDeletedByUser(String userGroupName, String propertySetName, String roleId, String username) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, username);
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
 
-        userGroupSteps.userGroupPropertySetRoleRelationshipIsDeletedByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySet.getPropertySetId(), roleId);
+        userGroupSteps.userGroupPropertySetRoleRelationshipIsDeletedByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySetId, roleId);
     }
 
     @When("^List of all roles for user group \"([^\"]*)\" and property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
     public void listOfAllRolesForUserGroupAndPropertySetIsRequestedByUser(String userGroupName, String propertySetName, String username) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, username);
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
 
-        userGroupSteps.listOfUserGroupPropertySetRolesIsGotByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySet.getPropertySetId());
+        userGroupSteps.listOfUserGroupPropertySetRolesIsGotByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySetId);
     }
 
 }
