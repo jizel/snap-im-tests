@@ -83,8 +83,6 @@ Feature: User Groups Properties Roles access check feature
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
     Then Response code is "204"
 
-  #  DP-1822
-  @skipped
   Scenario: Delete relationship UserGroup property and Role is updated by user without (or with inactive) access
     Given The following property is created with random address and billing address for user "32129079-48f0-4f00-9bec-e2329a8bdaac"
       | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

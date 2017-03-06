@@ -443,7 +443,8 @@ public class UserGroupsdefs {
     }
 
     @Then("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is not established$")
-    public void relationBetweenUserGroupAndRoleIsNotEstablished(String userGroupId, String roleId) throws Throwable {
+    public void relationBetweenUserGroupAndRoleIsNotEstablished(String userGroupName, String roleId) throws Throwable {
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
         userGroupSteps.checkUserGroupRoleRelationExistency(userGroupId, roleId, false);
     }
 
