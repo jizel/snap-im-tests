@@ -25,7 +25,6 @@ Feature: Properties create update delete
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
-    And Body contains entity with attribute "is_active" value "false"
 
   @Smoke
   Scenario: Updating property
