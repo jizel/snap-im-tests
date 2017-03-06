@@ -328,7 +328,7 @@ public class CustomerStepdefs {
         customerSteps.deleteCustomer(customerId);
     }
 
-    @When("^Customer with customer id \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
+    @When("^Customer(?: with customer id)? \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
     public void customerWithCustomerIdIsDeletedByUser(String customerId, String username) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         customerSteps.deleteCustomerByUser(userId, customerId);
@@ -566,7 +566,7 @@ public class CustomerStepdefs {
         customerSteps.getCustomerUserRelationByUser(userIdsMap.get(REQUESTOR_ID), customerId, userIdsMap.get(TARGET_ID));
     }
 
-    @When("^Relation between user \"([^\"]*)\" and customer (?:with id)? \"([^\"]*)\" is (de|in)?activated$")
+    @When("^Relation between user \"([^\"]*)\" and customer(?: with id)? \"([^\"]*)\" is (de|in)?activated$")
     public void relationBetweenUserAndCustomerWithIdIsActivated(String userName, String customerId, String negation) throws Throwable {
         Boolean isActive = true;
         if (negation != null) {

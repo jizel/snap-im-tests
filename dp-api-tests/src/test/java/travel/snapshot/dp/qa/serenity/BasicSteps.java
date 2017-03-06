@@ -590,7 +590,7 @@ public class BasicSteps {
     @Step
     public void sendDeleteToUrl(String url, String module) {
         setBaseUriForModule(module);
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).basePath(url).when().delete();
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).basePath(url).when().delete();
         setSessionResponse(response);
     }
 
