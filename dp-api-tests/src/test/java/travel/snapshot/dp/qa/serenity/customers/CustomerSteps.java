@@ -9,15 +9,10 @@ import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-import java.time.LocalDate;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
@@ -35,13 +30,13 @@ import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -182,7 +177,9 @@ public class CustomerSteps extends BasicSteps {
         relation.setValidTo(LocalDate.parse(validTo));
         relation.setIsActive(isActive);
         relation.setPropertyId(propertyId);
-        return createSecondLevelRelationshipByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        Response response =  createSecondLevelRelationshipByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        setSessionResponse(response);
+        return response;
     }
 
     @Step
@@ -466,7 +463,7 @@ public class CustomerSteps extends BasicSteps {
     public void propertyIsgotForCustomerByUser(String userId, String propertyId, String customerId) {
         CustomerPropertyRelationshipDto customerPropertyRelationship = getCustomerPropertyRelationship(customerId, propertyId);
         assertThat(customerPropertyRelationship, is(notNullValue()));
-        Response response = getSecondLevelEntityByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        Response response = getSecondLevelEntityByUser(userId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getRelationshipId());
         setSessionResponse(response);
     }
 

@@ -6,7 +6,6 @@ Feature: Customers property sets access check feature (second level endpoints)
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -27,7 +26,8 @@ Feature: Customers property sets access check feature (second level endpoints)
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"
 
-
+#  DP-1854
+  @skipped
   Scenario: Second level entities - User sees only property sets he should for customer he sees
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
@@ -38,4 +38,11 @@ Feature: Customers property sets access check feature (second level endpoints)
     When List of all property sets for customer with id "00000000-0000-4000-8000-123000000abc" is requested by user "userWithCust2"
     Then Response code is "200"
     And Total count is "1"
+    When Relation between user "userWithCust1" and property set "prop_set1" is deactivated
+    When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Then Response code is "200"
+    And Total count is "1"
+    When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
+    When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Then Response code is "404"
 
