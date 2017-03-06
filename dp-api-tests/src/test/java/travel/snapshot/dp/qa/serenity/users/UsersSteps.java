@@ -72,6 +72,11 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
+    public void createUserByUser(String requestorID, UserCreateDto user) {
+        setSessionResponse(createEntityByUser(requestorID, user));
+    }
+
+    @Step
     public void bodyContainsUserWith(String attributeName, String value) {
         Response response = getSessionResponse();
         response.then().body(attributeName, is(value));
