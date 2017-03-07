@@ -334,16 +334,6 @@ public class BasicSteps {
         return requestSpecification.body(data).when().post("/{id}", entityId);
     }
 
-    protected Response updateEntityWithEtag(String entityId, String data) {
-        return updateEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data);
-    }
-
-    protected Response updateEntityWithEtagByUser(String userId, String entityId, String data) {
-        String etag = getEntityEtag(entityId);
-        return updateEntityByUser(userId, entityId, data, etag);
-    }
-
-
     public Response deleteEntity(String entityId, String etag) {
         Response response = deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
         setSessionResponse(response);
@@ -371,14 +361,17 @@ public class BasicSteps {
         return response;
     }
 
-    protected Response deleteEntityWithEtag(String entityId) {
-        String etag = getEntityEtag(entityId);
-        return deleteEntity(entityId, etag);
+    protected void deleteEntityWithEtag(String entityId) {
+        deleteEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
     protected void deleteEntityWithEtagByUser(String userId, String entityId) {
+        deleteEntityWithEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
+    }
+
+    protected void deleteEntityWithEtagByUserForApp(String userId, String applicationVersionId, String entityId) {
         String etag = getEntityEtag(entityId);
-        Response response = deleteEntityByUser(userId, entityId, etag);
+        Response response = deleteEntityByUserForApplication(userId, applicationVersionId, entityId, etag);
         setSessionResponse(response);
     }
 
@@ -464,12 +457,19 @@ public class BasicSteps {
     protected Response getSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId) {
         return getSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId);
     }
+
     protected Response getSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+        return getSecondLevelEntityByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelObjectName, secondLevelId);
+    }
+
+    protected Response getSecondLevelEntityByUserForApp(String userId, String applicationVersionId, String firstLevelId, String secondLevelObjectName, String secondLevelId) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isNotBlank(userId)) {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
-        requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+        if (isNotBlank(applicationVersionId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId);
+        }
         return requestSpecification.when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
@@ -540,7 +540,12 @@ public class BasicSteps {
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
         return updateSecondLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelObjectName, secondLevelId, object, etag);
     }
+
     protected Response updateSecondLevelEntityByUser(String userId, String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
+        return updateSecondLevelEntityByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, firstLevelId, secondLevelObjectName, secondLevelId, object, etag);
+    }
+
+    protected Response updateSecondLevelEntityByUserForApp(String userId, String applicationVersionId, String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
@@ -548,7 +553,9 @@ public class BasicSteps {
         if(isNotBlank(userId)){
             requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+        if(isNotBlank(applicationVersionId)) {
+            requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId);
+        }
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
@@ -582,8 +589,13 @@ public class BasicSteps {
 
     @Step
     public void sendGetRequestToUrlByUser(String userId, String url, String module) {
+        sendGetRequestToUrlByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, url, module);
+    }
+
+    @Step
+    public void sendGetRequestToUrlByUserForApp(String userId, String applicationVersionId, String url, String module) {
         setBaseUriForModule(module);
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).basePath(url).when().get();
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId).basePath(url).when().get();
         setSessionResponse(response);
     }
 
@@ -598,6 +610,13 @@ public class BasicSteps {
     public void sendGetRequestToUrlWithoutUserHeader(String url, String module) {
         setBaseUriForModule(module);
         Response response = given().spec(spec).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).basePath(url).when().get();
+        setSessionResponse(response);
+    }
+
+    @Step
+    public void sendGetRequestToUrlWithoutAppHeader(String url, String module) {
+        setBaseUriForModule(module);
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).basePath(url).when().get();
         setSessionResponse(response);
     }
 

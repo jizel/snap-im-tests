@@ -4,7 +4,6 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
@@ -71,6 +70,7 @@ public class CustomerStepdefs {
 
     @Steps
     private BasicSteps basicSteps;
+
     @Steps
     private ApplicationVersionsSteps applicationVersionSteps;
 
@@ -140,37 +140,41 @@ public class CustomerStepdefs {
         }
     }
 
-    @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^List of customers is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void List_of_customers_is_got_with_limit_and_cursor_and_filter_filter_and_sort_and_sort_desc(
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
             @Transform(NullEmptyStringConverter.class) String sortDesc,
-            String username) throws Throwable {
+            String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.listOfCustomersIsGotByUserWith(userId, limit, cursor, filter, sort, sortDesc);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.listOfCustomersIsGotByUserForAppVersionWith(userId, applicationVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Customer with id \"([^\"]*)\" is updated with data by user \"([^\"]*)\"$")
-    public void customerWithIdIsUpdatedWithData(String customerId, String username, List<CustomerUpdateDto> customersData) throws Throwable {
+    @When("^Customer with id \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void customerWithIdIsUpdatedWithData(String customerId, String username, String applicationVersionName, List<CustomerUpdateDto> customersData) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.updateCustomerByUser(customerId, userId, customersData.get(0));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.updateCustomerByUserForApp(customerId, userId, applicationVersionId, customersData.get(0));
     }
 
-    @When("^Property(?: with code)? \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?$")
+    @When("^Property(?: with code)? \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode,
                                                                                     String customerId, @Transform(NullEmptyStringConverter.class) String type,
                                                                                     @Transform(NullEmptyStringConverter.class) String dateFrom,
-                                                                                    @Transform(NullEmptyStringConverter.class) String dateTo, String isActiveString, String userName) throws Throwable {
+                                                                                    @Transform(NullEmptyStringConverter.class) String dateTo,
+                                                                                    String isActiveString, String userName, String applicationVersionName) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        String userId = ((userName == null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(userName));
+        String userId = usersSteps.resolveUserId(userName);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (property == null) {
-            customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, BasicStepDefs.NONEXISTENT_ID, customerId, type,
+            customerSteps.addPropertyToCustomerWithTypeFromToByUserForApp(userId, applicationVersionId, BasicStepDefs.NONEXISTENT_ID, customerId, type,
                     dateFrom, dateTo, isActive);
         } else {
-            customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, property.getPropertyId(), customerId, type, dateFrom,
+            customerSteps.addPropertyToCustomerWithTypeFromToByUserForApp(userId, applicationVersionId, property.getPropertyId(), customerId, type, dateFrom,
                     dateTo, isActive);
         }
 
@@ -194,11 +198,12 @@ public class CustomerStepdefs {
         customerSteps.propertyIsgotForCustomerWithType(propertyId, customerId);
     }
 
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got by user \"([^\"]*)\"$")
-    public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerId, String username) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerId, String username, String applicationVersionName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username) ;
-        customerSteps.propertyIsgotForCustomerByUser(userId, propertyId, customerId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.getPropertyForCustomerByUserForApp(userId, applicationVersionId, propertyId, customerId);
     }
 
     @When("^Nonexistent customerPropety id is got for customer with id \"([^\"]*)\"$")
@@ -216,10 +221,11 @@ public class CustomerStepdefs {
         customerSteps.listOfCustomerPropertiesIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of all customer properties is got for customer with id \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void listOfAllCustomerPropertiesIsGotForCustomerWithIdByUser(String customerId, String username) throws Throwable {
+    @When("^List of all customer properties is got for customer with id \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllCustomerPropertiesIsGotForCustomerWithIdByUser(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username) ;
-        customerSteps.listOfCustomerPropertiesIsGotByUser(userId, customerId, null, null, null, null, null);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.listOfCustomerPropertiesIsGotByUserForApp(userId, applicationVersionId, customerId, null, null, null, null, null);
     }
 
     @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")?$")
@@ -232,13 +238,14 @@ public class CustomerStepdefs {
     }
 
 
-    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")? by user \"([^\"]*)\"$")
+    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void userIsAddedToCustomerWithIdWithIsPrimaryByUser(String username, String customerId,
-                                                               String isPrimaryString, String isActiveString, String performerName) throws Throwable {
+                                                               String isPrimaryString, String isActiveString, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
-        Response response = customerSteps.addUserToCustomerByUser(userIds.get(REQUESTOR_ID), userIds.get(TARGET_ID), customerId, isPrimary, isActive);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        Response response = customerSteps.addUserToCustomerByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId, isPrimary, isActive);
         customerSteps.setSessionResponse(response);
     }
 
@@ -250,10 +257,11 @@ public class CustomerStepdefs {
     }
 
 
-    @When("^User \"([^\"]*)\" is removed from customer with id \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void userIsRemovedFromCustomerWithIdByUser(String username, String customerId, String performerName) throws Throwable {
+    @When("^User \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void userIsRemovedFromCustomerWithIdByUser(String username, String customerId, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
-        customerSteps.userIsDeletedFromCustomerByUser(userIds.get(REQUESTOR_ID), userIds.get(TARGET_ID), customerId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.userIsDeletedFromCustomerByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId);
     }
 
     @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\"$")
@@ -264,12 +272,13 @@ public class CustomerStepdefs {
         customerSteps.updateUserCustomerRelationship(userId, customerId, userCustomerRelationshipUpdate);
     }
 
-    @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimaryByUser(String username, String customerId, Boolean isPrimary, String performerName) throws Throwable {
+    @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimaryByUser(String username, String customerId, Boolean isPrimary, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         UserCustomerRelationshipDto userCustomerRelationship = new UserCustomerRelationshipDto();
         userCustomerRelationship.setIsPrimary(isPrimary);
-        customerSteps.updateUserCustomerRelationshipByUser(userIds.get(REQUESTOR_ID), userIds.get(TARGET_ID), customerId, userCustomerRelationship);
+        customerSteps.updateUserCustomerRelationshipByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId, userCustomerRelationship);
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
@@ -279,12 +288,13 @@ public class CustomerStepdefs {
         customerSteps.propertyIsUpdateForCustomerWithType(property, customerId, type, fieldName, value);
     }
 
-    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updated by user \"([^\"]*)\" with$")
+    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updated(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")? with$")
     public void propertyWithCodeForCustomerWithIdFieldIsUpdatedToValueString(String propertyCode,String customerId,
-                                                                             String username, List<CustomerPropertyRelationshipUpdateDto> relationshipUpdates) throws Throwable {
+                                                                             String username, String applicationVersionName, List<CustomerPropertyRelationshipUpdateDto> relationshipUpdates) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.updateCustomerPropertyRelationshipByUser(userId, propertyId, customerId, relationshipUpdates.get(0));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.updateCustomerPropertyRelationshipByUserForApp(userId, applicationVersionId, propertyId, customerId, relationshipUpdates.get(0));
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
@@ -327,15 +337,11 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGotWithEtagAfterUpdate(customerId, userId);
     }
 
-    @When("^Customer with customer id \"([^\"]*)\" is deleted$")
-    public void customerWithCustomerIdIsDeleted(String customerId) throws Throwable {
-        customerSteps.deleteCustomer(customerId);
-    }
-
-    @When("^Customer(?: with customer id)? \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
-    public void customerWithCustomerIdIsDeletedByUser(String customerId, String username) throws Throwable {
+    @When("^Customer(?: with customer id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void customerWithCustomerIdIsDeletedByUserForApp(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.deleteCustomerByUser(userId, customerId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.deleteCustomerByUserForApp(userId, applicationVersionId, customerId);
     }
 
     @When("^Customer with id \"([^\"]*)\" is updated with outdated etag$")
@@ -353,10 +359,11 @@ public class CustomerStepdefs {
         customerSteps.listOfCustomerPropertySetsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of all property sets for customer with id \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void listOfAllPropertySetsForCustomerWithIdIsRequestedByUser(String customerId, String username) throws Throwable {
+    @When("^List of all property sets for customer with id \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllPropertySetsForCustomerWithIdIsRequestedByUser(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.listOfCustomerPropertySetsIsGotByUser(userId, customerId, null, null, null, null, null);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.listOfCustomerPropertySetsIsGotByUserForApp(userId, applicationVersionId, customerId, null, null, null, null, null);
     }
 
     @When("^List of users for customer with id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -370,10 +377,11 @@ public class CustomerStepdefs {
     }
 
 
-    @When("^List of all users for customer with id \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void listOfAllUsersForCustomerWithIdIsRequestedByUser(String customerId, String username) throws Throwable {
+    @When("^List of all users for customer with id \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllUsersForCustomerWithIdIsRequestedByUser(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.listOfUsersIsGotByUser(userId, customerId, null, null, null, null, null);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.listOfUsersIsGotByUserForApp(userId, applicationVersionId, customerId, null, null, null, null, null);
     }
 
     @When("^Update customer with id \"([^\"]*)\", field \"([^\"]*)\", its value \"([^\"]*)\"$")

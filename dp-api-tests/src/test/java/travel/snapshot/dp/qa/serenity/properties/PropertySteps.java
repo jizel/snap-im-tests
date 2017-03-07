@@ -64,8 +64,7 @@ public class PropertySteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
 
-    public void followingPropertiesExist(List<PropertyDto> properties, String userName) {
-        String userId = usersSteps.resolveUserId(userName);
+    public void followingPropertiesExist(List<PropertyDto> properties, String userId) {
         properties.forEach(property -> {
             property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
 
@@ -166,6 +165,7 @@ public class PropertySteps extends BasicSteps {
     @Step
     public Response createProperty(String userId, PropertyDto property) {
         return createEntityByUser(userId, property);
+
     }
 
     /**
@@ -208,7 +208,8 @@ public class PropertySteps extends BasicSteps {
             String updatedPropertyString = retrieveData(updatedProperty).toString();
             assertThat("Empty property update", updatedPropertyString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
 
-            Response response = updateEntityWithEtagByUser(userId, propertyId, updatedPropertyString);
+            String etag = getEntityEtag(propertyId);
+            Response response = updateEntityByUser(userId, propertyId, updatedPropertyString, etag);
             setSessionResponse(response);
         }catch(JsonProcessingException jsonException){
             fail("Error while converting object to JSON: " + jsonException);
