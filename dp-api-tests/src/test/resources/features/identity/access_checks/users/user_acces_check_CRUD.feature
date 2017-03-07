@@ -69,3 +69,11 @@ Feature: Users can create, update and delete only users of the same customer
       | userType | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | Vasya     | Pupkin   | vpupkin@snapshot.com | Europe/Prague | cs-CZ   | false    |
     Then Response code is "404"
+
+  # DP-1759
+  Scenario: User of type customer can not create snapshot user
+    When User "User1OfC1" creates user with:
+      | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
+      | snapshot | vpupkin  | Vasya     | Pupkin   | vpupkin@snapshot.com | Europe/Prague | cs-CZ   | true     |
+    Then Response code is "403"
+    And Custom code is "40301"

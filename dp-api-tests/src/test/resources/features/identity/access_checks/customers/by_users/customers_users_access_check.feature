@@ -19,32 +19,36 @@ Feature: Customers users access check feature (second level endpoints)
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithCust2 | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"
+    Given Relation between user "userWithCust1" and default property exists
+    Given Relation between user "userWithCust2" and default property exists
 
-    #      DP-1677
+#      DP-1840
+  @skipped
   Scenario: Second level entities - User sees only users of the same customer
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
     And Total count is "1"
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
     Then Response code is "404"
-    Given Relation between user "userWithCust2" and customer with id "12300000-0000-4000-a000-000000000000" exists with isPrimary "true"
-    When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
+    Given Relation between user "userWithCust2" and customer with id "12300000-0000-4000-a000-000000000000" exists with isPrimary "false"
+    When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
     Then Response code is "200"
     And Total count is "2"
+    When Relation between user "userWithCust2" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
+    When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
+    Then Response code is "404"
 
-
-    #   Might need refactoring when user access checks are fully implemented!
-    Scenario: Add user to customer by user who has access to the customer
-      When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1"
-      Then Response code is "201"
 
     Scenario: Add user to customer by user without access to the customer
       When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust2"
       Then Response code is "404"
       And Custom code is 40402
+      When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
+      When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1"
+      Then Response code is "404"
+      And Custom code is 40402
 
     Scenario: Updating User Customer relationship by user who can access it
-      Then Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is primary
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "false" by user "userWithCust1"
       Then Response code is "204"
       And Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is not primary
@@ -53,6 +57,9 @@ Feature: Customers users access check feature (second level endpoints)
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "false" by user "userWithCust2"
       Then Response code is "404"
       And Custom code is 40402
+      When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
+      When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "true" by user "userWithCust1"
+      Then Response code is "404"
 
     Scenario: Deleting User Customer relationship by user who can access it
       When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1"
@@ -64,3 +71,6 @@ Feature: Customers users access check feature (second level endpoints)
       When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust2"
       Then Response code is "404"
       And Custom code is 40402
+      When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
+      When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1"
+      Then Response code is "404"

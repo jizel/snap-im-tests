@@ -82,7 +82,6 @@ Feature: User Group Roles access check feature
     Then Response code is 404
     And Custom code is 40402
 
-#  DP-1822
   Scenario: Delete relationship UserGroup-Role is possible only for user who can see the entities (with active relations)
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
@@ -100,5 +99,5 @@ Feature: User Group Roles access check feature
     When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup"
     Then Response code is 204
     And Body is empty
-    And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is not established
+    And Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is not established
 

@@ -1,0 +1,6 @@
+DROP DATABASE dp;
+DROP DATABASE dp_metadata;
+DROP DATABASE identity;
+DROP DATABASE tti;
+DROP DATABASE ota_dm;
+DROP DATABASE ota_stg;

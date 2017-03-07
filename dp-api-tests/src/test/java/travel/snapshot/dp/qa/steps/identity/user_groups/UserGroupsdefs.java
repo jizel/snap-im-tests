@@ -7,12 +7,14 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
+import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
@@ -441,7 +443,8 @@ public class UserGroupsdefs {
     }
 
     @Then("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is not established$")
-    public void relationBetweenUserGroupAndRoleIsNotEstablished(String userGroupId, String roleId) throws Throwable {
+    public void relationBetweenUserGroupAndRoleIsNotEstablished(String userGroupName, String roleId) throws Throwable {
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
         userGroupSteps.checkUserGroupRoleRelationExistency(userGroupId, roleId, false);
     }
 
@@ -475,29 +478,19 @@ public class UserGroupsdefs {
         userGroupSteps.checkuserGroupPropertyRelationActivity(userGroup.getUserGroupId(), property.getPropertyId(), false);
     }
 
-    @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is active$")
-    public void relationBetweenUserGroupAndPropertySetIsActivate(String userGroupName, String propertySetName) throws Throwable {
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(userGroup, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroup.getUserGroupId(), propertySet.getPropertySetId(), true);
+    @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is (not )?active$")
+    public void relationBetweenUserGroupAndPropertySetIsNotActivate(String userGroupName, String propertySetName, String negation) throws Throwable {
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
+        Boolean isActive = (negation==null);
+        userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroupId, propertySetId, isActive);
     }
 
-    @Then("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" is not active$")
-    public void relationBetweenUserGroupAndPropertySetIsNotActivate(String userGroupName, String propertySetName) throws Throwable {
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(userGroup, is(notNullValue()));
-        PropertySetDto propertySet = propertySetSteps.getPropertySetByName(propertySetName);
-        assertThat(propertySet, is(notNullValue()));
-        userGroupSteps.checkuserGroupPropertySetRelationActivity(userGroup.getUserGroupId(), propertySet.getPropertySetId(), false);
-    }
-
-    @Given("^User \"([^\"]*)\" is added to userGroup \"([^\"]*)\"$")
-    public void userIsAddedToUserGroupWithId(String userName, String userGroupName) throws Throwable {
+    @Given("^User \"([^\"]*)\" is added to userGroup \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    public void userIsAddedToUserGroupWithId(String userName, String userGroupName, String isActiveString) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
-
-        userGroupSteps.addUserToUserGroup(ids.get(USER_ID), ids.get(USER_GROUP_ID), true);
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        userGroupSteps.addUserToUserGroup(ids.get(USER_ID), ids.get(USER_GROUP_ID), isActive);
     }
 
     @Given("^User \"([^\"]*)\" is added to userGroup \"([^\"]*)\" as isActive \"([^\"]*)\"$")
@@ -606,6 +599,16 @@ public class UserGroupsdefs {
         userGroupSteps.setGroupPropertySetActivityByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySet.getPropertySetId(), isActive);
     }
 
+    @Given("^Relation between user \"([^\"]*)\" and group \"([^\"]*)\" is (in|de)?activated$")
+    public void relationBetweenUserAndGroupIsActivated(String userName, String userGroupName, String negation) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
+        String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        Boolean isActive = (negation == null);
+        userGroupSteps.setUserGroupUserActivity(groupId, userId, isActive);
+        Response response = userGroupSteps.getSessionResponse();
+        assertThat(String.format("Failed to change the is_active flag: %s", response.asString()), response.statusCode() == HttpStatus.SC_NO_CONTENT);
+    }
+
     @Given("^The following user group is created by user \"([^\"]*)\"$")
     public void theFollowingUserGroupIsCreatedByUser(String userName, List<UserGroupDto> userGroups) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(userName);
@@ -683,5 +686,4 @@ public class UserGroupsdefs {
 
         userGroupSteps.listOfUserGroupPropertySetRolesIsGotByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID), propertySetId);
     }
-
 }

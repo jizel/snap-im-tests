@@ -4,9 +4,6 @@ Feature: Roles create update delete user customer
   Background:
     Given Database is cleaned and default entities are created
     Given Switch for user customer role tests
-
-
-
     Given The following applications exist
       | applicationName            | description               | website                    | applicationId                        | partnerId                            | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
@@ -137,3 +134,39 @@ Feature: Roles create update delete user customer
       | roleId                               | roleName         | description             | applicationId                        |
       | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
+
+    Scenario: Create the same role for all role types - DP-1803. Only one role of one type with given name can exist.
+      When Role is created
+        | applicationId                        | roleName            | description            |
+        | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      Then Response code is "201"
+      And Body contains entity with attribute "name" value "Created role name 1"
+      When Role is created
+        | applicationId                        | roleName            | description            |
+        | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      Then Response code is "409"
+      And Custom code is 40907
+
+      Given Switch for user property role tests
+      When Role is created
+        | applicationId                        | roleName            | description            |
+        | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      Then Response code is "201"
+      And Body contains entity with attribute "name" value "Created role name 1"
+      When Role is created
+        | applicationId                        | roleName            | description            |
+        | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      Then Response code is "409"
+      And Custom code is 40907
+
+      Given Switch for user property set role tests
+      When Role is created
+        | applicationId                        | roleName            | description            |
+        | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      Then Response code is "201"
+      And Body contains entity with attribute "name" value "Created role name 1"
+      When Role is created
+        | applicationId                        | roleName            | description            |
+        | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      Then Response code is "409"
+      And Custom code is 40907

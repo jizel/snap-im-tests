@@ -72,6 +72,11 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
+    public void createUserByUser(String requestorID, UserCreateDto user) {
+        setSessionResponse(createEntityByUser(requestorID, user));
+    }
+
+    @Step
     public void bodyContainsUserWith(String attributeName, String value) {
         Response response = getSessionResponse();
         response.then().body(attributeName, is(value));
@@ -469,6 +474,8 @@ public class UsersSteps extends BasicSteps {
     }
 
     public String resolveUserId(String userName) {
+        if (userName == null) return DEFAULT_SNAPSHOT_USER_ID;
+
         String userId;
         if (isUUID(userName)) {
             userId = userName;
