@@ -461,14 +461,21 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    @Step
-    public PropertyCustomerRelationshipDto getPropertyCustomerRelationship(String propertyId, String customerId) {
-        return getPropertyCustomerRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, customerId);
+    public PropertyCustomerRelationshipDto getPropertyCustomerRelationship(String customerId, String propertyId) {
+        return getPropertyCustomerRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, customerId, propertyId);
+    }
+
+    public PropertyCustomerRelationshipDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
+        String filter = String.format("customer_id==%s", customerId);
+        PropertyCustomerRelationshipDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(PropertyCustomerRelationshipDto[].class);
+        return stream(relations).findFirst().orElse(null);
     }
 
     @Step
-    public PropertyCustomerRelationshipDto getPropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId) {
-        return getSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId).as(PropertyCustomerRelationshipDto.class);
+    public void requestPropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId) {
+        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(propertyId, customerId);
+        assertThat(propertyCustomerRelation, is(notNullValue()));
+        setSessionResponse(getSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId()));
     }
 
     public void allCustomersAreCustomersOfProperty(CustomerDto[] allCustomers, String propertyCode) {

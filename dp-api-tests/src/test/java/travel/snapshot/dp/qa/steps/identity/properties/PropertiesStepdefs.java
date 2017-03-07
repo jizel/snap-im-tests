@@ -537,6 +537,6 @@ public class PropertiesStepdefs {
     public void relationBetweenPropertyAndCustomerWithIdIsRequestedByUser(String propertyCode, String customerId, String userName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(userName);
-        propertySteps.getPropertyCustomerRelationshipByUser(userId, propertyId, customerId);
+        propertySteps.requestPropertyCustomerRelationshipByUser(userId, propertyId, customerId);
     }
 }
