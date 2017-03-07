@@ -20,9 +20,9 @@ Feature: Applications versions create update delete
     And Body contains entity with attribute "description" value "Versions description 1"
 
   Scenario Outline: Checking error codes for creating application versions
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
@@ -37,9 +37,9 @@ Feature: Applications versions create update delete
 
   @Smoke
   Scenario: Deleting application version
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is deleted
     Then Response code is "204"
     And Body is empty
@@ -50,9 +50,9 @@ Feature: Applications versions create update delete
     Then Response code is "404"
 
   Scenario Outline: Updating application
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is updated with data
       | apiManagerId           | versionName           | status           | description           |
       | <updated_apiManagerId> | <updated_versionName> | <updated_status> | <updated_description> |
@@ -69,9 +69,9 @@ Feature: Applications versions create update delete
       | 99999                | New name             | certified      | Updated description |
 
   Scenario: Updating application version with outdated etag
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is updated with data with invalid etag
       | apiManagerId | versionName          | status    | description         |
       | 123-XYZ      | Updated version name | certified | Updated description |

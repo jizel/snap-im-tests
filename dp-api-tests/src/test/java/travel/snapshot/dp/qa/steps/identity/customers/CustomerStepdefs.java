@@ -35,6 +35,7 @@ import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.CustomerUtils;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
@@ -70,6 +71,9 @@ public class CustomerStepdefs {
 
     @Steps
     private BasicSteps basicSteps;
+    @Steps
+    private ApplicationVersionsSteps applicationVersionSteps;
+
 
     // ---------------------------- GIVEN ------------------------------
 
@@ -496,10 +500,11 @@ public class CustomerStepdefs {
 
     }
 
-    @When("^Customer with customerId \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void customerWithCustomerIdIsGotByUserWithId(String customerId, String username) throws Throwable {
+    @When("^Customer with customerId \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void customerWithCustomerIdIsGotByUserWithId(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        customerSteps.customerWithIdIsGotByUser(userId, customerId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        customerSteps.customerWithIdIsGotByUserForApplication(userId, applicationVersionId, customerId);
     }
 
     @When("^Customer with customerId \"([^\"]*)\" is got with etag by user with id \"([^\"]*)\"$")

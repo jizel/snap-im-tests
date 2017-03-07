@@ -6,10 +6,10 @@ Feature: Api subscription get
 
 
 
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName | status   | description            |
-      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
-      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
+      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 11111111-0000-4000-a000-111111111111 |
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -50,28 +50,28 @@ Feature: Api subscription get
     And Custom code is 40402
 
   Scenario Outline: Getting list of api subscriptions with valid query parameters
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName    | status   | description             |
-      | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1 List | inactive | Versions description 1  |
-      | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2 List | inactive | Versions description 2  |
-      | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3 List | inactive | Versions description 3  |
-      | ac39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4 List | inactive | Versions description 4  |
-      | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5 List | inactive | Versions description 5  |
-      | f29ce9d8-e4b9-4d99-9531-e1e1513ab4e5 | 6            | Version 6 List | inactive | Versions description 6  |
-      | 2e215979-49df-488c-8cea-a4abeb4c0265 | 7            | Version 7 List | inactive | Versions description 7  |
-      | 0b29cc24-d2bc-49e3-9944-c58532f00534 | 8            | Version 8 List | inactive | Versions description 8  |
-      | 75d47daa-21fa-431d-a2b9-b490bba5250d | 9            | Version 9 List | inactive | Versions description 9  |
-      | 4e701c5f-aa7e-4a68-9f96-967550c2442c | 10           | Version 10List | inactive | Versions description 10 |
-      | 5ca16080-f21d-4d35-b257-b18f0d7b2a14 | 11           | Version 11List | inactive | Versions description 11 |
-      | 49dad233-3199-4cf2-827a-0efbb6899acd | 12           | Version 12List | inactive | Versions description 12 |
-      | 9701fcc1-5d31-4f1f-80d3-5c2cee3bbaed | 13           | Version 13List | inactive | Versions description 13 |
-      | 6c591036-2c6c-4362-a465-39515466163c | 14           | Version 14List | inactive | Versions description 14 |
-      | 3b02cb4e-1cca-4d70-8bd6-c7efbc817493 | 15           | Version 15List | inactive | Versions description 15 |
-      | a4e30390-8e6c-404f-b719-e344dfad4519 | 16           | Version 16List | inactive | Versions description 16 |
-      | 2579aeb0-95bb-4789-98ac-99659b5b77b0 | 17           | Version 17List | inactive | Versions description 17 |
-      | bcc3efa9-fd93-4c9d-add7-67545971d1b9 | 18           | Version 18List | inactive | Versions description 18 |
-      | bc4bed55-de3d-471e-a1e8-fce6f6e029aa | 19           | Version 19List | inactive | Versions description 19 |
-      | bf7b9b34-14de-4987-82c7-6251aa43a188 | 20           | Version 20List | inactive | Versions description 20 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName    | status   | description             | applicationId                        |
+      | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1 List | inactive | Versions description 1  | 11111111-0000-4000-a000-111111111111 |
+      | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2 List | inactive | Versions description 2  | 11111111-0000-4000-a000-111111111111 |
+      | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3 List | inactive | Versions description 3  | 11111111-0000-4000-a000-111111111111 |
+      | ac39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4 List | inactive | Versions description 4  | 11111111-0000-4000-a000-111111111111 |
+      | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5 List | inactive | Versions description 5  | 11111111-0000-4000-a000-111111111111 |
+      | f29ce9d8-e4b9-4d99-9531-e1e1513ab4e5 | 6            | Version 6 List | inactive | Versions description 6  | 11111111-0000-4000-a000-111111111111 |
+      | 2e215979-49df-488c-8cea-a4abeb4c0265 | 7            | Version 7 List | inactive | Versions description 7  | 11111111-0000-4000-a000-111111111111 |
+      | 0b29cc24-d2bc-49e3-9944-c58532f00534 | 8            | Version 8 List | inactive | Versions description 8  | 11111111-0000-4000-a000-111111111111 |
+      | 75d47daa-21fa-431d-a2b9-b490bba5250d | 9            | Version 9 List | inactive | Versions description 9  | 11111111-0000-4000-a000-111111111111 |
+      | 4e701c5f-aa7e-4a68-9f96-967550c2442c | 10           | Version 10List | inactive | Versions description 10 | 11111111-0000-4000-a000-111111111111 |
+      | 5ca16080-f21d-4d35-b257-b18f0d7b2a14 | 11           | Version 11List | inactive | Versions description 11 | 11111111-0000-4000-a000-111111111111 |
+      | 49dad233-3199-4cf2-827a-0efbb6899acd | 12           | Version 12List | inactive | Versions description 12 | 11111111-0000-4000-a000-111111111111 |
+      | 9701fcc1-5d31-4f1f-80d3-5c2cee3bbaed | 13           | Version 13List | inactive | Versions description 13 | 11111111-0000-4000-a000-111111111111 |
+      | 6c591036-2c6c-4362-a465-39515466163c | 14           | Version 14List | inactive | Versions description 14 | 11111111-0000-4000-a000-111111111111 |
+      | 3b02cb4e-1cca-4d70-8bd6-c7efbc817493 | 15           | Version 15List | inactive | Versions description 15 | 11111111-0000-4000-a000-111111111111 |
+      | a4e30390-8e6c-404f-b719-e344dfad4519 | 16           | Version 16List | inactive | Versions description 16 | 11111111-0000-4000-a000-111111111111 |
+      | 2579aeb0-95bb-4789-98ac-99659b5b77b0 | 17           | Version 17List | inactive | Versions description 17 | 11111111-0000-4000-a000-111111111111 |
+      | bcc3efa9-fd93-4c9d-add7-67545971d1b9 | 18           | Version 18List | inactive | Versions description 18 | 11111111-0000-4000-a000-111111111111 |
+      | bc4bed55-de3d-471e-a1e8-fce6f6e029aa | 19           | Version 19List | inactive | Versions description 19 | 11111111-0000-4000-a000-111111111111 |
+      | bf7b9b34-14de-4987-82c7-6251aa43a188 | 20           | Version 20List | inactive | Versions description 20 | 11111111-0000-4000-a000-111111111111 |
     Given The following customers exist with random address
       | customerId                           | companyName      | email           | salesforceId          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1  | c1@tenants.biz  | salesforceid_given_1  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -210,13 +210,13 @@ Feature: Api subscription get
 
 
   Scenario Outline: Filtering list of api subscriptions
-    Given The following application versions for application with id "11111111-0000-4000-a000-111111111111" exists
-      | versionId                            | apiManagerId | versionName        | status   | description            |
-      | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1filtering | inactive | Versions description 1 |
-      | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2filtering | inactive | Versions description 2 |
-      | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3filtering | inactive | Versions description 3 |
-      | bc39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4filtering | inactive | Versions description 4 |
-      | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5filtering | inactive | Versions description 5 |
+    Given The following application versions exists
+      | versionId                            | apiManagerId | versionName        | status   | description            | applicationId                        |
+      | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1filtering | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
+      | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2filtering | inactive | Versions description 2 | 11111111-0000-4000-a000-111111111111 |
+      | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3filtering | inactive | Versions description 3 | 11111111-0000-4000-a000-111111111111 |
+      | bc39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4filtering | inactive | Versions description 4 | 11111111-0000-4000-a000-111111111111 |
+      | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5filtering | inactive | Versions description 5 | 11111111-0000-4000-a000-111111111111 |
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
