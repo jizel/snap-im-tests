@@ -151,15 +151,18 @@ public class CustomerSteps extends BasicSteps {
         return stream(customerProperties).findFirst().orElse(null);
     }
 
-    private Response addPropertyToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
-        return addPropertyToCustomerWithTypeFromToByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, customerId, type, validFrom, validTo, isActive);
+    @Step
+    private Response addPropertyToCustomer(String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+        return addPropertyToCustomerByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, customerId, type, validFrom, validTo, isActive);
     }
 
-    public Response addPropertyToCustomerWithTypeFromToByUser(String userId, String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
-        return addPropertyToCustomerWithTypeFromToByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, customerId, type, validFrom, validTo, isActive);
+    @Step
+    public Response addPropertyToCustomerByUser(String userId, String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+        return addPropertyToCustomerByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, customerId, type, validFrom, validTo, isActive);
     }
 
-    public Response addPropertyToCustomerWithTypeFromToByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+    @Step
+    public Response addPropertyToCustomerByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
         CustomerPropertyRelationshipDto relation = new CustomerPropertyRelationshipDto();
         if (userId == null) {
             userId = DEFAULT_SNAPSHOT_USER_ID;
@@ -182,6 +185,19 @@ public class CustomerSteps extends BasicSteps {
         relation.setIsActive(isActive);
         relation.setPropertyId(propertyId);
         Response response =  createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        setSessionResponse(response);
+        return response;
+    }
+
+    @Step
+    public Response addPropertyToCustomerByUserForAppInvalid(String userId, String applicationVersionId, String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
+        Map<String, String> customerPropertyRelationMap = new HashMap<>();
+        customerPropertyRelationMap.put(RELATIONSHIP_TYPE, type.toUpperCase());
+        customerPropertyRelationMap.put(VALID_FROM, validFrom);
+        customerPropertyRelationMap.put(VALID_TO, validTo);
+        customerPropertyRelationMap.put(IS_ACTIVE, isActive.toString());
+        customerPropertyRelationMap.put(PROPERTY_ID, propertyId);
+        Response response =  createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationMap);
         setSessionResponse(response);
         return response;
     }
@@ -393,7 +409,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo, Boolean isActive) {
-        Response response = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, dateFrom, dateTo, isActive);
+        Response response = addPropertyToCustomer(propertyId, customerId, type, dateFrom, dateTo, isActive);
 
         if (response.statusCode() == HttpStatus.SC_CREATED) {
             setSessionVariable(SESSION_CREATED_CUSTOMER_PROPERTY, response.as(CustomerPropertyRelationshipDto.class));
@@ -403,7 +419,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void relationExistsBetweenPropertyAndCustomerWithTypeFromTo(String propertyId, String customerId, String type, String validFrom, String validTo, Boolean isActive) {
-        Response createResponse = addPropertyToCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo, isActive);
+        Response createResponse = addPropertyToCustomer(propertyId, customerId, type, validFrom, validTo, isActive);
         if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
             fail("CustomerProperty cannot be created " + createResponse.getBody().asString());
         }
