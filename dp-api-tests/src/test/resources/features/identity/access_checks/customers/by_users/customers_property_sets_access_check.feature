@@ -26,15 +26,13 @@ Feature: Customers property sets access check feature (second level endpoints)
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"
 
-#  DP-1854
-  @skipped
+
   Scenario: Second level entities - User sees only property sets he should for customer he sees
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
     And Total count is "2"
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
-    Then Response code is "200"
-    And Total count is "0"
+    Then Response code is "404"
     When List of all property sets for customer with id "00000000-0000-4000-8000-123000000abc" is requested by user "userWithCust2"
     Then Response code is "200"
     And Total count is "1"

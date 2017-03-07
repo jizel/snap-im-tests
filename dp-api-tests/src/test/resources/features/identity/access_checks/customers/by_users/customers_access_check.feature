@@ -113,7 +113,11 @@ Feature: Customers access check feature - GET
        Given API subscriptions exist for default application and customer with id "45645678-0000-4000-a000-000000000000"
        Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is activated
        Given Relation between user "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
-       Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true" with is_active "false"
+       Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
+       Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
+       Given API subscriptions exist for default application and customer with id "23445678-0000-4000-a000-000000000000"
+       Given API subscriptions exist for default application and customer with id "34545678-0000-4000-a000-000000000000"
+       Given API subscriptions exist for default application and customer with id "45645678-0000-4000-a000-000000000000"
        When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1"
        Then Response code is "200"
        And There are <returned> customers returned
@@ -194,19 +198,18 @@ Feature: Customers access check feature - GET
         # DP-1855
         | identity/customers/12300000-0000-4000-a000-000000000000/property_sets            |
 
-    @skipped
-    Scenario Outline: User with no access rights to property sends GET request with parameters
-      When GET request is sent to "<url>" on module "identity" by user "userWithCust2"
-      Then Response code is "404"
-      And Custom code is "40402"
-      Examples:
-        | url                                                                                                                            |
-        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
-        | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions?filter=is_active=='false'&sort=customer_id    |
-        | identity/customers/12300000-0000-4000-a000-000000000000/users?sortDesc=user_id&cursor=0                                        |
-        | identity/customers/12300000-0000-4000-a000-000000000000/properties?limit=55&filter=property_code=='*'                          |
-        # DP-1855
-        | identity/customers/12300000-0000-4000-a000-000000000000/property_sets?filter=property_id=='*'&sort='property_set_id'           |
+
+   Scenario Outline: User with no access rights to property sends GET request with parameters
+     When GET request is sent to "<url>" on module "identity" by user "userWithCust2"
+     Then Response code is "404"
+     And Custom code is "40402"
+     Examples:
+       | url                                                                                                                            |
+       | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
+       | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions?filter=is_active=='false'&sort=customer_id    |
+       | identity/customers/12300000-0000-4000-a000-000000000000/users?sortDesc=user_id&cursor=0                                        |
+       | identity/customers/12300000-0000-4000-a000-000000000000/properties?limit=55&filter=property_code=='*'                          |
+       | identity/customers/12300000-0000-4000-a000-000000000000/property_sets?filter=property_id=='*'&sort='property_set_id'           |
 
 
     Scenario Outline: Unauthorized request - GET request is send to all endpoints without X-Auth-UserId header

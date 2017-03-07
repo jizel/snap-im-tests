@@ -1,5 +1,10 @@
 package travel.snapshot.dp.qa.steps;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
@@ -8,16 +13,11 @@ import cucumber.api.java.en.When;
 import gherkin.formatter.model.DataTableRow;
 import net.thucydides.core.annotations.Steps;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.HashMap;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
 
 public class BasicStepDefs {
 
@@ -27,6 +27,8 @@ public class BasicStepDefs {
     private BasicSteps basicSteps;
     @Steps
     private UsersSteps usersSteps;
+    @Steps
+    private ApplicationVersionsSteps applicationVersionSteps;
 
     @Then("^Response code is (\\d+)$")
     public void response_code_is(int responseCode) throws Throwable {
@@ -134,10 +136,11 @@ public class BasicStepDefs {
                 attributeValue.matches("[A-Z0-9]+"), is(true));
     }
 
-    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void getRequestIsSentToOnModule(String url, String module, String username) throws Throwable {
+    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void getRequestIsSentToOnModule(String url, String module, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        basicSteps.sendGetRequestToUrlByUser(userId, url, module);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        basicSteps.sendGetRequestToUrlByUserForApp(userId, applicationVersionId, url, module);
     }
 
     @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" without X-Auth-UserId header$")
@@ -153,5 +156,15 @@ public class BasicStepDefs {
     @When("^DELETE request is sent to \"([^\"]*)\" on module \"([^\"]*)\"$")
     public void deleteRequestIsSentToOnModule(String url, String module) throws Throwable {
         basicSteps.sendDeleteToUrl(url, module);
+    }
+
+    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" without X-Auth-AppId header$")
+    public void getRequestIsSentToOnModuleWithoutXAuthAppIdHeader(String url, String module) throws Throwable {
+        basicSteps.sendGetRequestToUrlWithoutAppHeader(url, module);
+    }
+
+    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with empty X-Auth-AppId header$")
+    public void getRequestIsSentToOnModuleWithEmptyXAuthAppIdHeader(String url, String module) throws Throwable {
+        basicSteps.sendGetRequestToUrlByUserForApp(DEFAULT_SNAPSHOT_USER_ID, "", url, module);
     }
 }

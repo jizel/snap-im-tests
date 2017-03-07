@@ -3,7 +3,6 @@ package travel.snapshot.dp.qa.steps.identity.properties;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertEquals;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 
@@ -73,15 +72,10 @@ public class PropertiesStepdefs {
 
     // --- given ---
 
-    @Given("^The following properties exist with random address and billing address for user \"([^\"]*)\"$")
+    @Given("^The following properties exist with random address and billing address(?: for user \"([^\"]*)\")?$")
     public void theFollowingPropertiesExistWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
-        propertySteps.followingPropertiesExist(properties, userName);
-    }
-
-
-    @Given("^The following properties exist with random address and billing address$")
-    public void theFollowingPropertiesExistWithRandomAddressAndBillingAddress(List<PropertyDto> properties) throws Throwable {
-        propertySteps.followingPropertiesExist(properties, DEFAULT_SNAPSHOT_USER_ID);
+        String userId = usersSteps.resolveUserId(userName);
+        propertySteps.followingPropertiesExist(properties, userId);
     }
 
     @Given("^All users are removed for properties with codes: (.*)$")
@@ -89,7 +83,7 @@ public class PropertiesStepdefs {
         propertySteps.removeAllUsersFromPropertiesWithCodes(propertyCodes);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and property with code \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
+    @Given("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_user_with_username_and_property_with_code_exists(String username, String propertyCode, String isActiveString) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
@@ -146,14 +140,6 @@ public class PropertiesStepdefs {
     public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
-    }
-
-    @Given("^The following property exists with random address and billing address for user \"([^\"]*)\"$")
-    public void theFollowingPropertyExistsWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
-        String userId = usersSteps.resolveUserId(userName);
-        propertySteps.followingPropertyIsCreated(properties.get(0), userId);
-        Response response = propertySetSteps.getSessionResponse();
-        assertEquals(String.format("Failed to create property: %s", response.body().toString()), HttpStatus.SC_CREATED, response.statusCode());
     }
 
     @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created with userId \"([^\"]*)\"$")

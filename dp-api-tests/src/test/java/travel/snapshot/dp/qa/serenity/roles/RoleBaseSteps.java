@@ -1,5 +1,11 @@
 package travel.snapshot.dp.qa.serenity.roles;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.stream;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
@@ -11,12 +17,6 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.List;
-
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
 
 
 public class RoleBaseSteps extends BasicSteps {
@@ -121,11 +121,9 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public Response deleteRole(String roleId) {
-        Response response = deleteEntityWithEtag(roleId);
-        setSessionResponse(response);
+    public void deleteRole(String roleId) {
+        deleteEntityWithEtag(roleId);
         setSessionVariable(SESSION_ROLE_ID, roleId);
-        return response;
     }
 
     @Step
