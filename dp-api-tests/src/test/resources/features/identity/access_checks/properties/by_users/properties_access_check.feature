@@ -34,7 +34,6 @@ Feature: Properties access check feature - GET
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "200"
 
-    # DP-1816
     Scenario: User has direct relationship to property
       When Property with code "p1_code" is requested by user "userWithProp"
       Then Response code is "200"
@@ -56,8 +55,7 @@ Feature: Properties access check feature - GET
       And Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "200"
 
-    # DP-1818
-    @skipped
+
     Scenario: User has a relationship to any PropertySet that has a relationship to this instance
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
         | propertySetName | propertySetType |
@@ -72,8 +70,6 @@ Feature: Properties access check feature - GET
       Then Response code is "200"
 
 
-    # DP-1818
-    @skipped
     Scenario: User has a relationship to any PropertySet that has a successor which has relationship to this instance
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
         | propertySetName | propertySetType | propertySetId                        |
@@ -186,7 +182,6 @@ Feature: Properties access check feature - GET
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users?sortDesc=user_id&cursor=0                                        |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers?limit=55&filter=company_name=='*'                            |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/property_sets?filter=property_id=='*'&sort='property_set_id'           |
-
 
     Scenario Outline: Unauthorized request - GET request is send to all endpoints without X-Auth-UserId header
       When GET request is sent to "<url>" on module "identity" without X-Auth-UserId header

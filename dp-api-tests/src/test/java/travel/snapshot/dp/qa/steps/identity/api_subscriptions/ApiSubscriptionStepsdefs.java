@@ -57,11 +57,6 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.apiWithIdIsGot(apiSubscriptionId);
     }
 
-    @When("^Api subscription with id \"([^\"]*)\" is got with etag$")
-    public void apiSubscriptionWithIdIsGotWithEtag(String apiSubscriptionId) throws Throwable {
-        apiSteps.apiWithIdIsGotWithEtag(apiSubscriptionId);
-    }
-
     @When("^Trying to create second api subscription with the same versionID$")
     public void tryingToCreateSecondApiSubscriptionWithTheSameVersionID() throws Throwable {
         apiSteps.createExistingApiSubscription();

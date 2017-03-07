@@ -16,7 +16,6 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +68,7 @@ public class ApplicationsSteps extends BasicSteps {
     public void applicationIdInSessionDoesntExist() {
         String applicationId = Serenity.sessionVariableCalled(SESSION_APPLICATION_ID);
 
-        Response response = getEntity(applicationId, null);
+        Response response = getEntity(applicationId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -115,7 +114,7 @@ public class ApplicationsSteps extends BasicSteps {
 
     @Step
     public void applicationWithIdIsGotWithEtag(String applicationId) {
-        Response resp = getEntity(applicationId, getEntityEtag(applicationId));
+        Response resp = getEntity(applicationId);
         setSessionResponse(resp);
     }
 
@@ -125,25 +124,6 @@ public class ApplicationsSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    @Step
-    public void applicationWithIdIsGotWithEtagAfterUpdate(String applicationId) {
-
-        Response tempResponse = getEntity(applicationId, null);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("name", "Application test company 1");
-        mapForUpdate.put("description", "UpdatedDescription");
-        mapForUpdate.put("website", "http://www.snapshot.travel");
-
-        Response updateResponse = updateEntity(applicationId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
-
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Application cannot be updated: " + updateResponse.asString());
-        }
-
-        Response resp = getEntity(applicationId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
 
     public ApplicationDto getApplicationById(String applicationId) {
         ApplicationDto[] applications =

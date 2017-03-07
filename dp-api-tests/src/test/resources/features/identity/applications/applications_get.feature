@@ -27,18 +27,6 @@ Feature: Applications get
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
     Then Response code is "200"
 
-  Scenario: Getting application with expired etag
-    Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got for etag, updated and got with previous etag
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "description" value "UpdatedDescription"
-    And Body contains entity with attribute "name" value "Application test company 1"
-    And Body contains entity with attribute "website" value "http://www.snapshot.travel"
-
   Scenario: Checking error code for nonexistent applications
     When Nonexistent application id is got
     Then Response code is "404"

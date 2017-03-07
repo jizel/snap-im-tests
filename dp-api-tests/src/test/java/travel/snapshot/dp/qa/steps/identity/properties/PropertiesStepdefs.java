@@ -28,6 +28,7 @@ import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -57,6 +58,8 @@ public class PropertiesStepdefs {
     private CustomerSteps customerSteps;
     @Steps
     private BasicSteps basicSteps;
+    @Steps
+    private ApplicationVersionsSteps applicationVersionSteps;
 
     // Help methods
 
@@ -97,12 +100,13 @@ public class PropertiesStepdefs {
     }
     // --- when ---
 
-    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
-    public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName, String isActiveString) throws Throwable {
+    @When("^User \"([^\"]*)\" is added to property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void userIsAddedToPropertyWithCodeByUser(String username, String propertyCode, String performerName, String isActiveString, String applicationVersionName) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        propertySteps.addUserToPropertyByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.addUserToPropertyByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
     @When("^Property with code \"([^\"]*)\" is requested$")
@@ -125,15 +129,16 @@ public class PropertiesStepdefs {
         propertySteps.getListOfPropertiesWith(limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void listOfPropertiesIsGotWithLimitAndCursorAndFilterAndSortAndSort_descByUser(@Transform(NullEmptyStringConverter.class) String limit,
                                                                                           @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                           @Transform(NullEmptyStringConverter.class) String filter,
                                                                                           @Transform(NullEmptyStringConverter.class) String sort,
                                                                                           @Transform(NullEmptyStringConverter.class) String sortDesc,
-                                                                                          String username) throws Throwable {
+                                                                                          String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        propertySteps.getListOfPropertiesByUserWith(userId, limit, cursor, filter, sort, sortDesc);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.getListOfPropertiesByUserForApp(userId, applicationVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^The following property is created with random address and billing address for user \"([^\"]*)\"$")
@@ -166,11 +171,12 @@ public class PropertiesStepdefs {
         propertySteps.deleteProperty(propertyId);
     }
 
-    @When("^Property with code \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
-    public void propertyWithCodeIsDeletedByUser(String propertyCode, String username) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeIsDeletedByUser(String propertyCode, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.deletePropertyByUser(ids.get(USER_ID), ids.get(PROPERTY_ID));
+        propertySteps.deletePropertyByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID));
     }
 
     @When("^Nonexistent property id is deleted$")
@@ -185,11 +191,12 @@ public class PropertiesStepdefs {
         propertySteps.userIsDeletedFromProperty(userId, propertyId);
     }
 
-    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void userWithUsernameIsRemovedFromPropertyWithCodeByUser(String username, String propertyCode, String performerName) throws Throwable {
+    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void userWithUsernameIsRemovedFromPropertyWithCodeByUser(String username, String propertyCode, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         String performerId = usersSteps.resolveUserId(performerName);
-        propertySteps.userIsDeletedFromPropertyByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.userIsDeletedFromPropertyByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_ID));
     }
 
     @When("^Nonexistent user is removed from property with code \"([^\"]*)\"$")
@@ -213,11 +220,12 @@ public class PropertiesStepdefs {
         propertySteps.listOfUsersIsGotWith(propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of all users for property with code \"([^\"]*)\" is got by user \"([^\"]*)\"$")
-    public void listOfAllUsersForPropertyWithCodeIsGotByUser(String propertyCode, String username) throws Throwable {
+    @When("^List of all users for property with code \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllUsersForPropertyWithCodeIsGotByUser(String propertyCode, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.listOfUsersIsGotByUserWith(ids.get(USER_ID), ids.get(PROPERTY_ID), null, null, null, null, null);
+        propertySteps.listOfPropertyUsersIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), null, null, null, null, null);
     }
 
     @When("^List of customers for property with code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -231,11 +239,12 @@ public class PropertiesStepdefs {
         propertySteps.listOfCustomersIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of all customers for property with code \"([^\"]*)\" is got by user \"([^\"]*)\"$")
-    public void listOfAllCustomersForPropertyWithCodeIsGotByUser(String propertyCode, String username) throws Throwable {
+    @When("^List of all customers for property with code \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllCustomersForPropertyWithCodeIsGotByUser(String propertyCode, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.listOfCustomersIsGotByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), null, null, null, null, null);
+        propertySteps.listOfCustomersIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), null, null, null, null, null);
     }
 
     // --- then ---
@@ -327,11 +336,12 @@ public class PropertiesStepdefs {
         propertySteps.propertyPropertySetIsGot(propertyId, propertySetId);
     }
 
-    @When("^Property set with name \"([^\"]*)\" for property with code \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void PropertySetWithNameForPropertyWithCodeIsGotByUser(String propertySetName, String propertyCode, String username) {
+    @When("^Property set with name \"([^\"]*)\" for property with code \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void PropertySetWithNameForPropertyWithCodeIsGotByUser(String propertySetName, String propertyCode, String username, String applicationVersionName) {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
-        propertySteps.propertyPropertySetIsGotByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), propertySetId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.propertyPropertySetIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), propertySetId);
     }
 
     @When("^List of api subscriptions is got for property with id \"([^\"]*)\" and limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -354,19 +364,21 @@ public class PropertiesStepdefs {
         propertySteps.listOfPropertiesPropertySetsIsGot(propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^List of all property sets is got for property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void listOfAllPropertySetsIsGotForPropertyWithIdByUser(String propertyCode, String username) throws Throwable {
+    @When("^List of all property sets is got for property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllPropertySetsIsGotForPropertyWithIdByUser(String propertyCode, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.listOfPropertiesPropertySetsIsGotByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), null, null, null, null, null);
+        propertySteps.listOfPropertiesPropertySetsIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), null, null, null, null, null);
     }
 
-    @When("^Property with code \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void propertyWithCodeIsRequestedByUser(String propertyCode, String username) throws Throwable {
-        String userId = usersSteps.resolveUserId( username );
-        String propertyId = propertySteps.resolvePropertyId( propertyCode );
+    @When("^Property with code \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeIsRequestedByUser(String propertyCode, String username, String applicationVersionName) throws Throwable {
+        String userId = usersSteps.resolveUserId(username);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 //        Sets the session response
-        propertySteps.getPropertyByUser(userId, propertyId);
+        propertySteps.getPropertyByUserForApp(userId, applicationVersionId, propertyId);
     }
 
     @When("^Set is active to \"([^\"]*)\" for relation between user \"([^\"]*)\" and property with code \"([^\"]*)\"$")
@@ -424,11 +436,12 @@ public class PropertiesStepdefs {
         propertySteps.updateProperty(propertyId, propertyUpdates.get(0));
     }
 
-    @When("^Property with code \"([^\"]*)\" is updated with data by user \"([^\"]*)\"$")
-    public void propertyWithCodeIsUpdatedWithDataByUser(String propertyCode, String username, List<PropertyUpdateDto> propertyUpdates) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeIsUpdatedWithDataByUser(String propertyCode, String username, String applicationVersionName, List<PropertyUpdateDto> propertyUpdates) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.updatePropertyByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), propertyUpdates.get(0));
+        propertySteps.updatePropertyByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), propertyUpdates.get(0));
     }
 
     @When("^Property \"([^\"]*)\" is requested$")
@@ -445,11 +458,12 @@ public class PropertiesStepdefs {
         propertySteps.updatePropertyAddress(propertyId, addresses.get(0));
     }
 
-    @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is updated by user \"([^\"]*)\" with$")
-    public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsUpdatedByUser(String propertyCode, String propertySetName, String username, List<PropertySetPropertyRelationshipUpdateDto> relationshitpUpdates) throws Throwable {
+    @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is updated(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")? with$")
+    public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsUpdatedByUser(String propertyCode, String propertySetName, String username, String applicationVersionName, List<PropertySetPropertyRelationshipUpdateDto> relationshitpUpdates) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySteps.updatePropertyPropertySetRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), propertySetId, relationshitpUpdates.get(0));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.updatePropertyPropertySetRelationshipByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), propertySetId, relationshitpUpdates.get(0));
     }
 
     @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is updated with empty body$")
@@ -460,11 +474,12 @@ public class PropertiesStepdefs {
         propertySteps.updatePropertyPropertySetRelationship(propertyId, propertySetId, relationshipUpdate);
     }
 
-    @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
-    public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsDeletedByUser(String propertyCode, String propertySetName, String username) throws Throwable {
+    @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsDeletedByUser(String propertyCode, String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySteps.propertySetIsDeletedFromPropertyByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), propertySetId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.propertySetIsDeletedFromPropertyByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), propertySetId);
     }
 
 

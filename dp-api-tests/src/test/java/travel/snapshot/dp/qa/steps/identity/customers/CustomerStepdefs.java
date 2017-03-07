@@ -332,11 +332,6 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGotWithEtag(customerId);
     }
 
-    @When("^Customer with customerId \"([^\"]*)\" is got for etag, updated and got with previous etag by user with id \"([^\"]*)\"$")
-    public void customerWithCustomerIdIsGotForEtagUpdatedAndGotWithPreviousEtag(String customerId, String userId) throws Throwable {
-        customerSteps.customerWithIdIsGotWithEtagAfterUpdate(customerId, userId);
-    }
-
     @When("^Customer(?: with customer id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void customerWithCustomerIdIsDeletedByUserForApp(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);

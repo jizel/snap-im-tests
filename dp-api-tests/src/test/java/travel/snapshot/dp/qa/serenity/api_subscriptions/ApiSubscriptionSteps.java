@@ -29,7 +29,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
     public void apiWithIdIsGot(String apiCode) {
-        Response response = getEntity(apiCode, null);
+        Response response = getEntity(apiCode);
         setSessionResponse(response);
     }
 
@@ -47,12 +47,6 @@ public class ApiSubscriptionSteps extends BasicSteps {
         setSessionResponse(createdResponse);
     }
 
-    public void apiWithIdIsGotWithEtag(String apiSubscriptionId) {
-        Response temp = getEntity(apiSubscriptionId);
-        Response responce = getEntity(apiSubscriptionId, temp.getHeader(HEADER_ETAG));
-        setSessionResponse(responce);
-
-    }
 
     public void createExistingApiSubscription() {
         ApiSubscriptionDto[] apiSubsriptions = getEntities(null, null, null, null, null, null, null).as(ApiSubscriptionDto[].class);

@@ -31,10 +31,6 @@ Feature: Roles get user property
     And Body doesn't contain entity with attribute "non_existent"
 
 
-  Scenario: Getting role with etag
-    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
-    Then Response code is "200"
-
   Scenario: Checking error code for nonexistent role
     When Nonexistent role id got
     Then Response code is "404"
