@@ -29,23 +29,6 @@ Feature: Partners get
     When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
     Then Response code is "200"
 
-  #DP-1608 Partial update doesn't work, incorrect mandatory fields
-  @Bug
-  Scenario: Getting partner with expired etag
-    Given The following partner is created
-      | name           | email          | website                    | vatId      | notes        | partnerId                            |
-      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is got for etag, updated and got with previous etag
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "partner_id"
-    And Body contains entity with attribute "name" value "Partner test company 1"
-    And Body contains entity with attribute "email" value "p1@tenants.biz"
-    And Body contains entity with attribute "website" value "http://www.snapshot.travel"
-    And Body contains entity with attribute "vat_id" value "CZ10000001"
-    And Body contains entity with attribute "notes" value "Updated Notes"
-    And Body contains entity with attribute "is_active" value "false"
 
   Scenario: Checking error code for nonexistent partner
     When Nonexistent partner id is got

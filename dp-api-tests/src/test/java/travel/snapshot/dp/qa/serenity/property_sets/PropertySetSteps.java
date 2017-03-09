@@ -2,14 +2,11 @@ package travel.snapshot.dp.qa.serenity.property_sets;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
-import static java.util.Collections.singletonMap;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -28,8 +25,8 @@ import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDt
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,7 +74,7 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public PropertySetDto getPropertySet(String id) {
-        Response response = getEntity(id, null);
+        Response response = getEntity(id);
         setSessionResponse(response);
         return response.as(PropertySetDto.class);
     }
@@ -154,7 +151,7 @@ public class PropertySetSteps extends BasicSteps {
     public void propertySetIdInSessionDoesntExist() {
         String propertySetId = getSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID);
 
-        Response response = getEntity(propertySetId, null);
+        Response response = getEntity(propertySetId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -361,7 +358,7 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void propertysetWithIdIsGot(String propertySet) {
-        Response response = getEntity(propertySet, null);
+        Response response = getEntity(propertySet);
         setSessionResponse(response);
     }
 

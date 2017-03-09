@@ -6,7 +6,6 @@ Feature: Property sets Properties access check feature
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -20,7 +19,6 @@ Feature: Property sets Properties access check feature
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
 
-    # DP-1818
     Scenario: Second level entities - User sees only properties he should for property set he owns
       Given The following properties exist with random address and billing address for user "userWithPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

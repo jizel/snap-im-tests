@@ -127,11 +127,6 @@ public class UserStepdefs {
         usersSteps.userWithUsernameIsGotWithEtag(username);
     }
 
-    @When("^User \"([^\"]*)\" is got for etag, updated and got with previous etag$")
-    public void User_with_username_is_got_for_etag_updated_and_got_with_previous_etag(String username) throws Throwable {
-        usersSteps.userWithUsernameIsGotWithEtagAfterUpdate(username);
-    }
-
     @When("^Nonexistent user id is got$")
     public void Nonexistent_user_id_is_got() throws Throwable {
         usersSteps.userWithIdIsGot("nonexistent");

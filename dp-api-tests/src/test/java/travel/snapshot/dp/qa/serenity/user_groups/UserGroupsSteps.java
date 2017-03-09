@@ -76,23 +76,6 @@ public class UserGroupsSteps extends BasicSteps {
         return null;
     }
 
-    public void userGroupWithIdGotWithEtag(String userGroupId) {
-        Response tempResponse = getEntity(userGroupId);
-        Response resp = getEntity(userGroupId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
-
-    public void userGroupWithIdIsGotWithEtagAfterUpdate(String userGroupId) throws JsonProcessingException {
-        Response tempResponse = getEntity(userGroupId);
-        UserGroupUpdateDto userGroupUpdate = new UserGroupUpdateDto();
-        userGroupUpdate.setDescription("updatedDescription");
-
-        Response updateResponse = updateEntity(userGroupId, retrieveData(userGroupUpdate).toString(), tempResponse.getHeader(HEADER_ETAG));
-
-        Response resp = getEntity(userGroupId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
-
     @Step
     public void listUserGroupsIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);

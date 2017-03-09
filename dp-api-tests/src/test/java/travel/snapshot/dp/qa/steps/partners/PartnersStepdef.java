@@ -93,16 +93,6 @@ public class PartnersStepdef {
         partnerSteps.partnerWithIdIsGot(partnerId);
     }
 
-    @When("^Partner with id \"([^\"]*)\" is got with etag$")
-    public void Partner_with_id_is_got_with_etag(String partnerId) {
-        partnerSteps.partnerWithIdIsGotWithEtag(partnerId);
-    }
-
-    @When("^Partner with id \"([^\"]*)\" is got for etag, updated and got with previous etag$")
-    public void Partner_with_id_is_got_for_etag_updated_and_got_with_previous_etag(String partnerId) {
-        partnerSteps.partnerWithIdIsGotAfterUpdate(partnerId);
-    }
-
     @When("^Nonexistent partner id is got$")
     public void Nonexistent_partner_id_is_got() {
         partnerSteps.partnerWithIdIsGot("nonexistentId");

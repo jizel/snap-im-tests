@@ -102,11 +102,6 @@ public class ApplicationsStepsdef {
         applicationSteps.numberOfEntitiesInResponse(ApplicationDto.class, count);
     }
 
-    @When("^Application with id \"([^\"]*)\" is got for etag, updated and got with previous etag$")
-    public void Application_with_id_is_got_for_not_current_etag(String applicationId) {
-        applicationSteps.applicationWithIdIsGotWithEtagAfterUpdate(applicationId);
-    }
-
     @Then("^There are applications with following names returned in order: (.*)")
     public void There_are_applications_with_following_names_returned_in_order(List<String> applications)
             throws Throwable {

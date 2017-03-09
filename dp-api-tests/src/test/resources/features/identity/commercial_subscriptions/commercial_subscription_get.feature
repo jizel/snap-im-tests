@@ -32,11 +32,6 @@ Feature: Commercial subscription get
     And Body contains entity with attribute "property_id" value "742529dd-481f-430d-b6b6-686fbb687cab"
 
 
-  Scenario: Getting commercial subscription with etag
-    When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is got with etag
-    Then Response code is "200"
-
-
   Scenario: Checking error code for nonexistent commercial subscription
     When Nonexistent commercial subscription id is got
     Then Response code is "404"

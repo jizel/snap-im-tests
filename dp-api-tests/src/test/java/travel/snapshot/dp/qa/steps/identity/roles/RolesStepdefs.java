@@ -1,6 +1,9 @@
 package travel.snapshot.dp.qa.steps.identity.roles;
 
-import com.jayway.restassured.response.Response;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -13,10 +16,6 @@ import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 
 import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
 
 
 public class RolesStepdefs {
@@ -116,24 +115,6 @@ public class RolesStepdefs {
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got$")
     public void Role_with_name_for_application_id_is_got(String roleName, String applicationId) throws Throwable {
         roleBaseSteps.getRoleWithNameForApplicationId(roleName, applicationId);
-    }
-
-    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got with etag$")
-    public void Role_with_name_for_application_id_is_got_with_etag(String roleName, String applicationId) throws Throwable {
-        roleBaseSteps.getRoleWithNameForApplicationIdUsingEtag(roleName, applicationId);
-    }
-
-    @When("^Role with name \"([^\"]*)\" is got for etag, forced new etag through update$")
-    public void Role_with_name_for_application_id_is_got_for_etag_forced_new_etag_through_update(String roleName) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByName(roleName);
-        assertThat(role,is(notNullValue()));
-        String originalEtag = roleBaseSteps.getEntityEtag(role.getRoleId());
-        RoleUpdateDto roleUpdate = new RoleUpdateDto();
-        roleUpdate.setDescription("updated because of etag");
-        roleBaseSteps.updateRole(role.getRoleId(), roleUpdate, originalEtag);
-
-        Response response = roleBaseSteps.getRole(role.getRoleId(), originalEtag);
-        roleBaseSteps.setSessionResponse(response);
     }
 
     @Given("^The following roles don't exist$")

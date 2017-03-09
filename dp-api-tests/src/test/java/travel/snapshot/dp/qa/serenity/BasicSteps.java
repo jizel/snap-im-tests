@@ -117,6 +117,10 @@ public class BasicSteps {
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
     public static final String USER_ID = "user_id";
+    public static final String PROPERTY_ID = "property_id";
+    public static final String RELATIONSHIP_TYPE = "relationship_type";
+    public static final String VALID_FROM = "valid_from";
+    public static final String VALID_TO = "valid_to";
 
     public BasicSteps() {
 
@@ -274,14 +278,6 @@ public class BasicSteps {
         }
     }
 
-    protected Response getEntity(String id) {
-        return getEntity(id, null);
-    }
-
-    protected Response getEntityByUser(String userId, String entityId) {
-        return getEntityByUser(userId, entityId, null);
-    }
-
     protected Response createEntity(Object entity) {
         return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entity);
     }
@@ -394,21 +390,18 @@ public class BasicSteps {
         return requestSpecification.when().head("/{id}", entityId).getHeader(HEADER_ETAG);
     }
 
-    public Response getEntity(String entityId, String etag) {
-        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+    public Response getEntity(String entityId) {
+        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    public Response getEntityByUser(String userId, String entityId, String etag) {
-        return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
+    public Response getEntityByUser(String userId, String entityId) {
+        return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    public Response getEntityByUserForApplication(String userId, String applicationId, String entityId, String etag) {
+    public Response getEntityByUserForApplication(String userId, String applicationId, String entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
-        }
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         return requestSpecification.when().get("/{id}", entityId);
@@ -529,12 +522,9 @@ public class BasicSteps {
                 .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
-    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> object, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        return requestSpecification.body(object).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
+    protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, Map<String, Object> objectMap, String etag) {
+        JSONObject jsonBody = new JSONObject(objectMap);
+        return updateSecondLevelEntity(firstLevelId, secondLevelObjectName, secondLevelId, jsonBody, etag);
     }
 
     protected Response updateSecondLevelEntity(String firstLevelId, String secondLevelObjectName, String secondLevelId, JSONObject object, String etag) {

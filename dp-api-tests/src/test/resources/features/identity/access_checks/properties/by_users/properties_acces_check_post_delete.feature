@@ -22,7 +22,7 @@ Feature: Properties access check feature - POST and DELETE
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 654123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
-  # DP-1816
+
   Scenario: User with access updates property
     When Property with code "p1_code" is updated with data by user "userWithProp"
       | salesforceId   | name         | website                  | email            | isDemoProperty |
@@ -88,7 +88,8 @@ Feature: Properties access check feature - POST and DELETE
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
 
-  # DP-1816
+#  DP-1880
+  @skipped
   Scenario: Anchor_customer_id of not accessible customer cannot be used when updating property
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
@@ -97,14 +98,14 @@ Feature: Properties access check feature - POST and DELETE
     When Property with code "p1_code" is updated with data by user "userWithProp"
       | anchorCustomerId                     |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "422"
+    And Custom code is 42202
     Given Relation between user "userWithProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
     When Property with code "p1_code" is updated with data by user "userWithProp"
       | anchorCustomerId                     |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "422"
+    And Custom code is 42202
     When Relation between user "userWithProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is activated
     When Property with code "p1_code" is updated with data by user "userWithProp"
       | anchorCustomerId                     |

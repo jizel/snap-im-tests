@@ -37,12 +37,6 @@ Feature: Api subscription get
     And Body contains entity with attribute "application_version_id" value "b595fc9d-f5ca-45e7-a15d-c8a97108d884"
     And Body contains entity with attribute "commercial_subscription_id" value "8e238f8e-2c9c-4e32-9a63-40474a9728eb"
 
-
-  Scenario: Getting customer api subscription with etag
-    When Api subscription with id "5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f" is got with etag
-    Then Response code is 200
-
-
   Scenario: Checking error code for getting nonExisting api subscription
     When Api subscription with id "nonExistingApi" is got
     Then Response code is 404
