@@ -483,19 +483,21 @@ public class PropertiesStepdefs {
     }
 
 
-    @When("^Property customer relationship for property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated by user \"([^\"]*)\" with$")
-    public void propertyCustomerRelationshipForPropertyWithCodeAndCustomerWithIdIsUpdatedByUserWith(String propertyCode, String customerId, String username,
+    @When("^Property customer relationship for property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")? with$")
+    public void propertyCustomerRelationshipForPropertyWithCodeAndCustomerWithIdIsUpdatedByUserWith(String propertyCode, String customerId, String username, String applicationVersionName,
                                                                                                     List<CustomerPropertyRelationshipUpdateDto> relationshipUpdates) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.updatePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId, relationshipUpdates.get(0));
+        propertySteps.updatePropertyCustomerRelationshipByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), customerId, relationshipUpdates.get(0));
     }
 
-    @When("^Property customer relationship for property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
-    public void propertyCustomerRelationshipForPropertyWithCodeAndCustomerWithIdIsDeletedByUser(String propertyCode, String customerId, String username) throws Throwable {
+    @When("^Property customer relationship for property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyCustomerRelationshipForPropertyWithCodeAndCustomerWithIdIsDeletedByUser(String propertyCode, String customerId, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        propertySteps.deletePropertyCustomerRelationshipByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), customerId);
+        propertySteps.deletePropertyCustomerRelationshipByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_ID), customerId);
     }
 
     @When("^Relation between user \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" is (in|de)?activated(?: by user \"([^\"]*)\")?$")
@@ -533,10 +535,11 @@ public class PropertiesStepdefs {
         assert(response.statusCode() == HttpStatus.SC_NO_CONTENT);
     }
 
-    @When("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void relationBetweenPropertyAndCustomerWithIdIsRequestedByUser(String propertyCode, String customerId, String userName) throws Throwable {
+    @When("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void relationBetweenPropertyAndCustomerWithIdIsRequestedByUser(String propertyCode, String customerId, String userName, String applicationVersionName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(userName);
-        propertySteps.requestPropertyCustomerRelationshipByUser(userId, propertyId, customerId);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.requestPropertyCustomerRelationshipByUserForApp(userId, applicationVersionId, propertyId, customerId);
     }
 }

@@ -190,13 +190,7 @@ public class CustomerStepdefs {
         Response response = customerSteps.addPropertyToCustomerByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         customerSteps.setSessionResponse(response);
     }
-
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerId) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        customerSteps.propertyIsgotForCustomer(propertyId, customerId);
-    }
-
+    
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerId, String username, String applicationVersionName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
