@@ -36,19 +36,19 @@ Feature: Customers properties create update delete
     And Body contains entity with attribute "relationship_type" value "chain"
 
   Scenario Outline: Checking error codes for creating customerProperty
-    When Property with code "<property_code>" is added to customer with id "<customer_id>" with type "<type>" from "<valid_from>" to "<valid_to>"
+    When Property with code "<property_code>" is added to customer with id "<customer_id>" with type "<type>" from "<valid_from>" to "<valid_to>" with error "true"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
     Examples:
       |                      | property_code | customer_id                          | type        | valid_from | valid_to   | error_code | custom_code |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      |            | 422        | 42201       |
+      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | 2100-01-01 | 422        | 42201       |
       | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | /null      | 422        | 42201       |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            | /null      | 422        | 42201       |
+      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | /null      | 422        | 42201       |
       | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 422        | 42201       |
       | from after to date   | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 422        | 42201       |
-#  DP-1779
-      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 422        | 42201       |
-      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 422        | 42201       |
+      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 400        | 40001       |
+      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 400        | 40001       |
+      | wrong date           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2018-02-30 | 400        | 40001       |
       | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
       | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 409        | 40907       |
       | notexistent property | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
@@ -93,10 +93,9 @@ Feature: Customers properties create update delete
     Examples:
       | field             | value      | status_code | custom_code |
       | valid_from        | 2016-01-01 | 422         | 42201       |
-#  DP-1779
-      | valid_from        | invalid    | 422         | 42201       |
+      | valid_from        | invalid    | 400         | 40001       |
       | valid_to          | 2014-12-31 | 422         | 42201       |
-      | valid_to          | invalid    | 422         | 42201       |
+      | valid_to          | invalid    | 400         | 40001       |
       | relationship_type | invalid    | 422         | 42201       |
 
   Scenario: Duplicate adding of customer property throws correct error - DP-1661

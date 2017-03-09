@@ -39,7 +39,6 @@ import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.review.ReviewMultipropertyCustomerSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
-import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -160,22 +159,22 @@ public class CustomerStepdefs {
         customerSteps.updateCustomerByUserForApp(customerId, userId, applicationVersionId, customersData.get(0));
     }
 
-    @When("^Property(?: with code)? \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    @When("^Property(?: with code)? \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with error \"([^\"]*)\")?$")
     public void Property_with_code_is_added_to_customer_with_code_with_type_from_to(String propertyCode,
                                                                                     String customerId, @Transform(NullEmptyStringConverter.class) String type,
                                                                                     @Transform(NullEmptyStringConverter.class) String dateFrom,
                                                                                     @Transform(NullEmptyStringConverter.class) String dateTo,
-                                                                                    String isActiveString, String userName, String applicationVersionName) throws Throwable {
+                                                                                    String isActiveString, String userName, String applicationVersionName, Boolean error) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String userId = usersSteps.resolveUserId(userName);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        if (property == null) {
-            customerSteps.addPropertyToCustomerWithTypeFromToByUserForApp(userId, applicationVersionId, BasicStepDefs.NONEXISTENT_ID, customerId, type,
-                    dateFrom, dateTo, isActive);
-        } else {
-            customerSteps.addPropertyToCustomerWithTypeFromToByUserForApp(userId, applicationVersionId, property.getPropertyId(), customerId, type, dateFrom,
-                    dateTo, isActive);
+        String propertyId = (property == null) ? NON_EXISTENT_ID : property.getPropertyId();
+        if (error){
+            customerSteps.addPropertyToCustomerByUserForAppInvalid(userId, applicationVersionId, propertyId, customerId, type, dateFrom, dateTo, isActive);
+        }
+        else {
+            customerSteps.addPropertyToCustomerByUserForApp(userId, applicationVersionId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         }
 
     }
@@ -188,7 +187,7 @@ public class CustomerStepdefs {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username) ;
-        Response response = customerSteps.addPropertyToCustomerWithTypeFromToByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
+        Response response = customerSteps.addPropertyToCustomerByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         customerSteps.setSessionResponse(response);
     }
 
