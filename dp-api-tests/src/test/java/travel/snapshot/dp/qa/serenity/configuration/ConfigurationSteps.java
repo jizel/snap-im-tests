@@ -140,7 +140,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void getConfigurationTypeWithId(String configType) {
-        Response resp = getEntity(configType, null);
+        Response resp = getEntity(configType);
         setSessionResponse(resp);
     }
 

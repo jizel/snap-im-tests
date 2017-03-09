@@ -30,10 +30,6 @@ Feature: Users get
     And Body contains entity with attribute "timezone" value "Europe/Prague"
     And Body contains entity with attribute "culture" value "cs-CZ"
 
-  Scenario: Getting user with etag
-    When User "default1" is got with etag
-    Then Response code is "304"
-    And Body is empty
 
 ##  The oauth related tests are outdated since the whole authorization mechanism is
 ##  now keykloack-driven, hence some old endpoints may not work
@@ -54,19 +50,6 @@ Feature: Users get
 #      |          | NonExistingUser  | 401           |
 #      |          |                  | 401           |
 
-  Scenario: Getting user with not current etag
-    When User "default1" is got for etag, updated and got with previous etag
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "user_id"
-    And Body contains entity with attribute "user_type" value "customer"
-    And Body contains entity with attribute "user_name" value "default1"
-    And Body contains entity with attribute "first_name" value "Default1"
-    And Body contains entity with attribute "last_name" value "User1"
-    And Body contains entity with attribute "email" value "def1@snapshot.travel"
-    And Body contains entity with attribute "timezone" value "Europe/Prague"
-    And Body contains entity with attribute "culture" value "sk-SK"
 
   Scenario: Checking error code for getting user
     When Nonexistent user id is got

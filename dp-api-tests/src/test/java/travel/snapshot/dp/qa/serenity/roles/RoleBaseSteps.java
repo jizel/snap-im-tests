@@ -82,8 +82,8 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public Response getRole(String id, String etag) {
-        return getEntity(id, etag);
+    public Response getRole(String id) {
+        return getEntity(id);
     }
 
     public RoleDto getRoleByNameForApplicationInternal(String name, String applicationId) {
@@ -106,7 +106,7 @@ public class RoleBaseSteps extends BasicSteps {
 
     @Step
     public Response getRoleWithId(String roleId) {
-        Response resp = getRole(roleId, null);
+        Response resp = getRole(roleId);
         setSessionResponse(resp);
         return resp;
     }
@@ -116,7 +116,7 @@ public class RoleBaseSteps extends BasicSteps {
         //TODO implement actual customer search
         RoleDto roleByName = getRoleByNameForApplicationInternal(name, applicationId);
 
-        Response resp = getRole(roleByName.getRoleId(), null);
+        Response resp = getRole(roleByName.getRoleId());
         setSessionResponse(resp);
     }
 
@@ -130,7 +130,7 @@ public class RoleBaseSteps extends BasicSteps {
     public void roleIdInSessionDoesntExist() {
         String roleId = Serenity.sessionVariableCalled(SESSION_ROLE_ID);
 
-        Response response = getRole(roleId, null);
+        Response response = getRole(roleId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -138,17 +138,6 @@ public class RoleBaseSteps extends BasicSteps {
     public void listOfRolesIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
-    }
-
-    @Step
-    public void getRoleWithNameForApplicationIdUsingEtag(String name, String applicationId) {
-        //TODO implement actual customer search
-        RoleDto roleFromList = getRoleByNameForApplicationInternal(name, applicationId);
-
-        Response tempResponse = getRole(roleFromList.getRoleId(), null);
-
-        Response resp = getRole(roleFromList.getRoleId(), tempResponse.getHeader(HEADER_ETAG));
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
 
     @Step

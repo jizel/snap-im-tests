@@ -27,17 +27,6 @@ Feature: User groups get
     Then Response code is "304"
     And Body is empty
 
-  Scenario: Getting user group with not current etag
-    When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is got for etag, updated and got with previous etag
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "user_group_id" value "a8b40d08-de38-4246-bb69-ad39c31c025c"
-    And Body contains entity with attribute "name" value "userGroup_1"
-    And Body contains entity with attribute "customer_id" value "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
-    And Body contains entity with attribute "is_active" value "false"
-    And Body contains entity with attribute "description" value "updatedDescription"
-
   Scenario: Getting nonExistent user group
     When User group with non existent UserGroupId is got
     Then Response code is "404"

@@ -50,17 +50,6 @@ public class CommercialSubscriptionStepdef {
         commSubscriptionSteps.commSubscriptionWithIdIsGot(commSubscriptionId);
     }
 
-    @When("^Commercial subscription with id \"([^\"]*)\" is got with etag$")
-    public void Commercial_subscription_with_id_is_got_with_etag(String commSubscriptionId) {
-        commSubscriptionSteps.commSubscriptionWithIdIsGotWithEtag(commSubscriptionId);
-    }
-
-    @When("Commercial subscription with id \"([^\"]*)\" is got for etag, updated and got with previous etag")
-    public void Commercial_subscription_with_id_is_got_for_etag_updated_and_got_with_previous_etag(
-            String commSubscriptionId) {
-        commSubscriptionSteps.commSubscriptionWithIdIsGotWithExpiredEtag(commSubscriptionId);
-    }
-
     @When("Nonexistent commercial subscription id is got")
     public void Nonexistent_commercial_subscription_id_is_got() {
         commSubscriptionSteps.commSubscriptionWithIdIsGot("NonExistentId");

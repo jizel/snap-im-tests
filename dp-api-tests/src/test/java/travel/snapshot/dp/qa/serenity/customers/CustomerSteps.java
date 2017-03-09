@@ -214,7 +214,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public CustomerDto getCustomerByIdByUser(String customerId, String userId) {
-        Response response = getEntityByUser(userId, customerId, null);
+        Response response = getEntityByUser(userId, customerId);
         CustomerDto customer = response.as(CustomerDto.class);
         setSessionResponse(response);
         return customer;
@@ -232,7 +232,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithIdIsGotByUserForApplication(String userId, String applicationId, String customerId) {
-        Response response = getEntityByUserForApplication(userId, applicationId, customerId, null);
+        Response response = getEntityByUserForApplication(userId, applicationId, customerId);
         setSessionResponse(response);
     }
 
@@ -335,36 +335,16 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void customerWithIdIsGotWithEtag(String customerId) {
-        Response tempResponse = getEntity(customerId, null);
-
-        Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
+        Response resp = getEntity(customerId);
         setSessionResponse(resp);
     }
 
     @Step
     public void customerWithIdIsGotWithEtagByUser(String customerId, String userId) {
-        Response tempResponse = getEntityByUser(userId, customerId, null);
-
-        Response resp = getEntity(customerId, tempResponse.getHeader(HEADER_ETAG));
+        Response resp = getEntity(customerId);
         setSessionResponse(resp);
     }
 
-    @Step
-    public void customerWithIdIsGotWithEtagAfterUpdate(String customerId, String userId) {
-        Response tempResponse = getEntityByUser(userId, customerId, null);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("vat_id", "CZ99999999");
-
-        Response updateResponse = updateEntityByUser(userId, customerId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
-
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Customer cannot be updated: " + updateResponse.asString());
-        }
-
-        Response resp = getEntityByUser(userId, customerId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
 
     @Step
     public void invalidCustomerUpdate(String customerId, Map<String, Object> updateMap) {

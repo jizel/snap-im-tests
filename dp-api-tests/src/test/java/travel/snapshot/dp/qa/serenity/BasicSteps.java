@@ -274,14 +274,6 @@ public class BasicSteps {
         }
     }
 
-    protected Response getEntity(String id) {
-        return getEntity(id, null);
-    }
-
-    protected Response getEntityByUser(String userId, String entityId) {
-        return getEntityByUser(userId, entityId, null);
-    }
-
     protected Response createEntity(Object entity) {
         return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entity);
     }
@@ -394,21 +386,18 @@ public class BasicSteps {
         return requestSpecification.when().head("/{id}", entityId).getHeader(HEADER_ETAG);
     }
 
-    public Response getEntity(String entityId, String etag) {
-        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
+    public Response getEntity(String entityId) {
+        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    public Response getEntityByUser(String userId, String entityId, String etag) {
-        return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
+    public Response getEntityByUser(String userId, String entityId) {
+        return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    public Response getEntityByUserForApplication(String userId, String applicationId, String entityId, String etag) {
+    public Response getEntityByUserForApplication(String userId, String applicationId, String entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");
-        }
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_NONE_MATCH, etag);
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         return requestSpecification.when().get("/{id}", entityId);

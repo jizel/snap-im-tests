@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.serenity.commercial_subscription;
 
+import static java.util.Arrays.stream;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
@@ -12,10 +15,6 @@ import travel.snapshot.dp.qa.serenity.BasicSteps;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Arrays.stream;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class CommercialSubscriptionSteps extends BasicSteps {
 
@@ -60,7 +59,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     @Step
     public void commSubscriptionWithSameIdDoesNotExist() {
         String commSubcriptionId = Serenity.sessionVariableCalled(SESSION_COMMERCIAL_SUBSCRIPTION_ID);
-        Response response = getEntity(commSubcriptionId, null);
+        Response response = getEntity(commSubcriptionId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -86,27 +85,6 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     public void commSubscriptionWithIdIsGot(String commSubscriptionId) {
         Response response = getEntity(commSubscriptionId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-
-    @Step
-    public void commSubscriptionWithIdIsGotWithEtag(String commSubscriptionId) {
-        Response tempResponse = getEntity(commSubscriptionId, null);
-        Response resp = getEntity(commSubscriptionId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void commSubscriptionWithIdIsGotWithExpiredEtag(String commSubscriptionId) {
-        Response tempResponse = getEntity(commSubscriptionId, null);
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("start_date", "2016-03-01");
-        mapForUpdate.put("end_date", "2017-01-01");
-
-        Response updateResponse = updateEntity(commSubscriptionId, mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
-
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Commercial Subscription cannot be updated: " + updateResponse.asString());
-        }
     }
 
     @Step

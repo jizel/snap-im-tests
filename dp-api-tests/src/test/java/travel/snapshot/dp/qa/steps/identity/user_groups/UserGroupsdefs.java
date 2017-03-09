@@ -113,15 +113,6 @@ public class UserGroupsdefs {
         userGroupSteps.getUserGroupByUser(ids.get(USER_ID), ids.get(USER_GROUP_ID));
     }
 
-    @When("^User group with id \"([^\"]*)\" is got with etag$")
-    public void userGroupWithIdIsGotWithEtag(String userGroupId) throws Throwable {
-        userGroupSteps.userGroupWithIdGotWithEtag(userGroupId);
-    }
-
-    @When("^User group with id \"([^\"]*)\" is got for etag, updated and got with previous etag$")
-    public void userGroupWithIdIsGotForEtagUpdatedAndGotWithPreviousEtag(String userGroupId) throws Throwable {
-        userGroupSteps.userGroupWithIdIsGotWithEtagAfterUpdate(userGroupId);
-    }
 
     @When("^User group with non existent UserGroupId is got$")
     public void userGroupWithNonExistentUserGroupIdIsGot() throws Throwable {

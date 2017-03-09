@@ -117,7 +117,7 @@ public class UsersSteps extends BasicSteps {
     public void userIdInSessionDoesNotExist() {
         String roleId = getSessionVariable(SESSION_USER_ID);
 
-        Response response = getEntity(roleId, null);
+        Response response = getEntity(roleId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -174,36 +174,19 @@ public class UsersSteps extends BasicSteps {
     @Step
     public void userWithUsernameIsGot(String username) {
         UserDto user = getUserByUsername(username);
-        Response response = getEntity(user.getUserId(), null);
+        Response response = getEntity(user.getUserId());
         setSessionResponse(response);
     }
 
     public void userWithUsernameIsGotWithEtag(String username) {
         UserDto user = getUserByUsername(username);
-        Response tempResponse = getEntity(user.getUserId(), null);
-        Response response = getEntity(user.getUserId(), tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
-    }
-
-    public void userWithUsernameIsGotWithEtagAfterUpdate(String username) {
-        UserDto user = getUserByUsername(username);
-        Response tempResponse = getEntity(user.getUserId(), null);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("culture", "sk-SK");
-
-        Response updateResponse = updateEntity(user.getUserId(), mapForUpdate, tempResponse.getHeader(HEADER_ETAG));
-
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("User cannot be updated: " + updateResponse.asString());
-        }
-
-        Response response = getEntity(user.getUserId(), tempResponse.getHeader(HEADER_ETAG));
+        Response tempResponse = getEntity(user.getUserId());
+        Response response = getEntity(user.getUserId());
         setSessionResponse(response);
     }
 
     public void userWithIdIsGot(String userId) {
-        Response response = getEntity(userId, null);
+        Response response = getEntity(userId);
         setSessionResponse(response);
     }
 

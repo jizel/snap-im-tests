@@ -1,6 +1,10 @@
 package travel.snapshot.dp.qa.serenity.partners;
 
 
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonMap;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
@@ -12,15 +16,7 @@ import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
-
-import static java.util.Collections.singletonMap;
-import static org.junit.Assert.*;
 
 public class PartnerSteps extends BasicSteps {
 
@@ -58,7 +54,7 @@ public class PartnerSteps extends BasicSteps {
     public void partnerWithSameIdInSessionDoesNotExists() {
         String partnerId = Serenity.sessionVariableCalled(SESSION_PARTNER_ID);
 
-        Response response = getEntity(partnerId, null);
+        Response response = getEntity(partnerId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
@@ -99,30 +95,6 @@ public class PartnerSteps extends BasicSteps {
     public void partnerWithIdIsGot(String partnerId) {
         Response response = getEntity(partnerId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
-    }
-
-    @Step
-    public void partnerWithIdIsGotWithEtag(String partnerId) {
-        Response tempResponse = getEntity(partnerId, null);
-        Response resp = getEntity(partnerId, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void partnerWithIdIsGotAfterUpdate(String partnerId) {
-        String eTag = getEntity(partnerId, null).getHeader(HEADER_ETAG);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("name", "Partner test company 1");
-        mapForUpdate.put("notes", "Updated Notes");
-        mapForUpdate.put("website", "http://www.snapshot.travel");
-
-        Response updateResponse = updateEntity(partnerId, mapForUpdate, eTag);
-        if (updateResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("Partner cannot be updated: " + updateResponse.asString());
-        }
-        Response resp = getEntity(partnerId, eTag);
-        setSessionResponse(resp);
     }
 
     @Step
