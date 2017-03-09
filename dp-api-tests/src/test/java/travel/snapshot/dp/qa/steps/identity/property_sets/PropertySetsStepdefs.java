@@ -4,7 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
@@ -21,6 +21,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -49,6 +50,9 @@ public class PropertySetsStepdefs {
 
     @Steps
     private PropertySteps propertySteps;
+
+    @Steps
+    private ApplicationVersionsSteps applicationVersionSteps;
 
     // Help methods
 
@@ -121,14 +125,16 @@ public class PropertySetsStepdefs {
     }
 
 
-    @When("^List of property sets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\" by user \"([^\"]*)\"$")
+    @When("^List of property sets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void listOfPropertySetsIsGotWithLimitAndCursorAndFilterAndSortAndSort_descByUser(@Transform(NullEmptyStringConverter.class) String limit,
                                                                                             @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                             @Transform(NullEmptyStringConverter.class) String filter,
                                                                                             @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                            @Transform(NullEmptyStringConverter.class) String sortDesc, String username) throws Throwable {
+                                                                                            @Transform(NullEmptyStringConverter.class) String sortDesc,
+                                                                                            String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        propertySetSteps.listOfPropertySetsIsGotByUser(userId, limit, cursor, filter, sort, sortDesc);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.listOfPropertySetsIsGotByUserForApp(userId, applicationVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Property set \"([^\"]*)\" is deleted$")
@@ -137,10 +143,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.deletePropertySet(propertySetId);
     }
 
-    @When("^Property set \"([^\"]*)\" is deleted by user \"([^\"]*)\"$")
-    public void propertySetIsDeletedByUser(String propertySetName, String username) throws Throwable {
+    @When("^Property set \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertySetIsDeletedByUser(String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        propertySetSteps.deletePropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.deletePropertySetByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_SET_ID));
     }
 
     @When("^Nonexistent property set id is got$")
@@ -152,18 +159,14 @@ public class PropertySetsStepdefs {
     public void Nonexistent_property_set_id_is_deleted() throws Throwable {
         propertySetSteps.deleteEntity(NON_EXISTENT_ID, DEFAULT_SNAPSHOT_ETAG);
     }
-
-    @When("^User \"([^\"]*)\" is added to property set(?: with name)? \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
-    public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String performerName, String isActiveString) throws Throwable {
+    
+    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String performerName, String applicationVersionName, String isActiveString) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        Response response;
-        if (performerName != null) {
-            String performerId = usersSteps.resolveUserId(performerName);
-            response = propertySetSteps.addUserToPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), isActive);
-        } else {
-            response = propertySetSteps.addUserToPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), isActive);
-        }
+        String performerId = usersSteps.resolveUserId(performerName);
+        Response response = propertySetSteps.addUserToPropertySetByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), isActive);
         propertySetSteps.setSessionResponse(response);
     }
 
@@ -180,11 +183,12 @@ public class PropertySetsStepdefs {
     }
 
 
-    @When("^User \"([^\"]*)\" is removed from property set \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void userIsRemovedFromPropertySetByUser(String username, String propertySetName, String performerName) throws Throwable {
+    @When("^User \"([^\"]*)\" is removed from property set \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void userIsRemovedFromPropertySetByUser(String username, String propertySetName, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String performerId = usersSteps.resolveUserId( performerName );
-        propertySetSteps.removeUserFromPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.removeUserFromPropertySetByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
     }
 
     @When("^List of properties for property set with name \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -199,10 +203,11 @@ public class PropertySetsStepdefs {
     }
 
 
-    @When("^List of all properties for property set with name \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void listOfAllPropertiesForPropertySetWithNameIsRequested(String propertySetName, String username) throws Throwable {
+    @When("^List of all properties for property set with name \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllPropertiesForPropertySetWithNameIsRequested(String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        propertySetSteps.listOfPropertiesForPropertySetIsGotByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), null, null, null, null, null);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.listOfPropertiesForPropertySetIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_SET_ID), null, null, null, null, null);
     }
 
     @When("^List of users for property set with name \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -217,10 +222,11 @@ public class PropertySetsStepdefs {
     }
 
 
-    @When("^List of all users for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void listOfAllUsersForPropertySetIsRequestedByUser(String propertySetName, String username) throws Throwable {
+    @When("^List of all users for property set \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void listOfAllUsersForPropertySetIsRequestedByUser(String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        propertySetSteps.listOfUsersForPropertySetIsGotByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), null, null, null, null, null);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.listOfUsersForPropertySetIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_SET_ID), null, null, null, null, null);
     }
 
     @When("^Nonexistent property is removed from property set \"([^\"]*)\"$")
@@ -229,21 +235,13 @@ public class PropertySetsStepdefs {
         propertySetSteps.removePropertyFromPropertySet(NON_EXISTENT_ID, propertySetId);
     }
 
-    @When("^Property(?: with code)? \"([^\"]*)\" is added to property set \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
-    public void Property_with_code_is_added_to_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String isActiveString) throws Throwable {
-        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        Response response = propertySetSteps.addPropertyToPropertySet(propertyId, propertySetId, isActive);
-        propertySetSteps.setSessionResponse(response);
-    }
-
-    @When("^Property(?: with code)? \"([^\"]*)\" is added to property set \"([^\"]*)\" by user \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
-    public void propertyWithCodeIsAddedToPropertySetByUser(String propertyCode, String propertySetName, String username, String isActiveString) throws Throwable {
+    @When("^Property(?: with code)? \"([^\"]*)\" is added to property set \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    public void propertyWithCodeIsAddedToPropertySetByUser(String propertyCode, String propertySetName, String username, String applicationVersionName, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        Response response = propertySetSteps.addPropertyToPropertySetByUser(ids.get(USER_ID), propertyId, ids.get(PROPERTY_SET_ID), isActive);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        Response response = propertySetSteps.addPropertyToPropertySetByUserForApp(ids.get(USER_ID), applicationVersionId, propertyId, ids.get(PROPERTY_SET_ID), isActive);
         propertySetSteps.setSessionResponse(response);
     }
 
@@ -255,11 +253,12 @@ public class PropertySetsStepdefs {
     }
 
 
-    @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void propertyWithCodeIsRemovedFromPropertySetByUser(String propertyCode, String propertySetName, String username) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeIsRemovedFromPropertySetByUser(String propertyCode, String propertySetName, String username, String applicationVersionName  ) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        propertySetSteps.removePropertyFromPropertySetByUser(ids.get(USER_ID), propertyId, ids.get(PROPERTY_SET_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.removePropertyFromPropertySetByUserForApp(ids.get(USER_ID), applicationVersionId, propertyId, ids.get(PROPERTY_SET_ID));
     }
 
     @Then("^There are (\\d+) property sets returned$")
@@ -318,10 +317,11 @@ public class PropertySetsStepdefs {
         propertySetSteps.updatePropertySet(propertySetId, propSet.get(0));
     }
 
-    @When("^Property set \"([^\"]*)\" is updated with following data by user \"([^\"]*)\"$")
-    public void propertySetWithNameIsUpdatedWithFollowingDataByUser(String propertySetName, String username, List<PropertySetUpdateDto> propertySetUpdates) throws Throwable {
+    @When("^Property set \"([^\"]*)\" is updated with following data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertySetWithNameIsUpdatedWithFollowingDataByUser(String propertySetName, String username, String applicationVersionName, List<PropertySetUpdateDto> propertySetUpdates) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        propertySetSteps.updatePropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), propertySetUpdates.get(0));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.updatePropertySetByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_SET_ID), propertySetUpdates.get(0));
     }
 
     @Then("^Updated property set \"([^\"]*)\" has following data$")
@@ -347,36 +347,39 @@ public class PropertySetsStepdefs {
         assertThat(propertySetUserRelation.getIsActive(), is(isActive));
     }
 
-    @When("^IsActive for relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is set to \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void relationBetweenUserAndPropertySetIsSetTo(String username, String propertySetName, Boolean isActive, String performerName) throws Throwable {
+    @When("^IsActive for relation between user \"([^\"]*)\" and property set \"([^\"]*)\" is set to \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void relationBetweenUserAndPropertySetIsSetTo(String username, String propertySetName, Boolean isActive, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String performerId = usersSteps.resolveUserId( performerName );
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         UserPropertySetRelationshipUpdateDto userPropertySetRelation = new UserPropertySetRelationshipUpdateDto();
         userPropertySetRelation.setIsActive(isActive);
 
-        propertySetSteps.updateUserPropertySetRelationByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
+        propertySetSteps.updateUserPropertySetRelationByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), userPropertySetRelation);
     }
 
-    @When("^Property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void propertySetIsRequestedByUser(String propertySetName, String username) throws Throwable {
+    @When("^Property set \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertySetIsRequestedByUser(String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-
-        propertySetSteps.getPropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.getPropertySetByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_SET_ID));
     }
 
-    @When("^Property(?: with code)? \"([^\"]*)\" for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void propertyWithCodeForPropertySetIsRequestedByUser(String propertyCode, String propertySetName, String username) throws Throwable {
+    @When("^Property(?: with code)? \"([^\"]*)\" for property set \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeForPropertySetIsRequestedByUser(String propertyCode, String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        propertySetSteps.getPropertyForPropertySetByUser(ids.get(USER_ID), ids.get(PROPERTY_SET_ID), propertyId);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.getPropertyForPropertySetByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(PROPERTY_SET_ID), propertyId);
 
     }
 
-    @When("^User \"([^\"]*)\" for property set \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void userForPropertySetIsRequestedByUser(String username, String propertySetName, String performerName) throws Throwable {
+    @When("^User \"([^\"]*)\" for property set \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void userForPropertySetIsRequestedByUser(String username, String propertySetName, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String performerId = usersSteps.resolveUserId( performerName );
-        propertySetSteps.getUserForPropertySetByUser(performerId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySetSteps.getUserForPropertySetByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
     }
 
     @When("^Child property sets of property set \"([^\"]*)\" are requested by user \"([^\"]*)\"$")
