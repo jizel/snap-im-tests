@@ -492,13 +492,6 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    @Step
-    public void propertyIsgotForCustomerWithType(String propertyId, String customerId) {
-        setAccessTokenParamFromSession();
-        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
-        setSessionResponse(response);
-    }
-
     public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(String propertyId, String customerId, String type) {
         String eTag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
 
