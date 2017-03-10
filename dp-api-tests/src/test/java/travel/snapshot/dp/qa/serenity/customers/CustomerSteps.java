@@ -699,7 +699,7 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void removeUserFromCustomerByUser(String requestorId, String customerId, String targetUserId) {
-        setSessionResponse(deleteSecondLevelEntityByUser(requestorId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null));
+    public void removeUserFromCustomerByUserForApp(String requestorId, String appVersionId, String customerId, String targetUserId) {
+        setSessionResponse(deleteSecondLevelEntityByUserForApplication(requestorId, appVersionId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null));
     }
 }

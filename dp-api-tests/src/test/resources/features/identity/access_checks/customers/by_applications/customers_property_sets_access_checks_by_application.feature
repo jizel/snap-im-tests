@@ -37,6 +37,9 @@ Feature: Customers-Property Sets Application access check feature - GET
       | Id                                   | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
+    Given Relation between user "user1" and default property exists
+    Given Relation between user "user2" and default property exists
+
 
   Scenario: Second level entities - User sees only property sets he should for customer he sees
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
@@ -44,3 +47,55 @@ Feature: Customers-Property Sets Application access check feature - GET
     And Total count is "2"
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "404"
+
+ @skipped
+ Scenario: List users by app
+    When GET request is sent to "/identity/users" on module "identity" by user "user1" for application version "versionWithSubscription"
+    Then There are "2" users returned
+    When GET request is sent to "/identity/users" on module "identity" by user "user3" for application version "versionWithSubscription"
+    # DP-1889
+    Then There are "0" users returned
+    When GET request is sent to "/identity/users" on module "identity" by user "user1" for application version "versionWithoutSubscription"
+    Then There are "0" users returned
+    Given Relation between user "user3" and default property exists
+    When GET request is sent to "/identity/users" on module "identity" by user "user3" for application version "versionWithSubscription"
+    Then There are "3" users returned
+
+
+  Scenario: List users of property by app
+    When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then There are "2" users returned
+    When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithoutSubscription"
+    Then Response code is "404"
+
+  # DP-1893
+  # DP-1892
+  @skipped
+  Scenario: List users of customer by app
+    # User with explicit access to the property will try to access the user with access to this property
+    # through property set using application with commercial subscription to only one property in this property set
+    Given The following property is created with random address and billing address
+      | salesforceId   | name    | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
+    And Relation between user "user3" and property with code "p1_code" exists
+    Given The following property set is created for customer with id "12300000-0000-4000-a000-000000000000"
+      | propertySetName | propertySetDescription | propertySetType |
+      | myPs            | someDesc               | brand           |
+    And Property "defaultPropertyCode" is added to property set "myPs"
+    And Property "p1_code" is added to property set "myPs"
+    And Relation between user "user3" and property set "myPs" exists
+    When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then There are "3" users returned
+    When User "user3" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then There are "3" users returned
+
+  Scenario: List of users with inactive user-customer or user-property relation
+    Given Relation between user "user2" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated
+    When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then There are "1" users returned
+    Given Relation between user "user2" and customer with id "12300000-0000-4000-a000-000000000000" is activated
+    When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then There are "2" users returned
+    Given Relation between user "user2" and property "defaultPropertyCode" is inactivated
+    When GET request is sent to "/identity/users" on module "identity" by user "user1" for application version "versionWithSubscription"
+    Then There are "1" users returned
