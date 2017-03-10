@@ -37,15 +37,36 @@ Feature: Properties-Customers Application access check feature
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given Relation between user "user1" and property with code "p1_code" exists with is_active "true"
     Given Relation between user "user1" and property with code "p2_code" exists with is_active "true"
+    Given Relation between property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" exists
 
     Scenario: Only customers of property with valid commercial subscription are visible
       When List of all customers for property with code "p1_code" is got by user "user1" for application version "versionWithSubscription"
       Then Response code is "200"
+      And Total count is "1"
       When List of all customers for property with code "p1_code" is got by user "user1" for application version "versionWithoutSubscription"
       Then Response code is "404"
       When List of all customers for property with code "p2_code" is got by user "user1" for application version "versionWithSubscription"
       Then Response code is "404"
       And Custom code is 40402
+      When Relation between property "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithSubscription"
+      Then Response code is "200"
+      When Relation between property "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithoutSubscription"
+      Then Response code is "404"
+      And Custom code is 40402
 
+  Scenario: Update Property-Customer relationship by application with and without access
+    When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is updated by user "user1" for application version "versionWithoutSubscription" with
+      | type  |
+      | owner |
+    Then Response code is "404"
+    And Custom code is 40402
+    When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is updated by user "user1" for application version "versionWithSubscription" with
+      | type  |
+      | owner |
+    Then Response code is "204"
 
-#      TODO: The rest of Properties-Customer tests is waiting for merge of https://bitbucket.org/bbox/dataplatformcoreqa/pull-requests/74/fixed-customer-property-relationship/diff
+  Scenario: Delete Property-Customer relationship by application with and without access
+    When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "user1" for application version "versionWithoutSubscription"
+    Then Response code is "404"
+    When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "user1" for application version "versionWithSubscription"
+    Then Response code is "204"
