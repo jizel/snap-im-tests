@@ -22,8 +22,8 @@
     Given Relation between user "user2OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 
-
-    @skipped
+  # DP-1884
+  @skipped
   Scenario: User can view customer-user relations of only his customer
     When Relation between user "user2OfC1" and customer "12300000-0000-4000-a000-000000000000" is requested by user "user1OfC1"
     Then Response code is "200"
@@ -33,56 +33,37 @@
     Then Response code is "404"
     Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
     When User "user1OfC1" requests list of customer for user "user2OfC1"
-#  DP-1840
     Then There are 1 userCustomers returned
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
     When User "user1OfC1" requests list of customer for user "user2OfC1"
     Then Response code is "404"
+    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is activated
+    Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
+    When User "user1OfC1" requests list of customer for user "user2OfC1"
+    Then Response code is "404"
 
   # DP-1781
-    @skipped
-  Scenario: User can view only list of customer-user roles of his own customer (with active relation)
-    Given Switch for user customer role tests
-    Given The following roles exist
-      | roleId                               | applicationId                        | roleName | description      |
-      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
-      When User "defaultSnapshotUser" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
-    Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
-    When User "user1OfC1" requests roles of user "user2OfC1" for customer "12300000-0000-4000-a000-000000000001"
+  @skipped
+  Scenario: User can add/remove users to customer only when he has access to both users and customer
+    # Add wrong user to customer
+    When User "user1OfC1" adds user "user1OfC2" to customer "12300000-0000-4000-a000-000000000000"
+    Then Response code is "422"
+    # Add correct user to wrong customer
+    When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001"
     Then Response code is "404"
-    When User "user1OfC1" requests roles of user "user1OfC2" for customer "12300000-0000-4000-a000-000000000001"
+    # Add/remove correct user to customer with which relation is inactive
+    Given Relation between user "User1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false" with is_active "false"
+    When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001"
     Then Response code is "404"
-    When User "user1OfC1" requests roles of user "user1OfC1" for customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "200"
-    And Total count is "1"
-    When User "user1OfC1" requests roles of user "user2OfC1" for customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "200"
-    And Total count is "0"
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
-    When User "user1OfC1" requests roles of user "user1OfC1" for customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "200"
-    And Total count is "0"
-
-#    DP-1781
-    @skipped
-  Scenario: User can assign and revoke roles to customer-users only when he has access to the customer
-    Given Switch for user customer role tests
-    Given The following roles exist
-      | roleId                               | applicationId                        | roleName | description      |
-      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
-      Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
-      When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
+    When User "user1OfC1" removes user "user1OfC2" from customer "12300000-0000-4000-a000-000000000001"
     Then Response code is "404"
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is activated
-    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
+    # Positive scenario
+    Given Relation between user "User1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" is activated
+    When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001"
     Then Response code is "201"
-    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and customer "12300000-0000-4000-a000-000000000001"
-    Then Response code is "404"
-    When User "user1OfC2" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "404"
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
-    When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "404"
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is activated
-    When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
+    When User "user1OfC1" removes user "user1OfC2" from customer "12300000-0000-4000-a000-000000000001"
     Then Response code is "204"
+
+
+
+

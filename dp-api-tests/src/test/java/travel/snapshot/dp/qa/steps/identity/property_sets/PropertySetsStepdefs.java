@@ -9,7 +9,6 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -154,7 +153,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.deleteEntity(NON_EXISTENT_ID, DEFAULT_SNAPSHOT_ETAG);
     }
 
-    @When("^User \"([^\"]*)\" is added to property set with name \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    @When("^User \"([^\"]*)\" is added to property set(?: with name)? \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void User_with_username_is_added_to_property_set_with_name_for_customer_with_code(String username, String propertySetName, String performerName, String isActiveString) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));

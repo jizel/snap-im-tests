@@ -12,10 +12,10 @@ Feature: Property sets old option access check feature - DP-1576
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName                | firstName | lastName | email                | timezone      | culture | isActive |
-      | 00000009-48f0-4f00-9bec-e2329a8bdaac | customer | userWithImplicitPropSet | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-      | 11111119-48f0-4f00-9bec-e2329a8bdaac | customer | userWithExplicitPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    Given The following properties exist with random address and billing address for user "00000009-48f0-4f00-9bec-e2329a8bdaac"
+      | userType | userName                | firstName | lastName | email                | timezone      | culture | isActive |
+      | customer | userWithImplicitPropSet | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | customer | userWithExplicitPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given The following properties exist with random address and billing address for user "userWithImplicitPropSet"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -46,13 +46,15 @@ Feature: Property sets old option access check feature - DP-1576
       Then Response code is "200"
       And Body contains property with attribute "name" value "ps1_name"
 
-    # DP-1840
+    # DP-1857
     @skipped
     Scenario: When a single property is added to property set, user loses implicit access, when deleted he gains access again
       When Relation between property "p1_code" and property set "ps1_name" is activated
       When Relation between property "p2_code" and property set "ps1_name" is activated
       When Relation between property "p3_code" and property set "ps1_name" is activated
-      Given The following properties exist with random address and billing address for user "11111119-48f0-4f00-9bec-e2329a8bdaac"
+      When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
+      Then Total count is "1"
+      Given The following properties exist with random address and billing address for user "userWithExplicitPropSet"
         | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p4_code"
@@ -61,12 +63,11 @@ Feature: Property sets old option access check feature - DP-1576
       Then Response code is "200"
       And Total count is "0"
       When Property with code "p4_code" is deleted
+      Then Response code is "204"
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"
       And Total count is "1"
 
-    # DP-1840
-    @skipped
     Scenario: Single property is deleted from property set, user loses implicit access, when added he gains access again
       Given Relation between property "p1_code" and property set "ps1_name" is activated
       Given Relation between property "p2_code" and property set "ps1_name" is activated
@@ -83,11 +84,8 @@ Feature: Property sets old option access check feature - DP-1576
       Given Relation between user "userWithImplicitPropSet" and property "p1_code" is activated
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"
-      # DP-1840
       And Total count is "1"
 
-    # DP-1840
-    @skipped
     Scenario: Implicit access is not propagated to child property sets
       Given Relation between property "p1_code" and property set "ps1_name" is activated
       Given Relation between property "p2_code" and property set "ps1_name" is activated

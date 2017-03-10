@@ -553,4 +553,13 @@ public class PropertySteps extends BasicSteps {
         return propertyId;
     }
 
+    public void listUsersForPropertyByUser(String userId, String propertyId) {
+        setSessionResponse(getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null));
+    }
+
+    public void addPropertyToUserByUser(String requestorId, String propertyId, String targetUserId) {
+        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        relation.setUserId(targetUserId);
+        setSessionResponse(createSecondLevelRelationshipByUser(requestorId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
+    }
 }
