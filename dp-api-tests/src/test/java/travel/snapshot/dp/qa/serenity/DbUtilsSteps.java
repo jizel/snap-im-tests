@@ -47,15 +47,13 @@ public class DbUtilsSteps {
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
-    static final String DELETE_CUSTOMER_WITH_DELETED = "delete from Customer_With_Deleted";
-    static final String DELETE_PROPERTY_WITH_DELETED = "delete from Property_With_Deleted";
     static final String CREATE_DB_USER = "INSERT INTO User (user_id, user_type, user_name, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (partner_id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (application_id, application_name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO Application_Version (version_id, application_id, api_manager_id, version_name, status, release_date, description, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (customer_id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, code, is_deleted, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'defaultCode1', false, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (customer_id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (address_id, address_line1, address_line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
-    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (property_id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, is_deleted, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', false,'5544788');";
+    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (property_id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO Commercial_Subscription (commercial_subscription_id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO Api_Subscription (api_subscription_id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
 
@@ -121,11 +119,9 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_PROPERTY_SET);
         dbHelper.identityDb().update(DELETE_USER_GROUPS);
         dbHelper.identityDb().update(DELETE_PROPERTY);
-        dbHelper.identityDb().update(DELETE_PROPERTY_WITH_DELETED);
         dbHelper.identityDb().update(UPDATE_CUSTOMER);
         dbHelper.identityDb().update(DELETE_CUSTOMER);
         dbHelper.identityDb().update(DELETE_USER);
-        dbHelper.identityDb().update(DELETE_CUSTOMER_WITH_DELETED);
         dbHelper.identityDb().update(DELETE_ADDRESS);
         dbHelper.identityDb().update(DELETE_ROLE);
         dbHelper.identityDb().update(DELETE_USER_GROUP_ROLE);
