@@ -18,23 +18,23 @@ Feature: Property sets access check feature - POST and DELETE
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-      | propertySetName | propertySetType | propertySetId                        |
+      | name            | type            | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
 
   Scenario: User with access updates property set
     When Property set "ps1_name" is updated with following data by user "userWithPropSet"
-      | propertySetName | propertySetDescription | propertySetType   |
+      | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
     Then Response code is "204"
     And Body is empty
     And Updated property set "updated_name" has following data
-      | propertySetName | propertySetDescription | propertySetType   |
+      | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
 
   Scenario: User without access tries to update property set
     When Property set "ps1_name" is updated with following data by user "userWithNoPropSet"
-      | propertySetName | propertySetDescription | propertySetType   |
+      | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
     Then Response code is "404"
     When Property set "ps1_name" is requested by user "userWithPropSet"

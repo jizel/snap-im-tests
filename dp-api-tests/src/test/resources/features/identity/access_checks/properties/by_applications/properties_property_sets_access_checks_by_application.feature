@@ -38,7 +38,7 @@ Feature: Properties-Property Sets Application access check feature
     Given Relation between user "user1" and property with code "p1_code" exists with is_active "true"
     Given Relation between user "user1" and property with code "p2_code" exists with is_active "true"
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1" with is_active "false"
-      | propertySetName | propertySetType |
+      | name            | type            |
       | prop_set1       | brand           |
     When Property with code "p1_code" is added to property set "prop_set1"
     When Property with code "p2_code" is added to property set "prop_set1"

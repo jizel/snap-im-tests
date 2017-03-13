@@ -23,7 +23,7 @@ Feature: User Groups Property Sets Roles access check feature
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
-      | propertySetId                        | propertySetName       | propertySetDescription | propertySetType |
+      | propertySetId                        | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists
     Given The following partner exist
@@ -58,7 +58,7 @@ Feature: User Groups Property Sets Roles access check feature
 
   Scenario: Relationship between UserGroup Property Set and Role is created by user without access
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | propertySetId                        | propertySetName       | propertySetDescription | propertySetType |
+      | propertySetId                        | name                  | description            | type            |
       | eee352e6-44ff-45bb-bd51-28f62ca8f33c | NoPropSet_UserGroup   | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithNoUserGroup"
     Then Response code is "404"

@@ -19,7 +19,7 @@
       | userId                               | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | 12329079-48f0-4f00-9bec-e2329a8bdaab | customer | user1OfC2  | Customer  | User1C2  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
@@ -40,7 +40,7 @@
     Then Response code is "422"
     # Add to wrong property set
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user2OfC1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps2_name        | ps2_description        | brand           |
     When User "user3OfC1" is added to property set with name "ps2_name" by user "user1OfC1"
     Then Response code is "404"

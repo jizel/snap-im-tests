@@ -16,7 +16,7 @@ Feature: Properties property sets get
 
   Scenario: Getting properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Property set with name "ps1_name" for property with code "p1_code" is got
@@ -26,7 +26,7 @@ Feature: Properties property sets get
 
   Scenario Outline: Getting list of properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | list_ps1_name   | list_ps1_description   | brand           |
       | list_ps2_name   | list_ps2_description   | brand           |
       | list_ps3_name   | list_ps3_description   | brand           |
@@ -156,7 +156,7 @@ Feature: Properties property sets get
 
   Scenario Outline: Filtering list of properties property sets
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | list_ps1_name   | list_ps1_description   | brand           |
       | list_ps2_name   | list_ps2_description   | brand           |
       | list_ps3_name   | list_ps3_description   | brand           |

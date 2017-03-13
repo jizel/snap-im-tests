@@ -24,7 +24,7 @@ Feature: Review multiproperty property set
     Given The password of user "snapshotUser" is "Password1"
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snapshotUser"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
 
     Given Get token for user "snapshotUser" with password "Password1"

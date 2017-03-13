@@ -24,10 +24,10 @@ Feature: Properties-Property Sets access check feature
   Scenario: Second level entities - User sees only property sets he should for property he owns
     Given Relation between user "userWithProp" and property with code "p1_code" is inactivated
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp" with is_active "false"
-      | propertySetName | propertySetType |
+      | name            | type            |
       | prop_set1       | brand           |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp" with is_active "false"
-      | propertySetName | propertySetType |
+      | name            | type            |
       | prop_set2       | brand           |
     When Property with code "p1_code" is added to property set "prop_set1"
     When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
@@ -47,7 +47,7 @@ Feature: Properties-Property Sets access check feature
 
   Scenario: Update property - propertySet relationship by user has has access to them
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When  Relation between property with code "p1_code" and property set "ps1_name" is updated by user "userWithProp" with
@@ -57,7 +57,7 @@ Feature: Properties-Property Sets access check feature
 
   Scenario: Update property - propertySet relationship by user does not have access to the them
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When  Relation between property with code "p1_code" and property set "ps1_name" is updated by user "userWithNoProp" with
@@ -67,7 +67,7 @@ Feature: Properties-Property Sets access check feature
 
   Scenario: Delete property - PropertySet relationship by user who has access to them
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithProp"
@@ -75,7 +75,7 @@ Feature: Properties-Property Sets access check feature
 
   Scenario: Delete property - PropertySet relationship by user who does not have access to them
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithNoProp"
@@ -84,7 +84,7 @@ Feature: Properties-Property Sets access check feature
 
   Scenario: Delete property - PropertySet relationship by user who has access to the property but not to the property set
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithProp"

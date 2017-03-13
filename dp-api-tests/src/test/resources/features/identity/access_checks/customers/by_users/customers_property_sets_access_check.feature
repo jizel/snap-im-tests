@@ -17,11 +17,11 @@ Feature: Customers property sets access check feature (second level endpoints)
       | userId                               | userType | userName      | firstName | lastName | email                | timezone      | culture | isActive |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithCust2 | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithCust1"
-      | propertySetId                        | propertySetName | propertySetType |
+      | propertySetId                        | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
     Given The following property sets exist for customer with id "00000000-0000-4000-8000-123000000abc" and user "userWithCust2"
-      | propertySetId                        | propertySetName | propertySetType |
+      | propertySetId                        | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd2 | prop_set3       | brand           |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"

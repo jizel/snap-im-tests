@@ -11,7 +11,7 @@ Feature: Property sets create update delete
       | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
-      | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
+      | propertySetId                        | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -20,16 +20,16 @@ Feature: Property sets create update delete
   @Smoke
   Scenario Outline: Creating property set for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
     When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-      | propertySetName   | propertySetDescription   | propertySetType   |
-      | <propertySetName> | <propertySetDescription> | <propertySetType> |
+      | name              | description              | type              |
+      | <name           > | <description           > | <type           > |
     Then Response code is "201"
-    And Body contains entity with attribute "name" value "<propertySetName>"
-    And Body contains entity with attribute "property_set_type" value "<propertySetType>"
+    And Body contains entity with attribute "name" value "<name           >"
+    And Body contains entity with attribute "property_set_type" value "<type           >"
     And Body contains entity with attribute "is_active" value "false"
     And "Location" header is set and contains the same property set
     And Etag header is present
     Examples:
-    | propertySetName | propertySetDescription | propertySetType |
+    | name            | description            | type            |
     | ps1_name        | ps1_description        | brand           |
     | ps2_name        | ps2_description        | geolocation     |
     | ps3_name        | ps3_description        | hotel_type      |
@@ -48,17 +48,17 @@ Feature: Property sets create update delete
 
   Scenario Outline: Updating property set
 #  Property sets for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" were deleted in background, so we don't need to clean here.
-    When Property set "<propertySetName>" is updated with following data
-      | propertySetName           | propertySetDescription   | propertySetType   |
-      | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
+    When Property set "<name           >" is updated with following data
+      | name                      | description              | type              |
+      | <updated_name           > | <description           > | <type           > |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated property set "<updated_propertySetName>" has following data
-      | propertySetName           | propertySetDescription   | propertySetType   |
-      | <updated_propertySetName> | <propertySetDescription> | <propertySetType> |
+    And Updated property set "<updated_name           >" has following data
+      | name                      | description              | type              |
+      | <updated_name           > | <description           > | <type           > |
     Examples:
-      | propertySetName | updated_propertySetName | propertySetDescription   | propertySetType |
+      | name            | updated_name            | description              | type            |
       | ps1_name        | ps1_updated             | ps1_updated_description  | brand           |
       | ps1_name        | ps1_updated2            | ps1_updated_description  | geolocation     |
       | ps1_name        | ps2_updated2            | ps1_updated_description2 | hotel_type      |
@@ -66,7 +66,7 @@ Feature: Property sets create update delete
 
   Scenario: Property_set_type is mandatory (DP-1332)
     When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-      | propertySetName | propertySetDescription |
+      | name            | description            |
       | ps1_name        | ps1_desc               |
     Then Response code is "422"
     And Custom code is 42201
@@ -101,7 +101,7 @@ Feature: Property sets create update delete
 
   Scenario: Parent-child relationship should not contain loops - DP-1395
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
-      | propertySetName | propertySetType | parentId                             | propertySetId                        |
+      | name            | type            | parentId                             | propertySetId                        |
       | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | 000111b0-69bf-4c57-91bd-30230d2c1bd0 |
       | childPS2        | brand           | 000111b0-69bf-4c57-91bd-30230d2c1bd0 | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
     When Property set "ps1_name" is updated with following data

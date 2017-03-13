@@ -12,7 +12,7 @@ Feature: Users property set roles CRUD
       | 2048b11e-eff2-477c-b322-015bbd931e46 | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | e0aa919b-5b55-4f03-99ba-48c9f8fec42d | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
-      | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
+      | propertySetId                        | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
 
 
