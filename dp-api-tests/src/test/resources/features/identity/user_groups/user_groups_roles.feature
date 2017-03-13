@@ -44,14 +44,12 @@ Feature: User groups roles
       | a8b40d08-de38-4246-bb69-ad39c31c025c | NotExisting                          | 422       | 42201      | # Not valid RoleId                |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | b7b40d08-de38-4246-bb69-ad39c31c025c | 404       | 40402      | # Role not found                  |
 
-#  DP-1805
   Scenario: Delete relationship UserGroup-Role
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted
     Then Response code is 204
     And Body is empty
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is not established
 
-#  DP-1805
   Scenario: Delete relationship UserGroup-Role invalid
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is deleted
     Then Response code is 204
