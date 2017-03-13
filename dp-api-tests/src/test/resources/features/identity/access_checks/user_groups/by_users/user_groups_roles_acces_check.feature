@@ -24,7 +24,7 @@ Feature: User Group Roles access check feature
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
 
-  Scenario: Get list of userGroup's roles by user with/without
+  Scenario: Get list of userGroup's roles by user with/without access
     Given The following partner exist
       | partnerId                            | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
