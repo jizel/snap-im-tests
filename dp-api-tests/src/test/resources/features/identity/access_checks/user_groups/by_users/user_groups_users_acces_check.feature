@@ -10,7 +10,6 @@ Feature: User Groups Users access check feature
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -41,7 +40,6 @@ Feature: User Groups Users access check feature
        Then Response code is 404
        And Custom code is 40402
        When List of all users for user group "userGroup_1" is requested by user "userWithNoUserGroup"
-#         Fails until DP-1677 fixed
        Then Response code is 404
        And Custom code is 40402
 
