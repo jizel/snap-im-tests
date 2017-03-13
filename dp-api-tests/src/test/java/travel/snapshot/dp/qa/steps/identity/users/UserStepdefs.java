@@ -461,4 +461,40 @@ public class UserStepdefs {
         String userId = usersSteps.resolveUserId(username);
         usersSteps.createUserByUser(userId, users.get(0));
     }
+
+    @When("^User \"([^\"]*)\" requests(?: list of)? users for property \"([^\"]*)\"$")
+    public void userRequestsListOfUsersForProperty(String userName, String propertyName) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
+        String propertyId = propertySteps.resolvePropertyId(propertyName);
+        propertySteps.listUsersForPropertyByUser(userId, propertyId);
+    }
+
+    @When("^User \"([^\"]*)\" adds user \"([^\"]*)\" to property \"([^\"]*)\"$")
+    public void userAddsUserToProperty(String requestorName, String targetUserName, String propertyCode) throws Throwable {
+        String requestorId = usersSteps.resolveUserId(requestorName);
+        String targetUserId = usersSteps.resolveUserId(targetUserName);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        propertySteps.addPropertyToUserByUser(requestorId, propertyId, targetUserId);
+    }
+
+    @When("^User \"([^\"]*)\" adds user \"([^\"]*)\" to customer \"([^\"]*)\"$")
+    public void userAddsUserToCustomer(String requestorName, String targetUserName, String customerId) throws Throwable {
+        String requestorId = usersSteps.resolveUserId(requestorName);
+        String targetUserId = usersSteps.resolveUserId(targetUserName);
+        customerSteps.addUserToCustomerByUser(requestorId, targetUserId, customerId, true, true);
+    }
+
+    @When("^User \"([^\"]*)\" (?:removes|deletes) user \"([^\"]*)\" from customer \"([^\"]*)\"$")
+    public void userRemovesUserFromCustomer(String requestorName, String targetUserName, String customerId) throws Throwable {
+        String requestorId = usersSteps.resolveUserId(requestorName);
+        String targetUserId = usersSteps.resolveUserId(targetUserName);
+        customerSteps.removeUserFromCustomerByUser(requestorId, customerId, targetUserId);
+    }
+
+    @When("^User \"([^\"]*)\" requests (?:list of )?users for property set \"([^\"]*)\"$")
+    public void userRequestsListOfUsersForPropertySet(String requestorName, String propertySetName) throws Throwable {
+        String requestorId = usersSteps.resolveUserId(requestorName);
+        String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
+        propertySetSteps.listOfUsersForPropertySetIsGotByUser(requestorId, propertySetId, null, null, null, null, null);
+    }
 }

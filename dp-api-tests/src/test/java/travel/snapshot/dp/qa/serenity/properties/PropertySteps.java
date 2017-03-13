@@ -397,11 +397,13 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void updatePropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
-        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
+    public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
+        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        assertThat(propertyCustomerRelation, is(notNullValue()));
+        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId());
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
-            Response response = updateSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId(), jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException e) {
             fail("Exception thrown when trying to map PropertySetPropertyRelationshipUpdateDto to JSONObject: " +  e);
@@ -409,8 +411,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void deletePropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId) {
-        Response response = deleteSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId, null);
+    public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
+        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        assertThat(propertyCustomerRelation, is(notNullValue()));
+        Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId(), null);
         setSessionResponse(response);
     }
 
@@ -472,10 +476,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void requestPropertyCustomerRelationshipByUser(String userId, String propertyId, String customerId) {
-        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(propertyId, customerId);
+    public void requestPropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
+        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
-        setSessionResponse(getSecondLevelEntityByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId()));
+        setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId()));
     }
 
     public void allCustomersAreCustomersOfProperty(CustomerDto[] allCustomers, String propertyCode) {
@@ -553,4 +557,13 @@ public class PropertySteps extends BasicSteps {
         return propertyId;
     }
 
+    public void listUsersForPropertyByUser(String userId, String propertyId) {
+        setSessionResponse(getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null));
+    }
+
+    public void addPropertyToUserByUser(String requestorId, String propertyId, String targetUserId) {
+        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        relation.setUserId(targetUserId);
+        setSessionResponse(createSecondLevelRelationshipByUser(requestorId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
+    }
 }

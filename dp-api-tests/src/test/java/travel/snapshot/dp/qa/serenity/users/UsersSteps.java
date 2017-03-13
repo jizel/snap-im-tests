@@ -12,6 +12,7 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;

@@ -135,8 +135,8 @@ public class CustomerSteps extends BasicSteps {
         return from(inputStream).getObject("", CustomerDto.class);
     }
 
-    private CustomerPropertyRelationshipDto getCustomerPropertyForCustomerWithType(String customerId, String propertyId, String type) {
-        String filter = String.format("property_id==%s;relationship_type==%s", propertyId, type);
+    private CustomerPropertyRelationshipDto getCustomerPropertyForCustomer(String customerId, String propertyId) {
+        String filter = String.format("property_id==%s", propertyId);
         CustomerPropertyRelationshipDto[] customerProperties = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(CustomerPropertyRelationshipDto[].class);
         return stream(customerProperties).findFirst().orElse(null);
     }
@@ -209,7 +209,9 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public Response addUserToCustomerByUser(String performerId, String userId, String customerId, Boolean isPrimary, Boolean isActive) {
-        return addUserToCustomerByUserForApp(performerId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userId, customerId, isPrimary, isActive);
+        Response response = addUserToCustomerByUserForApp(performerId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userId, customerId, isPrimary, isActive);
+        setSessionResponse(response);
+        return response;
     }
 
     @Step
@@ -408,7 +410,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void propertyIsAddedToCustomerWithTypeFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo, Boolean isActive) {
+    public void propertyIsAddedToCustomerFromTo(String propertyId, String customerId, String type, String dateFrom, String dateTo, Boolean isActive) {
         Response response = addPropertyToCustomer(propertyId, customerId, type, dateFrom, dateTo, isActive);
 
         if (response.statusCode() == HttpStatus.SC_CREATED) {
@@ -426,8 +428,8 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void propertyIsUpdateForCustomerWithType(PropertyDto property, String customerId, String type, String fieldName, String value) {
-        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(customerId, property.getPropertyId(), type);
+    public void propertyIsUpdateForCustomer(PropertyDto property, String customerId, String fieldName, String value) {
+        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomer(customerId, property.getPropertyId());
         String etag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId());
         Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), singletonMap(fieldName, value), etag);
         setSessionResponse(updateResponse);
@@ -453,8 +455,8 @@ public class CustomerSteps extends BasicSteps {
 
     }
 
-    public void propertyIsUpdateForCustomerWithTypeWithInvalidEtag(PropertyDto p, String customerId, String type, String fieldName, String value) {
-        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomerWithType(customerId, p.getPropertyId(), type);
+    public void propertyIsUpdateForCustomerWithInvalidEtag(PropertyDto p, String customerId, String fieldName, String value) {
+        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomer(customerId, p.getPropertyId());
         Map<String, Object> data = new HashMap<>();
         data.put(fieldName, value);
 
@@ -641,9 +643,9 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void fieldNameHasValueForPropertyForCustomerAndType(String fieldName, String value, String propertyId, String customerId, String type) {
+    public void fieldNameHasValueForPropertyForCustomer(String fieldName, String value, String propertyId, String customerId) {
         CustomerDto c = getCustomerById(customerId);
-        CustomerPropertyRelationshipDto cp = getCustomerPropertyForCustomerWithType(c.getCustomerId(), propertyId, type);
+        CustomerPropertyRelationshipDto cp = getCustomerPropertyForCustomer(c.getCustomerId(), propertyId);
 
         switch (fieldName) {
             case "valid_from": {
@@ -689,4 +691,15 @@ public class CustomerSteps extends BasicSteps {
         CustomerDto customer = getEntity(customerId).as(CustomerDto.class);
         assertEquals(customer.getIsActive(), activity);
     }*/
+
+    public void propertyIsgotForCustomer(String propertyId, String customerId) {
+        setAccessTokenParamFromSession();
+        CustomerPropertyRelationshipDto customerPropertyRelationship = getCustomerPropertyForCustomer(customerId, propertyId);
+        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getRelationshipId());
+        setSessionResponse(response);
+    }
+
+    public void removeUserFromCustomerByUser(String requestorId, String customerId, String targetUserId) {
+        setSessionResponse(deleteSecondLevelEntityByUser(requestorId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null));
+    }
 }

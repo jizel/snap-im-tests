@@ -103,8 +103,6 @@ Feature: Properties Application access check feature
     And Body is empty
     And Property with same id doesn't exist
 
-#  DP-1880
-  @skipped
   Scenario: Anchor_customer_id of customer without commercial subscription cannot be used when creating or updating property
     Given The following customers exist with random address
       | customerId                           | companyName                   | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |

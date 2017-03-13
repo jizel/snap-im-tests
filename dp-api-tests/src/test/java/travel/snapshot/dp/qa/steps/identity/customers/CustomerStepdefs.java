@@ -190,13 +190,7 @@ public class CustomerStepdefs {
         Response response = customerSteps.addPropertyToCustomerByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         customerSteps.setSessionResponse(response);
     }
-
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type(String propertyCode, String customerId) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        customerSteps.propertyIsgotForCustomerWithType(propertyId, customerId);
-    }
-
+    
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerId, String username, String applicationVersionName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
@@ -284,7 +278,7 @@ public class CustomerStepdefs {
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode,
                                                                                                String customerId, String type, String fieldName, String value) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsUpdateForCustomerWithType(property, customerId, type, fieldName, value);
+        customerSteps.propertyIsUpdateForCustomer(property, customerId, fieldName, value);
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updated(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")? with$")
@@ -300,7 +294,7 @@ public class CustomerStepdefs {
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(
             String propertyCode, String customerId, String type, String fieldName, String value) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsUpdateForCustomerWithTypeWithInvalidEtag(property, customerId, type, fieldName, value);
+        customerSteps.propertyIsUpdateForCustomerWithInvalidEtag(property, customerId, fieldName, value);
     }
 
     @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\" for etag, updated and got with previous etag$")
@@ -477,8 +471,7 @@ public class CustomerStepdefs {
                                                                                         String customerId,
                                                                                         String type) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.fieldNameHasValueForPropertyForCustomerAndType(fieldName, value, p.getPropertyId(), customerId,
-                type);
+        customerSteps.fieldNameHasValueForPropertyForCustomer(fieldName, value, p.getPropertyId(), customerId);
     }
 
     @Then("There are (\\d+) customers commercial subscriptions returned")

@@ -88,8 +88,7 @@ Feature: Properties access check feature - POST and DELETE
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
 
-#  DP-1880
-  @skipped
+
   Scenario: Anchor_customer_id of not accessible customer cannot be used when updating property
     Given The following customers exist with random address
       | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |

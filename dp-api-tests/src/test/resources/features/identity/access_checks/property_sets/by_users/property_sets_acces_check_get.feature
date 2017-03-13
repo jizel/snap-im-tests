@@ -115,7 +115,7 @@ Feature: Property sets access check feature - GET
          | limit | cursor | filter                        | sort        | sort_desc         | returned    |
          | /null | 0      | name=='*'                     | /null       | name              | 5           |
          | /null | 0      | name=='ps5_name'              | /null       | /null             | 1           |
-         | /null | 0      | is_active=='true'             | /null       | property_set_type | 2           |
+         | /null | 0      | is_active=='true'             | /null       | property_set_type | 3           |
          | /null | 0      | property_set_type=='brand'    | /null       | property_set_type | 3           |
          | /null | 0      | description=='desc*'          | description | /null             | 4           |
          | /null | 0      | property_set_id=='43400000-*' | /null       | /null             | 1           |
@@ -132,14 +132,12 @@ Feature: Property sets access check feature - GET
     When Child property sets of property set "ps1_name" are requested by user "userWithPropSet"
     Then Response code is "200"
     When Child property sets of property set "ps1_name" are requested by user "userWithNoPropSet"
-#      Fails until DP-1330 fixed
     Then Response code is "404"
 
 #    General negative scenarios
 
     Scenario Outline: User with no access rights to property sends GET request to all general second level endpoints
       When GET request is sent to "<url>" on module "identity" by user "userWithNoPropSet"
-      #      Fails until DP-1330 fixed
       Then Response code is "404"
       And Custom code is "40402"
       Examples:
@@ -150,7 +148,6 @@ Feature: Property sets access check feature - GET
 
      Scenario Outline: User with no access rights to property sends GET request with parameters
        When GET request is sent to "<url>" on module "identity" by user "userWithNoPropSet"
-       #      Fails until DP-1330 fixed
        Then Response code is "404"
        And Custom code is "40402"
        Examples:
