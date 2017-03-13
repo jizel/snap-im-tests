@@ -271,7 +271,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>"
-      | propertySetName   | propertySetDescription | propertySetType |
+      | name              | description            | type            |
       | ps1_event_created | ps1_description        | brand           |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "PropertySet"
@@ -289,7 +289,7 @@ Feature: Eventing identity module
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1 | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     When The following property set is created for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881<string>"
-      | propertySetName           | propertySetDescription | propertySetType |
+      | name                      | description            | type            |
       | event_propset_del_propset | description            | brand           |
 
     Given Property set with name "event_propset_del_propset" for Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is stored in session under key "EVENTING_PROPERTY_SET"

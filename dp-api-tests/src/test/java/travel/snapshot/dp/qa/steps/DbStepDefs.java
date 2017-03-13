@@ -117,6 +117,7 @@ public class DbStepDefs {
         defaultAppVersion.setVersionId(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         defaultAppVersion.setApiManagerId("123");
         defaultAppVersion.setStatus(CERTIFIED);
+        defaultAppVersion.setIsNonCommercial(true);
         dbSteps.createDBApplicationVersion(defaultAppVersion);
     }
 

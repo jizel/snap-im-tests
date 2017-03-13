@@ -27,10 +27,10 @@ Feature: Property sets Application access check feature
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription    | certified | Active version description | 22200000-0000-4000-a000-000000000222 |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description | 00000000-0000-4000-a000-000000000222 |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1"
-      | propertySetName | propertySetType | propertySetId                        |
+      | name            | type            | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000111" and user "user1"
-      | propertySetName | propertySetType | propertySetId                        |
+      | name            | type            | propertySetId                        |
       | ps2_name        | brand           | 23400000-1111-4c57-91bd-30230d2c1bd0 |
     Given The following commercial subscriptions exist
       | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
@@ -55,7 +55,7 @@ Feature: Property sets Application access check feature
         | 12300000-0000-4000-a000-000000000000 | 22245678-0000-4000-a000-000000000000 | Company 222 | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | Europe/Prague |
         | 22245678-0000-4000-a000-000000000000 | 33345678-0000-4000-a000-000000000000 | Company 333 | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | Europe/Prague |
       Given The following property sets exist for customer with id "33345678-0000-4000-a000-000000000000" and user "user1"
-        | propertySetName | propertySetType | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | propertySetId                        |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd1 |
       When Property set "childPS2" is requested by user "user1" for application version "versionWithSubscription"
@@ -66,7 +66,7 @@ Feature: Property sets Application access check feature
 
   Scenario Outline: Filtering property sets with application access checks
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1"
-      | propertySetName | propertySetType | propertySetId                        | propertySetDescription | isActive |
+      | name            | type            | propertySetId                        | description            | isActive |
       | ps2_name        | brand           | 23400000-1111-4c57-91bd-30230d2c1bd1 | desc2                  | true     |
       | ps3_name        | HOTEL_TYPE      | 33400000-1111-4c57-91bd-30230d2c1bd0 | desc3                  | false    |
       | ps4_name        | GEOLOCATION     | 43400000-1111-4c57-91bd-30230d2c1bd0 | desc4                  | false    |
@@ -87,12 +87,12 @@ Feature: Property sets Application access check feature
 
   Scenario: Application with and without subscription updates property set
     When Property set "ps1_name" is updated with following data by user "user1"
-      | propertySetName | propertySetDescription | propertySetType   |
+      | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
     Then Response code is "404"
     And Custom code is 40402
     When Property set "ps1_name" is updated with following data by user "user1" for application version "versionWithSubscription"
-      | propertySetName | propertySetDescription | propertySetType   |
+      | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
     Then Response code is "204"
 

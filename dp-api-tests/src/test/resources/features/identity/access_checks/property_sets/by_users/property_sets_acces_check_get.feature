@@ -22,7 +22,7 @@ Feature: Property sets access check feature - GET
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-      | propertySetName | propertySetType | propertySetId                        |
+      | name            | type            | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
     Scenario: User has direct relationship to property set
@@ -48,10 +48,10 @@ Feature: Property sets access check feature - GET
 
     Scenario: User has access to any child property set if he has access to parent PS
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
-        | propertySetName | propertySetType | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | propertySetId                        |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
-        | propertySetName | propertySetType | parentId                             |
+        | name            | type            | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Property set "childPS2" is requested by user "userWithPropSet"
       Then Response code is "200"
@@ -61,10 +61,10 @@ Feature: Property sets access check feature - GET
         | userGroupId                          | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-        | propertySetName | propertySetType | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | propertySetId                        |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-        | propertySetName | propertySetType | parentId                             |
+        | name            | type            | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "false"
       When Property set "childPS2" is requested by user "userWithNoPropSet"
@@ -100,7 +100,7 @@ Feature: Property sets access check feature - GET
 
      Scenario Outline: Filtering property sets with access checks
        Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-         | propertySetName | propertySetType | propertySetId                        | propertySetDescription | isActive |
+         | name            | type            | propertySetId                        | description            | isActive |
          | ps2_name        | brand           | 23400000-1111-4c57-91bd-30230d2c1bd0 | desc2                  | true     |
          | ps3_name        | brand           | 33400000-1111-4c57-91bd-30230d2c1bd0 | desc3                  | true     |
          | ps4_name        | GEOLOCATION     | 43400000-1111-4c57-91bd-30230d2c1bd0 | desc4                  | false    |
@@ -127,7 +127,7 @@ Feature: Property sets access check feature - GET
 
   Scenario: Second level entities - User should see only child property sets of property set he has access to
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
-      | propertySetName | propertySetType | parentId                             | propertySetId                        |
+      | name            | type            | parentId                             | propertySetId                        |
       | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
     When Child property sets of property set "ps1_name" are requested by user "userWithPropSet"
     Then Response code is "200"

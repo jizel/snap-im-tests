@@ -132,7 +132,7 @@ public class PropertySetSteps extends BasicSteps {
         PropertySetDto[] propertySets = response.as(PropertySetDto[].class);
         int i = 0;
         for (PropertySetDto propertySet : propertySets) {
-            assertEquals("Property set on index=" + i + " is not expected", names.get(i), propertySet.getPropertySetName());
+            assertEquals("Property set on index=" + i + " is not expected", names.get(i), propertySet.getName());
             i++;
         }
     }
@@ -350,9 +350,9 @@ public class PropertySetSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
         given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).get(propertyLocation).then()
-                .body("property_set_type", is(lowerCase(originalProperty.getPropertySetType().toString())))
-                .body("description", is(originalProperty.getPropertySetDescription()))
-                .body("name", is(originalProperty.getPropertySetName()))
+                .body("property_set_type", is(lowerCase(originalProperty.getType().toString())))
+                .body("description", is(originalProperty.getDescription()))
+                .body("name", is(originalProperty.getName()))
                 .body("customer_id", is(originalProperty.getCustomerId()));
 
     }

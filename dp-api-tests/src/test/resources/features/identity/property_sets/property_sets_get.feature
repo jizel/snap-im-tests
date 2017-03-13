@@ -11,7 +11,7 @@ Feature: Property sets get
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "default1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |
       | ps3_name        | ps3_description        | brand           |
@@ -25,7 +25,7 @@ Feature: Property sets get
 
   Scenario Outline: Getting property sets
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "default1"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | list_ps1_name   | list_ps1_description   | brand           |
       | list_ps2_name   | list_ps2_description   | brand           |
       | list_ps3_name   | list_ps3_description   | brand           |
@@ -131,7 +131,7 @@ Feature: Property sets get
 
   Scenario Outline: Filtering list of property sets
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "default1"
-      | propertySetName      | propertySetDescription | propertySetType |
+      | name                 | description            | type            |
       | list_ps1_name        | list_ps1_description   | brand           |
       | list_ps2_name        | list_ps2_description   | brand           |
       | list_ps3_name        | list_ps3_description   | brand           |

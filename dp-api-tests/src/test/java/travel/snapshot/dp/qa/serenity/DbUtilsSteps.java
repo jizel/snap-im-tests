@@ -50,7 +50,7 @@ public class DbUtilsSteps {
     static final String CREATE_DB_USER = "INSERT INTO User (user_id, user_type, user_name, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (partner_id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (application_id, application_name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO Application_Version (version_id, application_id, api_manager_id, version_name, status, release_date, description, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO Application_Version (version_id, application_id, api_manager_id, version_name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (customer_id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (address_id, address_line1, address_line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
     static final String CREATE_DB_PROPERTY = "INSERT INTO Property (property_id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
@@ -80,7 +80,7 @@ public class DbUtilsSteps {
     }
 
     public void createDBApplicationVersion(ApplicationVersionDto applicationVersion) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, applicationVersion.getVersionId(), applicationVersion.getApplicationId(), applicationVersion.getApiManagerId(), applicationVersion.getVersionName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, applicationVersion.getVersionId(), applicationVersion.getApplicationId(), applicationVersion.getApiManagerId(), applicationVersion.getVersionName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
     }
 
     public void createDBCustomer(CustomerCreateDto customer) {

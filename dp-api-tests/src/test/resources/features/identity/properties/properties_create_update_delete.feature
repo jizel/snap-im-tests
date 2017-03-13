@@ -274,7 +274,7 @@ Feature: Properties create update delete
 
   Scenario Outline: Send POST request with empty body to all properties endpoints
     When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-      | propertySetId                        | propertySetName | propertySetDescription | propertySetType |
+      | propertySetId                        | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     When Property with code "p1_code" is added to property set "ps1_name"
     When Empty POST request is sent to "<url>" on module "identity"

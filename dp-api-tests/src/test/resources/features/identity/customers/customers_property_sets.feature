@@ -19,7 +19,7 @@ Feature: Customers property sets
   Scenario Outline: getting list of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" on customers side
 #failing because of not functional filtering
     Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "snapshotUser"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | list_ps1_name   | list_ps1_description   | brand           |
       | list_ps2_name   | list_ps2_description   | brand           |
       | list_ps3_name   | list_ps3_description   | brand           |
@@ -124,7 +124,7 @@ Feature: Customers property sets
 
   Scenario Outline: Filtering list of property sets
     Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "snapshotUser"
-      | propertySetName      | propertySetDescription | propertySetType |
+      | name                 | description            | type            |
       | list_ps1_name        | list_ps1_description   | brand           |
       | list_ps2_name        | list_ps2_description   | brand           |
       | list_ps3_name        | list_ps3_description   | brand           |

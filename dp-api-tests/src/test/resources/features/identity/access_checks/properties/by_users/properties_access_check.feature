@@ -58,7 +58,7 @@ Feature: Properties access check feature - GET
 
     Scenario: User has a relationship to any PropertySet that has a relationship to this instance
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
-        | propertySetName | propertySetType |
+        | name            | type            |
         | ps1_name        | brand           |
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "404"
@@ -72,13 +72,13 @@ Feature: Properties access check feature - GET
 
     Scenario: User has a relationship to any PropertySet that has a successor which has relationship to this instance
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
-        | propertySetName | propertySetType | propertySetId                        |
+        | name            | type            | propertySetId                        |
         | parentPS        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-        | propertySetName | propertySetType | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | propertySetId                        |
         | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-        | propertySetName | propertySetType | parentId                             |
+        | name            | type            | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Property with code "p1_code" is requested by user "userWithNoProp"
       Then Response code is "404"
@@ -94,7 +94,7 @@ Feature: Properties access check feature - GET
         | customerId                           | name        | isActive |
         | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-        | propertySetName | propertySetType |
+        | name            | type            |
         | ps1_name        | brand           |
       When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "true"
       And Property with code "p1_code" is added to property set "ps1_name"
