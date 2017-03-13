@@ -28,7 +28,7 @@ Feature: Customers multiproperty
     #Given Relation between user "snapshot" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" exists with isPrimary "true"
 
     Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" and user "everything"
-      | propertySetName | propertySetDescription | propertySetType |
+      | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |
 

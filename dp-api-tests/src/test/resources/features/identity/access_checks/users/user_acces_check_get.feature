@@ -44,7 +44,7 @@ Feature: User access check feature - GET
 
   Scenario: User has no access to users of another customer even when they share access to the same property set
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
-      | propertySetName | propertySetType | propertySetId                        |
+      | name            | type            | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "12329079-48f0-4f00-9bec-e2329a8bdaac"
     Then Response code is "200"

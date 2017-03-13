@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
@@ -495,6 +496,6 @@ public class UserStepdefs {
     public void userRequestsListOfUsersForPropertySet(String requestorName, String propertySetName) throws Throwable {
         String requestorId = usersSteps.resolveUserId(requestorName);
         String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
-        propertySetSteps.listOfUsersForPropertySetIsGotByUser(requestorId, propertySetId, null, null, null, null, null);
+        propertySetSteps.listOfUsersForPropertySetIsGotByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertySetId, null, null, null, null, null);
     }
 }

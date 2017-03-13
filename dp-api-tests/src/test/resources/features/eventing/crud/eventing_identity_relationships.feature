@@ -123,7 +123,7 @@ Feature: Eventing identity module relationships
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
-      | propertySetName                | propertySetDescription | propertySetType |
+      | name                           | description            | type            |
       | add_propset_user_event_propset | ps1_description        | brand           |
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -152,7 +152,7 @@ Feature: Eventing identity module relationships
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
-      | propertySetName                | propertySetDescription | propertySetType |
+      | name                           | description            | type            |
       | del_propset_user_event_propset | ps1_description        | brand           |
 
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -182,7 +182,7 @@ Feature: Eventing identity module relationships
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
-      | propertySetName                | propertySetDescription | propertySetType |
+      | name                           | description            | type            |
       | add_propset_user_event_propset | ps1_description        | brand           |
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
@@ -207,7 +207,7 @@ Feature: Eventing identity module relationships
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
-      | propertySetName                | propertySetDescription | propertySetType |
+      | name                           | description            | type            |
       | del_propset_user_event_propset | ps1_description        | brand           |
 
 

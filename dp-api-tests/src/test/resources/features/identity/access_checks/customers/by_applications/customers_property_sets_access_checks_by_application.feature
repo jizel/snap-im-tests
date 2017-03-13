@@ -34,7 +34,7 @@ Feature: Customers-Property Sets Application access check feature - GET
       | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithCust1"
-      | propertySetId                        | propertySetName | propertySetType |
+      | propertySetId                        | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
 

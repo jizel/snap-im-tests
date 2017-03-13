@@ -18,7 +18,7 @@ Feature: Property sets Users access check feature
     Given Relation between user "userWithPropSet" and default property exists
     Given Relation between user "userWithNoPropSet" and default property exists
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-      | propertySetName | propertySetType | propertySetId                        |
+      | name            | type            | propertySetId                        |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
 
