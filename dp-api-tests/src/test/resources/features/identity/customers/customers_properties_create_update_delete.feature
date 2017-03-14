@@ -10,7 +10,7 @@ Feature: Customers properties create update delete
       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
       | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     Given The following users exist for customer "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" as primary "true"
-      | userId                               | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
+      | Id                                   | userType | userName            | firstName | lastName     | email                         | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

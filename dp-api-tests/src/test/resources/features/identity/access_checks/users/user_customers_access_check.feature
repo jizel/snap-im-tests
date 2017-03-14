@@ -11,11 +11,11 @@
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000001"
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | userId                               | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | Id                                   | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | user1OfC1  | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | user2OfC1  | Customer  | User2C1  | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000001" as primary "false"
-      | userId                               | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | Id                                   | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | 12329079-48f0-4f00-9bec-e2329a8bdaab | customer | user1OfC2  | Customer  | User1C2  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
      #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"

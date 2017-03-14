@@ -165,12 +165,6 @@ public class PropertiesStepdefs {
         propertySteps.followingPropertyIsCreatedWithAddress(property, address, userId);
     }
 
-    @When("^Property with code \"([^\"]*)\" is deleted$")
-    public void Property_with_code_is_deleted(String code) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId(code);
-        propertySteps.deleteProperty(propertyId);
-    }
-
     @When("^Property with code \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeIsDeletedByUser(String propertyCode, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);

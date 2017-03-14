@@ -122,7 +122,7 @@ public class ApiSubscriptionSteps extends BasicSteps {
         ApiSubscriptionDto[] apiSubscriptios = getSessionResponse().as(ApiSubscriptionDto[].class);
         int i = 0;
         for (ApiSubscriptionDto api : apiSubscriptios) {
-            assertEquals(api.getApiSubscriptionId(), order.get(i));
+            assertEquals(api.getId(), order.get(i));
             i++;
         }
     }

@@ -132,7 +132,7 @@ public class ApiSubscriptionStepsdefs {
         commercialSubscription.setIsActive(true);
         commercialSubscription.setCustomerId(customerId);
         String commercialSubscriptionId = randomUUID().toString();
-        commercialSubscription.setCommercialSubscriptionId(commercialSubscriptionId);
+        commercialSubscription.setId(commercialSubscriptionId);
         commercialSubscriptionSteps.comSubscriptionsExists(singletonList(commercialSubscription));
 
         ApiSubscriptionDto apiSubscription = new ApiSubscriptionDto();

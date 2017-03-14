@@ -56,7 +56,7 @@ public class PropertySetSteps extends BasicSteps {
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + createResponse.asString());
             }
-            String propertySetId = createResponse.as(PropertySetDto.class).getPropertySetId();
+            String propertySetId = createResponse.as(PropertySetDto.class).getId();
             Response addUserResponse = addUserToPropertySet(userId, propertySetId, isActive);
             if (addUserResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Failed to add user to property set: " + addUserResponse.asString());
@@ -99,11 +99,11 @@ public class PropertySetSteps extends BasicSteps {
 
     public void deleteAllPropertySetsForCustomer(List<CustomerDto> customers) {
         customers.forEach(c -> {
-            String filter = "customer_id==" + c.getCustomerId();
+            String filter = "customer_id==" + c.getId();
             Response entities = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null);
             PropertySetDto[] propertySets = entities.as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
-                deleteEntityWithEtag(propertySet.getPropertySetId());
+                deleteEntityWithEtag(propertySet.getId());
                 Response deleteResponse = getSessionResponse();
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("Property set cannot be deleted: " + deleteResponse.asString());
@@ -157,13 +157,13 @@ public class PropertySetSteps extends BasicSteps {
 
     public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, CustomerDto c) {
         propertySetNames.forEach(n -> {
-            String filter = String.format("name==%s and customer_id==%s", n, c.getCustomerId());
+            String filter = String.format("name==%s and customer_id==%s", n, c.getId());
             PropertySetDto[] propertySets = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
-                Response propertyUsersResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
+                Response propertyUsersResponse = getSecondLevelEntities(propertySet.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 PropertyUserRelationshipDto[] propertyUsers = propertyUsersResponse.as(PropertyUserRelationshipDto[].class);
                 for (PropertyUserRelationshipDto pu : propertyUsers) {
-                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
+                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set user cannot be deleted: status code: " + deleteResponse.statusCode() + ", body: [" + deleteResponse.asString() + "]");
                     }
@@ -277,13 +277,13 @@ public class PropertySetSteps extends BasicSteps {
 
     public void removeAllPropertiesFromPropertySetsForCustomer(List<String> propertySetNames, CustomerDto customer) {
         propertySetNames.forEach(psn -> {
-            String filter = String.format("name==%s and customer_id==%s", psn, customer.getCustomerId());
+            String filter = String.format("name==%s and customer_id==%s", psn, customer.getId());
             PropertySetDto[] propertySets = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
-                Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
+                Response propertyPropertySetResponse = getSecondLevelEntities(propertySet.getId(), SECOND_LEVEL_OBJECT_PROPERTIES, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 PropertySetPropertyRelationshipDto[] propertyPropertySets = propertyPropertySetResponse.as(PropertySetPropertyRelationshipDto[].class);
                 for (PropertySetPropertyRelationshipDto pps : propertyPropertySets) {
-                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getPropertySetId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId(), null);
+                    Response deleteResponse = deleteSecondLevelEntity(propertySet.getId(), SECOND_LEVEL_OBJECT_PROPERTIES, pps.getPropertyId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set property cannot be deleted: " + deleteResponse.asString());
                     }
@@ -353,7 +353,7 @@ public class PropertySetSteps extends BasicSteps {
                 .body("property_set_type", is(lowerCase(originalProperty.getType().toString())))
                 .body("description", is(originalProperty.getDescription()))
                 .body("name", is(originalProperty.getName()))
-                .body("customer_id", is(originalProperty.getCustomerId()));
+                .body("customer_id", is(originalProperty.getId()));
 
     }
 
@@ -425,7 +425,7 @@ public class PropertySetSteps extends BasicSteps {
         } else {
             PropertySetDto propertySet = getPropertySetByName(propertySetName);
             assertThat(String.format("Property with code \"%s\" does not exist", propertySetName), propertySet, is(notNullValue()));
-            propertySetId = propertySet.getPropertySetId();
+            propertySetId = propertySet.getId();
         }
         return propertySetId;
     }

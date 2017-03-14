@@ -8,7 +8,7 @@ Feature: Customers create update delete
       | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
-      | userId                               | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
+      | Id                                   | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
@@ -53,6 +53,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/positive/create_customer_ancient_symbols.json   | POST   | identity | /identity/customers | 㐱㐲㐳  |
       | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
+    #  DP-1900
   @Smoke
   Scenario: Deleting Customer
     When Customer with customer id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted

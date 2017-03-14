@@ -149,8 +149,8 @@ public class UserGroupsSteps extends BasicSteps {
         RoleDto[] roles = getSessionResponse().as(RoleDto[].class);
         int i = 0;
         for (RoleDto r : roles) {
-            if (!r.getRoleId().startsWith(order.get(i))) {
-                fail("Expected ID: " + r.getRoleId() + "but was starting with: " + order.get(i));
+            if (!r.getId().startsWith(order.get(i))) {
+                fail("Expected ID: " + r.getId() + "but was starting with: " + order.get(i));
             }
             i++;
         }
@@ -426,7 +426,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void relationshipGroupRoleExist(String userGroupId, String roleId, Boolean isActive) throws JsonProcessingException {
-        RoleDto roleObject = new RoleDto();
+        RoleRelationshipDto roleObject = new RoleRelationshipDto();
         roleObject.setRoleId(roleId);
         roleObject.setIsActive(isActive);
 
@@ -474,7 +474,7 @@ public class UserGroupsSteps extends BasicSteps {
         RoleDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null).as(RoleDto[].class);
         Boolean found = false;
         for (RoleDto role : listOfRoles) {
-            if (role.getRoleId().equalsIgnoreCase(roleId)) {
+            if (role.getId().equalsIgnoreCase(roleId)) {
                 found = true;
             }
         }
@@ -523,7 +523,7 @@ public class UserGroupsSteps extends BasicSteps {
         } else {
             UserGroupDto userGroup = getUserGroupByName(userGroupName);
             assertThat(String.format("User group with name \"%s\" does not exist", userGroupName), userGroup, is(notNullValue()));
-            userGroupId = userGroup.getUserGroupId();
+            userGroupId = userGroup.getId();
         }
         return userGroupId;
     }

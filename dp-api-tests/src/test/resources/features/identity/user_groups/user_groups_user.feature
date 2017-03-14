@@ -10,7 +10,7 @@ Feature: User groups user relationship feature
       | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following user groups exist
-      | userGroupId                          | Id                                   | name        | isActive | description          |
+      | Id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
 
@@ -105,7 +105,7 @@ Feature: User groups user relationship feature
       | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
       | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
     Given The following user group is created by user "<userName>"
-      | userGroupId                          | Id                                   | name        | isActive | description          |
+      | Id                                   | customerId                           | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
     Then Response code is "201"
     When Relation between user group "userGroup_2" and user "<userName>" is got
@@ -131,7 +131,7 @@ Feature: User groups user relationship feature
       | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
       | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
     Given The following user group is created by user "<userName>"
-      | userGroupId                          | Id                                   | name        | isActive | description          |
+      | Id                                   | customerId                           | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
     Then Response code is "201"
     Given User "member1" is added to userGroup "userGroup_2"
@@ -151,7 +151,7 @@ Feature: User groups user relationship feature
 
   Scenario Outline: Send POST request with empty body to all user groups endpoints
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"
-      | userId                               | userType | userName  | firstName | lastName | email                | timezone      | culture |
+      | Id                                   | userType | userName  | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapUser1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given User "snapUser1" is added to userGroup "userGroup_1"
     When Empty POST request is sent to "<url>" on module "identity"

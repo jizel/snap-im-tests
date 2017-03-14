@@ -43,7 +43,7 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void followingApplicationsExist(List<ApplicationDto> applications) {
         applications.forEach((application) -> {
-            String partnerId = application.getPartnerId();
+            String partnerId = application.getId();
             Boolean isInternal = application.getIsInternal();
             if (partnerId == null) {
                 application.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
@@ -85,7 +85,7 @@ public class ApplicationsSteps extends BasicSteps {
 
         Map<String, Object> customerData = retrieveDataOld(ApplicationDto.class, application);
 
-        Response response = updateEntity(original.getApplicationId(), customerData, "fake-etag");
+        Response response = updateEntity(original.getId(), customerData, "fake-etag");
         setSessionResponse(response);
     }
 
@@ -174,7 +174,7 @@ public class ApplicationsSteps extends BasicSteps {
         } else {
             ApplicationDto application = getApplicationByName(applicationName);
             assertThat(String.format("Application with name \"%s\" does not exist", applicationName), application , is(notNullValue()));
-            applicationVersionId = application.getApplicationId();
+            applicationVersionId = application.getId();
         }
         return applicationVersionId;
     }

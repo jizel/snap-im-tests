@@ -31,9 +31,9 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     @Step
     public void comSubscriptionsExists(List<CommercialSubscriptionDto> commSubcsriptions) {
         commSubcsriptions.forEach(s -> {
-            CommercialSubscriptionDto existingSubscription = getSubscriptionById(s.getCommercialSubscriptionId());
+            CommercialSubscriptionDto existingSubscription = getSubscriptionById(s.getId());
             if (existingSubscription != null) {
-                deleteEntityWithEtag(existingSubscription.getCommercialSubscriptionId());
+                deleteEntityWithEtag(existingSubscription.getId());
             }
 
             Response createResponse = createEntity(s);
@@ -105,7 +105,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
         int i = 0;
         for (CommercialSubscriptionDto s : commSubscriptions) {
             assertEquals("Commercial subscription on index=" + i + " is not expected", commSubscriptionIds.get(i),
-                    s.getCommercialSubscriptionId());
+                    s.getId());
             i++;
         }
     }
