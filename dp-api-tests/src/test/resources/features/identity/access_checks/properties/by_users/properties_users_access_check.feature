@@ -7,7 +7,7 @@ Feature: Properties-Users access check feature
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -59,7 +59,7 @@ Feature: Properties-Users access check feature
 
   Scenario: Try to add user from different customer to property
     Given The following customers exist with random address
-      | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
+      | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Customer 2  | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     Given The following users exist for customer "2348fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName            | firstName | lastName | email                    | timezone      | culture | isActive |

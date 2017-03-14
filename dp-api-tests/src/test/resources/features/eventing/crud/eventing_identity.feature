@@ -12,7 +12,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -25,7 +25,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
 
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     Given Subscription with name "Test" for topic "Notifications.crud" is created
@@ -42,7 +42,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
 
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     Given Subscription with name "Test" for topic "Notifications.crud" is created
@@ -60,7 +60,7 @@ Feature: Eventing identity module
   Scenario: Eventing customer activated
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     And Subscription with name "Test" for topic "Notifications.crud" is created
@@ -75,7 +75,7 @@ Feature: Eventing identity module
   Scenario: Eventing customer deactivated
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     And Subscription with name "Test" for topic "Notifications.crud" is created
@@ -92,7 +92,7 @@ Feature: Eventing identity module
   Scenario: Eventing property activated
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
 
@@ -112,7 +112,7 @@ Feature: Eventing identity module
   Scenario: Eventing property deactivated
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     And The following properties exist with random address and billing address
@@ -136,7 +136,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -156,7 +156,7 @@ Feature: Eventing identity module
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
     And The following properties exist with random address and billing address
@@ -208,7 +208,7 @@ Feature: Eventing identity module
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
-      | applicationId                        | roleName            | description            |
+      | Id                                   | roleName            | description            |
       | 11111111-0000-4000-a000-111111111111 | event_role_create_1 | optional description 1 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
@@ -223,7 +223,7 @@ Feature: Eventing identity module
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
-      | applicationId                        | roleName          | description            |
+      | Id                                   | roleName          | description            |
       | 11111111-0000-4000-a000-111111111111 | event_role_delete | optional description 1 |
     Given Role with name "event_role_delete" for application id "11111111-0000-4000-a000-111111111111" is stored in session under key "EVENTING_ROLE"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -243,14 +243,14 @@ Feature: Eventing identity module
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Application"
     When Role is created
-      | applicationId                        | roleName          | description            |
+      | Id                                   | roleName          | description            |
       | 11111111-0000-4000-a000-111111111111 | event_role_update | optional description 1 |
     Given Role with name "event_role_update" for application id "11111111-0000-4000-a000-111111111111" is stored in session under key "EVENTING_ROLE"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Role"
     And Notification in session operation is "Create"
     When Role with name "event_role_update" for application id "11111111-0000-4000-a000-111111111111" is updated with data
-      | applicationId | roleName          | description |
+      | Id            | roleName          | description |
       |               | Updated Role Name | updated 1   |
 
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -262,7 +262,7 @@ Feature: Eventing identity module
   Scenario: Eventing property set created
 
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
       | userId                               | userType | userName     | firstName | lastName | email                        | timezone      | culture |
@@ -282,7 +282,7 @@ Feature: Eventing identity module
   Scenario: Eventing property set deleted
 
     When Customer is created with random address
-      | customerId                           | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
       | userId                               | userType | userName     | firstName | lastName | email                        | timezone      | culture |
@@ -319,7 +319,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given The following partner exist
-      | name                 | email          | website                    | vatId      | notes        | partnerId                            |
+      | name                 | email          | website                    | vatId      | notes        | Id                                   |
       | Partner company name | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
       | name | email | website | vatId      | notes |
@@ -349,7 +349,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given The following partner exist
-      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | name           | email          | website                    | vatId      | notes        | Id                                   |
       | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is activated
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -363,7 +363,7 @@ Feature: Eventing identity module
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given The following partner exist
-      | name           | email          | website                    | vatId      | notes        | partnerId                            |
+      | name           | email          | website                    | vatId      | notes        | Id                                   |
       | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
     When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is inactivated
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session

@@ -7,10 +7,10 @@ Feature: Partners users relationship feature
 
     Scenario: Create Partner-User relationship
       Given The following partner exist
-        | name     | email          | website                    | vatId      | notes        | partnerId                            |
+        | name     | email          | website                    | vatId      | notes        | Id                                   |
         | Partner1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc00011-a05d-42d8-8e84-42e904ace123 |
       Given The following customers exist with random address
-        | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+        | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
         | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
         | userId                               | userType | userName       | firstName | lastName | email                | timezone      | culture | isActive |

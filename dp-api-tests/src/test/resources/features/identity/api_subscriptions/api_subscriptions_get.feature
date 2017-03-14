@@ -7,23 +7,23 @@ Feature: Api subscription get
 
 
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
       | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 11111111-0000-4000-a000-111111111111 |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
-      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
 
 
@@ -45,7 +45,7 @@ Feature: Api subscription get
 
   Scenario Outline: Getting list of api subscriptions with valid query parameters
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName    | status   | description             | applicationId                        |
+      | Id                                   | apiManagerId | versionName    | status   | description             | Id                                   |
       | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1 List | inactive | Versions description 1  | 11111111-0000-4000-a000-111111111111 |
       | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2 List | inactive | Versions description 2  | 11111111-0000-4000-a000-111111111111 |
       | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3 List | inactive | Versions description 3  | 11111111-0000-4000-a000-111111111111 |
@@ -67,7 +67,7 @@ Feature: Api subscription get
       | bc4bed55-de3d-471e-a1e8-fce6f6e029aa | 19           | Version 19List | inactive | Versions description 19 | 11111111-0000-4000-a000-111111111111 |
       | bf7b9b34-14de-4987-82c7-6251aa43a188 | 20           | Version 20List | inactive | Versions description 20 | 11111111-0000-4000-a000-111111111111 |
     Given The following customers exist with random address
-      | customerId                           | companyName      | email           | salesforceId          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName      | email           | salesforceId          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1  | c1@tenants.biz  | salesforceid_given_1  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | Given company 2  | c2@tenants.biz  | salesforceid_given_2  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3  | c3@tenants.biz  | salesforceid_given_3  | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -92,7 +92,7 @@ Feature: Api subscription get
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address
-      | propertyId                           | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Id                                   | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1  | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz  | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2  | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz  | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
       | 4701c194-e39d-46fd-b70f-44dd15a82278 | salesforceid_3  | p3_list      | p3_list      | http://www.snapshot.travel | p3@tenants.biz  | true           | Europe/Prague | 83f16fc2-9e87-435c-9632-1aa8c08a7501 |
@@ -114,7 +114,7 @@ Feature: Api subscription get
       | 98b50129-72f8-4b55-af15-9507db2cca95 | salesforceid_19 | p19_list     | p19_list     | http://www.snapshot.travel | p19@tenants.biz | true           | Europe/Prague | faf0b7b5-5f1e-48e9-9ded-529e59baec6c |
       | d94a9119-6936-466c-8cfd-693acebd39ac | salesforceid_20 | p20_list     | p20_list     | http://www.snapshot.travel | p20@tenants.biz | true           | Europe/Prague | e0ddefaf-05d4-4330-ae67-1310af0d0b45 |
     Given The following commercial subscriptions exist
-      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | 23fe2b58-de46-4330-b361-482f07286cce | 11111111-0000-4000-a000-111111111111 |
       | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | 11111111-0000-4000-a000-111111111111 |
       | 309a2a7f-c400-4f39-b203-54869feebd5b | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | 4701c194-e39d-46fd-b70f-44dd15a82278 | 11111111-0000-4000-a000-111111111111 |
@@ -136,7 +136,7 @@ Feature: Api subscription get
       | 2e8a2b25-c7d7-46ba-a161-1b4dfcb2189c | faf0b7b5-5f1e-48e9-9ded-529e59baec6c | 98b50129-72f8-4b55-af15-9507db2cca95 | 11111111-0000-4000-a000-111111111111 |
       | 5f1c295b-d75f-48db-9203-c377b45702e6 | e0ddefaf-05d4-4330-ae67-1310af0d0b45 | d94a9119-6936-466c-8cfd-693acebd39ac | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 1c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 |
       | 598cfe31-9583-4c0b-86a0-82e9bf662849 | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 |
       | 87eb138c-23c1-43d8-bc88-d6fbbd7e4359 | 1820d135-4f75-4c64-a570-a89e8236229b | 309a2a7f-c400-4f39-b203-54869feebd5b |
@@ -205,14 +205,14 @@ Feature: Api subscription get
 
   Scenario Outline: Filtering list of api subscriptions
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName        | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName        | status   | description            | Id                                   |
       | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1filtering | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
       | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 2            | Version 2filtering | inactive | Versions description 2 | 11111111-0000-4000-a000-111111111111 |
       | 1820d135-4f75-4c64-a570-a89e8236229b | 3            | Version 3filtering | inactive | Versions description 3 | 11111111-0000-4000-a000-111111111111 |
       | bc39d04c-bb58-4955-a7ab-c216e5444a54 | 4            | Version 4filtering | inactive | Versions description 4 | 11111111-0000-4000-a000-111111111111 |
       | 315404f9-3ac8-4b75-8b54-1ea15702d046 | 5            | Version 5filtering | inactive | Versions description 5 | 11111111-0000-4000-a000-111111111111 |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -222,21 +222,21 @@ Feature: Api subscription get
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address
-      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1 | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2 | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
       | 4701c194-e39d-46fd-b70f-44dd15a82278 | salesforceid_3 | p3_list      | p3_list      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 83f16fc2-9e87-435c-9632-1aa8c08a7501 |
       | b9e2b6cc-4453-4935-a8c5-8763ae7873d7 | salesforceid_4 | p4_list      | p4_list      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague | 59f91161-ae55-4369-b963-0db1410b00d7 |
       | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | salesforceid_5 | p5_list      | p5_list      | http://www.snapshot.travel | p5@tenants.biz | true           | Europe/Prague | b7306a7d-851c-4f59-856d-907eff0aa9b7 |
     Given The following commercial subscriptions exist
-      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | 23fe2b58-de46-4330-b361-482f07286cce | 11111111-0000-4000-a000-111111111111 |
       | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | 11111111-0000-4000-a000-111111111111 |
       | 309a2a7f-c400-4f39-b203-54869feebd5b | 83f16fc2-9e87-435c-9632-1aa8c08a7501 | 4701c194-e39d-46fd-b70f-44dd15a82278 | 11111111-0000-4000-a000-111111111111 |
       | 00c7dece-b9a9-4bbc-a445-304723bc887e | 59f91161-ae55-4369-b963-0db1410b00d7 | b9e2b6cc-4453-4935-a8c5-8763ae7873d7 | 11111111-0000-4000-a000-111111111111 |
       | 02db47f4-0726-400f-89bd-e2fd6d8c8226 | b7306a7d-851c-4f59-856d-907eff0aa9b7 | 0567c8c6-523d-4c2b-9941-eb4bd7b61a7d | 11111111-0000-4000-a000-111111111111 |
     Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 17eb138c-23c1-43d8-bc88-d6fbbd7e4359 | a595fc9d-f5ca-45e7-a15d-c8a97108d884 | 83443d01-aa91-4e3d-bcd4-ede0c86e1875 |
       | 27eb138c-23c1-43d8-bc88-d6fbbd7e4359 | ab343111-12d3-4fde-ba8a-5ddff45d06d4 | 76245d74-f596-4bcc-9e1a-4d3298fd0ae5 |
       | 37eb138c-23c1-43d8-bc88-d6fbbd7e4359 | 1820d135-4f75-4c64-a570-a89e8236229b | 309a2a7f-c400-4f39-b203-54869feebd5b |

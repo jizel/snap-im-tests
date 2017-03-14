@@ -5,51 +5,51 @@ Feature: Api subscription create update delete
     Given Database is cleaned and default entities are created
 
     Given The following partner exist
-      | partnerId                            | name         | email                   | website                    |
+      | Id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationId                        | applicationName            | description               | website                    | partnerId                            | isInternal |
+      | Id                                   | applicationName            | description               | website                    | partnerId                            | isInternal |
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
       | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
-      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
 
 
   @Smoke
   Scenario: Create api subscription with valid data
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | e318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 4   | inactive | Versions description 1 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "2238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "6d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 842529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 2238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
-      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 2238fd9a-a05d-42d8-8e84-42e904ace123 | 842529dd-481f-430d-b6b6-686fbb687cab | 6f552105-0bae-4410-b4bb-bee31567d4fa |
     Given The following api subscriptions is created
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | e318fd9a-a05d-42d8-8e84-22e904ace111 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
     Then Response code is 201
     And Etag header is present
@@ -104,12 +104,12 @@ Feature: Api subscription create update delete
 
   Scenario Outline: Create api subscription with invalid data
     Given The following api subscriptions is created
-      | apiSubscriptionId   | applicationVersionId   | commercialSubscriptionId   |
+      | Id                  | applicationVersionId   | commercialSubscriptionId   |
       | <apiSubscriptionId> | <applicationVersionId> | <commercialSubscriptionId> |
     Then Response code is <responseCode>
     And Custom code is <customCode>
     Examples:
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             | responseCode | customCode | error_note                                                                                           |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             | responseCode | customCode | error_note                                                                                           |
       | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42201      | # The value is invalid. Param 'api_subscription_id' is not universally unique identifier (UUID)      |
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42201      | # The value is invalid. Param 'application_version_id' is not universally unique identifier (UUID)   |
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | something                            | 422          | 42201      | # The value is invalid. Param 'commercialSubscriptionId' is not universally unique identifier (UUID) |

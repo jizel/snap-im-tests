@@ -7,7 +7,7 @@ Feature: Property sets old option access check feature - DP-1576
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -23,7 +23,7 @@ Feature: Property sets old option access check feature - DP-1576
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p3_code"
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithExplicitPropSet"
-      | name            | type            | propertySetId                        |
+      | name            | type            | Id                                   |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists with is_active "false"
     Given Relation between property with code "p2_code" and property set with name "ps1_name" exists with is_active "false"
@@ -90,7 +90,7 @@ Feature: Property sets old option access check feature - DP-1576
       Given Relation between property "p2_code" and property set "ps1_name" is activated
       Given Relation between property "p3_code" and property set "ps1_name" is activated
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithExplicitPropSet"
-        | name            | type            | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | Id                                   |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithExplicitPropSet"
       Then Response code is "200"

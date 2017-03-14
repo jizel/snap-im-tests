@@ -7,7 +7,7 @@ Feature: Properties create update delete
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
@@ -76,7 +76,7 @@ Feature: Properties create update delete
   #GET /identity/properties/{id}/customers
   Scenario Outline: Filtering list of customers for property
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 2238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 3239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 4239fd9a-a05d-42d8-8e84-42e904ace123 | Given company 4 | c4@tenants.biz | salesforceid_given_4 | CZ10000004 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -274,7 +274,7 @@ Feature: Properties create update delete
 
   Scenario Outline: Send POST request with empty body to all properties endpoints
     When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-      | propertySetId                        | name            | description            | type            |
+      | Id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     When Property with code "p1_code" is added to property set "ps1_name"
     When Empty POST request is sent to "<url>" on module "identity"

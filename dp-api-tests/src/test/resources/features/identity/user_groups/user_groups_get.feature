@@ -4,10 +4,10 @@ Feature: User groups get
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
-      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | userGroupId                          | Id                                   | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
   @Smoke
@@ -35,7 +35,7 @@ Feature: User groups get
 
   Scenario Outline: Getting list of user groups using limit and cursor
     Given The following user groups exist
-      | customerId                           | name         | isActive | description            |
+      | Id                                   | name         | isActive | description            |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1  | false    | userGroupDescription1  |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2  | false    | userGroupDescription2  |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_3  | false    | userGroupDescription3  |
@@ -105,7 +105,7 @@ Feature: User groups get
 
   Scenario Outline: Getting list of user groups, sorting and filtering
     Given The following user groups exist
-      | userGroupId                          | customerId                           | name         | isActive | description |
+      | userGroupId                          | Id                                   | name         | isActive | description |
       | 580bc988-885c-4ca6-b369-37dfcd123665 | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1  | false    | ug1         |
       | bfbdf91e-523b-4ad9-9ed5-178a1f67e785 | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2  | false    | ug2         |
       | 4c5693af-57c1-4986-b86e-0f5e6f3df95a | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_3  | false    | ug3         |
