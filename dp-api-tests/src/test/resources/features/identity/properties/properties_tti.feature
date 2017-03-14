@@ -5,7 +5,7 @@ Feature: Properties tti code - DP-757
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
@@ -29,7 +29,7 @@ Feature: Properties tti code - DP-757
 
     Scenario: Add tti to booking.com mapping to property with defined tti_id (tti_id exists in OTA)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | ttiId | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
+        | Id                                   | ttiId | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
         | 888e833e-50e8-4854-a233-289f00b54a09 | 998   | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Add ttiId to booking.com id "1234" mapping to property with code "p2_code"
       Then Response code is "201"
@@ -37,7 +37,7 @@ Feature: Properties tti code - DP-757
 
     Scenario: Duplicate booking.com id send to properties with defined tti_id (tti_id exists in OTA)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | ttiId | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
+        | Id                                   | ttiId | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
         | 888e833e-50e8-4854-a233-289f00b54a09 | 998   | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Add ttiId to booking.com id "123" mapping to property with code "p2_code"
       Then Response code is "201"
@@ -48,7 +48,7 @@ Feature: Properties tti code - DP-757
 
     Scenario: Duplicate booking.com id send to property without defined tti_id (the original property has ttiId)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 888e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Add ttiId to booking.com id "123" mapping to property with code "p1_code"
       Then Response code is "201"
@@ -75,7 +75,7 @@ Feature: Properties tti code - DP-757
       Given Subscription with name "Test" for topic "Notifications.tti" does not exist
       Given Subscription with name "Test" for topic "Notifications.tti" is created
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | ttiId | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
+        | Id                                   | ttiId | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
         | 888e833e-50e8-4854-a233-289f00b54a09 | 998   | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Message is received with subscription "Test" from topic "Notifications.tti" and stored in session
       And Stored notification has key "propertyId" and value "888e833e-50e8-4854-a233-289f00b54a09"

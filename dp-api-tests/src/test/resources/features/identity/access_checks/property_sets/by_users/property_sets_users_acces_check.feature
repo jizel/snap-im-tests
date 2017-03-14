@@ -8,7 +8,7 @@ Feature: Property sets Users access check feature
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -18,7 +18,7 @@ Feature: Property sets Users access check feature
     Given Relation between user "userWithPropSet" and default property exists
     Given Relation between user "userWithNoPropSet" and default property exists
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-      | name            | type            | propertySetId                        |
+      | name            | type            | Id                                   |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
 
@@ -56,7 +56,7 @@ Feature: Property sets Users access check feature
     
   Scenario: Try to add user from different customer to property set
     Given The following customers exist with random address
-      | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
+      | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Customer 2  | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     Given The following users exist for customer "2348fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userId                               | userType | userName            | firstName | lastName | email                    | timezone      | culture | isActive |

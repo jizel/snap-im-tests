@@ -6,7 +6,7 @@ Feature: User access check feature - GET
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 12300000-0000-4000-a000-000000000001 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420123456780 | http://www.snapshot.com | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
@@ -44,7 +44,7 @@ Feature: User access check feature - GET
 
   Scenario: User has no access to users of another customer even when they share access to the same property set
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
-      | name            | type            | propertySetId                        |
+      | name            | type            | Id                                   |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "12329079-48f0-4f00-9bec-e2329a8bdaac"
     Then Response code is "200"

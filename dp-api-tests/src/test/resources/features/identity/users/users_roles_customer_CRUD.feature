@@ -4,7 +4,7 @@ Feature: Users customer roles CRUD
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users is created for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -15,7 +15,7 @@ Feature: Users customer roles CRUD
 
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | roleName    | description            | applicationId                        |
+      | roleId                               | roleName    | description            | Id                                   |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
 
@@ -42,7 +42,7 @@ Feature: Users customer roles CRUD
   Scenario Outline: Assigning property type of role to user customer
     Given Switch for user property role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | applicationId                        |
+      | roleId                               | roleName        | description            | Id                                   |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     Then Response code is "422"
@@ -55,7 +55,7 @@ Feature: Users customer roles CRUD
   Scenario Outline: Assigning property set type of role to user customer
     Given Switch for user property set role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | applicationId                        |
+      | roleId                               | roleName        | description            | Id                                   |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     Then Response code is "422"
@@ -105,7 +105,7 @@ Feature: Users customer roles CRUD
   Scenario Outline: Filtering list of roles for user customer relationship
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleName           | description            | applicationId                        |
+      | roleName           | description            | Id                                   |
       | user_filter_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | user_filter_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
       | user_filter_role_3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |

@@ -5,7 +5,7 @@
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 12300000-0000-4000-a000-000000000001 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420123456780 | http://www.snapshot.com | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
@@ -28,7 +28,7 @@
   Scenario: User can view only list of customer-user roles of his own customer (with active relation)
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | applicationId                        | roleName | description      |
+      | roleId                               | Id                                   | roleName | description      |
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
       When User "defaultSnapshotUser" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
     Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
@@ -52,7 +52,7 @@
   Scenario: User can assign and revoke roles to customer-users only when he has access to the customer
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | applicationId                        | roleName | description      |
+      | roleId                               | Id                                   | roleName | description      |
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
       Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
       When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"

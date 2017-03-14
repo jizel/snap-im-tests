@@ -4,13 +4,13 @@ Feature: User groups user relationship feature
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
       | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following user groups exist
-      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | userGroupId                          | Id                                   | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
 
@@ -89,7 +89,7 @@ Feature: User groups user relationship feature
 
     Scenario: Add one User to multiple User Groups
       Given The following user groups exist
-        | customerId                           | name        | isActive | description          |
+        | Id                                   | name        | isActive | description          |
         | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
       Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
       Then Response code is "201"
@@ -105,7 +105,7 @@ Feature: User groups user relationship feature
       | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
       | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
     Given The following user group is created by user "<userName>"
-      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | userGroupId                          | Id                                   | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
     Then Response code is "201"
     When Relation between user group "userGroup_2" and user "<userName>" is got
@@ -131,7 +131,7 @@ Feature: User groups user relationship feature
       | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
       | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
     Given The following user group is created by user "<userName>"
-      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | userGroupId                          | Id                                   | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
     Then Response code is "201"
     Given User "member1" is added to userGroup "userGroup_2"
