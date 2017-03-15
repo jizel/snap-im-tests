@@ -13,7 +13,7 @@ Feature: Customers multiproperty
      #snapshot - user that has everything accessible
      #random - no access to properties
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
-      | userId                               | userType | userName   | firstName | lastName | email                  | timezone      | culture |
+      | Id                                   | userType | userName   | firstName | lastName | email                  | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | customer | everything | Default1  | User1    | def1@snapshot.travel   | Europe/Prague | cs-CZ   |
       | ce5d9f8a-9623-4154-aba4-109e64cdc149 | customer | limited    | Default2  | User2    | def2@snapshot.travel   | Europe/Prague | cs-CZ   |
       | 3d262796-1ba1-442c-92fb-a95f6a598ffc | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel   | Europe/Prague | cs-CZ   |

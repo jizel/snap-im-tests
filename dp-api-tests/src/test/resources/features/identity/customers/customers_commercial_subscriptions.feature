@@ -15,7 +15,7 @@ Feature: Customers commercial subscriptions
   Scenario: Getting customers commercial subscriptions
 
     Given The following commercial subscriptions exist
-      | applicationId                        | Id                                   | Id                                   | propertyId                           |
+      | applicationId                        | customerId                           | Id                                   | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | c37c3501-d309-4702-ad0b-fd53a98c01fd |
     When Customers commercial subscriptions for customer id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got
     Then Response code is "200"

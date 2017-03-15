@@ -76,7 +76,6 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "default_sf_id";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
-    public static final String APPLICATION_ID = "";
     protected static final String SESSION_RESPONSE = "response";
     protected static final String SESSION_RESPONSE_MAP = "response_map";
     protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
@@ -117,6 +116,7 @@ public class BasicSteps {
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
     public static final String USER_ID = "user_id";
+    public static final String APPLICATION_ID = "application_id";
     public static final String PROPERTY_ID = "property_id";
     public static final String RELATIONSHIP_TYPE = "relationship_type";
     public static final String VALID_FROM = "valid_from";
@@ -792,9 +792,6 @@ public class BasicSteps {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
-    public void setApplicationId(String value) {
-        Serenity.setSessionVariable(APPLICATION_ID).to(value);
-    }
 
     public Map<String, Response> getSessionResponseMap() {
         return Serenity.<Map<String, Response>>sessionVariableCalled(SESSION_RESPONSE_MAP);

@@ -124,7 +124,7 @@ public class CustomerSteps extends BasicSteps {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String customerLocation = response.header(headerName).replaceFirst(BASE_PATH_CUSTOMERS, "");
         given().spec(spec).get(customerLocation).then()
-                .body("property_id", is(originalCustomerProperty.getPropertyId()))
+                .body("property_id", is(originalCustomerProperty.getId()))
                 //.body("type", is(originalCustomerProperty.getType()))
                 .body("valid_from", is(originalCustomerProperty.getValidFrom().format( DateTimeFormatter.ISO_LOCAL_DATE )))
                 .body("valid_to", is(originalCustomerProperty.getValidTo().format( DateTimeFormatter.ISO_LOCAL_DATE )));
@@ -404,7 +404,7 @@ public class CustomerSteps extends BasicSteps {
         PropertyCustomerRelationshipDto[] customers = response.as(PropertyCustomerRelationshipDto[].class);
         int i = 0;
         for (PropertyCustomerRelationshipDto customer : customers) {
-            contains("Customer on index=" + i + " is not expected", ids.get(i), customer.getCustomerId());
+            contains("Customer on index=" + i + " is not expected", ids.get(i), customer.getId());
             i++;
         }
     }
@@ -429,9 +429,9 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void propertyIsUpdateForCustomer(PropertyDto property, String customerId, String fieldName, String value) {
-        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomer(customerId, property.getPropertyId());
-        String etag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId());
-        Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), singletonMap(fieldName, value), etag);
+        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomer(customerId, property.getId());
+        String etag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getId());
+        Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getId(), singletonMap(fieldName, value), etag);
         setSessionResponse(updateResponse);
     }
 
@@ -442,7 +442,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void updateCustomerPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
-        String existingRelationshipId = getCustomerPropertyRelationship(customerId, propertyId).getRelationshipId();
+        String existingRelationshipId = getCustomerPropertyRelationship(customerId, propertyId).getId();
         String etag = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingRelationshipId).header(HEADER_ETAG);
 
         try {
@@ -456,11 +456,11 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public void propertyIsUpdateForCustomerWithInvalidEtag(PropertyDto p, String customerId, String fieldName, String value) {
-        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomer(customerId, p.getPropertyId());
+        CustomerPropertyRelationshipDto existingCustomerProperty = getCustomerPropertyForCustomer(customerId, p.getId());
         Map<String, Object> data = new HashMap<>();
         data.put(fieldName, value);
 
-        Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getRelationshipId(), data, "invalid");
+        Response updateResponse = updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, existingCustomerProperty.getId(), data, "invalid");
         setSessionResponse(updateResponse);
     }
 
@@ -490,7 +490,7 @@ public class CustomerSteps extends BasicSteps {
     public void getPropertyForCustomerByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
         CustomerPropertyRelationshipDto customerPropertyRelationship = getCustomerPropertyRelationship(customerId, propertyId);
         assertThat(customerPropertyRelationship, is(notNullValue()));
-        Response response = getSecondLevelEntityByUserForApp(userId, applicationVersionId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getRelationshipId());
+        Response response = getSecondLevelEntityByUserForApp(userId, applicationVersionId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getId());
         setSessionResponse(response);
     }
 
@@ -603,10 +603,10 @@ public class CustomerSteps extends BasicSteps {
         customerIds.forEach(customerId -> {
             CustomerDto customer = getCustomerById(customerId);
             if (customer != null) {
-                Response customerUsersResponse = getSecondLevelEntities(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
+                Response customerUsersResponse = getSecondLevelEntities(customer.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 CustomerUserRelationshipDto[] customerUsers = customerUsersResponse.as(CustomerUserRelationshipDto[].class);
                 for (CustomerUserRelationshipDto cu : customerUsers) {
-                    Response deleteResponse = deleteSecondLevelEntity(customer.getCustomerId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId(), null);
+                    Response deleteResponse = deleteSecondLevelEntity(customer.getId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set cannot be deleted: " + deleteResponse.getBody().asString());
                     }
@@ -645,7 +645,7 @@ public class CustomerSteps extends BasicSteps {
 
     public void fieldNameHasValueForPropertyForCustomer(String fieldName, String value, String propertyId, String customerId) {
         CustomerDto c = getCustomerById(customerId);
-        CustomerPropertyRelationshipDto cp = getCustomerPropertyForCustomer(c.getCustomerId(), propertyId);
+        CustomerPropertyRelationshipDto cp = getCustomerPropertyForCustomer(c.getId(), propertyId);
 
         switch (fieldName) {
             case "valid_from": {
@@ -695,7 +695,7 @@ public class CustomerSteps extends BasicSteps {
     public void propertyIsgotForCustomer(String propertyId, String customerId) {
         setAccessTokenParamFromSession();
         CustomerPropertyRelationshipDto customerPropertyRelationship = getCustomerPropertyForCustomer(customerId, propertyId);
-        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getRelationshipId());
+        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getId());
         setSessionResponse(response);
     }
 

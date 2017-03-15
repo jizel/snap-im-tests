@@ -47,7 +47,7 @@ Feature: User Groups Application access check feature
 #      Check tommorow, getAll access checks are fucked now
     Scenario Outline: Filtering user groups with application access checks
       Given The following user groups exist
-        | userGroupId                          | Id                                   | name        | isActive | description           |
+        | Id                                   | customerId                           | name        | isActive | description           |
         | 22345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroupDescription2 |
         | 32345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_3 | false    | userGroupDescription3 |
         | 42345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_4 | true     | userGroupDescription4 |

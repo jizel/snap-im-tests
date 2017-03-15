@@ -45,7 +45,7 @@ public class PartnersStepdef {
     public void Partner_with_name_is_deleted(String partnerName) {
         PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
         assertThat(partner, is(notNullValue()));
-        partnerSteps.deletePartner(partner.getPartnerId());
+        partnerSteps.deletePartner(partner.getId());
     }
 
     @Then("^Partner with same id does not exist$")
@@ -151,6 +151,6 @@ public class PartnersStepdef {
         assertThat(user, is(notNullValue()));
         assertThat(partner, is(notNullValue()));
 
-        partnerSteps.createPartnerUserRelationship(partner.getPartnerId(), user.getUserId());
+        partnerSteps.createPartnerUserRelationship(partner.getId(), user.getId());
     }
 }

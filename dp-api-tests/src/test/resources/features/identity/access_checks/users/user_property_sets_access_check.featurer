@@ -16,7 +16,7 @@
       | customer | user2OfC1  | Customer  | User2C1  | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | user3OfC1  | Customer  | User3C1  | usr3@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000001" as primary "false"
-      | userId                               | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | Id                                   | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | 12329079-48f0-4f00-9bec-e2329a8bdaab | customer | user1OfC2  | Customer  | User1C2  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
       | name            | description            | type            |

@@ -8,7 +8,7 @@ Feature: Users create update delete
       | Id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                         | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 55529079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot1 | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 66629079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser2 | Snapshot2 | User2    | snapshotUser2@snapshot.travel | Europe/Prague | cs-CZ   |
 
@@ -96,6 +96,7 @@ Feature: Users create update delete
 
   @Smoke
   Scenario: Deleting user
+    Given Relation between user "snapshotUser1" and customer "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
     When User "snapshotUser1" is deleted
     Then Response code is "204"
     And Body is empty

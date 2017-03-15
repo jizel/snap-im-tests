@@ -40,7 +40,7 @@ Feature: Customers access check feature - GET
 
     Scenario: User belongs to User Group that has access to customer
       Given The following user groups exist
-        | userGroupId                          | Id                                   | name        | isActive |
+        | Id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    |
       When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
       Then Response code is "404"
@@ -72,7 +72,7 @@ Feature: Customers access check feature - GET
 
     Scenario: User belongs to User Group that has a relation to customer that whose successor is requested
       Given The following user groups exist
-        | userGroupId                          | Id                                   | name        | isActive |
+        | Id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    |
       Given The following customers exist with random address
         | parentId                             | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
@@ -164,6 +164,8 @@ Feature: Customers access check feature - GET
     And Body is empty
     And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist
 
+#  DP-1900
+  @skipped
   Scenario: Deleting Customer by user without access to it
     When Customer "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust2"
     Then Response code is 404

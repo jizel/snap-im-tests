@@ -162,7 +162,7 @@ public class UsersSteps extends BasicSteps {
 
         Map<String, Object> userData = retrieveDataOld(UserDto.class, updatedUser);
 
-        Response response = updateEntity(original.getUserId(), userData, "fake-etag");
+        Response response = updateEntity(original.getId(), userData, "fake-etag");
         setSessionResponse(response);
     }
 
@@ -175,14 +175,14 @@ public class UsersSteps extends BasicSteps {
     @Step
     public void userWithUsernameIsGot(String username) {
         UserDto user = getUserByUsername(username);
-        Response response = getEntity(user.getUserId());
+        Response response = getEntity(user.getId());
         setSessionResponse(response);
     }
 
     public void userWithUsernameIsGotWithEtag(String username) {
         UserDto user = getUserByUsername(username);
-        Response tempResponse = getEntity(user.getUserId());
-        Response response = getEntity(user.getUserId());
+        Response tempResponse = getEntity(user.getId());
+        Response response = getEntity(user.getId());
         setSessionResponse(response);
     }
 
@@ -214,22 +214,22 @@ public class UsersSteps extends BasicSteps {
     public void roleIsAddedToUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
 
-        Response response = addRoleToUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        Response response = addRoleToUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         setSessionResponse(response);
     }
 
     public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
 
-        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         if (existingUserRole != null) {
 
-            Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+            Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
             if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
                 fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
             }
         }
-        Response createResponse = addRoleToUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        Response createResponse = addRoleToUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
             fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
         }
@@ -292,13 +292,13 @@ public class UsersSteps extends BasicSteps {
 
     public void roleIsDeletedFromUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
-        Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         setSessionResponse(deleteResponse);
     }
 
     public void roleDoesntExistForUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
         UserDto u = getUserByUsername(username);
-        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getRoleId(), u.getUserId(), relationshipType, entityId);
+        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         assertNull("Role should not be present for User", existingUserRole);
     }
 
@@ -307,7 +307,7 @@ public class UsersSteps extends BasicSteps {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
-        Response response = getSecondLevelEntities(u.getUserId(), SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, queryParams);
+        Response response = getSecondLevelEntities(u.getId(), SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, queryParams);
         setSessionResponse(response);
     }
 
@@ -323,7 +323,7 @@ public class UsersSteps extends BasicSteps {
 
     public void setUserPasswordByUsername(String username, String password) {
         UserDto u = getUserByUsername(username);
-        setUserPassword(u.getUserId(), password);
+        setUserPassword(u.getId(), password);
     }
 
     public void setUserPassword(String id, String password) {
@@ -425,7 +425,7 @@ public class UsersSteps extends BasicSteps {
         if (user == null) {
             return String.format("%s/%s/%s/%s", userName, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
         }
-        return String.format("%s/%s/%s/%s", user.getUserId(), entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
+        return String.format("%s/%s/%s/%s", user.getId(), entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
     }
 
     public void createUserForCustomerByUser(String performerId, String customerId, UserCreateDto user, Boolean isPrimary) {
@@ -466,7 +466,7 @@ public class UsersSteps extends BasicSteps {
         } else {
             UserDto user = getUserByUsername(userName);
             assertThat(String.format("User with username \"%s\" does not exist", userName), user, is(notNullValue()));
-            userId = user.getUserId();
+            userId = user.getId();
         }
         return userId;
     }

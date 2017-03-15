@@ -8,7 +8,7 @@ Feature: Users property set roles CRUD
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 2048b11e-eff2-477c-b322-015bbd931e46 | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | e0aa919b-5b55-4f03-99ba-48c9f8fec42d | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"

@@ -6,9 +6,8 @@ Feature: User groups roles
       | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
-      | userGroupId                          | Id                                   | name        | isActive | description          |
+      | Id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
-
     Given The following partner exist
       | Id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -32,17 +31,17 @@ Feature: User groups roles
     And Relation between user group "userGroup_1" and role with id "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
 
   Scenario Outline: Create relationship UserGroup-Role invalid
-    When Relation between user group "<userGroupId>" and role "<roleId>" exists
+    When Relation between user group "<userGroupId>" and role "<roleId>" is created
     Then Response code is <error_code>
     And Custom code is <custom_code>
     Examples:
-      | userGroupId                          | roleId                               |error_code | custom_code | # note                            |
-      | NotExisting                          | /null                                | 422       | 42201      | # Empty body, invalid userGroupId |
-      | NotExisting                          | NotExisting                          | 422       | 42201      | # Not in UUID                     |
-      | NotExisting                          | b7b40d08-de38-4246-bb69-ad39c31c025c | 404       | 40402      | # UserGroup not found             |
+      | Id                                   | roleId                               |error_code | custom_code | # note                            |
+      | 00000000-0000-4000-a000-000000000000 | /null                                | 422       | 42201      | # Empty body, invalid userGroupId |
+      | 00000000-0000-4000-a000-000000000000 | NotExisting                          | 422       | 42201      | # Not in UUID                     |
+      | 00000000-0000-4000-a000-000000000000 | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 404       | 40402      | # UserGroup not found             |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | /null                                | 422       | 42201      | # Empty body                      |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | NotExisting                          | 422       | 42201      | # Not valid RoleId                |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | b7b40d08-de38-4246-bb69-ad39c31c025c | 404       | 40402      | # Role not found                  |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | 00000000-0000-4000-a000-000000000000 | 422       | 42202      | # Role not found                  |
 
   Scenario: Delete relationship UserGroup-Role
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted

@@ -169,7 +169,7 @@ public class CustomerStepdefs {
         String userId = usersSteps.resolveUserId(userName);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        String propertyId = (property == null) ? NON_EXISTENT_ID : property.getPropertyId();
+        String propertyId = (property == null) ? NON_EXISTENT_ID : property.getId();
         if (error){
             customerSteps.addPropertyToCustomerByUserForAppInvalid(userId, applicationVersionId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         }
@@ -309,7 +309,7 @@ public class CustomerStepdefs {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
     }
 
-    @When("^Relation between user \"([^\"]*)\" and customer \"([^\"]*)\" is deleted$")
+    @When("^Relation between user \"([^\"]*)\" and customer(?: with id)? \"([^\"]*)\" is deleted$")
     public void relationBetweenUserWithUsernameAndCustomerIsDeleted(String username, String customerId) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         customerSteps.relationBetweenUserAndCustomerIsDeleted(userId, customerId);
@@ -471,7 +471,7 @@ public class CustomerStepdefs {
                                                                                         String customerId,
                                                                                         String type) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.fieldNameHasValueForPropertyForCustomer(fieldName, value, p.getPropertyId(), customerId);
+        customerSteps.fieldNameHasValueForPropertyForCustomer(fieldName, value, p.getId(), customerId);
     }
 
     @Then("There are (\\d+) customers commercial subscriptions returned")

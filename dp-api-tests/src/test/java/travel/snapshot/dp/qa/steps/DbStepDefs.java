@@ -44,7 +44,7 @@ public class DbStepDefs {
         CustomerDto c = customerSteps.getCustomerById(customerId);
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (c != null && p != null) {
-            dbSteps.deleteAllPropertyCustomersFromDb(c.getCustomerId(), p.getPropertyId());
+            dbSteps.deleteAllPropertyCustomersFromDb(c.getId(), p.getId());
         }
 
     }
@@ -70,7 +70,7 @@ public class DbStepDefs {
     @Given("^Default Snapshot user is created$")
     public void defaultSnapshotUserIsCreated() throws Throwable {
         UserCreateDto defaultSnapshotUser = new UserCreateDto();
-        defaultSnapshotUser.setUserId(DEFAULT_SNAPSHOT_USER_ID);
+        defaultSnapshotUser.setId(DEFAULT_SNAPSHOT_USER_ID);
         defaultSnapshotUser.setUserType(SNAPSHOT);
         defaultSnapshotUser.setUserName("defaultSnapshotUser");
         defaultSnapshotUser.setFirstName("Default");
@@ -86,7 +86,7 @@ public class DbStepDefs {
     @Given("^Default partner is created$")
     public void defaultPartnerIsCreated() throws Throwable {
         PartnerDto defaultPartner = new PartnerDto();
-        defaultPartner.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
+        defaultPartner.setId(DEFAULT_SNAPSHOT_PARTNER_ID);
         defaultPartner.setName("Somepartner");
         defaultPartner.setWebsite(SNAPSHOT_WEBSITE);
         defaultPartner.setIsActive(true);
@@ -102,7 +102,7 @@ public class DbStepDefs {
         defaultApp.setDescription("Test");
         defaultApp.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
         defaultApp.setIsInternal(true);
-        defaultApp.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        defaultApp.setId(DEFAULT_SNAPSHOT_APPLICATION_ID);
         defaultApp.setWebsite(SNAPSHOT_WEBSITE);
         dbSteps.createDBApplication(defaultApp);
     }
@@ -114,7 +114,7 @@ public class DbStepDefs {
         defaultAppVersion.setDescription("Default test app version");
         defaultAppVersion.setIsActive(true);
         defaultAppVersion.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
-        defaultAppVersion.setVersionId(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+        defaultAppVersion.setId(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         defaultAppVersion.setApiManagerId("123");
         defaultAppVersion.setStatus(CERTIFIED);
         defaultAppVersion.setIsNonCommercial(true);
@@ -124,7 +124,7 @@ public class DbStepDefs {
     @Given("^Default customer is created$")
     public void defaultCustomerIsCreated() throws Throwable {
         CustomerCreateDto customer = new CustomerCreateDto();
-        customer.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        customer.setId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         customer.setCompanyName("DefaultCustomer");
         customer.setIsActive(true);
         customer.setTimezone(DEFAULT_SNAPSHOT_TIMEZONE);
@@ -141,7 +141,7 @@ public class DbStepDefs {
     @Given("^Default property is created$")
     public void defaultPropertyIsCreated() throws Throwable {
         PropertyDto property = new PropertyDto();
-        property.setPropertyId(DEFAULT_PROPERTY_ID);
+        property.setId(DEFAULT_PROPERTY_ID);
         property.setEmail("defaultProperty@snapshot.travel");
         property.setPropertyCode("defaultPropertyCode");
         property.setTimezone(DEFAULT_SNAPSHOT_TIMEZONE);
@@ -159,7 +159,7 @@ public class DbStepDefs {
     public void defaultCommercialSubscriptionIsCreated() throws Throwable {
         CommercialSubscriptionDto commercialSubscription = new CommercialSubscriptionDto();
         commercialSubscription.setIsActive(true);
-        commercialSubscription.setCommercialSubscriptionId(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        commercialSubscription.setId(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         commercialSubscription.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
         commercialSubscription.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         commercialSubscription.setPropertyId(DEFAULT_PROPERTY_ID);
@@ -172,7 +172,7 @@ public class DbStepDefs {
         apiSubscription.setCommercialSubscriptionId(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
         apiSubscription.setApplicationVersionId(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         apiSubscription.setIsActive(true);
-        apiSubscription.setApiSubscriptionId(DEFAULT_API_SUBSCRIPTION_ID);
+        apiSubscription.setId(DEFAULT_API_SUBSCRIPTION_ID);
         dbSteps.createDBApiSubscription(apiSubscription);
     }
 

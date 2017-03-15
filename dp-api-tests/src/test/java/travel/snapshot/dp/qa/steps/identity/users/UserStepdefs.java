@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
@@ -14,6 +15,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
@@ -27,7 +29,6 @@ import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 import travel.snapshot.dp.qa.serenity.users.UserRolesSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
-import travel.snapshot.dp.qa.steps.BasicStepDefs;
 
 import java.util.List;
 import java.util.Map;
@@ -191,8 +192,8 @@ public class UserStepdefs {
 
     @When("^Nonexistent role is removed from user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Nonexistent_role_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String username, String relationshipType, String entityId) throws Throwable {
-        RoleDto role = new RoleDto();
-        role.setRoleId(BasicStepDefs.NONEXISTENT_ID);
+        RoleDto role = new CustomerRoleDto();
+        role.setId(NON_EXISTENT_ID);
         usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
@@ -272,7 +273,7 @@ public class UserStepdefs {
     public void roleWithNameForUserNameAndCustomerIdIsAdded(String roleName, String userName, String customerId) throws Throwable {
         roleBaseSteps.setRolesPathCustomer();
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
-        userRolesSteps.roleNameExistsBetweenUserAndCustomer(role.getRoleId(), userName, customerId);
+        userRolesSteps.roleNameExistsBetweenUserAndCustomer(role.getId(), userName, customerId);
     }
 
     @When("^List of roles for user with username \"([^\"]*)\" and customer id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -288,7 +289,7 @@ public class UserStepdefs {
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is added$")
     public void roleWithIdForUserNameAndPropertyCodeIsAdded(String roleId, String userName, String propCode) throws Throwable {
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userName, prop.getPropertyId());
+        userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userName, prop.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property id \"([^\"]*)\" is added$")
@@ -299,19 +300,19 @@ public class UserStepdefs {
     @When("^Role with id \"([^\"]*)\" for not existing user id and property code \"([^\"]*)\" is added$")
     public void roleWithIdForNotExistingPropertyIdAndCustomerIdIsAdded(String roleId, String propCode) throws Throwable {
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.addRoleBetweenNotExistingUserAndProperty(roleId, "1111fd9a-a11d-11d8-8e11-111904ace123", prop.getPropertyId());
+        userRolesSteps.addRoleBetweenNotExistingUserAndProperty(roleId, "1111fd9a-a11d-11d8-8e11-111904ace123", prop.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is deleted$")
     public void roleWithIdForUserNameAndPropertyCodeIsDeleted(String roleId, String userName, String propCode) throws Throwable {
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.roleBetweenUserAndPropertyIsDeleted(roleId, userName, prop.getPropertyId());
+        userRolesSteps.roleBetweenUserAndPropertyIsDeleted(roleId, userName, prop.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" does not exist$")
     public void roleWithIdForUserNameAndPropertyCodeDoesNotExist(String roleId, String userName, String propCode) throws Throwable {
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.roleBetweenUserAndPropertyNotExists(roleId, userName, prop.getPropertyId());
+        userRolesSteps.roleBetweenUserAndPropertyNotExists(roleId, userName, prop.getId());
     }
 
     @Given("^Role with name \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is added$")
@@ -320,7 +321,7 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPathProperty();
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
 
-        userRolesSteps.roleNameExistsBetweenUserAndProperty(role.getRoleId(), userName, prop.getPropertyId());
+        userRolesSteps.roleNameExistsBetweenUserAndProperty(role.getId(), userName, prop.getId());
     }
 
     @When("^List of roles for user with username \"([^\"]*)\" and property code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -331,28 +332,28 @@ public class UserStepdefs {
                                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.getRolesBetweenUserAndProperty(userName, prop.getPropertyId(), limit, cursor, filter, sort, sortDesc);
+        userRolesSteps.getRolesBetweenUserAndProperty(userName, prop.getId(), limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\" for customer \"([^\"]*)\" is added$")
     public void roleWithIdForUserNameAndPropertySetNameForCustomerIsAdded(String roleId, String userName, String propertySetName, String customerId) throws Throwable {
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
 
-        userRolesSteps.roleExistsBetweenUserAndPropertySet(roleId, userName, propertySet.getPropertySetId());
+        userRolesSteps.roleExistsBetweenUserAndPropertySet(roleId, userName, propertySet.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\" for customer \"([^\"]*)\" is deleted$")
     public void roleWithIdForUserNameAndPropertySetNameForCustomerIsDeleted(String roleId, String userName, String propertySetName, String customerId) throws Throwable {
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
 
-        userRolesSteps.roleBetweenUserAndPropertySetIsDeleted(roleId, userName, propertySet.getPropertySetId());
+        userRolesSteps.roleBetweenUserAndPropertySetIsDeleted(roleId, userName, propertySet.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\" for customer \"([^\"]*)\" does not exist$")
     public void roleWithIdForUserNameAndPropertySetNameForCustomerDoesNotExist(String roleId, String userName, String propertySetName, String customerId) throws Throwable {;
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
 
-        userRolesSteps.roleBetweenUserAndPropertySetNotExists(roleId, userName, propertySet.getPropertySetId());
+        userRolesSteps.roleBetweenUserAndPropertySetNotExists(roleId, userName, propertySet.getId());
     }
 
 
@@ -363,7 +364,7 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPathPropertySet();
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
 
-        userRolesSteps.roleNameExistsBetweenUserAndPropertySet(role.getRoleId(), userName, propertySet.getPropertySetId());
+        userRolesSteps.roleNameExistsBetweenUserAndPropertySet(role.getId(), userName, propertySet.getId());
     }
 
     @When("^List of roles for user with username \"([^\"]*)\" and property set name \"([^\"]*)\" for customer id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -375,14 +376,14 @@ public class UserStepdefs {
                                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
 
-        userRolesSteps.getRolesBetweenUserAndPropertySet(userName, propertySet.getPropertySetId(), limit, cursor, filter, sort, sortDesc);
+        userRolesSteps.getRolesBetweenUserAndPropertySet(userName, propertySet.getId(), limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Role with id \"([^\"]*)\" for not existing user id and property set name \"([^\"]*)\" for customer id \"([^\"]*)\" is added$")
     public void roleWithIdForNotExistingUserIdAndPropertySetNameForCustomerCodeIsAdded(String roleId, String propertySetName, String customerId) throws Throwable {
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
 
-        userRolesSteps.addRoleBetweenNotExistingUserAndPropertySet(roleId, "1111fd9a-a11d-11d8-8e11-111904ace123", propertySet.getPropertySetId());
+        userRolesSteps.addRoleBetweenNotExistingUserAndPropertySet(roleId, "1111fd9a-a11d-11d8-8e11-111904ace123", propertySet.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set id \"([^\"]*)\" is added$")
@@ -404,7 +405,7 @@ public class UserStepdefs {
         assertThat(user, is(notNullValue()));
         assertThat(propertySet, is(notNullValue()));
 
-        usersSteps.addPropertySetToUser(propertySet.getPropertySetId(), user.getUserId());
+        usersSteps.addPropertySetToUser(propertySet.getId(), user.getId());
     }
 
     @And("^There are \"([^\"]*)\" users returned$")

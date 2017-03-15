@@ -119,7 +119,7 @@ Feature: Eventing identity module relationships
       | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -148,7 +148,7 @@ Feature: Eventing identity module relationships
       | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -178,7 +178,7 @@ Feature: Eventing identity module relationships
       | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -203,7 +203,7 @@ Feature: Eventing identity module relationships
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -232,7 +232,7 @@ Feature: Eventing identity module relationships
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
@@ -253,7 +253,7 @@ Feature: Eventing identity module relationships
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Relation between user with username "del_cust_user_event_user" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
@@ -275,7 +275,7 @@ Feature: Eventing identity module relationships
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name         | propertyCode             | website                    | email          | isDemoProperty | timezone      |
@@ -300,7 +300,7 @@ Feature: Eventing identity module relationships
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name         | propertyCode             | website                    | email          | isDemoProperty | timezone      |

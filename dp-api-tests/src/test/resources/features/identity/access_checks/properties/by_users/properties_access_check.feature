@@ -43,7 +43,7 @@ Feature: Properties access check feature - GET
 
     Scenario: User belongs to User Group that has access to property
       Given The following user groups exist
-        | userGroupId                          | Id                                   | name        | isActive |
+        | Id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       When Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       When Property with code "p1_code" is requested by user "userWithNoProp"
