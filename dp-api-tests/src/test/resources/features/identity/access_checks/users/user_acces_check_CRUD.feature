@@ -19,8 +19,7 @@ Feature: Users can create, update and delete only users of the same customer
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 
-#  DP-1847
-  @skipped
+
   Scenario: User can create users only within his customer
     When User "user1OfC1" creates user as primary "false" for customer with id "12300000-0000-4000-a000-000000000000"
       | userType | userName  | firstName | lastName | email                | timezone      | culture | isActive |
@@ -31,14 +30,8 @@ Feature: Users can create, update and delete only users of the same customer
       | customer | user2OfC2 | Customer  | User2C2  | usr2@snapshot.com    | Europe/Prague | cs-CZ   | true     |
     Then Response code is "422"
     And Custom code is 42202
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated
-    When User "user1OfC1" creates user as primary "false" for customer with id "12300000-0000-4000-a000-000000000000"
-      | userType | userName  | firstName | lastName | email                | timezone      | culture | isActive |
-      | customer | user2OfC1 | Customer  | User3C1  | usr3@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    Then Response code is "422"
 
-#  DP-1847
-  @skipped
+
   Scenario: User can delete users only within his customer
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | Id                                   | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
@@ -49,8 +42,8 @@ Feature: Users can create, update and delete only users of the same customer
     When User "user1OfC1" deletes user "user1OfC2"
 #    409 is good enough to check access checks work
     Then Response code is "409"
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated
-    When User "user1OfC1" deletes user "user1OfC1"
+    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" is inactivated
+    When User "user1OfC1" deletes user "user1OfC2"
     Then Response code is "404"
 
 #    DP-1849 - test with uncommented "inactivate" step as well in case DP-1848 was fixed first
