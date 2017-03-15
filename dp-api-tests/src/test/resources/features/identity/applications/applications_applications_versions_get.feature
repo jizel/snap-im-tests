@@ -6,12 +6,10 @@ Feature: Applications versions get
     Given Database is cleaned and default entities are created
 
 
-
-    
   @Smoke
   Scenario: Getting application versions
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is got
     Then Response code is "200"
@@ -25,7 +23,7 @@ Feature: Applications versions get
 
   Scenario: Getting application versions with etag
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is got with etag
     Then Response code is "200"
@@ -37,7 +35,7 @@ Feature: Applications versions get
 
   Scenario Outline: Getting list of application versions
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description             | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description             | Id                                   |
       | a318fd9a-a05d-42d8-8e84-22e904ace101 | 123          | Version 1   | inactive | Versions description 1  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace102 | 123          | Version 2   | inactive | Versions description 2  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace103 | 123          | Version 3   | inactive | Versions description 3  | 11111111-0000-4000-a000-111111111111 |
@@ -136,7 +134,7 @@ Feature: Applications versions get
 
   Scenario Outline: Filtering list of application versions
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description             | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description             | Id                                   |
       | a318fd9a-a05d-42d8-8e84-22e904ace101 | 123          | Version 1   | inactive | Versions description 1  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace102 | 123          | Version 2   | inactive | Versions description 2  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace103 | 123          | Version 3   | inactive | Versions description 3  | 11111111-0000-4000-a000-111111111111 |

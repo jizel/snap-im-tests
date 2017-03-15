@@ -175,7 +175,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
         } else {
             ApplicationVersionDto applicationVersion = getApplicationVersionByName(applicationVersionName);
             assertThat(String.format("Application version with name \"%s\" does not exist", applicationVersionName), applicationVersion , is(notNullValue()));
-            applicationVersionId = applicationVersion.getVersionId();
+            applicationVersionId = applicationVersion.getId();
         }
         return applicationVersionId;
     }

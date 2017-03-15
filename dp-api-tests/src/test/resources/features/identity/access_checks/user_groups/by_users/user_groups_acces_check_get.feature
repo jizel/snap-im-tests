@@ -10,14 +10,14 @@ Feature: User Groups access check feature - GET
   Background:
   Given Database is cleaned and default entities are created
   Given The following customers exist with random address
-    | customerId                           | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+    | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
     | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
   Given The following user groups exist
-    | userGroupId                          | customerId                           | name        | isActive | description          |
+    | Id                                   | customerId                           | name        | isActive | description          |
     | 12345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
   Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-    | userId                               | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
+    | Id                                   | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
     | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithUserGroup   | Customer  | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
@@ -59,7 +59,7 @@ Feature: User Groups access check feature - GET
 
      Scenario Outline: Filtering user groups with access checks
        Given The following user groups exist
-         | userGroupId                          | customerId                           | name        | isActive | description           |
+         | Id                                   | customerId                           | name        | isActive | description           |
          | 22345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroupDescription2 |
          | 32345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_3 | false    | userGroupDescription3 |
          | 42345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_4 | true     | userGroupDescription4 |
@@ -91,11 +91,11 @@ Feature: User Groups access check feature - GET
     @skipped
     Scenario Outline: User with no access rights to property sends GET request with parameters
        Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-         | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+         | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
          | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
        Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
        Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-         | propertySetId                        | name            | type            |
+         | Id                                   | name            | type            |
          | 888e833e-50e8-4854-a233-289f00b54a09 | prop_set1       | brand           |
        Given Relation between user group "userGroup_1" and property set "prop_set1" exists with isActive "true"
        When GET request is sent to "<url>" on module "identity" by user "userWithNoUserGroup"
@@ -113,11 +113,11 @@ Feature: User Groups access check feature - GET
 
     Scenario Outline: Unauthorized request - GET request is send to all endpoints without X-Auth-UserId header
       Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-        | propertyId                           | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-        | propertySetId                        | name            | type            |
+        | Id                                   | name            | type            |
         | 888e833e-50e8-4854-a233-289f00b54a09 | prop_set1       | brand           |
       Given Relation between user group "userGroup_1" and property set "prop_set1" exists with isActive "false"
       When GET request is sent to "<url>" on module "identity" without X-Auth-UserId header

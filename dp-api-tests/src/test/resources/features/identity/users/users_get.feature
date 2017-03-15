@@ -5,7 +5,7 @@ Feature: Users get
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName  | email                    | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName  | email                    | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 728c45dd-a964-4f78-afe0-88d108c682ed | UserCustomer | userCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |

@@ -14,15 +14,15 @@ Feature: Property sets access check feature - GET
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | Id                                   | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-      | name            | type            | propertySetId                        |
+      | name            | type            | Id                                   |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
 
     Scenario: User has direct relationship to property set
@@ -34,7 +34,7 @@ Feature: Property sets access check feature - GET
 
     Scenario: User belongs to User Group that has access to property set
       Given The following user groups exist
-        | userGroupId                          | customerId                           | name        | isActive |
+        | Id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       When Relation between user group "userGroup_1" and property set "ps1_name" exists with isActive "false"
       When Property set "ps1_name" is requested by user "userWithNoPropSet"
@@ -48,7 +48,7 @@ Feature: Property sets access check feature - GET
 
     Scenario: User has access to any child property set if he has access to parent PS
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
-        | name            | type            | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | Id                                   |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
         | name            | type            | parentId                             |
@@ -58,10 +58,10 @@ Feature: Property sets access check feature - GET
 
     Scenario: User belongs to User Group that has a relation to a PropertySet that has a successor which has relationship to this instance
       Given The following user groups exist
-        | userGroupId                          | customerId                           | name        | isActive |
+        | Id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-        | name            | type            | parentId                             | propertySetId                        |
+        | name            | type            | parentId                             | Id                                   |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
         | name            | type            | parentId                             |
@@ -78,7 +78,7 @@ Feature: Property sets access check feature - GET
 
     Scenario: User type Snapshot has access to all entities (other user types are equal)
       Given The following customers exist with random address
-        | customerId                           | companyName     | email          | salesforceId  | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+        | Id                                   | companyName     | email          | salesforceId  | vatId       | isDemoCustomer | phone         | website                    | timezone      |
         | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_2 | CZ20000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       Given The following users exist for customer "2348fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
         | userType | userName  | firstName | lastName | email                | timezone      | culture | isActive |
@@ -100,7 +100,7 @@ Feature: Property sets access check feature - GET
 
      Scenario Outline: Filtering property sets with access checks
        Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
-         | name            | type            | propertySetId                        | description            | isActive |
+         | name            | type            | Id                                   | description            | isActive |
          | ps2_name        | brand           | 23400000-1111-4c57-91bd-30230d2c1bd0 | desc2                  | true     |
          | ps3_name        | brand           | 33400000-1111-4c57-91bd-30230d2c1bd0 | desc3                  | true     |
          | ps4_name        | GEOLOCATION     | 43400000-1111-4c57-91bd-30230d2c1bd0 | desc4                  | false    |
@@ -127,7 +127,7 @@ Feature: Property sets access check feature - GET
 
   Scenario: Second level entities - User should see only child property sets of property set he has access to
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
-      | name            | type            | parentId                             | propertySetId                        |
+      | name            | type            | parentId                             | Id                                   |
       | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
     When Child property sets of property set "ps1_name" are requested by user "userWithPropSet"
     Then Response code is "200"

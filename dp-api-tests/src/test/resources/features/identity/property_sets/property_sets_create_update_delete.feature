@@ -5,13 +5,13 @@ Feature: Property sets create update delete
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | customerId                           | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
-      | propertySetId                        | name            | description            | type            |
+      | Id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -20,11 +20,11 @@ Feature: Property sets create update delete
   @Smoke
   Scenario Outline: Creating property set for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
     When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-      | name              | description              | type              |
-      | <name           > | <description           > | <type           > |
+      | name   | description   | type   |
+      | <name> | <description> | <type> |
     Then Response code is "201"
-    And Body contains entity with attribute "name" value "<name           >"
-    And Body contains entity with attribute "property_set_type" value "<type           >"
+    And Body contains entity with attribute "name" value "<name>"
+    And Body contains entity with attribute "property_set_type" value "<type>"
     And Body contains entity with attribute "is_active" value "false"
     And "Location" header is set and contains the same property set
     And Etag header is present
@@ -101,7 +101,7 @@ Feature: Property sets create update delete
 
   Scenario: Parent-child relationship should not contain loops - DP-1395
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
-      | name            | type            | parentId                             | propertySetId                        |
+      | name            | type            | parentId                             | Id                                   |
       | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | 000111b0-69bf-4c57-91bd-30230d2c1bd0 |
       | childPS2        | brand           | 000111b0-69bf-4c57-91bd-30230d2c1bd0 | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
     When Property set "ps1_name" is updated with following data

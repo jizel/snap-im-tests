@@ -47,15 +47,15 @@ public class DbUtilsSteps {
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
-    static final String CREATE_DB_USER = "INSERT INTO User (user_id, user_type, user_name, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_PARTNER = "INSERT INTO Partner (partner_id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_APPLICATION = "INSERT INTO Application (application_id, application_name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO Application_Version (version_id, application_id, api_manager_id, version_name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (customer_id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_ADDRESS = "INSERT INTO Address (address_id, address_line1, address_line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
-    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (property_id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
-    static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO Commercial_Subscription (commercial_subscription_id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO Api_Subscription (api_subscription_id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_USER = "INSERT INTO User (id, user_type, user_name, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, application_name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO Application_Version (id, application_id, api_manager_id, version_name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, address_line1, address_line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
+    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
+    static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO Commercial_Subscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO Api_Subscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
 
     private DbHelper dbHelper = new DbHelper();
 
@@ -68,36 +68,36 @@ public class DbUtilsSteps {
     }
 
     public void createDBUser(UserDto user) {
-        dbHelper.identityDb().update(CREATE_DB_USER, user.getUserId(), user.getUserType().toString(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getCulture(), user.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_USER, user.getId(), user.getUserType().toString(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getCulture(), user.getIsActive());
     }
 
     public void createDBPartner(PartnerDto partner) {
-        dbHelper.identityDb().update(CREATE_DB_PARTNER, partner.getPartnerId(), partner.getName(), partner.getEmail(), partner.getNotes(), partner.getWebsite(), partner.getVatId(), partner.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_PARTNER, partner.getId(), partner.getName(), partner.getEmail(), partner.getNotes(), partner.getWebsite(), partner.getVatId(), partner.getIsActive());
     }
 
     public void createDBApplication(ApplicationDto application) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION, application.getApplicationId(), application.getApplicationName(), application.getDescription(), application.getWebsite(), application.getPartnerId(), application.getIsInternal(), application.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION, application.getId(), application.getApplicationName(), application.getDescription(), application.getWebsite(), application.getPartnerId(), application.getIsInternal(), application.getIsActive());
     }
 
     public void createDBApplicationVersion(ApplicationVersionDto applicationVersion) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, applicationVersion.getVersionId(), applicationVersion.getApplicationId(), applicationVersion.getApiManagerId(), applicationVersion.getVersionName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, applicationVersion.getId(), applicationVersion.getApplicationId(), applicationVersion.getApiManagerId(), applicationVersion.getVersionName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
     }
 
     public void createDBCustomer(CustomerCreateDto customer) {
         dbHelper.identityDb().update(CREATE_DB_ADDRESS, DEFAULT_ADDRESS_ID, "address line 1", "address line 2", "city", "12345", "CZ");
-        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, customer.getCustomerId(), customer.getIsActive(), customer.getSalesforceId(), customer.getCompanyName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemoCustomer(), customer.getNotes(), DEFAULT_ADDRESS_ID, customer.getTimezone());
+        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, customer.getId(), customer.getIsActive(), customer.getSalesforceId(), customer.getCompanyName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemoCustomer(), customer.getNotes(), DEFAULT_ADDRESS_ID, customer.getTimezone());
     }
 
     public void createDBProperty(PropertyDto property) {
-        dbHelper.identityDb().update(CREATE_DB_PROPERTY, property.getPropertyId(), property.getIsActive(), property.getSalesforceId(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemoProperty(), DEFAULT_ADDRESS_ID, property.getTimezone(), property.getPropertyCode(), property.getDescription(), property.getAnchorCustomerId());
+        dbHelper.identityDb().update(CREATE_DB_PROPERTY, property.getId(), property.getIsActive(), property.getSalesforceId(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemoProperty(), DEFAULT_ADDRESS_ID, property.getTimezone(), property.getPropertyCode(), property.getDescription(), property.getAnchorCustomerId());
     }
 
     public void createDbCommercialSubscription(CommercialSubscriptionDto commercialSubscription) {
-        dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, commercialSubscription.getCommercialSubscriptionId(), commercialSubscription.getCustomerId(), commercialSubscription.getPropertyId(), commercialSubscription.getApplicationId(), commercialSubscription.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, commercialSubscription.getId(), commercialSubscription.getCustomerId(), commercialSubscription.getPropertyId(), commercialSubscription.getApplicationId(), commercialSubscription.getIsActive());
     }
 
     public void createDBApiSubscription(ApiSubscriptionDto apiSubscription) {
-        dbHelper.identityDb().update(CREATE_DB_API_SUBSCRIPTION, apiSubscription.getApiSubscriptionId(), apiSubscription.getCommercialSubscriptionId(), apiSubscription.getApplicationVersionId(), apiSubscription.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_API_SUBSCRIPTION, apiSubscription.getId(), apiSubscription.getCommercialSubscriptionId(), apiSubscription.getApplicationVersionId(), apiSubscription.getIsActive());
     }
 
     public void cleanDatabase() {

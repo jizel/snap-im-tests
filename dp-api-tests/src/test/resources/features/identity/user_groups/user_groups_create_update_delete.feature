@@ -3,16 +3,16 @@ Feature: User groups create update delete
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
-      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | Id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
 
   Scenario: Create user group with ID that already exists
     When The following user group is created
-      | userGroupId                          | customerId                           | name        | isActive | description          |
+      | Id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
     Then Response code is "409"
     And Custom code is 40902
@@ -21,7 +21,7 @@ Feature: User groups create update delete
   @Smoke
   Scenario: Create user group
     When The following user group is created
-      | userGroupId                          | customerId                           | name                | description          |
+      | Id                                   | customerId                           | name                | description          |
       | b8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_created_1 | userGroupDescription |
     Then Response code is "201"
     And Content type is "application/json"
@@ -70,12 +70,12 @@ Feature: User groups create update delete
 
   Scenario Outline: Creating user group with invalid data
     When The following user group is created
-      | userGroupId   | customerId   | name   | isActive   | description   |
+      | userGroupId   | Id           | name   | isActive   | description   |
       | <userGroupId> | <customerId> | <name> | <isActive> | <description> |
     Then Response code is <response_code>
     And Custom code is <error_code>
     Examples:
-      | userGroupId | customerId                           | name          | isActive | description | response_code | error_code | #note                        |
+      | userGroupId | Id                                   | name          | isActive | description | response_code | error_code | #note                        |
       | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
       | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
       | /null       | /null                                | /null         | /null    | /null       | 422           | 42201      | # customerId is mandatory    |
@@ -115,31 +115,31 @@ Feature: User groups create update delete
 
   Scenario Outline: Updating user group with valid data - customer
     Given The following customers exist with random address
-      | customerId                           | companyName         | email           | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName         | email           | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer2 | ug2@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer3 | ug3@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
-      | customerId   | name   | isActive   | description   |
+      | Id           | name   | isActive   | description   |
       | <customerId> | <name> | <isActive> | <description> |
     Then Response code is 204
     And Etag header is present
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" contains following data
-      | customerId   | name   | isActive   | description   |
+      | Id           | name   | isActive   | description   |
       | <customerId> | <name> | <isActive> | <description> |
     Examples:
-      | customerId                           | name                        | isActive | description                |
+      | Id                                   | name                        | isActive | description                |
       | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null                       | /null    | /null                      |
       | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | updatedNameForThirdCustomer | true     | updatedDescriptionForThird |
 
 
   Scenario Outline: Updating user group with invalid data
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
-      | customerId   | name   | description   |
+      | Id           | name   | description   |
       | <customerId> | <name> | <description> |
     Then Response code is "<error_response>"
     And Custom code is "<error_code>"
     Examples:
-      | customerId | name     | description | error_response | error_code | #note                    |
+      | Id         | name     | description | error_response | error_code | #note                    |
       | \w{63}     | /null    | /null       | 400            | 63         | # customerId not in UUID |
       | \w{65}     | /null    | /null       | 400            | 63         | # customerId not in UUID |
       | karel      | /null    | /null       | 400            | 63         | # customerId not in UUID |
@@ -152,7 +152,7 @@ Feature: User groups create update delete
 
   Scenario Outline: Send POST request with empty body to all user groups endpoints
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"
-      | userId                               | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"

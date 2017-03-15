@@ -9,7 +9,7 @@ Feature: Applications get
   @Smoke
   Scenario: Getting applications
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
+      | applicationName            | description               | website                    | partnerId                            |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got
     Then Response code is "200"
@@ -22,7 +22,7 @@ Feature: Applications get
 
   Scenario: Getting application with etag
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        |
+      | applicationName            | description               | website                    | partnerId                            |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
     Then Response code is "200"
@@ -34,7 +34,7 @@ Feature: Applications get
 
   Scenario Outline: Getting list of applications
     Given The following applications exist
-      | applicationName             | description                | website                    | applicationId                        |
+      | applicationName             | description                | website                    | Id                                   |
       | Application test company 1  | Application description 1  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace111 |
       | Application test company 2  | Application description 2  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace112 |
       | Application test company 3  | Application description 3  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace113 |

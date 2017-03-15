@@ -120,7 +120,7 @@ public class EventingStepsDefs {
     @Then("^Notification in session id stands for customer in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_customer_in_session_on_key(String sessionKey) throws Throwable {
         CustomerDto c = steps.getSessionVariable(sessionKey);
-        steps.notificationContainsId(c.getCustomerId());
+        steps.notificationContainsId(c.getId());
     }
 
     @Then("^Notification in session id stands for configuration type with identifier \"([^\"]*)\"$")
@@ -131,25 +131,25 @@ public class EventingStepsDefs {
     @Then("^Notification in session id stands for property with code \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_property_with_code(String propertyCode) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        steps.notificationContainsId(p.getPropertyId());
+        steps.notificationContainsId(p.getId());
     }
 
     @Then("^Notification in session id stands for user with username \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_user_with_username(String username) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
-        steps.notificationContainsId(u.getUserId());
+        steps.notificationContainsId(u.getId());
     }
 
     @Then("^Notification in session id stands for role with name \"([^\"]*)\" for application id  \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName, String applicationId) throws Throwable {
         RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternalUsingCustomerRole(roleName, applicationId);
-        steps.notificationContainsId(r.getRoleId());
+        steps.notificationContainsId(r.getId());
     }
 
     @Then("^Notification in session id stands for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_with_name_for_customer_with_code(String propertySetName, String customerId) throws Throwable {
         PropertySetDto ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
-        steps.notificationContainsId(ps.getPropertySetId());
+        steps.notificationContainsId(ps.getId());
     }
 
     @Then("^Notification in session parent id stands for customer with id \"([^\"]*)\"$")
@@ -165,27 +165,27 @@ public class EventingStepsDefs {
     @Then("^Notification in session id stands for role in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_in_session_on_key(String sessionKey) throws Throwable {
         RoleDto r = steps.getSessionVariable(sessionKey);
-        steps.notificationContainsId(r.getRoleId());
+        steps.notificationContainsId(r.getId());
     }
 
 
     @Then("^Notification in session parent id stands for user with username \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_user_with_username(String username) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
-        steps.notificationContainsParentId(u.getUserId());
+        steps.notificationContainsParentId(u.getId());
     }
 
     @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName, String customerId) throws Throwable {
         PropertySetDto ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
-        steps.notificationContainsParentId(ps.getPropertySetId());
+        steps.notificationContainsParentId(ps.getId());
 
     }
 
     @Then("^Notification in session parent id stands for property with code \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_property_with_code(String propertyCode) throws Throwable {
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
-        steps.notificationContainsParentId(p.getPropertyId());
+        steps.notificationContainsParentId(p.getId());
     }
 
     @Given("^Property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
@@ -196,7 +196,7 @@ public class EventingStepsDefs {
     @Then("^Notification in session id stands for property set in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_property_set_in_session_on_key(String sessionKey) throws Throwable {
         PropertySetDto ps = steps.getSessionVariable(sessionKey);
-        steps.notificationContainsId(ps.getPropertySetId());
+        steps.notificationContainsId(ps.getId());
     }
 
     @Given("^Property with code \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
@@ -207,7 +207,7 @@ public class EventingStepsDefs {
     @Then("^Notification in session id stands for property in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_property_in_session_on_key(String sessionKey) throws Throwable {
         PropertyDto p = steps.getSessionVariable(sessionKey);
-        steps.notificationContainsId(p.getPropertyId());
+        steps.notificationContainsId(p.getId());
     }
 
     @Given("^User with username \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
@@ -218,13 +218,13 @@ public class EventingStepsDefs {
     @Then("^Notification in session id stands for user in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_user_in_session_on_key(String sessionKey) throws Throwable {
         UserDto u = steps.getSessionVariable(sessionKey);
-        steps.notificationContainsId(u.getUserId());
+        steps.notificationContainsId(u.getId());
     }
 
     @Then("^Notification in session id stands for partner with name \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_partner_with_name(String partnerName) throws Throwable {
         PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
-        steps.notificationContainsId(partner.getPartnerId());
+        steps.notificationContainsId(partner.getId());
     }
 
     @Then("^Stored notification has key \"([^\"]*)\" and value \"([^\"]*)\"$")

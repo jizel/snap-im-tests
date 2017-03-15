@@ -5,11 +5,11 @@ Feature: Roles get user customer
     Given Database is cleaned and default entities are created
     Given Switch for user customer role tests
     Given The following applications exist
-      | applicationName            | description               | website                    | applicationId                        | partnerId                           | isInternal |
+      | applicationName            | description               | website                    | Id                                   | partnerId                           | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
     Given The following roles exist
-      | applicationId                        | roleName    | description            |
+      | Id                                   | roleName    | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
@@ -35,7 +35,7 @@ Feature: Roles get user customer
 
   Scenario Outline: Getting list of roles
     Given The following roles exist
-      | applicationId                        | roleName          | description             |
+      | Id                                   | roleName          | description             |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 1  | optional description 1  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 2  | optional description 2  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 3  | optional description 3  |
@@ -147,7 +147,7 @@ Feature: Roles get user customer
 
   Scenario Outline: Filtering list of roles
     Given The following roles exist
-      | applicationId                        | roleName           | description             |
+      | Id                                   | roleName           | description             |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 1 | optional description 1  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 2 | optional description 2  |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 3 | different description 3 |

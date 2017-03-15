@@ -13,7 +13,7 @@ Feature: Applications versions GET (directly) - DP-1784
   @Smoke
   Scenario: Getting application versions
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" is requested directly
     Then Response code is "200"
@@ -32,7 +32,7 @@ Feature: Applications versions GET (directly) - DP-1784
 
   Scenario: Only GET is allowed for application_versions endpoint
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName | status   | description            | applicationId                        |
+      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
     When Empty POST request is sent to "identity/application_versions/a318fd9a-a05d-42d8-8e84-22e904ace111" on module "identity"
     Then Response code is "405"

@@ -7,32 +7,32 @@ Feature: User Groups Application access check feature
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | customerId                           | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | CustomerWithSubscription    | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | userWithUserGroup | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following partner exist
-      | partnerId                            | name                   | email                   | website                    |
+      | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName          | applicationId                        | partnerId                            | isInternal | website                    |
+      | applicationName          | Id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName             | status    | description                  | applicationId                        |
+      | Id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | versionId                            | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | Id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
-      | commercialSubscriptionId             | customerId                           | propertyId                           | applicationId                        |
+      | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
-      | apiSubscriptionId                    | applicationVersionId                 | commercialSubscriptionId             |
+      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following user groups exist
-      | customerId                           | name        | isActive | description          |
+      | Id                                   | name        | isActive | description          |
       | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
@@ -47,7 +47,7 @@ Feature: User Groups Application access check feature
 #      Check tommorow, getAll access checks are fucked now
     Scenario Outline: Filtering user groups with application access checks
       Given The following user groups exist
-        | userGroupId                          | customerId                           | name        | isActive | description           |
+        | Id                                   | customerId                           | name        | isActive | description           |
         | 22345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroupDescription2 |
         | 32345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_3 | false    | userGroupDescription3 |
         | 42345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_4 | true     | userGroupDescription4 |
@@ -71,20 +71,20 @@ Feature: User Groups Application access check feature
 
     Scenario: Creating User Group is possible only with customer id with valid commercial subscription
       Given The following customers exist with random address
-        | customerId                           | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+        | Id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
         | 23400000-0000-4000-a000-000000000000 | CustomerWithNoSubscription  | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       When The following user group is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-        | customerId                           | name        | isActive | description          |
+        | Id                                   | name        | isActive | description          |
         | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
       Then Response code is 404
       And Custom code is 40402
       When The following user group is created by user "userWithUserGroup" for application version "versionWithSubscription"
-        | customerId                           | name        | isActive | description          |
+        | Id                                   | name        | isActive | description          |
         | 23400000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
       Then Response code is 404
       And Custom code is 40402
       When The following user group is created by user "userWithUserGroup" for application version "versionWithSubscription"
-        | customerId                           | name        | isActive | description          |
+        | Id                                   | name        | isActive | description          |
         | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
       Then Response code is 201
 

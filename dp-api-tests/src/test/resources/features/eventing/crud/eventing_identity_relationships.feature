@@ -7,7 +7,7 @@ Feature: Eventing identity module relationships
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
 
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
@@ -34,7 +34,7 @@ Feature: Eventing identity module relationships
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
 
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
       |userId                                | userType | userName            | firstName | lastName | email                | timezone      | culture |
@@ -61,7 +61,7 @@ Feature: Eventing identity module relationships
   Scenario: Adding role to user
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
@@ -69,7 +69,7 @@ Feature: Eventing identity module relationships
       | snapshot | role_add_event_user | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following roles exist
-      | applicationId | roleName            | roleDescription        |
+      | Id            | roleName            | roleDescription        |
       | 333           | role_add_event_role | optional description 1 |
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
@@ -87,7 +87,7 @@ Feature: Eventing identity module relationships
   Scenario: Removing role from user
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
@@ -95,7 +95,7 @@ Feature: Eventing identity module relationships
       | snapshot | role_del_event_user | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following roles exist
-      | applicationId | roleName            | roleDescription        |
+      | Id            | roleName            | roleDescription        |
       | 333           | role_del_event_role | optional description 1 |
 
     Given Relation between role with name "role_del_event_role" for application id "333" and user with username "role_del_event_user" exists with relationship_type "customer" and entity with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
@@ -116,10 +116,10 @@ Feature: Eventing identity module relationships
   Scenario: Adding property to property set
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -145,10 +145,10 @@ Feature: Eventing identity module relationships
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -175,10 +175,10 @@ Feature: Eventing identity module relationships
   Scenario: Adding user to property set
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -199,11 +199,11 @@ Feature: Eventing identity module relationships
   Scenario: Removing user from property set
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snaphotUser1"
@@ -228,11 +228,11 @@ Feature: Eventing identity module relationships
   Scenario: Adding user to customer
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
@@ -249,11 +249,11 @@ Feature: Eventing identity module relationships
   Scenario: Removing user from customer
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Relation between user with username "del_cust_user_event_user" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
 
@@ -271,11 +271,11 @@ Feature: Eventing identity module relationships
   Scenario: Adding user to property
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name         | propertyCode             | website                    | email          | isDemoProperty | timezone      |
@@ -296,11 +296,11 @@ Feature: Eventing identity module relationships
   Scenario: Removing user from property
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | customerId                           | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
+      | Id                                   | companyName              | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    |timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Event role add company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel |Europe/Prague |
 
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userId                               | userType | userName      | firstName | lastName | email                        | timezone      | culture |
+      | Id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name         | propertyCode             | website                    | email          | isDemoProperty | timezone      |

@@ -21,7 +21,7 @@ public class ReviewMultipropertyPropertySetSteps extends AnalyticsBaseSteps {
         PropertySetSteps propertySetSteps = new PropertySetSteps();
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, customerId);
 
-        Response aggregatedPropertySet = getSecondLevelEntitiesForDates(propertySet.getPropertySetId(), metric, limit, cursor, since, until, granularity, null, null, null);
+        Response aggregatedPropertySet = getSecondLevelEntitiesForDates(propertySet.getId(), metric, limit, cursor, since, until, granularity, null, null, null);
         setSessionResponse(aggregatedPropertySet);
     }
 }

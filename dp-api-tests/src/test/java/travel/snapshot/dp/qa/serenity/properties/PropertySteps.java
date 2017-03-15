@@ -253,10 +253,10 @@ public class PropertySteps extends BasicSteps {
     public void removeAllUsersFromPropertiesWithCodes(List<String> propertyCodes) {
         propertyCodes.forEach(c -> {
             PropertyDto property = getPropertyByCodeInternal(c);
-            Response customerUsersResponse = getSecondLevelEntities(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
+            Response customerUsersResponse = getSecondLevelEntities(property.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
             PartnerUserRelationshipDto[] propertyUsers = customerUsersResponse.as(PartnerUserRelationshipDto[].class);
             for (PartnerUserRelationshipDto pu : propertyUsers) {
-                Response deleteResponse = deleteSecondLevelEntity(property.getPropertyId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
+                Response deleteResponse = deleteSecondLevelEntity(property.getId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
                 }
@@ -307,13 +307,13 @@ public class PropertySteps extends BasicSteps {
 
     public void customerDoesNotExistForProperty(String customerId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        CustomerDto cust = getCustomerForProperty(p.getPropertyId(), customerId);
+        CustomerDto cust = getCustomerForProperty(p.getId(), customerId);
         assertNull("Customer should not be link with property", cust);
     }
 
     public void userIsAddedToProperty(String userId, String propertyCode, Boolean isActive) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        addUserToProperty(userId, p.getPropertyId(), isActive);
+        addUserToProperty(userId, p.getId(), isActive);
     }
 
     public void userIsDeletedFromProperty(String userId, String propertyId) {
@@ -332,7 +332,7 @@ public class PropertySteps extends BasicSteps {
 
     public void userDoesntExistForProperty(String userId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        PropertyUserRelationshipDto userForProperty = getUserForProperty(p.getPropertyId(), userId);
+        PropertyUserRelationshipDto userForProperty = getUserForProperty(p.getId(), userId);
         assertNull("User should not be present in property", userForProperty);
     }
 
@@ -400,10 +400,10 @@ public class PropertySteps extends BasicSteps {
     public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
         PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
-        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId());
+        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId());
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
-            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId(), jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException e) {
             fail("Exception thrown when trying to map PropertySetPropertyRelationshipUpdateDto to JSONObject: " +  e);
@@ -414,7 +414,7 @@ public class PropertySteps extends BasicSteps {
     public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
         PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
-        Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId(), null);
+        Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), null);
         setSessionResponse(response);
     }
 
@@ -479,14 +479,14 @@ public class PropertySteps extends BasicSteps {
     public void requestPropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
         PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
-        setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getRelationshipId()));
+        setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId()));
     }
 
     public void allCustomersAreCustomersOfProperty(CustomerDto[] allCustomers, String propertyCode) {
-        String propertyID = getPropertyByCodeInternal(propertyCode).getPropertyId();
+        String propertyID = getPropertyByCodeInternal(propertyCode).getId();
         // This is slightly better but still does not work - listOfCustomersIsGotWith does not return list of customers but list of relations and needs to be changed
         for (CustomerDto c : allCustomers) {
-            given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getCustomerId() + "/properties").
+            given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getId() + "/properties").
                     then().body("property_id", hasItem(propertyID));
         }
     }
@@ -552,7 +552,7 @@ public class PropertySteps extends BasicSteps {
         } else {
             PropertyDto property = getPropertyByCodeInternal(propertyCode);
             assertThat(String.format("Property with code \"%s\" does not exist", propertyCode), property, is(notNullValue()));
-            propertyId = property.getPropertyId();
+            propertyId = property.getId();
         }
         return propertyId;
     }
