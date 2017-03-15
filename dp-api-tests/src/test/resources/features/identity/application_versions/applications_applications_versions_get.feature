@@ -11,7 +11,7 @@ Feature: Applications versions get
     Given The following application versions exists
       | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is got
+    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" is got
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -21,21 +21,14 @@ Feature: Applications versions get
     And Body contains entity with attribute "status" value "inactive"
     And Body contains entity with attribute "description" value "Versions description 1"
 
-  Scenario: Getting application versions with etag
-    Given The following application versions exists
-      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 123 | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is got with etag
-    Then Response code is "200"
-
   Scenario: Checking error code for nonexistent application versions
-    When Nonexistent application version id is got for application id "11111111-0000-4000-a000-111111111111"
+    When Application version with id "nonexistent" is got
     Then Response code is "404"
     And Custom code is "40402"
 
   Scenario Outline: Getting list of application versions
     Given The following application versions exists
-      | Id                                   | apiManagerId | versionName | status   | description             | Id                                   |
+      | Id                                   | apiManagerId | versionName | status   | description             | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace101 | 123          | Version 1   | inactive | Versions description 1  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace102 | 123          | Version 2   | inactive | Versions description 2  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace103 | 123          | Version 3   | inactive | Versions description 3  | 11111111-0000-4000-a000-111111111111 |
@@ -88,7 +81,7 @@ Feature: Applications versions get
       | a318fd9a-a05d-42d8-8e84-22e904ace150 | 123          | Version 50  | inactive | Versions description 50 | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace151 | 123          | Version 51  | inactive | Versions description 51 | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace152 | 123          | Version 52  | inactive | Versions description 52 | 11111111-0000-4000-a000-111111111111 |
-    When List of application versions is got for application id "11111111-0000-4000-a000-111111111111" with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
+    When List of application versions is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> application versions returned
@@ -97,18 +90,18 @@ Feature: Applications versions get
 
     Examples:
       | limit | cursor | returned | total | link_header                                                                                                                                                                                                                         |
-      | /null |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
-      | /null | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
-      |       |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
-      |       | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
-      | 15    |        | 15       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=15&cursor=15>; rel="next"                                                                                                                   |
-      |       | 1      | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=0>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=50&cursor=51>; rel="next" |
-      | 20    | 0      | 20       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=20&cursor=20>; rel="next"                                                                                                                   |
-      | 10    | 0      | 10       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=10&cursor=10>; rel="next"                                                                                                                   |
-      | 5     | 10     | 5        | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=5&cursor=5>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/application_versions?limit=5&cursor=15>; rel="next"   |
+      | /null |        | 50       | 53    | </identity/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      | /null | /null  | 50       | 53    | </identity/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      |       |        | 50       | 53    | </identity/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      |       | /null  | 50       | 53    | </identity/application_versions?limit=50&cursor=50>; rel="next"                                                                                                                   |
+      | 15    |        | 15       | 53    | </identity/application_versions?limit=15&cursor=15>; rel="next"                                                                                                                   |
+      |       | 1      | 50       | 53    | </identity/application_versions?limit=50&cursor=0>; rel="prev", </identity/application_versions?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | 53    | </identity/application_versions?limit=20&cursor=20>; rel="next"                                                                                                                   |
+      | 10    | 0      | 10       | 53    | </identity/application_versions?limit=10&cursor=10>; rel="next"                                                                                                                   |
+      | 5     | 10     | 5        | 53    | </identity/application_versions?limit=5&cursor=5>; rel="prev", </identity/application_versions?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of application versions
-    When List of application versions is got for application id "11111111-0000-4000-a000-111111111111" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of application versions is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
@@ -134,7 +127,7 @@ Feature: Applications versions get
 
   Scenario Outline: Filtering list of application versions
     Given The following application versions exists
-      | Id                                   | apiManagerId | versionName | status   | description             | Id                                   |
+      | Id                                   | apiManagerId | versionName | status   | description             | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace101 | 123          | Version 1   | inactive | Versions description 1  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace102 | 123          | Version 2   | inactive | Versions description 2  | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace103 | 123          | Version 3   | inactive | Versions description 3  | 11111111-0000-4000-a000-111111111111 |
@@ -147,7 +140,7 @@ Feature: Applications versions get
       | a318fd9a-a05d-42d8-8e84-22e904ace110 | 123          | Version 10  | inactive | Versions description 10 | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 11  | inactive | Versions description 11 | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-22e904ace112 | 123          | Version 12  | inactive | Versions description 12 | 11111111-0000-4000-a000-111111111111 |
-    When List of application versions is got for application id "11111111-0000-4000-a000-111111111111" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of application versions is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> application versions returned

@@ -40,13 +40,13 @@ Feature: Applications versions create update delete
     Given The following application versions exists
       | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is deleted
+    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" is deleted
     Then Response code is "204"
     And Body is empty
-    And Application version with same id for application with id "11111111-0000-4000-a000-111111111111" does not exist
+    And Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" does not exist
 
   Scenario: Checking error code for deleting application version
-    When Nonexistent application version for application with id "11111111-0000-4000-a000-111111111111" is deleted
+    When Application version with id "nonexistent" is deleted
     Then Response code is "404"
 
   Scenario Outline: Updating application
@@ -72,7 +72,7 @@ Feature: Applications versions create update delete
     Given The following application versions exists
       | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" for application with id "11111111-0000-4000-a000-111111111111" is updated with data with invalid etag
+    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" is updated with data with invalid etag
       | apiManagerId | versionName          | status    | description         |
       | 123-XYZ      | Updated version name | certified | Updated description |
     Then Response code is "412"

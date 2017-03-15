@@ -62,29 +62,15 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void applicationVersionIsDeleted(String appVersionId, String applicationId) {
-        Response response = deleteSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId, null);
+    public void deleteApplicationVersion(String appVersionId) {
+        String etag = getEntityEtag(appVersionId);
+        Response response = deleteEntity(appVersionId, etag);
         setSessionResponse(response);
         Serenity.setSessionVariable(SESSION_APPLICATION_VERSION_ID).to(appVersionId);
     }
 
     @Step
-    public void applicationVersionIdInSessionDoesntExist(String applicationId) {
-        String appVersionId = Serenity.sessionVariableCalled(SESSION_APPLICATION_VERSION_ID);
-
-        Response response = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Step
-    public void deleteAppVersionWithId(String id, String versionId) {
-        Response response = deleteSecondLevelEntity(id, SECOND_LEVEL_OBJECT_VERSIONS, versionId, null);
-        setSessionResponse(response);
-    }
-
-    @Step
-    public void updateApplicationVersionWithId(String appVersionId, ApplicationVersionUpdateDto applicationVersionUpdate) throws Throwable {
-        String etag = getEntityEtag(appVersionId);
+    public void updateApplicationVersion(String appVersionId, ApplicationVersionUpdateDto applicationVersionUpdate, String etag) throws Throwable {
         JSONObject update = retrieveData(applicationVersionUpdate);
 
         Response response = updateEntity(appVersionId, update.toString(), etag);
@@ -108,34 +94,9 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationVersionWithInvalidEtag(String appVersionId, String applicationId,
-                                                        ApplicationVersionDto applicationVersion) throws Throwable {
-
-        Map<String, Object> applicationVersionData = retrieveDataOld(ApplicationVersionDto.class, applicationVersion);
-
-        Response updateResponse = updateSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId,
-                applicationVersionData, "invalid");
-        setSessionResponse(updateResponse);
-    }
-
-    @Step
-    public void applicationVersionWithIdIsGot(String appVersionId, String applicationId) {
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
-    }
-
-    @Step
-    public void applicationVersionWithIdIsGotWithEtag(String appVersionId, String applicationId) {
-        Response tempResponse = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        Response resp = getSecondLevelEntity(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, appVersionId);
-        setSessionResponse(resp);
-    }
-
-    @Step
-    public void listOfApplicationVersionsIsGotWith(String applicationId, String limit, String cursor, String filter,
+    public void listOfApplicationVersionsIsGotWith(String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(applicationId, SECOND_LEVEL_OBJECT_VERSIONS, limit, cursor, filter,
-                sort, sortDesc, null);
+        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
