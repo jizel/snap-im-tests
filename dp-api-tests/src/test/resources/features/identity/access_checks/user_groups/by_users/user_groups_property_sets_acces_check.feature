@@ -24,19 +24,20 @@ Feature: User Groups Property Sets access check feature
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
-#  DP-1817
-  @skipped
+
     Scenario: Second level entities - User sees only user group-property sets relations for user groups and property sets he can access and is active
       Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
         | name            | type            |
         | prop_set1       | brand           |
         | prop_set2       | brand           |
-      Given Relation between user group "userGroup_1" and property set "prop_set1" exists with isActive "false"
-      When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup"
+      Given Relation between user group "userGroup_1" and property set "prop_set1" exists
+      When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithNoUserGroup"
       Then Response code is 404
-      Given Relation between user group "userGroup_1" and property set "prop_set1" exists with isActive "true"
       When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup"
       Then Response code is 200
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup"
+      Then Response code is 404
 
     Scenario: Second level entities - User does not see user group-property sets relations when he cannot access the user group
       Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
@@ -97,7 +98,7 @@ Feature: User Groups Property Sets access check feature
     And Body is empty
     And Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is active
 
-  Scenario: Update relationship userGroup-propertySet by user with access to user group
+  Scenario: Update relationship userGroup-propertySet by user without access to user group
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
       | Id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
@@ -105,21 +106,7 @@ Feature: User Groups Property Sets access check feature
     When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithNoUserGroup"
     Then Response code is 404
     And Custom code is 40402
-
-#  DP-1817
-  @skipped
-  Scenario: Update user group to property relationship by user whose relation with the user group is inactive, or the user group-property relation is inactive
-    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
-      | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists with isActive "false"
-    When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithUserGroup"
-    Then Response code is 404
-    And Custom code is 40402
-    Given Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated
-    When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithUserGroup"
-    Then Response code is 204
-    Given Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
+    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
     When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithUserGroup"
     Then Response code is 404
     And Custom code is 40402
@@ -134,29 +121,15 @@ Feature: User Groups Property Sets access check feature
     And Body is empty
     And Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" no more exists
 
-  Scenario: Delete userGroup-propertySet relationship by user without access to user group
+  Scenario: Delete userGroup-propertySet relationship by user without (or with inactive) access to user group
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
       | Id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true"
+    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithNoUserGroup"
     Then Response code is 404
     And Custom code is 40402
-
-#  DP-1817
-  @skipped
-  Scenario: Delete user group to property relationship by user whose relation with the user group is inactive, or the user group-property relation is inactive
-    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
-      | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
-    Given Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists with isActive "false"
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithUserGroup"
-    Then Response code is 404
-    And Custom code is 40402
-    Given Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithUserGroup"
-    Then Response code is 204
-    Given Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
+    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithUserGroup"
     Then Response code is 404
     And Custom code is 40402
