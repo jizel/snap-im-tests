@@ -79,14 +79,12 @@ Feature: User groups property sets
       | 922913b0-877c-45f3-b650-df8022608d61 | notExistent                          |
       | notExistent                          | notExistent                          |
 
-#  DP-1807
   Scenario: Activate relationship userGroup-propertySet
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated
     Then Response code is 204
     And Body is empty
     And Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is active
 
-#  DP-1807
   Scenario: Deactivate relationship userGroup-propertySet
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
