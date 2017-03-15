@@ -2,6 +2,11 @@
 Feature: facebook
   Testing of api for facebook with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
 
+  Background:
+    Given Database is cleaned and default entities are created
+#    Given API subscriptions exist for default application and customer with id "11111111-0000-4000-a000-555555555555" and property "99000099-9999-4999-a999-999999999999"
+
+
   Scenario Outline: Get facebook analytics data from API for a given wrong granularity
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "application/json"

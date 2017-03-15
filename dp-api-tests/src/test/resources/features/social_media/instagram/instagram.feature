@@ -1,6 +1,10 @@
 @SocialMedia
 Feature: Instagram
-  Testing of api for instagram with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
+  - Testing of api for instagram with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
+
+  Background:
+    Given Database is cleaned and default entities are created
+
 
   Scenario Outline: Get instagram analytics data from API for a given wrong granularity
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"

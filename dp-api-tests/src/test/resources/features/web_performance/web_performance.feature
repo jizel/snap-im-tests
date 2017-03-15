@@ -1,5 +1,10 @@
 Feature: web_performance
 
+
+  Background:
+    Given Database is cleaned and default entities are created
+
+
   Scenario Outline: Get web_performance analytics data from API for a given wrong granularity
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Response code is "400"

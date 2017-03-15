@@ -77,7 +77,9 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         LocalDate untilDate = StringUtil.parseDate(until);
 
         RequestSpecification requestSpecification = given().spec(spec)
-                .header("x-property", propertyId).parameter("access_token", "aaa");
+                .header("x-property", propertyId)
+                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
 
         if (StringUtils.isNotBlank(granularity)) {
             requestSpecification.parameter("granularity", granularity);
@@ -90,7 +92,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         }
 
         Response response = requestSpecification.when().get(url);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        setSessionResponse(response);
     }
 
 
@@ -99,6 +101,8 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath(url)
                 .header("x-property", propertyId)
+                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .parameter("access_token", "aaa");
 
         if (cursor != null) {

@@ -1,5 +1,9 @@
 @SocialMedia
-Feature: common
+Feature: Soscial media - Commons
+
+  Background:
+    Given Database is cleaned and default entities are created
+
 
   Scenario Outline: Get collective analytics data from API for all metrics
     When Get social media "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
