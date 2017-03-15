@@ -8,8 +8,6 @@ Feature: Applications versions GET (directly) - DP-1784
     Given Database is cleaned and default entities are created
 
 
-
-
   @Smoke
   Scenario: Getting application versions
     Given The following application versions exists

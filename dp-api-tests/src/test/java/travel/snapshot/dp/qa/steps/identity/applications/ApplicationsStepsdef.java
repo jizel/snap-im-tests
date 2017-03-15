@@ -1,11 +1,17 @@
 package travel.snapshot.dp.qa.steps.identity.applications;
 
+
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.http.HttpStatus;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationUpdateDto;
@@ -120,25 +126,22 @@ public class ApplicationsStepsdef {
         applicationVersionSteps.followingApplicationVersionsExists(applicationVersions);
     }
 
-    @Given("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is deleted$")
-    public void application_version_for_application_with_id_is_deleted(String appVersionId, String applicationId) {
-        applicationVersionSteps.applicationVersionIsDeleted(appVersionId, applicationId);
+    @Given("^Application version with id \"([^\"]*)\" is deleted$")
+    public void application_version_for_application_with_id_is_deleted(String appVersionId) {
+        applicationVersionSteps.deleteApplicationVersion(appVersionId);
     }
 
-    @Then("^Application version with same id for application with id \"([^\"]*)\" does not exist$")
-    public void Application_version_with_same_id_does_not_exist(String applicationId) {
-        applicationVersionSteps.applicationVersionIdInSessionDoesntExist(applicationId);
-    }
-
-    @When("^Nonexistent application version for application with id \"([^\"]*)\" is deleted$")
-    public void Nonexistent_application_version_id_is_deleted(String applicationId) {
-        applicationVersionSteps.deleteAppVersionWithId("nonexistent_id", applicationId);
+    @Then("^Application version with id \"([^\"]*)\" does not exist$")
+    public void Application_version_with_same_id_does_not_exist(String applicationVersionId) {
+        Response response = applicationVersionSteps.getApplicationVersion(applicationVersionId);
+        assertThat(response.getStatusCode(), is(HttpStatus.SC_NOT_FOUND));
     }
 
     @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data(String appVersionId,
                                                                                          String applicationId, List<ApplicationVersionDto> applicationVersion) throws Throwable {
-        applicationVersionSteps.updateApplicationVersionWithId(appVersionId, applicationVersion.get(0));
+        String etag = applicationVersionSteps.getEntityEtag(appVersionId);
+        applicationVersionSteps.updateApplicationVersion(appVersionId, applicationVersion.get(0), etag);
     }
 
     @Then("^Updated application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" has data$")
@@ -147,37 +150,25 @@ public class ApplicationsStepsdef {
         applicationVersionSteps.applicationVersionWithIdHasData(appVersionId, applicationVersion.get(0));
     }
 
-    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is updated with data with invalid etag$")
+    @When("^Application version with id \"([^\"]*)\" is updated with data with invalid etag$")
     public void Application_version_with_id_for_application_with_id_is_updated_with_data_with_invalid_etag(
-            String appVersionId, String applicationId, List<ApplicationVersionDto> applicationVersion) throws Throwable {
-        applicationVersionSteps.updateApplicationVersionWithInvalidEtag(appVersionId, applicationId,
-                applicationVersion.get(0));
+            String appVersionId, List<ApplicationVersionDto> applicationVersion) throws Throwable {
+        applicationVersionSteps.updateApplicationVersion(appVersionId, applicationVersion.get(0), "invalid_etag");
     }
 
-    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got$")
-    public void Application_version_with_id_for_application_with_id_is_got(String appVersionId, String applicationId) {
-        applicationVersionSteps.applicationVersionWithIdIsGot(appVersionId, applicationId);
+    @When("^Application version with id \"([^\"]*)\" is got$")
+    public void Application_version_with_id_for_application_with_id_is_got(String appVersionId) {
+        applicationVersionSteps.getApplicationVersion(appVersionId);
     }
 
-    @When("^Application version with id \"([^\"]*)\" for application with id \"([^\"]*)\" is got with etag$")
-    public void Application_version_with_id_for_application_with_id_is_got_with_etag(String appVersionId,
-                                                                                     String applicationId) {
-        applicationVersionSteps.applicationVersionWithIdIsGotWithEtag(appVersionId, applicationId);
-    }
-
-    @When("^Nonexistent application version id is got for application id \"([^\"]*)\"$")
-    public void Nonexistent_application_version_id_is_got_for_application_id(String applicationId) {
-        applicationVersionSteps.applicationVersionWithIdIsGot("nonexistent", applicationId);
-    }
-
-    @When("^List of application versions is got for application id \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of application versions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_application_versions_is_got_for_application_id_with_limit_cursor_filter_sort_sortdesc(
-            String applicationId, @Transform(NullEmptyStringConverter.class) String limit,
+            @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
             @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        applicationVersionSteps.listOfApplicationVersionsIsGotWith(applicationId, limit, cursor, filter, sort, sortDesc);
+        applicationVersionSteps.listOfApplicationVersionsIsGotWith(limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are (\\d+) application versions returned$")
