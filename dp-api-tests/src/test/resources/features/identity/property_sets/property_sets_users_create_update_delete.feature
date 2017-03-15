@@ -23,17 +23,16 @@ Feature: Property sets users create update delete
     When User "default3" is added to property set with name "ps1_name"
     Then Response code is "201"
 
-  # DP-1807
-  @Bug
+
   Scenario: Updating Property Set-User relationship
     When User "default0" is added to property set with name "ps1_name"
-    Given Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
-    When Relation between user "default0" and property set "ps1_name" is activated
-    Then Response code is "204"
-    And Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
+    Given Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
     When Relation between user "default0" and property set "ps1_name" is inactivated
     Then Response code is "204"
     And Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
+    When Relation between user "default0" and property set "ps1_name" is activated
+    Then Response code is "204"
+    And Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
 
 
   @Smoke
