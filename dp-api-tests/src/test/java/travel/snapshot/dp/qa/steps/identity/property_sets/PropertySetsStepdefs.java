@@ -87,7 +87,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and property set with name \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
+    @Given("^Relation between user \"([^\"]*)\" and property set(?: with name)? \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_user_with_username_and_property_set_with_name_for_customer_with_code_exists(String username, String propertySetName, String isActiveString) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
@@ -101,7 +101,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.removeAllPropertiesFromPropertySetsForCustomer(propertySetNames, customer);
     }
 
-    @Given("^Relation between property with code \"([^\"]*)\" and property set with name \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
+    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and property set with name \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_property_with_code_and_property_set_with_name_for_customer_with_code_exists(String propertyCode, String propertySetName, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId( propertyCode );

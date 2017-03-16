@@ -341,8 +341,8 @@ public class PropertySteps extends BasicSteps {
         PartnerUserRelationshipDto[] propertiesUsers = response.as(PartnerUserRelationshipDto[].class);
         int i = 0;
         for (PartnerUserRelationshipDto pu : propertiesUsers) {
-//            userName is not part of new class - PartnerUserRelationshipDto, needs to be obtained via different endpoint
-//            assertEquals("Propertyuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
+            //            userName is not part of new class - PartnerUserRelationshipDto, needs to be obtained via different endpoint
+            //            assertEquals("Propertyuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
             i++;
         }
     }
@@ -356,7 +356,7 @@ public class PropertySteps extends BasicSteps {
     public Response listOfPropertyUsersIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
-        return  response;
+        return response;
     }
 
     @Step
@@ -558,7 +558,11 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void listUsersForPropertyByUser(String userId, String propertyId) {
-        setSessionResponse(getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null));
+        listUsersForPropertyByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId);
+    }
+
+    public void listUsersForPropertyByUserForApp(String userId, String appId, String propertyId) {
+        setSessionResponse(getSecondLevelEntitiesByUserForApp(userId, appId, propertyId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null));
     }
 
     public void addPropertyToUserByUser(String requestorId, String propertyId, String targetUserId) {

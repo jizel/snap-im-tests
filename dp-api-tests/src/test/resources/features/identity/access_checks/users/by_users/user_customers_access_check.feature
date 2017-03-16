@@ -63,7 +63,3 @@
     Then Response code is "201"
     When User "user1OfC1" removes user "user1OfC2" from customer "12300000-0000-4000-a000-000000000001"
     Then Response code is "204"
-
-
-
-

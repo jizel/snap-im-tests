@@ -191,12 +191,12 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void listOfUsersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        listOfUsersIsGotByUser(limit, cursor, filter, sort, sortDesc, DEFAULT_SNAPSHOT_USER_ID);
+    public void listOfUsersIsGotByUser(String requestorId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        listOfUsersIsGotByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, limit, cursor, filter, sort, sortDesc);
     }
 
-    public void listOfUsersIsGotByUser(String limit, String cursor, String filter, String sort, String sortDesc, String requestorId) {
-        Response response = getEntitiesByUser(requestorId, null, limit, cursor, filter, sort, sortDesc, null);
+    public void listOfUsersIsGotByUserForApp(String requestorId, String appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntitiesByUserForApp(requestorId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -442,8 +442,8 @@ public class UsersSteps extends BasicSteps {
         deleteEntityByUser( performerId, targetId, etag);
     }
 
-    public void getUserCustomerRelationByUser(String requestorId, String customerId, String targetUserId) {
-        Response response = getSecondLevelEntityByUser( requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
+    public void getUserCustomerRelationByUserForApp(String requestorId, String appVersionId, String customerId, String targetUserId) {
+        Response response = getSecondLevelEntityByUserForApp(requestorId, appVersionId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
         setSessionResponse(response);
     }
 
@@ -452,8 +452,8 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void listRolesForRelationByUser(String requestorId, String targetUserId, String secondLevelName, String secondLevelId) {
-        Response response = getThirdLevelEntitiesByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+    public void listRolesForRelationByUserForApp(String requestorId,  String appVersionId, String targetUserId, String secondLevelName, String secondLevelId) {
+        Response response = getThirdLevelEntitiesByUserForApp(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
         setSessionResponse(response);
     }
 
@@ -478,14 +478,14 @@ public class UsersSteps extends BasicSteps {
         return userIdMap;
     }
 
-    public void userAssignsRoleToRelation(String requestorId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
-        Response response = createThirdLevelEntityByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
+    public void userAssignsRoleToRelationWithApp(String requestorId, String appVersionId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
+        Response response = createThirdLevelEntityByUserForApplication(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
         setSessionResponse(response);
     }
 
-    public void userDeletesRoleFromRelation(String requestorId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
+    public void userDeletesRoleFromRelationWithApp(String requestorId, String appVersionId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
         String eTag = getThirdLevelEntityEtag(targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId);
-        Response response = deleteThirdLevelEntityByUser(requestorId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId, eTag);
+        Response response = deleteThirdLevelEntityByUserForApplication(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId, eTag);
         setSessionResponse(response);
     }
 
