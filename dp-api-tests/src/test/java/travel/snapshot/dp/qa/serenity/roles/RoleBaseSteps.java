@@ -209,10 +209,17 @@ public class RoleBaseSteps extends BasicSteps {
 
     public void roleNamesAreInResponseInOrder(List<String> names) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
-        RoleDto[] roles = response.as(RoleDto[].class);
+        RoleDto[] roles = null;
+        switch(getRoleBaseType()){
+            case CUSTOMER : roles = response.as(CustomerRoleDto[].class);
+                break;
+            case PROPERTY: roles =response.as(PropertyRoleDto[].class);
+                break;
+            case PROPERTY_SET: roles = response.as(PropertySetRoleDto[].class);
+        }
         int i = 0;
-        for (RoleDto r : roles) {
-            assertEquals("Role on index=" + i + " is not expected", names.get(i), r.getRoleName());
+        for (RoleDto role : roles) {
+            assertEquals("Role on index=" + i + " is not expected", names.get(i), role.getRoleName());
             i++;
         }
     }
@@ -223,7 +230,7 @@ public class RoleBaseSteps extends BasicSteps {
         String roleLocation = response.header(headerName).replaceFirst(getBasePath(), "");
         given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .get(roleLocation).then()
-                .body("application_id", is(originalRole.getId()))
+                .body("application_id", is(originalRole.getApplicationId()))
                 .body("description", is(originalRole.getDescription()))
                 .body("name", is(originalRole.getRoleName()));
     }
