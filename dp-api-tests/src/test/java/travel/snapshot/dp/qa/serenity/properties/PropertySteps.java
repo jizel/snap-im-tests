@@ -420,12 +420,12 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyUserRelationship(String propertyId, String userId){
-        deletePropertyUserRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, userId);
+        deletePropertyUserRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, userId);
     }
 
     @Step
-    public void deletePropertyUserRelationshipByUser(String performerId, String propertyId, String userId){
-        Response response = deleteSecondLevelEntityByUser(performerId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+    public void deletePropertyUserRelationshipByUserForApp(String performerId, String applicationVersionId, String propertyId, String userId){
+        Response response = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(response);
     }
 
@@ -565,9 +565,9 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(getSecondLevelEntitiesByUserForApp(userId, appId, propertyId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null));
     }
 
-    public void addPropertyToUserByUser(String requestorId, String propertyId, String targetUserId) {
+    public void addPropertyToUserByUserForApp(String requestorId, String applicationVersionId, String propertyId, String targetUserId) {
         PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
         relation.setUserId(targetUserId);
-        setSessionResponse(createSecondLevelRelationshipByUser(requestorId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
+        setSessionResponse(createSecondLevelRelationshipByUserForApplication(requestorId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
     }
 }

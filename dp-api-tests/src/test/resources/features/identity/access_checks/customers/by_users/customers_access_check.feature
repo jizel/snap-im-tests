@@ -159,7 +159,7 @@ Feature: Customers access check feature - GET
     Then Response code is "404"
 
   Scenario: Deleting Customer by user with access
-    When Customer with customer id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
+    When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
     Then Response code is 204
     And Body is empty
     And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist

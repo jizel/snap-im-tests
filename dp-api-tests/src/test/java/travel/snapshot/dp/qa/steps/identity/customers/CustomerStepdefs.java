@@ -221,16 +221,6 @@ public class CustomerStepdefs {
         customerSteps.listOfCustomerPropertiesIsGotByUserForApp(userId, applicationVersionId, customerId, null, null, null, null, null);
     }
 
-    @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")?$")
-    public void User_with_username_is_added_to_customer_with_id_with_isPrimary(String username, String customerId,
-                                                                                 String isPrimaryString, String isActiveString) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
-        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
-        customerSteps.userIsAddedToCustomer(userId, customerId, isPrimary, isActive);
-    }
-
-
     @When("^User \"([^\"]*)\" is added to customer with id \"([^\"]*)\"(?: with isPrimary \"([^\"]*)\")?(?: and|with is_active \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void userIsAddedToCustomerWithIdWithIsPrimaryByUser(String username, String customerId,
                                                                String isPrimaryString, String isActiveString, String performerName, String applicationVersionName) throws Throwable {
@@ -241,14 +231,6 @@ public class CustomerStepdefs {
         Response response = customerSteps.addUserToCustomerByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId, isPrimary, isActive);
         customerSteps.setSessionResponse(response);
     }
-
-    @When("^User \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"$")
-    public void User_with_username_is_removed_from_customer_with_id(String username, String customerId)
-            throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
-        customerSteps.userIsDeletedFromCustomer(userId, customerId);
-    }
-
 
     @When("^User \"([^\"]*)\" is removed from customer with id \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void userIsRemovedFromCustomerWithIdByUser(String username, String customerId, String performerName, String applicationVersionName) throws Throwable {
@@ -274,9 +256,9 @@ public class CustomerStepdefs {
         customerSteps.updateUserCustomerRelationshipByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId, userCustomerRelationship);
     }
 
-    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
+    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\"$")
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode,
-                                                                                               String customerId, String type, String fieldName, String value) throws Throwable {
+                                                                                               String customerId, String fieldName, String value) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsUpdateForCustomer(property, customerId, fieldName, value);
     }
@@ -325,7 +307,7 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGotWithEtag(customerId);
     }
 
-    @When("^Customer(?: with customer id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    @When("^Customer(?: with id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void customerWithCustomerIdIsDeletedByUserForApp(String customerId, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);

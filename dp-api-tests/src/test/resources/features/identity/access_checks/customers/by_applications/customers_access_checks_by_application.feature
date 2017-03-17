@@ -99,10 +99,10 @@ Feature: Customers Application access check feature - GET
     And Custom code is 40402
 
   Scenario: Deleting Customer by application with and without access
-    When Customer with customer id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithoutSubscription"
+    When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is 404
     And Custom code is 40402
-    When Customer with customer id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithSubscription"
+    When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is 204
     And Body is empty
     And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist

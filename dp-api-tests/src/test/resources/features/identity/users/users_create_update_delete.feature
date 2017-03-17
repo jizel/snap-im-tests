@@ -3,7 +3,6 @@ Feature: Users create update delete
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | Id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -11,6 +10,7 @@ Feature: Users create update delete
       | Id                                   | userType | userName      | firstName | lastName | email                         | timezone      | culture |
       | 55529079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot1 | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 66629079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser2 | Snapshot2 | User2    | snapshotUser2@snapshot.travel | Europe/Prague | cs-CZ   |
+
 
   Scenario Outline: Creating users
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"

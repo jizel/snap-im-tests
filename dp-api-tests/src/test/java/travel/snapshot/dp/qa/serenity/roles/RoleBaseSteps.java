@@ -14,6 +14,9 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
+import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
+import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -59,6 +62,30 @@ public class RoleBaseSteps extends BasicSteps {
         roleBaseType = PROPERTY_SET;
     }
 
+    public void setRolesPath(RoleType roleType) {
+        switch(roleType){
+            case CUSTOMER: {
+                spec.basePath(USER_CUSTOMER_ROLES_PATH);
+                roleBasePath = USER_CUSTOMER_ROLES_PATH;
+                roleBaseType = CUSTOMER;
+            }
+            break;
+            case PROPERTY: {
+                spec.basePath(USER_PROPERTY_ROLES_PATH);
+                roleBasePath = USER_PROPERTY_ROLES_PATH;
+                roleBaseType = PROPERTY;
+            }
+            break;
+            case PROPERTY_SET: {
+                spec.basePath(USER_PROPERTY_SET_ROLES_PATH);
+                roleBasePath = USER_PROPERTY_SET_ROLES_PATH;
+                roleBaseType = PROPERTY_SET;
+            }
+            break;
+            default: fail("Invalid role type given");
+        }
+    }
+
     public String getBasePath() {
         return roleBasePath;
     }
@@ -75,8 +102,11 @@ public class RoleBaseSteps extends BasicSteps {
                 if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                     fail("Role cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
                 }
-            } catch (Exception ex){
-                fail("Error when preparing role for creating");
+            } catch(NullPointerException npe){
+                fail("Cannot create role because role type was not set. Use 'Switch to {User Customer | User Property | User Property Set} role type");
+            }
+            catch (Exception ex){
+                fail("Error when preparing role for creating: " + ex.toString());
             }
         });
     }
@@ -115,38 +145,33 @@ public class RoleBaseSteps extends BasicSteps {
 
     @Step
     public Response getRole(String id) {
-        return getEntity(id);
+        Response response = getEntity(id);
+        setSessionResponse(response);
+        return response;
     }
 
-    public RoleDto getRoleByNameForApplicationInternal(String name, String applicationId) {
-        String filter = String.format("name=='%s' and application_id=='%s'", name, applicationId);
-        RoleDto[] roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(RoleDto[].class);
-        return stream(roles).findFirst().orElse(null);
-    }
-
-    public RoleDto getRoleByNameForApplicationInternalUsingCustomerRole(String name, String applicationId) {
+    public RoleDto getRoleByNameUsingCustomerRole(String name) {
         setRolesPathCustomer();
-        return getRoleByNameForApplicationInternal(name, applicationId);
+        return getRoleByName(name);
     }
 
     public RoleDto getRoleByName(String name) {
         String filter = String.format("name=='%s'", name);
-        RoleDto[] roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(RoleDto[].class);
+        RoleDto[] roles = null;
+        switch(getRoleBaseType()){
+            case CUSTOMER : roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(CustomerRoleDto[].class);
+                break;
+            case PROPERTY: roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertyRoleDto[].class);
+                break;
+            case PROPERTY_SET: roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetRoleDto[].class);
+        }
         return stream(roles).findFirst().orElse(null);
-    }
-
-
-    @Step
-    public Response getRoleWithId(String roleId) {
-        Response resp = getRole(roleId);
-        setSessionResponse(resp);
-        return resp;
     }
 
     @Step
     public void getRoleWithNameForApplicationId(String name, String applicationId) {
         //TODO implement actual customer search
-        RoleDto roleByName = getRoleByNameForApplicationInternal(name, applicationId);
+        RoleDto roleByName = getRoleByName(name);
 
         Response resp = getRole(roleByName.getId());
         setSessionResponse(resp);
@@ -175,7 +200,7 @@ public class RoleBaseSteps extends BasicSteps {
     @Step
     public void deleteRoles(List<RoleDto> roles) {
         roles.forEach(r -> {
-            RoleDto existingRole = getRoleByNameForApplicationInternal(r.getRoleName(), r.getId());
+            RoleDto existingRole = getRoleByName(r.getRoleName());
             if (existingRole != null) {
                 deleteRole(existingRole.getId());
             }

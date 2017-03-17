@@ -63,7 +63,7 @@ Feature: User groups create update delete
 
 
   Scenario: Cascade delete (customer is deleted, all his user groups as well)
-    When Customer with customer id "45a5f9e4-5351-4e41-9d20-fdb4609e9353" is deleted
+    When Customer with id "45a5f9e4-5351-4e41-9d20-fdb4609e9353" is deleted
     Then Response code is 204
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
 

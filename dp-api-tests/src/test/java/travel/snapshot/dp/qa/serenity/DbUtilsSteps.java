@@ -47,6 +47,8 @@ public class DbUtilsSteps {
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
+    static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
+
     static final String CREATE_DB_USER = "INSERT INTO User (id, user_type, user_name, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, application_name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
@@ -104,6 +106,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_CUSTOMER_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY);
+        dbHelper.identityDb().update(DELETE_USER_CUSTOMER_ROLE);
         dbHelper.identityDb().update(DELETE_CUSTOMER_USER);
         dbHelper.identityDb().update(DELETE_PARTNER_USER);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
