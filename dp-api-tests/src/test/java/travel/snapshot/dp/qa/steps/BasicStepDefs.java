@@ -136,19 +136,20 @@ public class BasicStepDefs {
                 attributeValue.matches("[A-Z0-9]+"), is(true));
     }
 
-    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
-    public void getRequestIsSentToOnModule(String url, String module, String username, String applicationVersionName) throws Throwable {
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void getRequestIsSentToOnModule(String url, String module,
+                                           String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         basicSteps.sendGetRequestToUrlByUserForApp(userId, applicationVersionId, url, module);
     }
 
-    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" without X-Auth-UserId header$")
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? without X-Auth-UserId header$")
     public void getRequestIsSentToOnModuleWithoutXAuthUserIdHeader(String url, String module) throws Throwable {
         basicSteps.sendGetRequestToUrlWithoutUserHeader(url, module);
     }
 
-    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with empty X-Auth-UserId header$")
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? with empty X-Auth-UserId header$")
     public void getRequestIsSentToOnModuleWithEmptyXAuthUserIdHeader(String url, String module) throws Throwable {
         basicSteps.sendGetRequestToUrlByUser("", url, module);
     }
@@ -158,12 +159,12 @@ public class BasicStepDefs {
         basicSteps.sendDeleteToUrl(url, module);
     }
 
-    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" without X-Auth-AppId header$")
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? without X-Auth-AppId header$")
     public void getRequestIsSentToOnModuleWithoutXAuthAppIdHeader(String url, String module) throws Throwable {
         basicSteps.sendGetRequestToUrlWithoutAppHeader(url, module);
     }
 
-    @When("^GET request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with empty X-Auth-AppId header$")
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? with empty X-Auth-AppId header$")
     public void getRequestIsSentToOnModuleWithEmptyXAuthAppIdHeader(String url, String module) throws Throwable {
         basicSteps.sendGetRequestToUrlByUserForApp(DEFAULT_SNAPSHOT_USER_ID, "", url, module);
     }

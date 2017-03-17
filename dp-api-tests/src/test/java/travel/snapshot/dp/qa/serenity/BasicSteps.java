@@ -256,6 +256,7 @@ public class BasicSteps {
     }
 
     protected void setBaseUriForModule(String module) {
+        module = (module == null) ? "" : module;
         switch (module) {
             case "identity": {
                 spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
