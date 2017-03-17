@@ -19,8 +19,6 @@ Feature: Eventing tests for Customer related operations
     And Notification in session operation is "Create"
     And Notification in session id stands for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881"
 
-#  DP-1900
-  @skipped
   Scenario: Eventing customer deleted
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     Given Customer with id "00000000-3836-4207-a705-000000000000" is stored in session under key "EVENTING_CUSTOMER"

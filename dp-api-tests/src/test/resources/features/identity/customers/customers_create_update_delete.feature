@@ -53,9 +53,9 @@ Feature: Customers create update delete
       | /messages/identity/customers/positive/create_customer_ancient_symbols.json   | POST   | identity | /identity/customers | 㐱㐲㐳  |
       | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
-    #  DP-1900
   @Smoke
   Scenario: Deleting Customer
+    Given Relation between user "Snapshotuser" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is "204"
     And Body is empty

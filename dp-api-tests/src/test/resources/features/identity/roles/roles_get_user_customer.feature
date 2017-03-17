@@ -14,6 +14,7 @@ Feature: Roles get user customer
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
 
+
   @Smoke
   Scenario: Getting role
     When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got
