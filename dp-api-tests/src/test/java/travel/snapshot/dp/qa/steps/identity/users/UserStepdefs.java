@@ -442,12 +442,21 @@ public class UserStepdefs {
 
 
     @When("^User \"([^\"]*)\" assigns role \"([^\"]*)\" to relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
-    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId, String appVersionName) throws Throwable {
-        roleBaseSteps.setRolesPath(RoleType.valueOf(thirdLevelName.toUpperCase()));
+    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelType, String thirdLevelName, String appVersionName) throws Throwable {
+        roleBaseSteps.setRolesPath(RoleType.valueOf(thirdLevelType.toUpperCase()));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
+        String thirdLevelId = null;
+        switch (thirdLevelType) {
+            case "customer":     thirdLevelId = thirdLevelName;
+                                 break;
+            case "property":     thirdLevelId = propertySteps.resolvePropertyId(thirdLevelName);
+                                 break;
+            case "property set": thirdLevelId = propertySetSteps.resolvePropertySetId(thirdLevelName);
+                                 break;
+        }
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
-        usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
+        usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), thirdLevelType, thirdLevelId, roleId);
 
     }
 

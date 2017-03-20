@@ -23,8 +23,8 @@ Feature: User-property roles access check by app feature - GET
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
-      | Id                                   | commercialSubscriptionId             |
-      | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
+      | Id                                   | commercialSubscriptionId             | applicationVersionId                 |
+      | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 | 22200000-0000-4000-a000-000000000333 |
     Given Switch for user property role tests
     Given The following roles exist
       | Id                                   | applicationId                        | roleName | description      |
@@ -65,3 +65,13 @@ Feature: User-property roles access check by app feature - GET
     Then Response code is "404"
     When User "user1" assigns role "NewRole" to relation between user "user1" and property "defaultPropertyCode" for application version "versionWithSubscription"
     Then Response code is "201"
+
+  Scenario: Meaningful error messages at attempts to attach role of wrong type
+    Given Switch for user property set role tests
+    Given The following roles exist
+      | Id                                   | applicationId                        | roleName  | description      |
+      | 1d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | FalseRole | Some description |
+    When User "defaultSnapshotUser" assigns role "1d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1" and property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then Response code is "422"
+    And Body contains property with attribute "message" value "Reference does not exist. The entity PropertyRole with ID 1d07159e-855a-4fc3-bcf2-a0cdbf54a44d cannot be found."
+
