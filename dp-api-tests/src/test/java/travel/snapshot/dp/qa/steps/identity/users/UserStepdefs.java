@@ -24,6 +24,7 @@ import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
+import travel.snapshot.dp.qa.helpers.RoleType;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -65,7 +66,7 @@ public class UserStepdefs {
         usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
 
-    @When("^The following users is created for customer \"([^\"]*)\" as primary \"([^\"]*)\"$")
+    @When("^The following users is created for customer \"([^\"]*)\"(?: as primary \"([^\"]*)\")?$")
     public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
         usersSteps.createUserWithCustomer(users.get(0), customerId, isPrimary);
     }
@@ -168,27 +169,19 @@ public class UserStepdefs {
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_added_to_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto role = roleBaseSteps.getRoleByName(roleName);
         usersSteps.roleIsAddedToUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
-    }
-
-
-
-    @Given("^Relation between role with name \"([^\"]*)\" for application id \"([^\"]*)\" and user \"([^\"]*)\" exists with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
-    public void Relation_between_role_with_name_for_application_i_and_user_with_username_exists_with_relationship_type_and_entity_with_id(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
-        usersSteps.relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto role = roleBaseSteps.getRoleByName(roleName);
         usersSteps.roleIsDeletedFromUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
     @Then("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is not there for user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_not_there_for_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByNameForApplicationInternal(roleName, applicationId);
+        RoleDto role = roleBaseSteps.getRoleByName(roleName);
         usersSteps.roleDoesntExistForUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
     }
 
@@ -447,8 +440,10 @@ public class UserStepdefs {
         usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelName, secondLevelId);
     }
 
+
     @When("^User \"([^\"]*)\" assigns role \"([^\"]*)\" to relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
     public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId, String appVersionName) throws Throwable {
+        roleBaseSteps.setRolesPath(RoleType.valueOf(thirdLevelName.toUpperCase()));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
@@ -456,8 +451,10 @@ public class UserStepdefs {
 
     }
 
+
     @When("^User \"([^\"]*)\" deletes role \"([^\"]*)\" from relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
     public void userDeletesRoleFromUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId, String appVersionName) throws Throwable {
+        roleBaseSteps.setRolesPath(RoleType.valueOf(thirdLevelName.toUpperCase()));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);

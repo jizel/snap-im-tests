@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.jms;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import net.thucydides.core.annotations.Steps;
@@ -140,15 +141,15 @@ public class EventingStepsDefs {
         steps.notificationContainsId(u.getId());
     }
 
-    @Then("^Notification in session id stands for role with name \"([^\"]*)\" for application id  \"([^\"]*)\"$")
-    public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName, String applicationId) throws Throwable {
-        RoleDto r = roleBaseSteps.getRoleByNameForApplicationInternalUsingCustomerRole(roleName, applicationId);
-        steps.notificationContainsId(r.getId());
+    @Then("^Notification in session id stands for role with name \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_role_with_name_for_application_id(String roleName) throws Throwable {
+        RoleDto role = roleBaseSteps.getRoleByNameUsingCustomerRole(roleName);
+        steps.notificationContainsId(role.getId());
     }
 
-    @Then("^Notification in session id stands for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
-    public void Notification_in_session_id_stands_for_role_with_name_for_customer_with_code(String propertySetName, String customerId) throws Throwable {
-        PropertySetDto ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
+    @Then("^Notification in session id stands for property set \"([^\"]*)\"$")
+    public void Notification_in_session_id_stands_for_role_with_name_for_customer_with_code(String propertySetName) throws Throwable {
+        PropertySetDto ps = propertySetSteps.getPropertySetByName(propertySetName);
         steps.notificationContainsId(ps.getId());
     }
 
@@ -157,27 +158,27 @@ public class EventingStepsDefs {
         steps.notificationContainsParentId(customerId);
     }
 
-    @Given("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
-    public void Role_with_name_is_stored_in_session_under_key(String roleName, String applicationId, String sessionKey) throws Throwable {
-        steps.setSessionVariable(sessionKey, roleBaseSteps.getRoleByNameForApplicationInternalUsingCustomerRole(roleName, applicationId));
+    @Given("^Role \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
+    public void Role_with_name_is_stored_in_session_under_key(String roleName, String sessionKey) throws Throwable {
+        steps.setSessionVariable(sessionKey, roleBaseSteps.getRoleByNameUsingCustomerRole(roleName));
     }
 
     @Then("^Notification in session id stands for role in session on key \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_role_in_session_on_key(String sessionKey) throws Throwable {
-        RoleDto r = steps.getSessionVariable(sessionKey);
-        steps.notificationContainsId(r.getId());
+        RoleDto role = steps.getSessionVariable(sessionKey);
+        steps.notificationContainsId(role.getId());
     }
 
 
-    @Then("^Notification in session parent id stands for user with username \"([^\"]*)\"$")
+    @Then("^Notification in session parent id stands for user(?: with username)? \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_user_with_username(String username) throws Throwable {
         UserDto u = usersSteps.getUserByUsername(username);
         steps.notificationContainsParentId(u.getId());
     }
 
-    @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
-    public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName, String customerId) throws Throwable {
-        PropertySetDto ps = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
+    @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\"$")
+    public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName) throws Throwable {
+        PropertySetDto ps = propertySetSteps.getPropertySetByName(propertySetName);
         steps.notificationContainsParentId(ps.getId());
 
     }
@@ -231,5 +232,10 @@ public class EventingStepsDefs {
     public void storedNotificationHasKeyAndValue(String key, String expectedValue) throws Throwable {
         String returnedValue = steps.getNotificationValue(key);
         assertThat("Value " + expectedValue + " was expected for key " + key + " but actual value is: " + returnedValue, returnedValue, is(expectedValue));
+    }
+
+    @And("^Parent id in notification is \"([^\"]*)\"$")
+    public void parentIdInNotificationIs(String parentId) throws Throwable {
+        steps.notificationContainsParentId(parentId);
     }
 }

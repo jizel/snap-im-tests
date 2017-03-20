@@ -43,7 +43,7 @@ Feature: Roles create update delete user property
 
   @Smoke
   Scenario: Deleting role
-    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    When Role with name "Role name 1" is deleted
     Then Response code is "204"
     And Body is empty
     And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"

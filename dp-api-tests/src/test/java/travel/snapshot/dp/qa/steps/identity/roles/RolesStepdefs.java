@@ -63,12 +63,10 @@ public class RolesStepdefs {
         roleBaseSteps.compareRoleOnHeaderWithStored(header);
     }
 
-    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is deleted$")
-    public void role_with_name_for_application_id_is_deleted(String roleName, String applicationId) throws Throwable {
-//        TODO: Remove applicationId from this step, refactor all usages
-        RoleDto role = roleBaseSteps.getRoleByName(roleName);
-        assertThat(role, is(notNullValue()));
-        roleBaseSteps.deleteRole(role.getId());
+    @When("^Role(?: with name)? \"([^\"]*)\" is deleted$")
+    public void role_with_name_for_application_id_is_deleted(String roleName) throws Throwable {
+        String roleId = roleBaseSteps.resolveRoleId(roleName);
+        roleBaseSteps.deleteRole(roleId);
     }
 
     @When("^Nonexistent role id is deleted$")
@@ -119,10 +117,10 @@ public class RolesStepdefs {
 
     @When("^Nonexistent role id got$")
     public void Nonexistent_role_id_got() throws Throwable {
-        roleBaseSteps.getRoleWithId("nonexistent");
+        roleBaseSteps.getRole("nonexistent");
     }
 
-    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is got$")
+    @When("^Role with name \"([^\"]*)\"(?: for application id \"([^\"]*)\")? is got$")
     public void Role_with_name_for_application_id_is_got(String roleName, String applicationId) throws Throwable {
         roleBaseSteps.getRoleWithNameForApplicationId(roleName, applicationId);
     }

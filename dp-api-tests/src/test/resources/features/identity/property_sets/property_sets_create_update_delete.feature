@@ -48,15 +48,15 @@ Feature: Property sets create update delete
 
   Scenario Outline: Updating property set
 #  Property sets for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" were deleted in background, so we don't need to clean here.
-    When Property set "<name           >" is updated with following data
+    When Property set "<name>" is updated with following data
       | name                      | description              | type              |
-      | <updated_name           > | <description           > | <type           > |
+      | <updated_name> | <description> | <type> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated property set "<updated_name           >" has following data
+    And Updated property set "<updated_name>" has following data
       | name                      | description              | type              |
-      | <updated_name           > | <description           > | <type           > |
+      | <updated_name> | <description> | <type> |
     Examples:
       | name            | updated_name            | description              | type            |
       | ps1_name        | ps1_updated             | ps1_updated_description  | brand           |

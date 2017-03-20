@@ -179,13 +179,6 @@ public class PropertiesStepdefs {
         propertySteps.deleteProperty("nonexistent_id");
     }
 
-    @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"$")
-    public void User_with_username_is_removed_from_property_with_code(String username, String propertyCode) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
-        String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        propertySteps.userIsDeletedFromProperty(userId, propertyId);
-    }
-
     @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void userWithUsernameIsRemovedFromPropertyWithCodeByUser(String username, String propertyCode, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
@@ -425,12 +418,6 @@ public class PropertiesStepdefs {
         propertySteps.createDefaultMinimalPropertyWithAddress(propertyName, userId, customerId, addresses.get(0));
     }
 
-    @When("^Property with code \"([^\"]*)\" is updated with data$")
-    public void propertyIsUpdatedWithData(String propertyCode, List<PropertyUpdateDto> propertyUpdates) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        propertySteps.updateProperty(propertyId, propertyUpdates.get(0));
-    }
-
     @When("^Property with code \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeIsUpdatedWithDataByUser(String propertyCode, String username, String applicationVersionName, List<PropertyUpdateDto> propertyUpdates) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
@@ -509,11 +496,12 @@ public class PropertiesStepdefs {
         usersSteps.updateUserPropertyRelationshipByUser(performerId, userId, propertyId, relation);
     }
 
-    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and user \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?$")
-    public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username, String performerName) throws Throwable {
+    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and user \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")(?: for application \"([^\"]*)\")?$")
+    public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username, String performerName, String applicationVersionName) throws Throwable {
         String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        propertySteps.deletePropertyUserRelationshipByUser(performerId, ids.get(PROPERTY_ID), ids.get(USER_ID));
+        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.deletePropertyUserRelationshipByUserForApp(performerId, applicationVersionId, ids.get(PROPERTY_ID), ids.get(USER_ID));
     }
 
     @When("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" is (in|de)?activated$")
