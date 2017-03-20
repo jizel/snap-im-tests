@@ -9,19 +9,20 @@ Feature: Roles create update delete user customer
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     Given The following roles exist
-      | Id                                   | roleName    | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
+      | Id                                   | roleName    | description            | applicationId                        |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
 
   @Smoke
   Scenario: Creating role
     When Role is created
-      | Id                                   | roleName            | description            |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
+      | Id                                   | roleName            | description            | applicationId                        |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Created role name 1"
     And Body contains entity with attribute "description" value "optional description 1"
+    And Body contains entity with attribute "is_initial" value "false"
     And Etag header is present
 
 
@@ -41,7 +42,7 @@ Feature: Roles create update delete user customer
 
   @Smoke
   Scenario: Deleting role
-    When Role with name "Role name 1" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    When Role with name "Role name 1" is deleted
     Then Response code is "204"
     And Body is empty
     And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
@@ -103,69 +104,69 @@ Feature: Roles create update delete user customer
 
   Scenario: Role ID and name is unique when creating role - DP-1661
     When Role is created
-      | roleId                               | roleName         | description            | Id                                   |
+      | roleId                               | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "user_cust_role"
     When Role is created
-      | roleId                               | roleName         | description            | Id                                   |
+      | roleId                               | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role2  | Same ID different name | 11111111-0000-4000-a000-111111111111 |
     Then Response code is "409"
     And Custom code is 40902
     When Role is created
-      | roleName         | description            | Id                                   |
+      | roleName         | description            | applicationId                        |
       | user_cust_role   | Same name different ID | 11111111-0000-4000-a000-111111111111 |
     Then Response code is "409"
     And Custom code is 40907
 
   Scenario: Role ID is unique for all applications, role name just for one
     Given Role is created
-      | roleId                               | roleName         | description            | Id                                   |
+      | Id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
     Given The following applications exist
-      | applicationName  | description               | website                    | Id                                   | Id                                  | isInternal |
-      | OtherApplication | Application description 1 | http://www.snapshot.travel | 1118fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
+      | applicationName  | description               | website                    | Id                                   | partnerId                            | isInternal |
+      | OtherApplication | Application description 1 | http://www.snapshot.travel | 1118fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     When Role is created
-      | roleId                               | roleName         | description            | Id                                   |
+      | Id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same ID different app  | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "409"
     When Role is created
-      | roleId                               | roleName         | description             | Id                                   |
+      | Id                                   | roleName         | description             | applicationId                        |
       | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
 
     Scenario: Create the same role for all role types - DP-1803. Only one role of one type with given name can exist.
       When Role is created
-        | Id                                   | roleName            | description            |
+        | applicationId                        | roleName            | description            |
         | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
       Then Response code is "201"
       And Body contains entity with attribute "name" value "Created role name 1"
       When Role is created
-        | Id                                   | roleName            | description            |
+        | applicationId                        | roleName            | description            |
         | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
       Then Response code is "409"
       And Custom code is 40907
 
       Given Switch for user property role tests
       When Role is created
-        | Id                                   | roleName            | description            |
+        | applicationId                        | roleName            | description            |
         | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
       Then Response code is "201"
       And Body contains entity with attribute "name" value "Created role name 1"
       When Role is created
-        | Id                                   | roleName            | description            |
+        | applicationId                        | roleName            | description            |
         | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
       Then Response code is "409"
       And Custom code is 40907
 
       Given Switch for user property set role tests
       When Role is created
-        | Id                                   | roleName            | description            |
+        | applicationId                        | roleName            | description            |
         | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
       Then Response code is "201"
       And Body contains entity with attribute "name" value "Created role name 1"
       When Role is created
-        | Id                                   | roleName            | description            |
+        | applicationId                        | roleName            | description            |
         | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 |
       Then Response code is "409"
       And Custom code is 40907

@@ -68,7 +68,7 @@ public class PropertySetsStepdefs {
 //    End of help methods section
 
 
-    @Given("^The following property sets exist for customer with id \"([^\"]*)\" and user \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
+    @Given("^The following property sets exist for customer with id \"([^\"]*)\"(?: and user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, String isActiveString, List<PropertySetDto> propertySets) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
@@ -137,12 +137,6 @@ public class PropertySetsStepdefs {
         propertySetSteps.listOfPropertySetsIsGotByUserForApp(userId, applicationVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Property set \"([^\"]*)\" is deleted$")
-    public void Property_set_with_name_for_customer_with_code_is_deleted(String propertySetName) throws Throwable {
-        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySetSteps.deletePropertySet(propertySetId);
-    }
-
     @When("^Property set \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertySetIsDeletedByUser(String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
@@ -168,12 +162,6 @@ public class PropertySetsStepdefs {
         String performerId = usersSteps.resolveUserId(performerName);
         Response response = propertySetSteps.addUserToPropertySetByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_SET_ID), isActive);
         propertySetSteps.setSessionResponse(response);
-    }
-
-    @When("^User \"([^\"]*)\" is removed from property set \"([^\"]*)\"$")
-    public void User_with_username_is_removed_from_property_set_with_name_for_customer_with_code(String username, String propertySetName) throws Throwable {
-        Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        propertySetSteps.removeUserFromPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
     }
 
     @When("^Nonexistent user is removed from property set with name \"([^\"]*)\"$")
@@ -245,14 +233,6 @@ public class PropertySetsStepdefs {
         propertySetSteps.setSessionResponse(response);
     }
 
-    @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\"$")
-    public void Property_with_code_is_removed_from_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId( propertyCode );
-        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySetSteps.removePropertyFromPropertySet(propertyId, propertySetId);
-    }
-
-
     @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeIsRemovedFromPropertySetByUser(String propertyCode, String propertySetName, String username, String applicationVersionName  ) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
@@ -309,12 +289,6 @@ public class PropertySetsStepdefs {
     @Then("^There are (\\d+) property set properties returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
         propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, count);
-    }
-
-    @When("^Property set \"([^\"]*)\" is updated with following data$")
-    public void propertySetWithNameIsUpdatedWithFollowingData(String propertySetName, List<PropertySetUpdateDto> propSet) throws Throwable {
-        String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        propertySetSteps.updatePropertySet(propertySetId, propSet.get(0));
     }
 
     @When("^Property set \"([^\"]*)\" is updated with following data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")

@@ -65,7 +65,7 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     public void followingPropertySetIsCreated(PropertySetDto PropertySetDto, String customerId) {
-        PropertySetDto.setCustomerId(customerId);
+            PropertySetDto.setCustomerId(customerId);
 
         Response resp = createEntity(PropertySetDto);
         setSessionResponse(resp);

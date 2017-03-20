@@ -10,7 +10,7 @@ Feature: Roles get user property set
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
 
     Given The following roles exist
-      | Id                                   | roleName    | description            |
+      | applicationId                        | roleName    | description            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 |
@@ -36,7 +36,7 @@ Feature: Roles get user property set
 
   Scenario Outline: Getting list of roles
     Given The following roles exist
-      | Id                                   | roleName          | description             |
+      | applicationId                        | roleName          | description             |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 1  | optional description 1  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 2  | optional description 2  |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | List role name 3  | optional description 3  |
@@ -148,31 +148,32 @@ Feature: Roles get user property set
 
   Scenario Outline: Filtering list of roles
     Given The following roles exist
-      | Id                                   | roleName           | description             |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 1 | optional description 1  |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 2 | optional description 2  |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 3 | different description 3 |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 4 | different description 4 |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 5 | optional description 5  |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 6 | optional description 3  |
+      | applicationId                        | roleName           | description             | isInitial |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 1 | optional description 1  | true      |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 2 | optional description 2  | true      |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 3 | different description 3 | true      |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 4 | different description 4 | true      |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 5 | optional description 5  | false     |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Filter role name 6 | optional description 3  | false     |
 
     When List of roles is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> roles returned
     And There are roles with following names returned in order: <expected_names>
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter                                                                             | sort  | sort_desc | expected_names                                                                                     |
-      | 5     | 0      | 5        | 6     | name=='Filter role name*'                                                          | name  |           | Filter role name 1, Filter role name 2, Filter role name 3, Filter role name 4, Filter role name 5 |
-      | 5     | 0      | 5        | 6     | name=='Filter role name*'                                                          |       | name      | Filter role name 6, Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2 |
-      | 5     | 2      | 4        | 6     | name=='Filter role name*'                                                          | name  |           | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
-      | 5     | 2      | 4        | 6     | name=='Filter role name*'                                                          |       | name      | Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1                     |
-      | 5     | 4      | 2        | 6     | name=='Filter role name*'                                                          | name  |           | Filter role name 5, Filter role name 6                                                             |
-      | /null | /null  | 1        | 1     | name=='Filter role name 6'                                                         | /null | /null     | Filter role name 6                                                                                 |
-      | /null | /null  | 2        | 2     | name=='Filter role name*' and application_id==a318fd9a-a05d-42d8-8e84-42e904ace123 | name  | /null     | Filter role name 1, Filter role name 2                                                             |
-      | /null | /null  | 4        | 4     | application_id==b318fd9a-a05d-42d8-8e84-42e904ace123                               | name  | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
-      | /null | /null  | 2        | 2     | description=='different*'                                                          | name  | /null     | Filter role name 3, Filter role name 4                                                             |
+      | limit | cursor | total | filter                                                                             | sort  | sort_desc | expected_names                                                                                     |
+      | 5     | 0      | 6     | name=='Filter role name*'                                                          | name  |           | Filter role name 1, Filter role name 2, Filter role name 3, Filter role name 4, Filter role name 5 |
+      | 5     | 0      | 6     | name=='Filter role name*'                                                          |       | name      | Filter role name 6, Filter role name 5, Filter role name 4, Filter role name 3, Filter role name 2 |
+      | 5     | 2      | 6     | name=='Filter role name*'                                                          | name  |           | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | 5     | 2      | 6     | name=='Filter role name*'                                                          |       | name      | Filter role name 4, Filter role name 3, Filter role name 2, Filter role name 1                     |
+      | 5     | 4      | 6     | name=='Filter role name*'                                                          | name  |           | Filter role name 5, Filter role name 6                                                             |
+      | /null | /null  | 1     | name=='Filter role name 6'                                                         | /null | /null     | Filter role name 6                                                                                 |
+      | /null | /null  | 2     | name=='Filter role name*' and application_id==a318fd9a-a05d-42d8-8e84-42e904ace123 | name  | /null     | Filter role name 1, Filter role name 2                                                             |
+      | /null | /null  | 4     | application_id==b318fd9a-a05d-42d8-8e84-42e904ace123                               | name  | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | /null | /null  | 2     | description=='different*'                                                          | name  | /null     | Filter role name 3, Filter role name 4                                                             |
+      | 5     | 0      | 2     | name=='Filter role name*' and is_initial=='false'                           | name  |           | Filter role name 5, Filter role name 6                                                             |
+
   #add all fields
 

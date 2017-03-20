@@ -53,16 +53,16 @@ Feature: Customers create update delete
       | /messages/identity/customers/positive/create_customer_ancient_symbols.json   | POST   | identity | /identity/customers | 㐱㐲㐳  |
       | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
-    #  DP-1900
   @Smoke
   Scenario: Deleting Customer
-    When Customer with customer id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Given Relation between user "Snapshotuser" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is "204"
     And Body is empty
     And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" doesn't exist
 
   Scenario: Checking error code for deleting customer
-    When Customer with customer id "NotExistentCustomer" is deleted
+    When Customer with id "NotExistentCustomer" is deleted
     Then Response code is "412"
     And Customer with id "NotExistentCustomer" doesn't exist
 
@@ -563,7 +563,7 @@ Feature: Customers create update delete
       | Id                                   | companyName | email              | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 0002d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | salesforceid_1 | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is 201
-    When Customer with customer id "0002d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    When Customer with id "0002d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is 204
     Given The following customers exist with random address
       | Id                                   | companyName | email              | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |

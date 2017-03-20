@@ -12,7 +12,6 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -169,7 +168,7 @@ public class UsersSteps extends BasicSteps {
 
     public UserDto getUserByUsername(String username) {
         UserDto[] users = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_name==" + username, null, null, null).as(UserDto[].class);
-        return Arrays.asList(users).stream().findFirst().orElse(null);
+        return stream(users).findFirst().orElse(null);
     }
 
     @Step
@@ -216,23 +215,6 @@ public class UsersSteps extends BasicSteps {
 
         Response response = addRoleToUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
         setSessionResponse(response);
-    }
-
-    public void relationExistsBetweenRoleAndUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
-        UserDto u = getUserByUsername(username);
-
-        RoleDto existingUserRole = getRoleForUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
-        if (existingUserRole != null) {
-
-            Response deleteResponse = deleteRoleFromUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
-            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-                fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
-            }
-        }
-        Response createResponse = addRoleToUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
-        if (createResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-            fail("PropertyUser cannot be created - status: " + createResponse.getStatusCode() + ", " + createResponse.asString());
-        }
     }
 
     @Step
@@ -415,9 +397,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public Response addPropertySetToUserByUser(String performerId, String propertySetId, String userId){
-        return given().spec(spec).header(HEADER_XAUTH_USER_ID, performerId)
-                .body(singletonMap("property_set_id", propertySetId))
-                .when().post("/{userId}/property_sets", userId);
+        return createSecondLevelRelationshipByUser(performerId, userId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, singletonMap("property_set_id", propertySetId));
     }
 
     private String buildPathForRoles(String entityName, String userName, String entityId) {

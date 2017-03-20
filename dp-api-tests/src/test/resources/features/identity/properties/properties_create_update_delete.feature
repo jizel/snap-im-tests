@@ -41,7 +41,6 @@ Feature: Properties create update delete
     Then Body contains entity with attribute "is_demo_property" value "false"
     Then Body contains entity with attribute "description" value "updated_desc"
 
-#  DP-1900
   @Smoke
   Scenario: Deleting Property
     When Property with code "p1_code" is deleted
