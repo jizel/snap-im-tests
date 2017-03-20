@@ -21,8 +21,6 @@ Feature: Eventing tests for Property
     And Notification in session operation is "Create"
     And Notification in session id stands for property with code "event_prop_1_create"
 
-#  DP-1900
-  @skipped
   Scenario: Eventing property deleted
     Given Property with code "event_property" is stored in session under key "EVENTING_PROPERTY"
     Given Subscription with name "Test" for topic "Notifications.crud" is created

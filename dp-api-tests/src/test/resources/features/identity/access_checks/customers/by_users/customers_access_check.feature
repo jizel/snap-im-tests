@@ -164,8 +164,6 @@ Feature: Customers access check feature - GET
     And Body is empty
     And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist
 
-#  DP-1900
-  @skipped
   Scenario: Deleting Customer by user without access to it
     When Customer "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust2"
     Then Response code is 404
@@ -173,7 +171,7 @@ Feature: Customers access check feature - GET
     Then Response code is "404"
     Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is activated
     When Customer "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
-    Then Response code is "204"
+    Then Response code is "409"
 
   Scenario: User loses access to customer when relation is deleted - DP-1811
     Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is deleted
