@@ -23,6 +23,7 @@ import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -52,6 +53,9 @@ public class UserStepdefs {
 
     @Steps
     private PropertySetSteps propertySetSteps;
+
+    @Steps
+    private ApplicationVersionsSteps applicationVersionsSteps;
 
 
     @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
@@ -134,19 +138,17 @@ public class UserStepdefs {
         usersSteps.userWithIdIsGot("nonexistent");
     }
 
-    @When("^List of users is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"(?: by user \"([^\"]*)\")?$")
+    @When("^List of users is got(?: with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void List_of_users_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
                                                                                              @Transform(NullEmptyStringConverter.class) String cursor,
                                                                                              @Transform(NullEmptyStringConverter.class) String filter,
                                                                                              @Transform(NullEmptyStringConverter.class) String sort,
                                                                                              @Transform(NullEmptyStringConverter.class) String sortDesc,
-                                                                                             @Transform(NullEmptyStringConverter.class) String userName) throws Throwable {
+                                                                                             @Transform(NullEmptyStringConverter.class) String userName,
+                                                                                             @Transform(NullEmptyStringConverter.class) String appVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
-        if (userId != null) {
-            usersSteps.listOfUsersIsGotByUser(limit, cursor, filter, sort, sortDesc, userId);
-        } else {
-            usersSteps.listOfUsersIsGotWith(limit, cursor, filter, sort, sortDesc);
-        }
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        usersSteps.listOfUsersIsGotByUserForApp(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are (\\d+) users returned$")
@@ -425,10 +427,11 @@ public class UserStepdefs {
         usersSteps.deleteUserByUser(userIdMap.get(REQUESTOR_ID), userIdMap.get(TARGET_ID));
     }
 
-    @When("^Relation between user \"([^\"]*)\" and customer \"([^\"]*)\" is requested by user \"([^\"]*)\"$")
-    public void relationBetweenUserWithUsernameAndCustomerIsRequestedByUser(String targetUserName, String customerId, String requestorUserName) throws Throwable {
+    @When("^Relation between user \"([^\"]*)\" and customer \"([^\"]*)\" is requested by user \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void relationBetweenUserWithUsernameAndCustomerIsRequestedByUser(String targetUserName, String customerId, String requestorUserName, String appVersionName) throws Throwable {
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
-        usersSteps.getUserCustomerRelationByUser(userIdMap.get(REQUESTOR_ID), customerId, userIdMap.get(TARGET_ID));
+        usersSteps.getUserCustomerRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, customerId, userIdMap.get(TARGET_ID));
     }
 
     @When("^User \"([^\"]*)\" requests list of customer for user \"([^\"]*)\"$")
@@ -437,25 +440,28 @@ public class UserStepdefs {
         usersSteps.listUserCustomersByUser(userIdMap.get(REQUESTOR_ID), userIdMap.get(TARGET_ID));
     }
 
-    @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"$")
-    public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelName, String secondLevelId) throws Throwable {
+    @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelName, String secondLevelId, String appVersionName) throws Throwable {
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
-        usersSteps.listRolesForRelationByUser(userIdMap.get(REQUESTOR_ID), userIdMap.get(TARGET_ID), secondLevelName, secondLevelId);
+        usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelName, secondLevelId);
     }
 
-    @When("^User \"([^\"]*)\" assigns role \"([^\"]*)\" to relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"$")
-    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId) throws Throwable {
+    @When("^User \"([^\"]*)\" assigns role \"([^\"]*)\" to relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId, String appVersionName) throws Throwable {
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        usersSteps.userAssignsRoleToRelation(userIdsMap.get(REQUESTOR_ID), userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
+        String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
 
     }
 
-    @When("^User \"([^\"]*)\" deletes role \"([^\"]*)\" from relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"$")
-    public void userDeletesRoleFromUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId) throws Throwable {
+    @When("^User \"([^\"]*)\" deletes role \"([^\"]*)\" from relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userDeletesRoleFromUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId, String appVersionName) throws Throwable {
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        usersSteps.userDeletesRoleFromRelation(userIdsMap.get(REQUESTOR_ID), userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
+        String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        usersSteps.userDeletesRoleFromRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
     }
 
     @When("^User \"([^\"]*)\" creates user with:$")
@@ -464,33 +470,37 @@ public class UserStepdefs {
         usersSteps.createUserByUser(userId, users.get(0));
     }
 
-    @When("^User \"([^\"]*)\" requests(?: list of)? users for property \"([^\"]*)\"$")
-    public void userRequestsListOfUsersForProperty(String userName, String propertyName) throws Throwable {
+    @When("^User \"([^\"]*)\" requests(?: list of)? users for property \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userRequestsListOfUsersForProperty(String userName, String propertyName, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
         String propertyId = propertySteps.resolvePropertyId(propertyName);
-        propertySteps.listUsersForPropertyByUser(userId, propertyId);
+        String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(applicationVersionName);
+        propertySteps.listUsersForPropertyByUserForApp(userId, applicationVersionId, propertyId);
     }
 
-    @When("^User \"([^\"]*)\" adds user \"([^\"]*)\" to property \"([^\"]*)\"$")
-    public void userAddsUserToProperty(String requestorName, String targetUserName, String propertyCode) throws Throwable {
+    @When("^User \"([^\"]*)\" adds user \"([^\"]*)\" to property \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userAddsUserToProperty(String requestorName, String targetUserName, String propertyCode, String appVersionName) throws Throwable {
         String requestorId = usersSteps.resolveUserId(requestorName);
         String targetUserId = usersSteps.resolveUserId(targetUserName);
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        propertySteps.addPropertyToUserByUser(requestorId, propertyId, targetUserId);
+        String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        propertySteps.addPropertyToUserByUserForApp(requestorId, applicationVersionId, propertyId, targetUserId);
     }
 
-    @When("^User \"([^\"]*)\" adds user \"([^\"]*)\" to customer \"([^\"]*)\"$")
-    public void userAddsUserToCustomer(String requestorName, String targetUserName, String customerId) throws Throwable {
+    @When("^User \"([^\"]*)\" adds user \"([^\"]*)\" to customer \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userAddsUserToCustomer(String requestorName, String targetUserName, String customerId, String appVersionName) throws Throwable {
         String requestorId = usersSteps.resolveUserId(requestorName);
         String targetUserId = usersSteps.resolveUserId(targetUserName);
-        customerSteps.addUserToCustomerByUser(requestorId, targetUserId, customerId, true, true);
+        String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        customerSteps.addUserToCustomerByUserForApp(requestorId, applicationVersionId, targetUserId, customerId, true, true);
     }
 
-    @When("^User \"([^\"]*)\" (?:removes|deletes) user \"([^\"]*)\" from customer \"([^\"]*)\"$")
-    public void userRemovesUserFromCustomer(String requestorName, String targetUserName, String customerId) throws Throwable {
+    @When("^User \"([^\"]*)\" (?:removes|deletes) user \"([^\"]*)\" from customer \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userRemovesUserFromCustomer(String requestorName, String targetUserName, String customerId, String appVersionName) throws Throwable {
         String requestorId = usersSteps.resolveUserId(requestorName);
         String targetUserId = usersSteps.resolveUserId(targetUserName);
-        customerSteps.removeUserFromCustomerByUser(requestorId, customerId, targetUserId);
+        String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        customerSteps.removeUserFromCustomerByUserForApp(requestorId, applicationVersionId, customerId, targetUserId);
     }
 
     @When("^User \"([^\"]*)\" requests (?:list of )?users for property set \"([^\"]*)\"$")
@@ -498,5 +508,14 @@ public class UserStepdefs {
         String requestorId = usersSteps.resolveUserId(requestorName);
         String propertySetId = propertySetSteps.resolvePropertySetId(propertySetName);
         propertySetSteps.listOfUsersForPropertySetIsGotByUserForApp(requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertySetId, null, null, null, null, null);
+    }
+
+    @When("^User \"([^\"]*)\" deletes user \"([^\"]*)\" from property \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
+    public void userDeletesUserFromPropertyForApplicationVersion(String requestorName, String targetUserName, String propertyName, String appVersionName) throws Throwable {
+        String requestorId = usersSteps.resolveUserId(requestorName);
+        String targetUserId = usersSteps.resolveUserId(targetUserName);
+        String propertyId = propertySteps.resolvePropertyId(propertyName);
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        propertySteps.deletePropertyUserRelationshipByUserForApp(requestorId, appVersionId, propertyId, targetUserId);
     }
 }

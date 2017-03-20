@@ -3,9 +3,6 @@ Feature: Customers properties get
 
   Background:
     Given Database is cleaned and default entities are created
-
-
-
     Given The following application versions exists
       | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |

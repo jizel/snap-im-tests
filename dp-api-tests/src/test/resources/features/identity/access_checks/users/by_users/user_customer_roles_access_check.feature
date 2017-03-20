@@ -23,7 +23,7 @@
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 
 
-  # DP-1781
+  # DP-1780
   @skipped
   Scenario: User can view only list of customer-user roles of his own customer (with active relation)
     Given Switch for user customer role tests
