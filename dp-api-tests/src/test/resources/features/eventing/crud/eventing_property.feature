@@ -21,6 +21,28 @@ Feature: Eventing tests for Property
     And Notification in session operation is "Create"
     And Notification in session id stands for property with code "event_prop_1_create"
 
+  Scenario: Eventing property created by nonsnapshot user - DP-1728
+    Given The following customers exist with random address
+      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+      | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | customer | eventCustomerUser | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Subscription with name "Test" for topic "Notifications.crud" is created
+    And The following property is created with random address and billing address for user "eventCustomerUser"
+      | salesforceId   | name         | propertyCode        | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Property"
+    And Notification in session operation is "Create"
+    And Notification in session id stands for property with code "event_prop_1_create"
+    Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
+    And Notification in session entity_type is "Property"
+    And Notification in session operation is "Create"
+    And Notification in session parent entity type is "User"
+    And Notification in session parent id stands for user with username "eventCustomerUser"
+
   Scenario: Eventing property deleted
     Given Property with code "event_property" is stored in session under key "EVENTING_PROPERTY"
     Given Subscription with name "Test" for topic "Notifications.crud" is created
