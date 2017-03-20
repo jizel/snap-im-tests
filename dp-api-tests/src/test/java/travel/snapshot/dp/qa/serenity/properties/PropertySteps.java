@@ -419,11 +419,6 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void deletePropertyUserRelationship(String propertyId, String userId){
-        deletePropertyUserRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, userId);
-    }
-
-    @Step
     public void deletePropertyUserRelationshipByUserForApp(String performerId, String applicationVersionId, String propertyId, String userId){
         Response response = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
         setSessionResponse(response);
