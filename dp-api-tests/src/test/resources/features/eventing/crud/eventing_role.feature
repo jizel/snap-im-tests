@@ -28,8 +28,6 @@ Feature: Eventing tests for roles
     And Notification in session operation is "Delete"
     And Notification in session id stands for role in session on key "EVENTING_ROLE"
 
-#  DP-1908
-  @skipped
   Scenario: Eventing role updated
     Given Role "eventing_role" is stored in session under key "EVENTING_ROLE"
     Given Subscription with name "Test" for topic "Notifications.crud" is created

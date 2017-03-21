@@ -4,7 +4,6 @@ Feature: Partners users relationship feature
     Given Database is cleaned and default entities are created
 
 
-
     Scenario: Create Partner-User relationship
       Given The following partner exist
         | name     | email          | website                    | vatId      | notes        | Id                                   |
