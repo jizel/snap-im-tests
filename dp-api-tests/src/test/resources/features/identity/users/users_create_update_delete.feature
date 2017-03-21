@@ -158,13 +158,13 @@ Feature: Users create update delete
   @Bug
   Scenario: Creating user with same name as previously deleted user - DP-1380
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | Id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is 201
     When User "snaphostUser1" is deleted
     Then Response code is 204
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | Id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is 201
     And Body contains entity with attribute "user_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"

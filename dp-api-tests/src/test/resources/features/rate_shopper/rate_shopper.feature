@@ -73,7 +73,7 @@ Feature: Rate shopper
     And Custom code is "40402"
 
     Examples:
-      | url                                      |
+      | url                                                                        |
       | /rate_shopper/analytics/property/invalid?since=2015-12-03&until=2015-12-03 |
 
   Scenario Outline: Checking correct currency parameter returned for property

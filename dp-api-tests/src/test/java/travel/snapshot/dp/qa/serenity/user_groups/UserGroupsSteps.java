@@ -251,16 +251,26 @@ public class UserGroupsSteps extends BasicSteps {
      */
     @Step
     public void relationshipGroupPropertyExist(String userGroupId, String propertyId, Boolean isActive) {
-        userGroupPropertyRelationshipIsCreatedByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userGroupId, propertyId, isActive);
+        createUserGroupPropertyRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userGroupId, propertyId, isActive);
     }
 
     @Step
-    public void userGroupPropertyRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
+    public void createUserGroupPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
         UserGroupPropertyRelationshipDto relation = new UserGroupPropertyRelationshipDto();
         relation.setPropertyId(propertyId);
         relation.setIsActive(isActive);
 
         Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        setSessionResponse(resp);
+    }
+
+    @Step
+    public void createUserGroupPropertyRelationshipByUserForAppInvalid(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
+        Map<String, String> userGroupPropertyRelation = new HashMap<>();
+        userGroupPropertyRelation.put(PROPERTY_ID, propertyId);
+        userGroupPropertyRelation.put(IS_ACTIVE, isActive.toString());
+
+        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, userGroupPropertyRelation);
         setSessionResponse(resp);
     }
 
@@ -316,13 +326,13 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     @Step
-    public void relationshipGroupPropertyIsDeleted(String userGroupId, String propertyId) {
+    public void deleteUserGroupPropertyRelationship(String userGroupId, String propertyId) {
         Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(resp);
     }
 
     @Step
-    public void userGroupPropertyRelationshipIsDeletedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId) {
+    public void deleteUserGroupPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId) {
         Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(resp);
     }
