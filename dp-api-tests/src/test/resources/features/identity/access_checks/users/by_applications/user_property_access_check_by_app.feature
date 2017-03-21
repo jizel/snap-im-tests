@@ -45,8 +45,8 @@ Feature: User-property access check by app feature - GET
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000000 | 22222222-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
-      | Id                                   | commercialSubscriptionId             |
-      | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 |
+      | Id                                   | commercialSubscriptionId             | applicationVersionId                 |
+      | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" requests list of users for property "p1_code" for application version "versionWithoutSubscription"
     Then Response code is "404"
     When User "user1" requests list of users for property "p1_code" for application version "versionWithSubscription"
@@ -62,8 +62,8 @@ Feature: User-property access check by app feature - GET
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000000 | 22222222-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
-      | Id                                   | commercialSubscriptionId             |
-      | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 |
+      | Id                                   | commercialSubscriptionId             | applicationVersionId                 |
+      | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithoutSubscription"
     Then Response code is "404"
     # DP-1897

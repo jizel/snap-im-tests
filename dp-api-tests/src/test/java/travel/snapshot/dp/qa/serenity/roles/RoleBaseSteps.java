@@ -4,13 +4,17 @@ import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static travel.snapshot.dp.qa.helpers.RoleType.CUSTOMER;
 import static travel.snapshot.dp.qa.helpers.RoleType.PROPERTY;
 import static travel.snapshot.dp.qa.helpers.RoleType.PROPERTY_SET;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
+import java.util.Collection;
+import java.util.HashMap;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
@@ -97,8 +101,14 @@ public class RoleBaseSteps extends BasicSteps {
     @Step
     public void followingRolesExist(List<Map<String, Object>> roles) {
         roles.forEach(role -> {
+            // we can not modify an object we are currently iterating through, so we have to create a new mutable object with the copy of initial object's data
+            Map<String, Object> newRole = new HashMap<String, Object>();
+            for (String key : role.keySet()) {
+                newRole.put(key, role.get(key));
+            };
+            newRole.putIfAbsent(UNPROCESSED_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_ID);
             try {
-                Response createResponse = createRoleWithType(role);
+                Response createResponse = createRoleWithType(newRole);
                 if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                     fail("Role cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
                 }
