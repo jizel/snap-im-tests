@@ -44,8 +44,10 @@ Feature: User-property roles access check by app feature - GET
   @skipped
   Scenario: Application can view only list of property-user roles of the customer and property it can access through a CS
     When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithoutSubscription"
-    # DP-1898
     Then Response code is "404"
+    When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithSubscription"
+    Then Response code is "404"
+    Given Relation between user "user2" and property "defaultPropertyCode" is activated
     When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithSubscription"
     Then Response code is "200"
     # Now let's give the second app access to the same property and let it try accessing user-property roles for the user of the inaccessible customer
@@ -53,8 +55,8 @@ Feature: User-property roles access check by app feature - GET
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-111111111111 | 11111111-0000-4000-a000-666666666666 | 00000000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
-      | Id                                   | commercialSubscriptionId             |
-      | 00000000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 |
+      | Id                                   | commercialSubscriptionId             | applicationVersionId                 |
+      | 00000000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000444 |
     And Relation between user "user1" and customer with id "12300000-0000-4000-a000-111111111111" exists
     When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithoutSubscription"
     Then Response code is "404"

@@ -434,10 +434,20 @@ public class UserStepdefs {
     }
 
     @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
-    public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelName, String secondLevelId, String appVersionName) throws Throwable {
+    public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelType, String secondLevelName, String appVersionName) throws Throwable {
+        roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase()));
+        String secondLevelId = null;
+        switch (secondLevelType) {
+            case "customer":     secondLevelId = secondLevelName;
+                                 break;
+            case "property":     secondLevelId = propertySteps.resolvePropertyId(secondLevelName);
+                                 break;
+            case "property set": secondLevelId = propertySetSteps.resolvePropertySetId(secondLevelName);
+                                 break;
+        }
         String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
-        usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelName, secondLevelId);
+        usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelType, secondLevelId);
     }
 
 
