@@ -16,7 +16,6 @@ import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,19 +42,17 @@ public class RolesStepdefs {
 
     @Given("^The following roles exist$")
     public void The_following_roles_exist(DataTable rolesTable) throws Throwable {
-        List<Map<String, Object>> roleAttributes = rolesTable.asMaps(String.class, Object.class);
-        roleBaseSteps.followingRolesExist(roleAttributes);
+//        We cannot convert to RoleDto (it's abstract) and Cucumber doesn't know what type of role to use. Hence the DataTable (and later conversion).
+        List<Map<String, Object>> roles = rolesTable.asMaps(String.class, Object.class);
+        roleBaseSteps.followingRolesExist(roles);
     }
 
     @When("^Role is created$")
     public void Role_is_created(DataTable rolesTable) throws Throwable {
-        List<Map<String, Object>> roleAttributes = rolesTable.asMaps(String.class, Object.class);
-//        Cannot just use get(0) because of the the way list of maps is represented. Mergining all maps to one here:
-        Map<String, Object> roleMap = new HashMap<>();
-        for(Map<String, Object> singleAttributeMap : roleAttributes){
-            roleMap.putAll(singleAttributeMap);
-        }
-        roleBaseSteps.createRoleWithType(roleMap);
+        Map<String, Object> roleAttributes = rolesTable.asMaps(String.class, Object.class).get(0);
+        RoleDto roleDto = roleBaseSteps.getRoleBaseType().getDtoClassType().newInstance();
+        roleBaseSteps.setRoleAttributes(roleDto, roleAttributes);
+        roleBaseSteps.createRole(roleDto);
     }
 
     @Then("^\"([^\"]*)\" header is set and contains the same role$")

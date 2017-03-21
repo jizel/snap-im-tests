@@ -1,20 +1,15 @@
 package travel.snapshot.dp.qa.serenity.roles;
 
 import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.stream;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static travel.snapshot.dp.qa.helpers.RoleType.CUSTOMER;
 import static travel.snapshot.dp.qa.helpers.RoleType.PROPERTY;
 import static travel.snapshot.dp.qa.helpers.RoleType.PROPERTY_SET;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
-import java.util.Collection;
-import java.util.HashMap;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
@@ -27,6 +22,7 @@ import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RoleType;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,7 +36,7 @@ public class RoleBaseSteps extends BasicSteps {
     public static final String USER_PROPERTY_SET_ROLES_PATH = "/identity/user_property_set_roles";
     public static final String USER_PROPERTY_ROLES_PATH = "/identity/user_property_roles";
     private String roleBasePath = "";
-    private RoleType roleBaseType;
+    private static RoleType roleBaseType;
 
 
     public RoleBaseSteps() {
@@ -94,52 +90,36 @@ public class RoleBaseSteps extends BasicSteps {
         return roleBasePath;
     }
 
-    public RoleType getRoleBaseType() {
+    public static RoleType getRoleBaseType() {
         return roleBaseType;
     }
 
+
     @Step
-    public void followingRolesExist(List<Map<String, Object>> roles) {
-        roles.forEach(role -> {
-            // we can not modify an object we are currently iterating through, so we have to create a new mutable object with the copy of initial object's data
-            Map<String, Object> newRole = new HashMap<String, Object>();
-            for (String key : role.keySet()) {
-                newRole.put(key, role.get(key));
-            };
-            newRole.putIfAbsent(UNPROCESSED_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_ID);
-            try {
-                Response createResponse = createRoleWithType(newRole);
-                if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                    fail("Role cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
-                }
-            } catch(NullPointerException npe){
-                fail("Cannot create role because role type was not set. Use 'Switch to {User Customer | User Property | User Property Set} role type");
-            }
-            catch (Exception ex){
-                fail("Error when preparing role for creating: " + ex.toString());
-            }
-        });
-    }
-
-    public Response createRoleWithType(Map<String, Object> roleAttributes)throws Exception{
-
-        RoleDto roleDto = getRoleBaseType().getDtoClassType().newInstance();
-        setRoleAttributes(roleDto, roleAttributes);
-
-        setSessionVariable(SESSION_CREATED_ROLE, roleDto);
-        Response response = createEntity(roleDto);
+    public Response createRole(RoleDto role)throws Exception{
+        setSessionVariable(SESSION_CREATED_ROLE, role);
+        Response response = createEntity(role);
         setSessionResponse(response);
         return response;
     }
 
-    private RoleDto setRoleAttributes(RoleDto roleDto, Map<String, Object> roleAttributes){
-        roleDto.setId(Objects.toString(roleAttributes.get("id"), null));
-        roleDto.setDescription(Objects.toString(roleAttributes.get("description")));
-        roleDto.setIsActive(Boolean.valueOf(Objects.toString(roleAttributes.get("isActive"))));
-        roleDto.setApplicationId(Objects.toString(roleAttributes.get("applicationId"), null));
-        roleDto.setIsInitial(Boolean.valueOf(Objects.toString(roleAttributes.get("isInitial"))));
-        roleDto.setRoleName(Objects.toString(roleAttributes.get("roleName"), null));
-        return roleDto;
+    @Step
+    public void followingRolesExist(List<Map<String, Object>> rolesMap)throws Exception {
+        for (Map<String, Object> roleAttributes : rolesMap) {
+            RoleDto role = getRoleBaseType().getDtoClassType().newInstance();
+            setRoleAttributes(role, roleAttributes);
+
+            if (role.getApplicationId() == null) {
+                role.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
+            }
+            try {
+                createRole(role);
+            } catch (NullPointerException npe) {
+                fail("Cannot create role because role type was not set. Use 'Switch to {User Customer | User Property | User Property Set} role type");
+            } catch (Exception ex) {
+                fail("Error when preparing role for creating: " + ex.toString());
+            }
+        }
     }
 
     @Step
@@ -167,15 +147,9 @@ public class RoleBaseSteps extends BasicSteps {
 
     public RoleDto getRoleByName(String name) {
         String filter = String.format("name=='%s'", name);
-        RoleDto[] roles = null;
-        switch(getRoleBaseType()){
-            case CUSTOMER : roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(CustomerRoleDto[].class);
-                break;
-            case PROPERTY: roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertyRoleDto[].class);
-                break;
-            case PROPERTY_SET: roles = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetRoleDto[].class);
-        }
-        return stream(roles).findFirst().orElse(null);
+        Response response = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, filter, null, null, null);
+        List<RoleDto> roles = getResponseAsRoles(response);
+        return roles.get(0);
     }
 
     @Step
@@ -219,6 +193,15 @@ public class RoleBaseSteps extends BasicSteps {
 
     public void roleNamesAreInResponseInOrder(List<String> names) {
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
+        List<RoleDto> roles = getResponseAsRoles(response);
+        int i = 0;
+        for (RoleDto role : roles) {
+            assertEquals("Role on index=" + i + " is not expected", names.get(i), role.getRoleName());
+            i++;
+        }
+    }
+
+    public static List<RoleDto> getResponseAsRoles(Response response){
         RoleDto[] roles = null;
         switch(getRoleBaseType()){
             case CUSTOMER : roles = response.as(CustomerRoleDto[].class);
@@ -227,11 +210,7 @@ public class RoleBaseSteps extends BasicSteps {
                 break;
             case PROPERTY_SET: roles = response.as(PropertySetRoleDto[].class);
         }
-        int i = 0;
-        for (RoleDto role : roles) {
-            assertEquals("Role on index=" + i + " is not expected", names.get(i), role.getRoleName());
-            i++;
-        }
+        return Arrays.asList(roles);
     }
 
     public void compareRoleOnHeaderWithStored(String headerName) throws Exception {
@@ -255,5 +234,15 @@ public class RoleBaseSteps extends BasicSteps {
             roleId = role.getId();
         }
         return roleId;
+    }
+
+    public RoleDto setRoleAttributes(RoleDto roleDto, Map<String, Object> roleAttributes){
+        roleDto.setId(Objects.toString(roleAttributes.get("roleId"), null));
+        roleDto.setDescription(Objects.toString(roleAttributes.get("description")));
+        roleDto.setIsActive(Boolean.valueOf(Objects.toString(roleAttributes.get("isActive"))));
+        roleDto.setApplicationId(Objects.toString(roleAttributes.get("applicationId"), null));
+        roleDto.setIsInitial(Boolean.valueOf(Objects.toString(roleAttributes.get("isInitial"))));
+        roleDto.setRoleName(Objects.toString(roleAttributes.get("roleName"), null));
+        return roleDto;
     }
 }
