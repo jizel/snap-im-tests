@@ -17,7 +17,7 @@ import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -149,9 +149,8 @@ public class UserGroupsdefs {
                                                                                                       @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                       @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                       @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        UserGroupDto usergGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(usergGroup, is(notNullValue()));
-        userGroupSteps.listGroupRoleIsGot(usergGroup.getId(), limit, cursor, filter, sort, sortDesc);
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        userGroupSteps.listGroupRoleIsGot(userGroupId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^List of all relationships userGroups-Roles for userGroup \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
@@ -417,12 +416,12 @@ public class UserGroupsdefs {
 
     @Then("^There are \"([^\"]*)\" relationships returned$")
     public void thereAreRelationshipsReturned(int numberOfRoles) throws Throwable {
-        userGroupSteps.numberOfEntitiesInResponse(RoleDto.class, numberOfRoles);
+        userGroupSteps.numberOfEntitiesInResponse(RoleRelationshipDto.class, numberOfRoles);
     }
 
     @Then("^There are relationships start with following IDs returned in order: \"([^\"]*)\"$")
     public void thereAreRelationshipsStartWithFollowingIDsReturnedInOrder(List<String> order) throws Throwable {
-        userGroupSteps.responseSortById(order);
+        userGroupSteps.responseRelationsAreSorted(order);
     }
 
     @Then("^Relation between user group \"([^\"]*)\" and property with code \"([^\"]*)\" is active$")

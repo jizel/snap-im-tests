@@ -116,7 +116,6 @@ public class BasicSteps {
     public static final String IS_ACTIVE = "is_active";
     public static final String USER_ID = "user_id";
     public static final String APPLICATION_ID = "application_id";
-    public static final String UNPROCESSED_APPLICATION_ID = "applicationId";
     public static final String PROPERTY_ID = "property_id";
     public static final String RELATIONSHIP_TYPE = "relationship_type";
     public static final String VALID_FROM = "valid_from";

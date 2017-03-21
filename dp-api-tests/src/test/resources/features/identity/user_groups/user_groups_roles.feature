@@ -2,6 +2,7 @@ Feature: User groups roles
 
   Background:
     Given Database is cleaned and default entities are created
+    Given Switch for user customer role tests
     Given The following customers exist with random address
       | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -14,16 +15,15 @@ Feature: User groups roles
     Given The following applications exist
       | applicationName                       | website                    | Id                                   | partnerId                            | isInternal |
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
-    Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | Id                                   | roleName |
+      | roleId                               | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 11111111-0000-4000-a000-111111111111 | UG role1 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists
 
   @Smoke
   Scenario: Create relationship UserGroup-Role
     Given The following roles exist
-      | roleId                               | Id                                   | roleName |
+      | roleId                               | applicationId                        | roleName |
       | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role2 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" exists
     Then Response code is 201
@@ -31,7 +31,7 @@ Feature: User groups roles
     And Relation between user group "userGroup_1" and role with id "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
 
   Scenario Outline: Create relationship UserGroup-Role invalid
-    When Relation between user group "<userGroupId>" and role "<roleId>" is created
+    When Relation between user group "<Id>" and role "<roleId>" is created
     Then Response code is <error_code>
     And Custom code is <custom_code>
     Examples:
@@ -51,13 +51,13 @@ Feature: User groups roles
 
   Scenario: Delete relationship UserGroup-Role invalid
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is deleted
-    Then Response code is 204
-    And Body is empty
+    Then Response code is 404
+    And Custom code is 40402
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is not established
 
   Scenario Outline: Get list of userGroup's role - valid
     Given The following roles exist
-      | roleId                               | Id                                   | roleName        |
+      | roleId                               | applicationId                        | roleName        |
       | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | 11111111-0000-4000-a000-111111111111 | UG_filter_role1 |
       | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | 11111111-0000-4000-a000-111111111111 | UG_filter_role2 |
       | 540be550-1702-4e2e-b094-394de63f6c48 | 11111111-0000-4000-a000-111111111111 | UG_filter_role3 |
@@ -84,14 +84,15 @@ Feature: User groups roles
       | 3     | 1      | /null                            | /null   | /null     | 3        |                                                            | # cursor < limit, limit param is used          |
       | 1     | 10     | /null                            | /null   | /null     | 0        |                                                            | # there are < 10 records, 0 should be returned |
       | 20    | 5      | /null                            | /null   | /null     | 1        |                                                            | # cursor > limit, last 1 should be returned    |
-      | /null | /null  | /null                            | role_id | /null     | 6        | 19e8d1c2, 2d6e7db2, 5184fb6b, 540be550, 7b570693, f40a9bf7 |                                                |
-      | /null | /null  | /null                            | /null   | role_id   | 6        | f40a9bf7, 7b570693, 540be550, 5184fb6b, 2d6e7db2, 19e8d1c2 |                                                |
-      | /null | /null  | role_id=='19*'                   | /null   | /null     | 1        |                                                            |                                                |
-      | /null | /null  | role_id=='5*'                    | role_id | /null     | 2        | 5184fb6b,540be550                                          |                                                |
-      | /null | /null  | role_id=='5*'                    | /null   | role_id   | 2        | 540be550,5184fb6b                                          |                                                |
-      | /null | /null  | role_id=='NotExistent'           | /null   | /null     | 0        |                                                            |                                                |
-      | /null | /null  | role_id=='5*' and role_id=='19*' | /null   | /null     | 0        |                                                            |                                                |
-      | /null | /null  | role_id=='5*' or role_id=='19*'  | /null   | /null     | 3        |                                                            |                                                |
+      | /null | /null  | /null                            | is_active| /null     | 6        | 19e8d1c2, 2d6e7db2, 5184fb6b, 540be550, 7b570693, f40a9bf7 |                                                |
+#  DP-1930
+#      | /null | /null  | /null                            | role_id | role_id   | 6        | f40a9bf7, 7b570693, 540be550, 5184fb6b, 2d6e7db2, 19e8d1c2 |                                                |
+#      | /null | /null  | role_id=='19*'                   | /null   | /null     | 1        |                                                            |                                                |
+#      | /null | /null  | role_id=='5*'                    | role_id | /null     | 2        | 5184fb6b,540be550                                          |                                                |
+#      | /null | /null  | role_id=='5*'                    | /null   | role_id   | 2        | 540be550,5184fb6b                                          |                                                |
+#      | /null | /null  | role_id=='NotExistent'           | /null   | /null     | 0        |                                                            |                                                |
+#      | /null | /null  | role_id=='5*' and role_id=='19*' | /null   | /null     | 0        |                                                            |                                                |
+#      | /null | /null  | role_id=='5*' or role_id=='19*'  | /null   | /null     | 3        |                                                            |                                                |
 
   Scenario Outline: Get list of userGroup's role - invalid
     When List of relationships userGroups-Roles for userGroup "userGroup_1" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"

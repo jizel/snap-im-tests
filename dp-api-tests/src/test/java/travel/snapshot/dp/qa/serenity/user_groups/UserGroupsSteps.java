@@ -4,6 +4,7 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps.getResponseAsRoles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -141,16 +142,15 @@ public class UserGroupsSteps extends BasicSteps {
         }
     }
 
-    public void responseSortById(List<String> order) {
+    public void responseRelationsAreSorted(List<String> order) {
         if (order.isEmpty()) {
             return;
         }
-
-        RoleDto[] roles = getSessionResponse().as(RoleDto[].class);
+        RoleRelationshipDto[] roles = getSessionResponse().as(RoleRelationshipDto[].class);
         int i = 0;
-        for (RoleDto r : roles) {
-            if (!r.getId().startsWith(order.get(i))) {
-                fail("Expected ID: " + r.getId() + "but was starting with: " + order.get(i));
+        for (RoleRelationshipDto roleRelationship : roles) {
+            if (!roleRelationship.getRoleId().startsWith(order.get(i))) {
+                fail("Expected ID: " + roleRelationship.getRoleId() + "but was starting with: " + order.get(i));
             }
             i++;
         }
@@ -471,7 +471,8 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkUserGroupRoleRelationExistency(String userGroupId, String roleId, Boolean existency) {
-        RoleDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null).as(RoleDto[].class);
+        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        List<RoleDto> listOfRoles = getResponseAsRoles(response);
         Boolean found = false;
         for (RoleDto role : listOfRoles) {
             if (role.getId().equalsIgnoreCase(roleId)) {
