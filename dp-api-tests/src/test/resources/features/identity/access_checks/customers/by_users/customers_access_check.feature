@@ -195,7 +195,6 @@ Feature: Customers access check feature - GET
         | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
         | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
         | identity/customers/12300000-0000-4000-a000-000000000000/properties               |
-        # DP-1855
         | identity/customers/12300000-0000-4000-a000-000000000000/property_sets            |
 
 

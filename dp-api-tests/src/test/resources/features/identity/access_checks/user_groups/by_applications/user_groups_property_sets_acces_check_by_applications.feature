@@ -35,7 +35,7 @@ Feature: User Groups - Properties Application access check feature
       | Id                                   | name        | isActive | description          |
       | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | propertySetName | propertySetType |
+      | Id                                   | name | type |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"

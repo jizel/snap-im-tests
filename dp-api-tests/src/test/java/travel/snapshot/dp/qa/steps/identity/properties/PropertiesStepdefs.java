@@ -456,7 +456,7 @@ public class PropertiesStepdefs {
         propertySteps.updatePropertyPropertySetRelationship(propertyId, propertySetId, relationshipUpdate);
     }
 
-    @When("^Relation between property with code \"([^\"]*)\" and property set \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    @When("^Relation between property(?: with code)? \"([^\"]*)\" and property set \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void relationBetweenPropertyWithCodeAndPropertySetWithNameIsDeletedByUser(String propertyCode, String propertySetName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
