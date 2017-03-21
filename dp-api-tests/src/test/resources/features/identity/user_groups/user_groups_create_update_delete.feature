@@ -29,7 +29,7 @@ Feature: User groups create update delete
     And Body contains entity with attribute "user_group_id" value "b8b40d08-de38-4246-bb69-ad39c31c025c"
     And Body contains entity with attribute "name" value "userGroup_created_1"
     And Body contains entity with attribute "customer_id" value "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "is_active" value "true"
     And Body contains entity with attribute "description" value "userGroupDescription"
 
 
@@ -70,12 +70,12 @@ Feature: User groups create update delete
 
   Scenario Outline: Creating user group with invalid data
     When The following user group is created
-      | userGroupId   | Id           | name   | isActive   | description   |
+      | Id            | customerId   | name   | isActive   | description   |
       | <userGroupId> | <customerId> | <name> | <isActive> | <description> |
     Then Response code is <response_code>
     And Custom code is <error_code>
     Examples:
-      | userGroupId | Id                                   | name          | isActive | description | response_code | error_code | #note                        |
+      | userGroupId | customerId                           | name          | isActive | description | response_code | error_code | #note                        |
       | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
       | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
       | /null       | /null                                | /null         | /null    | /null       | 422           | 42201      | # customerId is mandatory    |
@@ -119,36 +119,36 @@ Feature: User groups create update delete
       | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer2 | ug2@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer3 | ug3@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
-      | Id           | name   | isActive   | description   |
+      | customerId   | name   | isActive   | description   |
       | <customerId> | <name> | <isActive> | <description> |
     Then Response code is 204
     And Etag header is present
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" contains following data
-      | Id           | name   | isActive   | description   |
+      | customerId   | name   | isActive   | description   |
       | <customerId> | <name> | <isActive> | <description> |
     Examples:
-      | Id                                   | name                        | isActive | description                |
+      | customerId                           | name                        | isActive | description                |
       | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null                       | /null    | /null                      |
       | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | updatedNameForThirdCustomer | true     | updatedDescriptionForThird |
 
 
   Scenario Outline: Updating user group with invalid data
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
-      | Id           | name   | description   |
+      | customerId   | name   | description   |
       | <customerId> | <name> | <description> |
     Then Response code is "<error_response>"
     And Custom code is "<error_code>"
     Examples:
-      | Id         | name     | description | error_response | error_code | #note                    |
-      | \w{63}     | /null    | /null       | 400            | 63         | # customerId not in UUID |
-      | \w{65}     | /null    | /null       | 400            | 63         | # customerId not in UUID |
-      | karel      | /null    | /null       | 400            | 63         | # customerId not in UUID |
-      | /null      |          | /null       | 400            | 61         | # empty name             |
-      | /null      | \w{256}  | /null       | 400            | 63         | # long name              |
-      | /null      | \w{2048} | /null       | 400            | 63         | # very long name         |
-      | /null      | /null    | \w{501}     | 400            | 63         | # long description       |
-      | /null      | /null    | \w{2048}    | 400            | 63         | # very long description  |
-      | \w{65}     | \w{256}  | \w{501}     | 400            | 63         | # long all params        |
+      | customerId | name     | description | error_response | error_code | #note                    |
+      | \w{63}     | /null    | /null       | 422            | 42201      | # customerId not in UUID |
+      | \w{65}     | /null    | /null       | 422            | 42201      | # customerId not in UUID |
+      | karel      | /null    | /null       | 422            | 42201      | # customerId not in UUID |
+      | /null      |          | /null       | 422            | 42201      | # empty name             |
+      | /null      | \w{256}  | /null       | 422            | 42201      | # long name              |
+      | /null      | \w{2048} | /null       | 422            | 42201      | # very long name         |
+      | /null      | /null    | \w{501}     | 422            | 42201      | # long description       |
+      | /null      | /null    | \w{2048}    | 422            | 42201      | # very long description  |
+      | \w{65}     | \w{256}  | \w{501}     | 422            | 42201      | # long all params        |
 
   Scenario Outline: Send POST request with empty body to all user groups endpoints
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"

@@ -2,12 +2,11 @@ Feature: User groups user relationship feature
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
-      | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | Id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following user groups exist
       | Id                                   | customerId                           | name        | isActive | description          |
@@ -73,15 +72,12 @@ Feature: User groups user relationship feature
     Then Response code is 404
     And Custom code is 40402
 
-  Scenario: Activate relationship userGroup-user
+  Scenario: (De)Activate relationship userGroup-user
     Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "false"
     When Relation between user group "userGroup_1" and user "snapshotUser1" is activated
     Then Response code is 204
     And Body is empty
     And Relation between user group "userGroup_1" and user "snapshotUser1" is active
-
-  Scenario: Deactivate relationship userGroup-property
-    Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
     When Relation between user group "userGroup_1" and user "snapshotUser1" is deactivated
     Then Response code is 204
     And Body is empty
@@ -89,8 +85,8 @@ Feature: User groups user relationship feature
 
     Scenario: Add one User to multiple User Groups
       Given The following user groups exist
-        | Id                                   | name        | isActive | description          |
-        | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
+        | Id                                   | name        | isActive | description          | customerId                           |
+        | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |
       Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
       Then Response code is "201"
       Given User "snapshotUser1" is added to userGroup "userGroup_2" as isActive "true"
@@ -100,10 +96,11 @@ Feature: User groups user relationship feature
       When Relation between user group "userGroup_2" and user "snapshotUser1" is got
       Then Response code is 200
 
+  @skipped
   Scenario Outline: Creator of User Group does not automatically become it's member but he can access it - DP-1769
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
-      | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
-      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
+      | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | Id       |
+      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <Id>     |
     Given The following user group is created by user "<userName>"
       | Id                                   | customerId                           | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
@@ -116,20 +113,21 @@ Feature: User groups user relationship feature
     Then Response code is "200"
     And There are "1" user groups returned
     Examples:
-      | userName      | userType | firstName | lastName | email                         | timezone          | culture | userId                                |
+      | userName      | userType | firstName | lastName | email                         | timezone          | culture | Id                                    |
       | userPartner1  | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
       | userGuest     | guest    | FNU2      | LNU2     | userGuest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
       | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
       | userCustomer1 | customer | FNU4      | LNU4     | userCustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
 
+  @skipped
   Scenario Outline: Creator of User Group does not automatically become it's member but he can see all of it's members - DP-1769
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
       | userType   | userName | firstName | lastName | email                   | timezone          | culture |
       | guest      | member1  | FNU5      | LNU5     | member1@snapshot.travel | America/New_York  | en-US   |
       | customer   | member2  | FNU6      | LNU6     | member2@snapshot.travel | America/New_York  | en-US   |
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
-      | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | userId   |
-      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <userId> |
+      | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | Id   |
+      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <Id> |
     Given The following user group is created by user "<userName>"
       | Id                                   | customerId                           | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
@@ -142,7 +140,7 @@ Feature: User groups user relationship feature
     When Relation between user group "userGroup_2" and user "member1" is requested by user "<userName>"
     Then Response code is 200
     Examples:
-      | userName      | userType | firstName | lastName | email                         | timezone          | culture | userId                                |
+      | userName      | userType | firstName | lastName | email                         | timezone          | culture | Id                                    |
       | userPartner1  | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
       | userGuest     | guest    | FNU2      | LNU2     | userGuest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
       | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |

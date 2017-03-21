@@ -28,7 +28,7 @@ Feature: Commercial subscription create update delete
     And Body contains entity with attribute "customer_id" value "1238fd9a-a05d-42d8-8e84-42e904ace123"
     And Body contains entity with attribute "property_id" value "742529dd-481f-430d-b6b6-686fbb687cab"
     And Body contains entity with attribute "application_id" value "11111111-0000-4000-a000-111111111111"
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "is_active" value "true"
 
 
   Scenario Outline: Checking error codes for creating commercial subscription

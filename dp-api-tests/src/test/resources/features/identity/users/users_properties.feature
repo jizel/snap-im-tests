@@ -8,7 +8,7 @@ Feature: User property relationship tests
       | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     When The following users is created for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | userId                                | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | Id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | Customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |

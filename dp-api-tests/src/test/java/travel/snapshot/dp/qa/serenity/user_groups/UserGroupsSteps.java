@@ -4,6 +4,7 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps.getResponseAsRoles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -141,16 +142,15 @@ public class UserGroupsSteps extends BasicSteps {
         }
     }
 
-    public void responseSortById(List<String> order) {
+    public void responseRelationsAreSorted(List<String> order) {
         if (order.isEmpty()) {
             return;
         }
-
-        RoleDto[] roles = getSessionResponse().as(RoleDto[].class);
+        RoleRelationshipDto[] roles = getSessionResponse().as(RoleRelationshipDto[].class);
         int i = 0;
-        for (RoleDto r : roles) {
-            if (!r.getId().startsWith(order.get(i))) {
-                fail("Expected ID: " + r.getId() + "but was starting with: " + order.get(i));
+        for (RoleRelationshipDto roleRelationship : roles) {
+            if (!roleRelationship.getRoleId().startsWith(order.get(i))) {
+                fail("Expected ID: " + roleRelationship.getRoleId() + "but was starting with: " + order.get(i));
             }
             i++;
         }
@@ -251,16 +251,26 @@ public class UserGroupsSteps extends BasicSteps {
      */
     @Step
     public void relationshipGroupPropertyExist(String userGroupId, String propertyId, Boolean isActive) {
-        userGroupPropertyRelationshipIsCreatedByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userGroupId, propertyId, isActive);
+        createUserGroupPropertyRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userGroupId, propertyId, isActive);
     }
 
     @Step
-    public void userGroupPropertyRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
+    public void createUserGroupPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
         UserGroupPropertyRelationshipDto relation = new UserGroupPropertyRelationshipDto();
         relation.setPropertyId(propertyId);
         relation.setIsActive(isActive);
 
         Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        setSessionResponse(resp);
+    }
+
+    @Step
+    public void createUserGroupPropertyRelationshipByUserForAppInvalid(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
+        Map<String, String> userGroupPropertyRelation = new HashMap<>();
+        userGroupPropertyRelation.put(PROPERTY_ID, propertyId);
+        userGroupPropertyRelation.put(IS_ACTIVE, isActive.toString());
+
+        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, userGroupPropertyRelation);
         setSessionResponse(resp);
     }
 
@@ -316,13 +326,13 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     @Step
-    public void relationshipGroupPropertyIsDeleted(String userGroupId, String propertyId) {
+    public void deleteUserGroupPropertyRelationship(String userGroupId, String propertyId) {
         Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(resp);
     }
 
     @Step
-    public void userGroupPropertyRelationshipIsDeletedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId) {
+    public void deleteUserGroupPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId) {
         Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
         setSessionResponse(resp);
     }
@@ -471,7 +481,8 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkUserGroupRoleRelationExistency(String userGroupId, String roleId, Boolean existency) {
-        RoleDto[] listOfRoles = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null).as(RoleDto[].class);
+        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        List<RoleDto> listOfRoles = getResponseAsRoles(response);
         Boolean found = false;
         for (RoleDto role : listOfRoles) {
             if (role.getId().equalsIgnoreCase(roleId)) {

@@ -45,7 +45,7 @@ Feature: User groups property sets
 
 
   Scenario Outline: Relationship creation between user group and property - invalid
-    When Relation between user group "userGroup_1" and property set with id "<property_set_id>" is created with isActive "<is_active>"
+    When Relation between user group "922913b0-877c-45f3-b650-df8022608d61" and property set with id "<property_set_id>" is created with isActive "<is_active>" with error "true"
     Then Response code is "<error_response>"
     And Custom code is "<code>"
     Examples:
@@ -70,9 +70,9 @@ Feature: User groups property sets
 
 
   Scenario Outline: Delete userGroup-propertySet not existent relationship
-    When Relation between user group with id "<userGroupId>" and property set "<propertyId>" is deleted
+    When Relation between user group with id "<Id>" and property set "<propertyId>" is deleted with error "true"
     Then Response code is 404
-    And Body contains entity with attribute "message" value "Resource UserGroupPropertySetRelationship with ID (user_group_id: <userGroupId>, property_set_id: <propertyId>) was not found."
+    And Body contains entity with attribute "message" value "Resource UserGroupPropertySetRelationship with ID (user_group_id: <Id>, property_set_id: <propertyId>) was not found."
     Examples:
       | Id                                   | propertyId                           |
       | notExistent                          | fb141231-4d8c-4d75-9433-5d01cc665556 |
@@ -84,9 +84,6 @@ Feature: User groups property sets
     Then Response code is 204
     And Body is empty
     And Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is active
-
-  Scenario: Deactivate relationship userGroup-propertySet
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deactivated
     Then Response code is 204
     And Body is empty

@@ -42,7 +42,7 @@ Feature: User groups properties
     And Body contains entity with attribute "is_active" value "false"
 
   Scenario Outline: Relationship creation between user group and property - invalid
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "<property_id>" is created with isActive "<is_active>"
+    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "<property_id>" is created with isActive "<is_active>" with error "true"
     Then Response code is "<error_response>"
     And Custom code is "<code>"
     Examples:
@@ -59,9 +59,9 @@ Feature: User groups properties
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is no more exists
 
   Scenario Outline: Delete userGroup-property not existent relationship
-    When Relation between user group "<userGroupId>" and property "<propertyId>" is deleted
-    Then Response code is 412
-    And Body contains entity with attribute "message" value "Precondition failed: ETag not present."
+    When Relation between user group "<Id>" and property "<propertyId>" is deleted with error "true"
+    Then Response code is 404
+    And Custom code is 40402
     Examples:
       | Id                                   | propertyId                           |
       | notExistent                          | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 |
@@ -73,9 +73,6 @@ Feature: User groups properties
     Then Response code is 204
     And Body is empty
     And Relation between user group "userGroup_1" and property with code "property_userGroup1" is active
-
-  Scenario: Deactivate relationship userGroup-property
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is activated
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is deactivated
     Then Response code is 204
     And Body is empty
