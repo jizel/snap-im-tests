@@ -22,10 +22,6 @@ Feature: User groups get
     And Body contains entity with attribute "is_active" value "false"
     And Body contains entity with attribute "description" value "userGroupDescription"
 
-  Scenario: Getting user group with etag
-    When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is got with etag
-    Then Response code is "304"
-    And Body is empty
 
   Scenario: Getting nonExistent user group
     When User group with non existent UserGroupId is got
@@ -35,7 +31,7 @@ Feature: User groups get
 
   Scenario Outline: Getting list of user groups using limit and cursor
     Given The following user groups exist
-      | Id                                   | name         | isActive | description            |
+      | customerId                           | name         | isActive | description            |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1  | false    | userGroupDescription1  |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2  | false    | userGroupDescription2  |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_3  | false    | userGroupDescription3  |

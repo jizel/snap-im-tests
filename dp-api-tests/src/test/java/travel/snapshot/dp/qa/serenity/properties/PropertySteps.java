@@ -246,7 +246,7 @@ public class PropertySteps extends BasicSteps {
      */
     @Step
     public PropertyDto getPropertyByCodeInternal(String code) {
-        PropertyDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code==" + code, null, null, null).as(PropertyDto[].class);
+        PropertyDto[] properties = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "property_code=='" + code + "'", null, null, null).as(PropertyDto[].class);
         return stream(properties).findFirst().orElse(null);
     }
 
