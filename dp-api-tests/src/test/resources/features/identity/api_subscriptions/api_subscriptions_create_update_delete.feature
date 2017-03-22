@@ -1,4 +1,5 @@
 @Identity
+@skipped
 Feature: Api subscription create update delete
 
   Background:
