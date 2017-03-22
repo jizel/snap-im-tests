@@ -25,6 +25,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
@@ -67,6 +68,9 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void followingCustomersExistWithRandomAddress(List<CustomerCreateDto> customers) {
         customers.forEach(t -> {
+            if (t.getType() == null) {
+                t.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));
+            }
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
