@@ -318,3 +318,57 @@ Feature: Instagram
       | /analytics/instagram/reach      | day         | today | today - 10 days | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/likes      | day         | today | today - 10 days | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/comments   | day         | today | today - 10 days | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get analytics data with large interval
+    When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "instagram"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> amount of values for global stats dto
+
+    Examples:
+      | url                  | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/instagram | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get specific analytics data with large time interval
+    When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "instagram"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> values
+
+    Examples:
+      | url                                  | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/instagram/pictures        | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement      | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers       | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags            | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach           | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes           | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments        | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/instagram/pictures        | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement      | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers       | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags            | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach           | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes           | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments        | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/instagram/pictures        | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/engagement      | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/followers       | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/tags            | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/reach           | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/likes           | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/instagram/comments        | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |

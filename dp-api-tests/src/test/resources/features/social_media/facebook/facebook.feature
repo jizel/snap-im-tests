@@ -264,3 +264,54 @@ Feature: facebook
       | /analytics/facebook/unlikes         | month       | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/followers       | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook                 | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get analytics data with large time interval
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Data is owned by "facebook"
+    And Content type is "application/json"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> amount of values for global stats dto
+
+    Examples:
+      | url                 | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/facebook | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get specific analytics data with large time interval
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Data is owned by "facebook"
+    And Content type is "application/json"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> values
+
+    Examples:
+      | url                                 | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/facebook/number_of_posts | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/facebook/number_of_posts | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/facebook/number_of_posts | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/engagement      | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/likes           | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/unlikes         | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/reach           | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/followers       | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
