@@ -235,6 +235,11 @@ public class CustomerSteps extends BasicSteps {
         return stream(customers).findFirst().orElse(null);
     }
 
+    public CustomerDto getCustomerByCompanyName(String name) {
+        CustomerDto[] customers = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "company_name==" + name, null, null, null).as(CustomerDto[].class);
+        return stream(customers).findFirst().orElse(null);
+    }
+
     public CustomerDto getCustomerByIdByUser(String customerId, String userId) {
         Response response = getEntityByUser(userId, customerId);
         CustomerDto customer = response.as(CustomerDto.class);
@@ -705,5 +710,19 @@ public class CustomerSteps extends BasicSteps {
 
     public void removeUserFromCustomerByUserForApp(String requestorId, String appVersionId, String customerId, String targetUserId) {
         setSessionResponse(deleteSecondLevelEntityByUserForApplication(requestorId, appVersionId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null));
+    }
+
+    public String resolveCustomerId(String companyName) {
+        if (companyName == null) return DEFAULT_SNAPSHOT_USER_ID;
+
+        String customerId;
+        if (isUUID(companyName)) {
+            customerId = companyName;
+        } else {
+            CustomerDto customer = getCustomerByCompanyName(companyName);
+            assertThat(String.format("Customer with company name \"%s\" does not exist", companyName), customer, is(notNullValue()));
+            customerId = customer.getId();
+        }
+        return customerId;
     }
 }
