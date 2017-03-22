@@ -124,8 +124,8 @@ Feature: Customers access check feature - GET
 
        Examples:
          | limit | cursor | filter                          | sort           | sort_desc           | returned    |
-         | /null | 0      | name=='*'                       | /null          | website             | 2           |
-         | /null | 0      | name=='Company 4'               | /null          | /null               | 0           |
+         | /null | 0      | name=='*'                       | /null          | website             | 3           |
+         | /null | 0      | name=='Company 4'               | /null          | /null               | 1           |
          | 1     | 0      | website=='*www.*'               | /null          | /null               | 1           |
          | /null | 0      | is_demo_customer=='true'        | /null          | salesforce_id       | 2           |
          | /null | 0      | salesforce_id=='salesforceid_3' | /null          | /null               | 1           |

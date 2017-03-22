@@ -56,6 +56,7 @@ import java.util.Map;
  * Created by sedlacek on 9/23/2015.
  */
 public class BasicSteps {
+    public static final String DEFAULT_CUSTOMER_TYPE = "HOTEL";
     public static final String SNAPSHOT_WEBSITE = "http://www.snapshot.travel";
     public static final String HEADER_IF_MATCH = "If-Match";
     public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
