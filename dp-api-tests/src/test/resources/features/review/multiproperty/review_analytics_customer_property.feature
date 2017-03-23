@@ -16,11 +16,7 @@ Feature: Review multiproperty customer property
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The password of user "snapshotUser" is "Password1"
     Given Relation between user "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
-    Given Get token for user "snapshotUser" with password "Password1"
-    Given Set access token from session for customer steps defs
-    Given Set access token for review steps defs
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p2_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p3_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
@@ -87,12 +83,11 @@ Feature: Review multiproperty customer property
   Scenario Outline: Checking mandatory values
     When Get "<metric>" for list of properties for customer "<customer_id>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 400
-    And Custom code is 52
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | metric                | customer_id | since      | until      | granularity | message                                       |
+      | metric                | customer_id | since      | until      | granularity                          | details                                       |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |

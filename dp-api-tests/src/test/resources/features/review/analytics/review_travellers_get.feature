@@ -16,13 +16,8 @@ Feature: Review travelers
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The password of user "snapshotUser" is "Password1"
     Given Relation between user "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
-    Given Get token for user "snapshotUser" with password "Password1"
-    Given Set access token from session for customer steps defs
-    Given Set access token for review steps defs
     Given Relation between user "snapshotUser" and property with code "p1_code" exists
-#    Relation with type 'anchor' doesn't exist anymore (was replaced with anchorCustomerId - Story DP-1232). Replaced with type 'owner'. Other types (data_owner, owner, asset_management, management, chain, membership) need to be covered too.
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 
@@ -118,7 +113,7 @@ Feature: Review travelers
       |  /travellers/ | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
   @Smoke
-  Scenario Outline: Checking data corectness for all travellers analitics
+  Scenario Outline: Checking data correctness for all travellers analytics
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     Then Review travellers file "<json_input_file>" is equals to previous response
     And Response code is "200"
@@ -130,7 +125,7 @@ Feature: Review travelers
       | /analytics_for_week.json  | /travellers/ | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | /analytics_for_month.json | /travellers/ | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
-  Scenario Outline: Checking data corectness for bubble rating
+  Scenario Outline: Checking data correctness for bubble rating
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     Then Review travellers file "<json_input_file>" is equals to previous response for bubble rating
     And Response code is "200"
