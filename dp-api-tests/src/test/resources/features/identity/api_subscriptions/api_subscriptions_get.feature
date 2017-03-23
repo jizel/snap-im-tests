@@ -1,4 +1,5 @@
 @Identity
+@skipped
 Feature: Api subscription get
 
   Background:

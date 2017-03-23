@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.serenity;
 
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 
 import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
@@ -32,11 +33,15 @@ public class DbUtilsSteps {
     static final String DELETE_ADDRESS = "delete  from Address";
     static final String DELETE_ROLE = "delete  from Role";
     static final String DELETE_USER_GROUP_ROLE = "delete  from User_Group_Role";
+    static final String DELETE_USER_PROPERTY_SET_ROLE = "delete from User_Property_Set_Role";
+    static final String DELETE_USER_PROPERTY_ROLE = "delete from User_Property_Role";
     static final String DELETE_API_SUBSCRIPTIONS = "delete  from Api_Subscription";
     static final String DELETE_APPLICATION = "delete from Application";
     static final String DELETE_APPLICATION_VERSIONS = "delete from Application_Version";
     static final String DELETE_USER_GROUPS = "delete from User_Group";
+    static final String DELETE_USER_GROUPS_PROPERTY_ROLES = "delete from User_Group_Property_Role";
     static final String DELETE_USER_GROUPS_PROPERTIES = "delete from User_Group_Property";
+    static final String DELETE_USER_GROUPS_PROPERTYSET_ROLES = "delete from User_Group_Property_Set_Role";
     static final String DELETE_USER_GROUPS_PROPERTYSET = "delete from User_Group_Property_Set";
     static final String DELETE_USER_GROUPS_USER = "delete from User_Group_User";
     static final String DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID = "delete from Customer_Property where customer_id = ? and property_id = ?";
@@ -53,7 +58,7 @@ public class DbUtilsSteps {
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, application_name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO Application_Version (id, application_id, api_manager_id, version_name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo_customer, notes, address_id, timezone, type, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_CUSTOMER_TYPE + "', 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, address_line1, address_line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
     static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO Commercial_Subscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
@@ -109,12 +114,16 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_USER_CUSTOMER_ROLE);
         dbHelper.identityDb().update(DELETE_CUSTOMER_USER);
         dbHelper.identityDb().update(DELETE_PARTNER_USER);
+        dbHelper.identityDb().update(DELETE_USER_PROPERTY_ROLE);
+        dbHelper.identityDb().update(DELETE_USER_PROPERTY_SET_ROLE);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
         dbHelper.identityDb().update(DELETE_USER_PROPERTYSET);
         dbHelper.identityDb().update(DELETE_API_SUBSCRIPTIONS);
         dbHelper.identityDb().update(DELETE_COMMERCIAL_SUBSCRIPTION);
         dbHelper.identityDb().update(DELETE_PROPERTY_PROPERTYSET);
+        dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTY_ROLES);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTIES);
+        dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTYSET_ROLES);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTYSET);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_USER);
         dbHelper.identityDb().update(DELETE_PROPERTY);

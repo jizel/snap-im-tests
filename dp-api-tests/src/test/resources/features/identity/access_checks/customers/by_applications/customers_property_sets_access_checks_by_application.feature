@@ -12,8 +12,10 @@ Feature: Customers-Property Sets Application access check feature - GET
       | 12300000-0000-4000-a000-000000000000 | CustomerWithSubscription    | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 00000000-0000-4000-8000-123000000abc | CustomerWithoutSubscription | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | userType | userName      | firstName | lastName | email                | timezone      | culture | isActive |
-      | customer | userWithCust1 | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
+      | customer | user1    | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | customer | user2    | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+      | customer | user3    | Customer  | User3    | cus3@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -33,7 +35,7 @@ Feature: Customers-Property Sets Application access check feature - GET
     Given The following api subscriptions exist
       | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
-    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithCust1"
+    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1"
       | Id                                   | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
@@ -42,10 +44,10 @@ Feature: Customers-Property Sets Application access check feature - GET
 
 
   Scenario: Second level entities - User sees only property sets he should for customer he sees
-    When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
+    When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithSubscription"
     Then Response code is "200"
     And Total count is "2"
-    When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
+    When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithoutSubscription"
     Then Response code is "404"
 
  @skipped
@@ -68,9 +70,6 @@ Feature: Customers-Property Sets Application access check feature - GET
     When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithoutSubscription"
     Then Response code is "404"
 
-  # DP-1893
-  # DP-1892
-  @skipped
   Scenario: List users of customer by app
     # User with explicit access to the property will try to access the user with access to this property
     # through property set using application with commercial subscription to only one property in this property set
@@ -79,15 +78,16 @@ Feature: Customers-Property Sets Application access check feature - GET
       | salesforceid_1 | p1_name | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     And Relation between user "user3" and property with code "p1_code" exists
     Given The following property set is created for customer with id "12300000-0000-4000-a000-000000000000"
-      | propertySetName | propertySetDescription | propertySetType |
-      | myPs            | someDesc               | brand           |
+      | name | description | type  |
+      | myPs | someDesc    | brand |
     And Property "defaultPropertyCode" is added to property set "myPs"
     And Property "p1_code" is added to property set "myPs"
     And Relation between user "user3" and property set "myPs" exists
     When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
-    Then There are "3" users returned
+    # user-property endpoint returns only direct relationships
+    Then There are "2" users returned
     When User "user3" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
-    Then There are "3" users returned
+    Then There are "2" users returned
 
   Scenario: List of users with inactive user-customer or user-property relation
     Given Relation between user "user2" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated

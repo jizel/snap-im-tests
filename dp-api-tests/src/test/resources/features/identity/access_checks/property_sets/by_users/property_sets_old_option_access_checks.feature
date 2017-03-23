@@ -45,8 +45,6 @@ Feature: Property sets old option access check feature - DP-1576
       Then Response code is "200"
       And Body contains property with attribute "name" value "ps1_name"
 
-    # DP-1857
-    @skipped
     Scenario: When a single property is added to property set, user loses implicit access, when deleted he gains access again
       When Relation between property "p1_code" and property set "ps1_name" is activated
       When Relation between property "p2_code" and property set "ps1_name" is activated
@@ -57,11 +55,11 @@ Feature: Property sets old option access check feature - DP-1576
         | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
         | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p4_code"
-      Given Relation between property with code "p4_code" and property set with name "ps1_name" exists
+      Given Relation between property "p4_code" and property set "ps1_name" exists
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"
       And Total count is "0"
-      When Property with code "p4_code" is deleted
+      When Relation between property "p4_code" and property set "ps1_name" is deleted
       Then Response code is "204"
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"

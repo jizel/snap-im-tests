@@ -94,20 +94,22 @@ public class CustomerStepdefs {
         customerSteps.followingCustomersExistWithRandomAddress(customers);
     }
 
-    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and customer with id \"([^\"]*)\" exists(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and customer(?: with id)? \"([^\"]*)\" exists(?: with type \"([^\"]*)\")?(?: from \"([^\"]*)\" to \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_property_with_code_and_customer_with_code_exists_with_type_from_to(String propertyCode,
-                                                                                                    String customerId, String type, String validFrom, String validTo, String isActiveString) throws Throwable {
+                                                                                                    String customerName, String type, String validFrom, String validTo, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String customerId = customerSteps.resolveCustomerId(customerName);
         customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(propertyId, customerId, type, validFrom, validTo, isActive);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" exists(?: with isPrimary \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    @Given("^Relation between user \"([^\"]*)\" and customer(?: with id)? \"([^\"]*)\" exists(?: with isPrimary \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void Relation_between_user_with_username_and_customer_with_id_exists_with_isPrimary(String username,
-                                                                                                 String customerId, String isPrimaryString, String isActiveString) throws Throwable {
+                                                                                                 String customerName, String isPrimaryString, String isActiveString) throws Throwable {
         Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String userId = usersSteps.resolveUserId(username);
+        String customerId = customerSteps.resolveCustomerId(customerName);
         customerSteps.relationExistsBetweenUserAndCustomer(userId, customerId, isPrimary, isActive);
     }
 
@@ -152,10 +154,11 @@ public class CustomerStepdefs {
         customerSteps.listOfCustomersIsGotByUserForAppVersionWith(userId, applicationVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^Customer with id \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
-    public void customerWithIdIsUpdatedWithData(String customerId, String username, String applicationVersionName, List<CustomerUpdateDto> customersData) throws Throwable {
+    @When("^Customer(?: with id)? \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void customerWithIdIsUpdatedWithData(String customerName, String username, String applicationVersionName, List<CustomerUpdateDto> customersData) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        String customerId = customerSteps.resolveCustomerId(customerName);
         customerSteps.updateCustomerByUserForApp(customerId, userId, applicationVersionId, customersData.get(0));
     }
 
@@ -179,22 +182,24 @@ public class CustomerStepdefs {
 
     }
 
-    @When("^Property with code \"([^\"]*)\" is added to customer with id \"([^\"]*)\" with type \"([^\"]*)\"(?: from \"([^\"]*)\")?(?: to \"([^\"]*)\")(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")$")
-    public void propertyWithCodeIsAddedToCustomerWithIdWithTypeFromToByUser(String propertyCode, String customerId, @Transform(NullEmptyStringConverter.class) String type,
+    @When("^Property with code \"([^\"]*)\" is added to customer(?: with id)? \"([^\"]*)\" with type \"([^\"]*)\"(?: from \"([^\"]*)\")?(?: to \"([^\"]*)\")(?: by user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")$")
+    public void propertyWithCodeIsAddedToCustomerWithIdWithTypeFromToByUser(String propertyCode, String customerName, @Transform(NullEmptyStringConverter.class) String type,
                                                                             @Transform(NullEmptyStringConverter.class) String dateFrom,
                                                                             @Transform(NullEmptyStringConverter.class) String dateTo,
                                                                             String username, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username) ;
+        String customerId = customerSteps.resolveCustomerId(customerName);
         Response response = customerSteps.addPropertyToCustomerByUser(userId, propertyId, customerId, type, dateFrom, dateTo, isActive);
         customerSteps.setSessionResponse(response);
     }
 
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
-    public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerId, String username, String applicationVersionName) throws Throwable {
+    @When("^Property with code \"([^\"]*)\" from customer(?: with id)? \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerName, String username, String applicationVersionName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username) ;
+        String customerId = customerSteps.resolveCustomerId(customerName);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         customerSteps.getPropertyForCustomerByUserForApp(userId, applicationVersionId, propertyId, customerId);
     }
@@ -204,13 +209,14 @@ public class CustomerStepdefs {
         customerSteps.getCustomerPropertyWithRelationshipId(customerId, "nonexistent");
     }
 
-    @When("^List of customerProperties is got for customer with id \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of customerProperties is got for customer(?: with id)? \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_customerProperties_is_got_for_customer_with_id_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
+            String customerName, @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
             @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        String customerId = customerSteps.resolveCustomerId(customerName);
         customerSteps.listOfCustomerPropertiesIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
     }
 
