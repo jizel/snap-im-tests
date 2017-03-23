@@ -17,7 +17,7 @@ public class Resolvers {
     @Steps
     private static CustomerSteps customerSteps;
 
-    public static String resolveSecondLevelName(String type, String name) {
+    public static String resolveEntityName(String type, String name) {
         switch (type) {
             case "customer":     return customerSteps.resolveCustomerId(name);
             case "property":     return propertySteps.resolvePropertyId(name);
