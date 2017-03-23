@@ -45,9 +45,7 @@ Feature: Properties access check feature - POST and DELETE
 
   Scenario: Deleting Property by user who owns it
     When Property with code "p1_code" is deleted by user "userWithProp"
-    Then Response code is "204"
-    And Body is empty
-    And Property with same id doesn't exist
+    Then Response code is "409"
 
   Scenario: User with inactive relation to property can not update or delete it
     When Relation between user "userWithNoProp" and property with code "p1_code" exists with is_active "false"
@@ -63,30 +61,29 @@ Feature: Properties access check feature - POST and DELETE
       | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
     Then Response code is "204"
     When Property with code "p1_code" is deleted by user "userWithNoProp"
-    Then Response code is "204"
+    Then Response code is "409"
 
   Scenario: Anchor_customer_id of not accessible customer cannot be used when creating property
     Given The following customers exist with random address
       | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
-    When The following property is created with random address and billing address for user "userWithNoProp"
+    When The user "userWithNoProp" creates the following property
       | salesforceId   | name         | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "422"
+    And Custom code is 42202
     Given Relation between user "userWithNoProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
-    When The following property is created with random address and billing address for user "userWithNoProp"
+    When The user "userWithProp" creates the following property
       | salesforceId   | name         | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "422"
+    And Custom code is 42202
     When Relation between user "userWithNoProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is activated
     When The following property is created with random address and billing address for user "userWithNoProp"
       | salesforceId   | name         | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
-
 
   Scenario: Anchor_customer_id of not accessible customer cannot be used when updating property
     Given The following customers exist with random address
@@ -112,13 +109,11 @@ Feature: Properties access check feature - POST and DELETE
 
   #    ----------------------------< Tti >----------------------------------
 
-  # DP-1816
   Scenario: Add tti to booking.com mapping to property with defined tti_id by user who has access to the property
     When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithProp"
     Then Response code is "201"
     And Body contains entity with attribute "code" and integer value 1234
 
-  # DP-1816
   Scenario: Add tti to booking.com mapping to property with defined tti_id by user who does not have access to the property
     When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithNoProp"
     Then Response code is "404"
