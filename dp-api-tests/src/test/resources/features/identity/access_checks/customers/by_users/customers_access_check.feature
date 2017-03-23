@@ -106,8 +106,8 @@ Feature: Customers access check feature - GET
        Given The following customers exist with random address
          | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
          | 23445678-0000-4000-a000-000000000000 | Company 3   | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-         | 34545678-0000-4000-a000-000000000000 | Company 4   | c4@tenants.biz | salesforceid_4 | CZ10000004 | false          | +420987654321 | http://www.snapshot.travel | Europe/Prague |
-         | 45645678-0000-4000-a000-000000000000 | Company 5   | c5@tenants.biz | salesforceid_5 | CZ10000005 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
+         | 34545678-0000-4000-a000-000000000000 | Company 4   | c4@tenants.com | salesforceid_4 | CZ10000004 | false          | +420987654321 | http://www.snapshot.travel | Europe/Prague |
+         | 45645678-0000-4000-a000-000000000000 | Company 5   | c5@tenants.com | salesforceid_5 | CZ10000005 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
        Given API subscriptions exist for default application and customer with id "23445678-0000-4000-a000-000000000000"
        Given API subscriptions exist for default application and customer with id "34545678-0000-4000-a000-000000000000"
        Given API subscriptions exist for default application and customer with id "45645678-0000-4000-a000-000000000000"
@@ -124,8 +124,8 @@ Feature: Customers access check feature - GET
 
        Examples:
          | limit | cursor | filter                          | sort           | sort_desc           | returned    |
-         | /null | 0      | name=='*'                       | /null          | website             | 2           |
-         | /null | 0      | name=='Company 4'               | /null          | /null               | 0           |
+         | /null | 0      | name=='*'                       | /null          | website             | 3           |
+         | /null | 0      | name=='Company 4'               | /null          | /null               | 1           |
          | 1     | 0      | website=='*www.*'               | /null          | /null               | 1           |
          | /null | 0      | is_demo_customer=='true'        | /null          | salesforce_id       | 2           |
          | /null | 0      | salesforce_id=='salesforceid_3' | /null          | /null               | 1           |
@@ -158,20 +158,15 @@ Feature: Customers access check feature - GET
       | updatedName   | updated@tenants.biz | updated_sf_id  | CZ01111110 | +420999666999 | http://www.update.snapshot.travel |
     Then Response code is "404"
 
-  Scenario: Deleting Customer by user with access
-    When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
-    Then Response code is 204
-    And Body is empty
-    And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist
-
-  Scenario: Deleting Customer by user without access to it
+  Scenario: Deleting Customer by user with and without access
     When Customer "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust2"
     Then Response code is 404
     When Customer "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
     Then Response code is "404"
-    Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is activated
-    When Customer "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
+    Given Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is activated
+    When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1"
     Then Response code is "409"
+    And Body contains property with attribute "message" value "The entity Customer with ID 12300000-0000-4000-a000-000000000000 is already referenced and cannot be removed."
 
   Scenario: User loses access to customer when relation is deleted - DP-1811
     Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is deleted
@@ -191,11 +186,10 @@ Feature: Customers access check feature - GET
       And Custom code is "40402"
       Examples:
         | url                                                                              |
-        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
+#        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
         | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
         | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
         | identity/customers/12300000-0000-4000-a000-000000000000/properties               |
-        # DP-1855
         | identity/customers/12300000-0000-4000-a000-000000000000/property_sets            |
 
 
@@ -205,7 +199,7 @@ Feature: Customers access check feature - GET
      And Custom code is "40402"
      Examples:
        | url                                                                                                                            |
-       | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
+#       | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
        | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions?filter=is_active=='false'&sort=customer_id    |
        | identity/customers/12300000-0000-4000-a000-000000000000/users?sortDesc=user_id&cursor=0                                        |
        | identity/customers/12300000-0000-4000-a000-000000000000/properties?limit=55&filter=property_code=='*'                          |
@@ -223,7 +217,7 @@ Feature: Customers access check feature - GET
         | url                                                                              |
         | identity/customers                                                               |
         | identity/customers/12300000-0000-4000-a000-000000000000/                         |
-        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
+#        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
         | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
         | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
         | identity/customers/12300000-0000-4000-a000-000000000000/properties               |

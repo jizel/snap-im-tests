@@ -36,7 +36,7 @@ Feature: User Groups Property sets Roles Application access check feature
       | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | propertySetName       | propertySetDescription | propertySetType |
+      | Id                                   | name       | description | type |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     Given Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists
     Given Switch for user property set role tests

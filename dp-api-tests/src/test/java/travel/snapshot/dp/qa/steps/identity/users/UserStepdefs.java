@@ -23,6 +23,7 @@ import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.Resolvers;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.helpers.RoleType;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
@@ -435,16 +436,8 @@ public class UserStepdefs {
 
     @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
     public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelType, String secondLevelName, String appVersionName) throws Throwable {
-        roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase()));
-        String secondLevelId = null;
-        switch (secondLevelType) {
-            case "customer":     secondLevelId = secondLevelName;
-                                 break;
-            case "property":     secondLevelId = propertySteps.resolvePropertyId(secondLevelName);
-                                 break;
-            case "property set": secondLevelId = propertySetSteps.resolvePropertySetId(secondLevelName);
-                                 break;
-        }
+        roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
+        String secondLevelId = Resolvers.resolveSecondLevelName(secondLevelType, secondLevelName);
         String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
         usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelType, secondLevelId);
@@ -452,32 +445,25 @@ public class UserStepdefs {
 
 
     @When("^User \"([^\"]*)\" assigns role \"([^\"]*)\" to relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
-    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelType, String thirdLevelName, String appVersionName) throws Throwable {
-        roleBaseSteps.setRolesPath(RoleType.valueOf(thirdLevelType.toUpperCase()));
+    public void userAssignsRoleToUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String secondLevelType, String secondLevelName, String appVersionName) throws Throwable {
+        roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        String thirdLevelId = null;
-        switch (thirdLevelType) {
-            case "customer":     thirdLevelId = thirdLevelName;
-                                 break;
-            case "property":     thirdLevelId = propertySteps.resolvePropertyId(thirdLevelName);
-                                 break;
-            case "property set": thirdLevelId = propertySetSteps.resolvePropertySetId(thirdLevelName);
-                                 break;
-        }
+        String secondLevelId = Resolvers.resolveSecondLevelName(secondLevelType, secondLevelName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
-        usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), thirdLevelType, thirdLevelId, roleId);
+        usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), secondLevelType, secondLevelId, roleId);
 
     }
 
 
     @When("^User \"([^\"]*)\" deletes role \"([^\"]*)\" from relation between user \"([^\"]*)\" and (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
-    public void userDeletesRoleFromUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String thirdLevelName, String thirdLevelId, String appVersionName) throws Throwable {
-        roleBaseSteps.setRolesPath(RoleType.valueOf(thirdLevelName.toUpperCase()));
+    public void userDeletesRoleFromUserCustomerRelationBetweenUserAtCustomer(String requestorUsername, String roleName, String targetUsername, String secondLevelType, String secondLevelName, String appVersionName) throws Throwable {
+        roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
+        String secondLevelId = Resolvers.resolveSecondLevelName(secondLevelType, secondLevelName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
-        usersSteps.userDeletesRoleFromRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), thirdLevelName, thirdLevelId, roleId);
+        usersSteps.userDeletesRoleFromRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), secondLevelType, secondLevelId, roleId);
     }
 
     @When("^User \"([^\"]*)\" creates user with:$")

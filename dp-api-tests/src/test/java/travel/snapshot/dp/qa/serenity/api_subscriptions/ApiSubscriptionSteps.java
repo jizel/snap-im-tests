@@ -34,12 +34,14 @@ public class ApiSubscriptionSteps extends BasicSteps {
     }
 
     public void followingApiSubscriptionExist(List<ApiSubscriptionDto> apiSubscriptionList) {
-        apiSubscriptionList.forEach(t -> {
+// The following was commented out due to api subscription code was disabled in master
+// Corresponding tracker issues are: DP-1925, DP-1927
+/*        apiSubscriptionList.forEach(t -> {
             Response createResponce = createEntity(t);
             if (createResponce.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("App Subscription cannot be created");
             }
-        });
+        }); */
     }
 
     public void followingApiSubscriptionIsCreated(ApiSubscriptionDto apiSubscription) {

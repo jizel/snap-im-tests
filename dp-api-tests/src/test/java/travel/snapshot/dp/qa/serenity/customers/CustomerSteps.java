@@ -25,6 +25,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
@@ -67,6 +68,9 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void followingCustomersExistWithRandomAddress(List<CustomerCreateDto> customers) {
         customers.forEach(t -> {
+            if (t.getType() == null) {
+                t.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));
+            }
             t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
             Response createResponse = createEntity(t);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
@@ -228,6 +232,11 @@ public class CustomerSteps extends BasicSteps {
 
     public CustomerDto getCustomerById(String id) {
         CustomerDto[] customers = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + id, null, null, null).as(CustomerDto[].class);
+        return stream(customers).findFirst().orElse(null);
+    }
+
+    public CustomerDto getCustomerByCompanyName(String name) {
+        CustomerDto[] customers = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "company_name==" + name, null, null, null).as(CustomerDto[].class);
         return stream(customers).findFirst().orElse(null);
     }
 
@@ -701,5 +710,19 @@ public class CustomerSteps extends BasicSteps {
 
     public void removeUserFromCustomerByUserForApp(String requestorId, String appVersionId, String customerId, String targetUserId) {
         setSessionResponse(deleteSecondLevelEntityByUserForApplication(requestorId, appVersionId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId, null));
+    }
+
+    public String resolveCustomerId(String companyName) {
+        if (companyName == null) return DEFAULT_SNAPSHOT_USER_ID;
+
+        String customerId;
+        if (isUUID(companyName)) {
+            customerId = companyName;
+        } else {
+            CustomerDto customer = getCustomerByCompanyName(companyName);
+            assertThat(String.format("Customer with company name \"%s\" does not exist", companyName), customer, is(notNullValue()));
+            customerId = customer.getId();
+        }
+        return customerId;
     }
 }
