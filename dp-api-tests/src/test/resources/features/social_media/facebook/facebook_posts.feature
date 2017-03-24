@@ -1,12 +1,12 @@
-#DP-1941
-@skipped
 @SocialMedia
 Feature: facebook posts
   Testing of api for facebook posts with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
 
   Background:
     Given Database is cleaned and default entities are created
-  
+
+  #DP-1941
+  @skipped
   Scenario Outline: Getting a list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is 200
@@ -53,10 +53,11 @@ Feature: facebook posts
       | /analytics/facebook/posts | 400           | 40002       |
 
 
+  #DP-1941
+  @skipped
   @Smoke
   Scenario Outline: Checking that data returned are correct (date(UTC) from DB is recalculated to property timezone)
     #property 99000099 has DB value for posts stored everyday at 2015-12-30 11:09:24 UTC -> convert -> 2015-12-30T18:09:24
-    When Database is cleaned
     Given The following customers exist with random address
       | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
