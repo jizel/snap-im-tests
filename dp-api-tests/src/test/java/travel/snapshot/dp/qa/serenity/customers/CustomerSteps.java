@@ -67,12 +67,12 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void followingCustomersExistWithRandomAddress(List<CustomerCreateDto> customers) {
-        customers.forEach(t -> {
-            if (t.getType() == null) {
-                t.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));
+        customers.forEach(customer -> {
+            if (customer.getType() == null) {
+                customer.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));
             }
-            t.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
-            Response createResponse = createEntity(t);
+            customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
+            Response createResponse = createEntity(customer);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Customer cannot be created " + createResponse.getBody().asString());
             }
@@ -694,17 +694,6 @@ public class CustomerSteps extends BasicSteps {
 
     public void getCustomerUserRelationByUser(String requestorId, String customerId, String targetUserId) {
         Response response = getSecondLevelEntityByUser( requestorId, customerId, SECOND_LEVEL_OBJECT_USERS, targetUserId);
-        setSessionResponse(response);
-    }
-    /*public void checkCustomerActivity(String customerId, boolean activity) {
-        CustomerDto customer = getEntity(customerId).as(CustomerDto.class);
-        assertEquals(customer.getIsActive(), activity);
-    }*/
-
-    public void propertyIsgotForCustomer(String propertyId, String customerId) {
-        setAccessTokenParamFromSession();
-        CustomerPropertyRelationshipDto customerPropertyRelationship = getCustomerPropertyForCustomer(customerId, propertyId);
-        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationship.getId());
         setSessionResponse(response);
     }
 

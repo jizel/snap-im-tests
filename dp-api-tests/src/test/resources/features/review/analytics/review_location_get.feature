@@ -12,11 +12,7 @@ Feature: Review locaitons
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The password of user "snapshotUser" is "Password1"
     Given Relation between user "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
-    Given Get token for user "snapshotUser" with password "Password1"
-    Given Set access token from session for customer steps defs
-    Given Set access token for review steps defs
     Given Relation between user "snapshotUser" and property with code "p1_code" exists
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
@@ -86,8 +82,8 @@ Feature: Review locaitons
       | 5     | 0      | 5        | location_name=='town_99*'               |               | location_name | town 999, town 998, town 997, town 996, town 995 |
       | 5     | 2      | 5        | location_name=='town_99*'               | location_name |               | town 991, town 992, town 993, town 994, town 995|
       | 5     | 2      | 5        | location_name=='town_99*'               |               | location_name | town 997, town 996, town 995, town 994, town 993|
-      | /null | /null  | 1        | location_name=='town 999'                 |               |               | town 999                                        |
-      | /null | /null  | 1        | location_id==999                         |               |               | town 999                                        |
+      | /null | /null  | 1        | location_name=='town 999'               |               |               | town 999                                        |
+      | /null | /null  | 1        | location_id==999                        |               |               | town 999                                        |
       | /null | /null  | 1        | location_name==town_99*;location_id==99 |               |               | town 99                                         |
       | /null | /null  | 1        | location_id==99                         |               |               | town 99                                         |
 

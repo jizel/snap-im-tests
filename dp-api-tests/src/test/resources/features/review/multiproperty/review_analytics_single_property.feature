@@ -24,7 +24,7 @@ Feature: Review multiproperty single property
     When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
     Then Content type is "application/json"
     And Response code is "400"
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | metric                | property_id                          | granularity | since      | until      |
@@ -51,13 +51,12 @@ Feature: Review multiproperty single property
 
   Scenario Outline: Checking error codes for analytics data
     When Get "<metric>" for single property "<property_id>" with since "<since>" until "<until>" and granularity "<granularity>"
-    Then Response code is 422
-    And Custom code is 42201
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    Then Response code is 400
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | metric                | property_id                          | since      | until      | granularity | message                                       |
+      | metric                | property_id                          | since      | until      | granularity | details                                       |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |

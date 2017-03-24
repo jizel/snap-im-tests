@@ -91,7 +91,7 @@ Feature: Properties access check feature - GET
 
     Scenario: User belongs to User Group that has a relation to a PropertySet that has a relation to the property
       Given The following user groups exist
-        | Id                                   | name        | isActive |
+        | customerId                           | name        | isActive |
         | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
         | name            | type            |
@@ -165,7 +165,7 @@ Feature: Properties access check feature - GET
       And Custom code is "40402"
       Examples:
         | url                                                                               |
-        | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
+#        | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users                    |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers                |
@@ -177,7 +177,7 @@ Feature: Properties access check feature - GET
        And Custom code is "40402"
        Examples:
          | url                                                                                                                             |
-         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
+#         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions?filter=is_active=='false'&sort=customer_id    |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users?sortDesc=user_id&cursor=0                                        |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers?limit=55&filter=company_name=='*'                            |
@@ -191,7 +191,7 @@ Feature: Properties access check feature - GET
         | url                                                                               |
         | identity/properties                                                               |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/                         |
-        | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
+#        | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users                    |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers                |

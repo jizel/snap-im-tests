@@ -141,11 +141,17 @@ public class PropertiesStepdefs {
         propertySteps.getListOfPropertiesByUserForApp(userId, applicationVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
-    @When("^The following property is created with random address and billing address(?: for user \"([^\"]*)\")?$")
+    @Given("^The following property is created with random address and billing address(?: for user \"([^\"]*)\")?$")
     public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
         assertThat("Failed to create the property: " + propertySteps.getSessionResponse().toString(), propertySteps.getSessionResponse().statusCode() == HttpStatus.SC_CREATED);
+    }
+
+    @When("^The user \"([^\"]*)\" creates the following property$")
+    public void theUserCreatesTheFollowingProperty(String userName, List<PropertyDto> properties) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
+        propertySteps.followingPropertyIsCreated(properties.get(0), userId);
     }
 
     @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created with userId \"([^\"]*)\"$")

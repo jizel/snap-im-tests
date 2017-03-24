@@ -1,5 +1,5 @@
 Feature: Review
-  Testing of api for review modul alias trip_advisor with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
+  Testing of api for review module alias trip_advisor with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
   data in db are mostly increasing some of the data also includes nulls
 
   NOTE: every monday will some tests fails because date calculation
@@ -13,14 +13,10 @@ Feature: Review
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
       | Id                                   | userType | userName  | firstName | lastName | email                     | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapUser1 | Snapshot  | User1    | snapUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The password of user "snapUser1" is "Password1"
     Given Relation between user "snapUser1" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
-    Given Get token for user "snapUser1" with password "Password1"
-    Given Set access token from session for customer steps defs
-    Given Set access token for review steps defs
     Given Relation between user "snapUser1" and property with code "p1_code" exists
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
@@ -104,7 +100,7 @@ Feature: Review
       | /analytics | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
   @Smoke
-  Scenario Outline: Checking data corectness for analitics for analytics
+  Scenario Outline: Checking data correctness for analytics for analytics
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     And Response code is "200"
     And Content type is "application/json"
@@ -220,7 +216,6 @@ Feature: Review
     And Content type is "application/json"
     And Response code is "200"
     And Review file "<json_input_file>" equals to previous response for popularity index
-
     Examples:
       | url                              | granularity | json_input_file                                     | since      | until      |
       | /analytics/popularity_index_rank | day         | /multiproperty/property/popularity_index_day.json   | 2015-12-03 | 2015-12-03 |
