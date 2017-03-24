@@ -32,9 +32,6 @@ Feature: Properties-Property Sets access check feature
     When Property with code "p1_code" is added to property set "prop_set1"
     When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
     Then Response code is "404"
-    When Relation between property set "prop_set1" and user "userWithProp" is activated
-    When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
-    Then Response code is "404"
     When Relation between user "userWithProp" and property set "prop_set1" is activated
     When Property set with name "prop_set1" for property with code "p1_code" is requested by user "userWithProp"
     Then Response code is "200"
@@ -83,10 +80,15 @@ Feature: Properties-Property Sets access check feature
     And Custom code is 40402
 
   Scenario: Delete property - PropertySet relationship by user who has access to the property but not to the property set
+    Given The following property is created with random address and billing address
+      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.com    | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
       | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
+    Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
     When Relation between property with code "p1_code" and property set "ps1_name" is deleted by user "userWithProp"
     Then Response code is "404"
     And Custom code is 40402

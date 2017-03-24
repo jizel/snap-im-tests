@@ -69,7 +69,6 @@ Feature: Properties-Property Sets Application access check feature
       | isActive |
       | true     |
     Then Response code is "204"
-    And Custom code is 40402
 
   Scenario: Delete property - PropertySet relationship by application with and without access
     When Relation between property with code "p1_code" and property set "prop_set1" is deleted by user "user1" for application version "versionWithoutSubscription"
