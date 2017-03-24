@@ -32,7 +32,7 @@ Feature: User Groups - Properties Application access check feature
       | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following user groups exist
-      | Id                                   | name        | isActive | description          |
+      | customerId                                   | name        | isActive | description          |
       | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
       | Id                                   | name | type |

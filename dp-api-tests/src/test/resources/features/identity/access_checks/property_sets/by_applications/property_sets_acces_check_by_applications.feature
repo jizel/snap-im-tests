@@ -23,7 +23,7 @@ Feature: Property sets Application access check feature
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-      | Id                                   | apiManagerId | versionName                | status    | description                | Id                                   |
+      | Id                                   | apiManagerId | versionName                | status    | description                | applicationId                                   |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription    | certified | Active version description | 22200000-0000-4000-a000-000000000222 |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description | 00000000-0000-4000-a000-000000000222 |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1"
@@ -78,15 +78,15 @@ Feature: Property sets Application access check feature
     And Total count is "0"
     Examples:
       | limit | cursor | filter                        | sort        | sort_desc         | returned    |
-      | /null | 0      | name=='*'                     | /null       | name              | 5           |
+      | /null | 0      | name=='*'                     | /null       | name              | 4           |
       | /null | 0      | name=='ps4_name'              | /null       | /null             | 1           |
-      | /null | 0      | is_active=='true'             | /null       | property_set_type | 3           |
-      | /null | 0      | property_set_type=='brand'    | /null       | property_set_type | 3           |
+      | /null | 0      | is_active=='true'             | /null       | property_set_type | 2           |
+      | /null | 0      | property_set_type=='brand'    | /null       | property_set_type | 2           |
       | /null | 0      | description=='desc*'          | description | /null             | 3           |
       | /null | 0      | property_set_id=='43400000-*' | /null       | /null             | 1           |
 
   Scenario: Application with and without subscription updates property set
-    When Property set "ps1_name" is updated with following data by user "user1"
+    When Property set "ps1_name" is updated with following data by user "user1" for application version "versionWithoutSubscription"
       | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
     Then Response code is "404"

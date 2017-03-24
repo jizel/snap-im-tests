@@ -28,10 +28,7 @@ Feature: Property sets Properties access check feature
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Property with code "p1_code" is added to property set "ps1_name" with is_active "false"
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
-      Then Response code is "404"
-      When List of all properties for property set with name "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
-      And Total count is "0"
       When Relation between property "p1_code" and property set "ps1_name" is activated
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
       Then Response code is "200"
