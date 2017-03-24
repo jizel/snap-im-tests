@@ -32,7 +32,8 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
     @Step
     public void verifySumOfMetricFromSocialMedia(String metric, String granularity, String property, String since, String until) {
-        List<Integer> facebookValues = given().spec(spec)
+        RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+        List<Integer> facebookValues = requestSpecification
                 .baseUri(PropertiesHelper.getProperty(FACEBOOK_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
@@ -41,7 +42,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .get("/social_media/analytics/facebook/{metric}", metric).jsonPath().getList("values.value");
         int facebookSum = facebookValues.stream().mapToInt(i -> i).sum();
 
-        List<Integer> twitterValues = given().spec(spec)
+        List<Integer> twitterValues = requestSpecification
                 .baseUri(PropertiesHelper.getProperty(TWITTER_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
@@ -50,7 +51,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .get("/social_media/analytics/twitter/{metric}", metric).jsonPath().getList("values.value");
         int twitterSum = twitterValues.stream().mapToInt(i -> i).sum();
 
-        List<Integer> instagramValues = given().spec(spec)
+        List<Integer> instagramValues = requestSpecification
                 .baseUri(PropertiesHelper.getProperty(INSTAGRAM_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)
@@ -59,7 +60,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
                 .get("/social_media/analytics/instagram/{metric}", metric).jsonPath().getList("values.value");
         int instagramSum = instagramValues.stream().mapToInt(i -> i).sum();
 
-        List<Integer> totalValues = given().spec(spec)
+        List<Integer> totalValues = requestSpecification
                 .baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI))
                 .header("x-property", property)
                 .param("granularity", granularity)

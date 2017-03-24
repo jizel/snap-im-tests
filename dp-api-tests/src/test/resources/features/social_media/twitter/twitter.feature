@@ -10,7 +10,7 @@ Feature: Twitter metrics
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "today" until "today"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | url                                 | granularity | property                             |
@@ -224,8 +224,8 @@ Feature: Twitter metrics
 
   Scenario Outline: Checking error codes for analytics data
     When Get twitter "<url>" with missing property header
-    Then Response code is 422
-    And Custom code is "42201"
+    Then Response code is 400
+    And Custom code is "40002"
 
     Examples:
       | url                                 |
@@ -240,11 +240,13 @@ Feature: Twitter metrics
       | /analytics/twitter/mentions         |
       | /analytics/twitter/mention_reach    |
 
+  DP-1943
+  @skipped
   Scenario Outline: Get analytics data from API with missing parameters
     When Get twitter "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 52
+    And Custom code is 40002
 
     Examples:
       | url                                 | granularity | since           | until      |
@@ -286,7 +288,7 @@ Feature: Twitter metrics
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 63
+    And Custom code is 40002
 
     Examples:
       | url                                 | granularity | since | until            | property                             |
@@ -304,7 +306,7 @@ Feature: Twitter metrics
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 63
+    And Custom code is 40002
 
     Examples:
       | url                | granularity | since | until            | property                             |

@@ -36,7 +36,10 @@ public class AnalyticsBaseSteps extends BasicSteps {
 
     @Step
     public void getDataWithoutProperty(String url) {
-        Response response = given().spec(spec).parameter("access_token", "aaa").get(url);
+        Response response = given().spec(spec)
+                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
+                .get(url);
         setSessionResponse(response);
     }
 

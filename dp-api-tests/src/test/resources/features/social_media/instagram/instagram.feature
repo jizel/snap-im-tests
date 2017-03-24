@@ -10,7 +10,7 @@ Feature: Instagram
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | url                             | granularity | property                             | since      | until      |
@@ -198,9 +198,9 @@ Feature: Instagram
 
   Scenario Outline: Checking error codes for analytics data
     When Get instagram "<url>" with missing property header
-    Then Response code is 422
+    Then Response code is 400
     And Content type is "application/json"
-    And Custom code is "42201"
+    And Custom code is "40002"
 
     Examples:
       | url                             |
@@ -213,11 +213,13 @@ Feature: Instagram
       | /analytics/instagram/likes      |
       | /analytics/instagram/comments   |
 
+#    DP-1943
+  @skipped
   Scenario Outline: Get analytics data from API with missing granularity
     When Get instagram "<url>" data with "/null" granularity for "99000099-9999-4999-a999-999999999999" since "/null" until "/null"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 52
+    And Custom code is 40002
     And Body contains entity with attribute "message" value "Mandatory parameter 'granularity' is missing."
 
     Examples:
@@ -274,7 +276,7 @@ Feature: Instagram
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 63
+    And Custom code is 40002
 
     Examples:
       | url                  | granularity | since | until           | property                             |
@@ -284,7 +286,7 @@ Feature: Instagram
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
     And Content type is "application/json"
-    And Custom code is 63
+    And Custom code is 40002
 
     Examples:
       | url                             | granularity | since | until           | property                             |

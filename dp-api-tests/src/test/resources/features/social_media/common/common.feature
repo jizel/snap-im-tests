@@ -1,5 +1,5 @@
 @SocialMedia
-Feature: Soscial media - Commons
+Feature: Social media - Commons
 
   Background:
     Given Database is cleaned and default entities are created
@@ -66,16 +66,16 @@ Feature: Soscial media - Commons
 
     Examples: 
       | url                   | error_code | custom_code |
-      | /analytics/           | 422        | 42202       |
-      | /analytics/followers  | 422        | 42202       |
-      | /analytics/engagement | 422        | 42202       |
-      | /analytics/reach      | 422        | 42202       |
+      | /analytics/           | 400        | 40002       |
+      | /analytics/followers  | 400        | 40002       |
+      | /analytics/engagement | 400        | 40002       |
+      | /analytics/reach      | 400        | 40002       |
 
   Scenario Outline: Get analytics data from API with missing parameters
     When Get social media "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<start_date>" until "<end_date>"
     Then Content type is "application/json"
     And Response code is "400"
-    And Custom code is 52
+    And Custom code is 40002
 
     Examples: 
       | url                   | granularity | start_date | end_date   |
