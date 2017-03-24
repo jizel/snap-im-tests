@@ -1,6 +1,11 @@
+#DP-1941
+@skipped
 @SocialMedia
 Feature: facebook posts
   Testing of api for facebook posts with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
+
+  Background:
+    Given Database is cleaned and default entities are created
   
   Scenario Outline: Getting a list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"

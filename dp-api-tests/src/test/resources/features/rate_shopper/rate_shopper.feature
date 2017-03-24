@@ -43,7 +43,6 @@ Feature: Rate shopper
     And The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
       | Id                                   | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | ttiId | anchorCustomerId                     |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 3     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
-
     When Getting BAR values for a given market for "<property>" since "<since>" until "<until>"
     Then Response code is "200"
     And Content type is "application/json"
@@ -53,7 +52,6 @@ Feature: Rate shopper
     And Body contains entity with attribute "until"
     And Body contains entity with attribute "fetch_datetime"
     And Body contains entity with attribute "currency"
-
     Examples:
       | property                             | since | until            |
       | 99000099-9999-4999-a999-999999999999 | today | today + 1 day    |
