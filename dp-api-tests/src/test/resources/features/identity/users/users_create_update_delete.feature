@@ -7,9 +7,9 @@ Feature: Users create update delete
       | Id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | Id                                   | userType | userName      | firstName | lastName | email                         | timezone      | culture |
-      | 55529079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser1 | Snapshot1 | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | 66629079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser2 | Snapshot2 | User2    | snapshotUser2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | Id                                   | userType | userName | firstName | lastName | email                 | timezone      | culture |
+      | 55529079-48f0-4f00-9bec-e2329a8bdaac | customer | User1    | Snapshot1 | User1    | User1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 66629079-48f0-4f00-9bec-e2329a8bdaac | customer | User2    | Snapshot2 | User2    | User2@snapshot.travel | Europe/Prague | cs-CZ   |
 
 
   Scenario Outline: Creating users
@@ -96,8 +96,8 @@ Feature: Users create update delete
 
   @Smoke
   Scenario: Deleting user
-    Given Relation between user "snapshotUser1" and customer "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
-    When User "snapshotUser1" is deleted
+    Given Relation between user "User1" and customer "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
+    When User "User1" is deleted
     Then Response code is "204"
     And Body is empty
     And User with same id doesn't exist
@@ -108,23 +108,23 @@ Feature: Users create update delete
     And Custom code is "40402"
 
   Scenario: Deleting user with invalid ETAG
-    When User "snapshotUser1" is deleted with ETAG "invalid_etag"
+    When User "User1" is deleted with ETAG "invalid_etag"
     Then Response code is "412"
     And Custom code is 41202
 
   Scenario: Deleting user without ETAG
-    When User "snapshotUser1" is deleted with ETAG ""
+    When User "User1" is deleted with ETAG ""
     Then Response code is "412"
     And Custom code is 41202
 
   Scenario Outline: Updating user
-    When User "snapshotUser2" is updated with data
+    When User "User2" is updated with data
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated user "snapshotUser2" has data
+    And Updated user "User2" has data
       | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
       | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
     Examples:
@@ -133,7 +133,7 @@ Feature: Users create update delete
       | guest    | FNUp2     | LNUp2    | EMUp2@snapshot.travel | America/New_York | en-US   | /null    |
 
   Scenario: Updating user with outdated ETag
-    When User "snapshotUser2" is updated with data if updated before
+    When User "User2" is updated with data if updated before
       | firstName   |
       | NOT_APPLIED |
     Then Response code is "412"
@@ -143,17 +143,17 @@ Feature: Users create update delete
 
   @Smoke
   Scenario: User is activated
-    When User "snapshotUser1" is activated
+    When User "User1" is activated
     Then Response code is "204"
     And Body is empty
-    And User "snapshotUser1" is active
+    And User "User1" is active
 
   Scenario: User is inactivated
-    Given User "snapshotUser1" is activated
-    When User "snapshotUser1" is inactivated
+    Given User "User1" is activated
+    When User "User1" is inactivated
     Then Response code is "204"
     And Body is empty
-    And User "snapshotUser1" is not active
+    And User "User1" is not active
 
   @Bug
   Scenario: Creating user with same name as previously deleted user - DP-1380
@@ -193,3 +193,21 @@ Feature: Users create update delete
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/                                        |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/                                       |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/                                    |
+
+  # DP-1953
+  @skipped
+  Scenario: Update user with the duplicate email
+    Given The following customers exist with random address
+      | companyName        | email                 | salesforceId         | vatId      | isDemoCustomer | phone         | website                 | timezone      |
+      | Customer2          | Customer2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456790 | http://www.snapshot.com | Europe/Prague |
+    Given The following users exist for customer "Customer2" as primary "false"
+      | userType | userName  | firstName        | lastName | email             | timezone      | culture |
+      | snapshot | User1OfC2 | User1OfCustomer2 | User1    | usr1@snapshot.com | Europe/Prague | cs-CZ   |
+    When User "User1" is updated with data
+      | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | customer | User1  | Customer  | User1C1  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
+    Then Response code is "409"
+    When User "User1" is updated with data
+      | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | customer | user1OfC2  | Customer  | User1C1  | User1@snapshot.travel    | Europe/Prague | cs-CZ   | true     |
+    Then Response code is "409"

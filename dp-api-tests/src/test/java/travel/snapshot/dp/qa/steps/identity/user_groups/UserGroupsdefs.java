@@ -78,14 +78,12 @@ public class UserGroupsdefs {
         userGroupSteps.followingUserGroupsExist(userGroups);
     }
 
-    @Given("^Relation between user group \"([^\"]*)\" and property with code \"([^\"]*)\" exists(?: with isActive \"([^\"]*)\")?$")
+    @Given("^Relation between user group \"([^\"]*)\" and property(?: with code)? \"([^\"]*)\" exists(?: with isActive \"([^\"]*)\")?$")
     public void relationBetweenUserGroupAndPropertyExistsWithIsActive(String userGroupName, String propertyCode, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        UserGroupDto userGroup = userGroupSteps.getUserGroupByName(userGroupName);
-        assertThat(userGroup, is(notNullValue()));
-        PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        assertThat(property, is(notNullValue()));
-        userGroupSteps.relationshipGroupPropertyExist(userGroup.getId(), property.getId(), isActive);
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        userGroupSteps.relationshipGroupPropertyExist(userGroupId, propertyId, isActive);
     }
 
     @Given("^Relation between user group \"([^\"]*)\" and property set \"([^\"]*)\" exists(?: with isActive \"([^\"]*)\")?$")
@@ -501,20 +499,6 @@ public class UserGroupsdefs {
         userGroupSteps.userGroupUserRelationshipIsDeletedByUserForApp(performerId, applicationVersionId, ids.get(USER_GROUP_ID), ids.get(USER_ID));
     }
 
-    @When("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is activated$")
-    public void relationBetweenUserGroupAndUserIsActivated(String userGroupName, String userName) throws Throwable {
-        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
-
-        userGroupSteps.setUserGroupUserActivity(ids.get(USER_GROUP_ID), ids.get(USER_ID), true);
-    }
-
-    @When("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is deactivated$")
-    public void relationBetweenUserGroupAndUserIsDeActivated(String userGroupName, String userName) throws Throwable {
-        Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
-
-        userGroupSteps.setUserGroupUserActivity(ids.get(USER_GROUP_ID), ids.get(USER_ID), false);
-    }
-
     @And("^Relation between user group \"([^\"]*)\" and user \"([^\"]*)\" is active$")
     public void relationBetweenUserGroupAndUserIsActive(String userGroupName, String userName) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, userName);
@@ -550,8 +534,8 @@ public class UserGroupsdefs {
         userGroupSteps.setGroupPropertySetActivityByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(USER_GROUP_ID), propertySetId, isActive);
     }
 
-    @Given("^Relation between user \"([^\"]*)\" and group \"([^\"]*)\" is (in|de)?activated$")
-    public void relationBetweenUserAndGroupIsActivated(String userName, String userGroupName, String negation) throws Throwable {
+    @Given("^Relation between(?: user)? group \"([^\"]*)\" and user \"([^\"]*)\" is (in|de)?activated$")
+    public void relationBetweenUserAndGroupIsActivated(String userGroupName, String userName, String negation) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
         String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
         Boolean isActive = (negation == null);

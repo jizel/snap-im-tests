@@ -22,9 +22,11 @@ Feature: User Customers access check feature
     Given The following commercial subscriptions exist
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
+      | 44400000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000001 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
       | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
+      | 66600000-0000-4000-a000-000000000666 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000555 |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1OfC1  | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -43,7 +45,8 @@ Feature: User Customers access check feature
     When Relation between user "user2OfC1" and customer "12300000-0000-4000-a000-000000000000" is requested by user "user1OfC1" for application version "versionWithSubscription"
     Then Response code is "200"
 
-  Scenario: User can add/remove users to customer only application has commercial subscription
+  Scenario: User can add/remove users to customer only if application has commercial subscription
+    Given Relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000001" exists
     When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001" for application version "versionWithoutSubscription"
     Then Response code is "404"
     When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001" for application version "versionWithSubscription"

@@ -40,25 +40,21 @@ Feature: Customers access check feature - POST and DELETE
       | updatedName | true       | udpatedDesc   |
     Then Response code is "404"
     And Custom code is 40402
-    When Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
     When User group "userGroup_1" is updated with following data by user "userWithUserGroup"
       | name        | isActive   | description   |
       | updatedName | true       | udpatedDesc   |
     Then Response code is 404
 
-#  DP-1691
-  @skipped
   Scenario: Delete user group by user with access
     When User group "userGroup_1" is deleted by user "userWithUserGroup"
-    Then Response code is 204
-    And Body is empty
-    And User group with id "12345000-1111-4000-a000-000000000000" is no more exists
+    Then Response code is 409
 
   Scenario: Delete user group by user without access, user loses access when relation is deactivated
     When User group "userGroup_1" is deleted by user "userWithNoUserGroup"
     Then Response code is 404
     When User group "userGroup_1" is requested by user "userWithUserGroup"
     Then Response code is "200"
-    When Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
     When User group "userGroup_1" is deleted by user "userWithUserGroup"
     Then Response code is 404

@@ -35,7 +35,7 @@ Feature: User Groups Property Sets access check feature
       Then Response code is 404
       When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup"
       Then Response code is 200
-      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
       When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup"
       Then Response code is 404
 
@@ -83,7 +83,7 @@ Feature: User Groups Property Sets access check feature
     Given Relation between user "userWithUserGroup" and property set "PropertySet_UserGroup" is activated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true" by user "userWithUserGroup"
     Then Response code is "201"
-    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true" by user "userWithUserGroup"
     Then Response code is "404"
     And Custom code is 40402
@@ -106,7 +106,7 @@ Feature: User Groups Property Sets access check feature
     When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithNoUserGroup"
     Then Response code is 404
     And Custom code is 40402
-    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
     When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithUserGroup"
     Then Response code is 404
     And Custom code is 40402
@@ -129,7 +129,7 @@ Feature: User Groups Property Sets access check feature
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithNoUserGroup"
     Then Response code is 404
     And Custom code is 40402
-    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithUserGroup"
     Then Response code is 404
     And Custom code is 40402
