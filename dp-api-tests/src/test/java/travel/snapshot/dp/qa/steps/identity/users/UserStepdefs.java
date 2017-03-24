@@ -437,7 +437,7 @@ public class UserStepdefs {
     @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
     public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelType, String secondLevelName, String appVersionName) throws Throwable {
         roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
-        String secondLevelId = Resolvers.resolveSecondLevelName(secondLevelType, secondLevelName);
+        String secondLevelId = Resolvers.resolveEntityName(secondLevelType, secondLevelName);
         String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
         usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelType, secondLevelId);
@@ -449,7 +449,7 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        String secondLevelId = Resolvers.resolveSecondLevelName(secondLevelType, secondLevelName);
+        String secondLevelId = Resolvers.resolveEntityName(secondLevelType, secondLevelName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), secondLevelType, secondLevelId, roleId);
 
@@ -461,7 +461,7 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        String secondLevelId = Resolvers.resolveSecondLevelName(secondLevelType, secondLevelName);
+        String secondLevelId = Resolvers.resolveEntityName(secondLevelType, secondLevelName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         usersSteps.userDeletesRoleFromRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), secondLevelType, secondLevelId, roleId);
     }
