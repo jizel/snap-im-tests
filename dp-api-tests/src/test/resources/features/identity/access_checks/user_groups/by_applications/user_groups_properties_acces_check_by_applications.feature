@@ -36,7 +36,7 @@ Feature: User Groups - Properties Application access check feature
       | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following user groups exist
-      | Id                                   | name        | isActive | description          |
+      | customerId                                   | name        | isActive | description          |
       | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
     Given Relation between user "userWithUserGroup" and property with code "p1_code" exists with is_active "true"
@@ -78,8 +78,8 @@ Feature: User Groups - Properties Application access check feature
 
   Scenario: Delete userGroup-property relationship by application with and without access
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists
-    When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
+    When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
     Then Response code is 404
     And Custom code is 40402
-    When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
+    When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204

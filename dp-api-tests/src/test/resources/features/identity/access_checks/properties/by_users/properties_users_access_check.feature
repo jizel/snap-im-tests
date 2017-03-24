@@ -38,15 +38,8 @@ Feature: Properties-Users access check feature
     And Total count is "2"
 
   Scenario: Add/Remove user to property by user who can access the property
-    When User "userWithNoProp" is added to property with code "p1_code" by user "userWithProp"
-    # User will not be found, because in order to see the user you must share with him not only customer, but also a property/propertyset
-    # The error would be 422 - Reference does not exist
-    Then Response code is "422"
-    When User "userWithNoProp" is added to property with code "p1_code" with is_active "false"
+    When User "userWithNoProp" is added to property with code "p1_code" by user "userWithProp" with is_active "false"
     Then Response code is "201"
-    When Relation between property with code "p1_code" and user "userWithNoProp" is deleted by user "userWithProp"
-    Then Response code is "404"
-    Given Relation between user "userWithNoProp" and property "p1_code" is activated
     When Relation between property with code "p1_code" and user "userWithNoProp" is deleted by user "userWithProp"
     Then Response code is "204"
     And User "userWithNoProp" isn't there for property with code "p1_code"
