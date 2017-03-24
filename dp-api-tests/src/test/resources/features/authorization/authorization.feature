@@ -1,3 +1,5 @@
+#This needs to be completely reimplemented
+@skipped
 Feature: authorization
 
   Background: 

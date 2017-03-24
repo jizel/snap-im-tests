@@ -2,7 +2,7 @@
   Feature: User Property sets access check feature
     - Users must have access only to user-propertyset relations if they have access to both user and propertyset
 
-  Background
+  Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
       | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
