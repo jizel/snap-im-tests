@@ -1,3 +1,5 @@
+#  DP-1940
+@skipped
 Feature: Review multiproperty property set
   GET /review/analytics/property_set/{property_set_id}/popularity_index_rank
   Returns popularity index rank statistics for the given time period aggregated for the specified property set.
@@ -17,19 +19,15 @@ Feature: Review multiproperty property set
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The password of user "snapshotUser" is "Password1"
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "snapshotUser"
       | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
-    Given Get token for user "snapshotUser" with password "Password1"
-    Given Set access token from session for customer steps defs
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
     Given Relation between property with code "p3_code" and property set with name "ps1_name" exists
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p2_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
     Given Relation between property with code "p3_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
-    Given Set access token for review steps defs
 
 #------------
 # GET /review/analytics/property_set/{property_set_id}/popularity_index_rank
@@ -38,7 +36,7 @@ Feature: Review multiproperty property set
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "<limit>" and cursor "<cursor>"
     Then Content type is "application/json"
     And Response code is "400"
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | metric                | property_set_name | granularity | since      | until      | limit        | cursor       |
@@ -89,12 +87,11 @@ Feature: Review multiproperty property set
   Scenario Outline: Checking mandatory values
     When Get "<metric>" for statistics agregated for property set "ps1_name" for customer "<customer_id>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is 400
-    And Custom code is 52
-    And Body contains entity with attribute "type" value "error"
-    And Body contains entity with attribute "message" value "<message>"
+    And Custom code is 40002
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | metric                | customer_id                          | since      | until      | granularity | message                                       |
+      | metric                | customer_id                          | since      | until      | granularity | details                                       |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
