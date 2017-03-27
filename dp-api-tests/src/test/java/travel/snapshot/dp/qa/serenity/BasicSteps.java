@@ -286,6 +286,10 @@ public class BasicSteps {
                 baseUri = (PropertiesHelper.getProperty(TWITTER_BASE_URI));
                 break;
             }
+            case "rate_shopper": {
+                baseUri = (PropertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
+                break;
+            }
             case "authorization": {
                 baseUri = (PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
