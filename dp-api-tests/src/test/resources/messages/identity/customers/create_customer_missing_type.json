@@ -1,16 +1,15 @@
 {
   "name": "company with wrong email",
   "phone": "+42012345679",
-  "website" : "http://www.snapshot.travel",
-  "eemail": "testing@test.biz",
+  "email": "testing@test.biz",
+  "vat_id": "xx330303030",
+  "website" : "www.snapdragon.com",
   "is_demo_customer": true,
-  "type": "HOTEL",
   "address": {
     "address_line1": "string",
-
     "city": "string",
     "zip_code": "string",
-    "country": "string"
+    "country": "Czech"
   },
   "notes": "string",
   "headquarters_timezone" : "Europe/Prague"

@@ -3,6 +3,7 @@
   "email": "testing@test.biz",
   "website" : "http://www.snapshot.travel",
   "is_demo_customer": true,
+  "type": "HOTEL",
   "address": {
     "address_line1": "address line 1",
     "city": "Brno",

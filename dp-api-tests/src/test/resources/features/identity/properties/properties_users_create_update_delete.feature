@@ -23,9 +23,13 @@ Feature: Properties users create update delete
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
 
   @Smoke
-  Scenario: Adding user to property
+  Scenario: Adding and removing user to property
     When User "default3" is added to property with code "p2_code"
     Then Response code is "201"
+    When User "default3" is removed from property with code "p2_code"
+    Then Response code is "204"
+    And Body is empty
+    And User "default3" isn't there for property with code "p2_code"
 
   Scenario: Updating User - Property relationship
     And Check is active attribute is "true" for relation between user "default2" and property with code "p2_code"
@@ -35,14 +39,6 @@ Feature: Properties users create update delete
 
   #validate just one primary user, notexistent user, already present user
   #validate different type of users
-
-  @Smoke
-  Scenario: Removing user from property
-    When User "default2" is removed from property with code "p1_code"
-    Then Response code is "204"
-    And Body is empty
-    And User "default2" isn't there for property with code "p1_code"
-
 
   Scenario: Checking error code for removing user from property
     When Nonexistent user is removed from property with code "p1_code"
@@ -84,7 +80,6 @@ Feature: Properties users create update delete
       | /null | /null  | 6        | 6     | /null            | /null     | /null     | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5  filter_pu_default_6 |
 
 
-  @Bug
   Scenario: Listing users of non-existent property
     When I query list of users for nonexistent property
     Then Response code is "404"
