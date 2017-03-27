@@ -114,9 +114,13 @@ public class ApplicationsStepsdef {
         applicationSteps.namesInResponseInOrder(applications);
     }
 
-    @When("^Application version is created for application with id \"([^\"]*)\"$")
+    @When("^Application version is created(?: for application with id \"([^\"]*)\")?$")
     public void Application_versions_are_created_for_application_with_id(String applicationId,
                                                                          List<ApplicationVersionDto> applicationVersions) {
+        ApplicationVersionDto appVersion = applicationVersions.get(0);
+        if (appVersion.getApplicationId() == null) {
+            appVersion.setApplicationId(applicationId);
+        }
         Response response = applicationVersionSteps.createApplicationVersion(applicationVersions.get(0));
         applicationVersionSteps.setSessionResponse(response);
     }

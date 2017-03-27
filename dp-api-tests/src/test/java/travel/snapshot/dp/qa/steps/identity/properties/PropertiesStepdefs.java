@@ -109,12 +109,6 @@ public class PropertiesStepdefs {
         propertySteps.addUserToPropertyByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
-    @When("^Property with code \"([^\"]*)\" is requested$")
-    public void Property_with_code_exists_with_etag(String code) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId( code );
-        propertySteps.getProperty(propertyId);
-    }
-
     @When("^Nonexistent property id sent$")
     public void Nonexistent_property_id_sent() throws Throwable {
         propertySteps.getProperty("nonexistent_id");

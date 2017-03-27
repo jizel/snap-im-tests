@@ -132,7 +132,7 @@ public class CommonObjectSteps extends BasicSteps {
     @Step
     public void verifyLocationObject() throws IOException {
         Response stored = getSessionResponse();
-        Response current = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).get(stored.header("location"));
+        Response current = given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).get(stored.header("location"));
         Assert.assertThat(getJsonNode(current), is(getJsonNode(stored)));
     }
 
@@ -239,7 +239,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restCreateObject(String objectLocation, String json) {
-        return given().spec(spec).basePath(objectLocation).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+        return given().spec(spec).basePath(objectLocation).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .body(json)
                 .when().post();
     }
@@ -279,7 +279,7 @@ public class CommonObjectSteps extends BasicSteps {
      */
     private Response restUpdateObject(String objectLocation, String id, String etag, String json) {
         return given().spec(spec).basePath(objectLocation + "/" + id)
-                .header(HEADER_IF_MATCH, etag).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_IF_MATCH, etag).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .body(json)
                 .when().post();
     }

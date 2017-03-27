@@ -5,19 +5,20 @@ Feature: Applications versions create update delete
   Background:
     Given Database is cleaned and default entities are created
 
-
-
-
   @Smoke
-  Scenario: Create applications versions
+  Scenario: Create/delete applications versions
     When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
-      | apiManagerId | versionName | status   | description            |
-      | 123          | Version 1   | inactive | Versions description 1 |
+      | id                                   | apiManagerId | versionName | status   | description            |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Version 1"
     And Body contains entity with attribute "status" value "inactive"
     And Body contains entity with attribute "api_key" value "123"
     And Body contains entity with attribute "description" value "Versions description 1"
+    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" does not exist
 
   Scenario Outline: Checking error codes for creating application versions
     Given The following application versions exists
@@ -34,16 +35,6 @@ Feature: Applications versions create update delete
       | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
       | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
       | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
-
-  @Smoke
-  Scenario: Deleting application version
-    Given The following application versions exists
-      | Id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Application version with id "a318fd9a-a05d-42d8-8e84-22e904ace111" does not exist
 
   Scenario: Checking error code for deleting application version
     When Application version with id "nonexistent" is deleted

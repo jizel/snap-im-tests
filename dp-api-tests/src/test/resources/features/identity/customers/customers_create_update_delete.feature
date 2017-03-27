@@ -4,25 +4,25 @@ Feature: Customers create update delete
   #TODO add etag things to get/update/create
   Background:
     Given Database is cleaned and default entities are created
-    Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
-    Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "true"
-      | Id                                   | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
-      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
-  Scenario: Creating Customer
+  Scenario: Creating/deleting  Customer
     When Customer is created with random address
-      | companyName           | email          | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Creation test company | s1@tenants.biz | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | id                                   | companyName           | email          | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Creation test company"
     And Body contains entity with attribute "email" value "s1@tenants.biz"
     And Body contains entity with attribute "salesforce_id" value "salesforceid_created_1"
     And Body contains entity with attribute "phone" value "+420123456789"
     And Body contains entity with attribute "customer_code"
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "is_active" value "true"
+    And Body contains entity with attribute "type" value "hotel"
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" doesn't exist
+
 
   Scenario Outline: Checking error codes for creating customer
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
@@ -31,6 +31,7 @@ Feature: Customers create update delete
     Examples:
       | json_input_file                                                        | method | module   | url                 | error_code | custom_code    |
       | /messages/identity/customers/create_customer_missing_company_name.json | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_missing_type.json         | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_email_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_field_email.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_vatid_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
@@ -53,13 +54,6 @@ Feature: Customers create update delete
       | /messages/identity/customers/positive/create_customer_ancient_symbols.json   | POST   | identity | /identity/customers | 㐱㐲㐳  |
       | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
-  @Smoke
-  Scenario: Deleting Customer
-    Given Relation between user "Snapshotuser" and customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" doesn't exist
 
   Scenario: Checking error code for deleting customer
     When Customer with id "NotExistentCustomer" is deleted
