@@ -136,12 +136,12 @@ public class BasicStepDefs {
                 attributeValue.matches("[A-Z0-9]+"), is(true));
     }
 
-    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with since \"([^\"]*)\", until \"([^\"]*)\", granularity \"([^\"]*)\" and property \"([^\"]*)\")?$")
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with since \"([^\"]*)\", until \"([^\"]*)\", granularity \"([^\"]*)\" and property \"([^\"]*)\")?( in path)?$")
     public void getRequestIsSentToOnModule(String url, String module, String username, String applicationVersionName,
-                                           String since, String until, String granularity, String property) throws Throwable {
+                                           String since, String until, String granularity, String property, String asParam) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
-        basicSteps.sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, since, until, granularity, property);
+        basicSteps.sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, since, until, granularity, property, asParam);
     }
 
     @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? without X-Auth-UserId header$")

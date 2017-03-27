@@ -1,7 +1,7 @@
 @SocialMedia
 Feature: Social media - External applications access checks
   - Application should have acccess to social media endpoints only if it's is_internal attribute is set to true
-  - Positive cases are tested in separete features. This feature should test that external applications don't have access
+  - Positive cases are tested in separate features. This feature should test that external applications don't have access
 
   Background:
     Given Database is cleaned and default entities are created

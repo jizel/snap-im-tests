@@ -66,7 +66,7 @@ Feature: Rate shopper
 # GET /rate_shopper/analytics/property/{id}
 
   
-  Scenario Outline: Error codes really
+  Scenario Outline: Checking error codes for analitics/property
     When Getting rate data for "<propertyId>" since "today" until "today" fetched "/null"
     Then Response code is "404"
     And Custom code is "40402"
