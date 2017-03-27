@@ -136,12 +136,12 @@ public class BasicStepDefs {
                 attributeValue.matches("[A-Z0-9]+"), is(true));
     }
 
-    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
-    public void getRequestIsSentToOnModule(String url, String module,
-                                           String username, String applicationVersionName) throws Throwable {
+    @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with since \"([^\"]*)\", until \"([^\"]*)\", granularity \"([^\"]*)\" and property \"([^\"]*)\")?$")
+    public void getRequestIsSentToOnModule(String url, String module, String username, String applicationVersionName,
+                                           String since, String until, String granularity, String property) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
-        basicSteps.sendGetRequestToUrlByUserForApp(userId, applicationVersionId, url, module);
+        basicSteps.sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, since, until, granularity, property);
     }
 
     @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? without X-Auth-UserId header$")

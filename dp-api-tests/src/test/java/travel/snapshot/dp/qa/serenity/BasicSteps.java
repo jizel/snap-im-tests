@@ -63,6 +63,7 @@ public class BasicSteps {
     public static final String OAUTH_PARAMETER_NAME = "access_token";
     public static final String HEADER_XAUTH_USER_ID = "X-Auth-UserId";
     public static final String HEADER_XAUTH_APPLICATION_ID = "X-Auth-AppId";
+    public static final String HEADER_XPROPERTY = "X-Property";
     public static final String DEFAULT_SNAPSHOT_USER_ID = "11111111-0000-4000-a000-000000000000";
     public static final String DEFAULT_SNAPSHOT_APPLICATION_ID = "11111111-0000-4000-a000-111111111111";
     public static final String DEFAULT_SNAPSHOT_PARTNER_ID = "11111111-0000-4000-a000-222222222222";
@@ -257,27 +258,42 @@ public class BasicSteps {
         return response.getBody().jsonPath().get(attributeName).toString();
     }
 
-    protected void setBaseUriForModule(String module) {
+    protected String setBaseUriForModule(String module) {
         module = (module == null) ? "" : module;
+        String baseUri = "";
         switch (module) {
             case "identity": {
-                spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+                 baseUri = PropertiesHelper.getProperty(IDENTITY_BASE_URI);
                 break;
             }
             case "configurations": {
-                spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));
+                baseUri = (PropertiesHelper.getProperty(CONFIGURATION_BASE_URI));
                 break;
             }
             case "social_media": {
-                spec.baseUri(PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+                baseUri = (PropertiesHelper.getProperty(SOCIAL_MEDIA_BASE_URI));
+                break;
+            }
+            case "facebook": {
+                baseUri = (PropertiesHelper.getProperty(FACEBOOK_BASE_URI));
+                break;
+            }
+            case "instagram": {
+                baseUri = (PropertiesHelper.getProperty(INSTAGRAM_BASE_URI));
+                break;
+            }
+            case "twitter": {
+                baseUri = (PropertiesHelper.getProperty(TWITTER_BASE_URI));
                 break;
             }
             case "authorization": {
-                spec.baseUri(PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
+                baseUri = (PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
             }
             default:
         }
+        spec.baseUri(baseUri);
+        return baseUri;
     }
 
     protected Response createEntity(Object entity) {
@@ -586,8 +602,30 @@ public class BasicSteps {
 
     @Step
     public void sendGetRequestToUrlByUserForApp(String userId, String applicationVersionId, String url, String module) {
-        setBaseUriForModule(module);
-        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId).basePath(url).when().get();
+        sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, null, null, null, null);
+    }
+
+    @Step
+    public void sendGetRequestToUrlByUserForAppWithParams(String userId, String applicationVersionId, String url, String module, String since, String until, String granularity, String xproperty) {
+        String baseUri = setBaseUriForModule(module);
+        RequestSpecification requestSpecification = given().spec(spec);
+        if(xproperty != null){
+            requestSpecification.header(HEADER_XPROPERTY, xproperty);
+        }
+        if(since != null){
+            requestSpecification.param("since", since);
+        }
+        if(until != null){
+            requestSpecification.param("until", until);
+        }
+        if(granularity != null){
+            requestSpecification.param("granularity", granularity);
+        }
+        Response response = requestSpecification
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId)
+                .baseUri(baseUri)
+                .basePath(url).when().get();
         setSessionResponse(response);
     }
 
