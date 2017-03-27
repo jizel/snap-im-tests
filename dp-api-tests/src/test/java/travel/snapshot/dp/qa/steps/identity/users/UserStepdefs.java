@@ -9,12 +9,14 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
+import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
@@ -30,6 +32,7 @@ import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
+import travel.snapshot.dp.qa.serenity.user_groups.UserGroupsSteps;
 import travel.snapshot.dp.qa.serenity.users.UserRolesSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
@@ -40,6 +43,9 @@ public class UserStepdefs {
 
     @Steps
     private UsersSteps usersSteps;
+
+    @Steps
+    private UserGroupsSteps userGroupSteps;
 
     @Steps
     private RoleBaseSteps roleBaseSteps;
@@ -59,10 +65,14 @@ public class UserStepdefs {
     @Steps
     private ApplicationVersionsSteps applicationVersionsSteps;
 
+    @Steps
+    private Resolvers resolvers;
+
 
     @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
-    public void theFollowingUsersExistForCustomer(String customerId, Boolean isPrimary, String isActiveString, List<UserCreateDto> users) throws Throwable {
+    public void theFollowingUsersExistForCustomer(String customerName, Boolean isPrimary, String isActiveString, List<UserCreateDto> users) throws Throwable {
 //        Cucumber turns is_active to false when not present we want true by default in tests.
+        String customerId = customerSteps.resolveCustomerId(customerName);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
@@ -437,7 +447,7 @@ public class UserStepdefs {
     @When("^User \"([^\"]*)\" requests roles of user \"([^\"]*)\" for (customer|property|property set) \"([^\"]*)\"(?: for application version \"([^\"]*)\")?$")
     public void userRequestsRolesOfUserForCustomer(String requestorUserName, String targetUserName, String secondLevelType, String secondLevelName, String appVersionName) throws Throwable {
         roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
-        String secondLevelId = Resolvers.resolveEntityName(secondLevelType, secondLevelName);
+        String secondLevelId = resolvers.resolveEntityName(secondLevelType, secondLevelName);
         String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         Map<String, String> userIdMap = usersSteps.getUsersIds(requestorUserName, targetUserName);
         usersSteps.listRolesForRelationByUserForApp(userIdMap.get(REQUESTOR_ID), appVersionId, userIdMap.get(TARGET_ID), secondLevelType, secondLevelId);
@@ -449,7 +459,7 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        String secondLevelId = Resolvers.resolveEntityName(secondLevelType, secondLevelName);
+        String secondLevelId = resolvers.resolveEntityName(secondLevelType, secondLevelName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         usersSteps.userAssignsRoleToRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), secondLevelType, secondLevelId, roleId);
 
@@ -461,7 +471,7 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPath(RoleType.valueOf(secondLevelType.toUpperCase().replace(" ", "_")));
         Map<String, String> userIdsMap = usersSteps.getUsersIds( requestorUsername, targetUsername );
         String roleId = roleBaseSteps.resolveRoleId(roleName);
-        String secondLevelId = Resolvers.resolveEntityName(secondLevelType, secondLevelName);
+        String secondLevelId = resolvers.resolveEntityName(secondLevelType, secondLevelName);
         String applicationVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         usersSteps.userDeletesRoleFromRelationWithApp(userIdsMap.get(REQUESTOR_ID), applicationVersionId, userIdsMap.get(TARGET_ID), secondLevelType, secondLevelId, roleId);
     }
@@ -520,4 +530,15 @@ public class UserStepdefs {
         String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         propertySteps.deletePropertyUserRelationshipByUserForApp(requestorId, appVersionId, propertyId, targetUserId);
     }
+
+    @Given("^Relation between user \"([^\"]*)\" and group \"([^\"]*)\" is (in|de)?activated$")
+    public void relationBetweenUserAndGroupIsActivated(String userName, String userGroupName, String negation) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
+        String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
+        Boolean isActive = (negation == null);
+        usersSteps.setUserUserGroupActivity(groupId, userId, isActive);
+        Response response = userGroupSteps.getSessionResponse();
+        assertThat(String.format("Failed to change the is_active flag: %s", response.asString()), response.statusCode() == HttpStatus.SC_NO_CONTENT);
+    }
+
 }

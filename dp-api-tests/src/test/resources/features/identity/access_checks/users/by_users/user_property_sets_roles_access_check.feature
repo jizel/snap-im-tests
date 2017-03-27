@@ -27,19 +27,16 @@
     #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
 
-  # DP-1781
-  @skipped
   Scenario: User can view only list of propertyset-user roles of his own customer and property set
-    When User "user1OfC2" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
+    Given Relation between user "user2OfC1" and property set "ps1_name" exists with is_active "true"
+    When User "user1OfC2" requests roles of user "user2OfC1" for property set "ps1_name"
     Then Response code is "404"
-    When User "user1OfC1" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
+    When User "user1OfC1" requests roles of user "user2OfC1" for property set "ps1_name"
     Then Response code is "200"
     When Relation between property set "ps1_name" and user "user1OfC1" is inactivated
-    When User "user1OfC1" requests roles of user "user2OfC1" for property set "00002111-cdaf-439a-8bef-3140f56c657e"
+    When User "user1OfC1" requests roles of user "user2OfC1" for property set "ps1_name"
     Then Response code is "404"
 
-# DP-1781
-    @skipped
   Scenario: User can assign and revoke roles to propertyset-users only when he has access to both user and propertyset
     When User "user2OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property set "00002111-cdaf-439a-8bef-3140f56c657e"
     Then Response code is "404"

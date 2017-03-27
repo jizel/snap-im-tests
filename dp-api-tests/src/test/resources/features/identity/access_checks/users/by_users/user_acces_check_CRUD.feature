@@ -46,8 +46,6 @@ Feature: Users can create, update and delete only users of the same customer
     When User "user1OfC1" deletes user "user1OfC2"
     Then Response code is "404"
 
-#    DP-1849 - test with uncommented "inactivate" step as well in case DP-1848 was fixed first
-  @skipped
   Scenario: User can update only users within his customer
     When User "user1OfC2" is updated with data by user "user1OfC1"
       | userType | firstName | lastName | email                | timezone      | culture | isActive |
@@ -58,13 +56,12 @@ Feature: Users can create, update and delete only users of the same customer
       | userType | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | Vasya     | Pupkin   | vpupkin@snapshot.com | Europe/Prague | cs-CZ   | false    |
     Then Response code is "204"
-    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated
-    When User "user1OfC1" is updated with data by user "user1OfC1"
+    Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" is inactivated
+    When User "user1OfC2" is updated with data by user "user1OfC1"
       | userType | firstName | lastName | email                | timezone      | culture | isActive |
-      | customer | Vasya     | Pupkin   | vpupkin@snapshot.com | Europe/Prague | cs-CZ   | false    |
+      | customer | Vasya     | Pupkin   | vpupkin1@snapshot.com | Europe/Prague | cs-CZ   | false    |
     Then Response code is "404"
 
-  # DP-1759
   Scenario: User of type customer can not create snapshot user
     When User "User1OfC1" creates user with:
       | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |

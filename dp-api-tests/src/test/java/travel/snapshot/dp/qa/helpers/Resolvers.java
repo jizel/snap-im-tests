@@ -9,15 +9,15 @@ public class Resolvers {
 
 
     @Steps
-    private static PropertySteps propertySteps;
+    private PropertySteps propertySteps;
 
     @Steps
-    private static PropertySetSteps propertySetSteps;
+    private PropertySetSteps propertySetSteps;
 
     @Steps
-    private static CustomerSteps customerSteps;
+    private CustomerSteps customerSteps;
 
-    public static String resolveEntityName(String type, String name) {
+    public String resolveEntityName(String type, String name) {
         switch (type) {
             case "customer":     return customerSteps.resolveCustomerId(name);
             case "property":     return propertySteps.resolvePropertyId(name);

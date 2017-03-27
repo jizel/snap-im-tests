@@ -236,7 +236,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     public CustomerDto getCustomerByCompanyName(String name) {
-        CustomerDto[] customers = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "company_name==" + name, null, null, null).as(CustomerDto[].class);
+        CustomerDto[] customers = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "name==" + name, null, null, null).as(CustomerDto[].class);
         return stream(customers).findFirst().orElse(null);
     }
 

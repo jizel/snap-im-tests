@@ -23,7 +23,6 @@ Feature: User Groups Users access check feature
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
-
     Scenario: User sees only users of the same user group
       When Relation between user group "userGroup_1" and user "userWithUserGroup" is requested by user "userWithUserGroup"
       Then Response code is 200
@@ -68,8 +67,8 @@ Feature: User Groups Users access check feature
 
     Scenario: Updating User Group-User relationship by user who cannot access the user group
       When Is Active for relation between user group "userGroup_1" and user "userWithNoUserGroup" is set to "false" by user "userWithNoUserGroup"
-      Then Response code is 404
-      And Custom code is 40402
+      Then Response code is 412
+      And Custom code is 41202
 
     Scenario: Deleting User User Group relationship by user who can access it
       When Relation between user group "userGroup_1" and user "userWithUserGroup" is requested by user "userWithUserGroup"

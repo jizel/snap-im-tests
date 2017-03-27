@@ -77,7 +77,7 @@ Feature: User Group Roles access check feature
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithNoUserGroup"
     Then Response code is 404
     And Custom code is 40402
-    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     Then Response code is 404
     And Custom code is 40402
