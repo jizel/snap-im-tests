@@ -291,6 +291,10 @@ public class BasicSteps {
                 baseUri = (PropertiesHelper.getProperty(RATE_SHOPPER_BASE_URI));
                 break;
             }
+            case "web_performance": {
+                baseUri = (PropertiesHelper.getProperty(WEB_PERFORMANCE_BASE_URI));
+                break;
+            }
             case "authorization": {
                 baseUri = (PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
@@ -607,14 +611,18 @@ public class BasicSteps {
 
     @Step
     public void sendGetRequestToUrlByUserForApp(String userId, String applicationVersionId, String url, String module) {
-        sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, null, null, null, null);
+        sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, null, null, null, null, null);
     }
 
     @Step
-    public void sendGetRequestToUrlByUserForAppWithParams(String userId, String applicationVersionId, String url, String module, String since, String until, String granularity, String xproperty) {
+    public void sendGetRequestToUrlByUserForAppWithParams(String userId, String applicationVersionId, String url, String module, String since, String until, String granularity, String xproperty, String asParam) {
         String baseUri = setBaseUriForModule(module);
         RequestSpecification requestSpecification = given().spec(spec);
-        if(xproperty != null){
+//        asParam is a workaround for Dp inconsistency. Remove when DP-1957 is solved.
+        if(xproperty != null && asParam != null){
+            requestSpecification.param("property_id", xproperty);
+        }
+        else if(xproperty != null){
             requestSpecification.header(HEADER_XPROPERTY, xproperty);
         }
         if(since != null){
