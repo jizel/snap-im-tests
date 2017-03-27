@@ -32,8 +32,8 @@ Feature: User Groups Application access check feature
       | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following user groups exist
-      | Id                                   | name        | isActive | description          |
-      | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
+      | Id                                   | name        | isActive | description          | customerId                           |
+      | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription | 12300000-0000-4000-a000-000000000000 |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
 
 
@@ -44,7 +44,6 @@ Feature: User Groups Application access check feature
       When User group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
       Then Response code is "200"
 
-#      Check tommorow, getAll access checks are fucked now
     Scenario Outline: Filtering user groups with application access checks
       Given The following user groups exist
         | Id                                   | customerId                           | name        | isActive | description           |
@@ -65,7 +64,7 @@ Feature: User Groups Application access check feature
         | /null | 0      | name=='*'                       | /null          | is_active           | 3           |
         | /null | 0      | name=='Company 5'               | /null          | name                | 0           |
         | /null | 0      | user_group_id=='22345000-*'     | /null          | picture             | 1           |
-        | /null | 0      | is_active=='false'              | name           | /null               | 2           |
+        | /null | 0      | is_active=='false'              | name           | /null               | 3           |
         | /null | 0      | description=='*'                | is_active      | /null               | 3           |
         | /null | 0      | customer_id=='123*'             | /null          | /null               | 3           |
 
@@ -74,17 +73,17 @@ Feature: User Groups Application access check feature
         | Id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
         | 23400000-0000-4000-a000-000000000000 | CustomerWithNoSubscription  | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       When The following user group is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-        | Id                                   | name        | isActive | description          |
+        | customerId                                   | name        | isActive | description          |
         | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
       Then Response code is 404
       And Custom code is 40402
       When The following user group is created by user "userWithUserGroup" for application version "versionWithSubscription"
-        | Id                                   | name        | isActive | description          |
+        | customerId                                   | name        | isActive | description          |
         | 23400000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
       Then Response code is 404
       And Custom code is 40402
       When The following user group is created by user "userWithUserGroup" for application version "versionWithSubscription"
-        | Id                                   | name        | isActive | description          |
+        | customerId                                   | name        | isActive | description          |
         | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
       Then Response code is 201
 

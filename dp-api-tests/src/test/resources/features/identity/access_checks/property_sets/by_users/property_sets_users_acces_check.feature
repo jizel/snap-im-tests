@@ -66,17 +66,16 @@ Feature: Property sets Users access check feature
     And Custom code is 42202
 
   Scenario: Updating Property Set-User relationship by user with access to the property set
-    Given Check is active attribute is "false" for relation between user "userWithPropSet" and property set "ps1_name"
-    When IsActive for relation between user "userWithPropSet" and property set "ps1_name" is set to "true" by user "userWithPropSet"
+    Given Check is active attribute is "true" for relation between user "userWithPropSet" and property set "ps1_name"
+    When IsActive for relation between user "userWithPropSet" and property set "ps1_name" is set to "false" by user "userWithPropSet"
     Then Response code is "204"
-    And Check is active attribute is "true" for relation between user "userWithPropSet" and property set "ps1_name"
+    And Check is active attribute is "false" for relation between user "userWithPropSet" and property set "ps1_name"
 
   Scenario: Updating Property Set-User relationship by user without access to the property set
-    Given Check is active attribute is "false" for relation between user "userWithPropSet" and property set "ps1_name"
-    When IsActive for relation between user "userWithPropSet" and property set "ps1_name" is set to "true" by user "userWithNoPropSet"
-#      Fails until DP-1330 fixed
+    Given Check is active attribute is "true" for relation between user "userWithPropSet" and property set "ps1_name"
+    When IsActive for relation between user "userWithPropSet" and property set "ps1_name" is set to "false" by user "userWithNoPropSet"
     Then Response code is "404"
-    And Check is active attribute is "false" for relation between user "userWithPropSet" and property set "ps1_name"
+    And Check is active attribute is "true" for relation between user "userWithPropSet" and property set "ps1_name"
 
   Scenario: Delete user from property set by user who has access to it
     When User "userWithPropSet" is removed from property set "ps1_name" by user "userWithPropSet"
