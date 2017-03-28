@@ -46,7 +46,7 @@
     Then Response code is "404"
     # Add correct user to the property set with which you have inactive relation
     Given User "user1OfC1" is added to property set "ps2_name" with is_active "false"
-    When User "user3OfC1" is added to property set with name "ps2_name" by user "user1OfC1"
+    When User "user3OfC1" is added to property set "ps2_name" by user "user1OfC1"
     Then Response code is "404"
     # Positive scenario
     Given Relation between user "user1OfC1" and property set "ps2_name" is activated

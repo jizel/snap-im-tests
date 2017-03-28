@@ -5,6 +5,7 @@
   "vat_id": "xx330303030",
   "website" : "www.snapshot.travel",
   "is_demo_customer": true,
+  "type": "HOTEL",
   "address": {
     "address_line1": "string",
     "city": "string",

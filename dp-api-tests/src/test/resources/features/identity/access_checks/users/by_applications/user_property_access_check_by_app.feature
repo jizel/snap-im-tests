@@ -55,8 +55,10 @@ Feature: User-property access check by app feature - GET
 
   Scenario: Application can add-remove users from properties only when it has access to them both
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithoutSubscription"
+    # Property not found
     Then Response code is "404"
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithSubscription"
+    # Property not found
     Then Response code is "404"
     Given The following commercial subscriptions exist
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
@@ -66,7 +68,10 @@ Feature: User-property access check by app feature - GET
       | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithoutSubscription"
     Then Response code is "404"
-    # DP-1897
+    When User "user1" adds user "user2" to property "p1_code" for application version "versionWithSubscription"
+    # User not found
+    Then Response code is "422"
+    Given Relation between user "user2" and property "defaultPropertyCode" is activated
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithSubscription"
     Then Response code is "201"
     When User "user1" deletes user "user2" from property "p1_code" for application version "versionWithoutSubscription"

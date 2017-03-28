@@ -30,7 +30,7 @@ Feature: Customers properties get
 
   @Smoke
   Scenario: Getting customerProperty
-    When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "CHAIN"
+    When Property with code "p1_code" for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is requested
     Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
@@ -38,13 +38,6 @@ Feature: Customers properties get
     And Body contains entity with attribute "valid_from" value "2015-01-01"
     And Body contains entity with attribute "valid_to" value "2015-12-31"
     And Body contains entity with attribute "relationship_type" value "chain"
-
-
-  # DP-1722
-  Scenario: Getting customerProperty with etag
-    When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "chain" with etag
-    Then Response code is "304"
-    And Body is empty
 
   Scenario: Getting customerProperty with not current etag
   CustomerProperty is got, etag is saved to tmp, then customerProperty valid_to is updated to "2016-12-31" so etag should change and is got again with previous etag
@@ -239,8 +232,6 @@ Feature: Customers properties get
     Then Response code is "200"
     And Content type is "application/json"
     And All customers are customers of property with code "<code>"
-    And All customers are active
-
     Examples:
       | code    |
       | p1_code |

@@ -45,6 +45,8 @@
     When User "user1OfC1" requests list of users for property "p1_code"
     Then Response code is "404"
 
+  # DP-1889
+  @skipped
   Scenario: User can add users to property only if he has access both to users and to property
     # Add wrong users to property
     When User "user1OfC1" adds user "user1OfC2" to property "p1_code"

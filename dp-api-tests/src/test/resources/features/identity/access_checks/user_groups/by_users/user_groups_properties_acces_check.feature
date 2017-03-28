@@ -30,9 +30,6 @@
     Scenario: Second level entities - User sees only user group-properties relations for user groups and properties he can access if the relation is active
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       When Relation between user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
-      Then Response code is 404
-      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "true" by user "defaultSnapshotUser"
-      When Relation between user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
       Then Response code is 200
 
     Scenario: Second level entities - User does not see user group-properties relations when he cannot access the user group
@@ -51,6 +48,7 @@
 
 
     Scenario: Add user group to property by user who cannot access the property, or the user group
+      Given Relation between user "userWithUserGroup" and property "p1_code" is inactivated
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
       Then Response code is "422"
       And Custom code is 42202
@@ -66,7 +64,7 @@
       Given Relation between user "userWithUserGroup" and property with code "p1_code" is activated
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
       Then Response code is "201"
-      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
+      Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
       Then Response code is "404"
       And Custom code is 40402
@@ -84,43 +82,24 @@
       Then Response code is 404
       And Custom code is 40402
 
-    Scenario: Update user group to property relationship by user whose relation with the user group is inactive, or the user group-property relation is inactive
-      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
-      Then Response code is 404
-      And Custom code is 40402
-      Given Relation between user group "userGroup_1" and property "p1_code" is activated
-      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
-      Then Response code is 204
-      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
-      When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup"
-      Then Response code is 404
-      And Custom code is 40402
-
     Scenario: Delete userGroup-property relationship by user with access
-      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
+      Given Relation between user group "userGroup_1" and property with code "p1_code" exists
+      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithUserGroup"
       Then Response code is 204
       And Body is empty
       And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is no more exists
 
     Scenario: Delete userGroup-property relationship by user without access
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithNoUserGroup"
+      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithNoUserGroup"
       Then Response code is 404
       And Custom code is 40402
       When Relation between user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
       Then Response code is 200
 
-    Scenario: Delete user group to property relationship by user whose relation with the user group is inactive, or the user group-property relation is inactive
-      Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
-      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
-      Then Response code is 404
-      And Custom code is 40402
-      Given Relation between user group "userGroup_1" and property "p1_code" is activated
-      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
-      Then Response code is 204
-      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
-      When Relation between user group "userGroup_1" and property with code "p1_code" is deleted is deleted by user "userWithUserGroup"
+    Scenario: Delete user group to property relationship by user whose relation with the user group is inactive
+      Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
+      Given Relation between user group "userGroup_1" and property "p1_code" exists
+      When Relation between user group "userGroup_1" and property "p1_code" is deleted by user "userWithUserGroup"
       Then Response code is 404
       And Custom code is 40402

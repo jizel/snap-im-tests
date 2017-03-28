@@ -22,36 +22,34 @@
       | roleId                               | Id                                   | roleName | description      |
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
     Given The following properties exist with random address and billing address
-      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 00000011-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
+      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000001" and property "p1_code"
      #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "p1_code" exists with is_active "true"
+    Given Relation between user "user2OfC1" and property with code "p1_code" exists with is_active "true"
 
-  # DP-1781
-  @Bug
   Scenario: User can view only list of property-user roles of his own customer and property he can access
-    When User "user1OfC2" requests roles of user "user2OfC1" for property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC2" requests roles of user "user2OfC1" for property "p1_code"
     Then Response code is "404"
-    When User "user1OfC1" requests roles of user "user2OfC1" for property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC1" requests roles of user "user2OfC1" for property "p1_code"
     Then Response code is "200"
     Given Relation between user "user1OfC1" and property with code "p1_code" is inactivated
-    When User "user1OfC1" requests roles of user "user2OfC1" for property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC1" requests roles of user "user2OfC1" for property "p1_code"
     Then Response code is "404"
 
-  # DP-1781
   Scenario: User can assign and revoke roles to property-users only when he has access to both user and property
-    When User "user1OfC2" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC2" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property "p1_code"
     Then Response code is "404"
-    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and property "p1_code"
     Then Response code is "201"
-    When User "user2OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user2OfC1" and property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user2OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and property "p1_code"
     Then Response code is "404"
     Given Relation between user "user1OfC2" and property with code "p1_code" exists
-    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC2" and property "p1_code"
     Then Response code is "404"
-    When User "user1OfC2" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC2" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property "p1_code"
     Then Response code is "404"
-    When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property "00000011-1cf1-4735-8ef9-216de1370f2e"
+    When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and property "p1_code"
     Then Response code is "204"

@@ -103,6 +103,8 @@ Feature: web_performance
       | url                           | granularity | property                             | since      | until      | response_code |
       | /analytics/visits/not_present | day         | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | 404           |
 
+#  DP-1903
+  @skipped
   Scenario Outline: Checking error codes for analytics data
     When Get web_performance "<url>" with missing property header
     Then Response code is <response_code>
@@ -111,15 +113,17 @@ Feature: web_performance
 
     Examples:
       | url                                   | response_code | custom_code | content_type     |
-      | /analytics/visits                     | 422           | 42201       | application/json |
-      | /analytics/visits_unique              | 422           | 42201       | application/json |
-      | /analytics/revenue                    | 422           | 42201       | application/json |
-      | /analytics/conversion_rates           | 422           | 42201       | application/json |
-      | /analytics/visits/countries           | 422           | 42201       | application/json |
-      | /analytics/visits_unique/countries    | 422           | 42201       | application/json |
-      | /analytics/conversion_rates/countries | 422           | 42201       | application/json |
-      | /analytics/referrals                  | 422           | 42201       | application/json |
+      | /analytics/visits                     | 400           | 40001       | application/json |
+      | /analytics/visits_unique              | 400           | 40001       | application/json |
+      | /analytics/revenue                    | 400           | 40001       | application/json |
+      | /analytics/conversion_rates           | 400           | 40001       | application/json |
+      | /analytics/visits/countries           | 400           | 40001       | application/json |
+      | /analytics/visits_unique/countries    | 400           | 40001       | application/json |
+      | /analytics/conversion_rates/countries | 400           | 40001       | application/json |
+      | /analytics/referrals                  | 400           | 40001       | application/json |
 
+  #  DP-1903
+  @skipped
   Scenario Outline: Checking non-valid since and until parameters
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is <response_code>
@@ -196,6 +200,8 @@ Feature: web_performance
       | 2016-01-01      | 2016-01-10 | week        | revenue       | descending |
       | 2016-01-01      | 2016-01-10 | month       | visits_unique | descending |
 
+  #  DP-1903
+  @skipped
   Scenario Outline: Checking error codes for sorting
     When Get web performance referrals with "day" granularity for "99000099-9999-4999-a999-999999999999" since "today - 80 days" until "today" sorted by "<metric>" "<direction>"
     Then Content type is "application/json"

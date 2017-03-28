@@ -10,15 +10,15 @@ Feature: Properties create update delete
       | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Given The following properties exist with random address and billing address for user "default1"
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
   Scenario: Creating property without parent with random address
-    When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property is created with random address and billing address for user "default1"
       | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
@@ -67,7 +67,7 @@ Feature: Properties create update delete
     And Property with code "p1_code" is not active
 
   Scenario: Timezone parameter is mandatory (DP-1696)
-    When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When The following property is created with random address and billing address for user "default1"
       | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | anchorCustomerId                     |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
@@ -108,7 +108,6 @@ Feature: Properties create update delete
       | 5     | 2      | 2     | customer_id=='*238fd9a*' |               | valid_from    |  1238fd9a-a05d-42d8-8e84-42e904ace123               |
       | /null | /null  | 1     | customer_id=='3239fd9a*' | /null         | /null         |  3239fd9a-a05d-42d8-8e84-42e904ace123                |
 
-  @skipped
   Scenario Outline: Checking error codes for getting list of customers from properties
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2030-02-28"
     Given Customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is activated
@@ -142,7 +141,7 @@ Feature: Properties create update delete
       | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 40002          |
 
   Scenario Outline: Validate that property regions belong to the correct country
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "default1"
     Then Content type is "application/json"
     And Response code is 201
     And Body contains entity with attribute "address.region" value "<region>"
@@ -231,7 +230,7 @@ Feature: Properties create update delete
       | CA      | Nunavut                           | propcode78 | mail78@mail.com |
 
   Scenario Outline: Checking error codes for regions
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "default1"
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"
@@ -254,23 +253,19 @@ Feature: Properties create update delete
       | CA      | Yukon region     | propcode18 | mail18@mail.com | 422           | 42202       |
       | CA      | TheGreatYukon    | propcode19 | mail19@mail.com | 422           | 42202       |
 
-  # Soft-delete is planned for demolition in the first quarter of 2017. Once this transition is performed the following testcase will be valid
-  @Bug
-  @skipped
   Scenario: Creating property with same name as previously deleted one - DP-1380
-    Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                            | salesforceId | name          | propertyCode  | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | sl_id_1      | property_name | property_code | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given The following property is created with random address and billing address for user "default1"
+      | salesforceId | name    | propertyCode | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |
+      | sl_id_1      | p2_name | p2_code      | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is 201
-    When Property with code "property_code" is deleted
+    When Property with code "p2_code" is deleted
     Then Response code is 204
-    Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | propertyId                            | salesforceId | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | sl_id_1      | property_name | property_code | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Given The following property is created with random address and billing address for user "default1"
+      | salesforceId | name    | propertyCode | website                    | email              | isDemoProperty | timezone      | anchorCustomerId                     |
+      | sl_id_1      | p2_name | p2_code      | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is 201
-    And Body contains entity with attribute "property_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
-    And Body contains entity with attribute "property_code" value "p1_code"
-    And Body contains entity with attribute "property_name" value "p1_name"
+    And Body contains entity with attribute "property_code" value "p2_code"
+    And Body contains entity with attribute "name" value "p2_name"
 
   Scenario Outline: Send POST request with empty body to all properties endpoints
     When The following property set is created for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
@@ -288,11 +283,11 @@ Feature: Properties create update delete
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0|
 
     Scenario: Creating duplicate property returns correct error  - DP-1661
-      When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      When The following property is created with random address and billing address for user "default1"
         | Id                                   | salesforceId  | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
         | 00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "201"
-      When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+      When The following property is created with random address and billing address for user "default1"
         | Id                                   | salesforceId  | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
         | 00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "409"

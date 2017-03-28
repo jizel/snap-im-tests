@@ -195,7 +195,7 @@ public class CustomerStepdefs {
         customerSteps.setSessionResponse(response);
     }
 
-    @When("^Property with code \"([^\"]*)\" from customer(?: with id)? \"([^\"]*)\" is got(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    @When("^Property with code \"([^\"]*)\" (?:from|for) customer(?: with id)? \"([^\"]*)\" is (?:got|requested)(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeFromCustomerWithIdIsGotByUser(String propertyCode, String customerName, String username, String applicationVersionName) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username) ;
@@ -314,8 +314,9 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer(?: with id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
-    public void customerWithCustomerIdIsDeletedByUserForApp(String customerId, String username, String applicationVersionName) throws Throwable {
+    public void customerWithCustomerIdIsDeletedByUserForApp(String customerName, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
+        String customerId = customerSteps.resolveCustomerId(customerName);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         customerSteps.deleteCustomerByUserForApp(userId, applicationVersionId, customerId);
     }
