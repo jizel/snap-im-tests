@@ -6,7 +6,7 @@ Feature: Customers create update delete
     Given Database is cleaned and default entities are created
 
   @Smoke
-  Scenario: Creating/deleting  Customer
+  Scenario: Creating/activating/deleting Customer
     When Customer is created with random address
       | id                                   | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
@@ -18,6 +18,14 @@ Feature: Customers create update delete
     And Body contains entity with attribute "customer_code"
     And Body contains entity with attribute "is_active" value "true"
     And Body contains entity with attribute "type" value "hotel"
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
+    Then Response code is "204"
+    And Body is empty
+    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is active
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is inactivated
+    Then Response code is "204"
+    And Body is empty
+    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is not active
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is "204"
     And Body is empty
@@ -63,13 +71,16 @@ Feature: Customers create update delete
   #TODO update with error fields, bad values, missing fields
   #TODO update nonexistent field
   Scenario Outline: Updating customer
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user "SnapshotUser"
+    Given The following customers exist with random address
+      | id                                   | companyName   | email          | salesforceId   | vatId       | phone         | website           | timezone      | type   | isDemoCustomer |
+      | 910cfc16-4597-479f-ae18-250b0a94752e | Some_Company  | cust1@email.cz | salesforceid   | CZ987654320 | +420123456789 | http://google.com | Europe/Prague | HOTEL  | true           |
+    When Customer "910cfc16-4597-479f-ae18-250b0a94752e" is updated with data
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And User with id "a63edcc6-6830-457c-89b1-7801730bd0ae" checks updated customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" has data
+    And Check updated customer "910cfc16-4597-479f-ae18-250b0a94752e" has data
       | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
       | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Examples:
@@ -91,21 +102,6 @@ Feature: Customers create update delete
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with outdated etag
     Then Response code is "412"
     And Custom code is "41202"
-
-
-  @Smoke
-  Scenario: Customer is activated
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
-    Then Response code is "204"
-    And Body is empty
-    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is active
-
-  Scenario: Customer is inactivated
-    Given Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is inactivated
-    Then Response code is "204"
-    And Body is empty
-    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is not active
 
   Scenario: Headquarters timezone parameter is not optional (DP-1695)
     When Customer is created with random address

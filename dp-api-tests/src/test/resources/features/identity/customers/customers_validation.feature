@@ -7,23 +7,24 @@ Feature: Customers validation
     Given the location "identity/customers" for object "customer"
     Given unique identifier "customer_id" for object "customer"
     Given the following "customer" object definition
-      | path                   | type   | required | correct                                                     | invalid   | longer   |
+      | path                   | type   | required | correct                                                     | invalid   | longer      |
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | /name                  | String | true     | \w{255}                                                     | /null     | \w{256}  |
-      | /salesforce_id         | String | false    | \w{100}                                                     | /null     | \w{101}  |
-      | /vat_id                | String | true     | CZ[0-9]{9}                                                  | /null     | \w{101}  |
-      | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}    | \w{1001} |
-      | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}    | \w{101}  |
-      | /phone                 | String | false    | +[0-9]{12}                                                  | \.{10}    | \w{101}  |
-      | /is_demo_customer      | Bool   | true     | (true\|false)                                               | /null     |          |
+      | /name                  | String | true     | \w{255}                                                     | /null     | \w{256}     |
+      | /salesforce_id         | String | false    | \w{100}                                                     | /null     | \w{101}     |
+      | /vat_id                | String | true     | CZ[0-9]{9}                                                  | /null     | \w{101}     |
+      | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}    | \w{1001}    |
+      | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}    | \w{101}     |
+      | /phone                 | String | false    | +[0-9]{12}                                                  | \.{10}    | \w{101}     |
+      | /is_demo_customer      | Bool   | true     | (true\|false)                                               | /null     |             |
       #| /is_active             | String | false    | (0\|1)                                                       | x         |          |
-      | /notes                 | String | false    | \w{255}                                                     | /null     | \w{256}  |
-      | /headquarters_timezone | String | true     | (America/New_York\|Europe/Prague)                           | UTC+01:00 |          |
-      | /address/address_line1 | String | true     | \w{100}                                                     | /null     | \w{101}  |
-      | /address/address_line2 | String | false    | \w{100}                                                     | /null     | \w{101}  |
-      | /address/city          | String | true     | \w{50}                                                      | /null     | \w{51}   |
-      | /address/zip_code      | String | true     | [a-zA-Z0-9]{10}                                             | /null     | \w{11}   |
-      | /address/country       | String | true     | US                                                          | xx        | USA      |
+      | /notes                 | String | false    | \w{255}                                                     | /null     | \w{256}     |
+      | /headquarters_timezone | String | true     | (America/New_York\|Europe/Prague)                           | UTC+01:00 |             |
+      | /address/address_line1 | String | true     | \w{100}                                                     | /null     | \w{101}     |
+      | /address/address_line2 | String | false    | \w{100}                                                     | /null     | \w{101}     |
+      | /address/city          | String | true     | \w{50}                                                      | /null     | \w{51}      |
+      | /address/zip_code      | String | true     | [a-zA-Z0-9]{10}                                             | /null     | \w{11}      |
+      | /address/country       | String | true     | US                                                          | xx        | USA         |
+      | /type                  | String | true     | HOTEL                                                       | xx        | CONSULTANCY |
 
     Given The following customers exist with random address
       | Id                                   | companyName          | email                   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |

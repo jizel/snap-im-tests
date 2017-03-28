@@ -5,6 +5,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static travel.snapshot.dp.qa.helpers.CustomerUtils.createCustomerDto;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
@@ -419,8 +420,10 @@ public class CustomerStepdefs {
         customerSteps.numberOfEntitiesInResponse(CustomerDto.class, count);
     }
 
-    @Then("^User with id \"([^\"]*)\" checks updated customer with id \"([^\"]*)\" has data$")
-    public void Updated_customer_with_code_has_data(String userId, String customerId, List<CustomerDto> customers) throws Throwable {
+    @Then("^(?:User with id \"([^\"]*)\" )?(?:c|C)hecks? updated customer(?: with id)? \"([^\"]*)\" has data$")
+    public void Updated_customer_with_code_has_data(String userId, String customerName, List<CustomerDto> customers) throws Throwable {
+        String customerId = customerSteps.resolveCustomerId(customerName);
+        userId = (userId == null) ? DEFAULT_SNAPSHOT_USER_ID : userId;
         customerSteps.customerWithIdHasData(customerId, userId, customers.get(0));
     }
 

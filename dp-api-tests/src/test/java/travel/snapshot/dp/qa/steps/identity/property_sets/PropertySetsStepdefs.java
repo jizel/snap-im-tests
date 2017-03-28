@@ -68,7 +68,7 @@ public class PropertySetsStepdefs {
 //    End of help methods section
 
 
-    @Given("^The following property sets exist for customer with id \"([^\"]*)\"(?: and user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    @Given("^The following property sets exist for customer(?: with id)? \"([^\"]*)\"(?: and user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, String isActiveString, List<PropertySetDto> propertySets) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
@@ -233,7 +233,7 @@ public class PropertySetsStepdefs {
         propertySetSteps.setSessionResponse(response);
     }
 
-    @When("^Property with code \"([^\"]*)\" is removed from property set \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    @When("^Property(?: with code)? \"([^\"]*)\" is removed from property set \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void propertyWithCodeIsRemovedFromPropertySetByUser(String propertyCode, String propertySetName, String username, String applicationVersionName  ) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
@@ -256,14 +256,14 @@ public class PropertySetsStepdefs {
         propertySetSteps.propertySetNamesAreInResponseInOrder(names);
     }
 
-    @Then("^User with \"([^\"]*)\" isn't there for property set \"([^\"]*)\"$")
+    @Then("^User(?: with)? \"([^\"]*)\" isn't there for property set \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_property_set_with_name_for_customer_with_code(String username, String propertySetName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
         PropertySetUserRelationshipDto relationship = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
         assertThat("Relation between user " + username + " and property set " + propertySetName + "should not exist!",relationship, is(nullValue()));
     }
 
-    @Then("^Property with code \"([^\"]*)\" isn't there for property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\"$")
+    @Then("^Property(?: with code)? \"([^\"]*)\" isn't there for property set(?: with name)? \"([^\"]*)\" for customer(?: with id)? \"([^\"]*)\"$")
     public void Property_with_code_isn_t_there_for_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerId) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );

@@ -78,7 +78,7 @@ public class ApplicationsStepsdef {
         applicationSteps.updateApplication(applicationId, applications.get(0), "Invalid_etag");
     }
 
-    @When("^Application with id \"([^\"]*)\" is got$")
+    @When("^Application with id \"([^\"]*)\" is (?:got|requested)$")
     public void Application_WithIdIsGot(String applicationId) {
         applicationSteps.applicationWithIdIsGot(applicationId);
     }

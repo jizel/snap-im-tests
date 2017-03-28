@@ -19,11 +19,24 @@ Feature: User groups create update delete
 
 
   @Smoke
-  Scenario: Create user group
+  Scenario: Create get activate and delete user group
     When The following user group is created
-      | Id                                   | customerId                           | name                | description          |
-      | b8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_created_1 | userGroupDescription |
+      | Id                                   | customerId                           | name                | description          | isActive |
+      | b8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_created_1 | userGroupDescription | false    |
     Then Response code is "201"
+    And Content type is "application/json"
+    And Etag header is present
+    And Body contains entity with attribute "user_group_id" value "b8b40d08-de38-4246-bb69-ad39c31c025c"
+    And Body contains entity with attribute "name" value "userGroup_created_1"
+    And Body contains entity with attribute "customer_id" value "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
+    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "description" value "userGroupDescription"
+    When User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" is activated
+    Then Response code is 204
+    And Body is empty
+    And User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" is active
+    When User group "userGroup_created_1" is requested
+    Then Response code is "200"
     And Content type is "application/json"
     And Etag header is present
     And Body contains entity with attribute "user_group_id" value "b8b40d08-de38-4246-bb69-ad39c31c025c"
@@ -31,15 +44,10 @@ Feature: User groups create update delete
     And Body contains entity with attribute "customer_id" value "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
     And Body contains entity with attribute "is_active" value "true"
     And Body contains entity with attribute "description" value "userGroupDescription"
-
-
-  @Smoke
-  Scenario: Activate user group
-    When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is activated
+    When User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" is deleted
     Then Response code is 204
     And Body is empty
-    And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is active
-
+    And User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
 
   Scenario: Deactivate user group
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is activated
@@ -47,14 +55,6 @@ Feature: User groups create update delete
     Then Response code is 204
     And Body is empty
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is not active
-
-
-  @Smoke
-  Scenario: Delete user group
-    When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is deleted
-    Then Response code is 204
-    And Body is empty
-    And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
 
 
   Scenario: Delete non-existing user group

@@ -27,13 +27,10 @@ Feature: Users validations
   # --- happy path ---
 
   @Smoke
-  Scenario: Object creation - correct values
+  Scenario: Object create, update - correct values
     When create "user" object with correct field values
     Then Response code is "201"
     And location header is set and points to the same object
-
-  @Smoke
-  Scenario: Object update - correct values
     When update "user" object with correct field values
     Then Response code is "204"
 

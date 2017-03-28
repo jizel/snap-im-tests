@@ -22,8 +22,6 @@ Feature: Customers properties get
     Given Relation between property with code "p1_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p3_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p3_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p1_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p1_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
     Given The password of user "snapshotUser" is "Password01"
     Given Get token for user "snapshotUser" with password "Password01"

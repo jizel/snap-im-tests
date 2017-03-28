@@ -30,7 +30,7 @@ Feature: facebook
       | /analytics/facebook/reach           | week        | 99000099-9999-4999-a999-999999999999  | -2015-12-03 | 2015-12-03  |
 
   @Smoke
-  Scenario Outline: Validate that metrics have valid value in the db
+  Scenario Outline: Validate that metrics have valid value in the db - smoke
     When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is 200
@@ -39,6 +39,15 @@ Feature: facebook
     Examples:
       | url                                 | granularity | count | since      | until      | property                             |
       | /analytics/facebook/number_of_posts | day         | 7488  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+
+  Scenario Outline: Validate that metrics have valid value in the db
+    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Content type is "application/json"
+    And Response code is 200
+    And The metric count is <count>
+
+    Examples:
+      | url                                 | granularity | count | since      | until      | property                             |
       | /analytics/facebook/engagement      | day         | 7397  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/likes           | day         | 7548  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/facebook/unlikes         | day         | 7829  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |

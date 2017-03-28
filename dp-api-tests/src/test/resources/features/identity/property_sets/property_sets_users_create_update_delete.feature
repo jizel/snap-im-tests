@@ -18,10 +18,6 @@ Feature: Property sets users create update delete
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |
 
-  @Smoke
-  Scenario: Adding user to property set
-    When User "default3" is added to property set with name "ps1_name"
-    Then Response code is "201"
 
 
   Scenario: Updating Property Set-User relationship
@@ -33,15 +29,6 @@ Feature: Property sets users create update delete
     When Relation between user "default0" and property set "ps1_name" is activated
     Then Response code is "204"
     And Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
-
-
-  @Smoke
-  Scenario: Removing user from property set
-    Given Relation between user "default2" and property set with name "ps1_name" exists
-    When User "default2" is removed from property set "ps1_name"
-    Then Response code is "204"
-    And Body is empty
-    And User with "default2" isn't there for property set "ps1_name"
 
   Scenario: Removing invalid user from property set
     When Nonexistent user is removed from property set with name "ps1_name"

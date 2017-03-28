@@ -94,13 +94,6 @@ Feature: Users create update delete
       | json_input_file                                             | method | module   | url             | error_code | custom_code |
       | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 422        | 42201       |
 
-  @Smoke
-  Scenario: Deleting user
-    Given Relation between user "User1" and customer "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
-    When User "User1" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And User with same id doesn't exist
 
   Scenario: Deleting nonexistent user
     When Nonexistent user is deleted
@@ -140,13 +133,6 @@ Feature: Users create update delete
     And Custom code is "41202"
 
 #    TODO: Check error codes for user update
-
-  @Smoke
-  Scenario: User is activated
-    When User "User1" is activated
-    Then Response code is "204"
-    And Body is empty
-    And User "User1" is active
 
   Scenario: User is inactivated
     Given User "User1" is activated
