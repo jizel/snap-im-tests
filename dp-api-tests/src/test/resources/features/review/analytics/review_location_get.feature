@@ -101,7 +101,7 @@ Feature: Review locaitons
 
     Examples:
       | url       | property                             | location_id | location_name |
-      | /location | 99000199-9999-4999-a999-999999999999 | 19          | town 19     |
+      | /location | 99000199-9999-4999-a999-999999999999 | 19          | town 19       |
 
 
   Scenario Outline: Getting error code for not existing property id from /location

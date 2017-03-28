@@ -29,13 +29,12 @@ Feature: Properties create update delete
   @Smoke
   Scenario: Updating property
     When Property with code "p1_code" is updated with data
-      | salesforceId   | name         | website                  | email            | isDemoProperty | description  |
-      | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          | updated_desc |
+      | name         | website                  | email            | isDemoProperty | description  |
+      | updated_name | https://www.upddated.com | updated@email.cz | false          | updated_desc |
     Then Response code is "204"
     When Property with code "p1_code" is requested
     Then Response code is "200"
     Then Body contains entity with attribute "name" value "updated_name"
-    Then Body contains entity with attribute "salesforce_id" value "updated_sf_id"
     Then Body contains entity with attribute "website" value "https://www.upddated.com"
     Then Body contains entity with attribute "email" value "updated@email.cz"
     Then Body contains entity with attribute "is_demo_property" value "false"
@@ -284,12 +283,12 @@ Feature: Properties create update delete
 
     Scenario: Creating duplicate property returns correct error  - DP-1661
       When The following property is created with random address and billing address for user "default1"
-        | Id                                   | salesforceId  | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
-        | 00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+        | Id                                   | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 00011223-50e8-4854-a233-289f00b54a09 | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "201"
       When The following property is created with random address and billing address for user "default1"
-        | Id                                   | salesforceId  | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
-        | 00011223-50e8-4854-a233-289f00b54a09 | sfid_1        | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+        | Id                                   | name         | propertyCode | website                    | email                | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 00011223-50e8-4854-a233-289f00b54a09 | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "409"
       And Custom code is 40902
 

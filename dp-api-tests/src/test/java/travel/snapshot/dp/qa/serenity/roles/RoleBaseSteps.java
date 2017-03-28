@@ -239,10 +239,14 @@ public class RoleBaseSteps extends BasicSteps {
     public RoleDto setRoleAttributes(RoleDto roleDto, Map<String, Object> roleAttributes){
         roleDto.setId(Objects.toString(roleAttributes.get("roleId"), null));
         roleDto.setDescription(Objects.toString(roleAttributes.get("description")));
-        roleDto.setIsActive(Boolean.valueOf(Objects.toString(roleAttributes.get("isActive"))));
         roleDto.setApplicationId(Objects.toString(roleAttributes.get("applicationId"), null));
-        roleDto.setIsInitial(Boolean.valueOf(Objects.toString(roleAttributes.get("isInitial"))));
         roleDto.setRoleName(Objects.toString(roleAttributes.get("roleName"), null));
+        if(roleAttributes.containsKey("isActive")) {
+            roleDto.setIsActive(Boolean.valueOf(Objects.toString(roleAttributes.get("isActive"))));
+        }
+        if(roleAttributes.containsKey("isInitial")) {
+            roleDto.setIsInitial(Boolean.valueOf(Objects.toString(roleAttributes.get("isInitial"))));
+        }
         return roleDto;
     }
 }

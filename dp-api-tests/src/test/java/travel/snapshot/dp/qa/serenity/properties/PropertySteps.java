@@ -28,6 +28,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpda
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
+import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -67,7 +68,9 @@ public class PropertySteps extends BasicSteps {
     public void followingPropertiesExist(List<PropertyDto> properties, String userId) {
         properties.forEach(property -> {
             property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
-
+            if(property.getSalesforceId() == null){
+                property.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
+            }
             Response createResponse = createProperty(userId, property);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
@@ -164,8 +167,14 @@ public class PropertySteps extends BasicSteps {
      */
     @Step
     public Response createProperty(String userId, PropertyDto property) {
-        return createEntityByUser(userId, property);
-
+        Response response = null;
+        try{
+            JSONObject jsonProperty = retrieveData(property);
+            response = createEntityByUser(userId, jsonProperty.toString());
+        }catch (JsonProcessingException e){
+            fail("Error while creating JSON object from propertyDto: " + e.toString());
+        }
+        return response;
     }
 
     /**
