@@ -57,11 +57,11 @@ Feature: Eventing tests for Property Sets
 #    Add
     When Property with code "event_property" is added to property set "event_background_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "PropertySet"
+    And Notification in session entity_type is "Property"
     And Notification in session operation is "Create"
-    And Notification in session id stands for property set "event_background_propset"
-    And Notification in session parent entity type is "Property"
-    And Notification in session parent id stands for property with code "event_property"
+    And Notification in session id stands for property with code "event_property"
+    And Notification in session parent entity type is "PropertySet"
+    And Notification in session parent id stands for property set with name "event_background_propset"
 #    Remove
     When Property with code "event_property" is removed from property set "event_background_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session

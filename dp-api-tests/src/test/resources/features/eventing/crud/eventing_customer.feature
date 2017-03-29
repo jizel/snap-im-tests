@@ -56,6 +56,8 @@ Feature: Eventing tests for Customer related operations
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "CustomerPropertyRelationship"
     And Notification in session operation is "Create"
+    And Notification in session parent entity type is "Customer"
+    And Notification in session parent id stands for customer with id "00000000-3836-4207-a705-000000000000"
 
   Scenario: Updating property for customer
     Given The following properties exist with random address and billing address
@@ -67,6 +69,8 @@ Feature: Eventing tests for Customer related operations
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "CustomerPropertyRelationship"
     And Notification in session operation is "Update"
+    And Notification in session parent entity type is "Customer"
+    And Notification in session parent id stands for customer with id "00000000-3836-4207-a705-000000000000"
 
 
   Scenario: Add and remove user to/from customer
