@@ -15,7 +15,6 @@ Feature: Users validations
       | /last_name                  | String     | true     | \w{255}                                                     | /null        | \w{256}    |
       | /user_type                  | String     | true     | (snapshot\|customer\|partner\|guest)                        | nonexisstent | \w{256}    |
       | /user_name                  | String     | true     | \w{64}                                                      | /null        | \w{65}     |
-      | /salesforce_id              | String     | false    | \w{32}                                                      | /null        | \w{33}     |
       | /email                      | String     | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | \w{101}    |
       | /phone                      | String     | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
       | /timezone                   | String     | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
