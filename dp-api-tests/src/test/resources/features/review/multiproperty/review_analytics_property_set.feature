@@ -1,8 +1,6 @@
-#  DP-1940
-@skipped
 Feature: Review multiproperty property set
-  GET /review/analytics/property_set/{property_set_id}/popularity_index_rank
-  Returns popularity index rank statistics for the given time period aggregated for the specified property set.
+  - GET /review/analytics/property_set/{property_set_id}/popularity_index_rank
+  - Returns popularity index rank statistics for the given time period aggregated for the specified property set.
   #TODO add paging tests - currently paging is only prepared but not implemented
   #TODO request with invalid access token ? how ?
 
@@ -174,7 +172,6 @@ Feature: Review multiproperty property set
       | popularity_index_rank | /multiproperty/customer/popularity_index_week.json  | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
       | popularity_index_rank | /multiproperty/customer/popularity_index_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 
-  # DP-1940
   @Smoke
   Scenario: Aspects of business data correctness smoke
     When Get "aspects_of_business" for statistics aggregated for property set "ps1_name" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "2015-12-03" until "2015-12-03" granularity "day" limit "/null" and cursor "/null"
