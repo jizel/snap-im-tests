@@ -25,16 +25,6 @@ Feature: Users property roles CRUD
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
 
 
-  @Smoke
-  Scenario Outline: Assigning role to user property
-    When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is added
-    Then Response code is "201"
-    Examples:
-      | role_id                              | user_name | property_code |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | p1_code       |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | p1_code       |
-
-
   Scenario Outline: Assigning not existing role
     When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is added
     Then Response code is "422"

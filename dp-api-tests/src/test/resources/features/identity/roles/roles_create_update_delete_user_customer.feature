@@ -15,7 +15,7 @@ Feature: Roles create update delete user customer
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
 
   @Smoke
-  Scenario: Creating role
+  Scenario: Creating deleting role
     When Role is created
       | Id                                   | roleName            | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -24,6 +24,10 @@ Feature: Roles create update delete user customer
     And Body contains entity with attribute "description" value "optional description 1"
     And Body contains entity with attribute "is_initial" value "false"
     And Etag header is present
+    When Role with name "Role name 1" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
 
   Scenario Outline: Checking error codes for creating role
@@ -40,34 +44,26 @@ Feature: Roles create update delete user customer
       | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/user_customer_roles | 400        | 40001       |
 
 
-  @Smoke
-  Scenario: Deleting role
-    When Role with name "Role name 1" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
-
-
   Scenario: Checking error code for deleting role
     When Nonexistent role id is deleted
     Then Response code is "404"
 
-#  DP-1793
+
   Scenario Outline: Updating role
     When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
-      | Id              | roleName           | description       |
-      | <applicationId> | <updated_roleName> | <description> |
+      | roleName           | description       |
+      | <updated_roleName> | <description> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated role with name "<updated_roleName>" has data
-      | Id              | roleName           | description   |
-      | <applicationId> | <updated_roleName> | <description> |
+    When Role with name "<updated_roleName>" is got
+    Then Body contains entity with attribute "name" value "<updated_roleName>"
+    Then Body contains entity with attribute "description" value "<description>"
     Examples:
-      | Id                                   | roleName    | updated_roleName  | description                    |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | Updated role name |                                |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | Updated role name | Updated optional description   |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | Role name 1       | Updated optional description 1 |
+      | roleName    | updated_roleName  | description                    |
+      | Role name 1 | Updated role name |                                |
+      | Role name 1 | Updated role name | Updated optional description   |
+      | Role name 1 | Role name 1       | Updated optional description 1 |
 
 
   Scenario: Updating role with outdated etag

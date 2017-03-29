@@ -59,7 +59,7 @@ Feature: Instagram
       | /analytics/instagram/comments   | month       | 7762  | 2015-10-03 | 2015-12-09 | 99000099-9999-4999-a999-999999999999 |
 
   @Smoke
-  Scenario Outline: Validate that metrics have valid value in the db for all metrics
+  Scenario Outline: Validate that metrics have valid value in the db - smoke
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
     And Content type is "application/json"
@@ -68,6 +68,15 @@ Feature: Instagram
     Examples:
       | url                  | granularity | count                                     | since      | until      | property                             |
       | /analytics/instagram | day         | 7470, 7508, 7558, 7558, 7606, 7813, 15321 | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+
+  Scenario Outline: Validate that metrics have valid value in the db for all metrics
+    When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains "<count>" values of global stats dto
+
+    Examples:
+      | url                  | granularity | count                                     | since      | until      | property                             |
       | /analytics/instagram | week        | 7024, 7079, 7197, 7224, 7224, 7395, 14474 | 2015-11-13 | 2015-11-20 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram | month       | 7385, 7440, 7471, 7471, 7542, 7762, 15202 | 2015-11-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
 
@@ -156,7 +165,6 @@ Feature: Instagram
       | /analytics/instagram/likes      | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/comments   | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
-  @Smoke
   Scenario Outline: Get specific analytics data from instagram API for a given granularity
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
@@ -169,7 +177,6 @@ Feature: Instagram
 
     Examples:
       | url                   | granularity | count | since             | until | real_since        | real_until | property                             |
-      | /analytics/instagram/ | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/ | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/ | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000099-9999-4999-a999-999999999999 |
@@ -179,6 +186,20 @@ Feature: Instagram
       | /analytics/instagram/ | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000099-9999-4999-a999-999999999999 |
       | /analytics/instagram/ | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000099-9999-4999-a999-999999999999 |
 
+  @Smoke
+  Scenario Outline: Get specific analytics data from instagram API for a given granularity - smoke
+    When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "instagram"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> amount of values for global stats dto
+
+    Examples:
+      | url                   | granularity | count | since             | until | real_since        | real_until | property                             |
+      | /analytics/instagram/ | day         | 1     | today             | today | today             | today      | 99000099-9999-4999-a999-999999999999 |
 
   Scenario Outline: Getting non-existent analytics data
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "today" until "today"

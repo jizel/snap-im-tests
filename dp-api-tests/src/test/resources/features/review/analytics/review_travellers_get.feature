@@ -89,7 +89,6 @@ Feature: Review travelers
       |  /travellers/number_of_reviews | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       |  /travellers/number_of_reviews | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
-  @Smoke
   Scenario Outline: Get amount of analytics data from API for a given granularity of more complex endpoints
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
@@ -102,7 +101,6 @@ Feature: Review travelers
 
     Examples:
       | url          | granularity | count | since             | until | real_since        | real_until | property                             |
-      |  /travellers/ | day         | 1     | today             | today | today             | today      | 99000199-9999-4999-a999-999999999999 |
       |  /travellers/ | day         | 41    | today - 40 days   | today | today - 40 days   | today      | 99000199-9999-4999-a999-999999999999 |
       |  /travellers/ | day         | 366   | today - 365 days  | today | today - 365 days  | today      | 99000199-9999-4999-a999-999999999999 |
       |  /travellers/ | week        | 3     | today - 13 days   | today | today - 13 days   | today      | 99000199-9999-4999-a999-999999999999 |
@@ -112,7 +110,6 @@ Feature: Review travelers
       |  /travellers/ | month       | 5     | today - 4 months  | today | today - 4 months  | today      | 99000199-9999-4999-a999-999999999999 |
       |  /travellers/ | month       | 13    | today - 12 months | today | today - 12 months | today      | 99000199-9999-4999-a999-999999999999 |
 
-  @Smoke
   Scenario Outline: Checking data correctness for all travellers analytics
     When Get trip advisor travellers "<url>" data with "<granularity>" granularity for "<property_id>" since "<since>" until "<until>"
     Then Review travellers file "<json_input_file>" is equals to previous response
@@ -121,7 +118,6 @@ Feature: Review travelers
 
     Examples:
       | json_input_file           | url          | property_id                          | granularity | since      | until      |
-      | /analytics_for_day.json   | /travellers/ | 99000199-9999-4999-a999-999999999999 | day         | 2015-12-03 | 2015-12-03 |
       | /analytics_for_week.json  | /travellers/ | 99000199-9999-4999-a999-999999999999 | week        | 2015-11-12 | 2015-12-03 |
       | /analytics_for_month.json | /travellers/ | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 

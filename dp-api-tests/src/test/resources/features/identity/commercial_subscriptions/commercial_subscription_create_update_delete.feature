@@ -18,19 +18,6 @@ Feature: Commercial subscription create update delete
 
 
   # --------------------- CREATE ---------------------
-  @Smoke
-  Scenario: Create commercial subscription
-    Given Commercial subscription is created
-      | Id                                   | customerId                           | propertyId                           | applicationId                        |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728ec | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
-    Then Response code is "201"
-    And Body contains entity with attribute "commercial_subscription_id" value "8e238f8e-2c9c-4e32-9a63-40474a9728ec"
-    And Body contains entity with attribute "customer_id" value "1238fd9a-a05d-42d8-8e84-42e904ace123"
-    And Body contains entity with attribute "property_id" value "742529dd-481f-430d-b6b6-686fbb687cab"
-    And Body contains entity with attribute "application_id" value "11111111-0000-4000-a000-111111111111"
-    And Body contains entity with attribute "is_active" value "true"
-
-
   Scenario Outline: Checking error codes for creating commercial subscription
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
@@ -43,13 +30,6 @@ Feature: Commercial subscription create update delete
 
 
   # --------------------- DELETE ---------------------
-  @Smoke
-  Scenario: Deleting commercial subscriptions
-    When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Commercial subscription with same id does not exist
-
 
   Scenario: Checking error code for deleting commercial subscription
     When Nonexistent commercial subscription id is deleted
@@ -58,15 +38,6 @@ Feature: Commercial subscription create update delete
 
 
   # --------------------- UPDATE ---------------------
-  @Smoke
-  Scenario: Update commercial subscription - activate
-    When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is activated
-    Then Response code is "204"
-    And Body is empty
-    And Etag header is present
-    And Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is activate
-
-
   Scenario: Update commercial subscription - inactivate
     Given Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is activated
     When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is deactivated

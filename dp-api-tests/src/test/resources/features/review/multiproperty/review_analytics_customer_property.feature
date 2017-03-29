@@ -158,18 +158,16 @@ Feature: Review multiproperty customer property
       | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | month       | 5     | today - 4 months  | today | today - 4 months  | today      |
       | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | month       | 13    | today - 12 months | today | today - 12 months | today      |
 
-  @Smoke
   Scenario Outline: Checking data corectness for popularity_index_rank
     When Get "<metric>" for list of properties for customer "<customer_id>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
     And Content type is "application/json"
     And Review file "<json_input_file>" equals to previous response for popularity index
-
     Examples:
       | metric                | json_input_file                                     | customer_id                          | granularity | since      | until      |
       | popularity_index_rank | /multiproperty/customer/popularity_index_day.json   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | day         | 2015-12-03 | 2015-12-03 |
       | popularity_index_rank | /multiproperty/customer/popularity_index_week.json  | 1238fd9a-a05d-42d8-8e84-42e904ace123 | week        | 2015-11-12 | 2015-12-03 |
-      | popularity_index_rank | /multiproperty/customer/popularity_index_month.json | 1238fd9a-a05d-42d8-8e84-42e904ace123 | month       | 2015-08-26 | 2015-12-03 |
+
 
   Scenario Outline: Checking data corectness for aspects_of_business
     When Get "<metric>" for list of properties for customer "<customer_id>" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"

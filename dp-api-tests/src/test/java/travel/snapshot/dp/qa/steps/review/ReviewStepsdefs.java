@@ -262,7 +262,7 @@ public class ReviewStepsdefs {
         reviewMultipropertySinglePropertySteps.getStatisticsForSingleProperty(metric, property_id, since, until, granularity);
     }
 
-    @When("^Get \"([^\"]*)\" for statistics agregated for property set \"([^\"]*)\" for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
+    @When("^Get \"([^\"]*)\" for statistics agg?regated for property set \"([^\"]*)\" for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
     public void getForStatisticsAgregatedForPropertySetForCustomerWithSinceUntilGranularityLimitAndCursor(String metric, String pSetCode, String customerId,
                                                                                                           @Transform(NullEmptyStringConverter.class) String since,
                                                                                                           @Transform(NullEmptyStringConverter.class) String until,

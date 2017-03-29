@@ -4,22 +4,29 @@ Feature: Applications create update delete
   Background:
     Given Database is cleaned and default entities are created
 
-
-
   @Smoke
-  Scenario: Create application
-    Given The following partner is created
-      | name           | email          | website                    | vatId      | notes        | Id                                   |
-      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
+  Scenario: Create get delete application
     When Application is created
       | applicationName            | description               | website                    | partnerId                            | Id                                   | isInternal |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Application test company 1"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
-    And Body contains entity with attribute "application_id" value "a318fd9a-a05d-42d8-8e84-42e904ace123"
-#  DP-1706
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "application_id" value "abc8fd9a-a05d-42d8-8e84-42e904ace123"
+    And Body contains entity with attribute "is_active" value "true"
+    And Body contains entity with attribute "is_internal" value "false"
+    When Application with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is requested
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Etag header is present
+    And Body contains entity with attribute "application_id"
+    And Body contains entity with attribute "name" value "Application test company 1"
+    And Body contains entity with attribute "description" value "Application description 1"
+    And Body contains entity with attribute "website" value "http://www.snapshot.travel"
+    When Application with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Application with same id does not exist
 
   Scenario Outline: Checking error codes for creating applications
     Given Application is created
@@ -35,16 +42,6 @@ Feature: Applications create update delete
       | /messages/identity/applications/create_application_not_unique_application_name.json | POST   | identity | /identity/applications | 422        | 42201       |
       | /messages/identity/applications/create_application_not_unique_application_id.json   | POST   | identity | /identity/applications | 422        | 42201       |
       | /messages/identity/applications/create_application_wrong_website_value.json         | POST   | identity | /identity/applications | 422        | 42201       |
-
-  @Smoke
-  Scenario: Deleting application
-    Given The following applications exist
-      | applicationName            | description               | website                    | partnerId                            |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Application with same id does not exist
 
   Scenario: Checking error code for deleting application
     When Nonexistent application id is deleted

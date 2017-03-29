@@ -17,29 +17,6 @@ Feature: Property sets create update delete
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 49ae92d9-2d80-47d9-994b-77f5f598336a |
 
-  @Smoke
-  Scenario Outline: Creating property set for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-    When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-      | name   | description   | type   |
-      | <name> | <description> | <type> |
-    Then Response code is "201"
-    And Body contains entity with attribute "name" value "<name>"
-    And Body contains entity with attribute "property_set_type" value "<type>"
-    And Body contains entity with attribute "is_active" value "false"
-    And "Location" header is set and contains the same property set
-    And Etag header is present
-    Examples:
-    | name            | description            | type            |
-    | ps1_name        | ps1_description        | brand           |
-    | ps2_name        | ps2_description        | geolocation     |
-    | ps3_name        | ps3_description        | hotel_type      |
-
-  @Smoke
-  Scenario: Deleting Property set
-    When Property set "ps1_name" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Property set with same id doesn't exist
 
   @Bug
   Scenario: Checking error code for deleting property
