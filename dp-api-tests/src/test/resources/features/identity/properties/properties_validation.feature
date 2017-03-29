@@ -28,18 +28,18 @@ Feature: Properties validation
 
   # --- happy path ---
 
-  @Smoke
-  Scenario: Object creation - correct values
-    When create "property" object with correct field values
-    Then Response code is "201"
-    And location header is set and points to the same object
-    And returned "property" object matches
+#  @Smoke
+#  Scenario: Object creation - correct values
+#    When create "property" object with correct field values
+#    Then Response code is "201"
+#    And location header is set and points to the same object
+#    And returned "property" object matches
 
-  @Smoke
-  Scenario: Object update - correct values
-    When update "property" object with correct field values
-    Then Response code is "204"
-    And returned "property" object matches
+#  @Smoke
+#  Scenario: Object update - correct values
+#    When update "property" object with correct field values
+#    Then Response code is "204"
+#    And returned "property" object matches
 
   Scenario: Object update - correct values one by one
     When update "property" objects each with one correct field value
