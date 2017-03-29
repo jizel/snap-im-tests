@@ -48,7 +48,6 @@ Feature: Eventing tests for Property Sets
 
 #    -------------------< Second level entities >-----------------
 
-#  DP-1913 - tests done for current implementation. Should be changed when (if) DP-1913 is done.
   Scenario: Add and remove property to and from property set
     Given The following properties exist with random address and billing address
       | salesforceId   | name         | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
