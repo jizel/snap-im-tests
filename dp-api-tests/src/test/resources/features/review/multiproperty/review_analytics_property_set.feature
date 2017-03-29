@@ -174,7 +174,14 @@ Feature: Review multiproperty property set
       | popularity_index_rank | /multiproperty/customer/popularity_index_week.json  | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
       | popularity_index_rank | /multiproperty/customer/popularity_index_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 
+  # DP-1940
   @Smoke
+  Scenario: Aspects of business data correctness smoke
+    When Get "aspects_of_business" for statistics aggregated for property set "ps1_name" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "2015-12-03" until "2015-12-03" granularity "day" limit "/null" and cursor "/null"
+    Then Response code is "200"
+    And Content type is "application/json"
+    And Review file "/multiproperty/customer/aspects_of_business_day.json" equals to previous response for aspects of business
+
   Scenario Outline: Checking data corectness for aspects_of_business
     When Get "<metric>" for statistics agregated for property set "<property_set_name>" for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" with since "<since>" until "<until>" granularity "<granularity>" limit "/null" and cursor "/null"
     Then Response code is "200"
@@ -183,7 +190,6 @@ Feature: Review multiproperty property set
 
     Examples:
       | metric              | json_input_file                                        | property_set_name | granularity | since      | until      |
-      | aspects_of_business | /multiproperty/customer/aspects_of_business_day.json   | ps1_name          | day         | 2015-12-03 | 2015-12-03 |
       | aspects_of_business | /multiproperty/customer/aspects_of_business_week.json  | ps1_name          | week        | 2015-11-12 | 2015-12-03 |
       | aspects_of_business | /multiproperty/customer/aspects_of_business_month.json | ps1_name          | month       | 2015-08-26 | 2015-12-03 |
 

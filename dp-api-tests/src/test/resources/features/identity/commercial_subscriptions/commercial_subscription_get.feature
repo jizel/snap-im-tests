@@ -17,18 +17,6 @@ Feature: Commercial subscription get
       | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
 
 
-  @Smoke
-  Scenario: Getting commercial subscription
-    When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is got
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "commercial_subscription_id" value "8e238f8e-2c9c-4e32-9a63-40474a9728eb"
-    And Body contains entity with attribute "application_id" value "11111111-0000-4000-a000-111111111111"
-    And Body contains entity with attribute "customer_id" value "1238fd9a-a05d-42d8-8e84-42e904ace123"
-    And Body contains entity with attribute "property_id" value "742529dd-481f-430d-b6b6-686fbb687cab"
-
-
   Scenario: Checking error code for nonexistent commercial subscription
     When Nonexistent commercial subscription id is got
     Then Response code is "404"

@@ -4,22 +4,6 @@ Feature: Applications get
   Background:
     Given Database is cleaned and default entities are created
 
-
-
-  @Smoke
-  Scenario: Getting applications
-    Given The following applications exist
-      | applicationName            | description               | website                    | partnerId                            |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is got
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "application_id"
-    And Body contains entity with attribute "name" value "Application test company 1"
-    And Body contains entity with attribute "description" value "Application description 1"
-    And Body contains entity with attribute "website" value "http://www.snapshot.travel"
-
   Scenario: Getting application with etag
     Given The following applications exist
       | applicationName            | description               | website                    | partnerId                            |

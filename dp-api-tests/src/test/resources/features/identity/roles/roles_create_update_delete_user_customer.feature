@@ -15,7 +15,7 @@ Feature: Roles create update delete user customer
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
 
   @Smoke
-  Scenario: Creating role
+  Scenario: Creating deleting role
     When Role is created
       | Id                                   | roleName            | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -24,6 +24,10 @@ Feature: Roles create update delete user customer
     And Body contains entity with attribute "description" value "optional description 1"
     And Body contains entity with attribute "is_initial" value "false"
     And Etag header is present
+    When Role with name "Role name 1" is deleted
+    Then Response code is "204"
+    And Body is empty
+    And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
 
   Scenario Outline: Checking error codes for creating role
@@ -38,14 +42,6 @@ Feature: Roles create update delete user customer
       | /messages/identity/roles/create_role_not_recognized_field.json     | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
       | /messages/identity/roles/create_role_not_unique_role_name.json     | POST   | identity | /identity/user_customer_roles | 422        | 42201       |
       | /messages/identity/roles/create_role_not_valid_json.json           | POST   | identity | /identity/user_customer_roles | 400        | 40001       |
-
-
-  @Smoke
-  Scenario: Deleting role
-    When Role with name "Role name 1" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Role with same id doesn't exist for application id "a318fd9a-a05d-42d8-8e84-42e904ace123"
 
 
   Scenario: Checking error code for deleting role

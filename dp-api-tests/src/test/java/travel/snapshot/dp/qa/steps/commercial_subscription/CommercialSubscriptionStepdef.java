@@ -45,7 +45,7 @@ public class CommercialSubscriptionStepdef {
         commSubscriptionSteps.deleteCommSubscriptionWithId("NonExistentId");
     }
 
-    @When("^Commercial subscription with id \"([^\"]*)\" is got$")
+    @When("^Commercial subscription with id \"([^\"]*)\" is (?:got|requested)$")
     public void Commercial_subscription_with_id_is_got(String commSubscriptionId) {
         commSubscriptionSteps.commSubscriptionWithIdIsGot(commSubscriptionId);
     }

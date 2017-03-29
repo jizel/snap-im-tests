@@ -349,7 +349,7 @@ public class PropertySetSteps extends BasicSteps {
         PropertySetDto originalProperty = Serenity.sessionVariableCalled(SERENITY_SESSION__CREATED_PROPERTY_SET);
         Response response = Serenity.sessionVariableCalled(SESSION_RESPONSE);
         String propertyLocation = response.header(headerName).replaceFirst(BASE_PATH__PROPERTY_SETS, "");
-        given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).get(propertyLocation).then()
+        given().spec(spec).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).get(propertyLocation).then()
                 .body("property_set_type", is(lowerCase(originalProperty.getType().toString())))
                 .body("description", is(originalProperty.getDescription()))
                 .body("name", is(originalProperty.getName()))

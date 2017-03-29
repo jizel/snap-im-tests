@@ -10,18 +10,6 @@ Feature: User groups get
       | Id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
-  @Smoke
-  Scenario: Getting user group
-    When User group "userGroup_1" is requested
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "user_group_id" value "a8b40d08-de38-4246-bb69-ad39c31c025c"
-    And Body contains entity with attribute "name" value "userGroup_1"
-    And Body contains entity with attribute "customer_id" value "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
-    And Body contains entity with attribute "is_active" value "false"
-    And Body contains entity with attribute "description" value "userGroupDescription"
-
 
   Scenario: Getting nonExistent user group
     When User group with non existent UserGroupId is got

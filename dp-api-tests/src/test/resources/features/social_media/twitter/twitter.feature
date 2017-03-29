@@ -26,7 +26,7 @@ Feature: Twitter metrics
       | /analytics/twitter/mention_reach    | WEEKs1      | 99000099-9999-4999-a999-999999999999 |
 
   @Smoke
-  Scenario Outline: Validate that metrics have valid value in the db
+  Scenario Outline: Validate that metrics have valid value in the db - smoke
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
     And Content type is "application/json"
@@ -36,6 +36,16 @@ Feature: Twitter metrics
     Examples:
       | url                                 | granularity | count | since      | until      | property                             |
       | /analytics/twitter/number_of_tweets | day         | 7697  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
+
+  Scenario Outline: Validate that metrics have valid value in the db
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And The metric count is <count>
+    And Body contains entity with attribute "granularity" value "<granularity>"
+
+    Examples:
+      | url                                 | granularity | count | since      | until      | property                             |
       | /analytics/twitter/engagement       | day         | 7745  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/followers        | day         | 7462  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter/impressions      | day         | 7506  | 2015-12-03 | 2015-12-03 | 99000099-9999-4999-a999-999999999999 |
@@ -66,7 +76,7 @@ Feature: Twitter metrics
       | /analytics/twitter/mention_reach    | month       | 7672  | 2015-11-01 | 2015-12-08 | 99000099-9999-4999-a999-999999999999 |
 
   @Smoke
-  Scenario Outline: Validate that metrics have valid value in the db for all metrics
+  Scenario Outline: Validate that metrics have valid value in the db for all metrics - smoke
     When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
     And Content type is "application/json"
@@ -75,6 +85,15 @@ Feature: Twitter metrics
     Examples:
       | url                | granularity | count                                                         | since      | until      | property                             |
       | /analytics/twitter | day         | 10748, 10477, 10212, 10265, 9993, 10279, 10114, 10315, 10437  | 2016-04-07 | 2016-04-07 | 99000099-9999-4999-a999-999999999999 |
+
+  Scenario Outline: Validate that metrics have valid value in the db for all metrics
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Response contains "<count>" values of global stats dto
+
+    Examples:
+      | url                | granularity | count                                                         | since      | until      | property                             |
       | /analytics/twitter | week        | 10797, 10531, 10293, 10338, 10051, 10304, 10153, 10397, 10519 | 2016-04-04 | 2016-04-10 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/twitter | month       | 11242, 11013, 10748, 10826, 10510, 10773, 10530, 10867, 10885 | 2016-04-01 | 2016-04-30 | 99000099-9999-4999-a999-999999999999 |
 
