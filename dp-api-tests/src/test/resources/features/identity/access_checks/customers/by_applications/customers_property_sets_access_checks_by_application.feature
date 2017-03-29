@@ -8,7 +8,7 @@ Feature: Customers-Property Sets Application access check feature - GET
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | Id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | CustomerWithSubscription    | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 00000000-0000-4000-8000-123000000abc | CustomerWithoutSubscription | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
@@ -17,26 +17,26 @@ Feature: Customers-Property Sets Application access check feature - GET
       | customer | user2    | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | user3    | Customer  | User3    | cus3@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following partner exist
-      | Id                                   | name                   | email                   | website                    |
+      | id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName          | Id                                   | partnerId                            | isInternal | website                    |
+      | applicationName          | id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-      | Id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
+      | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | Id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
-      | Id                                   | customerId                           | propertyId                           | applicationId                        |
+      | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
     Given The following api subscriptions exist
-      | Id                                   | applicationVersionId                 | commercialSubscriptionId             |
+      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1"
-      | Id                                   | name            | type            |
+      | id                                   | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | prop_set1       | brand           |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd1 | prop_set2       | brand           |
     Given Relation between user "user1" and default property exists

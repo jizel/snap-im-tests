@@ -35,7 +35,7 @@ Feature: Users customer roles CRUD
   Scenario: Assigning role to user property set
     Given Switch for user property set role tests
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
-      | Id                                   | name            | description            | type            |
+      | id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following roles exist
       | roleId                               | roleName    | description            | applicationId                                   |

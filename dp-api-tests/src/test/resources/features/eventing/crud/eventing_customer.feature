@@ -4,14 +4,14 @@ Feature: Eventing tests for Customer related operations
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | Id                                   | companyName         | email             | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName         | email             | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | 00000000-3836-4207-a705-000000000000 | Eventing Background | evbck@tenants.biz | CZ000123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
 
   Scenario: Eventing customer created
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Customer is created with random address
-      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | SALESFORCEID001 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session

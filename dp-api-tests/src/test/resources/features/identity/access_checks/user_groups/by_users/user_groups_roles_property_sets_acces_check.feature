@@ -11,30 +11,30 @@ Feature: User Groups Property Sets Roles access check feature
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given The following user groups exist
-      | Id                                   | customerId                           | name        | isActive | description          |
+      | id                                   | customerId                           | name        | isActive | description          |
       | 12345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | Id                                   | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
+      | id                                   | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
       | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithUserGroup   | Customer  | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists
     Given The following partner exist
-      | Id                                   | name         | email                   | website                    |
+      | id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName                       | website                    | Id                                   | partnerId                            | isInternal |
+      | applicationName                       | website                    | id                                   | partnerId                            | isInternal |
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given Switch for user property set role tests
     Given The following roles exist
-      | roleId                               | Id                                   | roleName |
+      | id                                   | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
 
 
@@ -58,7 +58,7 @@ Feature: User Groups Property Sets Roles access check feature
 
   Scenario: Relationship between UserGroup Property Set and Role is created by user without access
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | eee352e6-44ff-45bb-bd51-28f62ca8f33c | NoPropSet_UserGroup   | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithNoUserGroup"
     Then Response code is "404"

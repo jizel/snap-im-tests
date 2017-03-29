@@ -4,7 +4,7 @@ Feature: Eventing tests for Partner
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following partner exist
-      | name                    | email          | website                    | vatId      | notes        | Id                                   |
+      | name                    | email          | website                    | vatId      | notes        | id                                   |
       | Partner background name | p0@tenants.biz | http://www.snapshot.travel | CZ00000001 | Test notes 0 | abc00000-a05d-42d8-8e84-000000000000 |
 
   Scenario: Eventing partner created

@@ -5,7 +5,7 @@ Feature: Customers multiproperty
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
 
      #everything - all properties available
@@ -13,7 +13,7 @@ Feature: Customers multiproperty
      #snapshot - user that has everything accessible
      #random - no access to properties
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
-      | Id                                   | userType | userName   | firstName | lastName | email                  | timezone      | culture |
+      | id                                   | userType | userName   | firstName | lastName | email                  | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | customer | everything | Default1  | User1    | def1@snapshot.travel   | Europe/Prague | cs-CZ   |
       | ce5d9f8a-9623-4154-aba4-109e64cdc149 | customer | limited    | Default2  | User2    | def2@snapshot.travel   | Europe/Prague | cs-CZ   |
       | 3d262796-1ba1-442c-92fb-a95f6a598ffc | snapshot | snapshot   | snapshot  | root     | def3@snapshot.travel   | Europe/Prague | cs-CZ   |

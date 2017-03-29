@@ -5,7 +5,7 @@ Feature: Customers commercial subscriptions
 
 
     Given The following customers exist with random address
-      | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | Id                                   |
+      | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | id                                   |
       | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
       | propertyId                          | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -15,7 +15,7 @@ Feature: Customers commercial subscriptions
   Scenario: Getting customers commercial subscriptions
 
     Given The following commercial subscriptions exist
-      | applicationId                        | customerId                           | Id                                   | propertyId                           |
+      | applicationId                        | customerId                           | id                                   | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | c37c3501-d309-4702-ad0b-fd53a98c01fd |
     When Customers commercial subscriptions for customer id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got
     Then Response code is "200"
@@ -25,7 +25,7 @@ Feature: Customers commercial subscriptions
   Scenario Outline: Getting list of customers commercial subscriptions
 
     Given The following commercial subscriptions exist
-      | applicationId                        | Id                                   | propertyId                           |
+      | applicationId                        | id                                   | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |

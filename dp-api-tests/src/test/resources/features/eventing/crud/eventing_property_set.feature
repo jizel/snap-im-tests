@@ -4,10 +4,10 @@ Feature: Eventing tests for Property Sets
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | SALESFORCEID001 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
-      | Id                                   | userType | userName  | firstName | lastName | email                        | timezone      | culture |
+      | id                                   | userType | userName  | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | eventUser | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881"
       | name                     | description            | type            |

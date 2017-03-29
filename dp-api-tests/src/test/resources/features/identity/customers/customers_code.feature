@@ -38,7 +38,7 @@ Feature: Customer code feature
 
   Scenario: Customer code cannot be updated manually
     Given Customer is created with random address
-      | Id                                   | companyName     | email              | isDemoCustomer | timezone      |
+      | id                                   | companyName     | email              | isDemoCustomer | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Company 1       | c1@snaphsot.travel | true           | Europe/Prague |
     When Customer code of customer with Id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with "updatedCustomerCode"
     Then Response code is "422"

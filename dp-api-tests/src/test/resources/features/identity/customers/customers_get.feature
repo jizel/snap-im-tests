@@ -4,10 +4,10 @@ Feature: Customers get
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 87ae86b7-f5b5-4288-a59e-6bbf9fca4096 | Given company 1 | c1@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" as primary "true"
-      | Id                                   | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
+      | id                                   | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
