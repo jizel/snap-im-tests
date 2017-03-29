@@ -8,12 +8,12 @@ Feature: Customers create update delete
   @Smoke
   Scenario: Creating/deleting  Customer
     When Customer is created with random address
-      | id                                   | companyName           | email          | salesforceId           | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
+      | id                                   | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Creation test company"
     And Body contains entity with attribute "email" value "s1@tenants.biz"
-    And Body contains entity with attribute "salesforce_id" value "salesforceid_created_1"
+    And Body contains entity with attribute "salesforce_id" value "SALESFORCEID001"
     And Body contains entity with attribute "phone" value "+420123456789"
     And Body contains entity with attribute "customer_code"
     And Body contains entity with attribute "is_active" value "true"

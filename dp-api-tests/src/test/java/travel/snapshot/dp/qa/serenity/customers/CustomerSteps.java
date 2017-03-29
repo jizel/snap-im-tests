@@ -31,6 +31,7 @@ import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
+import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
@@ -71,12 +72,20 @@ public class CustomerSteps extends BasicSteps {
             if (customer.getType() == null) {
                 customer.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));
             }
-            customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
-            Response createResponse = createEntity(customer);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Customer cannot be created " + createResponse.getBody().asString());
+            if(customer.getSalesforceId() == null){
+                customer.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
             }
-            setSessionResponse(createResponse);
+            customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
+            try {
+            JSONObject jsonCustomer = retrieveData(customer);
+                Response createResponse = createEntity(jsonCustomer.toString());
+                if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+                    fail("Customer cannot be created " + createResponse.getBody().asString());
+                }
+                setSessionResponse(createResponse);
+            }catch(JsonProcessingException e){
+                fail("Exception while converting to JSON: " + e.toString());
+            }
         });
         Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
     }
@@ -103,8 +112,13 @@ public class CustomerSteps extends BasicSteps {
     public void followingCustomerIsCreatedWithRandomAddress(CustomerCreateDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        Response response = createEntity(customer);
-        setSessionResponse(response);
+        try {
+            JSONObject jsonCustomer = retrieveData(customer);
+            Response response = createEntity(jsonCustomer.toString());
+            setSessionResponse(response);
+        }catch (JsonProcessingException e){
+            fail("Exception while creating JSONObject from CustomerCreateDto: " + e.toString());
+        }
     }
 
     @Step

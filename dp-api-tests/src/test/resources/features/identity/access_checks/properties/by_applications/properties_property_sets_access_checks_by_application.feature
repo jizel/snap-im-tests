@@ -20,7 +20,7 @@ Feature: Properties-Property Sets Application access check feature
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-    | Id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
+      | Id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
       | Id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |

@@ -17,6 +17,7 @@ import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
@@ -31,9 +32,11 @@ import net.thucydides.core.annotations.Step;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.api.validation.UUIDValidator;
 import travel.snapshot.dp.qa.helpers.NullStringObjectValueConverter;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.SalesforceIdStdSerializer;
 import travel.snapshot.dp.qa.helpers.StringUtil;
 
 import java.beans.IntrospectionException;
@@ -75,7 +78,7 @@ public class BasicSteps {
     public static final String DEFAULT_COMMERCIAL_SUBSCRIPTION_ID = "11111111-0000-4000-a000-888888888888";
     public static final String DEFAULT_API_SUBSCRIPTION_ID = "11111111-0000-4000-a000-999999999999";
     public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
-    public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "default_sf_id";
+    public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "DEFAULTSFID0001";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     protected static final String SESSION_RESPONSE = "response";
@@ -815,6 +818,10 @@ public class BasicSteps {
 
     protected JSONObject retrieveData(Object value) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(SalesforceId.class, new SalesforceIdStdSerializer());
+        mapper.registerModule(module);
+
         String customerData = mapper.writeValueAsString(value);
         return NullStringObjectValueConverter.transform(customerData);
     }

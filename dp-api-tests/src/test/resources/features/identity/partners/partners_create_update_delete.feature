@@ -6,15 +6,19 @@ Feature: Partners create update delete
 
   Scenario: Create partner
     When The following partner is created
-      | name           | email          | website                    | vatId      | notes        |
-      | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
+      | name           | email              | website                    | vatId      | notes        |
+      | Company name 1 | p1@snapshot.travel | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Company name 1"
-    And Body contains entity with attribute "email" value "p1@tenants.biz"
+    And Body contains entity with attribute "email" value "p1@snapshot.travel"
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
     And Body contains entity with attribute "vat_id" value "CZ10000001"
     And Body contains entity with attribute "notes" value "Test notes 1"
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "is_active" value "true"
+    When The following partner is created
+      | name            | email              |
+      | Minimal Partner | p2@snapshot.travel |
+    Then Response code is "201"
 
   Scenario Outline: Checking error codes for creating partners
     Given The following partner exist

@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.identity.roles;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps.getRoleBaseType;
 
 import cucumber.api.DataTable;
 import cucumber.api.Transform;
@@ -50,7 +51,7 @@ public class RolesStepdefs {
     @When("^Role is created$")
     public void Role_is_created(DataTable rolesTable) throws Throwable {
         Map<String, Object> roleAttributes = rolesTable.asMaps(String.class, Object.class).get(0);
-        RoleDto roleDto = roleBaseSteps.getRoleBaseType().getDtoClassType().newInstance();
+        RoleDto roleDto = getRoleBaseType().getDtoClassType().newInstance();
         roleBaseSteps.setRoleAttributes(roleDto, roleAttributes);
         roleBaseSteps.createRole(roleDto);
     }
