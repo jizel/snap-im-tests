@@ -92,11 +92,11 @@ public class DbUtilsSteps {
 
     public void createDBCustomer(CustomerCreateDto customer) {
         dbHelper.identityDb().update(CREATE_DB_ADDRESS, DEFAULT_ADDRESS_ID, "address line 1", "address line 2", "city", "12345", "CZ");
-        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, customer.getId(), customer.getIsActive(), customer.getSalesforceId(), customer.getCompanyName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemoCustomer(), customer.getNotes(), DEFAULT_ADDRESS_ID, customer.getTimezone());
+        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, customer.getId(), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getCompanyName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemoCustomer(), customer.getNotes(), DEFAULT_ADDRESS_ID, customer.getTimezone());
     }
 
     public void createDBProperty(PropertyDto property) {
-        dbHelper.identityDb().update(CREATE_DB_PROPERTY, property.getId(), property.getIsActive(), property.getSalesforceId(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemoProperty(), DEFAULT_ADDRESS_ID, property.getTimezone(), property.getPropertyCode(), property.getDescription(), property.getAnchorCustomerId());
+        dbHelper.identityDb().update(CREATE_DB_PROPERTY, property.getId(), property.getIsActive(), property.getSalesforceId().toString(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemoProperty(), DEFAULT_ADDRESS_ID, property.getTimezone(), property.getPropertyCode(), property.getDescription(), property.getAnchorCustomerId());
     }
 
     public void createDbCommercialSubscription(CommercialSubscriptionDto commercialSubscription) {

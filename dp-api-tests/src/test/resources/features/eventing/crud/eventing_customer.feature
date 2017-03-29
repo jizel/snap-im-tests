@@ -4,15 +4,15 @@ Feature: Eventing tests for Customer related operations
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | Id                                   | companyName         | email             | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
-      | 00000000-3836-4207-a705-000000000000 | Eventing Background | evbck@tenants.biz | salesforceid_event_0 | CZ000123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Id                                   | companyName         | email             | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | 00000000-3836-4207-a705-000000000000 | Eventing Background | evbck@tenants.biz | CZ000123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
 
 
   Scenario: Eventing customer created
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Customer is created with random address
       | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | SALESFORCEID001 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Customer"
@@ -49,8 +49,8 @@ Feature: Eventing tests for Customer related operations
 
   Scenario: Adding property to customer
     Given The following properties exist with random address and billing address
-      | salesforceId    | name                              | propertyCode                 | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_n1 | Eventing property add to customer | cust_prop_add_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 00000000-3836-4207-a705-000000000000 |
+      | name                              | propertyCode                 | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Eventing property add to customer | cust_prop_add_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 00000000-3836-4207-a705-000000000000 |
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Relation between property with code "cust_prop_add_property_event" and customer with id "00000000-3836-4207-a705-000000000000" exists
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -59,8 +59,8 @@ Feature: Eventing tests for Customer related operations
 
   Scenario: Updating property for customer
     Given The following properties exist with random address and billing address
-      | salesforceId    | name                              | propertyCode                    | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_n1 | Eventing customer property update | cust_prop_update_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 00000000-3836-4207-a705-000000000000 |
+      | name                              | propertyCode                    | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | Eventing customer property update | cust_prop_update_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 00000000-3836-4207-a705-000000000000 |
     Given Relation between property with code "cust_prop_update_property_event" and customer with id "00000000-3836-4207-a705-000000000000" exists
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Property with code "cust_prop_update_property_event" for customer with id "00000000-3836-4207-a705-000000000000" is updating field "valid_from" to value "2015-01-01"

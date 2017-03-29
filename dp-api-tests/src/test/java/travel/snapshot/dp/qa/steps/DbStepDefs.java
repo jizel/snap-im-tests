@@ -26,6 +26,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -131,7 +132,7 @@ public class DbStepDefs {
         customer.setIsDemoCustomer(true);
         customer.setEmail("defaultCustomer@snapshot.travel");
         customer.setNotes("Default customer created directly in DB to set in default commercial subscription");
-        customer.setSalesforceId(DEFAULT_SNAPSHOT_SALESFORCE_ID);
+        customer.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
         customer.setPhone("123456789");
         customer.setVatId("DEF0000001");
         customer.setWebsite("www.defaultCustomerForTests.com");
@@ -149,7 +150,7 @@ public class DbStepDefs {
         property.setWebsite("www.defaultPropertyForTests.com");
         property.setAnchorCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         property.setDescription("Default property for default commercial subscription");
-        property.setSalesforceId(DEFAULT_SNAPSHOT_SALESFORCE_ID);
+        property.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
         property.setIsDemoProperty(true);
         property.setName("Default Property Name");
         dbSteps.createDBProperty(property);

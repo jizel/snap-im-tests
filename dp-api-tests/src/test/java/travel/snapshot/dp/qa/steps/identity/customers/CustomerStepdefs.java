@@ -4,11 +4,13 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static travel.snapshot.dp.qa.helpers.CustomerUtils.createCustomerDto;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.DataTable;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -125,8 +127,11 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer is created with random address$")
-    public void customer_is_created(List<CustomerCreateDto> customers) throws Throwable {
-        customerSteps.followingCustomerIsCreatedWithRandomAddress(customers.get(0));
+    public void customer_is_created(DataTable customersTable) throws Throwable {
+//        Cucumber Transformer cannot parse SalesforceId. Using dataTable and parsing values instead.
+        Map<String, Object> customerMap = customersTable.asMaps(String.class, Object.class).get(0);
+        CustomerCreateDto customer = createCustomerDto(customerMap);
+        customerSteps.followingCustomerIsCreatedWithRandomAddress(customer);
     }
 
     @When("^File \"([^\"]*)\" is used for \"([^\"]*)\"$")

@@ -4,18 +4,18 @@ Feature: Eventing tests for Property
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | Id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | salesforceid_event_1 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | Id                                   | companyName       | email           | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     And The following properties exist with random address and billing address
-      | salesforceId   | name         | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_0 | p0_name      | event_property | http://www.snapshot.travel | p0@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | name         | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | p0_name      | event_property | http://www.snapshot.travel | p0@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
 
 
   Scenario: Eventing property created
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     And The following property is created with random address and billing address
-      | salesforceId   | name         | propertyCode        | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_1 | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+      | name         | propertyCode        | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
     And Notification in session operation is "Create"

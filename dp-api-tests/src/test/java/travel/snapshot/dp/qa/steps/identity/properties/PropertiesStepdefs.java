@@ -139,7 +139,6 @@ public class PropertiesStepdefs {
     public void theFollowingPropertyIsCreatedWithRandomAddressAndBillingAddressForUser(String userName, List<PropertyDto> properties) throws Throwable {
         String userId = usersSteps.resolveUserId(userName);
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
-        assertThat("Failed to create the property: " + propertySteps.getSessionResponse().toString(), propertySteps.getSessionResponse().statusCode() == HttpStatus.SC_CREATED);
     }
 
     @When("^The user \"([^\"]*)\" creates the following property$")
