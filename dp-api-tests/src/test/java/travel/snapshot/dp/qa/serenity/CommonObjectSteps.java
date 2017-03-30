@@ -56,6 +56,8 @@ public class CommonObjectSteps extends BasicSteps {
         String jsonString = getJsonString(jsonObject);
         Response response = restCreateObject(getObjectLocation(objectName), jsonString);
 
+        jsonObject.remove(PROPERTY_CODE);
+
         // store original and returned objects for comparison
         setSessionVariable(SERENITY__PREFIX_OBJECT_SENT + objectName, jsonObject);
         setSessionVariable(SERENITY__PREFIX_OBJECT_RECEIVED + objectName, getJsonNode(response));
@@ -225,7 +227,7 @@ public class CommonObjectSteps extends BasicSteps {
 
         // customer_code is always generated
         ((ObjectNode) returnedObject).remove("customer_code");
-
+        ((ObjectNode) returnedObject).remove("property_code");
         assert(originalObject.equals(returnedObject));
     }
 
@@ -252,7 +254,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restGetObject(String objectLocation, String id) {
-        return given().spec(spec).basePath(objectLocation + "/" + id).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+        return given().spec(spec).basePath(objectLocation + "/" + id).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .when().get();
     }
 

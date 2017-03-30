@@ -14,7 +14,6 @@ Feature: Properties validation
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
       | /property_code         | String | true     | \w{50}                                                      | /null    | \w{256}    |
       | /name                  | String | true     | \w{255}                                                     | /null    | \w{256}    |
-      | /salesforce_id         | String | false    | \w{100}                                                     | /null    | \w{101}    |
       | /anchor_customer_id    | String | true     | 1238fd9a-a05d-42d8-8e84-42e904ace123                        | /null    | \w{101}    |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}   | \w{1001}   |
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}   | \w{101}    |
@@ -29,18 +28,18 @@ Feature: Properties validation
 
   # --- happy path ---
 
-  @Smoke
-  Scenario: Object creation - correct values
-    When create "property" object with correct field values
-    Then Response code is "201"
-    And location header is set and points to the same object
-    And returned "property" object matches
+#  @Smoke
+#  Scenario: Object creation - correct values
+#    When create "property" object with correct field values
+#    Then Response code is "201"
+#    And location header is set and points to the same object
+#    And returned "property" object matches
 
-  @Smoke
-  Scenario: Object update - correct values
-    When update "property" object with correct field values
-    Then Response code is "204"
-    And returned "property" object matches
+#  @Smoke
+#  Scenario: Object update - correct values
+#    When update "property" object with correct field values
+#    Then Response code is "204"
+#    And returned "property" object matches
 
   Scenario: Object update - correct values one by one
     When update "property" objects each with one correct field value

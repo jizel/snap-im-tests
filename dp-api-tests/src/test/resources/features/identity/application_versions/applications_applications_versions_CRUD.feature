@@ -8,8 +8,8 @@ Feature: Applications versions create update delete
   @Smoke
   Scenario: Create/delete applications versions
     When Application version is created for application with id "11111111-0000-4000-a000-111111111111"
-      | id                                   | apiManagerId | versionName | status   | description            | releaseDate|
-      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 | 2017-03-06 |
+      | id                                   | apiManagerId | versionName | status   | description            |
+      | a318fd9a-a05d-42d8-8e84-22e904ace111 | 123          | Version 1   | inactive | Versions description 1 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Version 1"
     And Body contains entity with attribute "status" value "inactive"
