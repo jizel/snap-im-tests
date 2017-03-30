@@ -42,7 +42,7 @@
     And Total count is "0"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
     When User "user1OfC1" requests roles of user "user1OfC1" for customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "404"
+    Then Response code is "403"
 
   Scenario: User can assign and revoke roles to customer-users only when he has access to the customer
     Given Switch for user customer role tests
@@ -51,7 +51,7 @@
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
       Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
       When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "404"
+    Then Response code is "403"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is activated
     When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
     Then Response code is "201"
@@ -61,7 +61,7 @@
     Then Response code is "404"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
     When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
-    Then Response code is "404"
+    Then Response code is "403"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is activated
     When User "user1OfC1" deletes role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
     Then Response code is "204"

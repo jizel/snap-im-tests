@@ -65,11 +65,6 @@ Feature: User Groups Users access check feature
       And Body is empty
       And Relation between user group "userGroup_1" and user "userWithUserGroup" is not active
 
-    Scenario: Updating User Group-User relationship by user who cannot access the user group
-      When Is Active for relation between user group "userGroup_1" and user "userWithNoUserGroup" is set to "false" by user "userWithNoUserGroup"
-      Then Response code is 412
-      And Custom code is 41202
-
     Scenario: Deleting User User Group relationship by user who can access it
       When Relation between user group "userGroup_1" and user "userWithUserGroup" is requested by user "userWithUserGroup"
       Then Response code is "200"

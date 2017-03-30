@@ -9,14 +9,12 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
-import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
@@ -26,8 +24,8 @@ import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.helpers.Resolvers;
-import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.helpers.RoleType;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
@@ -529,16 +527,6 @@ public class UserStepdefs {
         String propertyId = propertySteps.resolvePropertyId(propertyName);
         String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
         propertySteps.deletePropertyUserRelationshipByUserForApp(requestorId, appVersionId, propertyId, targetUserId);
-    }
-
-    @Given("^Relation between user \"([^\"]*)\" and group \"([^\"]*)\" is (in|de)?activated$")
-    public void relationBetweenUserAndGroupIsActivated(String userName, String userGroupName, String negation) throws Throwable {
-        String userId = usersSteps.resolveUserId(userName);
-        String groupId = userGroupSteps.resolveUserGroupId(userGroupName);
-        Boolean isActive = (negation == null);
-        usersSteps.setUserUserGroupActivity(groupId, userId, isActive);
-        Response response = userGroupSteps.getSessionResponse();
-        assertThat(String.format("Failed to change the is_active flag: %s", response.asString()), response.statusCode() == HttpStatus.SC_NO_CONTENT);
     }
 
 }

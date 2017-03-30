@@ -16,7 +16,6 @@ import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -474,18 +473,5 @@ public class UsersSteps extends BasicSteps {
     public UserCustomerRelationshipDto getCustomerForUser(String userId, String customerId) {
         Response userCustomerResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
         return stream(userCustomerResponse.as(UserCustomerRelationshipDto[].class)).findFirst().orElse(null);
-    }
-
-    public void setUserUserGroupActivity(String groupId, String userId, Boolean isActive) throws JsonProcessingException {
-        setUserGroupUserActivityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, groupId, userId, isActive);
-    }
-
-    private void setUserGroupUserActivityByUserForApp(String performerId, String appVersionId, String groupId, String userId, Boolean isActive) throws JsonProcessingException {
-        String etag = getSecondLevelEntityEtag(userId, SECOND_LEVEL_OBJECT_GROUPS, groupId);
-        UserGroupUserRelationshipUpdateDto relation = new UserGroupUserRelationshipUpdateDto();
-        relation.setIsActive(isActive);
-        JSONObject jsonRelation = retrieveData(relation);
-        Response resp = updateSecondLevelEntityByUserForApp(performerId, appVersionId, groupId, SECOND_LEVEL_OBJECT_USERS, userId, jsonRelation, etag);
-        setSessionResponse(resp);
     }
 }
