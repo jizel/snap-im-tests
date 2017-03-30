@@ -20,7 +20,7 @@ Feature: Properties Application access check feature
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-    | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
+      | Id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
       | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
@@ -43,17 +43,17 @@ Feature: Properties Application access check feature
       When Property with code "p1_code" is requested by user "user1" for application version "versionWithSubscription"
       Then Response code is "200"
       When Property with code "p1_code" is requested by user "user1" for application version "versionWithoutSubscription"
-      Then Response code is "404"
+      Then Response code is "403"
       When Property with code "p2_code" is requested by user "user1" for application version "versionWithSubscription"
       Then Response code is "404"
 
   Scenario Outline: Filtering properties with application access checks
     Given The following properties exist with random address and billing address
-      | salesforceId   | name     | propertyCode | email              | website                    | isDemoProperty | timezone      | anchorCustomerId                     | ttiId |
-      | salesforceid_3 | p3_name  | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 4231  |
-      | salesforceid_4 | p4_name  | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 5678  |
-      | salesforceid_5 | p5_name  | p5_cedo      | p5@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 8765  |
-      | salesforceid_6 | p6_name  | p6_cedo      | p6@snapshot.travel | http://snapshot.travel     | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 1234  |
+      | name     | propertyCode | email              | website                    | isDemoProperty | timezone      | anchorCustomerId                     | ttiId |
+      | p3_name  | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 4231  |
+      | p4_name  | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 5678  |
+      | p5_name  | p5_cedo      | p5@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 8765  |
+      | p6_name  | p6_cedo      | p6@snapshot.travel | http://snapshot.travel     | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 1234  |
     Given Relation between user "user1" and property with code "p3_code" exists
     Given Relation between user "user1" and property with code "p4_code" exists
     Given Relation between user "user1" and property with code "p5_cedo" exists
@@ -65,8 +65,8 @@ Feature: Properties Application access check feature
     Then Response code is "200"
     And There are <returned> properties returned
     When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "200"
-    And There are 0 properties returned
+    Then Response code is "403"
+    And Custom code is 40301
     Examples:
       | limit | cursor | filter                                                     | sort           | sort_desc           | returned    |
       | /null | 0      | name=='*'                                                  | /null          | website             | 6           |
@@ -76,7 +76,6 @@ Feature: Properties Application access check feature
       | /null | 0      | property_code=='*_code'                                    | property_code  | /null               | 4           |
       | /null | 0      | property_code=='p3_code'                                   | /null          | /null               | 1           |
       | /null | 0      | is_active=='true'                                          | /null          | salesforce_id       | 6           |
-      | /null | 0      | salesforce_id=='salesforceid_2'                            | /null          | /null               | 1           |
       | 5     | 0      | anchor_customer_id=='*23*'                                 | /null          | anchor_customer_id  | 5           |
       | /null | 0      | email=='*p3*@snapshot.travel'                              | property_id    | /null               | 1           |
 
@@ -84,7 +83,7 @@ Feature: Properties Application access check feature
     When Property with code "p1_code" is updated with data by user "user1" for application version "versionWithoutSubscription"
       | salesforceId   | name         | website                  | email            | isDemoProperty |
       | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
-    Then Response code is "404"
+    Then Response code is "403"
     When Property with code "p2_code" is updated with data by user "user1" for application version "versionWithSubscription"
       | salesforceId   | name         | website                  | email            | isDemoProperty |
       | updated_sf_id  | updated_name | https://www.upddated.com | updated@email.cz | false          |
@@ -96,7 +95,7 @@ Feature: Properties Application access check feature
 
   Scenario: Deleting Property by application with and without access
     When Property with code "p1_code" is deleted by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
     When Property with code "p2_code" is deleted by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
     When Property with code "p1_code" is deleted by user "user1" for application version "versionWithSubscription"
@@ -124,8 +123,8 @@ Feature: Properties Application access check feature
 
   Scenario Outline: Application without subscription to property sends GET request to all general second level endpoints
     When GET request is sent to "<url>" on module "identity" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is "40402"
+    Then Response code is "403"
+    And Custom code is "40301"
     Examples:
       | url                                                                               |
 #      | identity/properties/33300000-0000-4000-a000-000000000111/api_subscriptions        |

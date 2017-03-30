@@ -47,8 +47,8 @@ Feature: Properties-Property Sets Application access check feature
     When Property set with name "prop_set1" for property with code "p1_code" is requested by user "user1" for application version "versionWithSubscription"
     Then Response code is "200"
     When Property set with name "prop_set1" for property with code "p1_code" is requested by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Property set with name "prop_set1" for property with code "p2_code" is requested by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
     And Custom code is 40402
@@ -56,15 +56,16 @@ Feature: Properties-Property Sets Application access check feature
     Then Response code is "200"
     And Total count is "1"
     When List of all property sets is got for property with code "p1_code" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
+
 
   Scenario: Update property - propertySet relationship by application with and without access
     When  Relation between property with code "p1_code" and property set "prop_set1" is updated by user "user1" for application version "versionWithoutSubscription" with
       | isActive |
       | true     |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When  Relation between property with code "p1_code" and property set "prop_set1" is updated by user "user1" for application version "versionWithSubscription" with
       | isActive |
       | true     |
@@ -72,8 +73,8 @@ Feature: Properties-Property Sets Application access check feature
 
   Scenario: Delete property - PropertySet relationship by application with and without access
     When Relation between property with code "p1_code" and property set "prop_set1" is deleted by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between property with code "p2_code" and property set "prop_set1" is deleted by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
     And Custom code is 40402

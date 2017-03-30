@@ -44,22 +44,22 @@ Feature: Properties-Customers Application access check feature
       Then Response code is "200"
       And Total count is "1"
       When List of all customers for property with code "p1_code" is got by user "user1" for application version "versionWithoutSubscription"
-      Then Response code is "404"
+      Then Response code is "403"
       When List of all customers for property with code "p2_code" is got by user "user1" for application version "versionWithSubscription"
       Then Response code is "404"
       And Custom code is 40402
       When Relation between property "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithSubscription"
       Then Response code is "200"
       When Relation between property "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithoutSubscription"
-      Then Response code is "404"
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
 
   Scenario: Update Property-Customer relationship by application with and without access
     When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is updated by user "user1" for application version "versionWithoutSubscription" with
       | type  |
       | owner |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is updated by user "user1" for application version "versionWithSubscription" with
       | type  |
       | owner |
@@ -67,6 +67,6 @@ Feature: Properties-Customers Application access check feature
 
   Scenario: Delete Property-Customer relationship by application with and without access
     When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
     When Property customer relationship for property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "user1" for application version "versionWithSubscription"
     Then Response code is "204"
