@@ -22,7 +22,6 @@ Feature: Properties get
     And Etag header is present
     And Body contains property with attribute "property_id"
     And Body contains property with attribute "address"
-    And Body contains property with attribute "salesforce_id" value "salesforceid_1"
     And Body contains property with attribute "name" value "p1_name"
     And Body contains property with attribute "property_code" value "p1_code"
     And Body contains property with attribute "website" value "http://www.snapshot.travel"

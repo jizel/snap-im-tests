@@ -10,7 +10,7 @@ Feature: Customers validation
       | path                   | type   | required | correct                                                     | invalid   | longer      |
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
       | /name                  | String | true     | \w{255}                                                     | /null     | \w{256}     |
-      | /salesforce_id         | String | false    | \w{100}                                                     | /null     | \w{101}     |
+      | /salesforce_id         | String | false    | DEFAULTSFID0001                                             | /null     | \w{101}     |
       | /vat_id                | String | true     | CZ[0-9]{9}                                                  | /null     | \w{101}     |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}    | \w{1001}    |
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}    | \w{101}     |
@@ -24,7 +24,8 @@ Feature: Customers validation
       | /address/city          | String | true     | \w{50}                                                      | /null     | \w{51}      |
       | /address/zip_code      | String | true     | [a-zA-Z0-9]{10}                                             | /null     | \w{11}      |
       | /address/country       | String | true     | US                                                          | xx        | USA         |
-      | /type                  | String | true     | HOTEL                                                       | xx        | CONSULTANCY |
+      | /type                  | String | true     | hotel                                                       | xx        | CONSULTANCY |
+      | /is_active             | Bool   | false    | (true\|false)                                               | \.{10}    |             |
 
     Given The following customers exist with random address
       | Id                                   | companyName          | email                   | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
