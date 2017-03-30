@@ -29,6 +29,7 @@ Feature: User Groups Property sets Roles Application access check feature
       | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 33300000-0000-4000-a000-000000000333 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       | 33300000-0000-4000-a000-000000000000 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
+    Given Relation between user "userWithUserGroup" and property with code "p1_code" exists
     Given The following commercial subscriptions exist
       | Id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 33300000-0000-4000-a000-000000000333 | 22200000-0000-4000-a000-000000000222 |
@@ -48,18 +49,18 @@ Feature: User Groups Property sets Roles Application access check feature
 
   Scenario: UserGroup-Property-Role relation is created, got and deleted by application with and withou access
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "201"
     When List of all roles for user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "200"
     And Total count is "1"
     When List of all roles for user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "204"

@@ -37,14 +37,14 @@ Feature: User-propertyset roles access check by app feature
       | name            | description            | type            |
       | ps1_name        | ps1_description        | brand           |
     And Relation between property with code "defaultPropertyCode" and property set with name "ps1_name" exists
-     #    Must be here - DP-1846
     Given Relation between user "user1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2" and property with code "defaultPropertyCode" exists with is_active "false"
 
   Scenario: App can view only list of propertyset-user roles of customer and property set it has access to
     Given Relation between user "user2" and property set "ps1_name" exists
     When User "user1" requests roles of user "user2" for property set "ps1_name" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" requests roles of user "user2" for property set "ps1_name" for application version "versionWithSubscription"
     Then Response code is "404"
     Given Relation between user "user2" and property "defaultPropertyCode" is activated
@@ -53,10 +53,12 @@ Feature: User-propertyset roles access check by app feature
 
   Scenario: Application can assign and revoke roles to propertyset-users only when it has access to both user and propertyset
     When User "user1" assigns role "NewRole" to relation between user "user1" and property set "ps1_name" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" assigns role "NewRole" to relation between user "user1" and property set "ps1_name" for application version "versionWithSubscription"
     Then Response code is "201"
     When User "user1" deletes role "NewRole" from relation between user "user1" and property set "ps1_name" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" deletes role "NewRole" from relation between user "user1" and property set "ps1_name" for application version "versionWithSubscription"
     Then Response code is "204"

@@ -29,7 +29,6 @@ Feature: User access check by app feature - GET
       | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1      | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | user2      | Customer  | User2C1  | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-     #    Must be here - DP-1846
     Given Relation between user "user1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2" and property with code "defaultPropertyCode" exists with is_active "false"
 
@@ -37,23 +36,15 @@ Feature: User access check by app feature - GET
     When List of users is got by user "user1" for application version "versionWithSubscription"
     Then There are "1" users returned
     When List of users is got by user "user1" for application version "versionWithoutSubscription"
-    Then There are "0" users returned
-
-  Scenario: Application sees only users that have active connection to the property this application is attached to
-    Given The following commercial subscriptions exist
-      |                       Id             | customerId                           | propertyId                           | applicationId                        |
-      | 44400000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 00000000-0000-4000-a000-000000000222 |
-    When List of users is got by user "user2" for application version "versionWithoutSubscription"
-    Then There are "1" users returned
-    Given Relation between user "user2" and property "defaultPropertyCode" is activated
-    When List of users is got by user "user2" for application version "versionWithoutSubscription"
-    Then There are "2" users returned
+    Then Response code is "403"
+    And Custom code is 40301
 
   Scenario: Application does not see users not belonging to the customer it is attached to via commercial subscription
-    Given Relation between user "user2" and property "defaultPropertyCode" is activated
-    And Relation between user "user2" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated
     When List of users is got by user "user1" for application version "versionWithSubscription"
     Then There are "1" users returned
-    Given Relation between user "user2" and customer with id "12300000-0000-4000-a000-000000000000" is activated
+    Given Relation between user "user2" and property "defaultPropertyCode" is activated
     When List of users is got by user "user1" for application version "versionWithSubscription"
     Then There are "2" users returned
+    When List of users is got by user "user1" for application version "versionWithoutSubscription"
+    Then Response code is "403"
+    And Custom code is 40301

@@ -32,22 +32,21 @@ Feature: User Customers Role by app access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000001" as primary "false"
       | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1OfC2  | Customer  | User1C2  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
-     #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 
-  # DP-1889
-  @skipped
   Scenario: User can view only list of customer-user roles of his own customer (with active relation)
     Given Switch for user customer role tests
     Given The following roles exist
       | applicationId                        | roleName | description      |
       | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
     When User "user1OfC1" requests roles of user "user1OfC1" for customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1OfC1" requests roles of user "user2OfC1" for customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1OfC1" requests roles of user "user1OfC1" for customer "12300000-0000-4000-a000-000000000000" for application version "versionWithSubscription"
     Then Response code is "200"
     And Total count is "0"
@@ -58,10 +57,12 @@ Feature: User Customers Role by app access check feature
       | applicationId                        | roleName | description      |
       | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
     When User "user1OfC1" assigns role "NewRole" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1OfC1" assigns role "NewRole" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithSubscription"
     Then Response code is "201"
     When User "user1OfC1" deletes role "NewRole" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1OfC1" deletes role "NewRole" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithSubscription"
     Then Response code is "204"

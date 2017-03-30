@@ -13,6 +13,7 @@ Feature: User Groups Roles Application access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | userWithUserGroup | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "userWithUserGroup" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -50,15 +51,16 @@ Feature: User Groups Roles Application access check feature
     Then Response code is 200
     And Total count is "3"
     When List of all relationships userGroups-Roles for userGroup "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
+    Then Response code is "403"
+    And Custom code is 40301
 
   Scenario: Create userGroup role by application with/without access
     Given The following roles exist
       | roleId                               | Id                                   | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 22200000-0000-4000-a000-000000000222 | role1    |
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 201
 

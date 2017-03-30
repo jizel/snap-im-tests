@@ -41,21 +41,21 @@ Feature: User Groups - Users Application access check feature
 
   Scenario: Application sees only users of user group it has subscribed to
     When Relation between user group "userGroup_1" and user "userWithUserGroup" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and user "userWithUserGroup" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 200
     When List of all users for user group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When List of all users for user group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 200
     And Total count is "1"
 
   Scenario: Add user to user group by application with and without access
     When User "userWithoutUserGroup" is added to userGroup "userGroup_1" with isActive "true" by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "userWithoutUserGroup" is added to userGroup "userGroup_1" with isActive "true" by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "201"
     Given The following customers exist with random address
@@ -70,14 +70,14 @@ Feature: User Groups - Users Application access check feature
 
   Scenario: Updating User Group-User relationship by user who can access it
     When Is Active for relation between user group "userGroup_1" and user "userWithUserGroup" is set to "false" by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Is Active for relation between user group "userGroup_1" and user "userWithUserGroup" is set to "false" by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204
 
   Scenario: Deleting User User Group relationship by user who can access it
     When User "userWithUserGroup" is removed from userGroup "userGroup_1" by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "userWithUserGroup" is removed from userGroup "userGroup_1" by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204

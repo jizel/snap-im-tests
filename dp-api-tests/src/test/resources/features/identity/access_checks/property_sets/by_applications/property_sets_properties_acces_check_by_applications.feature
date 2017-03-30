@@ -13,6 +13,7 @@ Feature: Property sets- Properties Application access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1    | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "user1" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -46,7 +47,8 @@ Feature: Property sets- Properties Application access check feature
   Scenario: Second level entities - User sees only properties he should for property set he owns
     When Property with code "p1_code" is added to property set "ps1_name"
     When Property with code "p1_code" for property set "ps1_name" is requested by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When Property set "ps1_name" is requested by user "user1" for application version "versionWithSubscription"
     Then Response code is "200"
     When Property with code "p1_code" for property set "ps1_name" is requested by user "user1" for application version "versionWithSubscription"
@@ -55,14 +57,15 @@ Feature: Property sets- Properties Application access check feature
     Then Response code is "200"
     And Total count is "1"
     When List of all properties for property set with name "ps1_name" is requested by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When List of all properties for property set with name "ps2_name" is requested by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
 
   Scenario: Adding property to property set by application with and without access
     And Property with code "p1_code" is added to property set "ps1_name" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     And Property with code "p1_code" is added to property set "ps2_name" by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
     And Custom code is 40402
@@ -73,7 +76,7 @@ Feature: Property sets- Properties Application access check feature
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists
     Given Relation between property with code "p2_code" and property set with name "ps1_name" exists
     When Property with code "p1_code" is removed from property set "ps1_name" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Property with code "p1_code" is removed from property set "ps1_name" by user "user1" for application version "versionWithSubscription"
     Then Response code is "204"

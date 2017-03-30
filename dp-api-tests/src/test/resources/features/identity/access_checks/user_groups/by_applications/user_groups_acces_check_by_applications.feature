@@ -12,6 +12,7 @@ Feature: User Groups Application access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | userWithUserGroup | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "userWithUserGroup" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -39,8 +40,8 @@ Feature: User Groups Application access check feature
 
     Scenario: Get user group by application with and without access
       When User group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-      Then Response code is "404"
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
       When User group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
       Then Response code is "200"
 
@@ -57,8 +58,8 @@ Feature: User Groups Application access check feature
       Then Response code is "200"
       And There are "<returned>" user groups returned
       When List of user groups is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithUserGroup" for application version "versionWithoutSubscription"
-      Then Response code is "200"
-      And There are "0" user groups returned
+      Then Response code is "403"
+      And Custom code is 40301
       Examples:
         | limit | cursor | filter                          | sort           | sort_desc           | returned    |
         | /null | 0      | name=='*'                       | /null          | is_active           | 3           |
@@ -75,8 +76,8 @@ Feature: User Groups Application access check feature
       When The following user group is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
         | customerId                                   | name        | isActive | description          |
         | 12300000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
-      Then Response code is 404
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
       When The following user group is created by user "userWithUserGroup" for application version "versionWithSubscription"
         | customerId                                   | name        | isActive | description          |
         | 23400000-0000-4000-a000-000000000000 | userGroup_2 | false    | userGroup2Description |
@@ -91,8 +92,8 @@ Feature: User Groups Application access check feature
       When User group "userGroup_1" is updated with following data by user "userWithUserGroup" for application version "versionWithoutSubscription"
         | name        | isActive   | description   |
         | updatedName | true       | udpatedDesc   |
-      Then Response code is 404
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
       When User group "userGroup_1" is updated with following data by user "userWithUserGroup" for application version "versionWithSubscription"
         | name        | isActive   | description   |
         | updatedName | true       | udpatedDesc   |
@@ -100,8 +101,8 @@ Feature: User Groups Application access check feature
 
     Scenario: Delete user group by application with and without access
       When User group "userGroup_1" is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
-      Then Response code is 404
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
       When User group "userGroup_1" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
   #    409 is good enough to check access checks work
       Then Response code is 409
