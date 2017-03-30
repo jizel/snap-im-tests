@@ -4,21 +4,21 @@ Feature: Users property set roles CRUD
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 2048b11e-eff2-477c-b322-015bbd931e46 | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | e0aa919b-5b55-4f03-99ba-48c9f8fec42d | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
-      | Id                                   | name            | description            | type            |
+      | id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
 
 
     Given Switch for user property set role tests
     Given The following roles exist
-      | roleId                               | roleName    | description            | Id                                   |
+      | roleId                               | roleName    | description            | id                                   |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
 
@@ -33,7 +33,7 @@ Feature: Users property set roles CRUD
   Scenario Outline: Assigning property type of role to user property set
     Given Switch for user property role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | Id                                   |
+      | roleId                               | roleName        | description            | id                                   |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is added
     Then Response code is "422"
@@ -45,7 +45,7 @@ Feature: Users property set roles CRUD
   Scenario Outline: Assigning customer type of role to user property set
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | Id                                   |
+      | roleId                               | roleName        | description            | id                                   |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is added
     Then Response code is "422"
@@ -96,7 +96,7 @@ Feature: Users property set roles CRUD
   Scenario Outline: Filtering list of roles for user customer relationship
     Given Switch for user property set role tests
     Given The following roles exist
-      | roleName           | description            | Id                                   |
+      | roleName           | description            | id                                   |
       | user_filter_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | user_filter_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
       | user_filter_role_3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |

@@ -4,7 +4,7 @@ Feature: Eventing tests for Property
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | Id                                   | companyName       | email           | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName       | email           | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     And The following properties exist with random address and billing address
       | name         | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -23,7 +23,7 @@ Feature: Eventing tests for Property
 
   Scenario: Eventing property created by nonsnapshot user - DP-1728
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -89,7 +89,7 @@ Feature: Eventing tests for Property
 
   Scenario: Update and Delete Property-Customer relationship events
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given Relation between property "event_property" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
     Given Subscription with name "Test" for topic "Notifications.crud" is created

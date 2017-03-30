@@ -5,11 +5,11 @@ Feature: Roles create update delete user customer
     Given Database is cleaned and default entities are created
     Given Switch for user customer role tests
     Given The following applications exist
-      | applicationName            | description               | website                    | Id                                   | partnerId                            | isInternal |
+      | applicationName            | description               | website                    | id                                   | partnerId                            | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     Given The following roles exist
-      | Id                                   | roleName    | description            | applicationId                        |
+      | id                                   | roleName    | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
@@ -17,7 +17,7 @@ Feature: Roles create update delete user customer
   @Smoke
   Scenario: Creating deleting role
     When Role is created
-      | Id                                   | roleName            | description            | applicationId                        |
+      | id                                   | roleName            | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Created role name 1 | optional description 1 | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Created role name 1"
@@ -76,19 +76,19 @@ Feature: Roles create update delete user customer
 
   Scenario Outline: Updating with invalid data
     When Role with name "<roleName>" for application id "<applicationId>" is updated with data
-      | Id                      | roleName           | description           |
+      | applicationId           | roleName           | description           |
       | <updated_applicationId> | <updated_roleName> | <updated_description> |
     Then Response code is "<responseCode>"
     And Custom code is "<customCode>"
     Examples:
-      | Id                                   | updated_applicationId                | roleName    | updated_roleName | updated_description | responseCode | customCode |
+      | applicationId                        | updated_applicationId                | roleName    | updated_roleName | updated_description | responseCode | customCode |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | a000111a-a05d-42d8-8e84-42e904ace123 | Role name 3 | Role name 5      |                     | 422          | 42202      |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | nonUUID                              | Role name 3 | Role name 5      |                     | 422          | 42201      |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 |                  | empty name          | 422          | 42201      |
 
   Scenario Outline: Send POST request with empty body to all user customer roles endpoints
     Given The following roles exist
-      | roleId                               | Id                                   | roleName    | description            |
+      | id                                   | applicationId                        | roleName    | description            |
       | 7e0982a4-cab3-47fb-b3ff-3951fa10967c | a318fd9a-a05d-42d8-8e84-42e904ace123 | testPOST1   | optional description 1 |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
@@ -100,12 +100,12 @@ Feature: Roles create update delete user customer
 
   Scenario: Role ID and name is unique when creating role - DP-1661
     When Role is created
-      | roleId                               | roleName         | description            | applicationId                        |
+      | id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "user_cust_role"
     When Role is created
-      | roleId                               | roleName         | description            | applicationId                        |
+      | id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role2  | Same ID different name | 11111111-0000-4000-a000-111111111111 |
     Then Response code is "409"
     And Custom code is 40902
@@ -117,17 +117,17 @@ Feature: Roles create update delete user customer
 
   Scenario: Role ID is unique for all applications, role name just for one
     Given Role is created
-      | Id                                   | roleName         | description            | applicationId                        |
+      | id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
     Given The following applications exist
-      | applicationName  | description               | website                    | Id                                   | partnerId                            | isInternal |
+      | applicationName  | description               | website                    | id                                   | partnerId                            | isInternal |
       | OtherApplication | Application description 1 | http://www.snapshot.travel | 1118fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     When Role is created
-      | Id                                   | roleName         | description            | applicationId                        |
+      | id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same ID different app  | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "409"
     When Role is created
-      | Id                                   | roleName         | description             | applicationId                        |
+      | id                                   | roleName         | description             | applicationId                        |
       | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
 

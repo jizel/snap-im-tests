@@ -8,10 +8,10 @@ Feature: Review
   Background:
     Given Database is cleaned and default entities are created
     Given The following users exist for customer "11111111-0000-4000-a000-555555555555" as primary "true"
-      | Id                                   | userType | userName  | firstName | lastName | email                     | timezone      | culture |
+      | id                                   | userType | userName  | firstName | lastName | email                     | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | snapUser1 | Snapshot  | User1    | snapUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address
-      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
     Given Relation between user "snapUser1" and property with code "p1_code" exists
 

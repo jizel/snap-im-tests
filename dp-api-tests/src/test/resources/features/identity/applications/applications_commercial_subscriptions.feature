@@ -3,7 +3,7 @@ Feature: Applications commercial subscriptions
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following properties exist with random address and billing address
       | propertyId                          | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -12,7 +12,7 @@ Feature: Applications commercial subscriptions
 
   Scenario: Getting applications commercial subscriptions
     Given The following commercial subscriptions exist
-      | applicationId                        | Id                                   | propertyId                           |
+      | applicationId                        | id                                   | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
     When Applications commercial subscriptions for application id "11111111-0000-4000-a000-111111111111" is got
     Then Response code is "200"
@@ -21,7 +21,7 @@ Feature: Applications commercial subscriptions
 
   Scenario Outline: Getting list of applications commercial subscriptions
     Given The following commercial subscriptions exist
-      | applicationId                        | Id                                   | propertyId                          |
+      | applicationId                        | id                                   | propertyId                          |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 |c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 |c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 |c37c3501-d309-4702-ad0b-fd53a98c01fd |

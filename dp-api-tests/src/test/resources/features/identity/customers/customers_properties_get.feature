@@ -5,16 +5,16 @@ Feature: Customers properties get
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
       | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
-      | Id                                   | userType | userName     | firstName | lastName     | email                                | timezone      | culture |
+      | id                                   | userType | userName     | firstName | lastName     | email                                | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
       | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1           | customer  | property     | customerProperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
-      | Id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |
       | f7aaed3d-f8ef-41a4-a630-99d07f0ee592 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 |
       | 0a9a76ca-a8f8-445e-85d1-af857b0986e1 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | b13fde13-615a-48fd-a287-ba4a7314193b |
@@ -57,11 +57,11 @@ Feature: Customers properties get
 
   Scenario Outline: Getting list of customerProperties
     Given The following customers exist with random address
-      | Id                                   | companyName               | email               | salesforceId              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName               | email               | salesforceId              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | ae3c902f-3386-4956-be84-cd969866c571 | List test Given company 1 | list_c1@tenants.biz | list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Prague |
       | f9766fd3-483d-4507-a20d-929421d44c84 | List test Given company 2 | list_c2@tenants.biz | list_salesforceid_given_2 | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "ae3c902f-3386-4956-be84-cd969866c571" as primary "true"
-      | Id                                   | userType | userName              | firstName | lastName     | email                    | timezone      | culture |
+      | id                                   | userType | userName              | firstName | lastName     | email                    | timezone      | culture |
       | 6006cd1a-7d4a-42b1-84f1-93d3628a38e0 | snapshot | gettingListofCustProp | Default   | SnapshotUser | snapshot@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "6006cd1a-7d4a-42b1-84f1-93d3628a38e0"
       | salesforceId   | name                   | propertyCode           | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -172,10 +172,10 @@ Feature: Customers properties get
 
   Scenario Outline: Filtering list of customer properties
     Given The following customers exist with random address
-      | Id                                   | companyName                      | email               | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | id                                   | companyName                      | email               | salesforceId                     | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 | Filter list test Given company 1 | list_c1@tenants.biz | filter_list_salesforceid_given_1 | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "3964bc8b-082d-4d47-b300-9a7b26a3ce91" as primary "true"
-      | Id                                   | userType | userName      | firstName | lastName     | email                    | timezone      | culture |
+      | id                                   | userType | userName      | firstName | lastName     | email                    | timezone      | culture |
       | 7006cd1a-7d4a-42b1-84f1-93d3628a38e0 | snapshot | FilteringList | Default   | SnapshotUser | snapshot@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "7006cd1a-7d4a-42b1-84f1-93d3628a38e0"
       | salesforceId   | name                          | propertyCode                  | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |

@@ -14,7 +14,7 @@ Feature: Customers access check feature - GET
   Background:
   Given Database is cleaned and default entities are created
   Given The following customers exist with random address
-    | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+    | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
     | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     | 00000000-0000-4000-8000-123000000abc | Company 2   | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
   Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false" with is_active "false"
@@ -40,7 +40,7 @@ Feature: Customers access check feature - GET
 
     Scenario: User belongs to User Group that has access to customer
       Given The following user groups exist
-        | Id                                   | customerId                           | name        | isActive |
+        | id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    |
       When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust2"
       Then Response code is "404"
@@ -57,7 +57,7 @@ Feature: Customers access check feature - GET
 
     Scenario: User has a relationship to any customer that has a successor that has a successor which is the requested customer
       Given The following customers exist with random address
-        | parentId                             | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
+        | parentId                             | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
         | 12300000-0000-4000-a000-000000000000 | 22245678-0000-4000-a000-000000000000 | Company 222 | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | Europe/Prague |
         | 22245678-0000-4000-a000-000000000000 | 33345678-0000-4000-a000-000000000000 | Company 333 | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | Europe/Prague |
       When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1"
@@ -72,10 +72,10 @@ Feature: Customers access check feature - GET
 
     Scenario: User belongs to User Group that has a relation to customer that whose successor is requested
       Given The following user groups exist
-        | Id                                   | customerId                           | name        | isActive |
+        | id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    |
       Given The following customers exist with random address
-        | parentId                             | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
+        | parentId                             | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
         | 12300000-0000-4000-a000-000000000000 | 22245678-0000-4000-a000-000000000000 | Company 222 | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | Europe/Prague |
       When Customer with customerId "22245678-0000-4000-a000-000000000000" is requested by user "userWithCust2"
       Then Response code is "404"
@@ -104,7 +104,7 @@ Feature: Customers access check feature - GET
 
      Scenario Outline: Filtering customers with access checks
        Given The following customers exist with random address
-         | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+         | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
          | 23445678-0000-4000-a000-000000000000 | Company 3   | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
          | 34545678-0000-4000-a000-000000000000 | Company 4   | c4@tenants.com | salesforceid_4 | CZ10000004 | false          | +420987654321 | http://www.snapshot.travel | Europe/Prague |
          | 45645678-0000-4000-a000-000000000000 | Company 5   | c5@tenants.com | salesforceid_5 | CZ10000005 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |

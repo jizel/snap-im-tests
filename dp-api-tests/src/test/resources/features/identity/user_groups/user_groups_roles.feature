@@ -4,16 +4,16 @@ Feature: User groups roles
     Given Database is cleaned and default entities are created
     Given Switch for user customer role tests
     Given The following customers exist with random address
-      | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
-      | Id                                   | customerId                           | name        | isActive | description          |
+      | id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
     Given The following partner exist
-      | Id                                   | name         | email                   | website                    |
+      | id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName                       | website                    | Id                                   | partnerId                            | isInternal |
+      | applicationName                       | website                    | id                                   | partnerId                            | isInternal |
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following roles exist
       | roleId                               | applicationId                        | roleName |
@@ -35,7 +35,7 @@ Feature: User groups roles
     Then Response code is <error_code>
     And Custom code is <custom_code>
     Examples:
-      | Id                                   | roleId                               |error_code | custom_code | # note                            |
+      | id                                   | roleId                               |error_code | custom_code | # note                            |
       | 00000000-0000-4000-a000-000000000000 | /null                                | 422       | 42201      | # Empty body, invalid userGroupId |
       | 00000000-0000-4000-a000-000000000000 | NotExisting                          | 422       | 42201      | # Not in UUID                     |
       | 00000000-0000-4000-a000-000000000000 | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 404       | 40402      | # UserGroup not found             |

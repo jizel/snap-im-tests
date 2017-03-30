@@ -30,7 +30,7 @@ Feature: Property sets create update delete
   Scenario: Add remove property to property set
     # --------------- ADD ----------------------
     Given The following users exist for customer "11111111-0000-4000-a000-555555555555" as primary "false"
-      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     When The following property sets exist for customer "11111111-0000-4000-a000-555555555555" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | id                                   | name      | description     | type  |
@@ -52,7 +52,7 @@ Feature: Property sets create update delete
   Scenario: Add remove user to property set
     # ----------------- ADD --------------------
     Given The following users exist for customer "11111111-0000-4000-a000-555555555555" as primary "false"
-      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     When The following property sets exist for customer "11111111-0000-4000-a000-555555555555"
       | id                                   | name      | description     | type  |
