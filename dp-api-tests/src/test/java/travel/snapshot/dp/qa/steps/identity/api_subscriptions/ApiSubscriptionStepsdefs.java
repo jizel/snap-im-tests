@@ -16,6 +16,7 @@ import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.api_subscriptions.ApiSubscriptionSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
@@ -41,6 +42,8 @@ public class ApiSubscriptionStepsdefs {
     @Steps
     private CommercialSubscriptionSteps commercialSubscriptionSteps;
 
+    @Steps
+    private ApplicationsSteps applicationsSteps;
 
     @Given("^The following api subscriptions exist$")
     public void theFollowingApiSubscriptionsExist(List<ApiSubscriptionDto> listApiSubscriptions) throws Throwable {
@@ -123,12 +126,13 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.responceSortIs(order);
     }
 
-    @Given("^API subscriptions exist for default application and customer (?:with id)? \"([^\"]*)\"(?: and property \"([^\"]*)\")?$")
-    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String customerId, String propertyCode) throws Throwable {
+    @Given("^API subscriptions exist for(?: default)? application(?: \"([^\"]*)\")? and customer (?:with id)? \"([^\"]*)\"(?: and property \"([^\"]*)\")?$")
+    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String applicationName, String customerId, String propertyCode) throws Throwable {
         String propertyId = ((propertyCode==null) ? DEFAULT_PROPERTY_ID : propertySteps.resolvePropertyId(propertyCode));
+        String applicationId = applicationsSteps.resolveApplicationId(applicationName);
         CommercialSubscriptionDto commercialSubscription = new CommercialSubscriptionDto();
         commercialSubscription.setPropertyId(propertyId);
-        commercialSubscription.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        commercialSubscription.setApplicationId(applicationId);
         commercialSubscription.setIsActive(true);
         commercialSubscription.setCustomerId(customerId);
         String commercialSubscriptionId = randomUUID().toString();

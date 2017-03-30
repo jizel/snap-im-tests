@@ -48,17 +48,15 @@ Feature: Customers-Property Sets Application access check feature - GET
     Then Response code is "200"
     And Total count is "2"
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
 
- @skipped
  Scenario: List users by app
     When GET request is sent to "/identity/users" on module "identity" by user "user1" for application version "versionWithSubscription"
     Then There are "2" users returned
     When GET request is sent to "/identity/users" on module "identity" by user "user3" for application version "versionWithSubscription"
-    # DP-1889
-    Then There are "0" users returned
+    Then Response code is "403"
     When GET request is sent to "/identity/users" on module "identity" by user "user1" for application version "versionWithoutSubscription"
-    Then There are "0" users returned
+   Then Response code is "403"
     Given Relation between user "user3" and default property exists
     When GET request is sent to "/identity/users" on module "identity" by user "user3" for application version "versionWithSubscription"
     Then There are "3" users returned
@@ -68,7 +66,7 @@ Feature: Customers-Property Sets Application access check feature - GET
     When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
     Then There are "2" users returned
     When User "user1" requests list of users for property "defaultPropertyCode" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
 
   Scenario: List users of customer by app
     # User with explicit access to the property will try to access the user with access to this property
@@ -87,7 +85,7 @@ Feature: Customers-Property Sets Application access check feature - GET
     # user-property endpoint returns only direct relationships
     Then There are "2" users returned
     When User "user3" requests list of users for property "defaultPropertyCode" for application version "versionWithSubscription"
-    Then There are "2" users returned
+    Then Response code is "403"
 
   Scenario: List of users with inactive user-customer or user-property relation
     Given Relation between user "user2" and customer with id "12300000-0000-4000-a000-000000000000" is inactivated

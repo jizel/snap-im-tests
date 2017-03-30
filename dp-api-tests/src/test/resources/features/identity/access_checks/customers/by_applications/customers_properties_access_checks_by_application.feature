@@ -48,13 +48,13 @@ Feature: Customers-Properties Application access check feature - GET
     Then Response code is "200"
     And Total count is "1"
     When Property with code "p1_code" from customer with id "12300000-0000-4000-a000-000000000000" is got by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
     When List of all customer properties is got for customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
 
   Scenario: Add user to property by application with and without access to the property
     When Property with code "p1_code" is added to customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
     When Property with code "p2_code" is added to customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "422"
     When Property with code "p1_code" is added to customer with id "00000000-0000-4000-8000-123000000abc" by user "userWithCust1" for application version "versionWithSubscription"
@@ -68,7 +68,7 @@ Feature: Customers-Properties Application access check feature - GET
     When Property with code "p1_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust1" for application version "versionWithoutSubscription" with
       | type  |
       | owner |
-    Then Response code is "404"
+    Then Response code is "403"
     When Property with code "p1_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust1" for application version "versionWithSubscription" with
       | type  |
       | owner |
