@@ -33,7 +33,6 @@ Feature: User-property roles access check by app feature - GET
       | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1    | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | user2    | Customer  | User2C1  | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-     #    Must be here - DP-1846
     Given Relation between user "user1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2" and property with code "defaultPropertyCode" exists with is_active "false"
     Given The following properties exist with random address and billing address
@@ -44,7 +43,8 @@ Feature: User-property roles access check by app feature - GET
   @skipped
   Scenario: Application can view only list of property-user roles of the customer and property it can access through a CS
     When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithSubscription"
     Then Response code is "404"
     Given Relation between user "user2" and property "defaultPropertyCode" is activated
@@ -64,7 +64,8 @@ Feature: User-property roles access check by app feature - GET
   Scenario: Application can assign and revoke roles to property-users only when it has access to both user and property
     Given Switch for user property role tests
     When User "user1" assigns role "NewRole" to relation between user "user1" and property "defaultPropertyCode" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" assigns role "NewRole" to relation between user "user1" and property "defaultPropertyCode" for application version "versionWithSubscription"
     Then Response code is "201"
 

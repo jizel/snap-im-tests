@@ -12,6 +12,7 @@ Feature: User Groups - Properties Application access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | userWithUserGroup | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "userWithUserGroup" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -44,35 +45,36 @@ Feature: User Groups - Properties Application access check feature
   Scenario: Application sees only user group-property sets relations for user groups and property sets it has subscribed to
     Given Relation between user group "userGroup_1" and property set "prop_set1" exists
     When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and property set "prop_set1" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 200
     When List of all property sets for user group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
+    Then Response code is "403"
+    And Custom code is 40301
     When List of all property sets for user group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 200
     And Total count is "1"
 
   Scenario: Relationship is created between user group and property set by application with and without access
     When Relation between user group "userGroup_1" and property set "prop_set1" is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and property set "prop_set1" is created by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 201
 
   Scenario: Update relationship userGroup-propertySet by application with and without access
     Given Relation between user group "userGroup_1" and property set "prop_set1" exists
     When IsActive relation between user group "userGroup_1" and property set "prop_set1" is set to "true" by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When IsActive relation between user group "userGroup_1" and property set "prop_set1" is set to "true" by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204
 
   Scenario: Delete userGroup-propertySet relationship by user with access
     Given Relation between user group "userGroup_1" and property set "prop_set1" exists
     When Relation between user group "userGroup_1" and property set "prop_set1" is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and property set "prop_set1" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204

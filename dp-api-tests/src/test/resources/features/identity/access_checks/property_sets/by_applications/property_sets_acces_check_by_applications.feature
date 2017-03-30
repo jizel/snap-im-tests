@@ -15,6 +15,7 @@ Feature: Property sets Application access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1    | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "user1" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -43,8 +44,8 @@ Feature: Property sets Application access check feature
       When Property set "ps1_name" is requested by user "user1" for application version "versionWithSubscription"
       Then Response code is "200"
       When Property set "ps1_name" is requested by user "user1" for application version "versionWithoutSubscription"
-      Then Response code is "404"
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
       When Property set "ps2_name" is requested by user "user1" for application version "versionWithSubscription"
       Then Response code is "404"
       And Custom code is 40402
@@ -61,8 +62,8 @@ Feature: Property sets Application access check feature
       When Property set "childPS2" is requested by user "user1" for application version "versionWithSubscription"
       Then Response code is "200"
       When Property set "childPS2" is requested by user "user1" for application version "versionWithoutSubscription"
-      Then Response code is "404"
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
 
   Scenario Outline: Filtering property sets with application access checks
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1"
@@ -74,8 +75,8 @@ Feature: Property sets Application access check feature
     Then Response code is "200"
     And There are <returned> property sets returned
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "200"
-    And Total count is "0"
+    Then Response code is "403"
+    And Custom code is 40301
     Examples:
       | limit | cursor | filter                        | sort        | sort_desc         | returned    |
       | /null | 0      | name=='*'                     | /null       | name              | 4           |
@@ -89,8 +90,8 @@ Feature: Property sets Application access check feature
     When Property set "ps1_name" is updated with following data by user "user1" for application version "versionWithoutSubscription"
       | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Property set "ps1_name" is updated with following data by user "user1" for application version "versionWithSubscription"
       | name            | description            | type              |
       | updated_name    | updated description    | geolocation       |
@@ -98,8 +99,8 @@ Feature: Property sets Application access check feature
 
   Scenario: Deleting Property set by Application with and without subscription
     When Property set "ps1_name" is deleted by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Property set "ps2_name" is deleted by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
     And Custom code is 40402
@@ -112,8 +113,8 @@ Feature: Property sets Application access check feature
 
   Scenario Outline: User with no access rights to property sends GET request to all general second level endpoints
     When GET request is sent to "<url>" on module "identity" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is "40402"
+    Then Response code is "403"
+    And Custom code is 40301
     Examples:
       | url                                                                       |
       | identity/property_sets/12300000-1111-4c57-91bd-30230d2c1bd0/users         |

@@ -14,8 +14,8 @@ Feature: Property sets- Users Application access check feature
       | userType | userName               | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | userWithPropertySet    | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | userWithoutPropertySet | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    Given Relation between user "userWithPropertySet" and property "11111111-0000-4000-a000-666666666666" exists
-    Given Relation between user "userWithoutPropertySet" and property "11111111-0000-4000-a000-666666666666" exists
+    Given Relation between user "userWithPropertySet" and property with code "defaultPropertyCode" exists
+    Given Relation between user "userWithoutPropertySet" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -45,34 +45,34 @@ Feature: Property sets- Users Application access check feature
     Then Response code is "200"
     And Total count is "1"
     When List of all users for property set "ps1_name" is requested by user "userWithPropertySet" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "userWithPropertySet" for property set "ps1_name" is requested by user "userWithPropertySet" for application version "versionWithSubscription"
     Then Response code is "200"
     When User "userWithPropertySet" for property set "ps1_name" is requested by user "userWithPropertySet" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
 
   Scenario: Add user to property set by application with and without access
     When User "userWithoutPropertySet" is added to property set with name "ps1_name" by user "userWithPropertySet" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "userWithoutPropertySet" is added to property set with name "ps1_name" by user "userWithPropertySet" for application version "versionWithSubscription"
     Then Response code is "201"
 
   Scenario: Updating Property Set-User relationship by application with and without access
     When User "userWithoutPropertySet" is added to property set with name "ps1_name" with is_active "false"
     When IsActive for relation between user "userWithoutPropertySet" and property set "ps1_name" is set to "true" by user "userWithPropertySet" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When IsActive for relation between user "userWithoutPropertySet" and property set "ps1_name" is set to "true" by user "userWithPropertySet" for application version "versionWithSubscription"
     Then Response code is "204"
     And Check is active attribute is "true" for relation between user "userWithPropertySet" and property set "ps1_name"
 
   Scenario: Delete user from property set by application with and without access
     When User "userWithPropertySet" is removed from property set "ps1_name" by user "userWithPropertySet" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "userWithPropertySet" is removed from property set "ps1_name" by user "userWithPropertySet" for application version "versionWithSubscription"
     Then Response code is "204"
     And Body is empty

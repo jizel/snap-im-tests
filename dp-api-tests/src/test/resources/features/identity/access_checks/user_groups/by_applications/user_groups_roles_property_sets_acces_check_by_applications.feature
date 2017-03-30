@@ -12,6 +12,7 @@ Feature: User Groups Property sets Roles Application access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | userWithUserGroup | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
+    Given Relation between user "userWithUserGroup" and property with code "defaultPropertyCode" exists
     Given The following partner exist
       | Id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
@@ -47,18 +48,18 @@ Feature: User Groups Property sets Roles Application access check feature
 
   Scenario: UserGroup-PropertySet-Role relation is created, got and deleted by application with and withou access
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "201"
     When List of all roles for user group "userGroup_1" and property set "PropertySet_UserGroup" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "200"
     And Total count is "1"
     When List of all roles for user group "userGroup_1" and property set "PropertySet_UserGroup" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "204"

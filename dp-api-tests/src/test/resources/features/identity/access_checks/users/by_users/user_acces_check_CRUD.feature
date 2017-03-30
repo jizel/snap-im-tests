@@ -15,7 +15,6 @@ Feature: Users can create, update and delete only users of the same customer
     Given The following users exist for customer "12300000-0000-4000-a000-000000000001" as primary "false"
       | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1OfC2  | Customer  | User1C2  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
-#    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 

@@ -34,24 +34,26 @@ Feature: User Customers access check feature
     Given The following users exist for customer "12300000-0000-4000-a000-000000000001" as primary "false"
       | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1OfC2  | Customer  | User1C2  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
-     #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 
   Scenario: User can view customer-user relations of his customer only with valid application
     When Relation between user "user2OfC1" and customer "12300000-0000-4000-a000-000000000000" is requested by user "user1OfC1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user "user2OfC1" and customer "12300000-0000-4000-a000-000000000000" is requested by user "user1OfC1" for application version "versionWithSubscription"
     Then Response code is "200"
 
   Scenario: User can add/remove users to customer only if application has commercial subscription
     Given Relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000001" exists
     When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1OfC1" adds user "user2OfC1" to customer "12300000-0000-4000-a000-000000000001" for application version "versionWithSubscription"
     Then Response code is "201"
     When User "user1OfC1" removes user "user1OfC2" from customer "12300000-0000-4000-a000-000000000001" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1OfC1" removes user "user1OfC2" from customer "12300000-0000-4000-a000-000000000001" for application version "versionWithSubscription"
     Then Response code is "204"

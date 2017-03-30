@@ -28,7 +28,6 @@ Feature: User-property access check by app feature - GET
       | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
       | customer | user1    | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | user2    | Customer  | User2C1  | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-     #    Must be here - DP-1846
     Given Relation between user "user1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2" and property with code "defaultPropertyCode" exists with is_active "false"
     Given The following properties exist with random address and billing address
@@ -38,7 +37,8 @@ Feature: User-property access check by app feature - GET
 
   Scenario: Application can view only list of property-users of accessible customer and property
     When User "user1" requests list of users for property "p1_code" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" requests list of users for property "p1_code" for application version "versionWithSubscription"
     Then Response code is "404"
     Given The following commercial subscriptions exist
@@ -48,7 +48,8 @@ Feature: User-property access check by app feature - GET
       | Id                                   | commercialSubscriptionId             | applicationVersionId                 |
       | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" requests list of users for property "p1_code" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" requests list of users for property "p1_code" for application version "versionWithSubscription"
     Then Response code is "200"
     And There are "1" users returned
@@ -56,7 +57,8 @@ Feature: User-property access check by app feature - GET
   Scenario: Application can add-remove users from properties only when it has access to them both
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithoutSubscription"
     # Property not found
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithSubscription"
     # Property not found
     Then Response code is "404"
@@ -67,7 +69,8 @@ Feature: User-property access check by app feature - GET
       | Id                                   | commercialSubscriptionId             | applicationVersionId                 |
       | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithSubscription"
     # User not found
     Then Response code is "422"
@@ -75,6 +78,7 @@ Feature: User-property access check by app feature - GET
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithSubscription"
     Then Response code is "201"
     When User "user1" deletes user "user2" from property "p1_code" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" deletes user "user2" from property "p1_code" for application version "versionWithSubscription"
     Then Response code is "204"

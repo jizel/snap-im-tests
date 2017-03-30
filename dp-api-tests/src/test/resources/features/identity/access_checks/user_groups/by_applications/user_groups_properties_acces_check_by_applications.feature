@@ -46,8 +46,8 @@ Feature: User Groups - Properties Application access check feature
     When Relation between user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 200
     When Relation between user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and property with code "p2_code" is requested by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 404
     And Custom code is 40402
@@ -55,13 +55,13 @@ Feature: User Groups - Properties Application access check feature
     Then Response code is 200
     And Total count is "1"
     When List of all properties for user group "userGroup_1" is requested by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
 
   Scenario: Add user group to property relationship by application with and without access
     When Relation between user group "userGroup_1" and property with code "p1_code" is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and property with code "p2_code" is created by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "422"
     And Custom code is 42202
@@ -71,15 +71,15 @@ Feature: User Groups - Properties Application access check feature
   Scenario: Update user group to property relationship  by application with and without access
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists
     When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When IsActive for relation between user group "userGroup_1" and property with code "p1_code" is set to "false" by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204
 
   Scenario: Delete userGroup-property relationship by application with and without access
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists
     When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithUserGroup" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is 204
