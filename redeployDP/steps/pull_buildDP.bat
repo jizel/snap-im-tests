@@ -6,4 +6,4 @@ pushd %DP_DIRECTORY%
 call git fetch
 call git checkout %GIT_BRANCH%
 call git pull
-call gradle build -x test
+call gradlew build -x test

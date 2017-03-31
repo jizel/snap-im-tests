@@ -14,7 +14,7 @@ Feature: Properties access check feature - GET
   Background:
   Given Database is cleaned and default entities are created
   Given The following customers exist with random address
-    | Id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+    | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
   Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
   Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
@@ -22,7 +22,7 @@ Feature: Properties access check feature - GET
     | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     | customer | userWithNoProp | Customer2 | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
   Given The following property is created with random address and billing address for user "userWithProp"
-    | Id                                   | salesforceId   | name | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+    | id                                   | salesforceId   | name | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
     | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
   Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
@@ -43,7 +43,7 @@ Feature: Properties access check feature - GET
 
     Scenario: User belongs to User Group that has access to property
       Given The following user groups exist
-        | Id                                   | customerId                           | name        | isActive |
+        | id                                   | customerId                           | name        | isActive |
         | a8b40d08-de38-4246-bb69-ad39c31c025c | 1238fd9a-a05d-42d8-8e84-42e904ace123 | userGroup_1 | false    |
       When Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       When Property with code "p1_code" is requested by user "userWithNoProp"
@@ -72,10 +72,10 @@ Feature: Properties access check feature - GET
 
     Scenario: User has a relationship to any PropertySet that has a successor which has relationship to this instance
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
-        | name            | type            | Id                                   |
+        | name            | type            | id                                   |
         | parentPS        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
-        | name            | type            | parentId                             | Id                                   |
+        | name            | type            | parentId                             | id                                   |
         | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
         | name            | type            | parentId                             |

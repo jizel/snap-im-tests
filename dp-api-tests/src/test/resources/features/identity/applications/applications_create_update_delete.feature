@@ -7,7 +7,7 @@ Feature: Applications create update delete
   @Smoke
   Scenario: Create get delete application
     When Application is created
-      | applicationName            | description               | website                    | partnerId                            | Id                                   | isInternal |
+      | applicationName            | description               | website                    | partnerId                            | id                                   | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Application test company 1"
@@ -81,7 +81,7 @@ Feature: Applications create update delete
       | applicationName            | description               | website                    | partnerId                            |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
     Given Application version is created for application with id "a318fd9a-a05d-42d8-8e84-42e904ace123"
-      | Id                                   | apiManagerId | versionName | status   | description            |
+      | id                                   | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
@@ -97,22 +97,22 @@ Feature: Applications create update delete
   Scenario: Application ID and name is unique when creating role - DP-1661
 
     Given The following applications exist
-      | applicationName | description          | website                    | Id                                   | partnerId                            | isInternal |
+      | applicationName | description          | website                    | id                                   | partnerId                            | isInternal |
       | App Name 1      | Original application | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     When Application is created
-      | applicationName | description            | website                    | Id                                   | partnerId                            | isInternal |
+      | applicationName | description            | website                    | id                                   | partnerId                            | isInternal |
       | App Name 2      | Different name same ID | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     Then Response code is "409"
     And Custom code is 40902
     When Application is created
-      | applicationName | description            | website                    | Id                                   | isInternal |
+      | applicationName | description            | website                    | id                                   | isInternal |
       | App Name 1      | Different ID same name | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | false      |
     Then Response code is "409"
     And Custom code is 40912
 
   Scenario: Trying to create application with non-existing partner id - DP-1732
       When Application is created
-        | applicationName | description            | website                    | Id                                   | partnerId                            | isInternal |
+        | applicationName | description            | website                    | id                                   | partnerId                            | isInternal |
         | App Name 2      | Different name same ID | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 00011123-0000-4000-a000-222222222222 | false      |
       Then Response code is "422"
       And Custom code is 42202

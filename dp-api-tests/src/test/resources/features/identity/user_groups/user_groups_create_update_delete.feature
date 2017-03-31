@@ -3,16 +3,16 @@ Feature: User groups create update delete
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | Id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
-      | Id                                   | customerId                           | name        | isActive | description          |
+      | id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
 
   Scenario: Create user group with ID that already exists
     When The following user group is created
-      | Id                                   | customerId                           | name        | isActive | description          |
+      | id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
     Then Response code is "409"
     And Custom code is 40902
@@ -21,7 +21,7 @@ Feature: User groups create update delete
   @Smoke
   Scenario: Create get activate and delete user group
     When The following user group is created
-      | Id                                   | customerId                           | name                | description          | isActive |
+      | id                                   | customerId                           | name                | description          | isActive |
       | b8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_created_1 | userGroupDescription | false    |
     Then Response code is "201"
     And Content type is "application/json"
@@ -70,7 +70,7 @@ Feature: User groups create update delete
 
   Scenario Outline: Creating user group with invalid data
     When The following user group is created
-      | Id            | customerId   | name   | isActive   | description   |
+      | id            | customerId   | name   | isActive   | description   |
       | <userGroupId> | <customerId> | <name> | <isActive> | <description> |
     Then Response code is <response_code>
     And Custom code is <error_code>
@@ -115,7 +115,7 @@ Feature: User groups create update delete
 
   Scenario Outline: Updating user group with valid data - customer
     Given The following customers exist with random address
-      | Id                                   | companyName         | email           | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName         | email           | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer2 | ug2@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 65a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer3 | ug3@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is updated with following data
@@ -152,7 +152,7 @@ Feature: User groups create update delete
 
   Scenario Outline: Send POST request with empty body to all user groups endpoints
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "false"
-      | Id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"

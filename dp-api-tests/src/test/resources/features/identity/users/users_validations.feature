@@ -6,7 +6,7 @@ Feature: Users validations
     Given the location "identity/users" for object "user"
     Given unique identifier "user_id" for object "user"
     Given The following customers exist with random address
-      | Id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given the following "user" object definition
       | path                        | type       | required | correct                                                     | invalid      | longer     |

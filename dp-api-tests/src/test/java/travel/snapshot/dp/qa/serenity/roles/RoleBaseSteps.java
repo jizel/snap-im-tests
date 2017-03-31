@@ -237,7 +237,7 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     public RoleDto setRoleAttributes(RoleDto roleDto, Map<String, Object> roleAttributes){
-        roleDto.setId(Objects.toString(roleAttributes.get("roleId"), null));
+        roleDto.setId(Objects.toString(roleAttributes.get("id"), null));
         roleDto.setDescription(Objects.toString(roleAttributes.get("description")));
         roleDto.setApplicationId(Objects.toString(roleAttributes.get("applicationId"), null));
         roleDto.setRoleName(Objects.toString(roleAttributes.get("roleName"), null));

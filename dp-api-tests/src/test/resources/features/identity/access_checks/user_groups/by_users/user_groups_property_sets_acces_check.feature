@@ -12,14 +12,14 @@ Feature: User Groups Property Sets access check feature
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | Id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given The following user groups exist
-      | Id                                   | customerId                           | name        | isActive | description          |
+      | id                                   | customerId                           | name        | isActive | description          |
       | 12345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | Id                                   | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
+      | id                                   | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
       | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithUserGroup   | Customer  | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
@@ -55,7 +55,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Relationship is created between user group and property set by user with access
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true" by user "userWithUserGroup"
     Then Response code is 201
@@ -63,7 +63,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Relationship is created between user group and property set by user without access to user group, or the property set
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true" by user "userWithNoUserGroup"
     Then Response code is 404
@@ -74,7 +74,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Add user group to property set by user whose access to the user group - or the property - is inactive
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     Given Relation between user "userWithUserGroup" and property set "PropertySet_UserGroup" is inactivated
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true" by user "userWithUserGroup"
@@ -90,7 +90,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Update relationship userGroup-propertySet by user with access
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "false"
     When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithUserGroup"
@@ -100,7 +100,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Update relationship userGroup-propertySet by user without access to user group
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists with isActive "false"
     When IsActive relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is set to "true" by user "userWithNoUserGroup"
@@ -113,7 +113,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Delete userGroup-propertySet relationship by user with access
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true"
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithUserGroup"
@@ -123,7 +123,7 @@ Feature: User Groups Property Sets access check feature
 
   Scenario: Delete userGroup-propertySet relationship by user without (or with inactive) access to user group
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithNoUserGroup"
-      | Id                                   | name                  | description            | type            |
+      | id                                   | name                  | description            | type            |
       | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is deleted by user "userWithNoUserGroup"
