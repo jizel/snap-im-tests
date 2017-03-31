@@ -66,7 +66,7 @@ public class CustomerUtils {
         customerDto.setCompanyName(Objects.toString(customerAttributes.get("companyName"), null));
         customerDto.setHospitalityId(Objects.toString(customerAttributes.get("hospitalityId"), null));
         customerDto.setParentId(Objects.toString(customerAttributes.get("parentId"), null));
-        customerDto.setType(CustomerType.valueOf(Objects.toString(customerAttributes.get("type"), null)));
+        customerDto.setType(CustomerType.valueOf(Objects.toString(customerAttributes.get("type"), null).toUpperCase()));
         customerDto.setSalesforceId(SalesforceId.of(Objects.toString(customerAttributes.get("salesforceId"), null)));
         if(customerAttributes.containsKey("isActive")){
             customerDto.setIsActive(Boolean.valueOf((customerAttributes.get("isActive")).toString()));

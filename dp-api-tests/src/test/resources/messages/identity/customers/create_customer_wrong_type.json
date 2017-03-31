@@ -1,0 +1,20 @@
+{
+  "website": "http://www.snapshot.travel",
+  "is_active": true,
+  "address": {
+    "country": "CZ",
+    "address_line2": "zuDmJyVpeZ 247",
+    "address_line1": "vNCTEFoMyP 401",
+    "city": "SqPqDsa",
+    "region": null,
+    "zip_code": "024"
+  },
+  "is_demo_customer": false,
+  "phone": "+420123456789",
+  "headquarters_timezone": "Europe/Prague",
+  "name": "TypeTestCustomer",
+  "vat_id": "CZ00000001",
+  "type": "WrongCustomerType",
+  "email": "typecustomer@snapshot.travle",
+  "salesforce_id": "SALESFORCEID001"
+}
