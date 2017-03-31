@@ -1,3 +1,5 @@
+# All api subscription endpoints are disabled in 1.37. See DP-1925
+@skipped
 @Identity
 Feature: Customers properties get
 
@@ -24,7 +26,9 @@ Feature: Customers properties get
       | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
       | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
 
-#  DP-1775
+  #  DP-1775
+  # All api subscription endpoints are disabled in 1.37
+  @skipped
   Scenario Outline: Getting customer's api subscriptions - positive scenarios
     When List of api subscriptions is got for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -58,7 +62,6 @@ Feature: Customers properties get
       | /null | /null  | commercial_subscription_id=='*4e32*' and is_active=='true'         | /null                      | /null                      | 0           | 0     |                                                                            |
       | /null | /null  | commercial_subscription_id=='*4e32*' or is_active=='false'         | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
       | /null | /null  | commercial_subscription_id=='*4e32*' or is_active=='true'          | /null                      | /null                      | 2           | 2     | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f, 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f |
-
 
   Scenario Outline: Getting customer's api subscriptions - negative scenarios
     When List of api subscriptions is got for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
