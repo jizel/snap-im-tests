@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.identity.users;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.PARTNER;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
@@ -395,10 +396,15 @@ public class UserStepdefs {
         userRolesSteps.roleExistsBetweenUserAndPropertySet(roleId, userName, propSerId);
     }
 
-    @When("^Following snapshot user is created without customer$")
-    public void followingSnapshotUserIsCreatedWithoutCustomer(List<UserCreateDto> users) throws Throwable {
+    @When("^Following (snapshot|partner) user is created without customer$")
+    public void followingSnapshotUserIsCreatedWithoutCustomer(String userType, List<UserCreateDto> users) throws Throwable {
         UserCreateDto user = users.get(0);
-        user.setUserType(SNAPSHOT);
+        if(userType.equals("snapshot")) {
+            user.setUserType(SNAPSHOT);
+        }
+        else if (userType.equals("partner")){
+            user.setUserType(PARTNER);
+        }
         usersSteps.createUser(user);
     }
 
