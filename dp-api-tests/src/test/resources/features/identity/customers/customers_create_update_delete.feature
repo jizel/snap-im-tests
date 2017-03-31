@@ -576,41 +576,44 @@ Feature: Customers create update delete
       | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users                                      |
       | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users/a63edcc6-6830-457c-89b1-7801730bd0ae |
 
-    Scenario: Customer ID must be unique when creating customer - DP-1661
-      Given The following customers exist with random address
-        | id                                   | companyName       | email              | salesforceId   | vatId      | isDemoCustomer | timezone      |
-        | 00011222-3836-4207-a705-42bbecf3d881 | Original Customer | oc@snapshot.travel | original_sf_id | CZ10000001 | true           | Europe/Prague |
-      When Customer is created with random address
-        | id                                   | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
-        | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
-      Then Response code is "409"
-      And Custom code is 40902
+  Scenario: Customer ID must be unique when creating customer - DP-1661
+    Given The following customers exist with random address
+      | id                                   | companyName       | email              | salesforceId   | vatId      | isDemoCustomer | timezone      |
+      | 00011222-3836-4207-a705-42bbecf3d881 | Original Customer | oc@snapshot.travel | original_sf_id | CZ10000001 | true           | Europe/Prague |
+    When Customer is created with random address
+      | id                                   | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
+      | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
+    Then Response code is "409"
+    And Custom code is 40902
 
-      Scenario: CustomerId and parentId must be different - DP-1528
-        When Customer is created with random address
-          | id                                   | parentId                             | companyName               | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
-          | a792d2b2-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Already existing custoemr | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
-#        Already existing customerId
-        Then Response code is "409"
-        And Custom code is 40902
-        When Customer is created with random address
-          | id                                   | parentId                             | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
-          | 00011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
-#        Nonexistent customerId
-        Then Response code is "422"
-        And Custom code is 42202
-        Then Customer with id "00011222-3836-4207-a705-42bbecf3d881" doesn't exist
+  Scenario: CustomerId and parentId must be different - DP-1528
+    When Customer is created with random address
+      | id                                   | parentId                             | companyName               | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Already existing custoemr | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+#       Already existing customerId
+    Then Response code is "409"
+    And Custom code is 40902
+    When Customer is created with random address
+      | id                                   | parentId                             | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
+      | 00011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
+#       Nonexistent customerId
+    Then Response code is "422"
+    And Custom code is 42202
+    Then Customer with id "00011222-3836-4207-a705-42bbecf3d881" doesn't exist
 
-      Scenario: Parent-child relationship should not contain loops - DP-1395
-        Given The following customers exist with random address
-          | id                                   | parentId                             | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
-          | 00011222-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
-          | 10011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
-        When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data by user "Snapshotuser"
-          | parentId                             |
-          | 10011222-3836-4207-a705-42bbecf3d881 |
-        Then Response code is "409"
-        Then Custom code is 40911
+  Scenario: Parent-child relationship should not contain loops - DP-1395
+    Given The following customers exist with random address
+      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 0 | c0@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+    Given The following customers exist with random address
+      | id                                   | parentId                             | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | 00011222-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+      | 10011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data
+      | parentId                             |
+      | 10011222-3836-4207-a705-42bbecf3d881 |
+    Then Response code is "409"
+    Then Custom code is 40911
 
   Scenario Outline: Checking customer types - DP-1879
     When Customer is created with random address

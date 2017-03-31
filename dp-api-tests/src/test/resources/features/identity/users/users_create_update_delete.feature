@@ -24,7 +24,7 @@ Feature: Users create update delete
     And Body contains entity with attribute "email" value "<email>"
     And Body contains entity with attribute "timezone" value "<timezone>"
     And Body contains entity with attribute "culture" value "<culture>"
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "is_active" value "true"
     And Etag header is present
     Examples:
       | userType | userName | firstName | lastName | email                           | timezone      | culture |
@@ -91,8 +91,10 @@ Feature: Users create update delete
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
     Examples:
-      | json_input_file                                             | method | module   | url             | error_code | custom_code |
-      | /messages/identity/users/create_user_invalid_user_type.json | POST   | identity | /identity/users | 422        | 42201       |
+      | json_input_file                                                     | method | module   | url             | error_code | custom_code | notes   |
+      | /messages/identity/users/create_user_invalid_user_type.json         | POST   | identity | /identity/users | 422        | 42201       |         |
+      | /messages/identity/users/create_user_missing_customer_relation.json | POST   | identity | /identity/users | 400        | 40003       | DP-1664 |
+
 
 
   Scenario: Deleting nonexistent user

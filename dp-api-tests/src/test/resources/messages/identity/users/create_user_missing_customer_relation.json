@@ -1,0 +1,10 @@
+{
+  "user_type": "customer",
+  "user_name": "customerUserWithoutCustomer",
+  "first_name": "Qa",
+  "last_name": "Test",
+  "phone": "+123456789",
+  "email": "qa@test.com",
+  "timezone": "America/New_York",
+  "culture": "en-US"
+}
