@@ -24,7 +24,6 @@
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000001" and property "p1_code"
-     #    Must be here - DP-1846
     Given Relation between user "user1OfC1" and property with code "p1_code" exists with is_active "true"
 
   Scenario: User can view only list of property-users of his own customer and property he can access
@@ -45,8 +44,7 @@
     When User "user1OfC1" requests list of users for property "p1_code"
     Then Response code is "404"
 
-  # DP-1889
-  @skipped
+
   Scenario: User can add users to property only if he has access both to users and to property
     # Add wrong users to property
     When User "user1OfC1" adds user "user1OfC2" to property "p1_code"
@@ -58,11 +56,6 @@
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p2_code"
     When User "user1OfC1" adds user "user2OfC1" to property "p2_code"
     Then Response code is "404"
-    # DP-1889
     Given Relation between user "user1OfC1" and property with code "p2_code" exists with is_active "true"
-    When User "user1OfC1" adds user "user2OfC1" to property "p2_code"
-    Then Response code is "422"
-    # Positive scenario. We need user1 to have access to both property p2 and user2
-    And Relation between user "user2OfC1" and property with code "p1_code" exists with is_active "true"
     When User "user1OfC1" adds user "user2OfC1" to property "p2_code"
     Then Response code is "201"

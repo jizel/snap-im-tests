@@ -148,7 +148,6 @@ Feature: Properties access check feature - GET
          | /null | 0      | property_code=='*_code'                                    | property_code  | /null               | 5           |
          | /null | 0      | property_code=='p3_code'                                   | /null          | /null               | 1           |
          | /null | 0      | is_active=='true'                                          | /null          | salesforce_id       | 5           |
-         | /null | 0      | salesforce_id=='salesforceid_2'                            | /null          | /null               | 1           |
          | /null | 0      | anchor_customer_id=='*23'                                  | /null          | anchor_customer_id  | 5           |
          | /null | 0      | anchor_customer_id=='2228fd9a-a05d-42d8-8e84-42e904ace222' | /null          | /null               | 0           |
          | /null | 0      | tti_id=='*23*'                                             | /null          | /null               | 2           |
