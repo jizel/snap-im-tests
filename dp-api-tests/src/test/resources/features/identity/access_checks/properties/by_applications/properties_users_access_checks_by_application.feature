@@ -43,16 +43,16 @@ Feature: Properties-Users Application access check feature
       Then Response code is "200"
       And Total count is "1"
       When List of all users for property with code "p1_code" is got by user "user1" for application version "versionWithoutSubscription"
-      Then Response code is "404"
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
       When List of all users for property with code "p2_code" is got by user "user1" for application version "versionWithSubscription"
       Then Response code is "404"
       And Custom code is 40402
 
   Scenario: Add/Remove user to property by application with and without access
     When User "user1" is added to property with code "p1_code" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" is added to property with code "p2_code" by user "user1" for application version "versionWithSubscription"
     Then Response code is "404"
     And Custom code is 40402
@@ -62,7 +62,7 @@ Feature: Properties-Users Application access check feature
 
   Scenario: Delete user from property by application with and without access
     When User "user1" is removed from property with code "p1_code" by user "user1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
     When User "user1" is removed from property with code "p1_code" by user "user1" for application version "versionWithSubscription"
     Then Response code is "204"
