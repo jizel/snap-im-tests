@@ -5,8 +5,7 @@ Feature: facebook posts
   Background:
     Given Database is cleaned and default entities are created
 
-  #DP-1941
-  @skipped
+
   Scenario Outline: Getting a list of items
     When List of facebook items "<url>" for property id "<property>" is got with limit "<limit>" and cursor "<cursor>"
     Then Response code is 200
@@ -53,11 +52,8 @@ Feature: facebook posts
       | /analytics/facebook/posts | 400           | 40002       |
 
 
-  #DP-1941
-  @skipped
   @Smoke
   Scenario Outline: Checking that data returned are correct (date(UTC) from DB is recalculated to property timezone)
-    #property 99000099 has DB value for posts stored everyday at 2015-12-30 11:09:24 UTC -> convert -> 2015-12-30T18:09:24
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -66,11 +62,11 @@ Feature: facebook posts
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     And The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone     | anchorCustomerId                     |
-      | 99000099-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Asia/Bangkok | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | 99001099-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Asia/Bangkok | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     And List of facebook items "<url>" for property id "<property>" is got with limit "1" and cursor "/null"
     Then Response code is 200
     And Facebook posts contains datetime "<datetime>" engagement "<engagement>" content "<content>" and reach "<reach>"
 
     Examples:
-      | url                       | datetime                 | engagement | content     | reach | property                             |
-      | /analytics/facebook/posts | 2015-12-30T18:09:24+0700 | 3567       | Post 0 - 59 | 11712 | 99000099-9999-4999-a999-999999999999 |
+      | url                       | datetime      | engagement | content       | reach | property                             |
+      | /analytics/facebook/posts | today - 1 day | 4168       | Post 10 - 500 | 11553 | 99001099-9999-4999-a999-999999999999 |
