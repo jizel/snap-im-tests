@@ -297,6 +297,10 @@ public class BasicSteps {
                 baseUri = (PropertiesHelper.getProperty(WEB_PERFORMANCE_BASE_URI));
                 break;
             }
+            case "review": {
+                baseUri = (PropertiesHelper.getProperty(REVIEW_BASE_URI));
+                break;
+            }
             case "authorization": {
                 baseUri = (PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI));
                 break;
