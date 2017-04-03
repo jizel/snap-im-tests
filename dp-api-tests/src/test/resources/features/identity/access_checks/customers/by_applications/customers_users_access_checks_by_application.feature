@@ -28,8 +28,9 @@ Feature: Customers-Users Application access check feature - GET
       | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
-      | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
+      | id                                   | isNonCommercial |apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | 22200000-0000-4000-a000-000000000444 | false           | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
+      | 22200000-0000-4000-a000-000000000555 | true            | 3            | nonCommercialversion       | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
@@ -48,11 +49,15 @@ Feature: Customers-Users Application access check feature - GET
     And Total count is "1"
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
+    When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "200"
 
   Scenario: Add user to customer by application with and without access to the customer
     When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
     When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1" for application version "versionWithSubscription"
+    Then Response code is "201"
+    When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1" for application version "nonCommercialversion"
     Then Response code is "201"
 
   Scenario: Updating User Customer relationship by application with and without access
@@ -60,9 +65,14 @@ Feature: Customers-Users Application access check feature - GET
     Then Response code is "403"
     When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "false" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "204"
+    When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "true" by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "204"
 
   Scenario: Deleting User Customer relationship by application with and without access
     When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
     When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithSubscription"
+    Then Response code is "204"
+    Given Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" exists
+    When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "nonCommercialversion"
     Then Response code is "204"
