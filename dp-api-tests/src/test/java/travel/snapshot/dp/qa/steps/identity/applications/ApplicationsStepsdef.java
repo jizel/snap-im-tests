@@ -59,16 +59,18 @@ public class ApplicationsStepsdef {
         applicationSteps.applicationWithIdIsDeleted("nonexistent_id");
     }
 
-    @When("^Application with id \"([^\"]*)\" is updated with data$")
-    public void Application_With_Id_Is_Updated_With_Data(String applicationId, List<ApplicationUpdateDto> applications)
+    @When("^Application(?: with id)? \"([^\"]*)\" is updated with data$")
+    public void Application_With_Id_Is_Updated_With_Data(String applicationName, List<ApplicationUpdateDto> applications)
             throws Throwable {
+        String applicationId = applicationSteps.resolveApplicationId(applicationName);
         String etag = applicationSteps.getEntityEtag(applicationId);
         applicationSteps.updateApplication(applicationId, applications.get(0), etag);
     }
 
-    @Then("^Updated application with id \"([^\"]*)\" has data$")
-    public void Updated_Application_With_Id_Has_Data(String applicationId, List<ApplicationDto> applicationData)
+    @Then("^Updated application(?: with id)? \"([^\"]*)\" has data$")
+    public void Updated_Application_With_Id_Has_Data(String applicationName, List<ApplicationDto> applicationData)
             throws Throwable {
+        String applicationId = applicationSteps.resolveApplicationId(applicationName);
         applicationSteps.applicationWithIdHasData(applicationId, applicationData.get(0));
     }
 

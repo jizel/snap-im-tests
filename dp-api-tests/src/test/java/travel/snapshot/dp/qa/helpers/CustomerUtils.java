@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.helpers;
 
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
+
 import org.apache.commons.lang3.RandomStringUtils;
 
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;

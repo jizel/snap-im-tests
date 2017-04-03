@@ -6,13 +6,13 @@ Feature: Applications commercial subscriptions
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following properties exist with random address and billing address
-      | propertyId                          | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      |c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
   Scenario: Getting applications commercial subscriptions
     Given The following commercial subscriptions exist
-      | applicationId                        | id                                   | propertyId                           |
+      | applicationId                        | customerId                           | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
     When Applications commercial subscriptions for application id "11111111-0000-4000-a000-111111111111" is got
     Then Response code is "200"
@@ -21,7 +21,7 @@ Feature: Applications commercial subscriptions
 
   Scenario Outline: Getting list of applications commercial subscriptions
     Given The following commercial subscriptions exist
-      | applicationId                        | id                                   | propertyId                          |
+      | applicationId                        | customerId                           | propertyId                          |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 |c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 |c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 |c37c3501-d309-4702-ad0b-fd53a98c01fd |
@@ -83,15 +83,15 @@ Feature: Applications commercial subscriptions
 
     Examples:
       | limit | cursor | returned | total | link_header                                                                                                                                                                                                                                 |
-      | /null |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
-      | /null | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
-      |       |        | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
-      |       | /null  | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
-      | 15    |        | 15       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=15&cursor=15>; rel="next"                                                                                                                       |
-      |       | 1      | 50       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=0>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=51>; rel="next" |
-      | 20    | 0      | 20       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=20&cursor=20>; rel="next"                                                                                                                       |
-      | 10    | 0      | 10       | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=10&cursor=10>; rel="next"                                                                                                                       |
-      | 5     | 10     | 5        | 52    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=5&cursor=5>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=5&cursor=15>; rel="next"   |
+      | /null |        | 50       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
+      | /null | /null  | 50       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
+      |       |        | 50       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
+      |       | /null  | 50       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                       |
+      | 15    |        | 15       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=15&cursor=15>; rel="next"                                                                                                                       |
+      |       | 1      | 50       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=0>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=20&cursor=20>; rel="next"                                                                                                                       |
+      | 10    | 0      | 10       | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=10&cursor=10>; rel="next"                                                                                                                       |
+      | 5     | 10     | 5        | 53    | </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=5&cursor=5>; rel="prev", </identity/applications/11111111-0000-4000-a000-111111111111/commercial_subscriptions?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of applications commercial subscriptions
     When List of application commercial subscriptions is got for application with id "11111111-0000-4000-a000-111111111111" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
