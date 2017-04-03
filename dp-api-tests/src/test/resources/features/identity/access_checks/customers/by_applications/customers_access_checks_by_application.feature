@@ -25,8 +25,9 @@ Feature: Customers Application access check feature - GET
       | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
-      | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
+      | id                                   | isNonCommercial | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | 22200000-0000-4000-a000-000000000444 | false           | 2            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
+      | 22200000-0000-4000-a000-000000000555 | true            | 3            | nonCommercialversion       | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
@@ -39,6 +40,8 @@ Feature: Customers Application access check feature - GET
   Scenario: There is active CommercialSubscription linking to the ApplicationVersion (through Application)
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "200"
+    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "200"
     When Customer with customerId "00000000-0000-4000-8000-123000000abc" is requested by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "404"
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
@@ -50,6 +53,8 @@ Feature: Customers Application access check feature - GET
       | 12300000-0000-4000-a000-000000000000 | 22245678-0000-4000-a000-000000000000 | Company 222 | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | Europe/Prague |
       | 22245678-0000-4000-a000-000000000000 | 33345678-0000-4000-a000-000000000000 | Company 333 | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | Europe/Prague |
     When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
+    Then Response code is "200"
+    When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "nonCommercialversion"
     Then Response code is "200"
     When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
@@ -68,6 +73,8 @@ Feature: Customers Application access check feature - GET
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "200"
     And There are <returned> customers returned
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "200"
 
     Examples:
       | limit | cursor | filter                          | sort           | sort_desc           | returned    |
@@ -95,6 +102,10 @@ Feature: Customers Application access check feature - GET
       | updatedName   | updated@tenants.biz | updated_sf_id  | CZ11223344 | +420999666999 | http://www.update.snapshot.travel |
     Then Response code is "403"
     And Custom code is 40301
+    When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "nonCommercialversion"
+      | companyName                |
+      | updatedNameByNonCommercial |
+    Then Response code is "204"
 
   Scenario: Deleting Customer by application with and without access
     When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithoutSubscription"
@@ -102,11 +113,15 @@ Feature: Customers Application access check feature - GET
     And Custom code is 40301
     When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is 409
+    When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is 409
 
   Scenario Outline: Application with no access rights to property sends GET request to all general second level endpoints
     When GET request is sent to "<url>" on module "identity" by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
     And Custom code is "40301"
+    When GET request is sent to "<url>" on module "identity" by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "200"
     Examples:
       | url                                                                              |
 #      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |

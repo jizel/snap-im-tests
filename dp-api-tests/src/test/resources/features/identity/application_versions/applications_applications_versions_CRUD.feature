@@ -29,7 +29,7 @@ Feature: Applications versions create update delete
     And Custom code is "<custom_code>"
 
     Examples:
-      | json_input_file                                                             | method | module   | url                                                                              | error_code | custom_code |
+      | json_input_file                                                             | method | module   | url                            | error_code | custom_code |
       | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/application_versions | 422        | 42201       |
       | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/application_versions | 422        | 42201       |
       | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/application_versions | 422        | 42201       |
