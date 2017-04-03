@@ -31,7 +31,7 @@ Feature: Applications create update delete
   Scenario Outline: Checking error codes for creating applications
     Given Application is created
       | applicationName            | description               | website                    | partnerId                            |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
@@ -50,14 +50,14 @@ Feature: Applications create update delete
   Scenario Outline: Updating application
     Given The following applications exist
       | applicationName            | description               | website                    | partnerId                            |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
+    When Application "Application test company 1" is updated with data
       | applicationName           | description           | website           |
       | <updated_applicationName> | <updated_description> | <updated_website> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
-    And Updated application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" has data
+    And Updated application "<updated_applicationName>" has data
       | applicationName           | description           | website           |
       | <updated_applicationName> | <updated_description> | <updated_website> |
 
@@ -68,8 +68,8 @@ Feature: Applications create update delete
 
   Scenario: Updating application with outdated etag
     Given The following applications exist
-      | applicationName            | description               | website                    | partnerId                            |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | id                                   | applicationName            | description               | website                    | partnerId                            |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with invalid etag
       | applicationName  | description | website                    |
       | Updated App Name |             | http://www.snapshot.travel |
@@ -78,8 +78,8 @@ Feature: Applications create update delete
 
   Scenario Outline: Send POST request with empty body to all applications endpoints
     When The following applications exist
-      | applicationName            | description               | website                    | partnerId                            |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | id                                   | applicationName            | description               | website                    | partnerId                            |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     Given Application version is created for application with id "a318fd9a-a05d-42d8-8e84-42e904ace123"
       | id                                   | apiManagerId | versionName | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
@@ -91,11 +91,9 @@ Feature: Applications create update delete
       | identity/applications/                                                                                                                 |
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123                                                                             |
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions                                                        |
-      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions/b595fc9d-f5ca-45e7-a15d-c8a97108d884                   |
 
 
   Scenario: Application ID and name is unique when creating role - DP-1661
-
     Given The following applications exist
       | applicationName | description          | website                    | id                                   | partnerId                            | isInternal |
       | App Name 1      | Original application | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
@@ -105,8 +103,8 @@ Feature: Applications create update delete
     Then Response code is "409"
     And Custom code is 40902
     When Application is created
-      | applicationName | description            | website                    | id                                   | isInternal |
-      | App Name 1      | Different ID same name | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | false      |
+      | applicationName | description            | website                    | Id                                   | isInternal | partnerId                            |
+      | App Name 1      | Different ID same name | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | false      | 11111111-0000-4000-a000-222222222222 |
     Then Response code is "409"
     And Custom code is 40912
 

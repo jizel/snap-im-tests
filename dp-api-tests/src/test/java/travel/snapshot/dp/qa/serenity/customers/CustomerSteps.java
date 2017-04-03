@@ -389,7 +389,8 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void invalidCustomerUpdate(String customerId, Map<String, Object> updateMap) {
-        Response response = updateEntity(customerId, updateMap, getEntity(customerId).getHeader(HEADER_ETAG));
+        String etag = getEntityEtag(customerId);
+        Response response = updateEntity(customerId, updateMap, etag);
         setSessionResponse(response);
     }
 

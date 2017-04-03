@@ -8,13 +8,11 @@ Feature: Customer code feature
 
   Background:
     Given Database is cleaned and default entities are created
-    And Default Snapshot user is created
-
 
   Scenario Outline: Correct customer code is returned when none is sent for all company names
     Given Customer is created with random address
-      | companyName     | email              | isDemoCustomer | timezone      |
-      | <companyName>   | c1@snaphsot.travel | true           | Europe/Prague |
+      | companyName     | email              | isDemoCustomer | timezone      | type  | salesforceId    |
+      | <companyName>   | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
     Then Body contains entity with attribute "customer_code"
     And The "customer_code" attribute in response contains only CAPITAL latin characters or numbers
 
@@ -31,15 +29,15 @@ Feature: Customer code feature
 
   Scenario: Customer code cannot be created manually
     When Customer is created with code
-      | code       |  companyName | email              | isDemoCustomer | timezone      |
-      | manualCode | Company 1    | c1@snaphsot.travel | true           | Europe/Prague |
+      | code       |  companyName | email              | isDemoCustomer | timezone      | type  | salesforceId    |
+      | manualCode | Company 1    | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
     Then Response code is "422"
     And Custom code is 42201
 
   Scenario: Customer code cannot be updated manually
     Given Customer is created with random address
-      | id                                   | companyName     | email              | isDemoCustomer | timezone      |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Company 1       | c1@snaphsot.travel | true           | Europe/Prague |
+      | id                                   | companyName     | email              | isDemoCustomer | timezone      | type  | salesforceId    |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Company 1       | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
     When Customer code of customer with Id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with "updatedCustomerCode"
     Then Response code is "422"
     And Custom code is 42201

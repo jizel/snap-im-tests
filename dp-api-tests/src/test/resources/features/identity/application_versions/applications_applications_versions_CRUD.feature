@@ -30,11 +30,12 @@ Feature: Applications versions create update delete
 
     Examples:
       | json_input_file                                                             | method | module   | url                                                                              | error_code | custom_code |
-      | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
-      | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
-      | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
-      | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
-      | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/applications/11111111-0000-4000-a000-111111111111/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_missing_version_name.json    | POST   | identity | /identity/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_missing_api_manager_id.json  | POST   | identity | /identity/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_missing_status.json          | POST   | identity | /identity/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_not_unique_version_name.json | POST   | identity | /identity/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_not_unique_version_id.json   | POST   | identity | /identity/application_versions | 422        | 42201       |
+      | /messages/identity/applications/create_version_missing_application_id.json  | POST   | identity | /identity/application_versions | 422        | 42201       |
 
   Scenario: Checking error code for deleting application version
     When Application version with id "nonexistent" is deleted

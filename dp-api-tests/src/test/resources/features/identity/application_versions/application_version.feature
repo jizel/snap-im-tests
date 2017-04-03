@@ -36,5 +36,5 @@ Feature: Applications versions GET (directly) - DP-1784
     Then Response code is "405"
     And Custom code is "40501"
     When DELETE request is sent to "identity/application_versions/a318fd9a-a05d-42d8-8e84-22e904ace111" on module "identity"
-    Then Response code is "405"
-    And Custom code is "40501"
+    Then Response code is "422"
+    And Custom code is "42201"
