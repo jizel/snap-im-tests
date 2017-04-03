@@ -99,6 +99,20 @@ Feature: Customers properties create update delete
     Then Response code is "409"
     And Custom code is 40907
 
+  Scenario: Customer cannot be deleted if he has relationship to existing property
+    Given The following customers exist with random address
+      | id                                   | companyName   | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Deletion test | c1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
+    Given The following properties exist with random address and billing address
+      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    Given Property with code "p4_code" is deleted
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is "204"
+
   #error codes
 
   #Scenario Outline: Checking error codes for updating customer

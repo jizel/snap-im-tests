@@ -628,3 +628,19 @@ Feature: Customers create update delete
     | educational_institution         |
     | hospitality_technology_provider |
     | other                           |
+
+  Scenario: Customer with parent-child relationships cannot be deleted
+    Given The following customers exist with random address
+      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 0 | c0@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+    Given The following customers exist with random address
+      | id                                   | parentId                             | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | 00011222-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When Customer with id "00011222-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is "204"
+    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
+    Then Response code is "204"
+

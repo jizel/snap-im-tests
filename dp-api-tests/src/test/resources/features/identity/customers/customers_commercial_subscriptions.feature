@@ -2,18 +2,15 @@ Feature: Customers commercial subscriptions
 
   Background:
     Given Database is cleaned and default entities are created
-
-
     Given The following customers exist with random address
       | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | id                                   |
       | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
-      | propertyId                          | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-      |c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
   Scenario: Getting customers commercial subscriptions
-
     Given The following commercial subscriptions exist
       | applicationId                        | customerId                           | id                                   | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | c37c3501-d309-4702-ad0b-fd53a98c01fd |
@@ -23,7 +20,6 @@ Feature: Customers commercial subscriptions
     And Body contains entity with attribute "commercial_subscription_id"
 
   Scenario Outline: Getting list of customers commercial subscriptions
-
     Given The following commercial subscriptions exist
       | applicationId                        | id                                   | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
@@ -124,3 +120,21 @@ Feature: Customers commercial subscriptions
       | 10          | 0      | /null  | /null                      | nonexistent                | 400           | 40002          |
       | 10          | 0      | /null  | nonexistent                | /null                      | 400           | 40002          |
       | 10          | 0      | code== | /null                      | /null                      | 400           | 40002          |
+
+    Scenario: Customer cannot be deleted if he has any commercial subscription
+      Given The following customers exist with random address
+        | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | id                                   |
+        | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | 00000000-a05d-42d8-8e84-000000000001 |
+      Given The following properties exist with random address and billing address
+        | id                                   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | 11111111-d309-4702-ad0b-fd53a98c01fd | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      Given The following commercial subscriptions exist
+        | applicationId                        | customerId                           | id                                   | propertyId                           |
+        | 11111111-0000-4000-a000-111111111111 | 00000000-a05d-42d8-8e84-000000000001 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 11111111-d309-4702-ad0b-fd53a98c01fd |
+      When Customer with id "00000000-a05d-42d8-8e84-000000000001" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is deleted
+      Then Response code is "204"
+      When Customer with id "00000000-a05d-42d8-8e84-000000000001" is deleted
+      Then Response code is "204"
