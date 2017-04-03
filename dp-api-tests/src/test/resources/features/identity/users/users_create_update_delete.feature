@@ -161,9 +161,17 @@ Feature: Users create update delete
   Scenario: Snapshot user can be created without relationship to customer (DP-1427)
     When Following snapshot user is created without customer
       | userName      | firstName | lastName | email                         | timezone      | culture |
-      | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshotUser1 | Snapshot  | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is "201"
     And Body contains entity with attribute "user_type" value "snapshot"
+    And Body does not contain property with attribute "user_customer_relationship"
+
+  Scenario: Partner user can be created without relationship to customer (DP-1934)
+    When Following partner user is created without customer
+      | userName     | firstName | lastName | email                        | timezone      | culture |
+      | partnerUser1 | Partner   | User1    | partnerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+    Then Response code is "201"
+    And Body contains entity with attribute "user_type" value "partner"
     And Body does not contain property with attribute "user_customer_relationship"
 
 
