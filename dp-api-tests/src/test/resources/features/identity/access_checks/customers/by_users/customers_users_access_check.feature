@@ -22,8 +22,7 @@ Feature: Customers users access check feature (second level endpoints)
     Given Relation between user "userWithCust1" and default property exists
     Given Relation between user "userWithCust2" and default property exists
 
-#      DP-1840
-  @skipped
+
   Scenario: Second level entities - User sees only users of the same customer
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
@@ -45,8 +44,8 @@ Feature: Customers users access check feature (second level endpoints)
       And Custom code is 40402
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
       When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1"
-      Then Response code is "404"
-      And Custom code is 40402
+      Then Response code is "403"
+      And Custom code is 40301
 
     Scenario: Updating User Customer relationship by user who can access it
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "false" by user "userWithCust1"
@@ -59,7 +58,7 @@ Feature: Customers users access check feature (second level endpoints)
       And Custom code is 40402
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "true" by user "userWithCust1"
-      Then Response code is "404"
+      Then Response code is "403"
 
     Scenario: Deleting User Customer relationship by user who can access it
       When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1"
@@ -73,4 +72,4 @@ Feature: Customers users access check feature (second level endpoints)
       And Custom code is 40402
       When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
       When User "userWithCust1" is removed from customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1"
-      Then Response code is "404"
+      Then Response code is "403"

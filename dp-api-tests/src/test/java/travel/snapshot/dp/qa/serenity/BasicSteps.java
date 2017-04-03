@@ -105,7 +105,6 @@ public class BasicSteps {
     protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     protected static final String SECOND_LEVEL_OBJECT_API_SUBSCRIPTION = "api_subscriptions";
     protected static final String SECOND_LEVEL_OBJECT_TTI = "tti";
-    protected static final String SECOND_LEVEL_OBJECT_GROUPS = "groups";
     protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     protected static final String HEADER_ETAG = "ETag";
     protected static final String SECOND_LEVEL_OBJECT_APPLICATIONS = "applications";

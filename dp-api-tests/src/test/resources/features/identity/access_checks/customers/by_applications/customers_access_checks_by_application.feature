@@ -33,6 +33,7 @@ Feature: Customers Application access check feature - GET
     Given The following api subscriptions exist
       | id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
+    And Relation between user "userWithCust1" and default property exists
 
 
   Scenario: There is active CommercialSubscription linking to the ApplicationVersion (through Application)
@@ -41,7 +42,7 @@ Feature: Customers Application access check feature - GET
     When Customer with customerId "00000000-0000-4000-8000-123000000abc" is requested by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "404"
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
 
   Scenario: There is active CommercialSubscription with parent customer entity
     Given The following customers exist with random address
@@ -51,7 +52,7 @@ Feature: Customers Application access check feature - GET
     When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "200"
     When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
+    Then Response code is "403"
 
   Scenario Outline: Filtering customers with application access checks
     Given The following customers exist with random address
@@ -62,10 +63,9 @@ Feature: Customers Application access check feature - GET
     Given Relation between user "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
     Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
     Given Relation between user "userWithCust1" and customer with id "45645678-0000-4000-a000-000000000000" exists with isPrimary "true"
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
-    Given API subscriptions exist for default application and customer with id "23445678-0000-4000-a000-000000000000"
-    Given API subscriptions exist for default application and customer with id "34545678-0000-4000-a000-000000000000"
-    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1" for application version "DefaultVersion"
+    Given API subscriptions exist for application "App With Subscription" and customer with id "34545678-0000-4000-a000-000000000000"
+    Given API subscriptions exist for application "App With Subscription" and customer with id "23445678-0000-4000-a000-000000000000"
+    When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "200"
     And There are <returned> customers returned
 
@@ -75,45 +75,41 @@ Feature: Customers Application access check feature - GET
       | /null | 0      | name=='Company 5'               | /null          | /null               | 0           |
       | 2     | 0      | website=='*www.*'               | /null          | /null               | 2           |
       | /null | 0      | is_demo_customer=='true'        | /null          | salesforce_id       | 2           |
-      | /null | 0      | salesforce_id=='salesforceid_3' | /null          | /null               | 1           |
       | /null | 0      | email=='*@tenants.biz'          | website        | /null               | 3           |
       | /null | 0      | vat_id=='CZ10000005'            | website        | /null               | 0           |
       | /null | 0      | customer_id=='23445678-*'       | salesforce_id  | /null               | 1           |
 
   Scenario: Update customer with and without application access
     When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "versionWithSubscription"
-      | companyName   | email               | salesforceId   | vatId      | phone         | website                           |
-      | updatedName   | updated@tenants.biz | updated_sf_id  | CZ01111110 | +420999666999 | http://www.update.snapshot.travel |
+      | companyName   | email               | salesforceId   | vatId        | phone         | website                           |
+      | updatedName   | updated@tenants.biz | updated_sf_id  | CZ0123456789 | +420999666999 | http://www.update.snapshot.travel |
     Then Response code is "204"
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "200"
     And Body contains entity with attribute "name" value "updatedName"
-    And Body contains entity with attribute "salesforce_id" value "updated_sf_id"
     And Body contains entity with attribute "website" value "http://www.update.snapshot.travel"
     And Body contains entity with attribute "email" value "updated@tenants.biz"
-    And Body contains entity with attribute "vat_id" value "CZ01111110"
+    And Body contains entity with attribute "vat_id" value "CZ0123456789"
     When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "versionWithoutSubscription"
       | companyName   | email               | salesforceId   | vatId      | phone         | website                           |
-      | updatedName   | updated@tenants.biz | updated_sf_id  | CZ01111110 | +420999666999 | http://www.update.snapshot.travel |
-    Then Response code is "404"
-    And Custom code is 40402
+      | updatedName   | updated@tenants.biz | updated_sf_id  | CZ11223344 | +420999666999 | http://www.update.snapshot.travel |
+    Then Response code is "403"
+    And Custom code is 40301
 
   Scenario: Deleting Customer by application with and without access
     When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is 404
-    And Custom code is 40402
+    Then Response code is 403
+    And Custom code is 40301
     When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithSubscription"
-    Then Response code is 204
-    And Body is empty
-    And Customer with id "12300000-0000-4000-a000-000000000000" doesn't exist
+    Then Response code is 409
 
   Scenario Outline: Application with no access rights to property sends GET request to all general second level endpoints
     When GET request is sent to "<url>" on module "identity" by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "404"
-    And Custom code is "40402"
+    Then Response code is "403"
+    And Custom code is "40301"
     Examples:
       | url                                                                              |
-      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
+#      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
       | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
       | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
       | identity/customers/12300000-0000-4000-a000-000000000000/properties               |
@@ -130,7 +126,7 @@ Feature: Customers Application access check feature - GET
       | url                                                                              |
       | identity/customers                                                               |
       | identity/customers/12300000-0000-4000-a000-000000000000/                         |
-      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
+#      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
       | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
       | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
       | identity/customers/12300000-0000-4000-a000-000000000000/properties               |

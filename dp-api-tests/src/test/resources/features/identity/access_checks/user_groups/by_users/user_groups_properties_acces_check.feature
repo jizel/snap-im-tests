@@ -1,3 +1,4 @@
+
 @Identity
   Feature: User Groups Properties access check feature
   - Checking when certain user should and should not have access to certain User Group
@@ -64,7 +65,7 @@
       Given Relation between user "userWithUserGroup" and property with code "p1_code" is activated
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
       Then Response code is "201"
-      Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
       When Relation between user group "userGroup_1" and property with code "p1_code" is created with isActive "false" by user "userWithUserGroup"
       Then Response code is "404"
       And Custom code is 40402
@@ -98,7 +99,7 @@
       Then Response code is 200
 
     Scenario: Delete user group to property relationship by user whose relation with the user group is inactive
-      Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
+      Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
       Given Relation between user group "userGroup_1" and property "p1_code" exists
       When Relation between user group "userGroup_1" and property "p1_code" is deleted by user "userWithUserGroup"
       Then Response code is 404

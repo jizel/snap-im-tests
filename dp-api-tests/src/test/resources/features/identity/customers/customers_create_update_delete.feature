@@ -46,6 +46,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_country_value.json  | POST   | identity | /identity/customers | 422        | 42202          |
       | /messages/identity/customers/create_customer_wrong_phone_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_type.json           | POST   | identity | /identity/customers | 422        | 42201          |
 
 #    TODO: error codes for updating customer
   Scenario Outline: Create foreign customers
@@ -610,3 +611,17 @@ Feature: Customers create update delete
           | 10011222-3836-4207-a705-42bbecf3d881 |
         Then Response code is "409"
         Then Custom code is 40911
+
+  Scenario Outline: Checking customer types - DP-1879
+    When Customer is created with random address
+      | type   | companyName      | email                        | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | <type> | TypeTestCustomer | typecustomer@snapshot.travle | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+    Then Response code is "201"
+    And Body contains entity with attribute "type" value "<type>"
+    Examples:
+    | type                            |
+    | hotel                           |
+    | consultancy                     |
+    | educational_institution         |
+    | hospitality_technology_provider |
+    | other                           |

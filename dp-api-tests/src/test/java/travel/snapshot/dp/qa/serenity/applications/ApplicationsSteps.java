@@ -165,18 +165,18 @@ public class ApplicationsSteps extends BasicSteps {
         return stream(application).findFirst().orElse(null);
     }
 
-    public String resolveApplicationVersionId(String applicationName) {
+    public String resolveApplicationId(String applicationName) {
         if (applicationName == null) return DEFAULT_SNAPSHOT_APPLICATION_ID;
 
-        String applicationVersionId;
+        String applicationId;
         if (isUUID(applicationName)) {
-            applicationVersionId = applicationName;
+            applicationId = applicationName;
         } else {
             ApplicationDto application = getApplicationByName(applicationName);
             assertThat(String.format("Application with name \"%s\" does not exist", applicationName), application , is(notNullValue()));
-            applicationVersionId = application.getId();
+            applicationId = application.getId();
         }
-        return applicationVersionId;
+        return applicationId;
     }
 
 

@@ -42,5 +42,5 @@ Feature: Customers property sets access check feature (second level endpoints)
     And Total count is "1"
     When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
     When List of all property sets for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
-    Then Response code is "404"
+    Then Response code is "403"
 

@@ -40,7 +40,7 @@ Feature: Customers access check feature - POST and DELETE
       | updatedName | true       | udpatedDesc   |
     Then Response code is "404"
     And Custom code is 40402
-    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
+    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
     When User group "userGroup_1" is updated with following data by user "userWithUserGroup"
       | name        | isActive   | description   |
       | updatedName | true       | udpatedDesc   |
@@ -55,6 +55,6 @@ Feature: Customers access check feature - POST and DELETE
     Then Response code is 404
     When User group "userGroup_1" is requested by user "userWithUserGroup"
     Then Response code is "200"
-    Given Relation between user "userWithUserGroup" and group "userGroup_1" is deactivated
+    Given Relation between user group "userGroup_1" and user "userWithUserGroup" is deactivated
     When User group "userGroup_1" is deleted by user "userWithUserGroup"
     Then Response code is 404

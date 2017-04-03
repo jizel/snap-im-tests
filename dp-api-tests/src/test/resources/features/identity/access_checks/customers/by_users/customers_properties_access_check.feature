@@ -24,8 +24,7 @@ Feature: Customers properties access check feature (second level endpoints)
     Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc" and property "p1_code"
 
 
-#      DP-1840
-  @skipped
+
   Scenario: Second level entities - User sees only properties he should for customer he sees
     Given Relation between property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" exists with type "chain" from "2015-01-01" to "2050-12-31"
     When Property with code "p1_code" from customer with id "12300000-0000-4000-a000-000000000000" is got by user "userWithCust1"
@@ -48,7 +47,7 @@ Feature: Customers properties access check feature (second level endpoints)
     And Total count is "0"
     When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
     When List of all customer properties is got for customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1"
-    Then Response code is "404"
+    Then Response code is "403"
 
   Scenario: Add user to property by user who can access the property
     When Property with code "p1_code" is added to customer with id "12300000-0000-4000-a000-000000000000" with type "chain" from "2015-01-01" to "2015-10-31" by user "userWithCust1"
@@ -107,6 +106,6 @@ Feature: Customers properties access check feature (second level endpoints)
     When Property with code "p1_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust1" with
       | type  |
       | owner |
-    Then Response code is "404"
-    And Custom code is 40402
+    Then Response code is "403"
+    And Custom code is 40301
 
