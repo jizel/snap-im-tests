@@ -92,3 +92,15 @@ Feature: Customers users create update delete
     When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "true"
     Then Response code is "409"
     And Custom code is 40902
+
+  Scenario: Customer cannot be deleted if he has relationship to existing user
+    When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When User "snapUser1" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
+    When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When User "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
+    When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
+    Then Response code is "204"
