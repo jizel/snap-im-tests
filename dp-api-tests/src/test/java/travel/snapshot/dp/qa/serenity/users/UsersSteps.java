@@ -103,6 +103,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void deleteUser(String userId) {
+        setSessionVariable(SESSION_USER_ID, userId);
         String etag = getEntityEtag(userId);
         deleteUserWithEtag(userId, etag);
     }

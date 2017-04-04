@@ -145,6 +145,7 @@ public class PropertySetSteps extends BasicSteps {
 
     @Step
     public void deletePropertySetByUserForApp(String userId, String applicationVersionId, String propertySetId){
+        setSessionVariable(SERENITY_SESSION__PROPERTY_SET_ID, propertySetId);
         deleteEntityWithEtagByUserForApp(userId, applicationVersionId, propertySetId);
     }
 
