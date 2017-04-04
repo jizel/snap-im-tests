@@ -11,7 +11,7 @@ Feature: Users customer roles CRUD
   Scenario: Assigning role to user customer
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | roleName    | description            | applicationId                                   |
+      | id                                   | roleName    | description            | applicationId                                   |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When User "defaultSnapshotUser" assigns role "a318fd9a-a05d-42d8-8e84-42e904ace123" to relation between user "default1" and customer "11111111-0000-4000-a000-555555555555"
     Then Response code is "201"
@@ -25,7 +25,7 @@ Feature: Users customer roles CRUD
      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
      | 721a284b-9dc4-48e6-8353-6ec55b89e291 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
     Given The following roles exist
-      | roleId                               | roleName    | description            | applicationId                                   |
+      | id                                   | roleName    | description            | applicationId                                   |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When User "defaultSnapshotUser" assigns role "a318fd9a-a05d-42d8-8e84-42e904ace123" to relation between user "default1" and property "721a284b-9dc4-48e6-8353-6ec55b89e291"
     Then Response code is "201"
@@ -38,7 +38,7 @@ Feature: Users customer roles CRUD
       | id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following roles exist
-      | roleId                               | roleName    | description            | applicationId                                   |
+      | id                                   | roleName    | description            | applicationId                                   |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When User "defaultSnapshotUser" assigns role "a318fd9a-a05d-42d8-8e84-42e904ace123" to relation between user "default1" and property set "a318fd9a-a05d-42d8-8e84-42e904ace123"
     Then Response code is "201"
