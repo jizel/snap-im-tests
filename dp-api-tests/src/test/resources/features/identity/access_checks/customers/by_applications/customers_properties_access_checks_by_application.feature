@@ -25,8 +25,9 @@ Feature: Customers-Properties Application access check feature - GET
       | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
-      | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
+      | id                                   | isNonCommercial | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | 22200000-0000-4000-a000-000000000444 | false           | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
+      | 22200000-0000-4000-a000-000000000555 | true            | 3            | nonCommercialversion       | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following properties exist with random address and billing address
       | id                                   | salesforceId   | name                          | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 33300000-0000-4000-a000-000000000111 | salesforceid_1 | property_with_subscription    | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
@@ -38,6 +39,7 @@ Feature: Customers-Properties Application access check feature - GET
       | id                                   | applicationVersionId                 | commercialSubscriptionId             |
       | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given Relation between user "userWithCust1" and property with code "p1_code" exists with is_active "true"
+    Given Relation between user "userWithCust1" and property with code "p2_code" exists with is_active "true"
 
 
   Scenario: Second level entities - Application sees only properties it should for accessible customer sees
@@ -51,6 +53,10 @@ Feature: Customers-Properties Application access check feature - GET
     Then Response code is "403"
     When List of all customer properties is got for customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
+    When Property with code "p1_code" from customer with id "12300000-0000-4000-a000-000000000000" is got by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "200"
+    When List of all customer properties is got for customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "200"
 
   Scenario: Add user to property by application with and without access to the property
     When Property with code "p1_code" is added to customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithoutSubscription"
@@ -62,6 +68,8 @@ Feature: Customers-Properties Application access check feature - GET
     When Property with code "p1_code" is added to customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "201"
     And Body contains entity with attribute "property_id" value "33300000-0000-4000-a000-000000000111"
+    When Property with code "p2_code" is added to customer with id "12300000-0000-4000-a000-000000000000" by user "userWithCust1" for application version "nonCommercialversion"
+    Then Response code is "201"
 
   Scenario: Update customer property relationship by application with and without access to the customer and the property
     Given Relation between property with code "p1_code" and customer with id "12300000-0000-4000-a000-000000000000" exists with type "chain" from "2015-01-01" to "2050-12-31"
@@ -72,4 +80,8 @@ Feature: Customers-Properties Application access check feature - GET
     When Property with code "p1_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust1" for application version "versionWithSubscription" with
       | type  |
       | owner |
+    Then Response code is "204"
+    When Property with code "p1_code" for customer with id "12300000-0000-4000-a000-000000000000" is updated by user "userWithCust1" for application version "nonCommercialversion" with
+      | type       |
+      | management |
     Then Response code is "204"

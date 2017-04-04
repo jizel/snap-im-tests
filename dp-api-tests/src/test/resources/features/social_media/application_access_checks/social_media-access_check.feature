@@ -21,9 +21,11 @@ Feature: Social media - External applications access checks
 #  DP-1943 - for verification send GET for Internal app version without params and expect 400. Then delete this comment.
     Scenario Outline: External application requests social media endpoints with valid parameters
       When GET request is sent to "<url>" on module "<module>" for application version "External App Version"
-      Then Response code is "404"
+      Then Response code is "403"
+      And Custom code is 40301
       When GET request is sent to "<url>" on module "<module>" for application version "External App Version" with since "<since>", until "<until>", granularity "<granularity>" and property "99000099-9999-4999-a999-999999999999"
-      Then Response code is "404"
+      Then Response code is "403"
+      And Custom code is 40301
       When GET request is sent to "<url>" on module "<module>" for application version "Internal App Version" with since "<since>", until "<until>", granularity "<granularity>" and property "99000099-9999-4999-a999-999999999999"
       Then Response code is "200"
       Examples:

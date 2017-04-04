@@ -1,0 +1,9 @@
+{
+  "is_active": true,
+  "api_key": "123",
+  "name": "Version 1",
+  "status": "inactive",
+  "release_date": null,
+  "description": "Versions description 1",
+  "is_non_commercial": false
+}
