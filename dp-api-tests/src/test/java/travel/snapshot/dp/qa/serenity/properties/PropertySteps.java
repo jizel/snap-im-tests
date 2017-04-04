@@ -243,6 +243,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public Response deletePropertyByUserForApp(String userId, String applicationVersionId, String propertyId) {
+        setSessionVariable(SERENITY_SESSION__PROPERTY_ID, propertyId);
         deleteEntityWithEtagByUserForApp(userId, applicationVersionId, propertyId);
         return getSessionResponse();
     }
