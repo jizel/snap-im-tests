@@ -14,11 +14,9 @@ Feature: Users property set roles CRUD
     Given The following property sets exist for customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123" and user "default1"
       | id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
-
-
     Given Switch for user property set role tests
     Given The following roles exist
-      | roleId                               | roleName    | description            | id                                   |
+      | id                                   | roleName    | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
 
@@ -27,8 +25,8 @@ Feature: Users property set roles CRUD
     Then Response code is "422"
     And Custom code is 42202
     Examples:
-      | role_id                              | user_name | property_set_name | customer_id |
-      | 1111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | 1234fd9a-a05d-42d8-8e84-42e904ace123           |
+      | role_id                              | user_name | property_set_name | customer_id                          |
+      | 1111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
 
   Scenario Outline: Assigning property type of role to user property set
     Given Switch for user property role tests
@@ -37,15 +35,14 @@ Feature: Users property set roles CRUD
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is added
     Then Response code is "422"
-    And Custom code is 42202
     Examples:
-      | role_id                              | user_name | property_set_name | customer_id |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | 1234fd9a-a05d-42d8-8e84-42e904ace123           |
+      | role_id                              | user_name | property_set_name | customer_id                          |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
 
   Scenario Outline: Assigning customer type of role to user property set
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | id                                   |
+      | id                                   | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is added
     Then Response code is "422"
@@ -62,7 +59,7 @@ Feature: Users property set roles CRUD
     And Custom code is 40402
     Examples:
       | role_id                              | user_name | property_set_id                      |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | 1111fd9a-a05d-42d8-8e84-42e904ace123 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | a318fd9a-a05d-42d8-8e84-42e904ace123 |
 
     #todo issue dp-1294
   Scenario Outline: Assigning role to not existing user
@@ -136,3 +133,19 @@ Feature: Users property set roles CRUD
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0                                            |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/roles                                      |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |
+
+  Scenario: Role cannot be deleted until User is (and vice versa)
+    When Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property set name "ps1_name" for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
+    When Role with name "user_role_1" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When User "default1" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property set name "ps1_name" for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    Given User "default1" is removed from customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123"
+    Given All users are removed for property_sets with names: ps1_name
+    When Role with name "user_role_1" is deleted
+    Then Response code is "204"
+    When User "default1" is deleted
+    Then Response code is "204"

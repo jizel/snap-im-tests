@@ -3,7 +3,6 @@ Feature: Properties users create update delete
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -16,11 +15,10 @@ Feature: Properties users create update delete
     Given The following properties exist with random address and billing address for user "default1"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     Given The following properties exist with random address and billing address for user "default2"
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
+
 
   @Smoke
   Scenario: Adding and removing user to property
@@ -91,3 +89,19 @@ Feature: Properties users create update delete
     When User "default3" is added to property with code "p2_code"
     Then Response code is "409"
     And Custom code is 40902
+    
+    Scenario: Property cannot be deleted when it has a relationship with some user (and vice versa)
+      Given User "default1" is removed from customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+      Then Response code is "204"
+      When Property with code "p1_code" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When User "default1" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When User "default1" is removed from property with code "p1_code"
+      Then Response code is "204"
+      When Property with code "p1_code" is deleted
+      Then Response code is "204"
+      When User "default1" is deleted
+      Then Response code is "204"

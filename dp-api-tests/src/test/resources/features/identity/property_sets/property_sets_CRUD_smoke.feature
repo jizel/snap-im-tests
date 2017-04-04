@@ -5,6 +5,7 @@ Feature: Property sets create update delete
   Background:
     Given Database is cleaned and default entities are created
 
+
   Scenario Outline: Create, delete property set
     When The following property set is created for customer with id "11111111-0000-4000-a000-555555555555"
       | name    | description    | type    |
@@ -40,7 +41,7 @@ Feature: Property sets create update delete
       | 200749ac-a36e-416f-9f13-4d94a3db1267 | SALESFORCE12345 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
     When Property "200749ac-a36e-416f-9f13-4d94a3db1267" is added to property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4"
     Then Response code is "201"
-    # ---------------- CASCADE DELTE ----------------------------
+    # ---------------- CASCADE DELETE ----------------------------
     When Property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4" is deleted
     Then Response code is "409"
     # ---------------- REMOVE RELATION --------------------------

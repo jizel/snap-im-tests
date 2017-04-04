@@ -21,7 +21,6 @@ import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,24 +209,13 @@ public class UsersSteps extends BasicSteps {
         }
     }
 
-
-    public void roleIsAddedToUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
-        UserDto u = getUserByUsername(username);
-
-        Response response = addRoleToUserWithRelationshipTypeEntity(r.getId(), u.getId(), relationshipType, entityId);
-        setSessionResponse(response);
-    }
-
     @Step
     public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
-        RoleDto existingUserEntityRole = getRoleForUserEntity(roleId, userName, entityId, entityName);
-        if (existingUserEntityRole != null) {
-            Response deleteResponse = deleteEntityUrl(buildPathForRoles(entityName, userName, entityId), roleId);
-            if (deleteResponse.getStatusCode() != HttpStatus.SC_NO_CONTENT) {
-                fail("PropertyUser cannot be deleted - status: " + deleteResponse.getStatusCode() + ", " + deleteResponse.asString());
-            }
-        }
         Response createResponse = addRoleToUserEntity(roleId, userName, entityId, entityName);
+//        This should be here but this method should only be used in Given steps. Refactor all usages, then uncomment
+//        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+//            fail("Role cannot be created " + createResponse.getBody().asString());
+//        }
         setSessionResponse(createResponse);
     }
 
@@ -238,24 +226,10 @@ public class UsersSteps extends BasicSteps {
         return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_ROLES, roleId, queryParams);
     }
 
-    private Response addRoleToUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
-        Map<String, String> data = new HashMap<>();
-        data.put("relationship_type", relationshipType);
-        data.put("relationship_id", entityId);
-        data.put("role_id", roleId);
-
-        return given().spec(spec)
-                .body(data)
-                .when().post("/{userId}/roles", userId);
-    }
-
     private Response addRoleToUserEntity(String roleId, String userName, String entityId, String entityName) {
-        Map<String, String> data = new HashMap<>();
-        data.put("role_id", roleId);
-
         String path = buildPathForRoles(entityName, userName, entityId);
-        return given().spec(spec)
-                .body(data)
+        return given().spec(spec).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .body(singletonMap(ROLE_ID, roleId))
                 .when().post(path);
     }
 
@@ -264,13 +238,13 @@ public class UsersSteps extends BasicSteps {
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
         Response userRolesResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
-        return Arrays.asList(userRolesResponse.as(RoleDto[].class)).stream().findFirst().orElse(null);
+        return stream((userRolesResponse.as(RoleDto[].class))).findFirst().orElse(null);
     }
 
     private RoleDto getRoleForUserEntity(String roleId, String userName, String entityId, String entityName) {
         String path = buildPathForRoles(entityName, userName, entityId);
         Response userRolesUserEntity = getEntities(path, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, null);
-        return Arrays.asList(userRolesUserEntity.as(RoleDto[].class)).stream().findFirst().orElse(null);
+        return stream((userRolesUserEntity.as(RoleDto[].class))).findFirst().orElse(null);
     }
 
     public void roleIsDeletedFromUserWithRelationshipTypeEntity(RoleDto r, String username, String relationshipType, String entityId) {
@@ -345,8 +319,9 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void roleBetweenUserAndEntityIsDeleted(String entityName, String roleId, String userName, String entityId) {
-        Response deleteResponse = deleteEntityUrl(buildPathForRoles(entityName, userName, entityId), roleId);
+    public void roleBetweenUserAndEntityIsDeleted(String entityName, String roleId, String userId, String entityId) {
+        String etag = getThirdLevelEntityEtag(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+        Response deleteResponse = deleteThirdLevelEntity(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
         setSessionResponse(deleteResponse);
     }
 
@@ -474,5 +449,10 @@ public class UsersSteps extends BasicSteps {
     public UserCustomerRelationshipDto getCustomerForUser(String userId, String customerId) {
         Response userCustomerResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
         return stream(userCustomerResponse.as(UserCustomerRelationshipDto[].class)).findFirst().orElse(null);
+    }
+
+    @Step
+    public Response deleteUserPartnerRelationship(String userId, String partnerId){
+        return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PARTNERS, partnerId, null);
     }
 }

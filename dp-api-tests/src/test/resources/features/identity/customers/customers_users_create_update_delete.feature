@@ -3,7 +3,6 @@ Feature: Customers users create update delete
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -13,15 +12,13 @@ Feature: Customers users create update delete
       | snapshot | snapUser1 | Snapshot1 | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | snapshot | snapUser2 | Snapshot2 | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       | snapshot | snapUser3 | Snapshot3 | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
-
     Given All users are removed for customers with ids: 40ebf861-7549-46f1-a99f-249716c83b33, 58dd58d4-a56e-4cf5-a3a6-068fe37fef40
-
     Given Relation between user "snapUser1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
     Given Relation between user "snapUser2" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "false"
 
   @Smoke
   Scenario: Adding user to customer with isPrimary set
-    When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40 " with isPrimary "true"
+    When User "snapUser3" is added to customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with isPrimary "true"
     Then Response code is "201"
 
   Scenario: Updating User Customer relationship
@@ -93,7 +90,7 @@ Feature: Customers users create update delete
     Then Response code is "409"
     And Custom code is 40902
 
-  Scenario: Customer cannot be deleted if he has relationship to existing user
+  Scenario: Customer cannot be deleted if he has relationship to an existing user (and vice versa)
     When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
     Then Response code is "409"
     And Custom code is 40915
@@ -101,6 +98,11 @@ Feature: Customers users create update delete
     When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
     Then Response code is "409"
     And Custom code is 40915
+    When User "snapUser2" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
     When User "snapUser2" is removed from customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
     When Customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
+    Then Response code is "204"
+    When User "snapUser2" is deleted
     Then Response code is "204"

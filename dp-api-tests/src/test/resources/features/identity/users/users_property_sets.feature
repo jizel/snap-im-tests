@@ -31,3 +31,19 @@ Feature: User to Property set relationship feature
     Examples:
       | url                                                                                                    |
       | identity/users/5d829079-48f0-4f00-9bec-e2329a8bdaac/property_sets/10012345-48f0-4f00-9bec-e2329a8bdaac |
+    
+    Scenario: User cannot be deleted if he has a relation with an existing property set
+      When User "userWithSet" is removed from customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+#      Prerequisite
+      Then Response code is "204"
+      When User "userWithSet" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When Property set "10012345-48f0-4f00-9bec-e2329a8bdaac" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      Given All users are removed for property_sets with names: ps1_name
+      When User "userWithSet" is deleted
+      Then Response code is "204"
+      When Property set "10012345-48f0-4f00-9bec-e2329a8bdaac" is deleted
+      Then Response code is "204"

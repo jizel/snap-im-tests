@@ -11,11 +11,9 @@ Feature: Users customer roles CRUD
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
-
-
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleId                               | roleName    | description            | applicationId                                   |
+      | id                                   | roleName    | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
       | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
 
@@ -32,7 +30,7 @@ Feature: Users customer roles CRUD
   Scenario Outline: Assigning property type of role to user customer
     Given Switch for user property role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | id                                   |
+      | id                                   | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     Then Response code is "422"
@@ -45,7 +43,7 @@ Feature: Users customer roles CRUD
   Scenario Outline: Assigning property set type of role to user customer
     Given Switch for user property set role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | id                                   |
+      | id                                   | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     Then Response code is "422"
@@ -131,3 +129,19 @@ Feature: Users customer roles CRUD
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/1234fd9a-a05d-42d8-8e84-42e904ace123                                               |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles                                         |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles/a318fd9a-a05d-42d8-8e84-42e904ace123    |
+
+  Scenario: Role cannot be deleted until User is (and vice versa)
+    Given Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
+    When Role with name "user_role_1" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When User "default1" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    Given Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is deleted
+    When User "default1" is removed from customer with id "1234fd9a-a05d-42d8-8e84-42e904ace123"
+    Then Response code is 204
+    When Role with name "user_role_1" is deleted
+    Then Response code is "204"
+    When User "default1" is deleted
+    Then Response code is "204"

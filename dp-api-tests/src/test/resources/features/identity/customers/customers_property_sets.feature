@@ -148,7 +148,7 @@ Feature: Customers property sets
 
 
   Scenario: Customer cannot be deleted if he has relationship to existing property set
-    Given The following property set is created for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124"
+    Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124"
       | name       | description       | type            |
       | ps1_name   | ps1_description   | brand           |
     Given All users are removed for customers with ids: 55e2cf39-ffb6-4bb8-ad3f-66306c2be124
@@ -156,5 +156,6 @@ Feature: Customers property sets
     Then Response code is "409"
     And Custom code is 40915
     When Property set "ps1_name" is deleted
+    Then Response code is "204"
     When Customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" is deleted
     Then Response code is "204"

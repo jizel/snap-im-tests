@@ -157,8 +157,9 @@ public class UserGroupsdefs {
         userGroupSteps.setUserGroupActiveField(userGroupId, false);
     }
 
-    @When("^User group with id \"([^\"]*)\" is deleted$")
-    public void userGroupWithIdIsDeleted(String userGroupId) throws Throwable {
+    @When("^User group (:?with id)? \"([^\"]*)\" is deleted$")
+    public void userGroupWithIdIsDeleted(String userGroupName) throws Throwable {
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
         userGroupSteps.deleteUserGroup(userGroupId);
     }
 
@@ -302,7 +303,8 @@ public class UserGroupsdefs {
     }
 
     @When("^Relation between user group \"([^\"]*)\" and role \"([^\"]*)\" is deleted$")
-    public void relationBetweenUserGroupAndRoleIsDeleted(String userGroupId, String roleId) throws Throwable {
+    public void relationBetweenUserGroupAndRoleIsDeleted(String userGroupName, String roleId) throws Throwable {
+        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
         userGroupSteps.deleteUserGroupRoleRelationship(userGroupId, roleId);
     }
 
@@ -366,7 +368,7 @@ public class UserGroupsdefs {
         userGroupSteps.checkUserGroupActiveField(userGroupId, false);
     }
 
-    @Then("^User group with id \"([^\"]*)\" is no more exists$")
+    @Then("^User group with id \"([^\"]*)\" exists no more$")
     public void userGroupWithIdIsNoMoreExists(String userGroupId) throws Throwable {
         userGroupSteps.checkUserGroupExistency(userGroupId, false);
     }
@@ -376,7 +378,7 @@ public class UserGroupsdefs {
         userGroupSteps.checkUserGroupData(userGroupId, userGroups.get(0));
     }
 
-    @Then("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" is no more exists$")
+    @Then("^Relation between user group \"([^\"]*)\" and property \"([^\"]*)\" exists no more$")
     public void relationBetweenUserGroupAndPropertyIsNoMoreExists(String userGroupId, String propertyId) throws Throwable {
         userGroupSteps.checkGroupPropertyExistence(userGroupId, propertyId);
     }

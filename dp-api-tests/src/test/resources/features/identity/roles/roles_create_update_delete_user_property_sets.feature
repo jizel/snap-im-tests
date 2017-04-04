@@ -130,6 +130,6 @@ Feature: Roles create update delete user property set
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same ID different app  | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "409"
     When Role is created
-      | roleId                               | roleName         | description             | id                                   |
+      | id                                   | roleName         | description             | id                                   |
       | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
