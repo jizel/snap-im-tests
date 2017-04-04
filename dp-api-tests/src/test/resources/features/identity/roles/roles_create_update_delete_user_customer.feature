@@ -9,10 +9,10 @@ Feature: Roles create update delete user customer
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     Given The following roles exist
-      | id                                   | roleName    | description            | applicationId                        |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | Role name 3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
+      | roleName    | description            | applicationId                        |
+      | Role name 1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | Role name 2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+      | Role name 3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
 
   @Smoke
   Scenario: Creating deleting role
