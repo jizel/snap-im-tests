@@ -17,8 +17,6 @@ Feature: Rate shopper
       | 98000099-9999-4999-a999-999999999999 | /null | today |
       | 98000099-9999-4999-a999-999999999999 | today | /null |
 
-#  DP-1951
-    @skipped
   Scenario Outline: Checking correct currency parameter returned for market
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
@@ -65,7 +63,8 @@ Feature: Rate shopper
 
 # GET /rate_shopper/analytics/property/{id}
 
-  
+#    DP-1982
+  @skipped
   Scenario Outline: Checking error codes for analitics/property
     When Getting rate data for "<propertyId>" since "today" until "today" fetched "/null"
     Then Response code is "404"

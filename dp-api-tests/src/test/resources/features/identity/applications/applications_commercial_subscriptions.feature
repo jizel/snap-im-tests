@@ -117,3 +117,18 @@ Feature: Applications commercial subscriptions
       | 10          | 0      | /null  | /null                      | nonexistent                | 400           | 40002       |
       | 10          | 0      | /null  | nonexistent                | /null                      | 400           | 40002       |
       | 10          | 0      | code== | /null                      | /null                      | 400           | 40002       |
+
+  Scenario: Application cannot be deleted when it plays role in commercial subscription
+    Given The following applications exist
+      | id                                   | applicationName    | description               | website                    | partnerId                            |
+      | 00000000-a05d-42d8-8e84-111111111111 | Application test 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
+    Given The following commercial subscriptions exist
+      | applicationId                        | customerId                           | propertyId                           | id                                   |
+      | 00000000-a05d-42d8-8e84-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd | 00000000-a05d-42d8-8e84-222222222222 |
+    When Application with id "00000000-a05d-42d8-8e84-111111111111" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When Commercial subscription with id "00000000-a05d-42d8-8e84-222222222222" is deleted
+    Then Response code is "204"
+    When Application with id "00000000-a05d-42d8-8e84-111111111111" is deleted
+    Then Response code is "204"
