@@ -66,14 +66,14 @@ Feature: User groups property sets
 
 
   Scenario Outline: Delete userGroup-propertySet not existent relationship
-    When Relation between user group with id "<Id>" and property set "<propertyId>" is deleted with error "true"
+    When Relation between user group with id "<id>" and property set "<propertyId>" is deleted with error "true"
     Then Response code is 404
-    And Body contains entity with attribute "message" value "Resource UserGroupPropertySetRelationship with ID (user_group_id: <Id>, property_set_id: <propertyId>) was not found."
+    And Body contains entity with attribute "message" value "Resource UserGroupPropertySetRelationship with ID (user_group_id: <id>, property_set_id: <propertyId>) was not found."
     Examples:
       | id                                   | propertyId                           |
-      | notExistent                          | fb141231-4d8c-4d75-9433-5d01cc665556 |
-      | 922913b0-877c-45f3-b650-df8022608d61 | notExistent                          |
-      | notExistent                          | notExistent                          |
+      | 00000000-0000-4000-a000-000000000000 | fb141231-4d8c-4d75-9433-5d01cc665556 |
+      | 922913b0-877c-45f3-b650-df8022608d61 | 00000000-0000-4000-a000-000000000000 |
+      | 00000000-0000-4000-a000-000000000000 | 00000000-0000-4000-a000-000000000000 |
 
   Scenario: Activate relationship userGroup-propertySet
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is activated

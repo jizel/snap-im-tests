@@ -50,10 +50,10 @@ Feature: User groups roles
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is not established
 
   Scenario: Delete relationship UserGroup-Role invalid
-    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is deleted
+    When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "00000000-0000-4000-a000-000000000000" is deleted
     Then Response code is 404
     And Custom code is 40402
-    And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "NotExistingOne" is not established
+    And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "00000000-0000-4000-a000-000000000000" is not established
 
   Scenario Outline: Get list of userGroup's role - valid
     Given The following roles exist

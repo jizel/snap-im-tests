@@ -117,7 +117,7 @@ public class UserStepdefs {
 
     @When("^Nonexistent user is deleted$")
     public void Nonexistent_user_is_deleted() throws Throwable {
-        usersSteps.deleteUser("nonexistent");
+        usersSteps.deleteUser(NON_EXISTENT_ID);
     }
 
     @When("^User \"([^\"]*)\" is updated with data(?: by user \"([^\"]*)\")?$")
@@ -153,7 +153,7 @@ public class UserStepdefs {
 
     @When("^Nonexistent user id is got$")
     public void Nonexistent_user_id_is_got() throws Throwable {
-        usersSteps.userWithIdIsGot("nonexistent");
+        usersSteps.userWithIdIsGot(NON_EXISTENT_ID);
     }
 
     @When("^List of users is got(?: with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
