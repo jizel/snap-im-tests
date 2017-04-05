@@ -56,12 +56,14 @@ public class PropertySetSteps extends BasicSteps {
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
                 fail("Property set cannot be created: " + createResponse.asString());
             }
-            String propertySetId = createResponse.as(PropertySetDto.class).getId();
-            Response addUserResponse = addUserToPropertySet(userId, propertySetId, isActive);
-            if (addUserResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Failed to add user to property set: " + addUserResponse.asString());
+            if (userId != null) {
+                String propertySetId = createResponse.as(PropertySetDto.class).getId();
+                Response addUserResponse = addUserToPropertySet(userId, propertySetId, isActive);
+                if (addUserResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+                    fail("Failed to add user to property set: " + addUserResponse.asString());
+                }
             }
-        });
+            });
     }
 
     public void followingPropertySetIsCreated(PropertySetDto PropertySetDto, String customerId) {
@@ -156,9 +158,9 @@ public class PropertySetSteps extends BasicSteps {
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames, CustomerDto c) {
+    public void removeAllUsersForPropertySetsForCustomer(List<String> propertySetNames) {
         propertySetNames.forEach(n -> {
-            String filter = String.format("name==%s and customer_id==%s", n, c.getId());
+            String filter = String.format("name==%s", n);
             PropertySetDto[] propertySets = getEntities(null, LIMIT_TO_ALL, CURSOR_FROM_FIRST, filter, null, null, null).as(PropertySetDto[].class);
             for (PropertySetDto propertySet : propertySets) {
                 Response propertyUsersResponse = getSecondLevelEntities(propertySet.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);

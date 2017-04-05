@@ -495,7 +495,7 @@ public class PropertiesStepdefs {
         usersSteps.updateUserPropertyRelationshipByUser(performerId, userId, propertyId, relation);
     }
 
-    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and user \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")(?: for application \"([^\"]*)\")?$")
+    @Given("^Relation between property(?: with code)? \"([^\"]*)\" and user \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application \"([^\"]*)\")?$")
     public void relationBetweenPropertyWithCodeAndUserIsDeleted(String propertyCode, String username, String performerName, String applicationVersionName) throws Throwable {
         String performerId = ((performerName==null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         Map<String, String> ids =  getValidUserPropertyIdsFromNameAndCode(username, propertyCode);

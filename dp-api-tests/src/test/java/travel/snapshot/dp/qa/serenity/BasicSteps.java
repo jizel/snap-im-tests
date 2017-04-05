@@ -99,6 +99,7 @@ public class BasicSteps {
     protected static final String CURSOR_FROM_FIRST = "0";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
     protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
+    protected static final String SECOND_LEVEL_OBJECT_PARTNERS = "partners";
     protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
     protected static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
     protected static final String SECOND_LEVEL_OBJECT_RECORDS = "records";

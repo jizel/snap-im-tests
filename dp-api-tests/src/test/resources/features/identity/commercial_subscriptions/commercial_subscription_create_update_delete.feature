@@ -6,10 +6,7 @@ Feature: Commercial subscription create update delete
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | 2a2f76f3-3537-4d5a-971a-7a36f61095bd | partner | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "2a2f76f3-3537-4d5a-971a-7a36f61095bd"
+    Given The following properties exist with random address and billing address
       | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
@@ -18,6 +15,7 @@ Feature: Commercial subscription create update delete
 
 
   # --------------------- CREATE ---------------------
+
   Scenario Outline: Checking error codes for creating commercial subscription
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
@@ -35,6 +33,15 @@ Feature: Commercial subscription create update delete
     When Nonexistent commercial subscription id is deleted
     Then Response code is "404"
     And Custom code is "40402"
+
+  Scenario: Property cannot be deleted when it plays role in commercial subscription
+    When Property with code "p1_code" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When Commercial subscription with id "8e238f8e-2c9c-4e32-9a63-40474a9728eb" is deleted
+    Then Response code is "204"
+    When Property with code "p1_code" is deleted
+    Then Response code is "204"
 
 
   # --------------------- UPDATE ---------------------

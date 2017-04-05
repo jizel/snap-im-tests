@@ -19,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
@@ -70,7 +71,8 @@ public class PropertySetsStepdefs {
 
     @Given("^The following property sets exist for customer(?: with id)? \"([^\"]*)\"(?: and user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, String isActiveString, List<PropertySetDto> propertySets) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
+        UserDto user = usersSteps.getUserByUsername(username);
+        String userId = (user == null)? null : user.getId();
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId, isActive);
     }
@@ -81,10 +83,9 @@ public class PropertySetsStepdefs {
         propertySetSteps.deleteAllPropertySetsForCustomer(customers);
     }
 
-    @Given("^All users are removed for property_sets for customer with id \"([^\"]*)\" with names: (.*)$")
-    public void All_users_are_removed_for_property_sets(String customerId, List<String> names) throws Throwable {
-        CustomerDto customer = customerSteps.getCustomerById(customerId);
-        propertySetSteps.removeAllUsersForPropertySetsForCustomer(names, customer);
+    @Given("^All users are removed for property_sets with names: (.*)$")
+    public void All_users_are_removed_for_property_sets(List<String> names) throws Throwable {
+        propertySetSteps.removeAllUsersForPropertySetsForCustomer(names);
     }
 
     @Given("^Relation between user \"([^\"]*)\" and property set(?: with name)? \"([^\"]*)\" exists(?: with is_active \"([^\"]*)\")?$")

@@ -88,7 +88,7 @@
       When Relation between user group "userGroup_1" and property with code "p1_code" is deleted by user "userWithUserGroup"
       Then Response code is 204
       And Body is empty
-      And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is no more exists
+      And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" exists no more
 
     Scenario: Delete userGroup-property relationship by user without access
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"

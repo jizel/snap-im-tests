@@ -113,7 +113,10 @@ public class RoleBaseSteps extends BasicSteps {
                 role.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
             }
             try {
-                createRole(role);
+                Response createResponse = createRole(role);
+                if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+                    fail("Role cannot be created " + createResponse.getBody().asString());
+                }
             } catch (NullPointerException npe) {
                 fail("Cannot create role because role type was not set. Use 'Switch to {User Customer | User Property | User Property Set} role type");
             } catch (Exception ex) {

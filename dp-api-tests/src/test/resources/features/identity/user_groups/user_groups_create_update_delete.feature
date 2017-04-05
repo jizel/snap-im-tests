@@ -10,14 +10,6 @@ Feature: User groups create update delete
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
 
 
-  Scenario: Create user group with ID that already exists
-    When The following user group is created
-      | id                                   | customerId                           | name        | isActive | description          |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
-    Then Response code is "409"
-    And Custom code is 40902
-
-
   @Smoke
   Scenario: Create get activate and delete user group
     When The following user group is created
@@ -47,7 +39,14 @@ Feature: User groups create update delete
     When User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" is deleted
     Then Response code is 204
     And Body is empty
-    And User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
+    And User group with id "b8b40d08-de38-4246-bb69-ad39c31c025c" exists no more
+
+  Scenario: Create user group with ID that already exists
+    When The following user group is created
+      | id                                   | customerId                           | name        | isActive | description          |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
+    Then Response code is "409"
+    And Custom code is 40902
 
   Scenario: Deactivate user group
     When User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is activated
@@ -56,16 +55,18 @@ Feature: User groups create update delete
     And Body is empty
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is not active
 
-
   Scenario: Delete non-existing user group
     When User group with id "NonExistentUserGroup" is deleted
     Then Response code is 404
 
-
-  Scenario: Cascade delete (customer is deleted, all his user groups as well)
+  Scenario: Customer cannot be deleted until User Group is deleted
+    When Customer with id "45a5f9e4-5351-4e41-9d20-fdb4609e9353" is deleted
+    Then Response code is 409
+    And Custom code is 40915
+    When User group "userGroup_1" is deleted
+    Then Response code is 204
     When Customer with id "45a5f9e4-5351-4e41-9d20-fdb4609e9353" is deleted
     Then Response code is 204
-    And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is no more exists
 
 
   Scenario Outline: Creating user group with invalid data

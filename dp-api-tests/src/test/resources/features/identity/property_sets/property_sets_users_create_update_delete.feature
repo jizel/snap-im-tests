@@ -19,7 +19,6 @@ Feature: Property sets users create update delete
       | ps2_name        | ps2_description        | brand           |
 
 
-
   Scenario: Updating Property Set-User relationship
     When User "default0" is added to property set with name "ps1_name"
     Given Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"

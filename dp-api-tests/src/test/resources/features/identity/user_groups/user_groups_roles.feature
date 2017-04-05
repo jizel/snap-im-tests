@@ -16,14 +16,14 @@ Feature: User groups roles
       | applicationName                       | website                    | id                                   | partnerId                            | isInternal |
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following roles exist
-      | roleId                               | applicationId                        | roleName |
+      | id                                   | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 11111111-0000-4000-a000-111111111111 | UG role1 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists
 
   @Smoke
   Scenario: Create relationship UserGroup-Role
     Given The following roles exist
-      | roleId                               | applicationId                        | roleName |
+      | id                                   | applicationId                        | roleName |
       | 65e928fc-fbe5-4863-95af-8ec1f24baa0d | a318fd9a-a05d-42d8-8e84-42e904ace123 | UG role2 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "65e928fc-fbe5-4863-95af-8ec1f24baa0d" exists
     Then Response code is 201
@@ -31,7 +31,7 @@ Feature: User groups roles
     And Relation between user group "userGroup_1" and role with id "65e928fc-fbe5-4863-95af-8ec1f24baa0d" is established
 
   Scenario Outline: Create relationship UserGroup-Role invalid
-    When Relation between user group "<Id>" and role "<roleId>" is created
+    When Relation between user group "<id>" and role "<roleId>" is created
     Then Response code is <error_code>
     And Custom code is <custom_code>
     Examples:
@@ -57,7 +57,7 @@ Feature: User groups roles
 
   Scenario Outline: Get list of userGroup's role - valid
     Given The following roles exist
-      | roleId                               | applicationId                        | roleName        |
+      | id                                   | applicationId                        | roleName        |
       | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | 11111111-0000-4000-a000-111111111111 | UG_filter_role1 |
       | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | 11111111-0000-4000-a000-111111111111 | UG_filter_role2 |
       | 540be550-1702-4e2e-b094-394de63f6c48 | 11111111-0000-4000-a000-111111111111 | UG_filter_role3 |
@@ -115,3 +115,17 @@ Feature: User groups roles
       | /null | /null  | /null     | /null       | 0           | 40002      |
       | /null | /null  | /null     | /null       | nonExistent | 40002      |
       | /null | /null  | /null     | role_id     | role_id     | 40002      |
+    
+    Scenario: Role cannot be deleted until User Group is (and vice versa)
+      When Role with name "UG role1" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When User group "userGroup_1" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted
+      Then Response code is 204
+      When Role with name "UG role1" is deleted
+      Then Response code is "204"
+      When User group "userGroup_1" is deleted
+      Then Response code is "204"

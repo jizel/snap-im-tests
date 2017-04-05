@@ -10,13 +10,16 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
+import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
+import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
@@ -28,6 +31,7 @@ import travel.snapshot.dp.qa.helpers.Resolvers;
 import travel.snapshot.dp.qa.helpers.RoleType;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps;
@@ -66,6 +70,9 @@ public class UserStepdefs {
 
     @Steps
     private Resolvers resolvers;
+
+    @Steps
+    private PartnerSteps partnerSteps;
 
 
     @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
@@ -177,12 +184,6 @@ public class UserStepdefs {
         usersSteps.usernamesAreInResponseInOrder(usernames);
     }
 
-    @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is added to user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
-    public void Role_with_name_for_application_id_is_added_to_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
-        RoleDto role = roleBaseSteps.getRoleByName(roleName);
-        usersSteps.roleIsAddedToUserWithRelationshipTypeEntity(role, username, relationshipType, entityId);
-    }
-
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is removed from user \"([^\"]*)\" with relationship_type \"([^\"]*)\" and entity with id \"([^\"]*)\"$")
     public void Role_with_name_for_application_id_is_removed_from_user_with_username_with_relationship_type_and_entity_with_code(String roleName, String applicationId, String username, String relationshipType, String entityId) throws Throwable {
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
@@ -266,7 +267,8 @@ public class UserStepdefs {
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and customer id \"([^\"]*)\" is deleted$")
     public void roleWithIdForUserNameAndCustomerIdIsDeleted(String roleId, String userName, String customerId) throws Throwable {
-        userRolesSteps.roleBetweenUserAndCustomerIsDeleted(roleId, userName, customerId);
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.roleBetweenUserAndCustomerIsDeleted(roleId, userId, customerId);
     }
 
     @And("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and customer id \"([^\"]*)\" does not exist$")
@@ -293,8 +295,8 @@ public class UserStepdefs {
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is added$")
     public void roleWithIdForUserNameAndPropertyCodeIsAdded(String roleId, String userName, String propCode) throws Throwable {
-        PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userName, prop.getId());
+        String propertyId = propertySteps.resolvePropertyId(propCode);
+        userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userName, propertyId);
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property id \"([^\"]*)\" is added$")
@@ -311,7 +313,8 @@ public class UserStepdefs {
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is deleted$")
     public void roleWithIdForUserNameAndPropertyCodeIsDeleted(String roleId, String userName, String propCode) throws Throwable {
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.roleBetweenUserAndPropertyIsDeleted(roleId, userName, prop.getId());
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.roleBetweenUserAndPropertyIsDeleted(roleId, userId, prop.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" does not exist$")
@@ -350,8 +353,8 @@ public class UserStepdefs {
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\" for customer \"([^\"]*)\" is deleted$")
     public void roleWithIdForUserNameAndPropertySetNameForCustomerIsDeleted(String roleId, String userName, String propertySetName, String customerId) throws Throwable {
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
-
-        userRolesSteps.roleBetweenUserAndPropertySetIsDeleted(roleId, userName, propertySet.getId());
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.roleBetweenUserAndPropertySetIsDeleted(roleId, userId, propertySet.getId());
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\" for customer \"([^\"]*)\" does not exist$")
@@ -535,4 +538,11 @@ public class UserStepdefs {
         propertySteps.deletePropertyUserRelationshipByUserForApp(requestorId, appVersionId, propertyId, targetUserId);
     }
 
+    @When("^Relation between user \"([^\"]*)\" and partner \"([^\"]*)\" is deleted$")
+    public void relationBetweenUserAndPartnerIsDeleted(String userName, String partnerName) throws Throwable {
+        PartnerDto partner = partnerSteps.getPartnerByName(partnerName);
+        assertThat(partner, is(notNullValue()));
+        Response response = usersSteps.deleteUserPartnerRelationship(usersSteps.resolveUserId(userName), partner.getId());
+        assertThat(response.getStatusCode(), is(HttpStatus.SC_NO_CONTENT));
+    }
 }

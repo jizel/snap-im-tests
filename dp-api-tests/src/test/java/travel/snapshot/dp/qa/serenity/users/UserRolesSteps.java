@@ -14,8 +14,8 @@ public class UserRolesSteps extends UsersSteps {
         roleExistsBetweenNotExistingUserAndEntity(SECOND_LEVEL_OBJECT_CUSTOMERS, roleId, s, customerId);
     }
 
-    public void roleBetweenUserAndCustomerIsDeleted(String roleId, String userName, String customerId) {
-        roleBetweenUserAndEntityIsDeleted(SECOND_LEVEL_OBJECT_CUSTOMERS, roleId, userName, customerId);
+    public void roleBetweenUserAndCustomerIsDeleted(String roleId, String userId, String customerId) {
+        roleBetweenUserAndEntityIsDeleted(SECOND_LEVEL_OBJECT_CUSTOMERS, roleId, userId, customerId);
     }
 
     public void roleBetweenUserAndCustomerNotExists(String roleId, String userName, String customerId) {
@@ -40,8 +40,8 @@ public class UserRolesSteps extends UsersSteps {
         roleExistsBetweenNotExistingUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, s, customerId);
     }
 
-    public void roleBetweenUserAndPropertyIsDeleted(String roleId, String userName, String propertyId) {
-        roleBetweenUserAndEntityIsDeleted(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, userName, propertyId);
+    public void roleBetweenUserAndPropertyIsDeleted(String roleId, String userId, String propertyId) {
+        roleBetweenUserAndEntityIsDeleted(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, userId, propertyId);
     }
 
     public void roleBetweenUserAndPropertyNotExists(String roleId, String userName, String propertyId) {
@@ -63,8 +63,8 @@ public class UserRolesSteps extends UsersSteps {
         roleExistsBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTY_SETS, roleId, userName, propertySetId);
     }
 
-    public void roleBetweenUserAndPropertySetIsDeleted(String roleId, String userName, String propertySetId) {
-        roleBetweenUserAndEntityIsDeleted(SECOND_LEVEL_OBJECT_PROPERTY_SETS, roleId, userName, propertySetId);
+    public void roleBetweenUserAndPropertySetIsDeleted(String roleId, String userId, String propertySetId) {
+        roleBetweenUserAndEntityIsDeleted(SECOND_LEVEL_OBJECT_PROPERTY_SETS, roleId, userId, propertySetId);
     }
 
     public void roleBetweenUserAndPropertySetNotExists(String roleId, String userName, String propertySetId) {

@@ -96,11 +96,12 @@ Feature: User groups user relationship feature
       When Relation between user group "userGroup_2" and user "snapshotUser1" is got
       Then Response code is 200
 
+#    DP-1769
   @skipped
   Scenario Outline: Creator of User Group does not automatically become it's member but he can access it - DP-1769
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
       | userType   | userName   | firstName   | lastName  | email   | timezone   | culture   | id       |
-      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <Id>     |
+      | <userType> | <userName> | <firstName> | <lastName>| <email> | <timezone> | <culture> | <id>     |
     Given The following user group is created by user "<userName>"
       | id                                   | customerId                           | name        | isActive | description          |
       | 12340d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_2 | false    | userGroupDescription |
@@ -119,6 +120,7 @@ Feature: User groups user relationship feature
       | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
       | userCustomer1 | customer | FNU4      | LNU4     | userCustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
 
+#  DP-1769
   @skipped
   Scenario Outline: Creator of User Group does not automatically become it's member but he can see all of it's members - DP-1769
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
@@ -165,3 +167,22 @@ Feature: User groups user relationship feature
     Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
     Then Response code is "409"
     And Custom code is 40902
+
+  Scenario: User cannot be deleted until User Group is (and vice versa)
+    When User "snapshotUser1" is removed from customer with id "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
+    Then Response code is 204
+    Given User "snapshotUser1" is added to userGroup "userGroup_1"
+    #    Prerequisites
+    Then Response code is 201
+    When User "snapshotUser1" is deleted
+    Then Response code is 409
+    And Custom code is 40915
+    When User group "userGroup_1" is deleted
+    Then Response code is 409
+    And Custom code is 40915
+    When User "snapshotUser1" is removed from userGroup "userGroup_1"
+    Then Response code is "204"
+    When User "snapshotUser1" is deleted
+    Then Response code is 204
+    When User group "userGroup_1" is deleted
+    Then Response code is 204
