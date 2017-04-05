@@ -30,7 +30,7 @@ Feature: Properties get
     And Body contains property with attribute "timezone" value "Europe/Prague"
 
   Scenario: Checking error code for nonexistent property
-    When Nonexistent property id sent
+    When Nonexistent property is got
     Then Response code is "404"
     And Custom code is "40402"
 

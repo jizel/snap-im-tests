@@ -24,6 +24,9 @@ Feature: Customers get
 
   Scenario: Checking error code for getting customer
     When Customer with customerId "NotExistent" is got
+    Then Response code is "400"
+    And Custom code is "40003"
+    When Customer with customerId "00000000-0000-4000-a000-000000000000" is got
     Then Response code is "404"
     And Custom code is "40402"
 

@@ -55,14 +55,16 @@ Feature: User groups properties
     And Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" exists no more
 
   Scenario Outline: Delete userGroup-property not existent relationship
-    When Relation between user group "<Id>" and property "<propertyId>" is deleted with error "true"
-    Then Response code is 404
-    And Custom code is 40402
+    When Relation between user group "<id>" and property "<propertyId>" is deleted with error "true"
+    Then Response code is <responseCode>
+    And Custom code is <customCode>
     Examples:
-      | id                                   | propertyId                           |
-      | notExistent                          | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 |
-      | a8b40d08-de38-4246-bb69-ad39c31c025c | notExistent                          |
-      | notExistent                          | notExistent                          |
+      | id                                   | propertyId                           | responseCode | customCode |
+      | notExistent                          | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 | 400          | 40003      |
+      | a8b40d08-de38-4246-bb69-ad39c31c025c | notExistent                          | 400          | 40003      |
+      | 00000000-0000-4000-a000-000000000000 | 00000000-0000-4000-a000-000000000000 | 404          | 40402      |
+      | 00000000-0000-4000-a000-000000000000 | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 | 404          | 40402      |
+      | 00000000-0000-4000-a000-000000000000 | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 | 404          | 40402      |
 
   Scenario: Activate relationship userGroup-property
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "896c2eac-4ef8-45d1-91fc-79a5933a0ed3" is activated

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -109,9 +110,9 @@ public class PropertiesStepdefs {
         propertySteps.addUserToPropertyByUserForApp(performerId, applicationVersionId, ids.get(USER_ID), ids.get(PROPERTY_ID), isActive);
     }
 
-    @When("^Nonexistent property id sent$")
+    @When("^Nonexistent property is got$")
     public void Nonexistent_property_id_sent() throws Throwable {
-        propertySteps.getProperty("nonexistent_id");
+        propertySteps.getProperty(NON_EXISTENT_ID);
     }
 
     @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")

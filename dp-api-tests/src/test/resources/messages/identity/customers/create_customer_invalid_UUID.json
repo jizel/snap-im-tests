@@ -1,0 +1,21 @@
+{
+  "website": "http://www.snapshot.travel",
+  "is_active": true,
+  "is_demo_customer": false,
+  "phone": "+420123456789",
+  "headquarters_timezone": "Europe/Prague",
+  "name": "Creation test company",
+  "vat_id": "CZ00000001",
+  "type": "HOTEL",
+  "customer_id": "invalid_customerID",
+  "email": "s1@tenants.biz",
+  "salesforce_id": "SALESFORCEID001",
+  "address": {
+    "country": "CZ",
+    "address_line2": "ydHOXQwycn 137",
+    "address_line1": "BZKFlznPSO 347",
+    "city": "LlXYAys",
+    "region": null,
+    "zip_code": "833"
+  }
+}

@@ -26,7 +26,7 @@ Feature: Partners get
     Given The following partner is created
       | name           | email          | website                    | vatId      | notes        | id                                   |
       | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 | abc8fd9a-a05d-42d8-8e84-42e904ace123 |
-    When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is got with etag
+    When Partner with id "abc8fd9a-a05d-42d8-8e84-42e904ace123" is got
     Then Response code is "200"
 
 
@@ -34,6 +34,9 @@ Feature: Partners get
     When Nonexistent partner id is got
     Then Response code is "404"
     And Custom code is "40402"
+    When Partner with id "invalidUUID" is got
+    Then Response code is "400"
+    And Custom code is 40003
 
   Scenario Outline: Getting list of partners
     Given The following partner exist

@@ -47,6 +47,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_phone_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_type.json           | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_invalid_UUID.json         | POST   | identity | /identity/customers | 422        | 42201          |
 
 #    TODO: error codes for updating customer
   Scenario Outline: Create foreign customers
@@ -63,11 +64,6 @@ Feature: Customers create update delete
       | /messages/identity/customers/positive/create_customer_ancient_symbols.json   | POST   | identity | /identity/customers | 㐱㐲㐳  |
       | /messages/identity/customers/positive/create_customer_chinese_symbols.json   | POST   | identity | /identity/customers | 笅笆笇  |
 
-
-  Scenario: Checking error code for deleting customer
-    When Customer with id "NotExistentCustomer" is deleted
-    Then Response code is "412"
-    And Customer with id "NotExistentCustomer" doesn't exist
 
   #TODO update with error fields, bad values, missing fields
   #TODO update nonexistent field

@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.partners;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
@@ -15,7 +16,6 @@ import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.partners.PartnerSteps;
 import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
@@ -55,7 +55,7 @@ public class PartnersStepdef {
 
     @When("^Nonexistent partner id is deleted$")
     public void Nonexistent_partner_id_is_deleted() {
-        partnerSteps.deletePartner(BasicSteps.NON_EXISTENT_ID);
+        partnerSteps.deletePartner(NON_EXISTENT_ID);
     }
 
     @When("^Partner with id \"([^\"]*)\" is activated$")
@@ -95,7 +95,7 @@ public class PartnersStepdef {
 
     @When("^Nonexistent partner id is got$")
     public void Nonexistent_partner_id_is_got() {
-        partnerSteps.partnerWithIdIsGot("nonexistentId");
+        partnerSteps.partnerWithIdIsGot(NON_EXISTENT_ID);
     }
 
     @When("^List of partners is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")

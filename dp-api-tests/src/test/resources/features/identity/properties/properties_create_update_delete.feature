@@ -17,14 +17,15 @@ Feature: Properties create update delete
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
-  Scenario: Creating property without parent with random address
+  Scenario: Creating property without parent with random address (with capital UUID letters - DP-1974)
     When The following property is created with random address and billing address for user "default1"
-      | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
-      | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | id                                   | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
+      | 000E833E-50B8-4854-A233-289F00bC4A09 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
+    And Body contains property with attribute "property_id" value "000e833e-50b8-4854-a233-289f00bc4a09"
 
   @Smoke
   Scenario: Updating property

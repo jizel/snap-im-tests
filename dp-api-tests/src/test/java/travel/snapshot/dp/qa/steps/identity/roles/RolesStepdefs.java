@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.steps.identity.roles;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 import static travel.snapshot.dp.qa.serenity.roles.RoleBaseSteps.getRoleBaseType;
 
 import cucumber.api.DataTable;
@@ -115,7 +116,7 @@ public class RolesStepdefs {
 
     @When("^Nonexistent role id got$")
     public void Nonexistent_role_id_got() throws Throwable {
-        roleBaseSteps.getRole("nonexistent");
+        roleBaseSteps.getRole(NON_EXISTENT_ID);
     }
 
     @When("^Role with name \"([^\"]*)\"(?: for application id \"([^\"]*)\")? is got$")
