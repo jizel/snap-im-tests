@@ -114,3 +114,19 @@ Feature: Applications create update delete
         | App Name 2      | Different name same ID | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 00011123-0000-4000-a000-222222222222 | false      |
       Then Response code is "422"
       And Custom code is 42202
+
+  Scenario: Application cannot be deleted when it has application versions
+    When The following applications exist
+      | id                                   | applicationName            | description               | website                    | partnerId                            |
+      | 00000000-a05d-42d8-8e84-111111111111 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
+    Given Application version is created for application with id "00000000-a05d-42d8-8e84-111111111111"
+      | id                                   | apiManagerId | versionName | status   | description            |
+      | 00000000-a05d-42d8-8e84-222222222222 | 1            | Version 1   | inactive | Versions description 1 |
+    When Application with id "00000000-a05d-42d8-8e84-111111111111" is deleted
+    Then Response code is "409"
+    And Custom code is 40915
+    When Application version with id "00000000-a05d-42d8-8e84-222222222222" is deleted
+    Then Response code is "204"
+    When Application with id "00000000-a05d-42d8-8e84-111111111111" is deleted
+    Then Response code is "204"
+    

@@ -3,7 +3,6 @@ Feature: Customers properties create update delete
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 40ebf861-7549-46f1-a99f-249716c83b33 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
@@ -21,9 +20,6 @@ Feature: Customers properties create update delete
     Given Relation between property with code "p1_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
-
-    Given The password of user "defaultSnapshotuser" is "Password01"
-    Given Get token for user "defaultSnapshotuser" with password "Password01"
 
   @Smoke
   Scenario: Adding property to customer with some type valid from date to date
@@ -99,7 +95,7 @@ Feature: Customers properties create update delete
     Then Response code is "409"
     And Custom code is 40907
 
-  Scenario: Customer cannot be deleted if he has relationship to existing property
+  Scenario: Customer cannot be deleted if he is anchor customer of some existing property
     Given The following customers exist with random address
       | id                                   | companyName   | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Deletion test | c1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
@@ -110,6 +106,7 @@ Feature: Customers properties create update delete
     Then Response code is "409"
     And Custom code is 40915
     Given Property with code "p4_code" is deleted
+    Then Response code is "204"
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is "204"
 

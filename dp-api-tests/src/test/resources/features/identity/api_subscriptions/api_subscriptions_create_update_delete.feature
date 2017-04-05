@@ -4,7 +4,6 @@ Feature: Api subscription create update delete
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following partner exist
       | id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
@@ -12,9 +11,9 @@ Feature: Api subscription create update delete
       | id                                   | applicationName            | description               | website                    | partnerId                            | isInternal |
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName | status   | description            | applicationId                        |
-      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
-      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 6f552105-0bae-4410-b4bb-bee31567d4fa |
+      | id                                   | apiManagerId | versionName | status   | description            | applicationId                        | isNonCommercial |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 6f552105-0bae-4410-b4bb-bee31567d4fa | true            |
+      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 6f552105-0bae-4410-b4bb-bee31567d4fa | true            |
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -118,7 +117,7 @@ Feature: Api subscription create update delete
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 |                                      | 422          | 42201      | # The body parameter 'commercialSubscriptionId' cannot be empty.                                     |
       | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 1d491c7d-4c70-4be7-ab47-73f36701bcf4 | 422          | 42202      | # Version with identifier 1d491c7d-4c70-4be7-ab47-73f36701bcf4 was not found.                        |
 
-  Scenario Outline: Send POST request with empty body to all api subcriptions endpoints
+  Scenario Outline: Send POST request with empty body to all api subscriptions endpoints
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
     And Custom code is "42201"

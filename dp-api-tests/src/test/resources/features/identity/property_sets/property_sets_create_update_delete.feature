@@ -10,7 +10,7 @@ Feature: Property sets create update delete
     Given The following users exist for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" as primary "false"
       | id                                   | userType | userName      | firstName | lastName | email                        | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
+    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
       | id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -86,3 +86,22 @@ Feature: Property sets create update delete
       | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
     Then Response code is "409"
     Then Custom code is 40911
+    
+    Scenario: Parent Property Set cannot be deleted until all child Property Sets are deleted
+      Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
+        | name            | type            | parentId                             | id                                   |
+        | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | 000111b0-69bf-4c57-91bd-30230d2c1bd0 |
+        | childPS2        | brand           | 000111b0-69bf-4c57-91bd-30230d2c1bd0 | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
+      Given All users are removed for property_sets with names: ps1_name
+      When Property set "childPS1" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When Property set "ps1_name" is deleted
+      Then Response code is "409"
+      And Custom code is 40915
+      When Property set "childPS2" is deleted
+      Then Response code is "204"
+      When Property set "childPS1" is deleted
+      Then Response code is "204"
+      When Property set "ps1_name" is deleted
+      Then Response code is "204"
