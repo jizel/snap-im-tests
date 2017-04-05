@@ -19,14 +19,13 @@ For manually created property code the following rules hold
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapUser | Snap  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given  Default Snapshot user is created
 
 #    ----------< Automatically generated property code tests >-----------------
 
   Scenario Outline: Correct property code is returned when none sent
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
     | name           | email          | isDemoProperty | timezone      | anchorCustomerId                     |
-    | <name        > | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    | <name>         | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Body contains entity with attribute "property_code"
     And The "property_code" attribute in response contains only CAPITAL latin characters or numbers
 
@@ -43,7 +42,7 @@ For manually created property code the following rules hold
 
   # DP-1222 Fixed only in master branch
   Scenario Outline: Correct property code is returned according to customers address
-    Given Property "<name        >" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
+    Given Property "<name>" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
       | addressLine1   | city   | zipCode   | country   |
       | <addressLine1> | <city> | <zipCode> | <country> |
     Then Response code is "201"
@@ -115,13 +114,11 @@ For manually created property code the following rules hold
 
 
    Scenario: Property cannot be updated
-     Given Property "Brno Hilton" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-       | addressLine1 | city | zipCode | country |
-       | line 1       | Brno | 60200   | CZ      |
+     Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+       | id                                   | name         | email              | isDemoProperty | timezone      | anchorCustomerId                     |
+       | 2f7a530b-199d-4662-a95e-866f43498c7d | property51   | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
      Then Response code is "201"
-     Then Body contains entity with attribute "property_code" value "CZBRQBRN"
-     When Property with code "CZBRQBRN" is updated with data
-       | propertyCode |
-       | updated_code |
+     When POST request is sent to "/identity/properties/2f7a530b-199d-4662-a95e-866f43498c7d" on module "identity" with
+       | propertyCode | updated_code |
      Then Response code is "422"
      And Custom code is 42201

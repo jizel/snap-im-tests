@@ -12,7 +12,7 @@ Feature: Properties create update delete
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
       | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "default1"
+    Given The following property is created with random address and billing address for user "default1"
       | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
@@ -141,7 +141,7 @@ Feature: Properties create update delete
       | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 40002          |
 
   Scenario Outline: Validate that property regions belong to the correct country
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created by user "default1"
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "11111111-0000-4000-a000-000000000000"
     Then Content type is "application/json"
     And Response code is 201
     And Body contains entity with attribute "address.region" value "<region>"
@@ -230,7 +230,7 @@ Feature: Properties create update delete
       | CA      | Nunavut                           | propcode78 | mail78@mail.com |
 
   Scenario Outline: Checking error codes for regions
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created by user "default1"
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created with userId "11111111-0000-4000-a000-000000000000"
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"

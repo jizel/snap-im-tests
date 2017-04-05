@@ -34,7 +34,6 @@ Feature: Properties get
     Then Response code is "404"
     And Custom code is "40402"
 
-
   Scenario Outline: Getting list of properties
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
@@ -106,14 +105,14 @@ Feature: Properties get
     And Total count is "<total>"
 
     Examples:
-      | description   | limit | cursor | sort  | returned | total | link_header                                                                                                          |
-      | default limit |       | /null  | /null | 50       | 60    | </identity/properties?limit=50&cursor=50>; rel="next"                                                                |
-      | default limit | /null |        | name  | 50       | 60    | </identity/properties?limit=50&cursor=50&sort=name>; rel="next"                                                      |
-      | limit at 15   | 15    |        | /null | 15       | 60    | </identity/properties?limit=15&cursor=15>; rel="next"                                                                |
-      | offset by 1   |       | 1      | /null | 50       | 60    | </identity/properties?limit=50&cursor=0>; rel="prev", </identity/properties?limit=50&cursor=51>; rel="next"          |
-      | limit by 20   | 20    | 0      | /null | 20       | 60    | </identity/properties?limit=20&cursor=20>; rel="next"                                                                |
-      | limit by 10   | 10    | 0      | /null | 10       | 60    | </identity/properties?limit=10&cursor=10>; rel="next"                                                                |
-      | l:5 o:5       | 5     | 10     | name  | 5        | 60    | </identity/properties?limit=5&cursor=5&sort=name>; rel="prev", </identity/properties?limit=5&cursor=15&sort=name>; rel="next"  |
+      | limit | cursor | sort  | returned | total | link_header                                                                                                          |
+      |       | /null  | /null | 50       | 61    | </identity/properties?limit=50&cursor=50>; rel="next"                                                                |
+      | /null |        | name  | 50       | 61    | </identity/properties?limit=50&cursor=50&sort=name>; rel="next"                                                      |
+      | 15    |        | /null | 15       | 61    | </identity/properties?limit=15&cursor=15>; rel="next"                                                                |
+      |       | 1      | /null | 50       | 61    | </identity/properties?limit=50&cursor=0>; rel="prev", </identity/properties?limit=50&cursor=51>; rel="next"          |
+      | 20    | 0      | /null | 20       | 61    | </identity/properties?limit=20&cursor=20>; rel="next"                                                                |
+      | 10    | 0      | /null | 10       | 61    | </identity/properties?limit=10&cursor=10>; rel="next"                                                                |
+      | 5     | 10     | name  | 5        | 61    | </identity/properties?limit=5&cursor=5&sort=name>; rel="prev", </identity/properties?limit=5&cursor=15&sort=name>; rel="next"  |
 
 
   Scenario Outline: Checking error codes for lists of properties

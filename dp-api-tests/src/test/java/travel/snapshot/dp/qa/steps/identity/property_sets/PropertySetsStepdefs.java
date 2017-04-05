@@ -15,6 +15,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.PropertyPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
@@ -290,6 +291,11 @@ public class PropertySetsStepdefs {
     @Then("^There are (\\d+) property set properties returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
         propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, count);
+    }
+
+    @Then("^There are (\\d+) property property sets returned$")
+    public void There_are_returned_property_property_sets_returned(int count) throws Throwable {
+        propertySetSteps.numberOfEntitiesInResponse(PropertyPropertySetRelationshipDto.class, count);
     }
 
     @When("^Property set \"([^\"]*)\" is updated with following data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")

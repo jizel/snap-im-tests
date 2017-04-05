@@ -71,11 +71,11 @@ Feature: Properties users create update delete
 
     Examples:
       | limit | cursor | returned | total | filter           | sort      | sort_desc | expected_usernames                                                                                                           |
-      | 5     | 0      | 5        | 6     | /null            | is_active |           | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5                      |
+      | 5     | 0      | 5        | 7     | /null            | is_active |           | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5                      |
       | 5     | 0      | 3        | 3     | user_id==8b88*   |           | is_active | filter_pu_default_6, filter_pu_default_5, filter_pu_default_4, filter_pu_default_3, filter_pu_default_2                      |
-      | 5     | 2      | 4        | 6     | /null            | is_active |           | filter_pu_default_3, filter_pu_default_4, filter_pu_default_5, filter_pu_default_6                                           |
+      | 5     | 2      | 5        | 7     | /null            | is_active |           | filter_pu_default_3, filter_pu_default_4, filter_pu_default_5, filter_pu_default_6                                           |
       | 5     | 2      | 1        | 3     | user_id==9b88* |           | is_active | filter_pu_default_4, filter_pu_default_3, filter_pu_default_2, filter_pu_default_1                                           |
-      | /null | /null  | 6        | 6     | /null            | /null     | /null     | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5  filter_pu_default_6 |
+      | /null | /null  | 7        | 7     | /null            | /null     | /null     | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5  filter_pu_default_6 |
 
 
   Scenario: Listing users of non-existent property

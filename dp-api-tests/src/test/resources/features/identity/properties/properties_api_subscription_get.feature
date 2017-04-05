@@ -1,3 +1,4 @@
+@skipped
 @Identity
 Feature: Properties get
 
@@ -33,7 +34,6 @@ Feature: Properties get
 
   # DP-1797
   @Bug
-  @skipped
   Scenario Outline: Getting property's api subscriptions - positive scenarios
     When List of api subscriptions is got for property with id "742529dd-481f-430d-b6b6-686fbb687cab" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
