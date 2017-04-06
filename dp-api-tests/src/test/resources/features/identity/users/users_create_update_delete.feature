@@ -96,7 +96,6 @@ Feature: Users create update delete
       | /messages/identity/users/create_user_missing_customer_relation.json | POST   | identity | /identity/users | 400        | 40003       | DP-1664 |
 
 
-
   Scenario: Deleting nonexistent user
     When Nonexistent user is deleted
     Then Response code is "404"
@@ -147,9 +146,10 @@ Feature: Users create update delete
   Scenario: Creating user with same name as previously deleted user - DP-1380
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
-      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is 201
-    When User "snaphostUser1" is deleted
+    Given Relation between user "snapshotUser1" and customer with id "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
+    When User "snapshotUser1" is deleted
     Then Response code is 204
     When The following users is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
