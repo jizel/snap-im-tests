@@ -55,11 +55,11 @@ Feature: Property sets users create update delete
     And There are property set users with following usernames returned in order: <expected_usernames>
     Examples:
       | limit | cursor | returned | filter           | sort      | sort_desc   | expected_usernames                                                                                            |
-      | 5     | 0      | 5        | is_active==false | is_active |             | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5  |
-      | 5     | 0      | 5        | is_active==false |           | is_active   | filter_psu_default_6, filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2  |
-      | 5     | 2      | 5        | is_active==false | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6, default0              |
-      | 5     | 2      | 5        | is_active==false |           | user_id     | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
-      | 1     | 0      | 1        | is_active==false |           |             | filter_psu_default_6                                                                                          |
+      | 5     | 0      | 5        | is_active==true  | is_active |             | filter_psu_default_1, filter_psu_default_2, filter_psu_default_3, filter_psu_default_4, filter_psu_default_5  |
+      | 5     | 0      | 5        | is_active==true  |           | is_active   | filter_psu_default_6, filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2  |
+      | 5     | 2      | 5        | is_active==true  | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6, default0              |
+      | 5     | 2      | 5        | is_active==true  |           | user_id     | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
+      | 1     | 0      | 1        | is_active==true  |           |             | filter_psu_default_6                                                                                          |
       | 2     | 0      | 1        | user_id=='*aac'  | user_id   |             | default0                                                                                                      |
       | 5     | 0      | 1        | user_id=='5d829*'| user_id   |             | default0                                                                                                      |
 
