@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.helpers;
 
+import static travel.snapshot.dp.api.identity.model.CustomerType.HOTEL;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -25,7 +26,8 @@ public class CustomerUtils {
                 Boolean.TRUE,
                 "+420" + RandomStringUtils.randomNumeric(9),
                 "http://www.snapshot.travel",
-                "Europe/Prague"
+                "Europe/Prague",
+                HOTEL
         );
     }
 
@@ -33,16 +35,17 @@ public class CustomerUtils {
         return createRandomCustomer(
                 RandomStringUtils.randomAlphabetic(10),
                 RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + "." + RandomStringUtils.randomAlphabetic(2),
-                RandomStringUtils.randomAlphabetic(10),
+                DEFAULT_SNAPSHOT_SALESFORCE_ID,
                 vatId,
                 Boolean.TRUE,
                 "+420" + RandomStringUtils.randomNumeric(9),
                 "http://www.snapshot.travel",
-                "Europe/Prague"
+                "Europe/Prague",
+                HOTEL
         );
     }
 
-    public static CustomerCreateDto createRandomCustomer(String companyName, String email, String salesForce, String vatId, Boolean demoCustomer, String phone, String website, String timezone) {
+    public static CustomerCreateDto createRandomCustomer(String companyName, String email, String salesForce, String vatId, Boolean demoCustomer, String phone, String website, String timezone, CustomerType type) {
         CustomerCreateDto customer = new CustomerCreateDto();
         customer.setCompanyName(companyName);
         customer.setEmail(email);
@@ -52,6 +55,7 @@ public class CustomerUtils {
         customer.setPhone(phone);
         customer.setWebsite(website);
         customer.setTimezone(timezone);
+        customer.setType(type);
         return customer;
     }
 

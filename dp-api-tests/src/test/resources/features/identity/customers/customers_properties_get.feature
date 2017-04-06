@@ -12,19 +12,15 @@ Feature: Customers properties get
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | id                                   | userType | userName     | firstName | lastName     | email                                | timezone      | culture |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1           | customer  | property     | customerProperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
+      | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1    | customer  | property     | customerProperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |
       | f7aaed3d-f8ef-41a4-a630-99d07f0ee592 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 |
       | 0a9a76ca-a8f8-445e-85d1-af857b0986e1 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | b13fde13-615a-48fd-a287-ba4a7314193b |
-
     Given Relation between property with code "p1_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p3_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p3_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
-
-    Given The password of user "snapshotUser" is "Password01"
-    Given Get token for user "snapshotUser" with password "Password01"
 
   @Smoke
   Scenario: Getting customerProperty
@@ -35,17 +31,6 @@ Feature: Customers properties get
     And Body contains entity with attribute "property_id" value "4d266045-1cf1-4735-8ef9-216de1370f2e"
     And Body contains entity with attribute "valid_from" value "2015-01-01"
     And Body contains entity with attribute "valid_to" value "2015-12-31"
-    And Body contains entity with attribute "relationship_type" value "chain"
-
-  Scenario: Getting customerProperty with not current etag
-  CustomerProperty is got, etag is saved to tmp, then customerProperty valid_to is updated to "2016-12-31" so etag should change and is got again with previous etag
-    When Property with code "p1_code" from customer with id "40ebf861-7549-46f1-a99f-249716c83b33" is got with type "chain" for etag, updated and got with previous etag
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "property_id" value "4d266045-1cf1-4735-8ef9-216de1370f2e"
-    And Body contains entity with attribute "valid_from" value "2015-01-01"
-    And Body contains entity with attribute "valid_to" value "2200-01-01"
     And Body contains entity with attribute "relationship_type" value "chain"
 
 
@@ -195,16 +180,16 @@ Feature: Customers properties get
     Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p6_code"
     Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p7_code"
     Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p8_code"
-    Given Relation between property with code "filter_list_prop_cust_p1_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-01-01" to "2030-02-31"
+    Given Relation between property with code "filter_list_prop_cust_p1_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-01-01" to "2030-02-28"
     Given Relation between property with code "filter_list_prop_cust_p2_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-02-01" to "2030-03-31"
-    Given Relation between property with code "filter_list_prop_cust_p3_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-03-01" to "2030-04-31"
+    Given Relation between property with code "filter_list_prop_cust_p3_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-03-01" to "2030-04-30"
     Given Relation between property with code "filter_list_prop_cust_p4_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-04-01" to "2030-05-31"
-    Given Relation between property with code "filter_list_prop_cust_p5_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-05-01" to "2030-06-31"
+    Given Relation between property with code "filter_list_prop_cust_p5_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-05-01" to "2030-06-30"
     Given Relation between property with code "filter_list_prop_cust_p6_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-06-01" to "2030-07-31"
     Given Relation between property with code "filter_list_prop_cust_p7_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-07-01" to "2030-08-31"
-    Given Relation between property with code "filter_list_prop_cust_p8_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-08-01" to "2030-09-31"
+    Given Relation between property with code "filter_list_prop_cust_p8_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-08-01" to "2030-09-30"
     Given Relation between property with code "filter_list_prop_cust_p1_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "data_owner" from "2015-09-01" to "2030-10-31"
-    Given Relation between property with code "filter_list_prop_cust_p2_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "data_owner" from "2015-10-01" to "2030-11-31"
+    Given Relation between property with code "filter_list_prop_cust_p2_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "data_owner" from "2015-10-01" to "2030-11-30"
     Given Relation between property with code "filter_list_prop_cust_p3_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "data_owner" from "2015-11-01" to "2030-12-31"
     When List of customerProperties is got for customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
@@ -219,13 +204,18 @@ Feature: Customers properties get
       | 10    | 0      | 10       | 11     | /null                    | /null |           |
       | 10    | 0      | 10       | 11     | /null                    | /null |           |
       | 5     | 2      | 4        | 6      | valid_from<2015-06-15    |       | valid_to  |
-# DP-1722
       | 5     | 0      | 5        | 8      | relationship_type==chain | /null |           |
   #add all fields
 
     #TODO add test for wrong parameters in url
 
   Scenario Outline: Getting customers of a property
+    Given Relation between property with code "p1_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p1_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p2_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p2_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p2_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
+    Given Relation between property with code "p3_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
     When List of customers for property with code "<code>" is got with limit "/null" and cursor "/null" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
@@ -235,38 +225,3 @@ Feature: Customers properties get
       | p1_code |
       | p2_code |
       | p3_code |
-
-  Scenario: Relation between user and customer does not exist
-    Given The password of user "custProp1" is "Password01"
-    Given Get token for user "custProp1" with password "Password01"
-    When Relation between user "b63edcc6-6830-457c-89b1-7801730bd0ae" and customer "40ebf861-7549-46f1-a99f-249716c83b33" is deleted
-    When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
-    Then Response code is 404
-
-  Scenario: No relation between user and property, 0 properties visible for user
-    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given The password of user "custProp1" is "Password01"
-    Given Get token for user "custProp1" with password "Password01"
-    When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
-    Then Response code is 200
-    And Total count is "0"
-
-  Scenario: Relation between user and property, 3 property visible for user
-    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user "custProp1" and property with code "p1_code" exists
-    Given The password of user "custProp1" is "Password01"
-    Given Get token for user "custProp1" with password "Password01"
-    When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
-    Then Response code is 200
-    And Total count is "3"
-
-  Scenario: Relation between user and all properties, 4 properties visible for user
-    Given Relation between user "custProp1" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with isPrimary "true"
-    Given Relation between user "custProp1" and property with code "p1_code" exists
-    Given Relation between user "custProp1" and property with code "p2_code" exists
-    Given Relation between user "custProp1" and property with code "p3_code" exists
-    Given The password of user "custProp1" is "Password01"
-    Given Get token for user "custProp1" with password "Password01"
-    When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "" and cursor "" and filter "" and sort "" and sort_desc ""
-    Then Response code is 200
-    And Total count is "4"

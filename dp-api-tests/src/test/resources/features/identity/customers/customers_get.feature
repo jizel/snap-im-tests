@@ -23,7 +23,7 @@ Feature: Customers get
 
 
   Scenario: Checking error code for getting customer
-    When Customer with customerId "NotExistent" is got
+    When Customer with customerId "invalidUUID" is got
     Then Response code is "400"
     And Custom code is "40003"
     When Customer with customerId "00000000-0000-4000-a000-000000000000" is got
@@ -103,15 +103,15 @@ Feature: Customers get
 
     Examples:
       | limit | cursor | returned | total | link_header                                                                                               |
-      | /null |        | 50       | 59    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
-      | /null | /null  | 50       | 59    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
-      |       |        | 50       | 59    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
-      |       | /null  | 50       | 59    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
-      | 15    |        | 15       | 59    | </identity/customers?limit=15&cursor=15>; rel="next"                                                      |
-      |       | 1      | 50       | 59    | </identity/customers?limit=50&cursor=0>; rel="prev", </identity/customers?limit=50&cursor=51>; rel="next" |
-      | 20    | 0      | 20       | 59    | </identity/customers?limit=20&cursor=20>; rel="next"                                                      |
-      | 10    | 0      | 10       | 59    | </identity/customers?limit=10&cursor=10>; rel="next"                                                      |
-      | 5     | 10     | 5        | 59    | </identity/customers?limit=5&cursor=5>; rel="prev", </identity/customers?limit=5&cursor=15>; rel="next"   |
+      | /null |        | 50       | 60    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      | /null | /null  | 50       | 60    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      |       |        | 50       | 60    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      |       | /null  | 50       | 60    | </identity/customers?limit=50&cursor=50>; rel="next"                                                      |
+      | 15    |        | 15       | 60    | </identity/customers?limit=15&cursor=15>; rel="next"                                                      |
+      |       | 1      | 50       | 60    | </identity/customers?limit=50&cursor=0>; rel="prev", </identity/customers?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | 60    | </identity/customers?limit=20&cursor=20>; rel="next"                                                      |
+      | 10    | 0      | 10       | 60    | </identity/customers?limit=10&cursor=10>; rel="next"                                                      |
+      | 5     | 10     | 5        | 60    | </identity/customers?limit=5&cursor=5>; rel="prev", </identity/customers?limit=5&cursor=15>; rel="next"   |
 
     #TODO test filter, sort with different values
 
@@ -146,14 +146,14 @@ Feature: Customers get
 
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address
-      | companyName                           | email                 | salesforceId                | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | Filter test Given company 1           | Filter_c1@tenants.biz | Filter_salesforceid_given_1 | CZ12345671 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 2           | Filter_c2@tenants.biz | Filter_salesforceid_given_2 | CZ12345672 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 3           | Filter_c3@tenants.biz | Filter_salesforceid_given_3 | CZ12345673 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 4           | Filter_c4@tenants.biz | Filter_salesforceid_given_4 | CZ12345674 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 5           | Filter_c5@tenants.biz | Filter_salesforceid_given_5 | CZ12345675 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter different test Given company 6 | Filter_c6@tenants.biz | Filter_salesforceid_given_6 | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
-      | Filter different test Given company 7 | Filter_c7@tenants.biz | Filter_salesforceid_given_7 | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
+      | companyName                           | email                 | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | Filter test Given company 1           | Filter_c1@tenants.biz | CZ12345671 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 2           | Filter_c2@tenants.biz | CZ12345672 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 3           | Filter_c3@tenants.biz | CZ12345673 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 4           | Filter_c4@tenants.biz | CZ12345674 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 5           | Filter_c5@tenants.biz | CZ12345675 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter different test Given company 6 | Filter_c6@tenants.biz | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
+      | Filter different test Given company 7 | Filter_c7@tenants.biz | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
 
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "snapshotUser"
     Then Response code is "200"
@@ -172,7 +172,6 @@ Feature: Customers get
       | /null | /null  | 1        | 1     | email=='Filter_c7*'                        | /null | /null     | Filter_c7                                             |
       | /null | /null  | 2        | 2     | email==Filter_c* and phone==+22222222      | email | /null     | Filter_c6, Filter_c7                                  |
       | /null | /null  | 1        | 1     | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1                                             |
-      | /null | /null  | 1        | 1     | salesforce_id==Filter_salesforceid_given_2 | /null | /null     | Filter_c2                                             |
       | /null | /null  | 1        | 1     | vat_id==CZ*73                              | /null | /null     | Filter_c3                                             |
       | /null | /null  | 1        | 1     | is_demo_customer==0                        | /null | /null     | Filter_c7                                             |
       | /null | /null  | 1        | 1     | website==http://www.snapshot.cz            | /null | /null     | Filter_c6                                             |

@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static travel.snapshot.dp.qa.helpers.CustomerUtils.createCustomerDto;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
@@ -216,7 +217,7 @@ public class CustomerStepdefs {
 
     @When("^Nonexistent customerPropety id is got for customer with id \"([^\"]*)\"$")
     public void Nonexistent_customerPropety_id_is_got_for_customer_with_code(String customerId) throws Throwable {
-        customerSteps.getCustomerPropertyWithRelationshipId(customerId, "nonexistent");
+        customerSteps.getCustomerPropertyWithRelationshipId(customerId, NON_EXISTENT_ID);
     }
 
     @When("^List of customerProperties is got for customer(?: with id)? \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -255,14 +256,6 @@ public class CustomerStepdefs {
         customerSteps.userIsDeletedFromCustomerByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId);
     }
 
-    @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\"$")
-    public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimary(String username, String customerId, Boolean isPrimary) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
-        UserCustomerRelationshipUpdateDto userCustomerRelationshipUpdate = new UserCustomerRelationshipUpdateDto();
-        userCustomerRelationshipUpdate.setIsPrimary(isPrimary);
-        customerSteps.updateUserCustomerRelationship(userId, customerId, userCustomerRelationshipUpdate);
-    }
-
     @When("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated with isPrimary \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimaryByUser(String username, String customerId, Boolean isPrimary, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
@@ -288,18 +281,11 @@ public class CustomerStepdefs {
         customerSteps.updateCustomerPropertyRelationshipByUserForApp(userId, applicationVersionId, propertyId, customerId, relationshipUpdates.get(0));
     }
 
-    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" with type \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
+    @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updating field \"([^\"]*)\" to value \"([^\"]*)\" with invalid etag$")
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value_with_invalid_etag(
-            String propertyCode, String customerId, String type, String fieldName, String value) throws Throwable {
+            String propertyCode, String customerId, String fieldName, String value) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
         customerSteps.propertyIsUpdateForCustomerWithInvalidEtag(property, customerId, fieldName, value);
-    }
-
-    @When("^Property with code \"([^\"]*)\" from customer with id \"([^\"]*)\" is got with type \"([^\"]*)\" for etag, updated and got with previous etag$")
-    public void Property_with_code_from_customer_with_code_is_got_with_type_for_etag_updated_and_got_with_previous_etag(
-            String propertyCode, String customerId, String type) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        customerSteps.propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(propertyId, customerId, type);
     }
 
     @When("^Customer with id \"([^\"]*)\", update address with following data$")
@@ -336,14 +322,15 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsUpdatedWithOutdatedEtag(customerId);
     }
 
-    @When("^List of property sets for customer \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of property sets for customer \"([^\"]*)\" is got(?: by user \"([^\"]*)\")? with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
     public void List_of_property_sets_for_customer_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String customerId, @Transform(NullEmptyStringConverter.class) String limit,
+            String customerId, String username, @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
             @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        customerSteps.listOfCustomerPropertySetsIsGotWith(customerId, limit, cursor, filter, sort, sortDesc);
+        customerSteps.listOfCustomerPropertySetsIsGotByUserForApp(usersSteps.resolveUserId(username), DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
+                customerId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^List of all property sets for customer with id \"([^\"]*)\" is requested(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")

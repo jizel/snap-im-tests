@@ -3,7 +3,6 @@ package travel.snapshot.dp.qa.serenity.properties;
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -485,15 +484,6 @@ public class PropertySteps extends BasicSteps {
         PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId()));
-    }
-
-    public void allCustomersAreCustomersOfProperty(CustomerDto[] allCustomers, String propertyCode) {
-        String propertyID = getPropertyByCodeInternal(propertyCode).getId();
-        // This is slightly better but still does not work - listOfCustomersIsGotWith does not return list of customers but list of relations and needs to be changed
-        for (CustomerDto c : allCustomers) {
-            given().baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath("identity/customers/").get(c.getId() + "/properties").
-                    then().body("property_id", hasItem(propertyID));
-        }
     }
 
     public void listOfApiSubscriptionsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
