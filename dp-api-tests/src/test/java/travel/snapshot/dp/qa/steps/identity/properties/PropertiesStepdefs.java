@@ -116,14 +116,6 @@ public class PropertiesStepdefs {
         propertySteps.getProperty(NON_EXISTENT_ID);
     }
 
-    @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_properties_exists_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                  @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                  @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        propertySteps.getListOfPropertiesWith(limit, cursor, filter, sort, sortDesc);
-    }
 
     @When("^List of properties is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void listOfPropertiesIsGotWithLimitAndCursorAndFilterAndSortAndSort_descByUser(@Transform(NullEmptyStringConverter.class) String limit,
@@ -177,7 +169,7 @@ public class PropertiesStepdefs {
 
     @When("^Nonexistent property id is deleted$")
     public void Nonexistent_property_id_is_deleted() throws Throwable {
-        propertySteps.deleteProperty("nonexistent_id");
+        propertySteps.deleteProperty(NON_EXISTENT_ID);
     }
 
     @When("^User \"([^\"]*)\" is removed from property with code \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
@@ -190,7 +182,8 @@ public class PropertiesStepdefs {
 
     @When("^Nonexistent user is removed from property with code \"([^\"]*)\"$")
     public void Nonexistent_user_is_removed_from_property_with_code(String propertyCode) throws Throwable {
-        propertySteps.userIsDeletedFromProperty("nonexistent", propertyCode);
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        propertySteps.userIsDeletedFromProperty(NON_EXISTENT_ID, propertyId);
     }
 
     @When("^I query list of users for nonexistent property$")

@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.serenity.properties;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -71,7 +72,7 @@ public class PropertySteps extends BasicSteps {
                 property.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
             }
             Response createResponse = createProperty(userId, property);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
+            if (createResponse.getStatusCode() != SC_CREATED) {
                 fail("Property cannot be created! Status:" + createResponse.getStatusCode() + " " + createResponse.body().asString());
             }
         });
@@ -114,6 +115,9 @@ public class PropertySteps extends BasicSteps {
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
         Response response = createProperty(userId, property);
         setSessionResponse(response);
+        if (response.statusCode() == SC_CREATED) {
+            setSessionVariable(SERENITY_SESSION__PROPERTY_ID, property.getId());
+        }
     }
 
     @Step
@@ -276,7 +280,7 @@ public class PropertySteps extends BasicSteps {
     public void relationExistsBetweenUserAndProperty(String userId, String propertyId, Boolean isActive) {
         addUserToProperty(userId, propertyId, isActive);
         Response response = getSessionResponse();
-        if (response.getStatusCode() != HttpStatus.SC_CREATED) {
+        if (response.getStatusCode() != SC_CREATED) {
             fail("Relation between user and property cannot be created - status: " + response.getStatusCode() + ", " + response.asString());
         }
     }

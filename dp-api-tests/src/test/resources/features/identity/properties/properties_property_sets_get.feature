@@ -185,15 +185,15 @@ Feature: Properties property sets get
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
-    And There are <returned> property set properties returned
+    And There are <returned> property property sets returned
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total |  filter           |   sort         |  sort_desc  |
-      | 5     | 0      | 5        | 12    | is_active==false  | property_id  |               |
-      | 5     | 0      | 5        | 12    | is_active==false  |              | property_id   |
-      | 5     | 2      | 5        | 12    | is_active==false  | property_id  |               |
-      | 5     | 2      | 0        | 0     | is_active==true   |              | property_id    |
+      | limit | cursor | returned | total |  filter          |   sort          |  sort_desc      |
+      | 5     | 0      | 5        | 12    | is_active==true  | property_set_id |                 |
+      | 5     | 0      | 5        | 12    | is_active==true  |                 | property_set_id |
+      | 5     | 2      | 5        | 12    | is_active==true  | property_set_id |                 |
+      | 5     | 2      | 0        | 0     | is_active==false |                 | property_set_id |
 
   Scenario Outline: Checking error codes for getting list of property property sets
     When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
