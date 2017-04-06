@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.steps.identity.properties;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
@@ -148,8 +149,8 @@ public class PropertiesStepdefs {
         propertySteps.followingPropertyIsCreated(properties.get(0), userId);
     }
 
-    @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created with userId \"([^\"]*)\"$")
-    public void aPropertyForCustomerFromCountryRegionCodeEmailIsCreatedWithUserId(String customerId, String country, String region, String code, String email, String userId) throws Throwable {
+    @When("^A property for customer \"([^\"]*)\" from country \"([^\"]*)\" region \"([^\"]*)\" code \"([^\"]*)\" email \"([^\"]*)\" is created by user \"([^\"]*)\"$")
+    public void aPropertyForCustomerFromCountryRegionCodeEmailIsCreatedWithUserId(String customerId, String country, String region, String code, String email, String userName) throws Throwable {
         AddressDto address = new AddressDto();
         PropertyDto property = new PropertyDto();
         address.setAddressLine1("someAddress");
@@ -163,7 +164,7 @@ public class PropertiesStepdefs {
         property.setEmail(email);
         property.setIsDemoProperty(true);
         property.setTimezone("GMT");
-        propertySteps.followingPropertyIsCreatedWithAddress(property, address, userId);
+        propertySteps.followingPropertyIsCreatedWithAddress(property, address, usersSteps.resolveUserId(userName));
     }
 
     @When("^Property with code \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
@@ -259,8 +260,14 @@ public class PropertiesStepdefs {
 
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")
     public void each_customer_is_a_customer_of_property_with_code(String propertyCode) throws Throwable {
+        String propertyID = propertySteps.resolvePropertyId(propertyCode);
         CustomerDto[] allCustomers = customerSteps.listOfCustomersIsGotWith(null, null, null, null, null).as(CustomerDto[].class);
-        propertySteps.allCustomersAreCustomersOfProperty(allCustomers, propertyCode);
+        for (CustomerDto customer : allCustomers) {
+            if(!customer.getId().equals("11111111-0000-4000-a000-555555555555")) {
+//                We don't want to check default customer's properties
+                customerSteps.listOfCustomerPropertiesIsGotWith(customer.getId(), null, null, null, null, null).then().body("property_id", hasItem(propertyID));
+            }
+        }
     }
 
     // --- and ---

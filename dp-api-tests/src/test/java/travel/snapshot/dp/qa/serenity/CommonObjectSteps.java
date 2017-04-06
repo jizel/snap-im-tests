@@ -1,5 +1,12 @@
 package travel.snapshot.dp.qa.serenity;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
+
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,7 +20,11 @@ import net.thucydides.core.annotations.Step;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import travel.snapshot.dp.qa.helpers.*;
+import travel.snapshot.dp.qa.helpers.FieldType;
+import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.helpers.ObjectField;
+import travel.snapshot.dp.qa.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.helpers.ResponseEntry;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,12 +33,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.fail;
-import static travel.snapshot.dp.qa.helpers.ObjectMappers.OBJECT_MAPPER;
 
 /**
  * @author konkol
@@ -294,7 +299,9 @@ public class CommonObjectSteps extends BasicSteps {
      * @return server response
      */
     private Response restFilterObject(String objectLocation, String query) {
-        return given().spec(spec).basePath(objectLocation).param("limit", LIMIT_TO_ALL).param("filter", query).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+        return given().spec(spec).basePath(objectLocation).param("limit", LIMIT_TO_ALL).param("filter", query)
+                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .when().get();
     }
 

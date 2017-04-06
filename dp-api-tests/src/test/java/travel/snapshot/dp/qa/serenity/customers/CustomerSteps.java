@@ -132,8 +132,13 @@ public class CustomerSteps extends BasicSteps {
     public void followingCustomerIsCreatedWithAddress(CustomerCreateDto customer, AddressDto address) {
         customer.setAddress(address);
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        Response response = createEntity(customer);
-        setSessionResponse(response);
+        try {
+            JSONObject jsonCustomer = retrieveData(customer);
+            Response response = createEntity(jsonCustomer.toString());
+            setSessionResponse(response);
+        } catch(JsonProcessingException exception){
+            fail("Exception while creating JSONObject from customer: " + exception.getMessage());
+        }
     }
 
     @Step
@@ -518,18 +523,6 @@ public class CustomerSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void propertyIsgotForCustomerWithTypeWithEtagAfterUpdate(String propertyId, String customerId, String type) {
-        String eTag = getSecondLevelEntityEtag(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
-
-        Map<String, Object> mapForUpdate = new HashMap<>();
-        mapForUpdate.put("valid_to", "2200-01-01");
-
-        updateSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, mapForUpdate, eTag);
-
-        Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
-        setSessionResponse(response);
-    }
-
     @Step
     public void getCustomerPropertyWithRelationshipId(String customerId, String relationshipId) {
         Response response = getSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, relationshipId);
@@ -537,9 +530,10 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfCustomerPropertiesIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public Response listOfCustomerPropertiesIsGotWith(String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
+        return response;
     }
 
     @Step

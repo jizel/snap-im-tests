@@ -547,17 +547,16 @@ Feature: Customers create update delete
   @Bug
   Scenario: Creating customer with same name as previously deleted one - DP-1380
     Given The following customers exist with random address
-      | id                                   | companyName | email              | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 0002d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | salesforceid_1 | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
+      | id                                   | companyName | email              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 0002d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is 201
     When Customer with id "0002d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is 204
     Given The following customers exist with random address
-      | id                                   | companyName | email              | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
-      | 1112d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | salesforceid_1 | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
+      | id                                   | companyName | email              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | 1112d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is 201
     And Body contains entity with attribute "customer_id" value "1112d2b2-3836-4207-a705-42bbecf3d881"
-    And Body contains entity with attribute "salesforce_id" value "salesforceid_1"
     And Body contains entity with attribute "name" value "Company 1"
 
   Scenario Outline: Send POST request with empty body to all configurations endpoints
@@ -574,24 +573,27 @@ Feature: Customers create update delete
 
   Scenario: Customer ID must be unique when creating customer - DP-1661
     Given The following customers exist with random address
-      | id                                   | companyName       | email              | salesforceId   | vatId      | isDemoCustomer | timezone      |
-      | 00011222-3836-4207-a705-42bbecf3d881 | Original Customer | oc@snapshot.travel | original_sf_id | CZ10000001 | true           | Europe/Prague |
+      | id                                   | companyName       | email              | vatId      | isDemoCustomer | timezone      |
+      | 00011222-3836-4207-a705-42bbecf3d881 | Original Customer | oc@snapshot.travel | CZ10000001 | true           | Europe/Prague |
     When Customer is created with random address
-      | id                                   | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
-      | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
+      | id                                   | companyName  | email                   | salesforceId    | vatId      | isDemoCustomer | timezone      | type  |
+      | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | SALESFORCEID001 | CZ20000002 | true           | Europe/Prague | HOTEL |
     Then Response code is "409"
     And Custom code is 40902
 
   Scenario: CustomerId and parentId must be different - DP-1528
+    Given The following customers exist with random address
+      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 0 | c0@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     When Customer is created with random address
-      | id                                   | parentId                             | companyName               | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Already existing custoemr | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
+      | id                                   | parentId                             | companyName               | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive | type  |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Already existing custoemr | c1@tenants.biz | SALESFORCEID001 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     | HOTEL |
 #       Already existing customerId
     Then Response code is "409"
     And Custom code is 40902
     When Customer is created with random address
-      | id                                   | parentId                             | companyName  | email                   | salesforceId | vatId      | isDemoCustomer | timezone      |
-      | 00011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | sf_id2       | CZ20000002 | true           | Europe/Prague |
+      | id                                   | parentId                             | companyName  | email                   | salesforceId    | vatId      | isDemoCustomer | timezone      | type  |
+      | 00011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | SALESFORCEID001 | CZ20000002 | true           | Europe/Prague | HOTEL |
 #       Nonexistent customerId
     Then Response code is "422"
     And Custom code is 42202

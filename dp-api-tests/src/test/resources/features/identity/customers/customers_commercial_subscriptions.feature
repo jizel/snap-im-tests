@@ -21,7 +21,7 @@ Feature: Customers commercial subscriptions
 
   Scenario Outline: Getting list of customers commercial subscriptions
     Given The following commercial subscriptions exist
-      | applicationId                        | id                                   | propertyId                           |
+      | applicationId                        | customerId                           | propertyId                           |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
       | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
@@ -88,10 +88,10 @@ Feature: Customers commercial subscriptions
       |       |        | 50       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                    |
       |       | /null  | 50       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=50&cursor=50>; rel="next"                                                                                                                    |
       | 15    |        | 15       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=15&cursor=15>; rel="next"                                                                                                                    |
-      |       | 1      | 50       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=50&cursor=51>; rel="next", </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=50&cursor=0>; rel="prev" |
+      |       | 1      | 50       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=50&cursor=0>; rel="prev", </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=50&cursor=51>; rel="next" |
       | 20    | 0      | 20       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=20&cursor=20>; rel="next"                                                                                                                    |
       | 10    | 0      | 10       | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=10&cursor=10>; rel="next"                                                                                                                    |
-      | 5     | 10     | 5        | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=5&cursor=15>; rel="next", </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=5&cursor=5>; rel="prev"   |
+      | 5     | 10     | 5        | 52    | </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=5&cursor=5>; rel="prev", </identity/customers/1238fd9a-a05d-42d8-8e84-42e904ace123/commercial_subscriptions?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of customers commercial subscriptions
     Given The following customers exist with random address
