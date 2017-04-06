@@ -20,7 +20,7 @@ Feature: Partners get
     And Body contains entity with attribute "website" value "http://www.snapshot.travel"
     And Body contains entity with attribute "vat_id" value "CZ10000001"
     And Body contains entity with attribute "notes" value "Test notes 1"
-    And Body contains entity with attribute "is_active" value "false"
+    And Body contains entity with attribute "is_active" value "true"
 
   Scenario: Getting partner with etag
     Given The following partner is created
@@ -102,15 +102,15 @@ Feature: Partners get
     And Total count is "<total>"
     Examples:
       | limit | cursor | returned | total | link_header                                                                                             |
-      | /null |        | 50       | 52    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
-      | /null | /null  | 50       | 52    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
-      |       |        | 50       | 52    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
-      |       | /null  | 50       | 52    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
-      | 15    |        | 15       | 52    | </identity/partners?limit=15&cursor=15>; rel="next"                                                     |
-      |       | 1      | 50       | 52    | </identity/partners?limit=50&cursor=0>; rel="prev", </identity/partners?limit=50&cursor=51>; rel="next" |
-      | 20    | 0      | 20       | 52    | </identity/partners?limit=20&cursor=20>; rel="next"                                                     |
-      | 10    | 0      | 10       | 52    | </identity/partners?limit=10&cursor=10>; rel="next"                                                     |
-      | 5     | 10     | 5        | 52    | </identity/partners?limit=5&cursor=5>; rel="prev", </identity/partners?limit=5&cursor=15>; rel="next"   |
+      | /null |        | 50       | 53    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
+      | /null | /null  | 50       | 53    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
+      |       |        | 50       | 53    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
+      |       | /null  | 50       | 53    | </identity/partners?limit=50&cursor=50>; rel="next"                                                     |
+      | 15    |        | 15       | 53    | </identity/partners?limit=15&cursor=15>; rel="next"                                                     |
+      |       | 1      | 50       | 53    | </identity/partners?limit=50&cursor=0>; rel="prev", </identity/partners?limit=50&cursor=51>; rel="next" |
+      | 30    | 0      | 30       | 53    | </identity/partners?limit=30&cursor=30>; rel="next"                                                     |
+      | 10    | 0      | 10       | 53    | </identity/partners?limit=10&cursor=10>; rel="next"                                                     |
+      | 5     | 10     | 5        | 53    | </identity/partners?limit=5&cursor=5>; rel="prev", </identity/partners?limit=5&cursor=15>; rel="next"   |
 
   Scenario Outline: Checking error codes for getting list of partners
     When List of partners is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
