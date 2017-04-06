@@ -259,8 +259,6 @@ Feature: Twitter metrics
       | /analytics/twitter/mentions         |
       | /analytics/twitter/mention_reach    |
 
-#  DP-1943
-  @skipped
   Scenario Outline: Get analytics data from API with missing parameters
     When Get twitter "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is 400
@@ -269,7 +267,8 @@ Feature: Twitter metrics
 
     Examples:
       | url                                 | granularity | since           | until      |
-      | /analytics/twitter/number_of_tweets |             | 2015-12-03      | 2015-12-03 |
+      #    DP-1991
+#      | /analytics/twitter/number_of_tweets |             | 2015-12-03      | 2015-12-03 |
       | /analytics/twitter/engagement       | week        | 2015-12-03      |            |
       | /analytics/twitter/followers        | month       |                 | today      |
       | /analytics/twitter/impressions      | day         | today - 1 month |            |
