@@ -13,6 +13,9 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
+import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
+import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
@@ -70,7 +73,7 @@ public class RolesStepdefs {
 
     @When("^Nonexistent role id is deleted$")
     public void Nonexistent_role_id_is_deleted() throws Throwable {
-        roleBaseSteps.deleteRole("nonexistent");
+        roleBaseSteps.deleteRole(NON_EXISTENT_ID);
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data$")
@@ -111,7 +114,13 @@ public class RolesStepdefs {
 
     @Then("^There are (\\d+) roles returned$")
     public void There_are_roles_returned(int count) throws Throwable {
-        roleBaseSteps.numberOfEntitiesInResponse(RoleDto.class, count);
+        switch(getRoleBaseType()){
+            case CUSTOMER : roleBaseSteps.numberOfEntitiesInResponse(CustomerRoleDto.class, count);
+                break;
+            case PROPERTY: roleBaseSteps.numberOfEntitiesInResponse(PropertyRoleDto.class, count);
+                break;
+            case PROPERTY_SET: roleBaseSteps.numberOfEntitiesInResponse(PropertySetRoleDto.class, count);
+        }
     }
 
     @When("^Nonexistent role id got$")
