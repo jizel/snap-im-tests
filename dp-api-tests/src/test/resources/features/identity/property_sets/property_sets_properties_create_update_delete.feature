@@ -21,7 +21,6 @@ Feature: Property sets properties create update delete
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
-
   Scenario: Checking error code for removing property from property set
     When Nonexistent property is removed from property set "ps1_name"
     Then Response code is "404"
@@ -43,7 +42,7 @@ Feature: Property sets properties create update delete
     And There are properties with following names returned in order: <expected_names>
     Examples:
       | limit | cursor | returned | filter           | sort          | sort_desc       | expected_names                                                      |
-      | 1     | 0      | 1        | is_active==false | property_id   |                 | filtering_prop_name_1                                               |
-      | 2     | 2      | 1        | is_active==false |               |                 | filtering_prop_name_2                                               |
-      | 3     | 2      | 1        | is_active==false |               |                 | filtering_prop_name_3                        |
-      | 5     | 0      | 3        | is_active==false |               |                 | filtering_prop_name_1, filtering_prop_name_2, filtering_prop_name_3 |
+      | 1     | 0      | 1        | is_active==true  | property_id   |                 | filtering_prop_name_1                                               |
+      | 2     | 2      | 1        | is_active==true  |               |                 | filtering_prop_name_2                                               |
+      | 3     | 2      | 1        | is_active==true  |               |                 | filtering_prop_name_3                        |
+      | 5     | 0      | 3        | is_active==true  |               |                 | filtering_prop_name_1, filtering_prop_name_2, filtering_prop_name_3 |

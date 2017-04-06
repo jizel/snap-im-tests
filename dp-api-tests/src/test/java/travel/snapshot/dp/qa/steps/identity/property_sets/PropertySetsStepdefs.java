@@ -115,17 +115,6 @@ public class PropertySetsStepdefs {
         propertySetSteps.followingPropertySetIsCreated(propertySets.get(0), customerId);
     }
 
-    @When("^List of property sets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
-    public void List_of_property_sets_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(@Transform(NullEmptyStringConverter.class) String limit,
-                                                                                                     @Transform(NullEmptyStringConverter.class) String cursor,
-                                                                                                     @Transform(NullEmptyStringConverter.class) String filter,
-                                                                                                     @Transform(NullEmptyStringConverter.class) String sort,
-                                                                                                     @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        propertySetSteps.listOfPropertySetsIsGotWith(limit, cursor, filter, sort, sortDesc);
-
-    }
-
-
     @When("^List of property sets is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void listOfPropertySetsIsGotWithLimitAndCursorAndFilterAndSortAndSort_descByUser(@Transform(NullEmptyStringConverter.class) String limit,
                                                                                             @Transform(NullEmptyStringConverter.class) String cursor,

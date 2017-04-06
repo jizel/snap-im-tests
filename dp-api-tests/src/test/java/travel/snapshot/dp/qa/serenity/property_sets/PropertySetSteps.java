@@ -115,12 +115,6 @@ public class PropertySetSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfPropertySetsIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
-        setSessionResponse(response);
-    }
-
-    @Step
     public void listOfPropertySetsIsGotByUserForApp(String userId, String applicationVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntitiesByUserForApp(userId, applicationVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
