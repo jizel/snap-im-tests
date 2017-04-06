@@ -175,14 +175,12 @@ Feature: Users get
       | customer | other_default_7  | FilterDefault7 | FilterUser7 | filter_user7@snapshot.travel | +42010111218 | Europe/Prague     | cs-CZ   |
       | customer | other_default_8  | FilterDefault8 | FilterUser8 | filter_user8@snapshot.travel | +42010111213 | Europe/Prague     | sk-SK   |
       | snapshot | other_default_9  | FilterDefault9 | FilterUser9 | filter_user9@snapshot.travel | +42010111213 | Europe/Prague     | sk-SK   |
-
     When List of users is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned
     And There are users with following usernames returned in order: <expected_usernames>
     And Total count is "<total>"
-
     Examples:
       | limit | cursor | returned | total | filter                                        | sort      | sort_desc | expected_usernames                                                                       |
       | 5     | 0      | 5        | 6     | user_name=='filter_default*'                  | user_name |           | filter_default_1, filter_default_2, filter_default_3, filter_default_4, filter_default_5 |
@@ -195,6 +193,6 @@ Feature: Users get
       | /null | /null  | 1        | 1     | email==filter_user4@snapshot.travel           | /null     | /null     | filter_default_4                                                                         |
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |
       | /null | /null  | 1        | 1     | phone==+42010111218                           | /null     | /null     | other_default_7                                                                          |
-      | 5     | /null  | 5        | 14    | is_active=='false'                            | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
-      | /null | /null  | 0        | 0     | is_active=='true'                             | user_name |           |                                                                                          |
+      | 5     | /null  | 5        | 14    | is_active=='true'                            | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
+      | /null | /null  | 0        | 0     | is_active=='false'                             | user_name |           |                                                                                          |
   #add all fields
