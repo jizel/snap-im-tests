@@ -36,8 +36,7 @@ Feature: Rate shopper
       | 99000299-9999-4999-a999-999999999999 | GBP               |
       | 99001499-9999-4999-a999-999999999999 | EUR               |
 
-#    DP-1951
-    @skipped
+#  This test keeps failing on my computer with empty values, altough on others it works. Needs to be reteted
   Scenario Outline: Check minimal, average, and maximal market values
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
@@ -189,8 +188,6 @@ Feature: Rate shopper
       | 99000099-9999-4999-a999-999999999999 | text        | 0      | 400           | 40002       |
       | 99000099-9999-4999-a999-999999999999 | 10          | text   | 400           | 40002       |
 
-#  DP-1955
-  @skipped
   Scenario Outline: Given property in future or without fetchDatetime are calculated real time
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |

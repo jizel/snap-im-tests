@@ -4,6 +4,7 @@ package travel.snapshot.dp.qa.steps.identity.applications;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -56,7 +57,7 @@ public class ApplicationsStepsdef {
 
     @When("^Nonexistent application id is deleted$")
     public void Nonexistent_application_id_is_deleted() throws Throwable {
-        applicationSteps.applicationWithIdIsDeleted("nonexistent_id");
+        applicationSteps.applicationWithIdIsDeleted(NON_EXISTENT_ID);
     }
 
     @When("^Application(?: with id)? \"([^\"]*)\" is updated with data$")
