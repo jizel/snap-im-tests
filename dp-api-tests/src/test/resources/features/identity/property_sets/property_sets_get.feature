@@ -76,15 +76,7 @@ Feature: Property sets get
       | list_ps48_name  | list_ps48_description  | brand           |
       | list_ps49_name  | list_ps49_description  | brand           |
       | list_ps50_name  | list_ps50_description  | brand           |
-      | list_ps51_name  | list_ps51_description  | brand           |
-      | list_ps52_name  | list_ps52_description  | brand           |
-      | list_ps53_name  | list_ps53_description  | brand           |
-      | list_ps54_name  | list_ps54_description  | brand           |
-      | list_ps55_name  | list_ps55_description  | brand           |
-      | list_ps56_name  | list_ps56_description  | brand           |
-      | list_ps57_name  | list_ps57_description  | brand           |
-      | list_ps58_name  | list_ps58_description  | brand           |
-      | list_ps59_name  | list_ps59_description  | brand           |
+
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
     Then Response code is "200"
     And Content type is "application/json"
@@ -93,15 +85,15 @@ Feature: Property sets get
     And Total count is "<total>"
     Examples:
       | limit | cursor | returned | total | link_header                                                                                                       |
-      | /null |        | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      | /null | /null  | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      |       |        | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      |       | /null  | 50       | 62    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
-      | 15    |        | 15       | 62    | </identity/property_sets?limit=15&cursor=15>; rel="next"                                                          |
-      |       | 1      | 50       | 62    | </identity/property_sets?limit=50&cursor=0>; rel="prev", </identity/property_sets?limit=50&cursor=51>; rel="next" |
-      | 20    | 0      | 20       | 62    | </identity/property_sets?limit=20&cursor=20>; rel="next"                                                          |
-      | 10    | 0      | 10       | 62    | </identity/property_sets?limit=10&cursor=10>; rel="next"                                                          |
-      | 5     | 10     | 5        | 62    | </identity/property_sets?limit=5&cursor=5>; rel="prev", </identity/property_sets?limit=5&cursor=15>; rel="next"   |
+      | /null |        | 50       | 53    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      | /null | /null  | 50       | 53    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      |       |        | 50       | 53    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      |       | /null  | 50       | 53    | </identity/property_sets?limit=50&cursor=50>; rel="next"                                                          |
+      | 15    |        | 15       | 53    | </identity/property_sets?limit=15&cursor=15>; rel="next"                                                          |
+      |       | 1      | 50       | 53    | </identity/property_sets?limit=50&cursor=0>; rel="prev", </identity/property_sets?limit=50&cursor=51>; rel="next" |
+      | 20    | 0      | 20       | 53    | </identity/property_sets?limit=20&cursor=20>; rel="next"                                                          |
+      | 10    | 0      | 10       | 53    | </identity/property_sets?limit=10&cursor=10>; rel="next"                                                          |
+      | 5     | 10     | 5        | 53    | </identity/property_sets?limit=5&cursor=5>; rel="prev", </identity/property_sets?limit=5&cursor=15>; rel="next"   |
 
 
   Scenario Outline: Checking error codes for getting list of property sets
