@@ -1,7 +1,5 @@
 package travel.snapshot.dp.qa.steps;
 
-import cucumber.api.PendingException;
-import cucumber.api.java.en.And;
 import net.thucydides.core.annotations.Steps;
 
 import org.slf4j.LoggerFactory;
