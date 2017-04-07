@@ -55,9 +55,13 @@ public class ApplicationsStepsdef {
         applicationSteps.applicationIdInSessionDoesntExist();
     }
 
-    @When("^Nonexistent application id is deleted$")
-    public void Nonexistent_application_id_is_deleted() throws Throwable {
-        applicationSteps.applicationWithIdIsDeleted(NON_EXISTENT_ID);
+    @When("^Nonexistent application( version)? id is deleted$")
+    public void Nonexistent_application_id_is_deleted(String version) throws Throwable {
+        if (version != null) {
+            applicationVersionSteps.deleteApplicationVersion(NON_EXISTENT_ID);
+        } else {
+            applicationSteps.applicationWithIdIsDeleted(NON_EXISTENT_ID);
+        }
     }
 
     @When("^Application(?: with id)? \"([^\"]*)\" is updated with data$")
@@ -83,7 +87,7 @@ public class ApplicationsStepsdef {
 
     @When("^Application with id \"([^\"]*)\" is (?:got|requested)$")
     public void Application_WithIdIsGot(String applicationId) {
-        applicationSteps.applicationWithIdIsGot(applicationId);
+        applicationSteps.applicationWithIdIsRequested(applicationId);
     }
 
     @When("^Application with id \"([^\"]*)\" is got with etag$")
@@ -91,9 +95,13 @@ public class ApplicationsStepsdef {
         applicationSteps.applicationWithIdIsGotWithEtag(applicationId);
     }
 
-    @When("^Nonexistent application id is got$")
-    public void Nonexistent_application_id_is_got() {
-        applicationSteps.applicationWithIdIsGot("nonexistentId");
+    @When("^Nonexistent application( version)? id is (?:requested|got)$")
+    public void Nonexistent_application_id_is_got(String version) {
+        if (version != null) {
+            applicationVersionSteps.getApplicationVersion(NON_EXISTENT_ID);
+        } else {
+            applicationSteps.applicationWithIdIsRequested(NON_EXISTENT_ID);
+        }
     }
 
     @When("^List of applications is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")

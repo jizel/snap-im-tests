@@ -106,7 +106,7 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void applicationWithIdIsGot(String applicationId) {
+    public void applicationWithIdIsRequested(String applicationId) {
 
         Response resp = getEntity(applicationId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
@@ -129,7 +129,7 @@ public class ApplicationsSteps extends BasicSteps {
         ApplicationDto[] applications =
                 getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_id==" + applicationId, null, null, null)
                         .as(ApplicationDto[].class);
-        return Arrays.asList(applications).stream().findFirst().orElse(null);
+        return Arrays.stream(applications).findFirst().orElse(null);
     }
 
     @Step
