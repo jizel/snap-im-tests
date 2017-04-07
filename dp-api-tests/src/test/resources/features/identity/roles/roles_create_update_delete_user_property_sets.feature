@@ -123,13 +123,13 @@ Feature: Roles create update delete user property set
       | id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | optional description 2 | 11111111-0000-4000-a000-111111111111 |
     Given The following applications exist
-      | applicationName  | description               | website                    | id                                   | partnerId                           | isInternal |
-      | OtherApplication | Application description 1 | http://www.snapshot.travel | 1118fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
+      | applicationName  | description               | website                    | id                                   | partnerId                            | isInternal |
+      | OtherApplication | Application description 1 | http://www.snapshot.travel | 1118fd9a-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     When Role is created
       | id                                   | roleName         | description            | applicationId                        |
       | 33344455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same ID different app  | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "409"
     When Role is created
-      | id                                   | roleName         | description             | id                                   |
+      | id                                   | roleName         | description             | applicationId                        |
       | 00044455-3dc2-477e-aa02-6e09465d22ae | user_cust_role   | Same name different app | 1118fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
