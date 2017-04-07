@@ -157,7 +157,7 @@ public class UserGroupsdefs {
         userGroupSteps.setUserGroupActiveField(userGroupId, false);
     }
 
-    @When("^User group (:?with id)? \"([^\"]*)\" is deleted$")
+    @When("^User group(?: with id)? \"([^\"]*)\" is deleted$")
     public void userGroupWithIdIsDeleted(String userGroupName) throws Throwable {
         String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
         userGroupSteps.deleteUserGroup(userGroupId);
