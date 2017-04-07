@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.steps.configuration.general;
 
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -25,7 +27,7 @@ public class GeneralConfigurationStepdefs {
 
     @When("^Nonexistent configuration type id is deleted$")
     public void Nonexistent_configuration_type_id_is_deleted() throws Throwable {
-        configurationSteps.tryDeleteConfigurationType("nonexistent_id");
+        configurationSteps.tryDeleteConfigurationType(NON_EXISTENT_ID);
     }
 
     @Given("^The following configuration types exist$")

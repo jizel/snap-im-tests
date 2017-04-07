@@ -90,8 +90,6 @@ Feature: Applications create update delete
       | url                                                                                                                                    |
       | identity/applications/                                                                                                                 |
       | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123                                                                             |
-      | identity/applications/a318fd9a-a05d-42d8-8e84-42e904ace123/application_versions                                                        |
-
 
   Scenario: Application ID and name is unique when creating role - DP-1661
     Given The following applications exist

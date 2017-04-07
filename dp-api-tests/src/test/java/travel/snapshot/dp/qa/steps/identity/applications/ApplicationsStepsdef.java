@@ -93,7 +93,7 @@ public class ApplicationsStepsdef {
 
     @When("^Nonexistent application id is got$")
     public void Nonexistent_application_id_is_got() {
-        applicationSteps.applicationWithIdIsGot("nonexistentId");
+        applicationSteps.applicationWithIdIsGot(NON_EXISTENT_ID);
     }
 
     @When("^List of applications is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
