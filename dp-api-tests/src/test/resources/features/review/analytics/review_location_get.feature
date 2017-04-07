@@ -1,4 +1,4 @@
-Feature: Review locaitons
+Feature: Review locations
   Testing of api for review locations with mock data in db - testing property id is "99000199-9999-4999-a999-999999999999"
 
   Background:
@@ -6,15 +6,10 @@ Feature: Review locaitons
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-    Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
-      | id                                   | userType | userName     | firstName | lastName | email                | timezone      | culture |
-      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser | Snapshot  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
+    Given The following properties exist with random address and billing address
       | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given Relation between user "snapshotUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with isPrimary "true"
-    Given Relation between user "snapshotUser" and property with code "p1_code" exists
-    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
+    Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2055-12-31"
 
 
   # /locations/
@@ -92,13 +87,14 @@ Feature: Review locaitons
   #---------------------------------------------------------------------------------------------------------------------
 
   @Smoke
+#  DP-1992 - add more test properties when fixed
+    @skipped
   Scenario Outline: Getting location id for correct property id
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "200"
     And Content type is "application/json"
     And Body contains entity with attribute "location_id" value "<location_id>"
     And Body contains entity with attribute "location_name" value "<location_name>"
-
     Examples:
       | url       | property                             | location_id | location_name |
       | /location | 99000199-9999-4999-a999-999999999999 | 19          | town 19       |

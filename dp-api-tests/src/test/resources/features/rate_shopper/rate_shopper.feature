@@ -115,11 +115,16 @@ Feature: Rate shopper
       | 99000499-9999-4999-a999-999999999999 | today | today + 6 days    | 7     | 2015-12-14T00:00:01 |
       | 99000499-9999-4999-a999-999999999999 | today | today + 10 months | 60    | 2015-12-14T00:00:01 |
 
+#  DP-1982
+  @skipped
   Scenario: Getting data for a non-existent property
-    When Getting rate data for "non-existent" since "today" until "today" fetched "/null"
+    When Getting rate data for "00000000-0000-4000-a000-000000000000" since "today" until "today" fetched "/null"
     Then Response code is "404"
     And Custom code is "40402"
     And Content type is "application/json"
+    When Getting rate data for "invalidUUID" since "today" until "today" fetched "/null"
+    Then Response code is "400"
+    And Custom code is "40002"
 
 # GET /rate_shopper/analytics/market/properties
 
