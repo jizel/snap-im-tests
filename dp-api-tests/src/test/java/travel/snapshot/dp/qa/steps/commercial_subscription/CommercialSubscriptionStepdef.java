@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.steps.commercial_subscription;
 
+import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -8,6 +10,7 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
+import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
 
 import java.util.List;
@@ -42,7 +45,7 @@ public class CommercialSubscriptionStepdef {
 
     @When("Nonexistent commercial subscription id is deleted")
     public void Nonexistent_commercial_subscription_id_is_deleted() {
-        commSubscriptionSteps.deleteCommSubscriptionWithId("NonExistentId");
+        commSubscriptionSteps.deleteCommSubscriptionWithId(NON_EXISTENT_ID);
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is (?:got|requested)$")
@@ -50,9 +53,9 @@ public class CommercialSubscriptionStepdef {
         commSubscriptionSteps.commSubscriptionWithIdIsGot(commSubscriptionId);
     }
 
-    @When("Nonexistent commercial subscription id is got")
+    @When("Nonexistent commercial subscription id is (?:got|requested)")
     public void Nonexistent_commercial_subscription_id_is_got() {
-        commSubscriptionSteps.commSubscriptionWithIdIsGot("NonExistentId");
+        commSubscriptionSteps.commSubscriptionWithIdIsGot(NON_EXISTENT_ID);
     }
 
     @When("List of commercial subscriptions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"")
