@@ -38,7 +38,7 @@ Feature: Applications versions create update delete
       | /messages/identity/applications/create_version_missing_application_id.json  | POST   | identity | /identity/application_versions | 422        | 42201       |
 
   Scenario: Checking error code for deleting application version
-    When Application version with id "nonexistent" is deleted
+    When Nonexistent application version id is deleted
     Then Response code is "404"
 
   Scenario Outline: Updating application

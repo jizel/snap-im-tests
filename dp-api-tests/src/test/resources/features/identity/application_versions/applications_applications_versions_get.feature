@@ -21,11 +21,6 @@ Feature: Applications versions get
     And Body contains entity with attribute "status" value "inactive"
     And Body contains entity with attribute "description" value "Versions description 1"
 
-  Scenario: Checking error code for nonexistent application versions
-    When Application version with id "nonexistent" is got
-    Then Response code is "404"
-    And Custom code is "40402"
-
   Scenario Outline: Getting list of application versions
     Given The following application versions exists
       | id                                   | apiManagerId | versionName | status   | description             | applicationId                        |
