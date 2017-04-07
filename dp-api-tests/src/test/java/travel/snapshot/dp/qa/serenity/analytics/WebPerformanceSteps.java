@@ -45,7 +45,9 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
 
-        RequestSpecification requestSpecification = given().spec(spec);
+        RequestSpecification requestSpecification = given().spec(spec)
+                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
 
         if (StringUtils.isNotBlank(propertyId)) {
             requestSpecification.header("x-property", propertyId);
