@@ -1,4 +1,4 @@
-Feature: Review
+Feature: Review GET feature
   Testing of api for review module alias trip_advisor with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
   data in db are mostly increasing some of the data also includes nulls
 
@@ -21,6 +21,8 @@ Feature: Review
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 
+#  DP-1991
+  @skipped
   Scenario Outline: Get trip advisor analytics data from API for a given wrong granularity
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400

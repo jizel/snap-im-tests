@@ -1,4 +1,4 @@
-Feature: Review
+Feature: Review Smoke test feature
   Testing of api for review module alias trip_advisor with mock data in db - testing property id is "99000099-9999-4999-a999-999999999999"
   data in db are mostly increasing some of the data also includes nulls
 

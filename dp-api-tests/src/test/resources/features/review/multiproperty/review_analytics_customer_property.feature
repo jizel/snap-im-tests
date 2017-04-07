@@ -87,20 +87,21 @@ Feature: Review multiproperty customer property
     And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
 
     Examples:
-      | metric                | customer_id | since      | until      | granularity                          | details                                       |
-      | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+      | metric                | customer_id                          | since      | until      | granularity | details                                       |
+#  DP-1991
+#      | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | popularity_index_rank | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
-
-      | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | aspects_of_business   | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
-
-      | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | number_of_reviews     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
-
-      | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | overall_bubble_rating | 1238fd9a-a05d-42d8-8e84-42e904ace123 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
 

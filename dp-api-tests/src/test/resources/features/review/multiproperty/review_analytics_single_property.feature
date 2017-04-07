@@ -57,19 +57,20 @@ Feature: Review multiproperty single property
 
     Examples:
       | metric                | property_id                          | since      | until      | granularity | details                                       |
-      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | popularity_index_rank | 99000199-9999-4999-a999-999999999999 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
-
-      | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | aspects_of_business   | 99000199-9999-4999-a999-999999999999 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
-
-      | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | number_of_reviews     | 99000199-9999-4999-a999-999999999999 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
-
-      | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
+#  DP-1991
+#      | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | /null       | Mandatory parameter 'granularity' is missing. |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | /null      | day         | Mandatory parameter 'until' is missing.       |
       | overall_bubble_rating | 99000199-9999-4999-a999-999999999999 | /null      | 2015-12-03 | week        | Mandatory parameter 'since' is missing.       |
 
