@@ -37,7 +37,7 @@ public class WebPerformanceStepdefs {
 
     @When("^Get web_performance \"([^\"]*)\" with missing property header$")
     public void Get_web_performance_with_missing_property_header(String url) throws Throwable {
-        steps.getPropertiesWithDate("/web_performance" + url, "day", null, null, null);
+        steps.getPropertiesWithDate("/web_performance" + url, "day", null, "2017-01-01", "2055-01-01");
 
     }
 

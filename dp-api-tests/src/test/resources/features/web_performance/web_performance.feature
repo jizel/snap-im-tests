@@ -9,7 +9,7 @@ Feature: web_performance
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "2015-12-03" until "2015-12-03"
     Then Response code is "400"
     And Content type is "application/json"
-    And Custom code is "63"
+    And Custom code is "40002"
 
     Examples:
       | url                         | granularity |
@@ -79,8 +79,8 @@ Feature: web_performance
       | /analytics/conversion_rates | week        | 3     | 2015-11-01 | 2015-11-13 |
       | /analytics/visits           | week        | 55    | 2015-01-01 | 2016-01-14 |
       | /analytics/visits_unique    | week        | 55    | 2015-01-01 | 2016-01-14 |
-      | /analytics/revenue          | week        | 107   | 2014-01-01 | 2016-01-14 |
-      | /analytics/conversion_rates | week        | 107   | 2014-01-01 | 2016-01-14 |
+      | /analytics/revenue          | week        | 104   | 2014-01-01 | 2016-01-14 |
+      | /analytics/conversion_rates | week        | 104   | 2014-01-01 | 2016-01-14 |
       | /analytics/visits           | month       | 1     | 2015-11-01 | 2015-11-30 |
       | /analytics/visits_unique    | month       | 1     | 2015-11-01 | 2015-11-30 |
       | /analytics/revenue          | month       | 1     | 2015-11-01 | 2015-11-30 |
@@ -98,13 +98,10 @@ Feature: web_performance
   Scenario Outline: Getting non-existent analytics data
     When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is <response_code>
-
     Examples:
       | url                           | granularity | property                             | since      | until      | response_code |
       | /analytics/visits/not_present | day         | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 | 404           |
 
-#  DP-1903
-  @skipped
   Scenario Outline: Checking error codes for analytics data
     When Get web_performance "<url>" with missing property header
     Then Response code is <response_code>
@@ -113,23 +110,20 @@ Feature: web_performance
 
     Examples:
       | url                                   | response_code | custom_code | content_type     |
-      | /analytics/visits                     | 400           | 40001       | application/json |
-      | /analytics/visits_unique              | 400           | 40001       | application/json |
-      | /analytics/revenue                    | 400           | 40001       | application/json |
-      | /analytics/conversion_rates           | 400           | 40001       | application/json |
-      | /analytics/visits/countries           | 400           | 40001       | application/json |
-      | /analytics/visits_unique/countries    | 400           | 40001       | application/json |
-      | /analytics/conversion_rates/countries | 400           | 40001       | application/json |
-      | /analytics/referrals                  | 400           | 40001       | application/json |
+      | /analytics/visits                     | 400           | 40002       | application/json |
+      | /analytics/visits_unique              | 400           | 40002       | application/json |
+      | /analytics/revenue                    | 400           | 40002       | application/json |
+      | /analytics/conversion_rates           | 400           | 40002       | application/json |
+      | /analytics/visits/countries           | 400           | 40002       | application/json |
+      | /analytics/visits_unique/countries    | 400           | 40002       | application/json |
+      | /analytics/conversion_rates/countries | 400           | 40002       | application/json |
+      | /analytics/referrals                  | 400           | 40002       | application/json |
 
-  #  DP-1903
-  @skipped
   Scenario Outline: Checking non-valid since and until parameters
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Response code is <response_code>
     And Custom code is "<custom_code>"
-    And Body contains entity with attribute "type" value "error"
-
+    And Body contains entity with attribute "message" value "There is a problem with some parameters. See details."
     Examples:
       | url                         | granularity | since | until             | response_code | custom_code |
       | /analytics/visits           | day         | today | today - 100 days  | 400           | 40002       |
@@ -200,8 +194,6 @@ Feature: web_performance
       | 2016-01-01      | 2016-01-10 | week        | revenue       | descending |
       | 2016-01-01      | 2016-01-10 | month       | visits_unique | descending |
 
-  #  DP-1903
-  @skipped
   Scenario Outline: Checking error codes for sorting
     When Get web performance referrals with "day" granularity for "99000099-9999-4999-a999-999999999999" since "today - 80 days" until "today" sorted by "<metric>" "<direction>"
     Then Content type is "application/json"

@@ -1,5 +1,5 @@
 Feature: Web Performance - External applications access checks
-  - Application should have acccess to Web Performance endpoints only if it's is_internal attribute is set to true
+  - Application should have access to Web Performance endpoints only if it's is_internal attribute is set to true
   - Positive cases are tested in separate features. This feature should test that external applications don't have access
 
   Background:
