@@ -100,20 +100,17 @@ Feature: Properties Application access check feature
     Then Response code is "404"
     When Property with code "p1_code" is deleted by user "user1" for application version "versionWithSubscription"
     Then Response code is "409"
-
-  # DP-1939
-  @skippped
+    
   Scenario: Anchor_customer_id of customer without commercial subscription cannot be used when creating or updating property
     Given The following customers exist with random address
       | id                                   | companyName                   | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
       | 23400000-0000-4000-a000-000000000111 | Customer Without Subscription | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
-    Given Relation between user "user1" and customer with id "23400000-0000-4000-a000-000000000111" exists
     When The following property is created with random address and billing address for user "user1"
       | salesforceId   | name         | propertyCode | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_3 | p3_name      | p3_code      | p3@tenants.biz | true           | Europe/Prague | 23400000-0000-4000-a000-000000000111 |
     Then Response code is "422"
     And Custom code is 42202
-    When Property with code "p1_code" is updated with data by user "user1" for application version "versionWithSubscription"
+    When Property with code "p1_code" is updated with data by user "user1"
       | anchorCustomerId                     |
       | 23400000-0000-4000-a000-000000000111 |
     Then Response code is "422"
