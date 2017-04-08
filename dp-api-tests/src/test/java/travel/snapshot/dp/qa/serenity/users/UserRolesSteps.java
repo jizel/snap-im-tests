@@ -1,17 +1,29 @@
 package travel.snapshot.dp.qa.serenity.users;
 
+import static com.jayway.awaitility.Awaitility.given;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.assertj.core.api.Fail.fail;
+import static org.assertj.core.api.Fail.setRemoveAssertJRelatedElementsFromStackTrace;
+import static org.junit.Assert.assertThat;
+
+import com.jayway.restassured.response.Response;
+import static org.hamcrest.Matchers.is;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by benka on 05-May-16.
  */
 public class UserRolesSteps extends UsersSteps {
 
 
-    public void roleExistsBetweenUserAndCustomer(String roleId, String userName, String customerId) {
-        roleExistsBetweenUserAndEntity(SECOND_LEVEL_OBJECT_CUSTOMERS, roleId, userName, customerId);
+    public void roleExistsBetweenUserAndCustomer(String roleId, String userId, String customerId) {
+        Response response = createRoleBetweenUserAndCustomer(roleId, userId, customerId);
+        assertThat("Failed to assign role: " + response.body().toString(), response.statusCode(), is(SC_CREATED));
     }
 
-    public void addRoleBetweenNotExistingUserAndCustomer(String roleId, String s, String customerId) {
-        roleExistsBetweenNotExistingUserAndEntity(SECOND_LEVEL_OBJECT_CUSTOMERS, roleId, s, customerId);
+    public Response createRoleBetweenUserAndCustomer(String roleId, String userId, String customerId) {
+        return createRoleBetweenUserAndEntity(SECOND_LEVEL_OBJECT_CUSTOMERS, roleId, userId, customerId);
     }
 
     public void roleBetweenUserAndCustomerIsDeleted(String roleId, String userId, String customerId) {
