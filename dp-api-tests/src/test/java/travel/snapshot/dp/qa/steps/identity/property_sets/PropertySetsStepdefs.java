@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
@@ -73,7 +74,7 @@ public class PropertySetsStepdefs {
     @Given("^The following property sets exist for customer(?: with id)? \"([^\"]*)\"(?: and user \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
     public void theFollowingPropertySetsExistForCustomerWithCodeAndUser(String customerId, String username, String isActiveString, List<PropertySetDto> propertySets) throws Throwable {
         UserDto user = usersSteps.getUserByUsername(username);
-        String userId = (user == null)? null : user.getId();
+        String userId = (user == null)? DEFAULT_SNAPSHOT_USER_ID : user.getId();
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         propertySetSteps.followingPropertySetsExist(propertySets, customerId, userId, isActive);
     }

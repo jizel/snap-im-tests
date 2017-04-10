@@ -18,8 +18,6 @@ Feature: Users customer roles CRUD
     Then Response code is "201"
 
 
-  # DP-1961
-  @skipped
   Scenario: Assigning role to user property
     Given Switch for user property role tests
     Given The following properties exist with random address and billing address for user "default1"

@@ -23,38 +23,6 @@ Feature: Commercial subscription get
     And Custom code is "40402"
 
 
-  Scenario Outline: Getting list of commercial subscription
-    Given The following commercial subscriptions exist
-      | id                                   | applicationId                        | customerId                           | propertyId                           |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e1 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e2 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e3 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e4 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e5 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e6 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e7 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e8 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2c9c-4e32-9a63-40474a9728e9 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-
-    When List of commercial subscriptions is got with limit "<limit>" and cursor "<cursor>" and filter "/null" and sort "/null" and sort_desc "/null"
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Total count is "11"
-    And There are <returned> commercial subscriptions returned
-    Examples:
-      | limit | cursor | returned |
-      | /null |        | 11       |
-      | /null | /null  | 11       |
-      |       |        | 11       |
-      |       | /null  | 11       |
-      | 10    |        | 10       |
-      |       | 1      | 10       |
-      |       | 20     | 0        |
-      | 10    | 0      | 10       |
-      | 5     | 0      | 5        |
-      | 5     | 10     | 1        |
-
-
   Scenario Outline: Checking error codes for getting list of commercial subscriptions
     When List of commercial subscriptions is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
@@ -78,54 +46,3 @@ Feature: Commercial subscription get
       | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
       | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
       | 10          | 0      | code== | /null       | /null       | 400           | 40002       |
-
-
-  Scenario Outline: Filtering list of commercial subscriptions
-    Given The following commercial subscriptions exist
-      | id                                   | applicationId                        | customerId                           | propertyId                           |
-      | 8e238f8e-2a9c-4e32-9a61-40474a9728e1 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2a9c-4e32-9a62-40474a9728e2 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-2a9c-4e32-9a63-40474a9728e3 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-8c9c-4e32-9a63-40474a9728e4 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-8c9c-4e32-9a63-40474a9728e5 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-8c9c-4e32-9a63-40474a9728e6 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-3b9c-4e32-9a63-40474a9728e7 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-3b9c-4e32-9a63-40474a9728e8 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-      | 8e238f8e-3b9c-4e32-9a63-40474a9728e9 | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab |
-    When List of commercial subscriptions is got with limit "/null" and cursor "/null" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
-    Then Response code is "200"
-    And Content type is "application/json"
-    And There are <returned> commercial subscriptions returned
-    And There are commercial subscriptions with following referenceIDs returned in order: "<order>"
-    Examples:
-      | filter                                                                    | sort                       | sort_desc                  | returned | order                                                                                                            |
-      | commercial_subscription_id=='8e238f8e*'                                   | /null                      | /null                      | 10       |                                                                                                                  |
-      | commercial_subscription_id=='*9'                                          | /null                      | /null                      | 1        |                                                                                                                  |
-      | commercial_subscription_id=='*2a9c*'                                      | commercial_subscription_id | /null                      | 3        | 8e238f8e-2a9c-4e32-9a61-40474a9728e1, 8e238f8e-2a9c-4e32-9a62-40474a9728e2, 8e238f8e-2a9c-4e32-9a63-40474a9728e3 |
-      | commercial_subscription_id=='*2a9c*'                                      | /null                      | /null                      | 3        |                                                                                                                  |
-      | commercial_subscription_id=='*2a9c*' or commercial_subscription_id=='*7'  | /null                      | /null                      | 4        |                                                                                                                  |
-      | commercial_subscription_id=='*2a9c*' and commercial_subscription_id=='*1' | /null                      | /null                      | 1        |                                                                                                                  |
-      | application_id=='11111111*'                                               | /null                      | /null                      | 11       |                                                                                                                  |
-      | is_active=='false'                                                        | /null                      | /null                      | 0        |                                                                                                                  |
-      | customer_id=='123*'                                                       | /null                      | /null                      | 10       |                                                                                                                  |
-      | property_id=='*cab'                                                       | /null                      | /null                      | 10       |                                                                                                                  |
-      | property_id=='*cab' and commercial_subscription_id=='*1'                  | /null                      | /null                      | 1        |                                                                                                                  |
-      | /null                                                                     |                            | commercial_subscription_id | 11       |                                                                                                                  |
-      | /null                                                                     |                            | is_active                  | 11       |                                                                                                                  |
-      | /null                                                                     |                            | customer_id                | 11       |                                                                                                                  |
-      | /null                                                                     |                            | application_id             | 11       |                                                                                                                  |
-      | /null                                                                     |                            | property_id                | 11       |                                                                                                                  |
-      | /null                                                                     | commercial_subscription_id |                            | 11       |                                                                                                                  |
-      | /null                                                                     | is_active                  |                            | 11       |                                                                                                                  |
-      | /null                                                                     | customer_id                |                            | 11       |                                                                                                                  |
-      | /null                                                                     | application_id             |                            | 11       |                                                                                                                  |
-      | /null                                                                     | property_id                |                            | 11       |                                                                                                                  |
-      | commercial_subscription_id=='*2a9c*'                                      | is_active                  | /null                      | 3        | 8e238f8e-2a9c-4e32-9a61-40474a9728e1, 8e238f8e-2a9c-4e32-9a62-40474a9728e2, 8e238f8e-2a9c-4e32-9a63-40474a9728e3 |
-      | commercial_subscription_id=='*2a9c*'                                      | customer_id                | /null                      | 3        | 8e238f8e-2a9c-4e32-9a61-40474a9728e1, 8e238f8e-2a9c-4e32-9a62-40474a9728e2, 8e238f8e-2a9c-4e32-9a63-40474a9728e3 |
-      | commercial_subscription_id=='*2a9c*'                                      | application_id             | /null                      | 3        | 8e238f8e-2a9c-4e32-9a61-40474a9728e1, 8e238f8e-2a9c-4e32-9a62-40474a9728e2, 8e238f8e-2a9c-4e32-9a63-40474a9728e3 |
-      | commercial_subscription_id=='*2a9c*'                                      | property_id                | /null                      | 3        | 8e238f8e-2a9c-4e32-9a61-40474a9728e1, 8e238f8e-2a9c-4e32-9a62-40474a9728e2, 8e238f8e-2a9c-4e32-9a63-40474a9728e3 |
-      | commercial_subscription_id=='*8c9c*'                                      | /null                      | commercial_subscription_id | 3        | 8e238f8e-8c9c-4e32-9a63-40474a9728e6, 8e238f8e-8c9c-4e32-9a63-40474a9728e5, 8e238f8e-8c9c-4e32-9a63-40474a9728e4 |
-      | commercial_subscription_id=='*8c9c*'                                      | /null                      | is_active                  | 3        | 8e238f8e-8c9c-4e32-9a63-40474a9728e4, 8e238f8e-8c9c-4e32-9a63-40474a9728e5, 8e238f8e-8c9c-4e32-9a63-40474a9728e6 |
-      | commercial_subscription_id=='*8c9c*'                                      | /null                      | customer_id                | 3        | 8e238f8e-8c9c-4e32-9a63-40474a9728e4, 8e238f8e-8c9c-4e32-9a63-40474a9728e5, 8e238f8e-8c9c-4e32-9a63-40474a9728e6 |
-      | commercial_subscription_id=='*8c9c*'                                      | /null                      | application_id             | 3        | 8e238f8e-8c9c-4e32-9a63-40474a9728e4, 8e238f8e-8c9c-4e32-9a63-40474a9728e5, 8e238f8e-8c9c-4e32-9a63-40474a9728e6 |
-      | commercial_subscription_id=='*8c9c*'                                      | /null                      | property_id                | 3        | 8e238f8e-8c9c-4e32-9a63-40474a9728e4, 8e238f8e-8c9c-4e32-9a63-40474a9728e5, 8e238f8e-8c9c-4e32-9a63-40474a9728e6 |
