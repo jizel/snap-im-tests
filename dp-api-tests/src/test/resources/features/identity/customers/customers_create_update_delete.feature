@@ -72,38 +72,37 @@ Feature: Customers create update delete
       | id                                   | companyName   | email          | salesforceId   | vatId       | phone         | website           | timezone      | type   | isDemoCustomer |
       | 910cfc16-4597-479f-ae18-250b0a94752e | Some_Company  | cust1@email.cz | salesforceid   | CZ987654320 | +420123456789 | http://google.com | Europe/Prague | HOTEL  | true           |
     When Customer "910cfc16-4597-479f-ae18-250b0a94752e" is updated with data
-      | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
-      | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
+      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   |
+      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Check updated customer "910cfc16-4597-479f-ae18-250b0a94752e" has data
-      | companyName   | email   | salesforceId   | vatId   | phone   | website   | notes   | timezone   |
-      | <companyName> | <email> | <salesforceId> | <vatId> | <phone> | <website> | <notes> | <timezone> |
+      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   |
+      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> |
     Examples:
-      | companyName        | email             | salesforceId         | vatId       | phone         | website              | notes         | timezone      |
-      | updatedCompanyName | /null             | /null                | /null       | /null         | /null                | /null         | /null         |
-      | /null              | updated@email.com | /null                | /null       | /null         | /null                | /null         | /null         |
-      | /null              | /null             | salesforceid_updated | /null       | /null         | /null                | /null         | /null         |
-      | /null              | /null             | /null                | CZ987654321 | /null         | /null                | /null         | /null         |
-      | /null              | /null             | /null                | /null       | +420987654321 | /null                | /null         | /null         |
-      | /null              | /null             | /null                | /null       | /null         | http://update.com    | /null         | /null         |
-      | /null              | /null             | /null                | /null       | /null         | /null                | updatedNotes  | /null         |
-      | /null              | /null             | /null                | /null       | /null         | /null                | /null         | Pacific/Fiji  |
-      | severalUpdates     | /null             | /null                | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague |
-      | allUpdates         | all@all.com       | allUpdated_sf_id     | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    |
+      | companyName        | email             | vatId       | phone         | website              | notes         | timezone      |
+      | updatedCompanyName | /null             | /null       | /null         | /null                | /null         | /null         |
+      | /null              | updated@email.com | /null       | /null         | /null                | /null         | /null         |
+      | /null              | /null             | CZ987654321 | /null         | /null                | /null         | /null         |
+      | /null              | /null             | /null       | +420987654321 | /null                | /null         | /null         |
+      | /null              | /null             | /null       | /null         | http://update.com    | /null         | /null         |
+      | /null              | /null             | /null       | /null         | /null                | updatedNotes  | /null         |
+      | /null              | /null             | /null       | /null         | /null                | /null         | Pacific/Fiji  |
+      | severalUpdates     | /null             | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague |
+      | allUpdates         | all@all.com       | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
   Scenario: Updating customer with outdated etag
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with outdated etag
+    When Customer with id "11111111-0000-4000-a000-555555555555" is updated with outdated etag
     Then Response code is "412"
     And Custom code is "41202"
 
   Scenario: Headquarters timezone parameter is not optional (DP-1695)
     When Customer is created with random address
-      | companyName           | email          | salesforceId           | vatId      | isDemoCustomer | phone         | website                    |
-      | Creation test company | s1@tenants.biz | salesforceid_created_1 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel |
+      | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | type    |
+      | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | HOTEL   |
     Then Response code is "422"
     And Custom code is 42201
 
@@ -560,16 +559,19 @@ Feature: Customers create update delete
     And Body contains entity with attribute "name" value "Company 1"
 
   Scenario Outline: Send POST request with empty body to all configurations endpoints
+    Given The following users exist for customer "11111111-0000-4000-a000-555555555555"
+      | id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
     And Custom code is "42201"
     Examples:
       | url                                                                                                |
       | identity/customers/                                                                                |
-      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881                                            |
-      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/properties                                 |
-      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users                                      |
-      | identity/customers/a792d2b2-3836-4207-a705-42bbecf3d881/users/a63edcc6-6830-457c-89b1-7801730bd0ae |
+      | identity/customers/11111111-0000-4000-a000-555555555555                                            |
+      | identity/customers/11111111-0000-4000-a000-555555555555/properties                                 |
+      | identity/customers/11111111-0000-4000-a000-555555555555/users                                      |
+      | identity/customers/11111111-0000-4000-a000-555555555555/users/00029079-48f0-4f00-9bec-e2329a8bdaac |
 
   Scenario: Customer ID must be unique when creating customer - DP-1661
     Given The following customers exist with random address

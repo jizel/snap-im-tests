@@ -86,9 +86,9 @@ Feature: Review locations
   #/location/<property>
   #---------------------------------------------------------------------------------------------------------------------
 
-  @Smoke
 #  DP-1992 - add more test properties when fixed
-    @skipped
+  @Smoke
+  @skipped
   Scenario Outline: Getting location id for correct property id
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "200"

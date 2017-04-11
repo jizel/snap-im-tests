@@ -75,15 +75,16 @@ public class UserStepdefs {
     private PartnerSteps partnerSteps;
 
 
-    @Given("^The following users exist for customer \"([^\"]*)\" as primary \"([^\"]*)\"(?: with is_active \"([^\"]*)\")?$")
-    public void theFollowingUsersExistForCustomer(String customerName, Boolean isPrimary, String isActiveString, List<UserCreateDto> users) throws Throwable {
+    @Given("^The following users exist for customer \"([^\"]*)\"(?: as primary \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    public void theFollowingUsersExistForCustomer(String customerName, String isPrimaryString, String isActiveString, List<UserCreateDto> users) throws Throwable {
 //        Cucumber turns is_active to false when not present we want true by default in tests.
         String customerId = customerSteps.resolveCustomerId(customerName);
+        Boolean isPrimary = ((isPrimaryString==null) ? false : Boolean.valueOf(isPrimaryString));
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
 
-    @When("^The following users is created for customer \"([^\"]*)\"(?: as primary \"([^\"]*)\")?$")
+    @When("^The following user is created for customer \"([^\"]*)\"(?: as primary \"([^\"]*)\")?$")
     public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
         usersSteps.createUserWithCustomer(users.get(0), customerId, isPrimary);
     }
@@ -255,14 +256,15 @@ public class UserStepdefs {
         assertThat("User is active but should be inactive.", user.getIsActive(), is(false));
     }
 
-    @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and customer id \"([^\"]*)\" is added$")
+    @When("^Role with id \"([^\"]*)\" for user(?: name)? \"([^\"]*)\" and customer id \"([^\"]*)\" is added$")
     public void roleWithNameForUserNameAndCustomerIdIsAddedString(String roleId, String userName, String customerId) throws Throwable {
-        userRolesSteps.roleExistsBetweenUserAndCustomer(roleId, userName, customerId);
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.createRoleBetweenUserAndCustomer(roleId, userId, customerId);
     }
 
     @When("^Role with id \"([^\"]*)\" for not existing user id and customer id \"([^\"]*)\" is added$")
     public void roleWithIdForNotExistingUserIdAndCustomerIdIsAdded(String roleId, String customerId) throws Throwable {
-        userRolesSteps.addRoleBetweenNotExistingUserAndCustomer(roleId, "1111fd9a-a11d-11d8-8e11-111904ace123", customerId);
+        userRolesSteps.createRoleBetweenUserAndCustomer(roleId, NON_EXISTENT_ID, customerId);
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and customer id \"([^\"]*)\" is deleted$")

@@ -210,13 +210,16 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
+    public Response createRoleBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
         Response createResponse = addRoleToUserEntity(roleId, userName, entityId, entityName);
-//        This should be here but this method should only be used in Given steps. Refactor all usages, then uncomment
-//        if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-//            fail("Role cannot be created " + createResponse.getBody().asString());
-//        }
         setSessionResponse(createResponse);
+        return createResponse;
+    }
+
+    @Step
+    public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
+        Response response = createRoleBetweenUserAndEntity(entityName, roleId, userName, entityId);
+        assertThat("Role can not be assigned: " + response.body().toString(), response.statusCode(), is(HttpStatus.SC_CREATED));
     }
 
     private Response deleteRoleFromUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
@@ -226,8 +229,8 @@ public class UsersSteps extends BasicSteps {
         return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_ROLES, roleId, queryParams);
     }
 
-    private Response addRoleToUserEntity(String roleId, String userName, String entityId, String entityName) {
-        String path = buildPathForRoles(entityName, userName, entityId);
+    private Response addRoleToUserEntity(String roleId, String userId, String entityId, String entityName) {
+        String path = buildPathForRoles(entityName, userId, entityId);
         return given().spec(spec).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .body(singletonMap(ROLE_ID, roleId))
                 .when().post(path);

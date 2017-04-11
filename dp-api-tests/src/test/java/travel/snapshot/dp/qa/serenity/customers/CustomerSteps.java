@@ -91,16 +91,6 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void followingCustomersExist(List<CustomerCreateDto> customers) {
-        customers.forEach(customer -> {
-            Response createResponse = createEntity(customer);
-            assertThat("Customer cannot be created " + createResponse.getBody().asString(), createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
-            setSessionResponse(createResponse);
-        });
-        Serenity.setSessionVariable(SESSION_CUSTOMERS).to(customers);
-    }
-
-    @Step
     public void fileIsUsedForCreation(String filename) {
         CustomerDto customer = getCustomerFromFile(this.getClass().getResourceAsStream(filename));
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
@@ -111,34 +101,25 @@ public class CustomerSteps extends BasicSteps {
     @Step
     public void followingCustomerIsCreatedWithRandomAddress(CustomerCreateDto customer) {
         customer.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
-        Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        try {
-            JSONObject jsonCustomer = retrieveData(customer);
-            Response response = createEntity(jsonCustomer.toString());
-            setSessionResponse(response);
-        }catch (JsonProcessingException e){
-            fail("Exception while creating JSONObject from CustomerCreateDto: " + e.toString());
-        }
+        followingCustomerIsCreated(customer);
     }
 
     @Step
     public void followingCustomerIsCreated(CustomerCreateDto customer) {
         Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        Response response = createEntity(customer);
-        setSessionResponse(response);
+        try {
+            JSONObject jsonCustomer = retrieveData(customer);
+            Response response = createEntity(jsonCustomer.toString());
+            setSessionResponse(response);
+        } catch (JsonProcessingException e){
+            fail("Exception while creating JSONObject from CustomerCreateDto: " + e.toString());
+        }
     }
 
     @Step
     public void followingCustomerIsCreatedWithAddress(CustomerCreateDto customer, AddressDto address) {
         customer.setAddress(address);
-        Serenity.setSessionVariable(SESSION_CREATED_CUSTOMER).to(customer);
-        try {
-            JSONObject jsonCustomer = retrieveData(customer);
-            Response response = createEntity(jsonCustomer.toString());
-            setSessionResponse(response);
-        } catch(JsonProcessingException exception){
-            fail("Exception while creating JSONObject from customer: " + exception.getMessage());
-        }
+        followingCustomerIsCreated(customer);
     }
 
     @Step
@@ -694,10 +675,13 @@ public class CustomerSteps extends BasicSteps {
     public void customerWithIdIsUpdatedWithOutdatedEtag(String customerId) throws JsonProcessingException {
         CustomerUpdateDto updateData = new CustomerUpdateDto();
         updateData.setNotes("UpdatedNotes");
-
-        Response tempResp = getEntity(customerId);
-        Response firstUpdate = updateEntity(customerId, retrieveData(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
-        Response secondUpdate = updateEntity(customerId, retrieveData(updateData).toString(), tempResp.getHeader(HEADER_ETAG));
+        updateData.setWebsite(SNAPSHOT_WEBSITE);
+        updateData.setPhone(SNAPSHOT_PHONE);
+        updateData.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
+        updateData.setVatId(DEFAULT_SNAPSHOT_PARTNER_VAT_ID);
+        String etag = getEntityEtag(customerId);
+        updateEntity(customerId, retrieveData(updateData).toString(), etag);
+        Response secondUpdate = updateEntity(customerId, retrieveData(updateData).toString(), etag);
         setSessionResponse(secondUpdate);
     }
 

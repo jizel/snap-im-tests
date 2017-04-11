@@ -7,10 +7,10 @@ Feature: Users customer roles CRUD
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 2234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given The following users is created for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
+    Given The following users exist for customer "1234fd9a-a05d-42d8-8e84-42e904ace123"
       | userType | userName | firstName | lastName | email                | timezone      | culture |
-      | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Switch for user customer role tests
     Given The following roles exist
       | id                                   | roleName    | description            | applicationId                        |
@@ -62,7 +62,6 @@ Feature: Users customer roles CRUD
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | 1111fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
-    #todo issue dp-1294
   Scenario Outline: Assigning role to not existing user
     When Role with id "<role_id>" for not existing user id and customer id "<customer_id>" is added
     Then Response code is "404"
@@ -71,7 +70,8 @@ Feature: Users customer roles CRUD
       | role_id                              | customer_id                          |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
 
-
+  # DP-2004
+  @skipped
   Scenario Outline: Removing role from user customer
     Given Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is deleted
