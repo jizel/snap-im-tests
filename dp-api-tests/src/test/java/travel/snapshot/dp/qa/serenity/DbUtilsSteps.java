@@ -63,6 +63,7 @@ public class DbUtilsSteps {
     static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo_property, address_id, timezone, property_code, description, anchor_customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO Commercial_Subscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO Api_Subscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO Customer_Hierarchy_Path (parent_id, child_id) values (?, ?) ;";
 
     private DbHelper dbHelper = new DbHelper();
 
@@ -93,6 +94,10 @@ public class DbUtilsSteps {
     public void createDBCustomer(CustomerCreateDto customer) {
         dbHelper.identityDb().update(CREATE_DB_ADDRESS, DEFAULT_ADDRESS_ID, "address line 1", "address line 2", "city", "12345", "CZ");
         dbHelper.identityDb().update(CREATE_DB_CUSTOMER, customer.getId(), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getCompanyName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemoCustomer(), customer.getNotes(), DEFAULT_ADDRESS_ID, customer.getTimezone());
+    }
+
+    public void populateCustomerHierarchyPath(String customerId) {
+        dbHelper.identityDb().update(CREATE_CUSTOMER_HIERARCHY_PATH, customerId, customerId);
     }
 
     public void createDBProperty(PropertyDto property) {

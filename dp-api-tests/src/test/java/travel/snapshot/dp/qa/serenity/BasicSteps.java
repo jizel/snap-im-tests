@@ -70,7 +70,7 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_USER_ID = "11111111-0000-4000-a000-000000000000";
     public static final String DEFAULT_SNAPSHOT_APPLICATION_ID = "11111111-0000-4000-a000-111111111111";
     public static final String DEFAULT_SNAPSHOT_PARTNER_ID = "11111111-0000-4000-a000-222222222222";
-    public static final String DEFAULT_SNAPSHOT_PARTNER_VAT_ID = "11111111-0000-4000-a000-333333333333";
+    public static final String DEFAULT_SNAPSHOT_PARTNER_VAT_ID = "CZ10000001";
     public static final String DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID = "11111111-0000-4000-a000-444444444444";
     public static final String DEFAULT_SNAPSHOT_CUSTOMER_ID = "11111111-0000-4000-a000-555555555555";
     public static final String DEFAULT_PROPERTY_ID = "11111111-0000-4000-a000-666666666666";
@@ -127,6 +127,7 @@ public class BasicSteps {
     public static final String RELATIONSHIP_TYPE = "relationship_type";
     public static final String VALID_FROM = "valid_from";
     public static final String VALID_TO = "valid_to";
+    public static final String SNAPSHOT_PHONE = "+420530514301";
 
     public BasicSteps() {
 

@@ -70,7 +70,8 @@ Feature: Users customer roles CRUD
       | role_id                              | customer_id                          |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
 
-
+  # DP-2004
+  @skipped
   Scenario Outline: Removing role from user customer
     Given Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is deleted
