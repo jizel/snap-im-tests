@@ -67,7 +67,6 @@ Feature: Users create update delete
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         |
 
 
-  @Bug
   Scenario Outline: Create user with same name or email
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | userType   | userName   | firstName   | lastName   | email               | timezone      | culture   |

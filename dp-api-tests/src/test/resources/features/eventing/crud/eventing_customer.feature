@@ -11,7 +11,7 @@ Feature: Eventing tests for Customer related operations
   Scenario: Eventing customer created
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Customer is created with random address
-      | id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | companyName       | email           | salesforceId    | vatId       | isDemoCustomer | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | SALESFORCEID001 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
@@ -81,16 +81,16 @@ Feature: Eventing tests for Customer related operations
 #    Add
     When User "event_user" is added to customer with id "00000000-3836-4207-a705-000000000000" with isPrimary "true"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Customer"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Create"
-    And Notification in session id stands for customer with id "00000000-3836-4207-a705-000000000000"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user with username "event_user"
+    And Notification in session id stands for user "event_user"
+    And Notification in session parent entity type is "Customer"
+    And Notification in session parent id stands for customer with id "00000000-3836-4207-a705-000000000000"
 #    Remove
     When User "event_user" is removed from customer with id "00000000-3836-4207-a705-000000000000"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Customer"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Delete"
-    And Notification in session id stands for customer with id "00000000-3836-4207-a705-000000000000"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user with username "event_user"
+    And Notification in session id stands for user "event_user"
+    And Notification in session parent entity type is "Customer"
+    And Notification in session parent id stands for customer with id "00000000-3836-4207-a705-000000000000"

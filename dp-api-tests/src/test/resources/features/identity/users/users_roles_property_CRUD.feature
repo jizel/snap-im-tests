@@ -88,9 +88,9 @@ Feature: Users property roles CRUD
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | p1_code       | default1  |
 
 
-  Scenario Outline: Checking error code for removing not existing role from user customer
-    When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is deleted
-    Then Response code is "204"
+  Scenario Outline: Checking error code for removing not existing role from user property
+    When Nonexistent role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is deleted
+    Then Response code is "404"
     Examples:
       | role_id                              | property_code | user_name |
       | 1111fd9a-a11d-11d8-8e84-11e904ace123 | p1_code       | default1  |
@@ -98,43 +98,44 @@ Feature: Users property roles CRUD
 
   Scenario Outline: Filtering list of roles for user customer relationship
     Given Switch for user property role tests
-    Given The following roles exist
-      | roleName           | description            | id                                   |
-      | user_filter_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
-      | user_filter_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
-      | user_filter_role_3 | optional description 3 | 11111111-0000-4000-a000-111111111111 |
-      | user_filter_role_4 | optional description 4 | 11111111-0000-4000-a000-111111111111 |
-      | user_filter_role_5 | optional description 5 | 11111111-0000-4000-a000-111111111111 |
-      | user_filter_role_6 | optional description 6 | 11111111-0000-4000-a000-111111111111 |
+    And The following roles exist
+      | roleName           | description            |
+      | user_filter_role_1 | optional description 1 |
+      | user_filter_role_2 | optional description 2 |
+      | user_filter_role_3 | optional description 3 |
+      | user_filter_role_4 | optional description 4 |
+      | user_filter_role_5 | optional description 5 |
+      | user_filter_role_6 | optional description 6 |
     Given Role with name "user_filter_role_1" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_2" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_3" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_4" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_5" for user name "default1" and property code "p1_code" is added
-    Given Role with name "user_filter_role_6" for user name "default1" and property code "p1_code" is added
+    Given Role with name "user_filter_role_6" for user name "default1" and property code "p1_code" is added with isActive "false"
     When List of roles for user with username "default1" and property code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> user roles returned
-    And There are user roles with following role names returned in order: <expected_usernames>
     And Total count is "<total>"
     Examples:
-      | limit | cursor | returned | total | filter                     | sort  | sort_desc | expected_usernames                                                                                 |
-      | 5     | 0      | 5        | 6     | name=='user_filter_role_*' | name  |           | user_filter_role_1, user_filter_role_2, user_filter_role_3, user_filter_role_4, user_filter_role_5 |
-      | 5     | 0      | 5        | 6     | name=='user_filter_role_*' |       | name      | user_filter_role_6, user_filter_role_5, user_filter_role_4, user_filter_role_3, user_filter_role_2 |
-      | 5     | 2      | 4        | 6     | name=='user_filter_role_*' | name  |           | user_filter_role_3, user_filter_role_4, user_filter_role_5, user_filter_role_6                     |
-      | 5     | 2      | 4        | 6     | name=='user_filter_role_*' |       | name      | user_filter_role_4, user_filter_role_3, user_filter_role_2, user_filter_role_1                     |
-      | /null | /null  | 1        | 1     | name=='user_filter_role_6' | /null | /null     | user_filter_role_6                                                                                 |
+      | limit | cursor | returned | total | filter           | sort      | sort_desc |
+      | 5     | 0      | 5        | 5     | is_active==true  | is_active |           |
+      | 5     | 0      | 5        | 5     | is_active==true  |           | is_active |
+      | 5     | 2      | 3        | 5     | is_active==true  | is_active |           |
+      | 5     | 2      | 3        | 5     | is_active==true  |           | is_active |
+      | 5     | 0      | 5        | 6     | /null            |           |           |
+      | /null | /null  | 1        | 1     | is_active==false | /null     | /null     |
 
   Scenario Outline: Send POST request with empty body to all user-property endpoints
+    And Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property "p1_code" is added
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
     And Custom code is "42201"
     Examples:
       | url                                                                                                                                            |
-      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/842529dd-481f-430d-b6b6-686fbb687cab                                            |
-      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles                                      |
-      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |
+      | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab                                            |
+      | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles                                      |
+      | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |
 
   Scenario: Role cannot be deleted until User is (and vice versa)
     Given Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property code "p1_code" is added

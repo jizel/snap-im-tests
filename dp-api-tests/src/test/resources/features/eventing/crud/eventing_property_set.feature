@@ -76,16 +76,16 @@ Feature: Eventing tests for Property Sets
 #    Add
     When User "eventUser" is added to property set with name "event_background_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "PropertySet"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Create"
-    And Notification in session id stands for property set "event_background_propset"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user "eventUser"
+    And Notification in session id stands for user "eventUser"
+    And Notification in session parent entity type is "PropertySet"
+    And Notification in session parent id stands for property set "event_background_propset"
 #    Delete
     When User "eventUser" is removed from property set "event_background_propset"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "PropertySet"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Delete"
-    And Notification in session id stands for property set "event_background_propset"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user "eventUser"
+    And Notification in session id stands for user "eventUser"
+    And Notification in session parent entity type is "PropertySet"
+    And Notification in session parent id stands for property set "event_background_propset"

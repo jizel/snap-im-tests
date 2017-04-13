@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.helpers;
 
 import static travel.snapshot.dp.api.identity.model.CustomerType.HOTEL;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -72,10 +73,14 @@ public class CustomerUtils {
         customerDto.setCompanyName(Objects.toString(customerAttributes.get("companyName"), null));
         customerDto.setHospitalityId(Objects.toString(customerAttributes.get("hospitalityId"), null));
         customerDto.setParentId(Objects.toString(customerAttributes.get("parentId"), null));
-        customerDto.setType(CustomerType.valueOf(Objects.toString(customerAttributes.get("type"), null).toUpperCase()));
         customerDto.setSalesforceId(SalesforceId.of(Objects.toString(customerAttributes.get("salesforceId"), null)));
         if(customerAttributes.containsKey("isActive")){
             customerDto.setIsActive(Boolean.valueOf((customerAttributes.get("isActive")).toString()));
+        }
+        if (customerAttributes.containsKey("type")) {
+            customerDto.setType(CustomerType.valueOf(Objects.toString(customerAttributes.get("type"), null).toUpperCase()));
+        } else {
+            customerDto.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));
         }
         return customerDto;
     }

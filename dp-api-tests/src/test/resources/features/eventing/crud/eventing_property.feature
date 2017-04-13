@@ -38,10 +38,10 @@ Feature: Eventing tests for Property
     And Notification in session operation is "Create"
     And Notification in session id stands for property with code "event_prop_1_create"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Property"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Create"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user with username "eventCustomerUser"
+    And Notification in session parent entity type is "Property"
+    And Notification in session parent id stands for property with code "event_prop_1_create"
 
   Scenario: Eventing property deleted
     Given Property with code "event_property" is stored in session under key "EVENTING_PROPERTY"
@@ -73,19 +73,19 @@ Feature: Eventing tests for Property
 #    Add
     When User "event_user" is added to property with code "event_property"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Property"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Create"
-    And Notification in session id stands for property with code "event_property"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user with username "event_user"
+    And Notification in session id stands for user with username "event_user"
+    And Notification in session parent entity type is "Property"
+    And Notification in session parent id stands for property with code "event_property"
 #    Remove
     When User "event_user" is removed from property with code "event_property"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Property"
+    And Notification in session entity_type is "User"
     And Notification in session operation is "Delete"
-    And Notification in session id stands for property with code "event_property"
-    And Notification in session parent entity type is "User"
-    And Notification in session parent id stands for user with username "event_user"
+    And Notification in session id stands for user with username "event_user"
+    And Notification in session parent entity type is "Property"
+    And Notification in session parent id stands for property with code "event_property"
 
   Scenario: Update and Delete Property-Customer relationship events
     Given The following customers exist with random address
