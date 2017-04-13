@@ -3,6 +3,8 @@ package travel.snapshot.dp.qa.serenity.partners;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonMap;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -98,8 +100,8 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfPartnersIsGotWith(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+    public void listOfPartnersIsGotWith(String userId, String appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -152,5 +154,19 @@ public class PartnerSteps extends BasicSteps {
         PartnerDto[] partners = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "partner_id==" + partnerId, null, null, null)
                 .as(PartnerDto[].class);
         return stream(partners).findFirst().orElse(null);
+    }
+
+    public String resolvePartnerId(String partnerName) {
+        if (partnerName == null) return DEFAULT_SNAPSHOT_USER_ID;
+
+        String partnerId;
+        if (isUUID(partnerName)) {
+            partnerId = partnerName;
+        } else {
+            PartnerDto partner = getPartnerByName(partnerName);
+            assertThat(String.format("Partner with name \"%s\" does not exist", partnerName), partner, is(notNullValue()));
+            partnerId = partner.getId();
+        }
+        return partnerId;
     }
 }

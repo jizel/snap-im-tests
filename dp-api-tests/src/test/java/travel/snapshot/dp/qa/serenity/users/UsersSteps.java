@@ -12,11 +12,13 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -55,12 +57,18 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void createUserWithCustomer(UserCreateDto user, String customerId, Boolean isPrimary) {
-        UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
-        relation.setCustomerId(customerId);
-        relation.setIsPrimary(isPrimary);
-        user.setUserCustomerRelationship(relation);
-
+    public void createUserWithCustomer(UserCreateDto user, String customerId, Boolean isPrimary, Boolean isActive) {
+        if (customerId != null) {
+            UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+            relation.setCustomerId(customerId);
+            relation.setIsPrimary(isPrimary);
+            relation.setIsActive(isActive);
+            user.setUserCustomerRelationship(relation);
+        } else {
+            if (user.getUserType().toString() == USER_TYPE_CUSTOMER) {
+                fail("Please either provide CustomerId, or change userType to \"partner\" or \"snapshot\"");
+            }
+        }
         Response response = createEntity(user);
         setSessionResponse(response);
     }
@@ -473,5 +481,27 @@ public class UsersSteps extends BasicSteps {
     @Step
     public Response deleteUserPartnerRelationship(String userId, String partnerId){
         return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PARTNERS, partnerId, null);
+    }
+
+    @Step
+    public void userPartnerRelationshipExists(String userId, String partnerId) {
+        createUserPartnerRelationship(userId, partnerId);
+        Response response = getSessionResponse();
+        assertThat("Failed to create relationship: " + response.body().toString(), response.statusCode(), is(HttpStatus.SC_CREATED));
+
+    }
+
+    @Step
+    public void createUserPartnerRelationship(String userId, String partnerId){
+        UserPartnerRelationshipDto relation = new UserPartnerRelationshipDto();
+        relation.setPartnerId(partnerId);
+        JSONObject jsonRelation = null;
+        try {
+            jsonRelation = retrieveData(relation);
+        } catch(JsonProcessingException exception){
+            fail("Exception thrown while getting JSON from UserPartnerRelationshipDto object");
+        }
+        Response response = createSecondLevelRelationship(userId, SECOND_LEVEL_OBJECT_PARTNERS, jsonRelation.toString());
+        setSessionResponse(response);
     }
 }
