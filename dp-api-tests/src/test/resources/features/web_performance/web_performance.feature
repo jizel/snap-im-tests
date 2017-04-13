@@ -230,3 +230,66 @@ Feature: web_performance
       | /analytics/visits | 14    | day         | 2016-02-01 | 2016-02-14 | 7            | singleStatsDto | /null | true       |
       | /analytics/visits | 2     | week        | 2016-02-01 | 2016-02-14 | 1            | singleStatsDto | 8852  | true       |
       | /analytics/visits | 2     | week        | 2016-02-01 | 2016-02-14 | 2            | singleStatsDto | 9086  | false      |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get analytics data with granularity and large interval
+    When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "Google Analytics"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> amount of values for global stats dto
+
+    Examples:
+      | url        | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get specific analytics data with granularity and large time interval
+    When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "Google Analytics"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> values
+
+    Examples:
+      | url                         | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/conversion_rates | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/referrals        | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/revenue          | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits           | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits_unique    | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/conversion_rates | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/revenue          | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits           | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits_unique    | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/conversion_rates | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/revenue          | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits           | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits_unique    | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get specific analytics data without granularity and with large time interval and pagination ignored
+    When List of web performance "<url>" for property id "<property>" is got with limit "1" and cursor "0" and granularity "day" and since "<since>" and until "<until>"
+    When Get web_performance "<url>" data with "day" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "Google Analytics"
+    And Response contains <count> values
+
+    Examples:
+      | url                                   | count | since      | until      | property                             |
+      | /analytics/conversion_rates/countries | 249   | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/referrals                  | 100   | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/referrals/channels         | 11    | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits/countries           | 249   | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/visits_unique/countries    | 249   | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |

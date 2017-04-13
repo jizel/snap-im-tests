@@ -329,3 +329,63 @@ Feature: Twitter metrics
     Examples:
       | url                | granularity | since | until            | property                             |
       | /analytics/twitter | day         | today | today - 3 months | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get analytics data with large interval
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "twitter"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> amount of values for global stats dto
+
+    Examples:
+      | url                  | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/twitter | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+  # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+  Scenario Outline: Get specific analytics data with large time interval
+    When Get twitter "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    Then Response code is 200
+    And Content type is "application/json"
+    And Data is owned by "twitter"
+    And Body contains entity with attribute "granularity" value "<granularity>"
+    And Response since is "<real_since>" for granularity "<granularity>"
+    And Response until is "<real_until>" for granularity "<granularity>"
+    And Response contains <count> values
+
+    Examples:
+      | url                                 | granularity | count | since      | until      | real_since | real_until | property                             |
+      | /analytics/twitter/number_of_tweets | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/number_of_tweets | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | week        | 210   | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+
+      | /analytics/twitter/number_of_tweets | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/engagement       | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/followers        | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/impressions      | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/reach            | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweets         | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/retweet_reach    | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mentions         | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
+      | /analytics/twitter/mention_reach    | month       | 48    | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
