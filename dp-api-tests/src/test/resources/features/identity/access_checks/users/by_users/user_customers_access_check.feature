@@ -21,7 +21,6 @@
     Given Relation between user "user2OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user1OfC2" and property with code "defaultPropertyCode" exists with is_active "true"
 
-  # DP-1884
   Scenario: User can view customer-user relations of only his customer
     When Relation between user "user2OfC1" and customer "12300000-0000-4000-a000-000000000000" is requested by user "user1OfC1"
     Then Response code is "200"
@@ -40,7 +39,6 @@
     When User "user1OfC1" requests list of customer for user "user2OfC1"
     Then Response code is "404"
 
-  # DP-1781
   Scenario: User can add/remove users to customer only when he has access to both users and customer
     # Add wrong user to customer
     When User "user1OfC1" adds user "user1OfC2" to customer "12300000-0000-4000-a000-000000000000"

@@ -24,7 +24,6 @@ Feature: User access check feature - GET
     Given Relation between user "user2OfC1" and property with code "defaultPropertyCode" exists with is_active "true"
 
   # DP-1765
-  @Bug
   Scenario: User has access only to users of the same customer
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "user1OfC1"
     Then Response code is "200"

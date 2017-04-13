@@ -13,6 +13,7 @@ import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.RoleDto;
+import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
@@ -210,15 +211,15 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public Response createRoleBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
-        Response createResponse = addRoleToUserEntity(roleId, userName, entityId, entityName);
+    public Response createRoleBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId, Boolean isActive) {
+        Response createResponse = addRoleToUserEntity(roleId, userName, entityId, entityName, isActive);
         setSessionResponse(createResponse);
         return createResponse;
     }
 
     @Step
-    public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
-        Response response = createRoleBetweenUserAndEntity(entityName, roleId, userName, entityId);
+    public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId, Boolean isActive) {
+        Response response = createRoleBetweenUserAndEntity(entityName, roleId, userName, entityId, isActive);
         assertThat("Role can not be assigned: " + response.body().toString(), response.statusCode(), is(HttpStatus.SC_CREATED));
     }
 
@@ -229,10 +230,20 @@ public class UsersSteps extends BasicSteps {
         return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_ROLES, roleId, queryParams);
     }
 
-    private Response addRoleToUserEntity(String roleId, String userId, String entityId, String entityName) {
+    private Response addRoleToUserEntity(String roleId, String userId, String entityId, String entityName, Boolean isActive) {
         String path = buildPathForRoles(entityName, userId, entityId);
+        RoleRelationshipDto role = new RoleRelationshipDto();
+        role.setRoleId(roleId);
+        role.setIsActive(isActive);
+        JSONObject jsonRole = null;
+        try {
+            jsonRole = retrieveData(role);
+        }
+        catch(JsonProcessingException exception){
+            fail("Exception thrown while getting JSON from RoleRelationshipDto object");
+        }
         return given().spec(spec).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .body(singletonMap(ROLE_ID, roleId))
+                .body(jsonRole.toString())
                 .when().post(path);
     }
 
@@ -322,8 +333,13 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void roleBetweenUserAndEntityIsDeleted(String entityName, String roleId, String userId, String entityId) {
-        String etag = getThirdLevelEntityEtag(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+    public void roleBetweenUserAndEntityIsDeleted(String entityName, String roleId, String userId, String entityId, String nonExistent) {
+        String etag;
+        if (nonExistent == null) {
+            etag = getThirdLevelEntityEtag(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+        } else {
+            etag = DEFAULT_SNAPSHOT_ETAG;
+        }
         Response deleteResponse = deleteThirdLevelEntity(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
         setSessionResponse(deleteResponse);
     }
@@ -337,8 +353,8 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void roleNameExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId) {
-        Response resp = addRoleToUserEntity(roleId, userName, entityId, entityName);
+    public void roleNameExistsBetweenUserAndEntity(String entityName, String roleId, String userId, String entityId, Boolean isActive) {
+        Response resp = addRoleToUserEntity(roleId, userId, entityId, entityName, isActive);
         setSessionResponse(resp);
     }
 

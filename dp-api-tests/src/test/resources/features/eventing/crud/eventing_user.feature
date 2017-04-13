@@ -53,14 +53,14 @@ Feature: Eventing tests for User
 #    Create
     When User "eventing_user" assigns role "eventing_role" to relation between user "eventing_user" and customer "12300000-0000-4000-a000-000000000000"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Role"
+    And Notification in session entity_type is "CustomerRole"
     And Notification in session id stands for role with name "eventing_role"
     And Notification in session operation is "Create"
     And Notification in session parent entity type is "User"
 #    Delete
     When User "eventing_user" deletes role "eventing_role" from relation between user "eventing_user" and customer "12300000-0000-4000-a000-000000000000"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
-    And Notification in session entity_type is "Role"
+    And Notification in session entity_type is "CustomerRole"
     And Notification in session id stands for role with name "eventing_role"
     And Notification in session operation is "Delete"
     And Notification in session parent entity type is "User"

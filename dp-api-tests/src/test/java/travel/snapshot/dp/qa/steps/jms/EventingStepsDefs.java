@@ -135,10 +135,10 @@ public class EventingStepsDefs {
         steps.notificationContainsId(p.getId());
     }
 
-    @Then("^Notification in session id stands for user with username \"([^\"]*)\"$")
+    @Then("^Notification in session id stands for user(?: with username)? \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_user_with_username(String username) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        steps.notificationContainsId(u.getId());
+        String userId = usersSteps.resolveUserId(username);
+        steps.notificationContainsId(userId);
     }
 
     @Then("^Notification in session id stands for role with name \"([^\"]*)\"$")
@@ -172,11 +172,11 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session parent id stands for user(?: with username)? \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_user_with_username(String username) throws Throwable {
-        UserDto u = usersSteps.getUserByUsername(username);
-        steps.notificationContainsParentId(u.getId());
+        String userId = usersSteps.resolveUserId(username);
+        steps.notificationContainsParentId(userId);
     }
 
-    @Then("^Notification in session parent id stands for property set with name \"([^\"]*)\"$")
+    @Then("^Notification in session parent id stands for property set(?: with name)? \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_property_set_with_name_for_customer_with_code(String propertySetName) throws Throwable {
         PropertySetDto ps = propertySetSteps.getPropertySetByName(propertySetName);
         steps.notificationContainsParentId(ps.getId());
