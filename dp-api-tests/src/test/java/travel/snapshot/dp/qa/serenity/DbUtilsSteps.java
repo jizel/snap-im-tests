@@ -14,6 +14,9 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.DbHelper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by sedlacek on 9/23/2015.
  */
@@ -65,6 +68,9 @@ public class DbUtilsSteps {
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO Api_Subscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO Customer_Hierarchy_Path (parent_id, child_id) values (?, ?) ;";
 
+    static final String TTI_SCHEMA_NAME = "tti";
+    static final String IDENTITY_SCHEMA_NAME = "identity";
+
     private DbHelper dbHelper = new DbHelper();
 
     public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
@@ -110,6 +116,17 @@ public class DbUtilsSteps {
 
     public void createDBApiSubscription(ApiSubscriptionDto apiSubscription) {
         dbHelper.identityDb().update(CREATE_DB_API_SUBSCRIPTION, apiSubscription.getId(), apiSubscription.getCommercialSubscriptionId(), apiSubscription.getApplicationVersionId(), apiSubscription.getIsActive());
+    }
+
+    public List<Map<String,Object>> selectColumnFromTableWhere(String column, String tableName, String conditionColumn, String conditionValue, String schemaName){
+        String sqlSelect = "SELECT " + column + " FROM "+ tableName +" WHERE "+ conditionColumn +" = ?";
+//        Only tti and identity schemes are used in tests now. New schemas constants can be added if needed. Identity should always be default.
+        if (schemaName != null && schemaName.equals(TTI_SCHEMA_NAME)){
+            return dbHelper.ttiDb().queryForList(sqlSelect, conditionValue);
+        }
+        else {
+            return dbHelper.identityDb().queryForList(sqlSelect, conditionValue);
+        }
     }
 
     public void cleanDatabase() {

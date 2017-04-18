@@ -3,7 +3,6 @@ Feature: Properties tti code - DP-757
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -11,7 +10,7 @@ Feature: Properties tti code - DP-757
       | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | ttiId  | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
+      | id                                  | ttiId  | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId         |
       |999e833e-50e8-4854-a233-289f00b54a09 | 654123 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
     Scenario: Add tti to booking.com mapping to property with defined tti_id (tti_id doesn't exist in OTA)
@@ -26,6 +25,10 @@ Feature: Properties tti code - DP-757
       Then Response code is "409"
       And Custom code is 40901
       And Body contains entity with attribute "message" value "The field code must be unique."
+      When Add ttiId to booking.com id "1111" mapping to property with code "p1_code"
+      Then Response code is "201"
+      Then Body contains entity with attribute "code" and integer value 1111
+      And Column "code" has value "1111" in table "Crossreferences" where column "tticode" has value "654123" in "tti" schema
 
     Scenario: Add tti to booking.com mapping to property with defined tti_id (tti_id exists in OTA)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -45,6 +48,10 @@ Feature: Properties tti code - DP-757
       Then Response code is "409"
       And Custom code is 40901
       And Body contains entity with attribute "message" value "The field code must be unique."
+      When Add ttiId to booking.com id "111" mapping to property with code "p2_code"
+      Then Response code is "201"
+      Then Body contains entity with attribute "code" and integer value 111
+      And Column "code" has value "111" in table "Crossreferences" where column "tticode" has value "998" in "tti" schema
 
     Scenario: Duplicate booking.com id send to property without defined tti_id (the original property has ttiId)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
