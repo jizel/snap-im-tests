@@ -24,7 +24,7 @@ Feature: Users property roles CRUD
 
 
   Scenario Outline: Assigning not existing role
-    When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is added
+    When I add role with id "<role_id>" to user name "<user_name>" and property code "<property_code>"
     Then Response code is "422"
     And Custom code is 42202
     Examples:
@@ -37,7 +37,7 @@ Feature: Users property roles CRUD
     Given The following roles exist
       | id                                   | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is added
+    When I add role with id "<role_id>" to user name "<user_name>" and property code "<property_code>"
     Then Response code is "422"
     And Custom code is 42202
     Examples:
@@ -50,7 +50,7 @@ Feature: Users property roles CRUD
     Given The following roles exist
       | id                                   | roleName        | description            | applicationId                        |
       | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
-    When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is added
+    When I assign role with id "<role_id>" to user name "<user_name>" and property code "<property_code>"
     Then Response code is "422"
     And Custom code is 42202
     Examples:
@@ -60,12 +60,12 @@ Feature: Users property roles CRUD
 
   #todo issue dp-1294
   Scenario Outline: Assigning role to not existing property
-    When Role with id "<role_id>" for user name "<user_name>" and property id "<property_id>" is added
+    When I assign role with id "<role_id>" to user name "<user_name>" and property id "<property_id>"
     Then Response code is "404"
     And Custom code is 40402
     Examples:
       | role_id                              | user_name | property_id                          |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | a111fd9a-a11d-11d8-8e84-42e111ace123 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | default1  | 00000000-0000-4000-a000-000000000000 |
 
 
     #todo issue dp-1294

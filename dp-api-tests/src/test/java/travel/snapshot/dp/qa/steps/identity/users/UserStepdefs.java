@@ -12,6 +12,7 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 import com.jayway.restassured.response.Response;
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -306,6 +307,13 @@ public class UserStepdefs {
         userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userName, propertyId, isActive);
     }
 
+    @When("^I (?:add|assign) role(?: with id)? \"([^\"]*)\" to user(?: name)? \"([^\"]*)\" and property(?: code| id)? \"([^\"]*)\"$")
+    public void iAddRoleWithIdToUserNameAndPropertyCode(String roleId, String userName, String propertyCode) throws Throwable {
+        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.addRoleBetweenUserAndProperty(roleId, userId, propertyId, true);
+    }
+
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property id \"([^\"]*)\" is added(?: with is(?:A|a)ctive \"([^\"]*)\")?$")
     public void roleWithIdForUserNameAndPropertyIdIsAdded(String roleId, String userName, String propertyId, String isActiveString) throws Throwable {
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
@@ -314,8 +322,8 @@ public class UserStepdefs {
 
     @When("^Role with id \"([^\"]*)\" for not existing user id and property code \"([^\"]*)\" is added$")
     public void roleWithIdForNotExistingPropertyIdAndCustomerIdIsAdded(String roleId, String propCode) throws Throwable {
-        PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.addRoleBetweenNotExistingUserAndProperty(roleId, "1111fd9a-a11d-11d8-8e11-111904ace123", prop.getId());
+        String propertyId = propertySteps.resolvePropertyId(propCode);
+        userRolesSteps.addRoleBetweenUserAndProperty(roleId, NON_EXISTENT_ID, propertyId, true);
     }
 
     @When("^(Nonexistent )?(?:R|r)ole with id \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is deleted$")

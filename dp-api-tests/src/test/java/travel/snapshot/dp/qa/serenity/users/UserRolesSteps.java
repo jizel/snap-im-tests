@@ -44,12 +44,12 @@ public class UserRolesSteps extends UsersSteps {
 
 //------------------------------------------------------------------------------------------------------------
 
-    public void roleExistsBetweenUserAndProperty(String roleId, String userName, String propId, Boolean isActive) {
-        roleExistsBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, userName, propId, isActive);
+    public void addRoleBetweenUserAndProperty(String roleId, String userId, String propId, Boolean isActive) {
+        createRoleBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, userId, propId, isActive);
     }
 
-    public void addRoleBetweenNotExistingUserAndProperty(String roleId, String s, String customerId) {
-        roleExistsBetweenNotExistingUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, s, customerId);
+    public void roleExistsBetweenUserAndProperty(String roleId, String userName, String propId, Boolean isActive) {
+        roleExistsBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTIES, roleId, userName, propId, isActive);
     }
 
     public void roleBetweenUserAndPropertyIsDeleted(String roleId, String userId, String propertyId, String nonExistent) {
