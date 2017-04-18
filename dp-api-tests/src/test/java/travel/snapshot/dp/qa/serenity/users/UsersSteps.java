@@ -211,8 +211,8 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public Response createRoleBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId, Boolean isActive) {
-        Response createResponse = addRoleToUserEntity(roleId, userName, entityId, entityName, isActive);
+    public Response createRoleBetweenUserAndEntity(String entityName, String roleId, String userId, String entityId, Boolean isActive) {
+        Response createResponse = addRoleToUserEntity(roleId, userId, entityId, entityName, isActive);
         setSessionResponse(createResponse);
         return createResponse;
     }
@@ -322,7 +322,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void roleExistsBetweenNotExistingUserAndEntity(String entityName, String roleId, String userId, String entityId) {
+    public void addRoleBetweenNotExistingUserAndEntity(String entityName, String roleId, String userId, String entityId) {
         Map<String, String> data = new HashMap<>();
         data.put("role_id", roleId);
 

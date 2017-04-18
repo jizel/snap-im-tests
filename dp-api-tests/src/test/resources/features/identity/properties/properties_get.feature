@@ -121,7 +121,6 @@ Feature: Properties get
     And Custom code is "<custom_code>"
 
     Examples:
-    Examples:
       | limit | cursor | filter           | sort        | sort_desc   | response_code | custom_code |
       #limit and cursor
       | /null | -1     | /null            | /null         | /null         | 400           | 40002   |
