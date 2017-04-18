@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.steps;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_API_SUBSCRIPTION_ID;
@@ -15,6 +17,7 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_TIMEZON
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.SNAPSHOT_WEBSITE;
 
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
@@ -30,6 +33,8 @@ import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+
+import java.util.Map;
 
 public class DbStepDefs {
 
@@ -179,4 +184,10 @@ public class DbStepDefs {
     }
 
 
+    @And("^Column \"([^\"]*)\" has value \"([^\"]*)\" in table \"([^\"]*)\" where column \"([^\"]*)\" has value \"([^\"]*)\"(?: in \"([^\"]*)\" schema)?$")
+    public void columnHasValueInTableForColumnWithValue(String columnName, String columnValue, String tableName, String conditionColumnName, String conditionColumnValue, String schema) throws Throwable {
+        Map<String,Object> selectResult = dbSteps.selectColumnFromTableWhere(columnName, tableName, conditionColumnName, conditionColumnValue, schema).get(0);
+        assertThat(selectResult.get(columnName).toString(), is(columnValue));
+
+    }
 }
