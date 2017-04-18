@@ -10,5 +10,5 @@ pushd %DP_DIRECTORY%\DB\ota_tti\
 call gradle flywayMigrate -Pflyway.url=jdbc:mariadb://localhost:3306 -Pflyway.user=root
 pushd %DP_DIRECTORY%\DB\dp\
 call gradle flywayMigrate -Pflyway.url=jdbc:mariadb://localhost:3306 -Pflyway.user=root
-pushd %DP_IDENTITY_DIRECTORY%\DB\identity\
+pushd %DP_IDENTITY_DIRECTORY%\
 call gradle flywayMigrate -Pflyway.url=jdbc:mariadb://localhost:3306 -Pflyway.user=root

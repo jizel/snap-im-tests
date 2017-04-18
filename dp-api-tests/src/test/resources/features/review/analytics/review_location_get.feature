@@ -86,10 +86,9 @@ Feature: Review locations
   #/location/<property>
   #---------------------------------------------------------------------------------------------------------------------
 
-#  DP-1992 - add more test properties when fixed
   @Smoke
-  @skipped
   Scenario Outline: Getting location id for correct property id
+#    Property ids are set by load_fake_data script in table dp/tripadvisor_property
     When Get trip advisor "<url>" for "<property>"
     Then Response code is "200"
     And Content type is "application/json"
@@ -98,6 +97,8 @@ Feature: Review locations
     Examples:
       | url       | property                             | location_id | location_name |
       | /location | 99000199-9999-4999-a999-999999999999 | 19          | town 19       |
+      | /location | 99000099-9999-4999-a999-999999999999 | 20          | town 20       |
+      | /location | 99000499-9999-4999-a999-999999999999 | 21          | town 21       |
 
 
   Scenario Outline: Getting error code for not existing property id from /location
