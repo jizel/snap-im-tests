@@ -111,10 +111,6 @@ Feature: Customers access check feature - GET
        Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is activated
        Given Relation between user "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
        Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
-       Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
-       Given API subscriptions exist for default application and customer with id "23445678-0000-4000-a000-000000000000"
-       Given API subscriptions exist for default application and customer with id "34545678-0000-4000-a000-000000000000"
-       Given API subscriptions exist for default application and customer with id "45645678-0000-4000-a000-000000000000"
        When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1"
        Then Response code is "200"
        And There are <returned> customers returned
@@ -144,7 +140,6 @@ Feature: Customers access check feature - GET
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
     And Body contains entity with attribute "name" value "updatedName"
-    And Body contains entity with attribute "salesforce_id" value "updated_sf_id"
     And Body contains entity with attribute "website" value "http://www.update.snapshot.travel"
     And Body contains entity with attribute "email" value "updated@tenants.biz"
     And Body contains entity with attribute "vat_id" value "CZ01111110"

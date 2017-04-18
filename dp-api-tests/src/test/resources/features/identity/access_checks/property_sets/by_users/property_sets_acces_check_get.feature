@@ -46,10 +46,10 @@ Feature: Property sets access check feature - GET
       Then Response code is "200"
 
     Scenario: User has access to any child property set if he has access to parent PS
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
+      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
         | name            | type            | parentId                             | id                                   |
         | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
+      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
         | name            | type            | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Property set "childPS2" is requested by user "userWithPropSet"
@@ -125,9 +125,10 @@ Feature: Property sets access check feature - GET
 #    property_sets/ps_id/property_sets
 
   Scenario: Second level entities - User should see only child property sets of property set he has access to
-    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithnoPropSet"
+    Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
       | name            | type            | parentId                             | id                                   |
       | childPS1        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
+    Given Relation between user "userWithnoPropSet" and property set "childPS1" exists
     When Child property sets of property set "ps1_name" are requested by user "userWithPropSet"
     Then Response code is "200"
     When Child property sets of property set "ps1_name" are requested by user "userWithNoPropSet"
