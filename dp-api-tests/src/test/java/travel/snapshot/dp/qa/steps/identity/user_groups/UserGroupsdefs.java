@@ -157,17 +157,16 @@ public class UserGroupsdefs {
         userGroupSteps.setUserGroupActiveField(userGroupId, false);
     }
 
-    @When("^User group(?: with id)? \"([^\"]*)\" is deleted$")
-    public void userGroupWithIdIsDeleted(String userGroupName) throws Throwable {
-        String userGroupId = userGroupSteps.resolveUserGroupId(userGroupName);
-        userGroupSteps.deleteUserGroup(userGroupId);
-    }
-
-    @When("^User group \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    @When("^User group(?: with id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void userGroupIsDeletedByUser(String userGroupName, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         userGroupSteps.deleteUserGroupByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(USER_GROUP_ID));
+    }
+
+    @When("^User group with nonexistent ID is deleted$")
+    public void userGroupWithNonexistentIDIsDeleted() throws Throwable {
+        userGroupSteps.deleteUserGroup(NON_EXISTENT_ID);
     }
 
 

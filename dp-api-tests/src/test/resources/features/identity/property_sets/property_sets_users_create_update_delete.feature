@@ -48,6 +48,7 @@ Feature: Property sets users create update delete
     Given Relation between user "filter_psu_default_4" and property set with name "ps1_name" exists
     Given Relation between user "filter_psu_default_5" and property set with name "ps1_name" exists
     Given Relation between user "filter_psu_default_6" and property set with name "ps1_name" exists
+    Given Relation between user "default0" and property set with name "ps1_name" exists
     When List of users for property set with name "ps1_name" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
