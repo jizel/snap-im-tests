@@ -113,7 +113,7 @@ Feature: Roles create update delete user property set
     Then Response code is "409"
     And Custom code is 40902
     When Role is created
-      | roleName         | description            | id                                   |
+      | roleName         | description            | applicationId                        |
       | user_cust_role   | Same name different ID | 11111111-0000-4000-a000-111111111111 |
     Then Response code is "409"
     And Custom code is 40907

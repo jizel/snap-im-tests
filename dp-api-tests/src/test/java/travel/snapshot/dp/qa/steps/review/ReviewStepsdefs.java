@@ -200,7 +200,7 @@ public class ReviewStepsdefs {
     public void reviewFileIsEqualsToPreviousResponse(String filename) throws Throwable {
         String path = "/messages/review" + filename;
         reviewSteps.checkFileAgainstResponse(path, (t, u) -> {
-            assertThat(Collections.singletonList(t), containsInAnyOrder(u));
+            assertThat(Collections.singletonList(u), containsInAnyOrder(t));
         }, OverallStatisticsDto.class);
     }
 
