@@ -56,7 +56,7 @@ Feature: User groups create update delete
     And User group with id "a8b40d08-de38-4246-bb69-ad39c31c025c" is not active
 
   Scenario: Delete non-existing user group
-    When User group with id "NonExistentUserGroup" is deleted
+    When User group with nonexistent ID is deleted
     Then Response code is 404
 
   Scenario: Customer cannot be deleted until User Group is deleted
@@ -76,17 +76,14 @@ Feature: User groups create update delete
     Then Response code is <response_code>
     And Custom code is <error_code>
     Examples:
-      | userGroupId | customerId                           | name          | isActive | description | response_code | error_code | #note                        |
-      | NotExisting | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
-      | \w{65}      | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
-      | /null       | /null                                | /null         | /null    | /null       | 422           | 42201      | # customerId is mandatory    |
-      | /null       |                                      | /null         | /null    | /null       | 422           | 42201      | # customerId cannot be empty |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | /null         | /null    | /null       | 422           | 42201      | # name is mandatory          |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |               | /null    | /null       | 422           | 42201      | # name cannot be empty       |
-      | /null       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | \w{256}       | /null    | /null       | 422           | 42201      | # too long name              |
-      | /null       | NotExisting                          | userGroupName | /null    | /null       | 422           | 42201      | # customerId not in UUID     |
-      | /null       | 11a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 404           | 40402      | # customerId not found       |
-      | /null       | NotExisting                          | userGroupName | /null    | \w{501}     | 422           | 42201      | # too long description       |
+      | userGroupId                          | customerId                           | name          | isActive | description | response_code | error_code | #note                        |
+      | NotExisting                          | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
+      | \w{65}                               | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 422           | 42201      | # UUID format                |
+      | 00000000-5351-4e41-9d20-fdb4609e9353 | /null                                | /null         | /null    | /null       | 422           | 42201      | # customerId is mandatory    |
+      | 00000000-5351-4e41-9d20-fdb4609e9353 |                                      | /null         | /null    | /null       | 422           | 42201      | # customerId cannot be empty |
+      | 00000000-5351-4e41-9d20-fdb4609e9353 | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 |               | /null    | /null       | 422           | 42201      | # name cannot be empty       |
+      | 00000000-5351-4e41-9d20-fdb4609e9353 | NotExisting                          | userGroupName | /null    | /null       | 422           | 42201      | # customerId not in UUID     |
+      | 00000000-5351-4e41-9d20-fdb4609e9353 | 11a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroupName | /null    | /null       | 404           | 40402      | # customerId not found       |
 
 
   Scenario Outline: Updating user group with valid data
