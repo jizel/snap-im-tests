@@ -74,10 +74,10 @@ Feature: Properties access check feature - GET
       Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithNoProp"
         | name            | type            | id                                   |
         | parentPS        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 |
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
+      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
         | name            | type            | parentId                             | id                                   |
         | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
-      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithProp"
+      Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
         | name            | type            | parentId                             |
         | childPS2        | brand           | d119e3b0-69bf-4c57-91bd-30230d2c1bd0 |
       When Property with code "p1_code" is requested by user "userWithNoProp"

@@ -41,7 +41,6 @@ Feature: Customers-Users Application access check feature - GET
       | 55500000-0000-4000-a000-000000000666 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000555 |
     Given Relation between user "userWithCust1" and property "11111111-0000-4000-a000-666666666666" exists with is_active "true"
     Given Relation between user "userWithCust2" and property "11111111-0000-4000-a000-666666666666" exists with is_active "true"
-    Given Relation between user "userWithCust1" and customer with id "00000000-0000-4000-8000-123000000abc" exists
 
   Scenario: Application sees only users for customer it has subscribed to
     When List of all users for customer with id "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
@@ -53,12 +52,13 @@ Feature: Customers-Users Application access check feature - GET
     Then Response code is "200"
 
   Scenario: Add user to customer by application with and without access to the customer
+    Given Relation between user "userWithCust1" and customer with id "00000000-0000-4000-8000-123000000abc" exists
     When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1" for application version "versionWithoutSubscription"
     Then Response code is "403"
     When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "201"
     When User "userWithCust2" is added to customer with id "12300000-0000-4000-a000-000000000000" with isPrimary "true" by user "userWithCust1" for application version "nonCommercialversion"
-    Then Response code is "201"
+    Then Response code is "409"
 
   Scenario: Updating User Customer relationship by application with and without access
     When Relation between user "userWithCust1" and customer with id "12300000-0000-4000-a000-000000000000" is updated with isPrimary "false" by user "userWithCust1" for application version "versionWithoutSubscription"

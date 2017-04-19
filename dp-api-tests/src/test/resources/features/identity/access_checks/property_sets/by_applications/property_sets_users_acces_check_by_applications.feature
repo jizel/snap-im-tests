@@ -30,9 +30,10 @@ Feature: Property sets- Users Application access check feature
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithPropertySet"
       | name            | type            | id                                   |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
-    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000111" and user "userWithPropertySet"
+    Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000111"
       | name            | type            | id                                   |
       | ps2_name        | brand           | 23400000-1111-4c57-91bd-30230d2c1bd0 |
+    Given Relation between user "userWithPropertySet" and property set "ps2_name" exists
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |

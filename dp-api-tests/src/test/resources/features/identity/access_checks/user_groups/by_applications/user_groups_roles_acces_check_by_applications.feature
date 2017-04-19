@@ -67,7 +67,7 @@ Feature: User Groups Roles Application access check feature
     Scenario: Delete relationship UserGroup-Role by application with and without access
     Given The following roles exist
       | id                                   | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | a318fd9a-a05d-42d8-8e84-42e904ace123 | role1    |
+      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 22200000-0000-4000-a000-000000000222 | role1    |
     When Relation between user group "userGroup_1" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists with is_active "false"
     When Relation between user group "userGroup_1" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is deleted by user "userWithUserGroup" for application version "versionWithSubscription"
     Then Response code is "204"

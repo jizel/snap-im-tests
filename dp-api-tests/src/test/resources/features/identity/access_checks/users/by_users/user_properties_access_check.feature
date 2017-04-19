@@ -30,7 +30,6 @@
     Given The following properties exist with random address and billing address
       | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.com    | p2@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     # Wrong customer
     When User "user1OfC2" requests list of users for property "p1_code"
     Then Response code is "404"
