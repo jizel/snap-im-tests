@@ -113,6 +113,7 @@ Feature: Customers Application access check feature - GET
     And Custom code is 40301
     When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is 409
+    And Custom code is 40915
     When Customer with id "12300000-0000-4000-a000-000000000000" is deleted by user "userWithCust1" for application version "nonCommercialversion"
     Then Response code is 409
 

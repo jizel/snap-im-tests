@@ -111,7 +111,7 @@ Feature: Review GET feature
       | /analytics/analytics_for_month.json | /analytics/ | 99000199-9999-4999-a999-999999999999 | month       | 2015-08-26 | 2015-12-03 |
 
 
-  Scenario Outline: Checking data corectness for analitics for /analytics/rating_score
+  Scenario Outline: Checking data correctness for analytics for /analytics/rating_score
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     And Content type is "application/json"
     And Response code is "200"

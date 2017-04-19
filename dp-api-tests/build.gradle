@@ -84,4 +84,9 @@ dependencies {
 configurations {
     all*.exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
 gradle.startParameter.continueOnFailure = true
