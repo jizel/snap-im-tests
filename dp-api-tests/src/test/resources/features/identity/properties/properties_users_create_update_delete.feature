@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties users create update delete
 
   Background:

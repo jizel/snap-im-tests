@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Property code feature
 When creating a property, property code be entered manually or generated
 Unique property code is generated according to following rules:

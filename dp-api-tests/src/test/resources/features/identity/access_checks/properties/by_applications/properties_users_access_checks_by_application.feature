@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties-Users Application access check feature
   - Checking when certain application should and should not have access to certain property users
   - Only users of Properties for which there is a CommercialSubscription linking to the ApplicationVersion (through Application) are accessible

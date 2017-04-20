@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties access check feature - GET
   - Checking when certain user should and should not have access to certain properties
   - User should have access to a property (instance) when

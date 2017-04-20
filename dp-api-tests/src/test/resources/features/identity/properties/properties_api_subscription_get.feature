@@ -1,4 +1,5 @@
 @skipped
+@Properties
 @Identity
 Feature: Properties get
 

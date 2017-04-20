@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties tti code - DP-757
 
   Background:
