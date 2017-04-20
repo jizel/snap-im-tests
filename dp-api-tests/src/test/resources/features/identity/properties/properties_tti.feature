@@ -28,7 +28,7 @@ Feature: Properties tti code - DP-757
       When Add ttiId to booking.com id "1111" mapping to property with code "p1_code"
       Then Response code is "201"
       Then Body contains entity with attribute "code" and integer value 1111
-      And Column "code" has value "1111" in table "Crossreferences" where column "tticode" has value "654123" in "tti" schema
+      And Column "code" has value "1111" in table "crossreferences" where column "tticode" has value "654123" in "tti" schema
 
     Scenario: Add tti to booking.com mapping to property with defined tti_id (tti_id exists in OTA)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -51,7 +51,7 @@ Feature: Properties tti code - DP-757
       When Add ttiId to booking.com id "111" mapping to property with code "p2_code"
       Then Response code is "201"
       Then Body contains entity with attribute "code" and integer value 111
-      And Column "code" has value "111" in table "Crossreferences" where column "tticode" has value "998" in "tti" schema
+      And Column "code" has value "111" in table "crossreferences" where column "tticode" has value "998" in "tti" schema
 
     Scenario: Duplicate booking.com id send to property without defined tti_id (the original property has ttiId)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
