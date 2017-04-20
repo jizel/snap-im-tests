@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties property sets create update delete
   - User is able to RUD relationship between property and property set (Create not implemented for now)
   - This is a test suite for properties/property_id/property_sets relationship

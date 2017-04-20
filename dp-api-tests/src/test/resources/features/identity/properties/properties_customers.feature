@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties - customers feature
 
   Background:

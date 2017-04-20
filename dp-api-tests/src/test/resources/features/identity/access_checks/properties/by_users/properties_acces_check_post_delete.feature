@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties access check feature - POST and DELETE
   - User can update/delete specific property and it's relationships only if he owns it
   - Check positive scenarios

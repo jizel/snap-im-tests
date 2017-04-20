@@ -1,4 +1,5 @@
 @Identity
+@Properties
 Feature: Properties-Property Sets access check feature
   - Checking when certain user should and should not have access to certain properties
   - 404 is returned for unauthorized users (403 when the X-Auth-UserId header is missing)`
