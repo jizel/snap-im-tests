@@ -94,9 +94,9 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfApplicationVersionsIsGotWith(String limit, String cursor, String filter,
+    public void listOfApplicationVersionsIsGotWith(String userId, String appVersionId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
-        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

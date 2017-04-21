@@ -6,6 +6,7 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 
+import com.sun.jna.platform.win32.Netapi32Util;
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -16,12 +17,14 @@ import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.api_subscriptions.ApiSubscriptionSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 
 import java.util.List;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 /**
  * Created by vlcek on 3/17/2016.
@@ -44,6 +47,12 @@ public class ApiSubscriptionStepsdefs {
 
     @Steps
     private ApplicationsSteps applicationsSteps;
+
+    @Steps
+    private ApplicationVersionsSteps applicationVersionsSteps;
+
+    @Steps
+    private UsersSteps usersSteps;
 
     @Given("^The following api subscriptions exist$")
     public void theFollowingApiSubscriptionsExist(List<ApiSubscriptionDto> listApiSubscriptions) throws Throwable {
@@ -80,14 +89,18 @@ public class ApiSubscriptionStepsdefs {
         apiSteps.deleteApiSubscription(apiSubscriptionId);
     }
 
-    @When("^List of api subscriptions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of api subscriptions is (?:requested|got)( with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void listOfApiSubscriptionsIsGotWithLimitAndCursorAndFilterAndSortAndSort_desc(
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) {
-        apiSteps.listApiSubscriptiosIsGot(limit, cursor, filter, sort, sortDesc);
+            @Transform(NullEmptyStringConverter.class) String sortDesc,
+            @Transform(NullEmptyStringConverter.class) String userName,
+            @Transform(NullEmptyStringConverter.class) String appVersionName) {
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        String userId = usersSteps.resolveUserId(userName);
+        apiSteps.listApiSubscriptiosIsGot(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Api subscription with id \"([^\"]*)\" is updated with following data$")

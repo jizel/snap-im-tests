@@ -11,9 +11,11 @@ import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
 
 import java.util.List;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 public class CommercialSubscriptionStepdef {
 
@@ -21,6 +23,12 @@ public class CommercialSubscriptionStepdef {
 
     @Steps
     private CommercialSubscriptionSteps commSubscriptionSteps;
+
+    @Steps
+    private ApplicationVersionsSteps applicationVersionsSteps;
+
+    @Steps
+    private UsersSteps usersSteps;
 
 
     @Given("^The following commercial subscriptions exist$")
@@ -58,14 +66,18 @@ public class CommercialSubscriptionStepdef {
         commSubscriptionSteps.commSubscriptionWithIdIsGot(NON_EXISTENT_ID);
     }
 
-    @When("List of commercial subscriptions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"")
+    @When("List of commercial subscriptions is (?:requested|got)(?: with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?")
     public void List_of_commercial_subscriptions_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) {
-        commSubscriptionSteps.listOfCommSubscriptionsIsGotWith(limit, cursor, filter, sort, sortDesc);
+            @Transform(NullEmptyStringConverter.class) String sortDesc,
+            @Transform(NullEmptyStringConverter.class) String userName,
+            @Transform(NullEmptyStringConverter.class) String appVersionName) {
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        String userId = usersSteps.resolveUserId(userName);
+        commSubscriptionSteps.listOfCommSubscriptionsIsGotWith(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("There are (\\d+) commercial subscriptions returned")

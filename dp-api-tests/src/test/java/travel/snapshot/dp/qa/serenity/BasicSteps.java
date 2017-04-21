@@ -128,6 +128,9 @@ public class BasicSteps {
     public static final String VALID_FROM = "valid_from";
     public static final String VALID_TO = "valid_to";
     public static final String SNAPSHOT_PHONE = "+420530514301";
+    public static final String USER_TYPE_PARTNER = "PARTNER";
+    public static final String USER_TYPE_SNAPSHOT = "SNAPSHOT";
+    public static final String USER_TYPE_CUSTOMER = "CUSTOMER";
 
     public BasicSteps() {
 

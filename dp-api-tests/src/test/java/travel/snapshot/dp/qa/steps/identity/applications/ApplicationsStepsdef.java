@@ -23,6 +23,7 @@ import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationsSteps;
 
 import java.util.List;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 public class ApplicationsStepsdef {
 
@@ -30,6 +31,12 @@ public class ApplicationsStepsdef {
 
     @Steps
     private ApplicationsSteps applicationSteps;
+
+    @Steps
+    private UsersSteps usersSteps;
+
+    @Steps
+    private ApplicationVersionsSteps applicationVersionsSteps;
 
     @Steps
     private ApplicationVersionsSteps applicationVersionSteps;
@@ -104,14 +111,18 @@ public class ApplicationsStepsdef {
         }
     }
 
-    @When("^List of applications is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of applications is (?:got|requested)(?: with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void List_of_applications_is_got_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        applicationSteps.listOfApplicationsIsGotWith(limit, cursor, filter, sort, sortDesc);
+            @Transform(NullEmptyStringConverter.class) String sortDesc,
+            @Transform(NullEmptyStringConverter.class) String userName,
+            @Transform(NullEmptyStringConverter.class) String appVersionName) throws Throwable {
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        String userId = usersSteps.resolveUserId(userName);
+        applicationSteps.listOfApplicationsIsGotWith(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are (\\d+) applications returned$")
@@ -176,14 +187,18 @@ public class ApplicationsStepsdef {
         applicationVersionSteps.getApplicationVersion(appVersionId);
     }
 
-    @When("^List of application versions is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
+    @When("^List of application versions is (?:requested|got)(?: with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void List_of_application_versions_is_got_for_application_id_with_limit_cursor_filter_sort_sortdesc(
             @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
-            @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        applicationVersionSteps.listOfApplicationVersionsIsGotWith(limit, cursor, filter, sort, sortDesc);
+            @Transform(NullEmptyStringConverter.class) String sortDesc,
+            @Transform(NullEmptyStringConverter.class) String userName,
+            @Transform(NullEmptyStringConverter.class) String appVersionName) throws Throwable {
+        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        String userId = usersSteps.resolveUserId(userName);
+        applicationVersionSteps.listOfApplicationVersionsIsGotWith(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Then("^There are (\\d+) application versions returned$")

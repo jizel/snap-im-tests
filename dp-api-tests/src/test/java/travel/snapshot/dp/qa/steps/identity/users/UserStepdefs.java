@@ -18,6 +18,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
@@ -87,9 +88,10 @@ public class UserStepdefs {
         usersSteps.followingUsersExist(users, customerId, isPrimary, isActive);
     }
 
-    @When("^The following user is created for customer \"([^\"]*)\"(?: as primary \"([^\"]*)\")?$")
-    public void User_is_created(String customerId, Boolean isPrimary, List<UserCreateDto> users) throws Throwable {
-        usersSteps.createUserWithCustomer(users.get(0), customerId, isPrimary);
+    @When("^The following user is created(?: for customer \"([^\"]*)\")?(?: as primary \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
+    public void User_is_created(String customerId, Boolean isPrimary, String isActiveString, List<UserCreateDto> users) throws Throwable {
+        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+        usersSteps.createUserWithCustomer(users.get(0), customerId, isPrimary, isActive);
     }
 
     @Then("^Body contains user type with \"([^\"]*)\" value \"([^\"]*)\"$")
@@ -572,5 +574,10 @@ public class UserStepdefs {
         assertThat(partner, is(notNullValue()));
         Response response = usersSteps.deleteUserPartnerRelationship(usersSteps.resolveUserId(userName), partner.getId());
         assertThat(response.getStatusCode(), is(HttpStatus.SC_NO_CONTENT));
+    }
+
+    @When("^Relation between user \"([^\"]*)\" and partner \"([^\"]*)\" exists$")
+    public void relationBetweenUserAndPartnerExists(String userName, String partnerName) throws Throwable {
+        usersSteps.userPartnerRelationshipExists(usersSteps.resolveUserId(userName), partnerSteps.resolvePartnerId(partnerName));
     }
 }

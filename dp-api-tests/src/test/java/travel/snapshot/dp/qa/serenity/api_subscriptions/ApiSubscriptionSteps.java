@@ -111,8 +111,8 @@ public class ApiSubscriptionSteps extends BasicSteps {
         assertEquals(activity, api.getIsActive());
     }
 
-    public void listApiSubscriptiosIsGot(String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getEntities(null, limit, cursor, filter, sort, sortDesc, null);
+    public void listApiSubscriptiosIsGot(String userId, String appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
