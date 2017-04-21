@@ -36,7 +36,8 @@ Feature: Rate shopper
       | 99000299-9999-4999-a999-999999999999 | GBP               |
       | 99001499-9999-4999-a999-999999999999 | EUR               |
 
-#  This test keeps failing on my computer with empty values, altough on others it works. Needs to be reteted
+#  DP-2047 - fake sql data need to be fixed
+  @skipped
   Scenario Outline: Check minimal, average, and maximal market values
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
