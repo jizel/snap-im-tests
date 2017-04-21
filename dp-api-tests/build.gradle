@@ -38,6 +38,7 @@ version = '1.0-SNAPSHOT'
 test {
     systemProperties['serenity.outputDirectory'] = System.getProperty("serenity.outputDirectory")
     systemProperties['api-tests-config'] = System.getProperty("api-tests-config")
+    systemProperty "file.encoding", "utf-8"
     testLogging {
         showStandardStreams = true
     }
