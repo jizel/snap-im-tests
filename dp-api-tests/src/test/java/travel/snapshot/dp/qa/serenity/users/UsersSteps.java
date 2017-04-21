@@ -187,13 +187,6 @@ public class UsersSteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public void userWithUsernameIsGotWithEtag(String username) {
-        UserDto user = getUserByUsername(username);
-        Response tempResponse = getEntity(user.getId());
-        Response response = getEntity(user.getId());
-        setSessionResponse(response);
-    }
-
     public void userWithIdIsGot(String userId) {
         Response response = getEntity(userId);
         setSessionResponse(response);

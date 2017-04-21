@@ -304,11 +304,6 @@ public class CustomerStepdefs {
         customerSteps.customerWithIdIsGot(customerId);
     }
 
-    @When("^Customer with customerId \"([^\"]*)\" is got with etag$")
-    public void customerWithCustomerIdIsGotWithEtag(String customerId) throws Throwable {
-        customerSteps.customerWithIdIsGotWithEtag(customerId);
-    }
-
     @When("^Customer(?: with id)? \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
     public void customerWithCustomerIdIsDeletedByUserForApp(String customerName, String username, String applicationVersionName) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
@@ -488,11 +483,6 @@ public class CustomerStepdefs {
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         customerSteps.customerWithIdIsGotByUserForApplication(userId, applicationVersionId, customerId);
-    }
-
-    @When("^Customer with customerId \"([^\"]*)\" is got with etag by user with id \"([^\"]*)\"$")
-    public void customerWithCustomerIdIsGotWithEtagByUserWithId(String customerId, String userId) throws Throwable {
-        customerSteps.customerWithIdIsGotWithEtagByUser(customerId, userId);
     }
 
     @Then("^Customer with id \"([^\"]*)\" is active$")

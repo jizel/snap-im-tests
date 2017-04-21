@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.steps.identity.users;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.PARTNER;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
@@ -12,7 +11,6 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.REQUESTOR_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.TARGET_ID;
 
 import com.jayway.restassured.response.Response;
-import cucumber.api.PendingException;
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -150,11 +148,6 @@ public class UserStepdefs {
     @When("^User \"([^\"]*)\" is got$")
     public void User_with_username_is_got(String username) throws Throwable {
         usersSteps.userWithUsernameIsGot(username);
-    }
-
-    @When("^User \"([^\"]*)\" is got with etag$")
-    public void User_with_username_is_got_with_etag(String username) throws Throwable {
-        usersSteps.userWithUsernameIsGotWithEtag(username);
     }
 
     @When("^Nonexistent user id is got$")

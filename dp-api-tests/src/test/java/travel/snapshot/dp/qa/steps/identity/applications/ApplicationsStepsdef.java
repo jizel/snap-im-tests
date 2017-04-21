@@ -97,11 +97,6 @@ public class ApplicationsStepsdef {
         applicationSteps.applicationWithIdIsRequested(applicationId);
     }
 
-    @When("^Application with id \"([^\"]*)\" is got with etag$")
-    public void Application_with_id_is_got_with_etag(String applicationId) {
-        applicationSteps.applicationWithIdIsGotWithEtag(applicationId);
-    }
-
     @When("^Nonexistent application( version)? id is (?:requested|got)$")
     public void Nonexistent_application_id_is_got(String version) {
         if (version != null) {

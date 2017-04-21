@@ -329,10 +329,9 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void updateConfigurationTypeDescription(String identifier, String newDescription) {
-        Response tempResponse = getEntity(identifier);
         Map<String, Object> updateObject = new HashMap<>();
         updateObject.put("description", newDescription);
-        Response resp = updateEntity(identifier, updateObject, tempResponse.getHeader(HEADER_ETAG));
+        Response resp = updateEntity(identifier, updateObject, getEntityEtag(identifier));
         setSessionResponse(resp);
     }
 
@@ -347,9 +346,9 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void updateConfigurationValue(String identifier, String key, String value, String type) {
-        Response tempResponse = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        String etag = getSecondLevelEntityEtag(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
 
-        Response resp = updateValueForKey(identifier, key, value, type, tempResponse.header(HEADER_ETAG));
+        Response resp = updateValueForKey(identifier, key, value, type, etag);
         setSessionResponse(resp);
     }
 

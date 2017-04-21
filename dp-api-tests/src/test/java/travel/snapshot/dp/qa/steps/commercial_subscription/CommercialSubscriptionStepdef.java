@@ -9,13 +9,13 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.serenity.commercial_subscription.CommercialSubscriptionSteps;
+import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 import java.util.List;
-import travel.snapshot.dp.qa.serenity.users.UsersSteps;
 
 public class CommercialSubscriptionStepdef {
 
@@ -90,14 +90,12 @@ public class CommercialSubscriptionStepdef {
         commSubscriptionSteps.idsInResponseInOrder(commSubscriptionIds);
     }
 
-    @When("^Commercial subscription with id \"([^\"]*)\" is activated$")
-    public void commercialSubscriptionWithIdIsActivated(String commSubscriptionId) throws Exception {
-        commSubscriptionSteps.setCommSubscriptionIsActiveField(commSubscriptionId, true);
-    }
-
-    @When("^Commercial subscription with id \"([^\"]*)\" is deactivated$")
-    public void commercialSubscriptionWithIdIsDeactivated(String commSubscriptionId) throws Throwable {
-        commSubscriptionSteps.setCommSubscriptionIsActiveField(commSubscriptionId, false);
+    @When("^Commercial subscription with id \"([^\"]*)\" is (in|de)?activated$")
+    public void commercialSubscriptionWithIdIsActivated(String commSubscriptionId, String negation) throws Exception {
+        Boolean isActive = (negation == null);
+        CommercialSubscriptionUpdateDto commercialSubscriptionUpdate = new CommercialSubscriptionDto();
+        commercialSubscriptionUpdate.setIsActive(isActive);
+        commSubscriptionSteps.updateCommSubscription(commSubscriptionId, commercialSubscriptionUpdate);
     }
 
     @Then("^Commercial subscription with id \"([^\"]*)\" is activate$")

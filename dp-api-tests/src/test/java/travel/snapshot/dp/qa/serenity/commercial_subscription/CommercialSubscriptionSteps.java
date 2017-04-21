@@ -3,18 +3,18 @@ package travel.snapshot.dp.qa.serenity.commercial_subscription;
 import static java.util.Arrays.stream;
 import static org.junit.Assert.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CommercialSubscriptionSteps extends BasicSteps {
 
@@ -63,22 +63,15 @@ public class CommercialSubscriptionSteps extends BasicSteps {
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    private void updateCommSubscriptionWithId(String commSubscriptionId, CommercialSubscriptionUpdateDto updatedCommSubscription) {
-        Response tempResponse = getEntity(commSubscriptionId);
-        Map<String, Object> mapToUpdate = new HashMap<>();
-
-        mapToUpdate.put("is_active", updatedCommSubscription.getIsActive());
-
-        Response response = updateEntity(commSubscriptionId, mapToUpdate, tempResponse.getHeader(HEADER_ETAG));
-        setSessionResponse(response);
-    }
-
     @Step
-    public void setCommSubscriptionIsActiveField(String commSubscriptionId, Boolean isActive) {
-        CommercialSubscriptionDto comSub = new CommercialSubscriptionDto();
-        comSub.setIsActive(isActive);
-
-        updateCommSubscriptionWithId(commSubscriptionId, comSub);
+    public void updateCommSubscription(String commSubscriptionId, CommercialSubscriptionUpdateDto updatedCommSubscription) {
+        try {
+            JSONObject jsonUpdate = retrieveData(updatedCommSubscription);
+            Response response = updateEntity(commSubscriptionId, jsonUpdate.toString(), getEntityEtag(commSubscriptionId));
+            setSessionResponse(response);
+        } catch(JsonProcessingException e){
+            fail("Exception while retrieving JSON data from commercialSubscriptionUpdateDto object: " + e.getMessage());
+        }
     }
 
     @Step

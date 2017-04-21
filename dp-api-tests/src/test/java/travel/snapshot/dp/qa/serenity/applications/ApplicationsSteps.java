@@ -80,16 +80,6 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationWithIdIfUpdatedBefore(String applicationId, ApplicationDto application) throws Throwable {
-        ApplicationDto original = getApplicationById(applicationId);
-
-        Map<String, Object> customerData = retrieveDataOld(ApplicationDto.class, application);
-
-        Response response = updateEntity(original.getId(), customerData, "fake-etag");
-        setSessionResponse(response);
-    }
-
-    @Step
     public void applicationWithIdHasData(String applicationId, ApplicationDto applicationData) throws Throwable {
         Map<String, Object> originalData = retrieveDataOld(ApplicationDto.class, getApplicationById(applicationId));
         Map<String, Object> expectedData = retrieveDataOld(ApplicationDto.class, applicationData);
