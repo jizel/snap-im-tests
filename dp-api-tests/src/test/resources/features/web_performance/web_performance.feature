@@ -79,8 +79,8 @@ Feature: web_performance
       | /analytics/conversion_rates | week        | 3     | 2015-11-01 | 2015-11-13 |
       | /analytics/visits           | week        | 55    | 2015-01-01 | 2016-01-14 |
       | /analytics/visits_unique    | week        | 55    | 2015-01-01 | 2016-01-14 |
-      | /analytics/revenue          | week        | 104   | 2014-01-01 | 2016-01-14 |
-      | /analytics/conversion_rates | week        | 104   | 2014-01-01 | 2016-01-14 |
+      | /analytics/revenue          | week        | 107   | 2014-01-01 | 2016-01-14 |
+      | /analytics/conversion_rates | week        | 107   | 2014-01-01 | 2016-01-14 |
       | /analytics/visits           | month       | 1     | 2015-11-01 | 2015-11-30 |
       | /analytics/visits_unique    | month       | 1     | 2015-11-01 | 2015-11-30 |
       | /analytics/revenue          | month       | 1     | 2015-11-01 | 2015-11-30 |
@@ -232,6 +232,8 @@ Feature: web_performance
       | /analytics/visits | 2     | week        | 2016-02-01 | 2016-02-14 | 2            | singleStatsDto | 9086  | false      |
 
   # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
+#  DP-2043
+  @skipped
   Scenario Outline: Get analytics data with granularity and large interval
     When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
@@ -262,7 +264,6 @@ Feature: web_performance
     Examples:
       | url                         | granularity | count | since      | until      | real_since | real_until | property                             |
       | /analytics/conversion_rates | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
-      | /analytics/referrals        | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/revenue          | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/visits           | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
       | /analytics/visits_unique    | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |

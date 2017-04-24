@@ -62,16 +62,14 @@ Feature: Rate shopper
 
 # GET /rate_shopper/analytics/property/{id}
 
-#    DP-1982
-  @skipped
   Scenario Outline: Checking error codes for analitics/property
     When Getting rate data for "<propertyId>" since "today" until "today" fetched "/null"
-    Then Response code is "404"
-    And Custom code is "40402"
+    Then Response code is "<responseCode>"
+    And Custom code is "<customCode>"
     Examples:
-      | propertyId                           |
-      | invalid                              |
-      | 98000099-9999-4999-a999-999999999999 |
+      | propertyId                           | responseCode | customCode |
+      | invalid                              | 400          | 40002      |
+      | 98000099-9999-4999-a999-999999999999 | 404          | 40402      |
 
   Scenario Outline: Checking correct currency parameter returned for property
     Given The following customers exist with random address
@@ -193,6 +191,8 @@ Feature: Rate shopper
       | 99000099-9999-4999-a999-999999999999 | text        | 0      | 400           | 40002       |
       | 99000099-9999-4999-a999-999999999999 | 10          | text   | 400           | 40002       |
 
+#  DP-1955
+  @skipped
   Scenario Outline: Given property in future or without fetchDatetime are calculated real time
     Given The following customers exist with random address
       | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
