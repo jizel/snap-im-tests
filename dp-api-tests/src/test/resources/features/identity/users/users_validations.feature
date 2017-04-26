@@ -14,8 +14,8 @@ Feature: Users validations
       | /first_name                 | String     | true     | \w{255}                                                     | /null        | \w{256}    |
       | /last_name                  | String     | true     | \w{255}                                                     | /null        | \w{256}    |
       | /user_type                  | String     | true     | (snapshot\|customer\|partner\|guest)                        | nonexisstent | \w{256}    |
-      | /user_name                  | String     | true     | \w{64}                                                      | /null        | \w{65}     |
-      | /email                      | String     | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | \w{101}    |
+      | /user_name                  | String     | true     | \w{150}                                                     | /null        | \w{151}    |
+      | /email                      | String     | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | (([a-z]\|\d){9}\.){4}(\w\|\d){24}\@(([a-z]\|\d){191}\.)com |
       | /phone                      | String     | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
       | /timezone                   | String     | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
       | /culture                    | String     | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
@@ -80,6 +80,18 @@ Feature: Users validations
       | /timezone   | 422          | 42201      |
       | /culture    | 422          | 42201      |
       | /user_type  | 422          | 42201      |
+
+  Scenario: Object creation - longer values
+    When create "user" objects each with one long field
+    Then there are following responses
+      | testedField | responseCode | customCode |
+      | /first_name | 422          | 42201      |
+      | /last_name  | 422          | 42201      |
+      | /user_type  | 422          | 42201      |
+      | /user_name  | 422          | 42201      |
+      | /email      | 422          | 42201      |
+      | /timezone   | 422          | 42201      |
+      | /culture    | 422          | 42201      |
 
 #   TODO when field lengths are stabilized
 #
