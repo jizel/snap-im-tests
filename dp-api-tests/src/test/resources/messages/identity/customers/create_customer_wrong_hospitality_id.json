@@ -1,0 +1,22 @@
+{
+  "website": "http://www.snapshot.travel",
+  "is_active": true,
+  "address": {
+    "country": "CZ",
+    "address_line2": "msuZswIVZt 254",
+    "address_line1": "iKqlhQrIfh 961",
+    "city": "vaVywIc",
+    "region": null,
+    "zip_code": "781"
+  },
+  "hospitality_id": "notUUID",
+  "type": "HOTEL",
+  "salesforce_id": "SALESFORCEID001",
+  "is_demo_customer": false,
+  "phone": "+420123456789",
+  "headquarters_timezone": "Europe/Prague",
+  "name": "Creation test company",
+  "vat_id": "CZ00000001",
+  "customer_id": "a792d2b2-3836-4207-a705-42bbecf3d881",
+  "email": "s1@tenants.biz"
+}

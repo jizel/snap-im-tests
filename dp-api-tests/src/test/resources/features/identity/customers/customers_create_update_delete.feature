@@ -8,8 +8,8 @@ Feature: Customers create update delete
   @Smoke
   Scenario: Creating/activating/deleting Customer
     When Customer is created with random address
-      | id                                   | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
+      | id                                   | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  | hospitalityId                        |
+      | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL | 000000b2-3836-4207-a705-42bbec000000 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Creation test company"
     And Body contains entity with attribute "email" value "s1@tenants.biz"
@@ -18,6 +18,7 @@ Feature: Customers create update delete
     And Body contains entity with attribute "customer_code"
     And Body contains entity with attribute "is_active" value "true"
     And Body contains entity with attribute "type" value "hotel"
+    And Body contains entity with attribute "hospitality_id" value "000000b2-3836-4207-a705-42bbec000000"
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
     Then Response code is "204"
     And Body is empty
@@ -48,6 +49,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_type.json           | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_invalid_UUID.json         | POST   | identity | /identity/customers | 422        | 42201          |
+      | /messages/identity/customers/create_customer_wrong_hospitality_id.json | POST   | identity | /identity/customers | 422        | 42201          |
 
 #    TODO: error codes for updating customer
   Scenario Outline: Create foreign customers
@@ -69,28 +71,28 @@ Feature: Customers create update delete
   #TODO update nonexistent field
   Scenario Outline: Updating customer
     Given The following customers exist with random address
-      | id                                   | companyName   | email          | salesforceId   | vatId       | phone         | website           | timezone      | type   | isDemoCustomer |
-      | 910cfc16-4597-479f-ae18-250b0a94752e | Some_Company  | cust1@email.cz | salesforceid   | CZ987654320 | +420123456789 | http://google.com | Europe/Prague | HOTEL  | true           |
+      | id                                   | companyName   | email          | salesforceId   | vatId       | phone         | website           | timezone      | type   | isDemoCustomer | hospitalityId                        |
+      | 910cfc16-4597-479f-ae18-250b0a94752e | Some_Company  | cust1@email.cz | salesforceid   | CZ987654320 | +420123456789 | http://google.com | Europe/Prague | HOTEL  | true           | 111111b2-3836-4207-a705-42bbec111111 |
     When Customer "910cfc16-4597-479f-ae18-250b0a94752e" is updated with data
-      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   |
-      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> |
+      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
+      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Check updated customer "910cfc16-4597-479f-ae18-250b0a94752e" has data
-      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   |
-      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> |
+      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
+      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
     Examples:
-      | companyName        | email             | vatId       | phone         | website              | notes         | timezone      |
-      | updatedCompanyName | /null             | /null       | /null         | /null                | /null         | /null         |
-      | /null              | updated@email.com | /null       | /null         | /null                | /null         | /null         |
-      | /null              | /null             | CZ987654321 | /null         | /null                | /null         | /null         |
-      | /null              | /null             | /null       | +420987654321 | /null                | /null         | /null         |
-      | /null              | /null             | /null       | /null         | http://update.com    | /null         | /null         |
-      | /null              | /null             | /null       | /null         | /null                | updatedNotes  | /null         |
-      | /null              | /null             | /null       | /null         | /null                | /null         | Pacific/Fiji  |
-      | severalUpdates     | /null             | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague |
-      | allUpdates         | all@all.com       | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    |
+      | companyName        | email             | vatId       | phone         | website              | notes         | timezone      | hospitalityId                        |
+      | updatedCompanyName | /null             | /null       | /null         | /null                | /null         | /null         | /null                                |
+      | /null              | updated@email.com | /null       | /null         | /null                | /null         | /null         | /null                                |
+      | /null              | /null             | CZ987654321 | /null         | /null                | /null         | /null         | /null                                |
+      | /null              | /null             | /null       | +420987654321 | /null                | /null         | /null         | /null                                |
+      | /null              | /null             | /null       | /null         | http://update.com    | /null         | /null         | /null                                |
+      | /null              | /null             | /null       | /null         | /null                | updatedNotes  | /null         | /null                                |
+      | /null              | /null             | /null       | /null         | /null                | /null         | Pacific/Fiji  | /null                                |
+      | severalUpdates     | /null             | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague | /null                                |
+      | allUpdates         | all@all.com       | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    | 000000b2-3836-4207-a705-42bbec000000 |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag

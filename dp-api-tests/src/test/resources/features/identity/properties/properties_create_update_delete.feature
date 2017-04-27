@@ -20,19 +20,20 @@ Feature: Properties create update delete
   @Smoke
   Scenario: Creating property without parent with random address (with capital UUID letters - DP-1974)
     When The following property is created with random address and billing address for user "default1"
-      | id                                   | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     |
-      | 000E833E-50B8-4854-A233-289F00bC4A09 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+      | id                                   | salesforceId    | name         | propertyCode | website                    | email           | isDemoProperty | timezone      | anchorCustomerId                     | hospitalityId                        |
+      | 000E833E-50B8-4854-A233-289F00bC4A09 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 000000b2-3836-4207-a705-42bbec000000 |
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
     And Body contains property with attribute "name" value "pn1_name"
     And Body contains property with attribute "email" value "pn1@tenants.biz"
     And Body contains property with attribute "property_id" value "000e833e-50b8-4854-a233-289f00bc4a09"
+    And Body contains entity with attribute "hospitality_id" value "000000b2-3836-4207-a705-42bbec000000"
 
   @Smoke
   Scenario: Updating property
     When Property with code "p1_code" is updated with data
-      | name         | website                  | email            | isDemoProperty | description  |
-      | updated_name | https://www.upddated.com | updated@email.cz | false          | updated_desc |
+      | name         | website                  | email            | isDemoProperty | description  | hospitalityId                        |
+      | updated_name | https://www.upddated.com | updated@email.cz | false          | updated_desc | 000000b2-3836-4207-a705-42bbec000000 |
     Then Response code is "204"
     When Property with code "p1_code" is requested
     Then Response code is "200"
@@ -41,6 +42,7 @@ Feature: Properties create update delete
     Then Body contains entity with attribute "email" value "updated@email.cz"
     Then Body contains entity with attribute "is_demo_property" value "false"
     Then Body contains entity with attribute "description" value "updated_desc"
+    And Body contains entity with attribute "hospitality_id" value "000000b2-3836-4207-a705-42bbec000000"
 
   @Smoke
   Scenario: Deleting Property
