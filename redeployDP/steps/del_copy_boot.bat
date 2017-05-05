@@ -8,7 +8,6 @@ call del * /s /q
 call rmdir . /s /q
 
 echo Copying war files to webapps - omiting OTAIntegration!
-copy %DP_IDENTITY_DIR%\IdentityModule\build\libs\IdentityModule-1.0.war .
 copy %DP_DIR%\Integration\Twitter\ServiceApi\build\libs\TwitterAnalyticsApi-1.0-SNAPSHOT.war .
 copy %DP_DIR%\Integration\Instagram\ServiceApi\build\libs\InstagramAnalyticsApi-1.0-SNAPSHOT.war .
 copy %DP_DIR%\Integration\GoogleAnalytics\ServiceApi\build\libs\GoogleAnalyticsApi-1.0-SNAPSHOT.war .
@@ -18,3 +17,7 @@ copy %DP_DIR%\Review\build\libs\Review-1.0.war
 copy %DP_DIR%\RateShopper\build\libs\RateShopper-1.0.war .
 copy %DP_DIR%\ConfigurationModule\build\libs\ConfigurationModule-1.0.war .
 copy %DP_DIR%\Integration\GoogleAnalytics\ServiceApi\build\libs\WebPerformance-1.0.war .
+
+echo Running Identity module using SpringBoot
+pushd %DP_IDENTITY_DIR%\IdentityModule\build\libs\
+call java -jar IdentityModule-1.0.jar
