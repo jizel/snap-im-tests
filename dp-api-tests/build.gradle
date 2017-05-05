@@ -66,12 +66,15 @@ dependencies {
 
     testCompile 'org.apache.activemq:activemq-client:5.12.1'
     testCompile 'javax.jms:jms:1.1'
-    testCompile 'junit:junit:4.11'
+    testCompile 'junit:junit:4.12'
     testCompile 'log4j:log4j:1.2.17'
     testCompile 'org.slf4j:slf4j-log4j12:1.7.13'
     testCompile "net.serenity-bdd:serenity-core:$serenityVersion"
     testCompile "net.serenity-bdd:serenity-rest-assured:$serenityVersion"
     testCompile "net.serenity-bdd:serenity-cucumber:1.1.5"
+    testCompile "net.serenity-bdd:serenity-junit:$serenityVersion"
+    testCompile "org.easetech:easytest-core:1.4.0"
+    testCompile "org.yaml:snakeyaml:1.18"
 
     testCompile 'org.assertj:assertj-core:1.7.0'
 

@@ -6,13 +6,13 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.CUSTOMER;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
@@ -65,7 +65,7 @@ public class UsersSteps extends BasicSteps {
             relation.setIsActive(isActive);
             user.setUserCustomerRelationship(relation);
         } else {
-            if (user.getUserType().toString() == USER_TYPE_CUSTOMER) {
+            if (user.getUserType().equals(CUSTOMER)) {
                 fail("Please either provide CustomerId, or change userType to \"partner\" or \"snapshot\"");
             }
         }
