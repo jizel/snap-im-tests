@@ -1,0 +1,26 @@
+The following is the script that automatically generates the test data for the
+identity database. It takes the info about the number of each entities as well as the
+database url from the config.yaml file. The data gets automatically inserted
+into the database without the intermediate database restore step. The identity
+database must exist and be migrated to the actual schema version.
+
+In order for the script to work, please:
+1. install epel-release: yum install epel-release -y
+2. install python-pip package (dnf install python-pip -y)
+3. install gcc, mariadb-devel, python-devel
+4. execute the following command prior to the first script execution to install
+all dependencies: "pip install -r requirements.txt"
+
+PLEASE NOTE: The above steps apply if you have CentOS. For other linux
+distributions package names may differ
+
+The default config.yaml makes the script to create a really huge database with:
+200000 users
+12000 customers
+60000 properties
+6000 property sets
+2000 applications
+6000 application versions
+24000 commercial subscriptions, etc
+The script takes it's time to perform the task (~ 20 min) and consumes considerable amount
+of RAM at some point - up to 2Gb. Be aware of that.

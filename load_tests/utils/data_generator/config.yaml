@@ -1,0 +1,21 @@
+# Please note: Number of addresses must be >= number of customers + number of
+# properties
+users: 1000
+addresses: 1000
+applications: 10
+application_versions: 30
+commercial_subscriptions: 120
+customers: 60
+customer_properties: 200
+partners: 20
+partner_users: 10
+properties: 300
+property_sets: 30
+property_propertysets: 40
+roles: 50
+user_customer_roles: 20
+user_properties: 200
+user_propertysets: 300
+multiplied_by: 200
+# db_url: "postgresql://postgres:postgres@localhost/identity"
+db_url: "mysql://root:root@127.0.0.1:3306/identity"
