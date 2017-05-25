@@ -8,7 +8,9 @@ class IdentityPropertySimulation extends AbstractIdentitySimulation {
     CreateCustomer(),
     pause(1),
     CreateAndAssignPropertiesToCustomer(20),
+    GetAllProperties(2),
     pause(1),
-    GetCustomersProperties()))
+    GetCustomersProperties(),
+    GetAllProperties(10)))
 
 }

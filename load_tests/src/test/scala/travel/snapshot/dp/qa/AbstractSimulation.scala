@@ -39,6 +39,14 @@ abstract class AbstractSimulation extends Simulation {
 
   val rateShopperPropertyCodes = new RateShopperPropertyCodeParser().parse()
 
+  val request_headers = Map(
+    "Accept-Encoding" -> "gzip, deflate, br",
+    "Authorization" -> "Bearer",
+    "Content-Type" -> "application/json;charset=UTF-8",
+    "Origin" -> "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop",
+    "X-Auth-AppId" -> "11111111-0000-4000-a000-444444444444",
+    "X-Auth-UserId" -> "11111111-0000-4000-a000-000000000000")
+
   /** Executes the scenario defined in descendant */
   protected def runScenario(scn: ScenarioBuilder): Unit = {
     setUp(scn.inject(rampUsersPerSec(startUsers.toDouble) to endUsers.toDouble during (rampTime seconds))).protocols(httpConf)

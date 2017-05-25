@@ -21,11 +21,12 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     */
   object CreateCustomer {
     def apply() = exec(http("add customer")
-      .post(session => s"identity/customers?access_token=$accessToken").body(StringBody(_ =>
+      .post(session => s"identity/customers?access_token=$accessToken")
+      .headers(request_headers)
+      .body(StringBody(_ =>
       s"""
           {
-            "company_name": "Company ${randomUtils.randomInt(randomBound)}",
-            "code": "perf_${randomUtils.randomInt(randomBound)}",
+            "name": "Company ${randomUtils.randomInt(randomBound)}",
             "phone": "+42012345679",
             "email": "perfcompany_${randomUtils.randomInt(randomBound)}@aaa.cz",
             "website" : "http://www.snapshot.travel",
@@ -37,7 +38,8 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
               "country": "CZ"
             },
             "notes": "string",
-            "timezone": "${randomUtils.randomTimezone}"
+            "type": "hotel",
+            "headquarters_timezone": "${randomUtils.randomTimezone}"
           }"""))
       .check(status.is(201))
       .check(jsonPath("$..customer_id").saveAs("customerId"))
@@ -65,6 +67,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
     def createProperty: ChainBuilder = exec(http("create property")
       .post(session => s"identity/properties?access_token=$accessToken")
+      .headers(request_headers)
       .body(StringBody(session => {
 
         val propertyId = randomUtils.randomUUIDAsString
@@ -72,13 +75,19 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
         s"""
          {
            "property_id": "$propertyId",
-           "salesforce_id": "salesforce_id",
-           "property_name": "testing property",
+           "name": "testing property",
            "property_code": "${propertyId}_code",
            "website": "http://example.org",
            "email": "${getValue(session, "customerEmail")}",
            "is_demo_property": true,
-           "timezone": "${randomUtils.randomTimezone}"
+           "timezone": "${randomUtils.randomTimezone}",
+           "address": {
+              "address_line1": "string",
+              "city": "string",
+              "zip_code": "string",
+              "country": "CZ"
+              },
+           "anchor_customer_id": "${SessionUtils.getValue(session, "customerId")}"
          }
        """
       }))
@@ -88,6 +97,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
     def assignPropertyToCustomer: ChainBuilder = exec(http("assign property to customer")
       .post(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessToken")
+      .headers(request_headers)
       .body(StringBody(session => {
         // random 50 years ahead
         val (validFrom, validTo) = randomUtils.randomValidFromAndTo(randomUtils.randomInt(20000))
@@ -96,7 +106,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
          {
            "relationship_id": "${randomUtils.randomUUIDAsString}",
            "property_id": "${getValue(session, "propertyId")}",
-           "type": "anchor",
+           "relationship_type": "owner",
            "valid_from": "$validFrom",
            "valid_to": "$validTo"
          }
@@ -104,6 +114,27 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
       }))
       .check(status.is(201))
     )
+  }
+
+  /**
+    * Gets list of all properties
+    */
+  object GetAllProperties {
+    def apply() = request("get all properties")
+
+    def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "propertyNumber"){
+      request(s"get all properties $numberOfProperties times")
+    }
+
+    def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
+
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
+
+      exec(http(request)
+        .get(session => s"identity/properties$additionalQueries")
+        .headers(request_headers)
+        .check(status.is(200)))
+    }
   }
 
   /**
@@ -124,6 +155,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
     def createUser: ChainBuilder = exec(http("create user")
       .post(session => s"identity/users?access_token=$accessToken")
+      .headers(request_headers)
       .body(StringBody(session => {
 
         val userId = randomUtils.randomUUIDAsString
@@ -132,8 +164,6 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
         s"""
          {
            "user_id": "$userId",
-           "partner_id": "partner_id",
-           "salesforce_id": "salesforce_id",
            "user_type": "snapshot",
            "user_name": "${randomUtils.randomUUIDAsString}",
            "first_name": "FirstName",
@@ -143,7 +173,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
            "timezone": "${randomUtils.randomTimezone}",
            "culture": "${randomUtils.randomCulture}",
            "comment": "$randomString",
-           "picture": "$randomString",
+           "picture": "http://www.validurl.com",
            "is_active": ${randomUtils.randomBooleanAsBinary}
          }
        """.stripMargin
@@ -154,6 +184,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
     def assignUserToCustomer: ChainBuilder = exec(http("assign user to customer")
       .post(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken")
+      .headers(request_headers)
       .body(StringBody(session =>
         s"""
          {
@@ -161,7 +192,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
            "is_primary": ${randomUtils.randomBoolean}
          }
        """))
-      .check(status.is(204))
+      .check(status.is(201))
     )
   }
 
@@ -249,12 +280,22 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   /**
     * Gets list of customers
     */
-  object GetCustomers {
-    def getCustomers = exec(http("get 50 customers")
-      .get(s"identity/customers?access_token=$accessToken")
-      .check(status.is(200)))
+  object GetAllCustomers {
+    def apply() = request("get all customers")
 
-    def apply = getCustomers
+    def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber"){
+      request(s"get all properties $numberOfProperties times")
+    }
+
+    def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
+
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
+
+      exec(http(request)
+        .get(session => s"identity/customers$additionalQueries")
+        .headers(request_headers)
+        .check(status.is(200)))
+    }
   }
 
   /**
@@ -291,6 +332,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
       exec(http(request)
         .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/properties?access_token=$accessToken$additionalQueries")
+        .headers(request_headers)
         .check(status.is(200)))
     }
   }
@@ -307,6 +349,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
 
       exec(http(request)
         .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken$additionalQueries")
+        .headers(request_headers)
         .check(status.is(200)))
     }
   }

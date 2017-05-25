@@ -17,7 +17,7 @@ object LoadTestContext extends Enumeration {
   case class LoadTestContextValue(name: String, localContext: String, developmentContext: String, productionContext: String = "v1") extends Val(name)
 
   val CONFIGURATION = LoadTestContextInternalValue("configuration", "ConfigurationModule-1.0/api/", "ConfigurationModule-1.0/api/")
-  val IDENTITY = LoadTestContextInternalValue("identity", "IdentityModule-1.0/api/", "IdentityModule-1.0/api/")
+  val IDENTITY = LoadTestContextInternalValue("identity", "api/", "api/")
   val SOCIAL_COMMON = LoadTestContextInternalValue("social.common", "SocialMediaAnalyticsApi-1.0-SNAPSHOT/api/", "SocialMediaAnalyticsApi-1.0/api/")
   val SOCIAL_FACEBOOK = LoadTestContextInternalValue("social.facebook", "FacebookAnalyticsApi-1.0-SNAPSHOT/api/", "FacebookAnalyticsApi-1.0/api/")
   val SOCIAL_TWITTER = LoadTestContextInternalValue("social.twitter", "TwitterAnalyticsApi-1.0-SNAPSHOT/api/", "TwitterAnalyticsApi-1.0/api/")
