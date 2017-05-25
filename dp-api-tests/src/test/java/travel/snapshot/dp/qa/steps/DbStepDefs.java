@@ -65,7 +65,6 @@ public class DbStepDefs {
         defaultCustomerIsCreated();
         defaultPropertyIsCreated();
         defaultCommercialSubscriptionIsCreated();
-        defaultApiSubscriptionIsCreated();
     }
 
     @Given("^Database is cleaned$")
