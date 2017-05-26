@@ -56,9 +56,9 @@ class Generator(object):
         self.max_data_len = 1000
 
         self.find_app_versions_string = """
-        select u.id, av.id from User u inner join Application_Version av on
+        select u.id, av.id from User u inner join ApplicationVersion av on
         av.application_id = (select cs.application_id from
-        Commercial_Subscription cs where customer_id in (select customer_id
+        CommercialSubscription cs where customer_id in (select customer_id
                 from Customer_User where user_id = u.id) and property_id in
         (select property_id from User_Property where user_id = u.id) and
         (select 1 from Application where id = cs.application_id and is_internal
@@ -209,8 +209,8 @@ class Generator(object):
 
     def generate_address(self, provided_id):
         return Address(id=provided_id,
-                       address_line1=self.gen_randstr(5),
-                       address_line2=self.gen_randstr(4),
+                       line1=self.gen_randstr(5),
+                       line2=self.gen_randstr(4),
                        city=self.gen_randstr(5),
                        zip_code=self.gen_randnum(6),
                        country=random.choice(self.country_codes),
@@ -229,7 +229,7 @@ class Generator(object):
                         email=self.gen_email(),
                         website=None,
                         vat_id=None,
-                        is_demo_customer=random.choice((True, False)),
+                        is_demo=random.choice((True, False)),
                         notes=None,
                         address_id=self.address_ids.pop(),
                         timezone='GMT',
@@ -239,7 +239,7 @@ class Generator(object):
 
     def generate_application(self, provided_id):
         return Application(id=provided_id,
-                           application_name=self.gen_randstr(10),
+                           name=self.gen_randstr(10),
                            description=self.gen_randstr(10),
                            website=self.gen_website(),
                            partner_id=random.choice(self.partner_ids),
@@ -252,7 +252,7 @@ class Generator(object):
         return Application_Version(id=provided_id,
                                    application_id=random.choice(self.application_ids),
                                    api_manager_id=self.gen_randstr(5),
-                                   version_name=self.gen_randstr(5),
+                                   name=self.gen_randstr(5),
                                    status='CERTIFIED',
                                    release_date=None,
                                    description=None,
@@ -332,14 +332,14 @@ class Generator(object):
                         name=self.gen_randstr(12),
                         hospitality_id=None,
                         salesforce_id=None,
-                        property_code=self.gen_randstr(12),
+                        code=self.gen_randstr(12),
                         website=self.gen_website(),
                         email=self.gen_email(),
-                        is_demo_property=random.choice((True, False)),
+                        is_demo=random.choice((True, False)),
                         timezone='GMT',
                         address_id=self.address_ids.pop(),
                         tti_id=None,
-                        anchor_customer_id=random.choice(self.customer_ids),
+                        customer_id=random.choice(self.customer_ids),
                         description=None,
                         is_active=True,
                         version=self.gen_etag()
@@ -366,8 +366,8 @@ class Generator(object):
     def generate_role(self, provided_id):
         return Role(id=provided_id,
                     application_id=random.choice(self.application_ids),
-                    role_type=random.choice(('CUSTOMER', 'PROPERTY')),
-                    role_name=self.gen_randstr(8),
+                    type=random.choice(('CUSTOMER', 'PROPERTY')),
+                    name=self.gen_randstr(8),
                     description=None,
                     is_initial=random.choice((True, False)),
                     is_active=True,
@@ -376,8 +376,8 @@ class Generator(object):
 
     def generate_user(self, provided_id, user_type):
         return User(id=provided_id,
-                    user_name=self.gen_randstr(10),
-                    user_type=user_type,
+                    username=self.gen_randstr(10),
+                    type=user_type,
                     first_name=self.gen_randstr(8),
                     last_name=self.gen_randstr(8),
                     phone=None,
@@ -418,8 +418,8 @@ class Generator(object):
 class Address(Base):
     __tablename__ = "Address"
     id = Column(String(36), primary_key=True)
-    address_line1 = Column(String(500))
-    address_line2 = Column(String(500))
+    line1 = Column(String(500))
+    line2 = Column(String(500))
     city = Column(String(250))
     zip_code = Column(String(100))
     country = Column(String(100))
@@ -429,7 +429,7 @@ class Address(Base):
 class Application(Base):
     __tablename__ = "Application"
     id = Column(String(36), primary_key=True)
-    application_name = Column(String(190))
+    name = Column(String(190))
     description = Column(String(500))
     website = Column(String(255))
     partner_id = Column(String(36))
@@ -443,7 +443,7 @@ class Application_Version(Base):
     id = Column(String(36), primary_key=True)
     application_id = Column(String(36))
     api_manager_id = Column(String(255))
-    version_name = Column(String(190))
+    name = Column(String(190))
     status = Column(String(64))
     release_date = Column(Date)
     description = Column(String(500))
@@ -475,7 +475,7 @@ class Customer(Base):
     email = Column(String(254))
     website = Column(String(255))
     vat_id = Column(String(100))
-    is_demo_customer = Column(Boolean)
+    is_demo = Column(Boolean)
     notes = Column(String(1000))
     address_id = Column(String(36))
     timezone = Column(String(50))
@@ -536,14 +536,14 @@ class Property(Base):
     name = Column(String(255))
     hospitality_id = Column(String(36))
     salesforce_id = Column(String(18))
-    property_code = Column(String(50))
+    code = Column(String(50))
     website = Column(String(255))
     email = Column(String(254))
-    is_demo_property = Column(Boolean)
+    is_demo = Column(Boolean)
     timezone = Column(String(50))
     address_id = Column(String(36))
     tti_id = Column(Integer)
-    anchor_customer_id = Column(String(36))
+    customer_id = Column(String(36))
     description = Column(String(500))
     is_active = Column(Boolean, default=True)
     version = Column(String(32))
@@ -579,8 +579,8 @@ class Role(Base):
     __tablename__ = "Role"
     id = Column(String(36), primary_key=True)
     application_id = Column(String(36))
-    role_type = Column(String(20))
-    role_name = Column(String(50))
+    type = Column(String(20))
+    name = Column(String(50))
     description = Column(String(500))
     is_initial = Column(Boolean)
     is_active = Column(Boolean, default=True)
@@ -590,8 +590,8 @@ class Role(Base):
 class User(Base):
     __tablename__ = "User"
     id = Column(String(36), primary_key=True)
-    user_name = Column(String(150))
-    user_type = Column(String(20))
+    username = Column(String(150))
+    type = Column(String(20))
     first_name = Column(String(255))
     last_name = Column(String(255))
     phone = Column(String(255))
