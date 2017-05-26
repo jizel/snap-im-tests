@@ -1,0 +1,41 @@
+---
+customer1:
+  id: a792d2b2-3836-4207-a705-42bbecf3d882
+  companyName:  Creation test company1
+  email:  s1@tenants.biz
+  salesforceId:  SALESFORCEID001
+  vatId:  CZ00000001
+  isDemoCustomer:  true
+  phone:  '+420123456789'
+  website:  http://www.snapshot.travel
+  timezone:  Europe/Prague
+  type:  HOTEL
+  hospitalityId: 000000b2-3836-4207-a705-42bbec000000
+  address:
+    country: CZ
+    addressLine2: ckLDmoQIQz 465
+    addressLine1: gmKUZYzREH 705
+    city: QXkIWZg
+    region: null
+    zipCode: 603
+
+customer2:
+  id: a792d2b2-3836-4207-a705-42bbecf3d883
+  companyName:  Creation test company2
+  email:  s2@tenants.biz
+  salesforceId:  SALESFORCEID002
+  vatId:  CZ00000002
+  isDemoCustomer:  true
+  phone:  '+420123456789'
+  website:  http://www.snapshot.com
+  timezone:  Europe/Prague
+  type:  HOTEL
+  hospitalityId: 000000b2-3836-4207-a705-42bbec000001
+  address:
+    country: CZ
+    addressLine2: ckLDmoQIQz 465
+    addressLine1: gmKUZYzREH 705
+    city: QXkIWZg
+    region: null
+    zipCode: 603
+...

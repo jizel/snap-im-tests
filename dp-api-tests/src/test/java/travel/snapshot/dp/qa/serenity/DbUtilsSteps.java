@@ -38,7 +38,6 @@ public class DbUtilsSteps {
     static final String DELETE_USER_GROUP_ROLE = "delete  from UserGroup_Role";
     static final String DELETE_USER_PROPERTY_SET_ROLE = "delete from User_PropertySet_Role";
     static final String DELETE_USER_PROPERTY_ROLE = "delete from User_Property_Role";
-    static final String DELETE_API_SUBSCRIPTIONS = "delete  from ApiSubscription";
     static final String DELETE_APPLICATION = "delete from Application";
     static final String DELETE_APPLICATION_VERSIONS = "delete from ApplicationVersion";
     static final String DELETE_USER_GROUPS = "delete from UserGroup";
@@ -140,6 +139,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_USER_PROPERTY_SET_ROLE);
         dbHelper.identityDb().update(DELETE_USER_PROPERTY);
         dbHelper.identityDb().update(DELETE_USER_PROPERTYSET);
+//        dbHelper.identityDb().update(DELETE_API_SUBSCRIPTIONS);
         dbHelper.identityDb().update(DELETE_COMMERCIAL_SUBSCRIPTION);
         dbHelper.identityDb().update(DELETE_PROPERTY_PROPERTYSET);
         dbHelper.identityDb().update(DELETE_USER_GROUPS_PROPERTY_ROLES);

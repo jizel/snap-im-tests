@@ -1,0 +1,61 @@
+---
+request: &REQUEST
+  limit: "/null"
+  cursor: "/null"
+  filter: "/null"
+  sort: "/null"
+  sort_desc: "/null"
+  response_code: "400"
+  custom_code: "40002"
+
+checkErrorCodesForGettingListOfCustomerCommercialSubscriptions:
+  - <<: *REQUEST
+    cursor: "-1"
+  - <<: *REQUEST
+    limit: ""
+    cursor: "-1"
+  - <<: *REQUEST
+    cursor: "text"
+  - <<: *REQUEST
+    limit: ""
+    cursor: "text"
+  - <<: *REQUEST
+    limit: "-1"
+    cursor: ""
+  - <<: *REQUEST
+    limit: "-1"
+  - <<: *REQUEST
+    limit: "201"
+  - <<: *REQUEST
+    limit: "21474836470"
+  - <<: *REQUEST
+    limit: "text"
+  - <<: *REQUEST
+    limit: "text"
+    cursor: ""
+  - <<: *REQUEST
+    limit: "10"
+    cursor: "1-"
+  - <<: *REQUEST
+    limit: "text"
+    cursor: "0"
+  - <<: *REQUEST
+    limit: "0"
+    cursor: "text"
+  - <<: *REQUEST
+    limit: "10"
+    cursor: "0"
+    sort: commercial_subscription_id
+    sort_desc: commercial_subscription_id
+  - <<: *REQUEST
+    limit: "10"
+    cursor: "0"
+    sort: nonexistent
+  - <<: *REQUEST
+    limit: "10"
+    cursor: "0"
+    sort_desc: nonexistent
+  - <<: *REQUEST
+    limit: "10"
+    cursor: "0"
+    filter: "code=="

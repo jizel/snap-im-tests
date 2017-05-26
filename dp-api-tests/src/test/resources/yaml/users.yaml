@@ -1,0 +1,20 @@
+---
+user: &BASIC_USER
+  userType: CUSTOMER
+  userName: johnSmith
+  firstName: John
+  lastName: Smith
+  email: user1@snapshot.travel
+  timezone: Europe/Prague
+  culture: cs-CZ
+
+userTypeCustomer1:
+  <<: *BASIC_USER
+
+userTypeCustomer2:
+  <<: *BASIC_USER
+  userName: dickJames
+  firstName: Dick
+  lastName: James
+  email: user2@snapshot.travel
+...

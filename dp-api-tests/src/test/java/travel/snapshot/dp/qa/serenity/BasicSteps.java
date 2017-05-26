@@ -325,6 +325,7 @@ public class BasicSteps {
     }
 
     protected Response createEntityByUserForApplication(String userId, String applicationId, Object entity) {
+
         return given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
     }
 
