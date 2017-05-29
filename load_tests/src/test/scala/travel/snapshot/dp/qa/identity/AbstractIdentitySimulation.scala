@@ -284,7 +284,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     def apply() = request("get all customers")
 
     def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber"){
-      request(s"get all properties $numberOfProperties times")
+      request(s"get all customers $numberOfProperties times")
     }
 
     def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
@@ -344,9 +344,7 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     def apply() = request("get customer's users")
 
     def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
-
       val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
-
       exec(http(request)
         .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/users?access_token=$accessToken$additionalQueries")
         .headers(request_headers)
@@ -361,11 +359,66 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     def apply() = request("get customer's propery sets")
 
     def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
-
       val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
-
       exec(http(request)
         .get(session => s"identity/customers/${SessionUtils.getValue(session, "customerId")}/property_sets?access_token=$accessToken$additionalQueries")
+        .check(status.is(200)))
+    }
+  }
+
+  /**
+    * Gets all users
+    */
+  object GetAllUsers {
+    def apply() = request("get all users")
+
+    def apply(numberOfUsers: Integer) = repeat(numberOfUsers.toInt, "requestNumber"){
+      request(s"get all users $numberOfUsers times")
+    }
+
+    def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
+      exec(http(request)
+        .get(session => s"identity/users$additionalQueries")
+        .headers(request_headers)
+        .check(status.is(200)))
+    }
+  }
+
+  /**
+    * Gets all partners
+    */
+  object GetAllPartners {
+    def apply() = request("get all partners")
+
+    def apply(numberOfpartners: Integer) = repeat(numberOfpartners.toInt, "requestNumber"){
+      request(s"get all partners $numberOfpartners times")
+    }
+
+    def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
+      exec(http(request)
+        .get(session => s"identity/partners$additionalQueries")
+        .headers(request_headers)
+        .check(status.is(200)))
+    }
+  }
+
+  /**
+    * Gets all applications
+    */
+  object GetAllApplications {
+    def apply() = request("get all applications")
+
+    def apply(numberOfapplications: Integer) = repeat(numberOfapplications.toInt, "requestNumber"){
+      request(s"get all applications $numberOfapplications times")
+    }
+
+    def request(request: String, sort: String = null, cursor: Integer = -1, limit: Integer = -1) = {
+      val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sort, cursor, limit)
+      exec(http(request)
+        .get(session => s"identity/applications$additionalQueries")
+        .headers(request_headers)
         .check(status.is(200)))
     }
   }
