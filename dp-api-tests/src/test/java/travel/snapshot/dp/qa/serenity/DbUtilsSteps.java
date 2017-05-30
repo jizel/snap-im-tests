@@ -57,11 +57,11 @@ public class DbUtilsSteps {
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
     static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
 
-    static final String CREATE_DB_USER = "INSERT INTO User (id, type, username, first_name, last_name, email, timezone, culture, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_USER = "INSERT INTO User (id, type, username, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO ApplicationVersion (id, application_id, api_manager_id, name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, company_name, phone, email, website, vat_id, is_demo, notes, address_id, timezone, type, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_CUSTOMER_TYPE + "', 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, name, phone, email, website, vat_id, is_demo, notes, address_id, timezone, type, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_CUSTOMER_TYPE + "', 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, line1, line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
     static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO CommercialSubscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
