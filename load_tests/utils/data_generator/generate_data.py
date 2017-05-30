@@ -223,7 +223,7 @@ class Generator(object):
                         type='HOTEL',
                         hospitality_id=None,
                         salesforce_id=self.gen_randstr(15),
-                        company_name=self.gen_randstr(10),
+                        name=self.gen_randstr(10),
                         code=self.gen_randstr(10),
                         phone=None,
                         email=self.gen_email(),
@@ -382,7 +382,7 @@ class Generator(object):
                     last_name=self.gen_randstr(8),
                     phone=None,
                     timezone='GMT',
-                    culture='en-US',
+                    language_code='en-US',
                     password=None,
                     email=self.gen_email(),
                     salesforce_id=None,
@@ -469,7 +469,7 @@ class Customer(Base):
     type = Column(String(40))
     hospitality_id = Column(String(36))
     salesforce_id = Column(String(18))
-    company_name = Column(String(255))
+    name = Column(String(255))
     code = Column(String(50))
     phone = Column(String(255))
     email = Column(String(254))
@@ -596,7 +596,7 @@ class User(Base):
     last_name = Column(String(255))
     phone = Column(String(255))
     timezone = Column(String(50))
-    culture = Column(String(50))
+    language_code = Column(String(50))
     password = Column(String(128))
     email = Column(String(254))
     salesforce_id = Column(String(64))
