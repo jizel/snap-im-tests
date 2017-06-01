@@ -148,7 +148,7 @@ public class PropertySteps extends BasicSteps {
         given().spec(spec).get(propertyLocation).then()
                 .body("salesforce_id", is(originalProperty.getSalesforceId()))
                 .body("name", is(originalProperty.getName()))
-                .body("property_code", is(originalProperty.getPropertyCode()))
+                .body("property_code", is(originalProperty.getCode()))
                 .body("email", is(originalProperty.getEmail()));
 
     }
@@ -509,10 +509,10 @@ public class PropertySteps extends BasicSteps {
     public PropertyDto buildDefaultMinimalProperty(String propertyName, String customerId){
         PropertyDto property = new PropertyDto();
         property.setName(propertyName);
-        property.setAnchorCustomerId(customerId);
+        property.setCustomerId(customerId);
         property.setEmail(DEFAULT_PROPERTY_EMAIL);
         property.setTimezone(DEFAULT_PROPERTY_TIMEZONE);
-        property.setIsDemoProperty(DEFAULT_PROPERTY_IS_DEMO);
+        property.setIsDemo(DEFAULT_PROPERTY_IS_DEMO);
         return property;
     }
 

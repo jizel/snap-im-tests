@@ -529,9 +529,9 @@ public class CustomerStepdefs {
     @Given("^Customer \"([^\"]*)\" is created with address$")
     public void customerIsCreatedWithAddress(String companyName, List<AddressDto> addresses) throws Throwable {
         CustomerCreateDto customer = new CustomerCreateDto();
-        customer.setCompanyName(companyName);
+        customer.setName(companyName);
         customer.setEmail(DEFAULT_CUSTOMER_EMAIL);
-        customer.setIsDemoCustomer(DEFAULT_CUSTOMER_IS_DEMO);
+        customer.setIsDemo(DEFAULT_CUSTOMER_IS_DEMO);
         customer.setTimezone(DEFAULT_CUSTOMER_TIMEZONE);
         customer.setAddress(addresses.get(0));
         customer.setType(CustomerType.valueOf(DEFAULT_CUSTOMER_TYPE));

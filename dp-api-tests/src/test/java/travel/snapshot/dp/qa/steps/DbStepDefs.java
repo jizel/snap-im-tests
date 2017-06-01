@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_API_SUBSCRIPTION_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
@@ -20,7 +19,6 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.SNAPSHOT_WEBSITE;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import net.thucydides.core.annotations.Steps;
-import travel.snapshot.dp.api.identity.model.ApiSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
@@ -76,13 +74,13 @@ public class DbStepDefs {
     public void defaultSnapshotUserIsCreated() throws Throwable {
         UserCreateDto defaultSnapshotUser = new UserCreateDto();
         defaultSnapshotUser.setId(DEFAULT_SNAPSHOT_USER_ID);
-        defaultSnapshotUser.setUserType(SNAPSHOT);
-        defaultSnapshotUser.setUserName("defaultSnapshotUser");
+        defaultSnapshotUser.setType(SNAPSHOT);
+        defaultSnapshotUser.setUsername("defaultSnapshotUser");
         defaultSnapshotUser.setFirstName("Default");
         defaultSnapshotUser.setLastName("SnapshotUser");
         defaultSnapshotUser.setEmail("defaultSnapshotUser1@snapshot.travel");
         defaultSnapshotUser.setTimezone("Europe/Prague");
-        defaultSnapshotUser.setCulture("cs-CZ");
+        defaultSnapshotUser.setLanguageCode("cs-CZ");
         defaultSnapshotUser.setIsActive(true);
 
         dbSteps.createDBUser(defaultSnapshotUser);
@@ -103,7 +101,7 @@ public class DbStepDefs {
     @Given("^Default application is created$")
     public void defaultSnapshotApplicationIsCreated() throws Throwable {
         ApplicationDto defaultApp = new ApplicationDto();
-        defaultApp.setApplicationName("Test");
+        defaultApp.setName("Test");
         defaultApp.setDescription("Test");
         defaultApp.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
         defaultApp.setIsInternal(true);
@@ -115,7 +113,7 @@ public class DbStepDefs {
     @Given("^Default application version is created$")
     public void defaultSnapshotApplicationVersionIsCreated() throws Throwable {
         ApplicationVersionDto defaultAppVersion = new ApplicationVersionDto();
-        defaultAppVersion.setVersionName("DefaultVersion");
+        defaultAppVersion.setName("DefaultVersion");
         defaultAppVersion.setDescription("Default test app version");
         defaultAppVersion.setIsActive(true);
         defaultAppVersion.setApplicationId(DEFAULT_SNAPSHOT_APPLICATION_ID);
@@ -130,10 +128,10 @@ public class DbStepDefs {
     public void defaultCustomerIsCreated() throws Throwable {
         CustomerCreateDto customer = new CustomerCreateDto();
         customer.setId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
-        customer.setCompanyName("DefaultCustomer");
+        customer.setName("DefaultCustomer");
         customer.setIsActive(true);
         customer.setTimezone(DEFAULT_SNAPSHOT_TIMEZONE);
-        customer.setIsDemoCustomer(true);
+        customer.setIsDemo(true);
         customer.setEmail("defaultCustomer@snapshot.travel");
         customer.setNotes("Default customer created directly in DB to set in default commercial subscription");
         customer.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
@@ -149,14 +147,14 @@ public class DbStepDefs {
         PropertyDto property = new PropertyDto();
         property.setId(DEFAULT_PROPERTY_ID);
         property.setEmail("defaultProperty@snapshot.travel");
-        property.setPropertyCode("defaultPropertyCode");
+        property.setCode("defaultPropertyCode");
         property.setTimezone(DEFAULT_SNAPSHOT_TIMEZONE);
         property.setIsActive(true);
         property.setWebsite("www.defaultPropertyForTests.com");
-        property.setAnchorCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        property.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         property.setDescription("Default property for default commercial subscription");
         property.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
-        property.setIsDemoProperty(true);
+        property.setIsDemo(true);
         property.setName("Default Property Name");
         dbSteps.createDBProperty(property);
     }
@@ -171,17 +169,6 @@ public class DbStepDefs {
         commercialSubscription.setPropertyId(DEFAULT_PROPERTY_ID);
         dbSteps.createDbCommercialSubscription(commercialSubscription);
     }
-
-    @Given("^Default api subscription is created$")
-    public void defaultApiSubscriptionIsCreated() throws Throwable {
-        ApiSubscriptionDto apiSubscription = new ApiSubscriptionDto();
-        apiSubscription.setCommercialSubscriptionId(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
-        apiSubscription.setApplicationVersionId(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        apiSubscription.setIsActive(true);
-        apiSubscription.setId(DEFAULT_API_SUBSCRIPTION_ID);
-        dbSteps.createDBApiSubscription(apiSubscription);
-    }
-
 
     @And("^Column \"([^\"]*)\" has value \"([^\"]*)\" in table \"([^\"]*)\" where column \"([^\"]*)\" has value \"([^\"]*)\"(?: in \"([^\"]*)\" schema)?$")
     public void columnHasValueInTableForColumnWithValue(String columnName, String columnValue, String tableName, String conditionColumnName, String conditionColumnValue, String schema) throws Throwable {

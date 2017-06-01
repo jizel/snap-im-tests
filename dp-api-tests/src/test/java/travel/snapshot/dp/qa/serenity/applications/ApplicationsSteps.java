@@ -128,7 +128,7 @@ public class ApplicationsSteps extends BasicSteps {
         ApplicationDto[] apps = response.as(ApplicationDto[].class);
         int i = 0;
         for (ApplicationDto a : apps) {
-            assertEquals("Application on index=" + i + " is not expected", applications.get(i), a.getApplicationName());
+            assertEquals("Application on index=" + i + " is not expected", applications.get(i), a.getName());
             i++;
         }
     }

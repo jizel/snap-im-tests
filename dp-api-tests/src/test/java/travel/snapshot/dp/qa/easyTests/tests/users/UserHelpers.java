@@ -1,5 +1,8 @@
 package travel.snapshot.dp.qa.easyTests.tests.users;
 
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
@@ -8,13 +11,10 @@ import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.junit.Assert.assertEquals;
-
 @Log
-public class Helpers extends BasicSteps {
+public class UserHelpers extends BasicSteps {
 
-    public Helpers() {
+    public UserHelpers() {
         super();
     }
 

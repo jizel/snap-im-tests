@@ -2,7 +2,6 @@ package travel.snapshot.dp.qa.easyTests.converters.helpers;
 
 import travel.snapshot.dp.api.identity.model.AddressDto;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,16 +31,13 @@ public class ConverterHelper {
     }
     public static AddressDto getAddress(Map<String, Object> addressMap) {
         AddressDto address = new AddressDto();
-        address.setAddressLine1(getStringValue(addressMap, ADDRESSLINE1));
-        address.setAddressLine2(getStringValue(addressMap, ADDRESSLINE2));
+        address.setLine1(getStringValue(addressMap, ADDRESSLINE1));
+        address.setLine2(getStringValue(addressMap, ADDRESSLINE2));
         address.setCity(getStringValue(addressMap, CITY));
-        address.setCountry(getStringValue(addressMap, COUNTRY));
+        address.setCountryCode(getStringValue(addressMap, COUNTRY));
         address.setRegion(getStringValue(addressMap, REGION));
         address.setZipCode(getStringValue(addressMap, ZIPCODE));
         return address;
     }
 
-    public static List<Map<String, String>> selectExamplesForTest(Map<String, List<Map<String, String>>> testData, String testName) {
-        return testData.get(testName);
-    }
 }

@@ -52,11 +52,11 @@ public class CustomerConverter {
             customer.setSalesforceId(customerSalesForceId);
             customer.setPhone(getStringValue(customerMap, PHONE));
             customer.setEmail(getStringValue(customerMap, CUSTOMER_EMAIL));
-            customer.setCompanyName(getStringValue(customerMap, COMPANY_NAME));
+            customer.setName(getStringValue(customerMap, COMPANY_NAME));
             customer.setId(getStringValue(customerMap, ID));
             customer.setVatId(getStringValue(customerMap, VAT_ID));
             customer.setWebsite(getStringValue(customerMap, WEBSITE));
-            customer.setIsDemoCustomer(getBooleanValue(customerMap, IS_DEMO_CUSTOMER));
+            customer.setIsDemo(getBooleanValue(customerMap, IS_DEMO_CUSTOMER));
             customer.setNotes(getStringValue(customerMap, NOTES));
             customer.setTimezone(getStringValue(customerMap, HEADQUARTERS_TIMEZONE));
             CustomerType customerType = Optional.ofNullable(getStringValue(customerMap, TYPE)).map(CustomerType::valueOf).orElse(null);

@@ -187,7 +187,7 @@ public class RoleBaseSteps extends BasicSteps {
     @Step
     public void deleteRoles(List<RoleDto> roles) {
         roles.forEach(r -> {
-            RoleDto existingRole = getRoleByName(r.getRoleName());
+            RoleDto existingRole = getRoleByName(r.getName());
             if (existingRole != null) {
                 deleteRole(existingRole.getId());
             }
@@ -199,7 +199,7 @@ public class RoleBaseSteps extends BasicSteps {
         List<RoleDto> roles = getResponseAsRoles(response);
         int i = 0;
         for (RoleDto role : roles) {
-            assertEquals("Role on index=" + i + " is not expected", names.get(i), role.getRoleName());
+            assertEquals("Role on index=" + i + " is not expected", names.get(i), role.getName());
             i++;
         }
     }
@@ -224,7 +224,7 @@ public class RoleBaseSteps extends BasicSteps {
                 .get(roleLocation).then()
                 .body("application_id", is(originalRole.getApplicationId()))
                 .body("description", is(originalRole.getDescription()))
-                .body("name", is(originalRole.getRoleName()));
+                .body("name", is(originalRole.getName()));
     }
 
     public String resolveRoleId(String roleName) {
@@ -243,7 +243,7 @@ public class RoleBaseSteps extends BasicSteps {
         roleDto.setId(Objects.toString(roleAttributes.get("id"), null));
         roleDto.setDescription(Objects.toString(roleAttributes.get("description")));
         roleDto.setApplicationId(Objects.toString(roleAttributes.get("applicationId"), null));
-        roleDto.setRoleName(Objects.toString(roleAttributes.get("roleName"), null));
+        roleDto.setName(Objects.toString(roleAttributes.get("roleName"), null));
         if(roleAttributes.containsKey("isActive")) {
             roleDto.setIsActive(Boolean.valueOf(Objects.toString(roleAttributes.get("isActive"))));
         }

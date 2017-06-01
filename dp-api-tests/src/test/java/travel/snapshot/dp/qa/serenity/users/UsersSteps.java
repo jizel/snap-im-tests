@@ -65,7 +65,7 @@ public class UsersSteps extends BasicSteps {
             relation.setIsActive(isActive);
             user.setUserCustomerRelationship(relation);
         } else {
-            if (user.getUserType().equals(CUSTOMER)) {
+            if (user.getType().equals(CUSTOMER)) {
                 fail("Please either provide CustomerId, or change userType to \"partner\" or \"snapshot\"");
             }
         }
@@ -99,12 +99,12 @@ public class UsersSteps extends BasicSteps {
         Response response = getSessionResponse();
         String customerLocation = response.header(headerName).replaceFirst(USERS_PATH, "");
         given().spec(spec).get(customerLocation).then()
-                .body("user_name", is(originalUser.getUserName()))
+                .body("user_name", is(originalUser.getUsername()))
                 .body("first_name", is(originalUser.getFirstName()))
                 .body("last_name", is(originalUser.getLastName()))
                 .body("email", is(originalUser.getEmail()))
                 .body("phone", is(originalUser.getPhone()))
-                .body("culture", is(originalUser.getCulture()))
+                .body("culture", is(originalUser.getLanguageCode()))
                 .body("timezone", is(originalUser.getTimezone()));
 
     }
@@ -206,7 +206,7 @@ public class UsersSteps extends BasicSteps {
         UserDto[] users = response.as(UserDto[].class);
         int i = 0;
         for (UserDto u : users) {
-            assertEquals("User on index=" + i + " is not expected", usernames.get(i), u.getUserName());
+            assertEquals("User on index=" + i + " is not expected", usernames.get(i), u.getUsername());
             i++;
         }
     }
@@ -288,7 +288,7 @@ public class UsersSteps extends BasicSteps {
         RoleDto[] userRoles = response.as(RoleDto[].class);
         int i = 0;
         for (RoleDto ur : userRoles) {
-            assertEquals("UserRole on index=" + i + " is not expected", rolenames.get(i), ur.getRoleName());
+            assertEquals("UserRole on index=" + i + " is not expected", rolenames.get(i), ur.getName());
             i++;
         }
     }
