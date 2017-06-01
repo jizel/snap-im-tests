@@ -108,7 +108,7 @@ public class RolesStepdefs {
         RoleDto requestedRole = roleBaseSteps.getRoleByName(roleName);
         assertThat("Role does not exists", requestedRole, is(notNullValue()));
         assertThat("Roles have different application ids", requestedRole.getId(), is(roles.get(0).getId()));
-        assertThat("Roles have different names", requestedRole.getRoleName(), is(roles.get(0).getRoleName()));
+        assertThat("Roles have different names", requestedRole.getName(), is(roles.get(0).getName()));
         assertThat("Roles have different application descriptions", requestedRole.getDescription(), is(roles.get(0).getDescription()));
     }
 

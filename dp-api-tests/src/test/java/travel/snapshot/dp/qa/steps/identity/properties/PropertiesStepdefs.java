@@ -145,16 +145,16 @@ public class PropertiesStepdefs {
     public void aPropertyForCustomerFromCountryRegionCodeEmailIsCreatedWithUserId(String customerId, String country, String region, String code, String email, String userName) throws Throwable {
         AddressDto address = new AddressDto();
         PropertyDto property = new PropertyDto();
-        address.setAddressLine1("someAddress");
+        address.setLine1("someAddress");
         address.setCity("someCity");
         address.setZipCode("1234");
-        address.setCountry(country);
+        address.setCountryCode(country);
         address.setRegion(region);
-        property.setAnchorCustomerId(customerId);
+        property.setCustomerId(customerId);
         property.setName("someProperty");
-        property.setPropertyCode(code);
+        property.setCode(code);
         property.setEmail(email);
-        property.setIsDemoProperty(true);
+        property.setIsDemo(true);
         property.setTimezone("GMT");
         propertySteps.followingPropertyIsCreatedWithAddress(property, address, usersSteps.resolveUserId(userName));
     }

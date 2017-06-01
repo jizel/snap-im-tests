@@ -1,0 +1,29 @@
+users:
+  user1: &BASIC_USER !user {
+    type: CUSTOMER,
+    username: johnSmith,
+    firstName: John,
+    lastName: Smith,
+    email: user1@snapshot.travel,
+    timezone: Europe/Prague,
+    languageCode: cs-CZ
+}
+
+  user2: !user {
+    <<: *BASIC_USER,
+    username: dickJames,
+    firstName: Dick,
+    lastName: James,
+    email: user2@snapshot.travel
+}
+
+snapshotUsers:
+  snapshotUser1: &BASIC_SNAPSHOT_USER !user {
+    type: SNAPSHOT,
+    username: snapUser1,
+    firstName: Snap,
+    lastName: User,
+    email: snapuser1@snapshot.travel,
+    timezone: Europe/Prague,
+    languageCode: cs-CZ
+}

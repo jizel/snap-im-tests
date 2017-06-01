@@ -107,7 +107,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
         int i = 0;
         for (ApplicationVersionDto a : appVersions) {
             assertEquals("Application version on index=" + i + " is not expected", versionNames.get(i),
-                    a.getVersionName());
+                    a.getName());
             i++;
         }
     }

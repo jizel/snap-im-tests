@@ -1,11 +1,8 @@
 package travel.snapshot.dp.qa.easyTests.converters;
 
-import static java.util.logging.Level.INFO;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType;
 import static travel.snapshot.dp.qa.easyTests.converters.helpers.ConverterHelper.getStringValue;
 
-import lombok.extern.java.Log;
-import org.easetech.easytest.converter.AbstractConverter;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 
 import java.util.Map;
@@ -31,12 +28,12 @@ public class UserConverter {
         Map<String, Object> userMap = (Map<String, Object>) yamlData;
         UserCreateDto user = new UserCreateDto();
         user.setId(getStringValue(userMap, USER_ID));
-        user.setUserName(getStringValue(userMap, USER_NAME));
+        user.setUsername(getStringValue(userMap, USER_NAME));
         UserType userType = Optional.ofNullable(getStringValue(userMap, USER_TYPE)).map(UserType::valueOf).orElse(null);
-        user.setUserType(userType);
+        user.setType(userType);
         user.setFirstName(getStringValue(userMap, FIRST_NAME));
         user.setLastName(getStringValue(userMap, LAST_NAME));
-        user.setCulture(getStringValue(userMap, CULTURE));
+        user.setLanguageCode(getStringValue(userMap, CULTURE));
         user.setTimezone(getStringValue(userMap, TIMEZONE));
         user.setEmail(getStringValue(userMap, USER_EMAIL));
         return user;

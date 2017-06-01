@@ -1,31 +1,32 @@
 package travel.snapshot.dp.qa.easyTests.tests.customers;
 
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.junit.Assert.assertEquals;
+import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 
 @Log
-public class Helpers extends BasicSteps {
+public class CustomerHelpers extends CustomerSteps {
 
-    public Helpers() {
+    public CustomerHelpers() {
         super();
     }
 
     public Response createCustomer(CustomerCreateDto createdCustomer) {
+        Response createResponse = null;
         try {
             JSONObject jsonCustomer = retrieveData(createdCustomer);
-            return (Response) createEntity(jsonCustomer.toString());
+            createResponse = createEntity(jsonCustomer.toString());
         } catch (JsonProcessingException e) {
             log.severe("Unable to convert customer object to json");
         }
-        return null;
+        return createResponse;
     }
 
     public CustomerDto customerIsCreated(CustomerCreateDto createdCustomer) {

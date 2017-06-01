@@ -16,7 +16,6 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
@@ -426,10 +425,10 @@ public class UserStepdefs {
     public void followingSnapshotUserIsCreatedWithoutCustomer(String userType, List<UserCreateDto> users) throws Throwable {
         UserCreateDto user = users.get(0);
         if(userType.equals("snapshot")) {
-            user.setUserType(SNAPSHOT);
+            user.setType(SNAPSHOT);
         }
         else if (userType.equals("partner")){
-            user.setUserType(PARTNER);
+            user.setType(PARTNER);
         }
         usersSteps.createUser(user);
     }
