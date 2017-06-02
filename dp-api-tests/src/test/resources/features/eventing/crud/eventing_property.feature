@@ -4,17 +4,17 @@ Feature: Eventing tests for Property
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | id                                   | companyName       | email           | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name              | email           | vatId       | isDemo         | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     And The following properties exist with random address and billing address
-      | name         | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | name         | code           | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | p0_name      | event_property | http://www.snapshot.travel | p0@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
 
 
   Scenario: Eventing property created
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     And The following property is created with random address and billing address
-      | name         | propertyCode        | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | name         | code                | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
@@ -23,15 +23,15 @@ Feature: Eventing tests for Property
 
   Scenario: Eventing property created by nonsnapshot user - DP-1728
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username          | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | eventCustomerUser | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     And The following property is created with random address and billing address for user "eventCustomerUser"
-      | salesforceId   | name         | propertyCode        | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code                | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | event_prop_1_create | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Property"
@@ -67,7 +67,7 @@ Feature: Eventing tests for Property
 
   Scenario: Add and remove user to/from property
     Given Following snapshot user is created without customer
-      | userType | userName   | firstName | lastName | email                        | timezone      | culture |
+      | type     | username   | firstName | lastName | email                        | timezone      | languageCode |
       | snapshot | event_user | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Subscription with name "Test" for topic "Notifications.crud" is created
 #    Add
@@ -89,7 +89,7 @@ Feature: Eventing tests for Property
 
   Scenario: Update and Delete Property-Customer relationship events
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given Relation between property "event_property" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
     Given Subscription with name "Test" for topic "Notifications.crud" is created

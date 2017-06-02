@@ -4,14 +4,14 @@ Feature: Eventing tests for User
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given Following snapshot user is created without customer
-      | userType | userName      | firstName | lastName | email                | timezone      | culture |
+      | type     | username      | firstName | lastName | email                | timezone      | languageCode |
       | snapshot | eventing_user | Default0  | User0    | def0@snapshot.travel | Europe/Prague | cs-CZ   |
 
 
   Scenario: Eventing user created
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Following snapshot user is created without customer
-      | userName            | firstName | lastName | email               | timezone      | culture |
+      | username            | firstName | lastName | email               | timezone      | languageCode |
       | event_user_create_1 | Snap      | Shot     | snp@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "User"
@@ -31,7 +31,7 @@ Feature: Eventing tests for User
     Given User with username "eventing_user" is stored in session under key "EVENTING_USER"
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When User "eventing_user" is updated with data
-      | userName          |
+      | username          |
       | updated_user_name |
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "User"
@@ -43,7 +43,7 @@ Feature: Eventing tests for User
   Scenario: Add role to user and then remove it from him
     Given Switch for user customer role tests
     Given The following customers exist with random address
-      | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given Relation between user "eventing_user" and customer with id "12300000-0000-4000-a000-000000000000" exists
     Given The following roles exist

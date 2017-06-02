@@ -7,10 +7,10 @@ Feature: Access to /identity/partners endpoint for internal non-commercial appli
   Background:
     Given Database is cleaned and default entities are created
     And The following user is created
-      | userType | userName      | firstName | lastName | email                 | timezone      | culture | isActive |
+      | type     | username      | firstName | lastName | email                 | timezone      | languageCode | isActive |
       | partner  | partnerUser   | Partner   | User1    | part1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     And The following user is created for customer "11111111-0000-4000-a000-555555555555" with is_active "false"
-      | userType | userName      | firstName | lastName | email                 | timezone      | culture | isActive |
+      | type     | username      | firstName | lastName | email                 | timezone      | languageCode | isActive |
       | customer | customerUser  | Customer  | User2    | cust1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
 
   @smoke

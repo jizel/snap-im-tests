@@ -13,11 +13,11 @@ Feature: Property sets access check feature - GET
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | id                                   | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | id                                   | type     | username          | firstName | lastName | email                | timezone      | languageCode | isActive |
       | 0d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | 1d829079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
@@ -77,10 +77,10 @@ Feature: Property sets access check feature - GET
 
     Scenario: User type Snapshot has access to all entities (other user types are equal)
       Given The following customers exist with random address
-        | id                                   | companyName     | email          | salesforceId  | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+        | id                                   | name            | email          | salesforceId  | vatId       | isDemo         | phone         | website                    | timezone      |
         | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Given company 2 | c2@tenants.biz | salesforceid_2 | CZ20000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       Given The following users exist for customer "2348fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-        | userType | userName  | firstName | lastName | email                | timezone      | culture | isActive |
+        | type     | username  | firstName | lastName | email                | timezone      | languageCode | isActive |
         | snapshot | snapshot1 | Snapshot1 | User1    | sna1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
         | guest    | guest1    | Guest1    | User1    | gue1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
         | partner  | partner1  | Partner1  | User1    | par1@snapshot.travel | Europe/Prague | cs-CZ   | true     |

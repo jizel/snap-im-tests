@@ -5,7 +5,7 @@ Feature: Commercial subscription create update delete
     Given Database is cleaned and default entities are created
     And Relation between property "11111111-0000-4000-a000-666666666666" and customer with id "11111111-0000-4000-a000-555555555555" exists
     Given The following property is created with random address and billing address
-      | id                                   | salesforceId   | name    | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name    | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
 
   @Smoke

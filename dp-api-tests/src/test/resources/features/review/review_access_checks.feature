@@ -5,7 +5,7 @@ Feature: Review application access checks
   Background:
     Given Database is cleaned and default entities are created
     Given The following applications exist
-      | id                                   | isInternal | applicationName | description          | website                    | partnerId                            |
+      | id                                   | isInternal | name            | description          | website                    | partnerId                            |
       | 00000000-a05d-42d8-8e84-111111111111 | false      | External App    | External Application | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
       | 00000000-a05d-42d8-8e84-111111100000 | true       | Internal App    | Internal Application | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     Given The following commercial subscriptions exist
@@ -13,7 +13,7 @@ Feature: Review application access checks
       | 11111111-0000-4000-a000-555555555555 | 11111111-0000-4000-a000-666666666666 | 00000000-a05d-42d8-8e84-111111111111 |
       | 11111111-0000-4000-a000-555555555555 | 11111111-0000-4000-a000-666666666666 | 00000000-a05d-42d8-8e84-111111100000 |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName          | status   | description            | applicationId                        |
+      | id                                   | apiManagerId | name                 | status   | description            | applicationId                        |
       | 00000000-a05d-42d8-8e84-222222222222 | 123          | External App Version | inactive | Versions description 1 | 00000000-a05d-42d8-8e84-111111111111 |
       | 00000000-a05d-42d8-8e84-333333333333 | 321          | Internal App Version | inactive | Versions description 2 | 00000000-a05d-42d8-8e84-111111100000 |
 
@@ -44,13 +44,13 @@ Feature: Review application access checks
 
   Scenario Outline: External application requests customers, properties and property sets review endpoints
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "true"
-      | id                                   | userType | userName     | firstName | lastName | email                | timezone      | culture |
+      | id                                   | type     | username     | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snapshotUser | Snapshot  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | 99000199-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000299-9999-4999-a999-999999999999 | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | 99000399-9999-4999-a999-999999999999 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |

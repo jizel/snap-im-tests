@@ -10,14 +10,14 @@ Feature: User Groups access check feature - GET
   Background:
   Given Database is cleaned and default entities are created
   Given The following customers exist with random address
-    | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+    | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
     | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
   Given The following user groups exist
     | id                                   | customerId                           | name        | isActive | description          |
     | 12345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
   Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-    | id                                   | userType | userName            | firstName | lastName | email                | timezone      | culture | isActive |
+    | id                                   | type     | username            | firstName | lastName | email                | timezone      | languageCode | isActive |
     | 12329079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithUserGroup   | Customer  | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithNoUserGroup | Customer  | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given User "userWithUserGroup" is added to userGroup "userGroup_1"
@@ -35,7 +35,7 @@ Feature: User Groups access check feature - GET
 
     Scenario: User type Snapshot has access to all entities (other user types are equal)
       Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-        | userType | userName  | firstName | lastName | email                | timezone      | culture | isActive |
+        | type     | username  | firstName | lastName | email                | timezone      | languageCode | isActive |
         | snapshot | snapshot1 | Snapshot1 | User1    | sna1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
         | guest    | guest1    | Guest1    | User1    | gue1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
         | partner  | partner1  | Partner1  | User1    | par1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -91,7 +91,7 @@ Feature: User Groups access check feature - GET
     @skipped
     Scenario Outline: User with no access rights to property sends GET request with parameters
        Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-         | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+         | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
          | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
        Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
        Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
@@ -113,7 +113,7 @@ Feature: User Groups access check feature - GET
 
     Scenario Outline: Unauthorized request - GET request is send to all endpoints without X-Auth-UserId header
       Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-        | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+        | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"

@@ -6,7 +6,7 @@ Feature: Social media - External applications access checks
   Background:
     Given Database is cleaned and default entities are created
     Given The following applications exist
-      | id                                   | isInternal | applicationName | description          | website                    | partnerId                            |
+      | id                                   | isInternal | name            | description          | website                    | partnerId                            |
       | 00000000-a05d-42d8-8e84-111111111111 | false      | External App    | External Application | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
       | 00000000-a05d-42d8-8e84-111111100000 | true       | Internal App    | Internal Application | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     Given The following commercial subscriptions exist
@@ -14,7 +14,7 @@ Feature: Social media - External applications access checks
       | 11111111-0000-4000-a000-555555555555 | 11111111-0000-4000-a000-666666666666 | 00000000-a05d-42d8-8e84-111111111111 |
       | 11111111-0000-4000-a000-555555555555 | 11111111-0000-4000-a000-666666666666 | 00000000-a05d-42d8-8e84-111111100000 |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName          | status   | description            | applicationId                        |
+      | id                                   | apiManagerId | name                 | status   | description            | applicationId                        |
       | 00000000-a05d-42d8-8e84-222222222222 | 123          | External App Version | inactive | Versions description 1 | 00000000-a05d-42d8-8e84-111111111111 |
       | 00000000-a05d-42d8-8e84-333333333333 | 321          | Internal App Version | inactive | Versions description 2 | 00000000-a05d-42d8-8e84-111111100000 |
 

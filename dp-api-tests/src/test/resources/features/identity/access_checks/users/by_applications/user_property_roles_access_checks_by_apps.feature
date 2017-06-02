@@ -8,15 +8,15 @@ Feature: User-property roles access check by app feature - GET
       | id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following customers exist with random address
-      | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 12300000-0000-4000-a000-111111111111 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420123456790 | http://www.snapshot.stay   | Europe/Prague |
     Given The following applications exist
-      | applicationName          | id                                   | partnerId                            | isInternal | website                    |
+      | name                     | id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | id                                   | apiManagerId | name                       | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription    | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
@@ -30,13 +30,13 @@ Feature: User-property roles access check by app feature - GET
       | id                                   | applicationId                        | roleName | description      |
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1    | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | user2    | Customer  | User2C1  | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given Relation between user "user1" and property with code "defaultPropertyCode" exists with is_active "true"
     Given Relation between user "user2" and property with code "defaultPropertyCode" exists with is_active "false"
     Given The following properties exist with random address and billing address
-      | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | 22222222-0000-4000-a000-666666666666 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.com    | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given Relation between user "user1" and property with code "p1_code" exists
 

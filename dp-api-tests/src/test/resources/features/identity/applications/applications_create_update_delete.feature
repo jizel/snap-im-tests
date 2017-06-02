@@ -7,7 +7,7 @@ Feature: Applications create update delete
   @Smoke
   Scenario: Create get delete application
     When Application is created
-      | applicationName            | description               | website                    | partnerId                            | id                                   | isInternal |
+      | name                       | description               | website                    | partnerId                            | id                                   | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Application test company 1"
@@ -30,7 +30,7 @@ Feature: Applications create update delete
 
   Scenario Outline: Checking error codes for creating applications
     Given Application is created
-      | applicationName            | description               | website                    | partnerId                            |
+      | name                       | description               | website                    | partnerId                            |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
@@ -49,16 +49,16 @@ Feature: Applications create update delete
 
   Scenario Outline: Updating application
     Given The following applications exist
-      | applicationName            | description               | website                    | partnerId                            |
+      | name                       | description               | website                    | partnerId                            |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     When Application "Application test company 1" is updated with data
-      | applicationName           | description           | website           |
+      | name                      | description           | website           |
       | <updated_applicationName> | <updated_description> | <updated_website> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Updated application "<updated_applicationName>" has data
-      | applicationName           | description           | website           |
+      | name                      | description           | website           |
       | <updated_applicationName> | <updated_description> | <updated_website> |
 
     Examples:
@@ -68,20 +68,20 @@ Feature: Applications create update delete
 
   Scenario: Updating application with outdated etag
     Given The following applications exist
-      | id                                   | applicationName            | description               | website                    | partnerId                            |
+      | id                                   | name                       | description               | website                    | partnerId                            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     When Application with id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with invalid etag
-      | applicationName  | description | website                    |
+      | name             | description | website                    |
       | Updated App Name |             | http://www.snapshot.travel |
     Then Response code is "412"
     And Custom code is "41202"
 
   Scenario Outline: Send POST request with empty body to all applications endpoints
     When The following applications exist
-      | id                                   | applicationName            | description               | website                    | partnerId                            |
+      | id                                   | name                       | description               | website                    | partnerId                            |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     Given Application version is created for application with id "a318fd9a-a05d-42d8-8e84-42e904ace123"
-      | id                                   | apiManagerId | versionName | status   | description            |
+      | id                                   | apiManagerId | name        | status   | description            |
       | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
@@ -93,32 +93,32 @@ Feature: Applications create update delete
 
   Scenario: Application ID and name is unique when creating role - DP-1661
     Given The following applications exist
-      | applicationName | description          | website                    | id                                   | partnerId                            | isInternal |
+      | name            | description          | website                    | id                                   | partnerId                            | isInternal |
       | App Name 1      | Original application | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     When Application is created
-      | applicationName | description            | website                    | id                                   | partnerId                            | isInternal |
+      | name            | description            | website                    | id                                   | partnerId                            | isInternal |
       | App Name 2      | Different name same ID | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 11111111-0000-4000-a000-222222222222 | false      |
     Then Response code is "409"
     And Custom code is 40902
     When Application is created
-      | applicationName | description            | website                    | Id                                   | isInternal | partnerId                            |
+      | name            | description            | website                    | Id                                   | isInternal | partnerId                            |
       | App Name 1      | Different ID same name | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 | false      | 11111111-0000-4000-a000-222222222222 |
     Then Response code is "409"
     And Custom code is 40912
 
   Scenario: Trying to create application with non-existing partner id - DP-1732
       When Application is created
-        | applicationName | description            | website                    | id                                   | partnerId                            | isInternal |
+        | name            | description            | website                    | id                                   | partnerId                            | isInternal |
         | App Name 2      | Different name same ID | http://www.snapshot.travel | 00011222-a05d-42d8-8e84-42e904ace123 | 00011123-0000-4000-a000-222222222222 | false      |
       Then Response code is "422"
       And Custom code is 42202
 
   Scenario: Application cannot be deleted when it has application versions
     When The following applications exist
-      | id                                   | applicationName            | description               | website                    | partnerId                            |
+      | id                                   | name                       | description               | website                    | partnerId                            |
       | 00000000-a05d-42d8-8e84-111111111111 | Application test company 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
     Given Application version is created for application with id "00000000-a05d-42d8-8e84-111111111111"
-      | id                                   | apiManagerId | versionName | status   | description            |
+      | id                                   | apiManagerId | name        | status   | description            |
       | 00000000-a05d-42d8-8e84-222222222222 | 1            | Version 1   | inactive | Versions description 1 |
     When Application with id "00000000-a05d-42d8-8e84-111111111111" is deleted
     Then Response code is "409"

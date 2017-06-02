@@ -4,10 +4,10 @@ Feature: Customers get
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name            | email          | vatId      | isDemo         | phone         | website                    | timezone      |
       | 87ae86b7-f5b5-4288-a59e-6bbf9fca4096 | Given company 1 | c1@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" as primary "true"
-      | id                                   | userType | userName     | firstName | lastName     | email                         | timezone      | culture |
+      | id                                   | type     | username     | firstName | lastName     | email                         | timezone      | languageCode |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
@@ -33,7 +33,7 @@ Feature: Customers get
 
   Scenario Outline: Getting list of customers
     Given The following customers exist with random address
-      | companyName                | email                | salesforceId               | vatId      | isDemoCustomer | phone         | website                    | timezone     |
+      | name                       | email                | salesforceId               | vatId      | isDemo         | phone         | website                    | timezone     |
       | List test Given company 1  | list_c1@tenants.biz  | list_salesforceid_given_1  | CZ22000001 | true           | +111111111111 | http://www.snapshot.travel | Europe/Sofia |
       | List test Given company 2  | list_c2@tenants.biz  | list_salesforceid_given_2  | CZ22000002 | true           | +111111111111 | http://www.snapshot.travel | Europe/Sofia |
       | List test Given company 3  | list_c3@tenants.biz  | list_salesforceid_given_3  | CZ22000003 | true           | +111111111111 | http://www.snapshot.travel | Europe/Sofia |
@@ -141,12 +141,12 @@ Feature: Customers get
       | 10          | 0      | /null    | name        | name        | 400           | 40002       |
       | 10          | 0      | /null    | /null       | nonexistent | 400           | 40002       |
       | 10          | 0      | /null    | nonexistent | /null       | 400           | 40002       |
-      | 10          | 0      | code==   | /null       | /null       | 400           | 40002       |
+      | 10          | 0      | code ==   | /null       | /null       | 400           | 40002       |
       | 10          | 0      | vat==CZ* | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address
-      | companyName                           | email                 | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | name                                  | email                 | vatId      | isDemo         | phone         | website                    | timezone      |
       | Filter test Given company 1           | Filter_c1@tenants.biz | CZ12345671 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
       | Filter test Given company 2           | Filter_c2@tenants.biz | CZ12345672 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
       | Filter test Given company 3           | Filter_c3@tenants.biz | CZ12345673 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |

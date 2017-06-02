@@ -8,26 +8,26 @@ Feature: Properties-Customers Application access check feature
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name                        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | CustomerWithSubscription    | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | userType | userName | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1    | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following partner exist
       | id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName          | id                                   | partnerId                            | isInternal | website                    |
+      | name                     | id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-    | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
+    | id                                   | apiManagerId | name                    | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | id                                   | apiManagerId | name                       | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following properties exist with random address and billing address
-      | id                                   | salesforceId   | name                          | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name                          | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | 33300000-0000-4000-a000-000000000111 | salesforceid_1 | property_with_subscription    | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       | 33300000-0000-4000-a000-000000000222 | salesforceid_2 | property_without_subscription | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following commercial subscriptions exist

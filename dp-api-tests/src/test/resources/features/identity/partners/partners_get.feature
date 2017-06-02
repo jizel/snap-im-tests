@@ -135,7 +135,7 @@ Feature: Partners get
       | 10          | 0      | /null  | notes       | notes       | 400           | 40002       |
       | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
       | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
-      | 10          | 0      | code== | /null       | /null       | 400           | 40002       |
+      | 10          | 0      | code == | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of partners
     Given The following partner exist

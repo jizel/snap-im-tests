@@ -5,10 +5,10 @@ Feature: Users get
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | id                                   | companyName  | email                    | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name         | email                    | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 728c45dd-a964-4f78-afe0-88d108c682ed | UserCustomer | userCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default2 | Default2  | User1    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
       | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -43,7 +43,7 @@ Feature: Users get
 
   Scenario Outline: Getting list of users
     Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
-      | userType | userName        | firstName     | lastName   | email                       | timezone      | culture |
+      | type     | username        | firstName     | lastName   | email                       | timezone      | languageCode |
       | customer | list_default_1  | ListDefault1  | ListUser1  | list_user1@snapshot.travel  | Europe/Prague | cs-CZ   |
       | customer | list_default_2  | ListDefault2  | ListUser2  | list_user2@snapshot.travel  | Europe/Prague | cs-CZ   |
       | customer | list_default_3  | ListDefault3  | ListUser3  | list_user3@snapshot.travel  | Europe/Prague | cs-CZ   |
@@ -165,7 +165,7 @@ Feature: Users get
 
   Scenario Outline: Filtering list of users
     Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
-      | userType | userName         | firstName      | lastName    | email                        | phone        | timezone          | culture |
+      | type     | username         | firstName      | lastName    | email                        | phone        | timezone          | languageCode |
       | customer | filter_default_1 | FilterDefault1 | FilterUser1 | filter_user1@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_default_2 | FilterDefault2 | FilterUser2 | filter_user2@snapshot.travel | +42010111213 | Europe/Bratislava | cs-CZ   |
       | guest    | filter_default_3 | FilterDefault3 | FilterUser3 | filter_user3@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
@@ -188,7 +188,7 @@ Feature: Users get
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  | user_name |           | filter_default_3, filter_default_4, filter_default_5, filter_default_6                   |
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  |           | user_name | filter_default_4, filter_default_3, filter_default_2, filter_default_1                   |
       | /null | /null  | 1        | 1     | user_name==filter_default_6                   | /null     | /null     | filter_default_6                                                                         |
-      | /null | /null  | 2        | 2     | user_name==other_default_* and culture==sk-SK | user_name | /null     | other_default_8, other_default_9                                                         |
+      | /null | /null  | 2        | 2     | user_name==other_default_* and languageCode==sk-SK | user_name | /null     | other_default_8, other_default_9                                                         |
       | /null | /null  | 2        | 2     | user_type==snapshot                           | /null     | /null     | defaultSnapshotUser, other_default_9                                                     |
       | /null | /null  | 1        | 1     | email==filter_user4@snapshot.travel           | /null     | /null     | filter_default_4                                                                         |
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |

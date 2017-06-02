@@ -8,24 +8,24 @@ Feature: Customers Application access check feature - GET
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName                 | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name                        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | CustomerWithSubscription    | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 00000000-0000-4000-8000-123000000abc | CustomerWithoutSubscription | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
-      | userType | userName      | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username      | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | userWithCust1 | Customer  | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following partner exist
       | id                                   | name                   | email                   | website                    |
       | 11100000-0000-4000-a000-000000000111 | PartnerForSubscription | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName          | id                                   | partnerId                            | isInternal | website                    |
+      | name                     | id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
     Given The following application versions exists
-      | id                                   | apiManagerId | versionName             | status    | description                  | applicationId                        |
+      | id                                   | apiManagerId | name                    | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
     Given The following application versions exists
-      | id                                   | isNonCommercial | apiManagerId | versionName                | status    | description                  | applicationId                        |
+      | id                                   | isNonCommercial | apiManagerId | name                       | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000444 | false           | 2            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
       | 22200000-0000-4000-a000-000000000555 | true            | 3            | nonCommercialversion       | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
@@ -49,7 +49,7 @@ Feature: Customers Application access check feature - GET
 
   Scenario: There is active CommercialSubscription with parent customer entity
     Given The following customers exist with random address
-      | parentId                             | id                                   | companyName | email          | salesforceId   | vatId      | isDemoCustomer | timezone      |
+      | parentId                             | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | timezone      |
       | 12300000-0000-4000-a000-000000000000 | 22245678-0000-4000-a000-000000000000 | Company 222 | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | Europe/Prague |
       | 22245678-0000-4000-a000-000000000000 | 33345678-0000-4000-a000-000000000000 | Company 333 | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | Europe/Prague |
     When Customer with customerId "33345678-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
@@ -61,7 +61,7 @@ Feature: Customers Application access check feature - GET
 
   Scenario Outline: Filtering customers with application access checks
     Given The following customers exist with random address
-      | id                                   | companyName    | email          | salesforceId   | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name           | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 23445678-0000-4000-a000-000000000000 | Company 3      | c3@tenants.biz | salesforceid_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 34545678-0000-4000-a000-000000000000 | Company 4      | c4@tenants.biz | salesforceid_4 | CZ10000004 | false          | +420987654321 | http://www.snapshot.travel | Europe/Prague |
       | 45645678-0000-4000-a000-000000000000 | NoSubscription | c5@tenants.biz | salesforceid_5 | CZ10000005 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
@@ -88,7 +88,7 @@ Feature: Customers Application access check feature - GET
 
   Scenario: Update customer with and without application access
     When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "versionWithSubscription"
-      | companyName   | email               | salesforceId   | vatId        | phone         | website                           |
+      | name          | email               | salesforceId   | vatId        | phone         | website                           |
       | updatedName   | updated@tenants.biz | updated_sf_id  | CZ0123456789 | +420999666999 | http://www.update.snapshot.travel |
     Then Response code is "204"
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
@@ -98,12 +98,12 @@ Feature: Customers Application access check feature - GET
     And Body contains entity with attribute "email" value "updated@tenants.biz"
     And Body contains entity with attribute "vat_id" value "CZ0123456789"
     When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "versionWithoutSubscription"
-      | companyName   | email               | salesforceId   | vatId      | phone         | website                           |
+      | name          | email               | salesforceId   | vatId      | phone         | website                           |
       | updatedName   | updated@tenants.biz | updated_sf_id  | CZ11223344 | +420999666999 | http://www.update.snapshot.travel |
     Then Response code is "403"
     And Custom code is 40301
     When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "nonCommercialversion"
-      | companyName                |
+      | name                       |
       | updatedNameByNonCommercial |
     Then Response code is "204"
 

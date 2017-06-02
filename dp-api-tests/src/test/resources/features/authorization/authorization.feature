@@ -4,7 +4,7 @@ Feature: authorization
 
   Background: 
     Given The following users exist
-      | userType | userName  | firstName | lastName  | email          | timezone | culture |
+      | type     | username  | firstName | lastName  | email          | timezone | languageCode |
       | customer | testauth1 | Auth1     | AuthUser1 | auth1@mail.com | GMT      | bg      |
     Given The password of user "testauth1" is "somepassword22"
 

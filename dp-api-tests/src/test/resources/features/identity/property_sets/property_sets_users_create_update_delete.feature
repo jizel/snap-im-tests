@@ -5,10 +5,10 @@ Feature: Property sets users create update delete
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone          |
+      | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default0 | Default0  | User0    | def0@snapshot.travel | Europe/Prague | cs-CZ   |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -35,7 +35,7 @@ Feature: Property sets users create update delete
 
   Scenario Outline: Filtering list of users for property set
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userType | userName             | firstName         | lastName       | email                            | phone        | timezone          | culture |
+      | type     | username             | firstName         | lastName       | email                            | phone        | timezone          | languageCode |
       | customer | filter_psu_default_1 | FilterPSUDefault1 | FilterPSUUser1 | filter_psu_user1@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | customer | filter_psu_default_2 | FilterPSUDefault2 | FilterPSUUser2 | filter_psu_user2@snapshot.travel | +42010111213 | Europe/Prague     | cs-CZ   |
       | guest    | filter_psu_default_3 | FilterPSUDefault3 | FilterPSUUser3 | filter_psu_user3@snapshot.travel | +42010111213 | Europe/Bratislava | cs-CZ   |

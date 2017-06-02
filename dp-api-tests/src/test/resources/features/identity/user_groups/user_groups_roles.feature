@@ -4,7 +4,7 @@ Feature: User groups roles
     Given Database is cleaned and default entities are created
     Given Switch for user customer role tests
     Given The following customers exist with random address
-      | id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name               | email          | salesforceId | vatId      | isDemo         | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
       | id                                   | customerId                           | name        | isActive | description          |
@@ -13,7 +13,7 @@ Feature: User groups roles
       | id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName                       | website                    | id                                   | partnerId                            | isInternal |
+      | name                                  | website                    | id                                   | partnerId                            | isInternal |
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following roles exist
       | id                                   | applicationId                        | roleName |

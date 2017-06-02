@@ -11,7 +11,7 @@ Feature: Applications get
 
   Scenario Outline: Getting list of applications
     Given The following applications exist
-      | applicationName             | description                | website                    | Id                                   | partnerId                            |
+      | name                        | description                | website                    | Id                                   | partnerId                            |
       | Application test company 1  | Application description 1  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace111 | 11111111-0000-4000-a000-222222222222 |
       | Application test company 2  | Application description 2  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace112 | 11111111-0000-4000-a000-222222222222 |
       | Application test company 3  | Application description 3  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace113 | 11111111-0000-4000-a000-222222222222 |
@@ -107,11 +107,11 @@ Feature: Applications get
       | 10          | 0      | /null  | description | description | 400           | 40002       |
       | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
       | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
-      | 10          | 0      | code== | /null       | /null       | 400           | 40002       |
+      | 10          | 0      | code == | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of applications
     Given The following applications exist
-      | applicationName             | description                | website                      |
+      | name                        | description                | website                      |
       | Application test company 1  | Application description 1  | http://www.snapshot1.travel  |
       | Application test company 2  | Application description 2  | http://www.snapshot2.travel  |
       | Application test company 3  | Application description 3  | http://www.snapshot3.travel  |

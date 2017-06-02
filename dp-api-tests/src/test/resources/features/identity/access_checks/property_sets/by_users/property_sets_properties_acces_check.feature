@@ -7,11 +7,11 @@ Feature: Property sets Properties access check feature
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
-      | userType | userName          | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username          | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | userWithPropSet   | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | userWithNoPropSet | Customer2 | User2    | usr2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithPropSet"
@@ -21,10 +21,10 @@ Feature: Property sets Properties access check feature
 
     Scenario: Second level entities - User sees only properties he should for property set he owns
       Given The following properties exist with random address and billing address for user "userWithPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Given The following properties exist with random address and billing address for user "userWithNoPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Property with code "p1_code" is added to property set "ps1_name" with is_active "false"
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
@@ -38,7 +38,7 @@ Feature: Property sets Properties access check feature
 
     Scenario: Second level entities - User doesn't see properties for property set when he doesn't have access to the property and the property set all at once
       Given The following properties exist with random address and billing address for user "userWithNoPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
       When Property with code "p1_code" for property set "ps1_name" is requested by user "userWithPropSet"
@@ -59,7 +59,7 @@ Feature: Property sets Properties access check feature
 
   Scenario: Adding property to property set by user with access to it
     Given The following properties exist with random address and billing address for user "userWithPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     When Relation between user "userWithPropSet" and property set "ps1_name" is inactivated
@@ -71,7 +71,7 @@ Feature: Property sets Properties access check feature
 
   Scenario: Adding property to property set by user without access to the property set
     Given The following properties exist with random address and billing address for user "userWithPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     When Property with code "p1_code" is added to property set "ps1_name" by user "userWithNoPropSet"
@@ -80,7 +80,7 @@ Feature: Property sets Properties access check feature
 
   Scenario: Adding property to property set by user without access to the property
     Given The following properties exist with random address and billing address for user "userWithNoPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     When Property with code "p1_code" is added to property set "ps1_name" by user "userWithNoPropSet"
@@ -89,13 +89,13 @@ Feature: Property sets Properties access check feature
 
   Scenario: Removing property from property set by user with and without access
     Given The following properties exist with random address and billing address for user "userWithPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     # When property set has only one property
     # Then anyone who has access to property, has implicit access to property set.
     # And removing explicit access to the property set has no effect
     Given The following properties exist with random address and billing address for user "userWithNoPropSet"
-      | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     Given Relation between property with code "p1_code" and property set with name "ps1_name" exists

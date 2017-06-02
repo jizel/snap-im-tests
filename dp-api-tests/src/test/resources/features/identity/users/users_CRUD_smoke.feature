@@ -5,7 +5,7 @@ Feature: Users customer roles CRUD
   Background:
     Given Database is cleaned and default entities are created
     Given The following users exist for customer "11111111-0000-4000-a000-555555555555"
-      | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given Relation between user "default1" and default property exists
 
@@ -21,7 +21,7 @@ Feature: Users customer roles CRUD
   Scenario: Assigning role to user property
     Given Switch for user property role tests
     Given The following properties exist with random address and billing address for user "default1"
-     | id                                   | salesforceId   | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+     | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
      | 721a284b-9dc4-48e6-8353-6ec55b89e291 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
     Given The following roles exist
       | id                                   | roleName    | description            | applicationId                                   |
@@ -52,7 +52,7 @@ Feature: Users customer roles CRUD
     And Body contains entity with attribute "last_name" value "User1"
     And Body contains entity with attribute "email" value "def1@snapshot.travel"
     And Body contains entity with attribute "timezone" value "Europe/Prague"
-    And Body contains entity with attribute "culture" value "cs-CZ"
+    And Body contains entity with attribute "languageCode" value "cs-CZ"
     When User "default1" is inactivated
     Then Response code is "204"
     And Body is empty

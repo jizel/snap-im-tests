@@ -4,30 +4,30 @@ Feature: Users create update delete
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name               | email                          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | id                                   | userType | userName | firstName | lastName | email                 | timezone      | culture |
+      | id                                   | type     | username | firstName | lastName | email                 | timezone      | languageCode |
       | 55529079-48f0-4f00-9bec-e2329a8bdaac | customer | User1    | Snapshot1 | User1    | User1@snapshot.travel | Europe/Prague | cs-CZ   |
       | 66629079-48f0-4f00-9bec-e2329a8bdaac | customer | User2    | Snapshot2 | User2    | User2@snapshot.travel | Europe/Prague | cs-CZ   |
 
 
   Scenario Outline: Creating users
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
-      | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
+      | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
+      | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
     Then Response code is "201"
-    And Body contains entity with attribute "user_type" value "<userType>"
-    And Body contains entity with attribute "user_name" value "<userName>"
+    And Body contains entity with attribute "user_type" value "<type>"
+    And Body contains entity with attribute "user_name" value "<username>"
     And Body contains entity with attribute "first_name" value "<firstName>"
     And Body contains entity with attribute "last_name" value "<lastName>"
     And Body contains entity with attribute "email" value "<email>"
     And Body contains entity with attribute "timezone" value "<timezone>"
-    And Body contains entity with attribute "culture" value "<culture>"
+    And Body contains entity with attribute "languageCode" value "<languageCode>"
     And Body contains entity with attribute "is_active" value "true"
     And Etag header is present
     Examples:
-      | userType | userName | firstName | lastName | email                           | timezone      | culture |
+      | type     | username | firstName | lastName | email                           | timezone      | languageCode |
       | customer | snp      | Snap      | Shot     | snp@snapshot.travel             | Europe/Prague | cs-CZ   |
       | customer | snp1     | Snap1     | Shot1    | dummy_mail+32@gmail.com         | Europe/Prague | cs-CZ   |
       | customer | snp2     | Snap2     | Shot2    | dummy.test-mail@gmail.com       | Europe/Prague | cs-CZ   |
@@ -46,12 +46,12 @@ Feature: Users create update delete
 
   Scenario Outline: Creating users with wrong fields
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
-      | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
+      | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
+      | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
     Then Response code is "422"
     And Custom code is "42201"
     Examples:
-      | userType | userName | firstName | lastName | email                  | timezone      | culture |
+      | type     | username | firstName | lastName | email                  | timezone      | languageCode |
       | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs-CZ   |
       | customer | snp      | Snap      | Shot     | snpsnapshot.travel     | Europe/Prague | cs-CZ   |
       | customer | snp      | Snap      | Shot     | @snpsnapshot.travel    | Europe/Prague | cs-CZ   |
@@ -69,16 +69,16 @@ Feature: Users create update delete
 
   Scenario Outline: Create user with same name or email
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userType   | userName   | firstName   | lastName   | email               | timezone      | culture   |
+      | type       | username   | firstName   | lastName   | email               | timezone      | languageCode   |
       | customer   | snp        |  Snap       |   Shot     | snp@snapshot.travel | Europe/Prague | cs-CZ     |
     Then Response code is "201"
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | userType   | userName   | firstName   | lastName   | email   | timezone   | culture   |
-      | <userType> | <userName> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
+      | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
+      | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
     Then Response code is "409"
     And Custom code is 40912
     Examples:
-      | userType | userName | firstName | lastName | email                  | timezone      | culture |
+      | type     | username | firstName | lastName | email                  | timezone      | languageCode |
       # Same name
       | customer | snp      | Snap7     | Shot7    | snp@snapshot.com       | Europe/Prague | cs-CZ   |
       # Same email
@@ -112,16 +112,16 @@ Feature: Users create update delete
 
   Scenario Outline: Updating user
     When User "User2" is updated with data
-      | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
-      | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
+      | type       | firstName   | lastName   | email   | timezone   | languageCode   | comment   |
+      | <type> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> | <comment> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Updated user "User2" has data
-      | userType   | firstName   | lastName   | email   | timezone   | culture   | comment   |
-      | <userType> | <firstName> | <lastName> | <email> | <timezone> | <culture> | <comment> |
+      | type       | firstName   | lastName   | email   | timezone   | languageCode   | comment   |
+      | <type> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> | <comment> |
     Examples:
-      | userType | firstName | lastName | email                 | timezone         | culture | comment  |
+      | type     | firstName | lastName | email                 | timezone         | languageCode | comment  |
       | partner  | FNUp1     | LNUp1    | EMUp1@snapshot.travel | Europe/Prague    | cs-CZ   | VIP user |
       | guest    | FNUp2     | LNUp2    | EMUp2@snapshot.travel | America/New_York | en-US   | /null    |
 
@@ -144,14 +144,14 @@ Feature: Users create update delete
   @Bug
   Scenario: Creating user with same name as previously deleted user - DP-1380
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is 201
     Given Relation between user "snapshotUser1" and customer with id "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
     When User "snapshotUser1" is deleted
     Then Response code is 204
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is 201
     And Body contains entity with attribute "user_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
@@ -159,7 +159,7 @@ Feature: Users create update delete
 
   Scenario: Snapshot user can be created without relationship to customer (DP-1427)
     When Following snapshot user is created without customer
-      | userName      | firstName | lastName | email                         | timezone      | culture |
+      | username      | firstName | lastName | email                         | timezone      | languageCode |
       | snapshotUser1 | Snapshot  | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is "201"
     And Body contains entity with attribute "user_type" value "snapshot"
@@ -167,7 +167,7 @@ Feature: Users create update delete
 
   Scenario: Partner user can be created without relationship to customer (DP-1934)
     When Following partner user is created without customer
-      | userName     | firstName | lastName | email                        | timezone      | culture |
+      | username     | firstName | lastName | email                        | timezone      | languageCode |
       | partnerUser1 | Partner   | User1    | partnerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Then Response code is "201"
     And Body contains entity with attribute "user_type" value "partner"
@@ -193,16 +193,16 @@ Feature: Users create update delete
   @skipped
   Scenario: Update user with the duplicate email
     Given The following customers exist with random address
-      | companyName        | email                 | salesforceId         | vatId      | isDemoCustomer | phone         | website                 | timezone      |
+      | name               | email                 | salesforceId         | vatId      | isDemo         | phone         | website                 | timezone      |
       | Customer2          | Customer2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456790 | http://www.snapshot.com | Europe/Prague |
     Given The following users exist for customer "Customer2" as primary "false"
-      | userType | userName  | firstName        | lastName | email             | timezone      | culture |
+      | type     | username  | firstName        | lastName | email             | timezone      | languageCode |
       | snapshot | User1OfC2 | User1OfCustomer2 | User1    | usr1@snapshot.com | Europe/Prague | cs-CZ   |
     When User "User1" is updated with data
-      | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | User1  | Customer  | User1C1  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
     Then Response code is "409"
     When User "User1" is updated with data
-      | userType | userName   | firstName | lastName | email                | timezone      | culture | isActive |
+      | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1OfC2  | Customer  | User1C1  | User1@snapshot.travel    | Europe/Prague | cs-CZ   | true     |
     Then Response code is "409"

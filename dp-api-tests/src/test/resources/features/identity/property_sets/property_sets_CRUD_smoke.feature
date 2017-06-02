@@ -32,7 +32,7 @@ Feature: Property sets create update delete
       | id                                   | name      | description     | type  |
       | ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4 | ps1_name  | ps1_description | brand |
     Given The following properties exist with random address and billing address
-      | id                                   | salesforceId    | name         | propertyCode | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId    | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | 200749ac-a36e-416f-9f13-4d94a3db1267 | SALESFORCE12345 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
     When Property "200749ac-a36e-416f-9f13-4d94a3db1267" is added to property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4"
     Then Response code is "201"
@@ -48,7 +48,7 @@ Feature: Property sets create update delete
   Scenario: Add remove user to property set
     # ----------------- ADD --------------------
     Given The following users exist for customer "11111111-0000-4000-a000-555555555555" as primary "false"
-      | id                                   | userType | userName | firstName | lastName | email                | timezone      | culture |
+      | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     When The following property sets exist for customer "11111111-0000-4000-a000-555555555555"
       | id                                   | name      | description     | type  |

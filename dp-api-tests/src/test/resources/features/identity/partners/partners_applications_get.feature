@@ -21,7 +21,7 @@ Feature: Partners applications get
 #
 #  Scenario Outline: Getting list of partner applications
 #    Given The following applications exist
-#      | applicationName             | description                | website                    | id                                   | partnerId                            | isInternal |
+#      | name                        | description                | website                    | id                                   | partnerId                            | isInternal |
 #      | Application test company 1  | Application description 1  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace111 | 11111111-0000-4000-a000-222222222222 | false      |
 #      | Application test company 2  | Application description 2  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace112 | 11111111-0000-4000-a000-222222222222 | false      |
 #      | Application test company 3  | Application description 3  | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace113 | 11111111-0000-4000-a000-222222222222 | false      |
@@ -116,14 +116,14 @@ Feature: Partners applications get
 #      | 10          | 0      | /null  | notes       | notes       | 400           | 64          |
 #      | 10          | 0      | /null  | /null       | nonexistent | 400           | 63          |
 #      | 10          | 0      | /null  | nonexistent | /null       | 400           | 63          |
-#      | 10          | 0      | code== | /null       | /null       | 400           | 63          |
+#      | 10          | 0      | code == | /null       | /null       | 400           | 63          |
 #
 #  Scenario Outline: Filtering list of partner applications
 #    Given The following partner exist
 #      | name           | email          | website                     | vatId      | notes        | id                                   |
 #      | Company name 1 | p1@tenants.biz | http://www.snapshot1.travel | CZ10000001 | Test notes 1 | 11111111-0000-4000-a000-222222222222 |
 #    Given The following applications exist
-#      | applicationName             | description                | website                      | id                                   | isInternal |
+#      | name                        | description                | website                      | id                                   | isInternal |
 #      | Application test company 1  | Application description 1  | http://www.snapshot1.travel  | 11111111-0000-4000-a000-222222222222 | false      |
 #      | Application test company 2  | Application description 2  | http://www.snapshot2.travel  | 11111111-0000-4000-a000-222222222222 | false      |
 #      | Application test company 3  | Application description 3  | http://www.snapshot3.travel  | 11111111-0000-4000-a000-222222222222 | false      |
