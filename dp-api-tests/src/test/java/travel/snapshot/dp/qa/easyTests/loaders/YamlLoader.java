@@ -26,6 +26,7 @@ import java.util.Map;
 public class YamlLoader {
     private static final String FILEDONTEXIST_MSG = "Provided file does not exist: %s";
     public static final String YAML_DATA_PATH = "src/test/resources/yaml/%s";
+    private static final String FAIL_MESSAGE = "Invalid YAML input data. Exception: %s";
 
     /**
      * Construct a new YamlLoader
@@ -40,8 +41,8 @@ public class YamlLoader {
             FileInputStream stream = new FileInputStream(filePath);
             data = (Map<String, Object>) yaml.load(stream);
         } catch (FileNotFoundException e1) {
-//            log.severe(String.format(FILEDONTEXIST_MSG, filePath));
-            fail("Invalid YAML input data. Exception: " + e1.getLocalizedMessage());
+            log.severe(String.format(FILEDONTEXIST_MSG, filePath));
+            fail(String.format(FAIL_MESSAGE, e1.getLocalizedMessage()));
         }
         return data;
     }
@@ -65,7 +66,7 @@ public class YamlLoader {
             data = (Map<String, Object>) yaml.load(stream);
         } catch (FileNotFoundException e1) {
             log.severe(String.format(FILEDONTEXIST_MSG, filePath));
-            fail("Invalid YAML input data. Exception: " + e1.getLocalizedMessage());
+            fail(String.format(FAIL_MESSAGE, e1.getLocalizedMessage()));
         }
         return data;
     }
