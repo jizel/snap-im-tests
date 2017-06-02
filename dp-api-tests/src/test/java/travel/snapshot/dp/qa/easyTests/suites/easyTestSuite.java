@@ -9,10 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import travel.snapshot.dp.qa.easyTests.tests.YamlCustomer2;
+import travel.snapshot.dp.qa.easyTests.tests.customers.YamlCustomer;
 
 @RunWith(Suite.class)
-@SuiteClasses({YamlCustomer2.class})
+@SuiteClasses({YamlCustomer.class})
 // TODO: multithreading, investigate how it affects test run. Can the annotation be moved to property file?
 // @Concurrent(threads="4x")
 public class easyTestSuite {

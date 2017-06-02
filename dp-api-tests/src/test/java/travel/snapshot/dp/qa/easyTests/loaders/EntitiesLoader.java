@@ -46,8 +46,8 @@ public class EntitiesLoader {
     }
 
     private void loadUsers() {
-        Map<String, Object> yamlCustomers = load(String.format(YAML_DATA_PATH, "entities/users.yaml"));
-        userDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserCreateDto>) yamlCustomers.get("users"));
+        Map<String, Object> yamlUsers = load(String.format(YAML_DATA_PATH, "entities/users.yaml"));
+        userDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserCreateDto>) yamlUsers.get("users"));
     }
 
     private void loadSnapshotUsers() {
