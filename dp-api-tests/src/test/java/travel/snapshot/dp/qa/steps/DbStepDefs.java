@@ -33,6 +33,7 @@ import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
 
 import java.util.Map;
+import java.util.UUID;
 
 public class DbStepDefs {
 
@@ -135,11 +136,11 @@ public class DbStepDefs {
         customer.setEmail("defaultCustomer@snapshot.travel");
         customer.setNotes("Default customer created directly in DB to set in default commercial subscription");
         customer.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
-        customer.setPhone("123456789");
+        customer.setPhone("+420123456789");
         customer.setVatId("DEF0000001");
-        customer.setWebsite("www.defaultCustomerForTests.com");
+        customer.setWebsite("https://www.defaultCustomerForTests.com");
         dbSteps.createDBCustomer(customer);
-        dbSteps.populateCustomerHierarchyPath(customer.getId());
+        dbSteps.populateCustomerHierarchyPath(UUID.fromString(customer.getId()));
     }
 
     @Given("^Default property is created$")
@@ -150,7 +151,7 @@ public class DbStepDefs {
         property.setCode("defaultPropertyCode");
         property.setTimezone(DEFAULT_SNAPSHOT_TIMEZONE);
         property.setIsActive(true);
-        property.setWebsite("www.defaultPropertyForTests.com");
+        property.setWebsite("https://www.defaultPropertyForTests.com");
         property.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         property.setDescription("Default property for default commercial subscription");
         property.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));

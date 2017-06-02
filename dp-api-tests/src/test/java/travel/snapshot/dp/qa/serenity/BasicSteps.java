@@ -79,6 +79,7 @@ public class BasicSteps {
     public static final String DEFAULT_API_SUBSCRIPTION_ID = "11111111-0000-4000-a000-999999999999";
     public static final String DEFAULT_SNAPSHOT_TIMEZONE = "Europe/Prague";
     public static final String DEFAULT_SNAPSHOT_SALESFORCE_ID = "DEFAULTSFID0001";
+    public static final String DEFAULT_SNAPSHOT_HOSPITALITY_ID = "a8d4e1b1-4f15-47b0-be00-db03c2c9a3c4";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     protected static final String SESSION_RESPONSE = "response";

@@ -17,6 +17,8 @@ import javax.sql.DataSource;
 public class DbHelper {
     private static final String DB_USERNAME = "db.username";
     private static final String DB_PASSWORD = "db.password";
+    private static final String TTI_DB_USERNAME = "tti.db.username";
+    private static final String TTI_DB_PASSWORD = "tti.db.password";
 
     private final JdbcTemplate identityDb;
     private final JdbcTemplate ttiDb;
@@ -26,7 +28,7 @@ public class DbHelper {
                 getProperty(DB_USERNAME), getProperty(DB_PASSWORD)));
 
         ttiDb = new JdbcTemplate(createDataSource(getProperty("tti.db.connectionString"),
-                getProperty(DB_USERNAME), getProperty(DB_PASSWORD)));
+                getProperty(TTI_DB_USERNAME), getProperty(TTI_DB_PASSWORD)));
     }
 
     public JdbcTemplate identityDb() {
