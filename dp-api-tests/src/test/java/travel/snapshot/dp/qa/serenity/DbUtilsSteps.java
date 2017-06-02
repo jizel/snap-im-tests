@@ -1,20 +1,13 @@
 package travel.snapshot.dp.qa.serenity;
 
-import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
-import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
-
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
-import travel.snapshot.dp.api.identity.model.PartnerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.helpers.DbHelper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import static travel.snapshot.dp.qa.serenity.BasicSteps.*;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -31,7 +24,7 @@ public class DbUtilsSteps {
     static final String DELETE_PROPERTY_SET = "delete  from PropertySet";
     static final String UPDATE_CUSTOMER = "update Customer set parent_id = null where parent_id is not null";
     static final String DELETE_CUSTOMER = "delete  from Customer";
-    static final String DELETE_USER = "delete  from User";
+    static final String DELETE_USER = "delete from public.user";
     static final String DELETE_ADDRESS = "delete  from Address";
     static final String DELETE_ROLE = "delete  from Role";
     static final String DELETE_USER_GROUP_ROLE = "delete  from UserGroup_Role";
@@ -54,13 +47,13 @@ public class DbUtilsSteps {
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from Partner_User";
     static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
-    static final String CREATE_DB_USER = "INSERT INTO User (id, type, username, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_USER = "INSERT INTO public.user (id, type, username, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO ApplicationVersion (id, application_id, api_manager_id, name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_CUSTOMER = "INSERT INTO Customer (id, is_active, salesforce_id, name, phone, email, website, vat_id, is_demo, notes, address_id, timezone, type, code, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_CUSTOMER_TYPE + "', 'defaultCode1', '" + DEFAULT_SNAPSHOT_ETAG + "');";
-    static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, line1, line2, city, zip_code, country) VALUES (?, ?, ?, ?, ?, ?);";
-    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '5544788');";
+    static final String CREATE_DB_ADDRESS = "INSERT INTO Address (id, line1, line2, city, zip_code, country_code) VALUES (?, ?, ?, ?, ?, ?);";
+    static final String CREATE_DB_PROPERTY = "INSERT INTO Property (id, is_active, salesforce_id, name, email, website, is_demo, address_id, timezone, code, description, customer_id, version, tti_id, hospitality_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "', '123', '" + DEFAULT_SNAPSHOT_HOSPITALITY_ID + "');";
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO CommercialSubscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO ApiSubscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
@@ -79,36 +72,36 @@ public class DbUtilsSteps {
     }
 
     public void createDBUser(UserDto user) {
-        dbHelper.identityDb().update(CREATE_DB_USER, user.getId(), user.getType().toString(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_USER, UUID.fromString(user.getId()), user.getType().toString(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
     }
 
     public void createDBPartner(PartnerDto partner) {
-        dbHelper.identityDb().update(CREATE_DB_PARTNER, partner.getId(), partner.getName(), partner.getEmail(), partner.getNotes(), partner.getWebsite(), partner.getVatId(), partner.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_PARTNER, UUID.fromString(partner.getId()), partner.getName(), partner.getEmail(), partner.getNotes(), partner.getWebsite(), partner.getVatId(), partner.getIsActive());
     }
 
     public void createDBApplication(ApplicationDto application) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION, application.getId(), application.getName(), application.getDescription(), application.getWebsite(), application.getPartnerId(), application.getIsInternal(), application.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION, UUID.fromString(application.getId()), application.getName(), application.getDescription(), application.getWebsite(), UUID.fromString(application.getPartnerId()), application.getIsInternal(), application.getIsActive());
     }
 
     public void createDBApplicationVersion(ApplicationVersionDto applicationVersion) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, applicationVersion.getId(), applicationVersion.getApplicationId(), applicationVersion.getApiManagerId(), applicationVersion.getName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, UUID.fromString(applicationVersion.getId()), UUID.fromString(applicationVersion.getApplicationId()), applicationVersion.getApiManagerId(), applicationVersion.getName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
     }
 
     public void createDBCustomer(CustomerCreateDto customer) {
-        dbHelper.identityDb().update(CREATE_DB_ADDRESS, DEFAULT_ADDRESS_ID, "address line 1", "address line 2", "city", "12345", "CZ");
-        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, customer.getId(), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemo(), customer.getNotes(), DEFAULT_ADDRESS_ID, customer.getTimezone());
+        dbHelper.identityDb().update(CREATE_DB_ADDRESS, UUID.fromString(DEFAULT_ADDRESS_ID), "address line 1", "address line 2", "city", "12345", "CZ");
+        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, UUID.fromString(customer.getId()), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemo(), customer.getNotes(), UUID.fromString(DEFAULT_ADDRESS_ID), customer.getTimezone());
     }
 
-    public void populateCustomerHierarchyPath(String customerId) {
+    public void populateCustomerHierarchyPath(UUID customerId) {
         dbHelper.identityDb().update(CREATE_CUSTOMER_HIERARCHY_PATH, customerId, customerId);
     }
 
     public void createDBProperty(PropertyDto property) {
-        dbHelper.identityDb().update(CREATE_DB_PROPERTY, property.getId(), property.getIsActive(), property.getSalesforceId().toString(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemo(), DEFAULT_ADDRESS_ID, property.getTimezone(), property.getCode(), property.getDescription(), property.getCustomerId());
+        dbHelper.identityDb().update(CREATE_DB_PROPERTY, UUID.fromString(property.getId()), property.getIsActive(), property.getSalesforceId().toString(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemo(), UUID.fromString(DEFAULT_ADDRESS_ID), property.getTimezone(), property.getCode(), property.getDescription(), UUID.fromString(property.getCustomerId()));
     }
 
     public void createDbCommercialSubscription(CommercialSubscriptionDto commercialSubscription) {
-        dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, commercialSubscription.getId(), commercialSubscription.getCustomerId(), commercialSubscription.getPropertyId(), commercialSubscription.getApplicationId(), commercialSubscription.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, UUID.fromString(commercialSubscription.getId()), UUID.fromString(commercialSubscription.getCustomerId()), UUID.fromString(commercialSubscription.getPropertyId()), UUID.fromString(commercialSubscription.getApplicationId()), commercialSubscription.getIsActive());
     }
 
 //    Don't delete, can be reused in the future when api subscriptions are reintroduced

@@ -64,6 +64,7 @@ dependencies {
     compile group: 'travel.snapshot.dp.api', name: 'web-performance-api', version: "$apiVersion"
     compile group: 'travel.snapshot.dp.api', name: 'api-commons', version: "$apiVersion"
 
+    compile group: 'org.postgresql', name: 'postgresql', version:  '42.1.1'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'
 
     testCompile 'org.apache.activemq:activemq-client:5.12.1'
