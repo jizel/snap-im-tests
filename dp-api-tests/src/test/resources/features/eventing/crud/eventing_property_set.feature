@@ -4,10 +4,10 @@ Feature: Eventing tests for Property Sets
     Given Database is cleaned and default entities are created
     Given Subscription with name "Test" for topic "Notifications.crud" does not exist
     Given The following customers exist with random address
-      | id                                   | companyName       | email           | salesforceId         | vatId       | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name              | email           | salesforceId         | vatId       | isDemo         | phone         | website                    | timezone      |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Eventing  company | ev1@tenants.biz | SALESFORCEID001 | CZ123123123 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "a792d2b2-3836-4207-a705-42bbecf3d881" as primary "false"
-      | id                                   | userType | userName  | firstName | lastName | email                        | timezone      | culture |
+      | id                                   | type     | username  | firstName | lastName | email                        | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | eventUser | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881"
       | name                     | description            | type            |
@@ -50,7 +50,7 @@ Feature: Eventing tests for Property Sets
 
   Scenario: Add and remove property to and from property set
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | propertyCode   | website                    | email          | isDemoProperty | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code           | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
       | salesforceid_1 | p1_name      | event_property | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
     Given Subscription with name "Test" for topic "Notifications.crud" is created
 #    Add

@@ -4,13 +4,13 @@ Feature: User groups properties
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | id                                   | companyName        | email          | vatId      | phone         | timezone      | isDemoCustomer |
+      | id                                   | name               | email          | vatId      | phone         | timezone      | isDemo         |
       | 5be73595-bf57-4b10-8725-dad80531dbc3 | UserGroupsCustomer | ug@tenants.biz | CZ10000001 | +420123456789 | Europe/Prague | true           |
     Given The following user groups exist
       | id                                   | customerId                           | name        | isActive |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 5be73595-bf57-4b10-8725-dad80531dbc3 | userGroup_1 | false    |
     Given The following properties exist with random address and billing address
-      | id                                   | name                | propertyCode        | email          | timezone      | anchorCustomerId                     | isDemoProperty |
+      | id                                   | name                | code                | email          | timezone      | anchorCustomerId                     | isDemo         |
       | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 | property_userGroup1 | property_userGroup1 | p1@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
     Given Relation between user group "userGroup_1" and property with code "property_userGroup1" exists with isActive "false"
 
@@ -29,7 +29,7 @@ Feature: User groups properties
 
   Scenario: Relationship creation between user group and property - valid
     Given The following properties exist with random address and billing address
-      | id                                   | name                | propertyCode        | email          | timezone      | anchorCustomerId                     | isDemoProperty |
+      | id                                   | name                | code                | email          | timezone      | anchorCustomerId                     | isDemo         |
       | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | property_userGroup2 | property_userGroup2 | p2@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "false"
     Then Response code is 201
@@ -42,7 +42,7 @@ Feature: User groups properties
     Then Response code is "<error_response>"
     And Custom code is "<code>"
     Examples:
-      | property_id                          | is_active | error_response | code  | #note                         |
+      | property_id                          | is_active | error_response | code   | #note                         |
       | NotValidFormat                       | /null     | 422            | 42201 | # property_id not in UUID     |
       | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | /null     | 422            | 42202 | # notExisting property_id     |
       |                                      | /null     | 422            | 42201 | # property_id cannot be empty |
@@ -87,7 +87,7 @@ Feature: User groups properties
 
   Scenario: Duplicate relationship creation between user group and property - DP-1661
     Given The following properties exist with random address and billing address
-      | id                                   | name                | propertyCode        | email          | timezone      | anchorCustomerId                     | isDemoProperty |
+      | id                                   | name                | code                | email          | timezone      | anchorCustomerId                     | isDemo         |
       | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | property_userGroup2 | property_userGroup2 | p2@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "true"
     Then Response code is 201

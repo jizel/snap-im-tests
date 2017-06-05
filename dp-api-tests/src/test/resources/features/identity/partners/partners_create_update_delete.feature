@@ -108,7 +108,7 @@ Feature: Partners create update delete
         | id                                   | name           | email          | website                    | vatId      | notes        |
         | abc00011-a05d-42d8-8e84-42e904ace123 | Company name 1 | p1@tenants.biz | http://www.snapshot.travel | CZ10000001 | Test notes 1 |
       Given The following applications exist
-        | id                                   | applicationName    | description               | website                    | partnerId                            |
+        | id                                   | name               | description               | website                    | partnerId                            |
         | 00000000-a05d-42d8-8e84-111111111111 | Application test 1 | Application description 1 | http://www.snapshot.travel | abc00011-a05d-42d8-8e84-42e904ace123 |
       When Partner with name "Company name 1" is deleted
       Then Response code is "409"

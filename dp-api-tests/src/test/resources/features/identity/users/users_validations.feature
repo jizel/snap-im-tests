@@ -6,7 +6,7 @@ Feature: Users validations
     Given the location "identity/users" for object "user"
     Given unique identifier "user_id" for object "user"
     Given The following customers exist with random address
-      | id                                   | companyName        | email                          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name               | email                          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | userCreateCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given the following "user" object definition
       | path                        | type       | required | correct                                                     | invalid      | longer     |
@@ -18,7 +18,7 @@ Feature: Users validations
       | /email                      | String     | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | (([a-z]\|\d){9}\.){4}(\w\|\d){24}\@(([a-z]\|\d){191}\.)com |
       | /phone                      | String     | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
       | /timezone                   | String     | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
-      | /culture                    | String     | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
+      | /languageCode                    | String     | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
       | /comment                    | String     | false    | \w{255}                                                     | /null        | \w{256}    |
       | /user_customer_relationship | JSON       | true     | {"is_primary":false,"customer_id":"55656571-a3be-4f8b-bc05-02c0797912a6"}|  /null   |  \w{100}    |
       #| /is_active     | Integer | false    | (1\|0)                                                      | 2            |            |
@@ -40,7 +40,7 @@ Feature: Users validations
       | /phone      | 204          |
       | /email      | 204          |
       | /timezone   | 204          |
-      | /culture    | 204          |
+      | /languageCode    | 204          |
       | /first_name | 204          |
       | /last_name  | 204          |
 
@@ -56,7 +56,7 @@ Feature: Users validations
       | /phone      | 422          | 42201      |
       | /email      | 422          | 42201      |
       | /timezone   | 422          | 42201      |
-      | /culture    | 422          | 42201      |
+      | /languageCode    | 422          | 42201      |
       | /user_type  | 422          | 42201      |
 
   Scenario: Object creation - missing values
@@ -69,7 +69,7 @@ Feature: Users validations
       | /user_name  | 422          | 42201      |
       | /email      | 422          | 42201      |
       | /timezone   | 422          | 42201      |
-      | /culture    | 422          | 42201      |
+      | /languageCode    | 422          | 42201      |
 
   Scenario: Object update - invalid values
     When update "user" objects each with one invalid field value
@@ -78,7 +78,7 @@ Feature: Users validations
       | /phone      | 422          | 42201      |
       | /email      | 422          | 42201      |
       | /timezone   | 422          | 42201      |
-      | /culture    | 422          | 42201      |
+      | /languageCode    | 422          | 42201      |
       | /user_type  | 422          | 42201      |
 
   Scenario: Object creation - longer values
@@ -91,7 +91,7 @@ Feature: Users validations
       | /user_name  | 422          | 42201      |
       | /email      | 422          | 42201      |
       | /timezone   | 422          | 42201      |
-      | /culture    | 422          | 42201      |
+      | /languageCode    | 422          | 42201      |
 
 #   TODO when field lengths are stabilized
 #

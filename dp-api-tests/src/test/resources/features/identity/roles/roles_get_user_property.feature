@@ -8,7 +8,7 @@ Feature: Roles get user property
       | id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
-      | applicationName            | description               | website                    | id                                   | partnerId                           | isInternal |
+      | name                       | description               | website                    | id                                   | partnerId                           | isInternal |
       | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
       | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
 
@@ -143,7 +143,7 @@ Feature: Roles get user property
       #|| 10    | 0      | /null    | /null        |              | 400           | 40002       |
       #|| 10    | 0      | /null    |              | /null        | 400           | 40002       |
       #|| 10    | 0      | /null    |              |              | 400           | 40002       |
-      | invalid expression          | 10    | 0      | code==      | /null  | /null     | 400           | 40002       |
+      | invalid expression          | 10    | 0      | code ==      | /null  | /null     | 400           | 40002       |
       | invalid field  in filter    | 10    | 0      | role_n==aa* | /null  | /null     | 400           | 40002       |
       | invalid field  in sort      | 10    | 0      | /null       | role_n | /null     | 400           | 40002       |
       | invalid field  in sort_desc | 10    | 0      | /null       | /null  | aaa       | 400           | 40002       |

@@ -4,7 +4,7 @@ Feature: User groups get
     Given Database is cleaned and default entities are created
 
     Given The following customers exist with random address
-      | id                                   | companyName        | email          | salesforceId | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name               | email          | salesforceId | vatId      | isDemo         | phone         | website                    | timezone      |
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following user groups exist
       | id                                   | customerId                           | name        | isActive | description          |
@@ -77,7 +77,7 @@ Feature: User groups get
       | /null | text   | /null       | /null       | /null       | 40002      | # The value is invalid. The cursor should be a positive number.                                                                                                                                             |
       | /null | /null  | -1          | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=-1                                                                                               |
       | /null | /null  | ==          | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter===                                                                                               |
-      | /null | /null  | code==      | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=code==                                                                                           |
+      | /null | /null  | code ==      | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=code==                                                                                           |
       | /null | /null  | is_active== | /null       | /null       | 40002      | # The value is invalid. Param 'arg0' The query parameter 'filter' has invalid FIQL syntax; provided filter=is_active==                                                                                      |
       | /null | /null  | /null       | -1          | /null       | 40002      | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |
       | /null | /null  | /null       | 0           | /null       | 40002      | # The value is invalid. Param 'sort' must match \"[a-zA-Z0-9_]*\"                                                                                                                                           |

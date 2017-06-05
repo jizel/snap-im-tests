@@ -8,7 +8,7 @@ Feature: Customers create update delete
   @Smoke
   Scenario: Creating/activating/deleting Customer
     When Customer is created with random address
-      | id                                   | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | type  | hospitalityId                        |
+      | id                                   | name                  | email          | salesforceId    | vatId      | isDemo         | phone         | website                    | timezone      | type  | hospitalityId                        |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL | 000000b2-3836-4207-a705-42bbec000000 |
     Then Response code is "201"
     And Body contains entity with attribute "name" value "Creation test company"
@@ -71,19 +71,19 @@ Feature: Customers create update delete
   #TODO update nonexistent field
   Scenario Outline: Updating customer
     Given The following customers exist with random address
-      | id                                   | companyName   | email          | salesforceId   | vatId       | phone         | website           | timezone      | type   | isDemoCustomer | hospitalityId                        |
+      | id                                   | name          | email          | salesforceId   | vatId       | phone         | website           | timezone      | type   | isDemo         | hospitalityId                        |
       | 910cfc16-4597-479f-ae18-250b0a94752e | Some_Company  | cust1@email.cz | salesforceid   | CZ987654320 | +420123456789 | http://google.com | Europe/Prague | HOTEL  | true           | 111111b2-3836-4207-a705-42bbec111111 |
     When Customer "910cfc16-4597-479f-ae18-250b0a94752e" is updated with data
-      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
-      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
+      | name          | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
+      | <name       > | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Check updated customer "910cfc16-4597-479f-ae18-250b0a94752e" has data
-      | companyName   | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
-      | <companyName> | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
+      | name          | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
+      | <name       > | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
     Examples:
-      | companyName        | email             | vatId       | phone         | website              | notes         | timezone      | hospitalityId                        |
+      | name               | email             | vatId       | phone         | website              | notes         | timezone      | hospitalityId                        |
       | updatedCompanyName | /null             | /null       | /null         | /null                | /null         | /null         | /null                                |
       | /null              | updated@email.com | /null       | /null         | /null                | /null         | /null         | /null                                |
       | /null              | /null             | CZ987654321 | /null         | /null                | /null         | /null         | /null                                |
@@ -103,7 +103,7 @@ Feature: Customers create update delete
 
   Scenario: Headquarters timezone parameter is not optional (DP-1695)
     When Customer is created with random address
-      | companyName           | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | type    |
+      | name                  | email          | salesforceId    | vatId      | isDemo         | phone         | website                    | type    |
       | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | HOTEL   |
     Then Response code is "422"
     And Custom code is 42201
@@ -548,13 +548,13 @@ Feature: Customers create update delete
   @Bug
   Scenario: Creating customer with same name as previously deleted one - DP-1380
     Given The following customers exist with random address
-      | id                                   | companyName | email              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name        | email              | vatId      | isDemo         | phone         | website                    | timezone      |
       | 0002d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is 201
     When Customer with id "0002d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is 204
     Given The following customers exist with random address
-      | id                                   | companyName | email              | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | id                                   | name        | email              | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1112d2b2-3836-4207-a705-42bbecf3d881 | Company 1   | c1@snapshot.travel | CZ11100001 | true           | +420321456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is 201
     And Body contains entity with attribute "customer_id" value "1112d2b2-3836-4207-a705-42bbecf3d881"
@@ -562,7 +562,7 @@ Feature: Customers create update delete
 
   Scenario Outline: Send POST request with empty body to all configurations endpoints
     Given The following users exist for customer "11111111-0000-4000-a000-555555555555"
-      | id                                    | userType   | userName      | firstName | lastName | email                         | timezone      | culture |
+      | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
@@ -577,26 +577,26 @@ Feature: Customers create update delete
 
   Scenario: Customer ID must be unique when creating customer - DP-1661
     Given The following customers exist with random address
-      | id                                   | companyName       | email              | vatId      | isDemoCustomer | timezone      |
+      | id                                   | name              | email              | vatId      | isDemo         | timezone      |
       | 00011222-3836-4207-a705-42bbecf3d881 | Original Customer | oc@snapshot.travel | CZ10000001 | true           | Europe/Prague |
     When Customer is created with random address
-      | id                                   | companyName  | email                   | salesforceId    | vatId      | isDemoCustomer | timezone      | type  |
+      | id                                   | name         | email                   | salesforceId    | vatId      | isDemo         | timezone      | type  |
       | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | SALESFORCEID001 | CZ20000002 | true           | Europe/Prague | HOTEL |
     Then Response code is "409"
     And Custom code is 40902
 
   Scenario: CustomerId and parentId must be different - DP-1528
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | id                                   | name            | email          | vatId      | isDemo         | phone         | website                    | timezone      | isActive |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 0 | c0@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     When Customer is created with random address
-      | id                                   | parentId                             | companyName               | email          | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive | type  |
+      | id                                   | parentId                             | name                      | email          | salesforceId    | vatId      | isDemo         | phone         | website                    | timezone      | isActive | type  |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Already existing custoemr | c1@tenants.biz | SALESFORCEID001 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     | HOTEL |
 #       Already existing customerId
     Then Response code is "409"
     And Custom code is 40902
     When Customer is created with random address
-      | id                                   | parentId                             | companyName  | email                   | salesforceId    | vatId      | isDemoCustomer | timezone      | type  |
+      | id                                   | parentId                             | name         | email                   | salesforceId    | vatId      | isDemo         | timezone      | type  |
       | 00011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | New Customer | newcust@snapshot.travel | SALESFORCEID001 | CZ20000002 | true           | Europe/Prague | HOTEL |
 #       Nonexistent customerId
     Then Response code is "422"
@@ -605,10 +605,10 @@ Feature: Customers create update delete
 
   Scenario: Parent-child relationship should not contain loops - DP-1395
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | id                                   | name            | email          | vatId      | isDemo         | phone         | website                    | timezone      | isActive |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 0 | c0@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     Given The following customers exist with random address
-      | id                                   | parentId                             | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | id                                   | parentId                             | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      | isActive |
       | 00011222-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
       | 10011222-3836-4207-a705-42bbecf3d881 | 00011222-3836-4207-a705-42bbecf3d881 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is updated with data
@@ -619,7 +619,7 @@ Feature: Customers create update delete
 
   Scenario Outline: Checking customer types - DP-1879
     When Customer is created with random address
-      | type   | companyName      | email                        | salesforceId    | vatId      | isDemoCustomer | phone         | website                    | timezone      |
+      | type   | name             | email                        | salesforceId    | vatId      | isDemo         | phone         | website                    | timezone      |
       | <type> | TypeTestCustomer | typecustomer@snapshot.travle | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Then Response code is "201"
     And Body contains entity with attribute "type" value "<type>"
@@ -633,10 +633,10 @@ Feature: Customers create update delete
 
   Scenario: Customer with parent-child relationships cannot be deleted
     Given The following customers exist with random address
-      | id                                   | companyName     | email          | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | id                                   | name            | email          | vatId      | isDemo         | phone         | website                    | timezone      | isActive |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 0 | c0@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     Given The following customers exist with random address
-      | id                                   | parentId                             | companyName     | email          | salesforceId         | vatId      | isDemoCustomer | phone         | website                    | timezone      | isActive |
+      | id                                   | parentId                             | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      | isActive |
       | 00011222-3836-4207-a705-42bbecf3d881 | a792d2b2-3836-4207-a705-42bbecf3d881 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | true     |
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is "409"

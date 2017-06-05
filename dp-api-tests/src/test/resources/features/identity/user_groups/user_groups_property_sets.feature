@@ -3,7 +3,7 @@ Feature: User groups property sets
   Background:
     Given Database is cleaned and default entities are created
     Given The following customers exist with random address
-      | id                                   | companyName        | email          | vatId      | phone         | timezone      | isDemoCustomer |
+      | id                                   | name               | email          | vatId      | phone         | timezone      | isDemo         |
       | 67adbc2d-f6ad-4e6a-9ed8-8ba93c430481 | UserGroupsCustomer | ug@tenants.biz | CZ10000001 | +420123456789 | Europe/Prague | true           |
     Given The following user groups exist
       | id                                   | customerId                           | name        | isActive |
@@ -45,7 +45,7 @@ Feature: User groups property sets
     Then Response code is "<error_response>"
     And Custom code is "<code>"
     Examples:
-      | property_set_id                      | is_active | error_response | code  | #note                             |
+      | property_set_id                      | is_active | error_response | code   | #note                             |
       | NotValidFormat                       | /null     | 422            | 42201 | # property_set_id not in UUID     |
       | d11352e6-44ff-45bb-bd51-28f62ca8f33c | /null     | 422            | 42202 | # notExisting property_set_id     |
       |                                      | /null     | 422            | 42201 | # property_set_id cannot be empty |
