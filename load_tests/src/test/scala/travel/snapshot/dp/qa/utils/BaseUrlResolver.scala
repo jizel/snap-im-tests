@@ -9,6 +9,8 @@ object LoadTestEnvironment extends Enumeration {
   val TESTING = Value("testing")
   val DOCKER = Value("docker")
   val NGINX = Value("nginx")
+  val VM12 = Value("vm12")
+  val STABLE = Value("stable")
 }
 
 object LoadTestContext extends Enumeration {
@@ -76,6 +78,20 @@ trait SystemPropertiesGatherer {
     System.getProperty("protocol", "http"),
     System.getProperty("host", "192.168.99.100"),
     System.getProperty("port", "8899"),
+    resolveScenario
+  )
+
+  val VM12EnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "http"),
+    System.getProperty("host", "192.168.1.127"),
+    System.getProperty("port", "8080"),
+    resolveScenario
+  )
+
+  val StableEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "https"),
+    System.getProperty("host", "europewest-api-stable.snapshot.technology/v1"),
+    System.getProperty("port", "8080"),
     resolveScenario
   )
 
@@ -156,6 +172,22 @@ object NginxUrlResolver extends SystemPropertiesGatherer {
   }
 }
 
+object VM12UrlResolver extends SystemPropertiesGatherer {
+
+  def apply(): String = {
+    val (protocol, host, port, scenario) = VM12EnvironmentProperties
+    s"$protocol://$host:$port/${scenario.localContext}"
+  }
+}
+
+object StableUrlResolver extends SystemPropertiesGatherer {
+
+  def apply(): String = {
+    val (protocol, host, port, scenario) = StableEnvironmentProperties
+    s"$protocol://$host/"
+  }
+}
+
 object BaseUrlResolver {
 
   def apply(): String = {
@@ -166,6 +198,8 @@ object BaseUrlResolver {
       case LoadTestEnvironment.PRODUCTION => ProductionUrlResolver()
       case LoadTestEnvironment.DOCKER => DockerUrlResolver()
       case LoadTestEnvironment.NGINX => NginxUrlResolver()
+      case LoadTestEnvironment.VM12 => VM12UrlResolver()
+      case LoadTestEnvironment.STABLE => StableUrlResolver()
     }
   }
 }

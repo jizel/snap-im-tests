@@ -43,7 +43,6 @@ abstract class AbstractSimulation extends Simulation {
     "Accept-Encoding" -> "gzip, deflate, br",
     "Authorization" -> "Bearer",
     "Content-Type" -> "application/json;charset=UTF-8",
-    "Origin" -> "chrome-extension://fhbjgbiflinjbdggehcddcbncdddomop",
     "X-Auth-AppId" -> "11111111-0000-4000-a000-444444444444",
     "X-Auth-UserId" -> "11111111-0000-4000-a000-000000000000")
 
