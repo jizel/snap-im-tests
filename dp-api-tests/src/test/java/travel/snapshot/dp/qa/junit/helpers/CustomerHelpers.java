@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.easyTests.tests.customers;
+package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
@@ -32,6 +32,7 @@ public class CustomerHelpers extends CustomerSteps {
     public CustomerDto customerIsCreated(CustomerCreateDto createdCustomer) {
         Response response = createCustomer(createdCustomer);
         assertEquals(String.format("Failed to create customer: %s", response.toString()), response.getStatusCode(), SC_CREATED);
+        setSessionResponse(response);
         return response.as(CustomerDto.class);
     }
 }
