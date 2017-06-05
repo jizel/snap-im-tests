@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.easyTests.tests.users;
+package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
@@ -21,9 +21,9 @@ public class UserHelpers extends BasicSteps {
     public Response createUser(UserCreateDto createdUser) {
         try {
             JSONObject jsonUser = retrieveData(createdUser);
-            return (Response) createEntity(jsonUser.toString());
+            return createEntity(jsonUser.toString());
         } catch (JsonProcessingException e) {
-//            log.severe("Unable to convert user object to json");
+            log.severe("Unable to convert user object to json");
         }
         return null;
     }

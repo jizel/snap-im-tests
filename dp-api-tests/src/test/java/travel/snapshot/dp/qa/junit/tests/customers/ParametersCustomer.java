@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.easyTests.tests.customers;
+package travel.snapshot.dp.qa.junit.tests.customers;
 
 
 import junitparams.JUnitParamsRunner;
@@ -8,8 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.qa.easyTests.loaders.EntitiesLoader;
-import travel.snapshot.dp.qa.easyTests.loaders.YamlLoader;
+import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
+import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
+import travel.snapshot.dp.qa.junit.loaders.YamlLoader;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
 import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;

@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.easyTests.loaders;
+package travel.snapshot.dp.qa.junit.loaders;
 
 import static org.junit.Assert.*;
 
@@ -58,7 +58,7 @@ public class YamlLoader {
         }
     }
 
-    public static Map<String, Object> load(String filePath) {
+    public static Map<String, Object> loadEntities(String filePath) {
         Yaml yaml = new Yaml(new YamlConstructor());
         Map<String, Object> data = null;
         try {

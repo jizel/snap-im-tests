@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.easyTests.utils;
+package travel.snapshot.dp.qa.junit.utils;
 
 import static org.junit.Assert.*;
 
