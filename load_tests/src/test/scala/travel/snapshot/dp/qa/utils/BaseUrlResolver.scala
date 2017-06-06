@@ -6,11 +6,12 @@ object LoadTestEnvironment extends Enumeration {
   val LOCAL = Value("local")
   val PRODUCTION = Value("production")
   val DEVELOPMENT = Value("development")
-  val TESTING = Value("testing")
+  val TESTING = Value("test")
   val DOCKER = Value("docker")
   val NGINX = Value("nginx")
   val VM12 = Value("vm12")
   val STABLE = Value("stable")
+  val STAGING = Value("staging")
 }
 
 object LoadTestContext extends Enumeration {
@@ -53,10 +54,11 @@ trait SystemPropertiesGatherer {
     resolveScenario
   )
 
-  val testEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
-    System.getProperty("protocol", "http"),
-    System.getProperty("host", "rg01we-dp-test-tomcat1.westeurope.cloudapp.azure.com"),
+  val testEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "https"),
+    System.getProperty("host", "europewest-sso-test1.snapshot.technology"),
     System.getProperty("port", "8080"),
+    System.getProperty("version", "v1"),
     resolveScenario
   )
 
@@ -88,13 +90,21 @@ trait SystemPropertiesGatherer {
     resolveScenario
   )
 
-  val StableEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+  val StableEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
     System.getProperty("protocol", "https"),
-    System.getProperty("host", "europewest-api-stable.snapshot.technology/v1"),
+    System.getProperty("host", "europewest-api-stable.snapshot.technology/"),
+    System.getProperty("port", "8080"),
+    System.getProperty("version", "v1"),
+    resolveScenario
+  )
+  val StagingEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
+    System.getProperty("protocol", "https"),
+    System.getProperty("host", "europewest-api-staging.snapshot.technology"),
+    System.getProperty("version", "v1"),
     System.getProperty("port", "8080"),
     resolveScenario
   )
-
+  
   private def resolveScenario: LoadTestContext.LoadTestContextValue = {
     val gatlingScenario: String = System.getProperty("gatling.simulationClass")
 
@@ -134,17 +144,27 @@ object LocalUrlResolver extends SystemPropertiesGatherer {
 
 object DevelopmentUrlResolver extends SystemPropertiesGatherer {
 
+  val (protocol, host, port, scenario) = developmentEnvironmentProperties
+
   def apply(): String = {
-    val (protocol, host, port, scenario) = developmentEnvironmentProperties
     s"$protocol://$host:$port/${scenario.developmentContext}"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token/"
   }
 }
 
 object TestingUrlResolver extends SystemPropertiesGatherer {
 
+  val (protocol, host, port, version, scenario) = testEnvironmentProperties
+
   def apply(): String = {
-    val (protocol, host, port, scenario) = testEnvironmentProperties
-    s"$protocol://$host:$port/${scenario.developmentContext}"
+    s"$protocol://$host/$version/"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token/"
   }
 }
 
@@ -182,9 +202,27 @@ object VM12UrlResolver extends SystemPropertiesGatherer {
 
 object StableUrlResolver extends SystemPropertiesGatherer {
 
+  val (protocol, host, port, version, scenario) = StableEnvironmentProperties
+
   def apply(): String = {
-    val (protocol, host, port, scenario) = StableEnvironmentProperties
-    s"$protocol://$host/"
+    s"$protocol://$host/$version/"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token/"
+  }
+}
+
+object StagingUrlResolver extends SystemPropertiesGatherer {
+
+  val (protocol, host, version, port, scenario) = StagingEnvironmentProperties
+
+  def apply(): String = {
+    s"$protocol://$host/$version/"
+  }
+
+  def resolveOauthUrl(): String = {
+    s"$protocol://$host/oauth/token/"
   }
 }
 
@@ -200,6 +238,21 @@ object BaseUrlResolver {
       case LoadTestEnvironment.NGINX => NginxUrlResolver()
       case LoadTestEnvironment.VM12 => VM12UrlResolver()
       case LoadTestEnvironment.STABLE => StableUrlResolver()
+      case LoadTestEnvironment.STAGING => StagingUrlResolver()
+    }
+  }
+}
+
+object OAuthUrlResolver {
+
+  def apply(): String = {
+    LoadTestEnvironment.withName(System.getProperty("environment", "local")) match {
+      case LoadTestEnvironment.DEVELOPMENT => DevelopmentUrlResolver.resolveOauthUrl()
+      case LoadTestEnvironment.TESTING => TestingUrlResolver.resolveOauthUrl()
+      case LoadTestEnvironment.STABLE => StableUrlResolver.resolveOauthUrl()
+      case LoadTestEnvironment.STAGING => StagingUrlResolver.resolveOauthUrl()
+      case LoadTestEnvironment.LOCAL => "no_oauth"
+      case LoadTestEnvironment.VM12 => "no_oauth"
     }
   }
 }

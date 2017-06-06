@@ -23,7 +23,7 @@ abstract class AbstractWebPerformaceSimulation extends AbstractSimulation {
 
         val additionalQueries = new QueryUtils().buildAdditionalQueries(null, sortKey)
 
-        s"web_performance/$suffix?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}$additionalQueries"
+        s"web_performance/$suffix?access_token=$accessTokenParam&granularity=$granularity&${randomUtils.randomSinceUntil(range)}$additionalQueries"
       })
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))

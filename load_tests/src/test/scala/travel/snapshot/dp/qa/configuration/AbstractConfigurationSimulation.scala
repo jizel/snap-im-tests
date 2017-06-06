@@ -13,7 +13,7 @@ abstract class AbstractConfigurationSimulation extends AbstractSimulation {
 
   object CreateConfigurationType {
     def apply() = exec(http("add configuration_type")
-      .post(session => s"configuration?access_token=$accessToken")
+      .post(session => s"configuration?access_token=$accessTokenParam")
       .body(StringBody(session => {
         val configTypeId: String = s""""config_${randomUtils.randomInt(10000000)}""""
         s"""
@@ -30,7 +30,7 @@ abstract class AbstractConfigurationSimulation extends AbstractSimulation {
 
   object GetConfigurationTypes {
     def apply() = exec(http("get 50 configuration_types")
-      .get(session => s"configuration?access_token=$accessToken&limit=${randomUtils.randomInt(50) + 20}&cursor=${randomUtils.randomInt(10) + randomUtils.randomInt(20)}")
+      .get(session => s"configuration?access_token=$accessTokenParam&limit=${randomUtils.randomInt(50) + 20}&cursor=${randomUtils.randomInt(10) + randomUtils.randomInt(20)}")
       .check(status.is(200)))
   }
 
@@ -39,7 +39,7 @@ abstract class AbstractConfigurationSimulation extends AbstractSimulation {
 
     def createConfiguration(key: String, value: Any, valueType: String) = {
       exec(http("add new configuration to current configuration type")
-        .post(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}?access_token=$accessToken")
+        .post(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}?access_token=$accessTokenParam")
         .body(StringBody(session =>
           s"""
               {
@@ -60,19 +60,19 @@ abstract class AbstractConfigurationSimulation extends AbstractSimulation {
 
   object GetConfiguration {
     val getConfigurations = exec(http("get configurations for configuration type")
-      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}?access_token=$accessToken")
+      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}?access_token=$accessTokenParam")
       .check(status.is(200))
       // there should be 3 configurations for each new configuration type
       .check(substring("key").count.is(3)))
 
     val getConfigurationKeyRetryCount = exec(http("get configuration key for configuration type 'retryCount' ")
-      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/retryCount?access_token=$accessToken")
+      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/retryCount?access_token=$accessTokenParam")
       .check(status.is(200))
       // there should be 10 configurations for each new configuration type
       .check(jsonPath("$..value").ofType[Int].is(10)))
 
     val getConfigurationKeyRetryInterval = exec(http("get configuration key for configuration type 'retryInterval' ")
-      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/retryInterval?access_token=$accessToken")
+      .get(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/retryInterval?access_token=$accessTokenParam")
       .check(status.is(200))
       // there should be 100 configurations for each new configuration type
       .check(jsonPath("$..value").ofType[Int].is(100)))
@@ -82,7 +82,7 @@ abstract class AbstractConfigurationSimulation extends AbstractSimulation {
 
   object UpdateConfigurationDescription {
     def apply() = exec(http("update configuration description")
-      .post(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/description_update?access_token=$accessToken")
+      .post(session => s"configuration/${SessionUtils.getValue(session, "configTypeId")}/description_update?access_token=$accessTokenParam")
       .body(StringBody(session =>
         s"""
           {
