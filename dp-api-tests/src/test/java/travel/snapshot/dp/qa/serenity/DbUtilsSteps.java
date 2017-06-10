@@ -15,10 +15,10 @@ import static travel.snapshot.dp.qa.serenity.BasicSteps.*;
 public class DbUtilsSteps {
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
-    static final String DELETE_CUSTOMER_USER = "delete  from Customer_User";
+    static final String DELETE_CUSTOMER_USER = "delete  from User_Customer";
     static final String DELETE_USER_PROPERTY = "delete  from User_Property";
     static final String DELETE_USER_PROPERTYSET = "delete  from User_PropertySet";
-    static final String DELETE_PROPERTY_PROPERTYSET = "delete  from Property_PropertySet";
+    static final String DELETE_PROPERTY_PROPERTYSET = "delete  from PropertySet_Property";
     static final String DELETE_PROPERTY = "delete  from Property";
     static final String UPDATE_PROPERTY_SET = "update PropertySet set parent_id = null where parent_id is not null";
     static final String DELETE_PROPERTY_SET = "delete  from PropertySet";
@@ -45,7 +45,7 @@ public class DbUtilsSteps {
     static final String DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID = "delete  from User_Property where user_id = ? and property_id = ?";
     static final String DELETE_TTI_CROSSREFERENCES = "delete  from crossreferences";
     static final String DELETE_PARTNER = "delete from Partner";
-    static final String DELETE_PARTNER_USER = "delete from Partner_User";
+    static final String DELETE_PARTNER_USER = "delete from User_Partner";
     static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
     static final String CREATE_DB_USER = "INSERT INTO public.user (id, type, username, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
