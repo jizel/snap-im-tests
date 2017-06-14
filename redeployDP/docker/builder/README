@@ -1,0 +1,7 @@
+The image is built using the following command:
+"docker build -t image_name ."
+You need to mount the operations/docker_shared folder as /data volume of the
+builder container.
+Something like this would do:
+docker run -v path_to/operations/docker_shared:/data image_name
+The artifacts will then be found in the operations/docker_shared/modules

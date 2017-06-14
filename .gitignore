@@ -35,3 +35,9 @@ fake-data-generator/Python_load/src/*.tsv
 *.log
 
 docker-manager/docker-manager-tests/snapshot
+
+# Private ssh keys and config files
+redeployDP/docker/builder/ssh/id_rsa
+redeployDP/docker/builder/ssh/config
+redeployDP/docker/dp_migrator/ssh/id_rsa
+redeployDP/docker/dp_migrator/ssh/config

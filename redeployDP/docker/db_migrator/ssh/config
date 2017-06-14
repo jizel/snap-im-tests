@@ -1,0 +1,4 @@
+Host bitbucket.org
+    User oleg.fayans@snapshot.travel
+    IdentityFile ~/.ssh/id_rsa
+    StrictHostKeyChecking no

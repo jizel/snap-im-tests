@@ -1,0 +1,3 @@
+Please put your private ssh key you use to access the bitbucket and rename it
+to id_rsa. Also, please update the config.sample file with your bitbucket
+username and rename it to "config"

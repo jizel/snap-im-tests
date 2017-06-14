@@ -1,0 +1,4 @@
+Host bitbucket.org
+    User your_username@snapshot.travel
+    IdentityFile ~/.ssh/id_rsa
+    StrictHostKeyChecking no

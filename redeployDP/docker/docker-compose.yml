@@ -1,0 +1,197 @@
+db_migrator:
+    image: docker.snapshot.travel:5000/snapshot/db_migrator:latest
+    links: 
+        - mariadb
+    environment:
+        DB_PASSWORD: root
+
+identity:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+    ports:
+        - "18081:18081"
+        - "18080:18080"
+    environment:
+        ARTIFACT: "IdentityModule-1.0.jar"
+        SPRING_PROFILE: identity
+        
+## Please note that springboot container uses tmp a lot, so you'll need to
+## have a dedicated folder in your filesystem for container's /tmp 
+## On the systems with selinux enforced this folder must have a container_file_t label:
+## > semanage fcontext -a -t container_file_t "/path/to/tmp(/*)"
+## > restorecon -R /path/to/tmp
+## Please adapt the following volume lines to point to the correct
+## places where:
+## 1. your docker_shared folder is
+## 2. dedicated folder for container's tmp
+## 3. Folder where *.properties file resides
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+## The same applies to all non-pms-integration images
+twitter_api:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "48080:48080"
+        - "48081:48081"
+    environment:
+        ARTIFACT: "TwitterAnalyticsApi-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,twitter
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+ 
+instagram_api:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "38080:38080"
+        - "38081:38081"
+    environment:
+        ARTIFACT: "InstagramAnalyticsApi-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,instagram
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+google_api:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "28080:28080"
+        - "28081:28081"
+    environment:
+        ARTIFACT: "GoogleAnalyticsApi-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,googleapi
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+facebook_api:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "58080:58080"
+        - "58081:58081"
+    environment:
+        ARTIFACT: "FacebookAnalyticsApi-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,facebook
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+socialmedia_api:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "15080:15080"
+        - "15081:15081"
+    environment:
+        ARTIFACT: "SocialMediaApi-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,socialmedia
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+rateshopper:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "12080:12080"
+        - "12081:12081"
+    environment:
+        ARTIFACT: "RateShopper-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,rateshopper
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+review:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "13080:13080"
+        - "13081:13081"
+    environment:
+        ARTIFACT: "Review-1.0-SNAPSHOT.jar"
+        SPRING_PROFILE: analytics,review
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+configuration:
+    image: docker.snapshot.travel:5000/snapshot/nonpms_integrations:latest
+    links:
+        - mariadb
+        - activemq
+        - mongodb
+        - identity
+    ports:
+        - "11080:11080"
+        - "11081:11081"
+    environment:
+        ARTIFACT: "configuration-1.0.jar"
+        SPRING_PROFILE: configuration
+    volumes:
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared:/data:ro
+        - $BASE_FOLDER/shared:/tmp:rw
+        - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/tomcat/config:/opt/integrations/config:ro
+
+mariadb:
+    image: docker.snapshot.travel:5000/snapshot/mariadb:10.1.22
+    ports:
+        - "3306:3306"
+    environment:
+        MYSQL_DATABASE: "identity"
+mongodb:
+    image: docker.snapshot.travel:5000/snapshot/mongodb:3.4.2
+    ports:
+        - "27017:27017"
+activemq:
+    image: docker.snapshot.travel:5000/snapshot/activemq:5.13.4
+    ports:
+        - "1098:1098"
+        - "5672:5672"
+        - "8161:8161"
+        - "61613:61613"
+        - "61614:61614"
+        - "61616:61616"
