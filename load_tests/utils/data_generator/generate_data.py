@@ -213,7 +213,7 @@ class Generator(object):
                        line2=self.gen_randstr(4),
                        city=self.gen_randstr(5),
                        zip_code=self.gen_randnum(6),
-                       country=random.choice(self.country_codes),
+                       country_code=random.choice(self.country_codes),
                        region=None
                        )
 
@@ -422,7 +422,7 @@ class Address(Base):
     line2 = Column(String(500))
     city = Column(String(250))
     zip_code = Column(String(100))
-    country = Column(String(100))
+    country_code = Column(String(100))
     region = Column(String(100))
 
 
