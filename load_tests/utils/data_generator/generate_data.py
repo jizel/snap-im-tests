@@ -56,12 +56,12 @@ class Generator(object):
         self.max_data_len = 1000
 
         self.find_app_versions_string = """
-        select u.id, av.id from User u inner join ApplicationVersion av on
+        select u.id, av.id from public.User u inner join ApplicationVersion av on
         av.application_id = (select cs.application_id from
         CommercialSubscription cs where customer_id in (select customer_id
-                from Customer_User where user_id = u.id) and property_id in
+                from User_Customer where user_id = u.id) and property_id in
         (select property_id from User_Property where user_id = u.id) and
-        (select 1 from Application where id = cs.application_id and is_internal
+        (select true from Application where id = cs.application_id and is_internal
                 = true) limit 1) and av.is_non_commercial = false limit 10;
         """
 
@@ -502,7 +502,7 @@ class Customer_Property(Base):
 
 
 class Customer_User(Base):
-    __tablename__ = "Customer_User"
+    __tablename__ = "User_Customer"
     customer_id = Column(String(36), primary_key=True)
     user_id = Column(String(36), primary_key=True)
     is_primary = Column(Integer)
@@ -523,7 +523,7 @@ class Partner(Base):
 
 
 class Partner_User(Base):
-    __tablename__ = "Partner_User"
+    __tablename__ = "User_Partner"
     partner_id = Column(String(36), primary_key=True)
     user_id = Column(String(36), primary_key=True)
     is_active = Column(Boolean, default=True)
@@ -556,7 +556,7 @@ class PropertySet_Hierarchy_Path(Base):
 
 
 class Property_PropertySet(Base):
-    __tablename__ = "Property_PropertySet"
+    __tablename__ = "PropertySet_Property"
     property_id = Column(String(36), primary_key=True)
     property_set_id = Column(String(36), primary_key=True)
     is_active = Column(Boolean, default=True)
