@@ -5,6 +5,7 @@ import io.gatling.core.Predef._
 class IdentityUserSimulation extends AbstractIdentitySimulation {
 
   runScenario(scenario("create and list customers and their users").exec(
+    getTokenByUser("exampleCustomerUser", "pass1"),
     CreateCustomer(),
     GetAllCustomers(2)
     pause 1,

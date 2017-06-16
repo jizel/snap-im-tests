@@ -12,7 +12,7 @@ abstract class AbstractRateShopperSimulation extends AbstractSimulation {
     def apply(range: Integer = 20) = request(range)
 
     def request(range: Integer) = exec(http("Return LAR (lowest available rate) for random property in random range of 20 days")
-      .get(session => s"rate_shopper/analytics/property/${rateShopperPropertyCodes.getRandomPropertyCode()}?access_token=$accessToken&${randomUtils.randomSinceUntil(range)}")
+      .get(session => s"rate_shopper/analytics/property/${rateShopperPropertyCodes.getRandomPropertyCode()}?access_token=$accessTokenParam&${randomUtils.randomSinceUntil(range)}")
       .check(status.is(200)))
   }
 
@@ -21,7 +21,7 @@ abstract class AbstractRateShopperSimulation extends AbstractSimulation {
     def apply(range: Integer = 20) = request(range)
 
     def request(range: Integer) = exec(http("Return BAR values for the given market - marker high, low and average in random range of 20 days")
-      .get(session => s"rate_shopper/analytics/market?access_token=$accessToken&property_id=${rateShopperPropertyCodes.getRandomPropertyCode()}&${randomUtils.randomSinceUntil(range)}")
+      .get(session => s"rate_shopper/analytics/market?access_token=$accessTokenParam&property_id=${rateShopperPropertyCodes.getRandomPropertyCode()}&${randomUtils.randomSinceUntil(range)}")
       .check(status.is(200)))
   }
 
@@ -35,7 +35,7 @@ abstract class AbstractRateShopperSimulation extends AbstractSimulation {
 
           val additionalQueries = new QueryUtils().buildAdditionalQueries(null, null, randomUtils.randomInt(10), randomUtils.randomInt(50))
 
-          s"rate_shopper/analytics/market/properties?access_token=$accessToken&property_id=${rateShopperPropertyCodes.getRandomPropertyCode()}$additionalQueries"
+          s"rate_shopper/analytics/market/properties?access_token=$accessTokenParam&property_id=${rateShopperPropertyCodes.getRandomPropertyCode()}$additionalQueries"
         })
         .check(status.is(200)))
   }

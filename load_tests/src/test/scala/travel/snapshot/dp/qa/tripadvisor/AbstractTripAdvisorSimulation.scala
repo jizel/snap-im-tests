@@ -25,7 +25,7 @@ abstract class AbstractTripAdvisorSimulation extends AbstractSimulation {
       request(requestMessage, context, granularity, range)
 
     def request(request: String, context: ReviewAnalyticsContext.Value, granularity: Granularity.Value, range: Int) = exec(http(request)
-      .get(session => s"$context?access_token=$accessToken&${randomUtils.randomSinceUntil(range)}&granularity=$granularity")
+      .get(session => s"$context?access_token=$accessTokenParam&${randomUtils.randomSinceUntil(range)}&granularity=$granularity")
       .header("X-Property", session => randomUtils.randomTripAdvisorPropertyId)
       .check(status.is(200)))
   }
@@ -56,7 +56,7 @@ abstract class AbstractTripAdvisorSimulation extends AbstractSimulation {
 
         val traveller = if (travellerFilter != null) s"&traveller=$travellerFilter" else ""
 
-        s"$context?access_token=$accessToken&${randomUtils.randomSinceUntil(range)}&granularity=$granularity$traveller"
+        s"$context?access_token=$accessTokenParam&${randomUtils.randomSinceUntil(range)}&granularity=$granularity$traveller"
       })
         .header("X-Property", session => randomUtils.randomTripAdvisorPropertyId)
         .check(status.is(200)))
@@ -75,7 +75,7 @@ abstract class AbstractTripAdvisorSimulation extends AbstractSimulation {
 
         val additionalQueries = new QueryUtils().buildAdditionalQueries(filter, sort, cursor, limit)
 
-        s"review/locations?access_token=$accessToken$additionalQueries"
+        s"review/locations?access_token=$accessTokenParam$additionalQueries"
       })
         .header("X-Property", session => randomUtils.randomTripAdvisorPropertyId)
         .check(status.is(200)))
@@ -84,7 +84,7 @@ abstract class AbstractTripAdvisorSimulation extends AbstractSimulation {
   object GetLocationProperties {
     def apply(request: String) =
       exec(http(request).get(session => {
-        s"review/locations/${randomUtils.getRandomLocationId}/properties?access_token=$accessToken"
+        s"review/locations/${randomUtils.getRandomLocationId}/properties?access_token=$accessTokenParam"
       }).check(status.is(200)))
   }
 

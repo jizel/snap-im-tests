@@ -16,7 +16,7 @@ abstract class AbstractOauthSimulation extends AbstractSimulation {
     def apply() = exec(http("create oauth token")
       .post(session => s"token")
       .asFormUrlEncoded
-      .body(StringBody(_ => s"""grant_type=client_credentials&client_id=${oauthClientId}&client_secret=${oauthClientSecret}"""))
+      .body(StringBody(_ => s"""grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}"""))
       .check(status.is(200))
       .check(jsonPath("$..access_token").saveAs("oauthAccessToken"))
       .check(jsonPath("$..refresh_token").saveAs("oauthRefreshToken"))

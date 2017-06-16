@@ -19,7 +19,7 @@ abstract class AbstractTwitterSimulation extends AbstractSimulation {
 
     def request(request: String, granularity: Granularity, range: Int) =
       exec(http(request)
-        .get(session => s"social_media/analytics/twitter?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
+        .get(session => s"social_media/analytics/twitter?access_token=$accessTokenParam&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
         .header("X-Property", session => randomUtils.randomPropertyId)
         .check(status.is(200)))
   }
@@ -30,7 +30,7 @@ abstract class AbstractTwitterSimulation extends AbstractSimulation {
       randomUtils.randomTwitterMetric, randomUtils.randomGranularity, 100)
 
     def request(request: String, metric: TwitterMetric, granularity: Granularity, range: Int) = exec(http(request)
-      .get(session => s"social_media/analytics/twitter/$metric?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
+      .get(session => s"social_media/analytics/twitter/$metric?access_token=$accessTokenParam&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))
   }
@@ -44,7 +44,7 @@ abstract class AbstractTwitterSimulation extends AbstractSimulation {
 
         val additionalQueries = new QueryUtils().buildAdditionalQueries(null, null, cursor, limit)
 
-        s"social_media/analytics/twitter/tweets?access_token=$accessToken$additionalQueries"
+        s"social_media/analytics/twitter/tweets?access_token=$accessTokenParam$additionalQueries"
       })
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))

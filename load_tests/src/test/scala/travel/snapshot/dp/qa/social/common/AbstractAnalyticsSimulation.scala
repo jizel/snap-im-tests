@@ -16,7 +16,7 @@ abstract class AbstractAnalyticsSimulation extends AbstractSimulation {
       randomUtils.randomGranularity, 100)
 
     def request(request: String, granularity: Granularity, range: Int) = exec(http(request)
-      .get(session => s"social_media/analytics?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
+      .get(session => s"social_media/analytics?access_token=$accessTokenParam&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))
   }

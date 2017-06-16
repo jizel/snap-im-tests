@@ -17,7 +17,7 @@ abstract class AbstractInstagramSimulation extends AbstractSimulation {
     def apply() = request("get Instagram overall daily metrics in range of 20 days in daily granularity", Granularity.DAY, 20)
 
     def request(request: String, granularity: Granularity, range: Int) = exec(http(request)
-      .get(session => s"social_media/analytics/instagram?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
+      .get(session => s"social_media/analytics/instagram?access_token=$accessTokenParam&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
       .header("X-Property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))
   }
@@ -28,7 +28,7 @@ abstract class AbstractInstagramSimulation extends AbstractSimulation {
       randomUtils.randomInstagramMetric, randomUtils.randomGranularity, 100)
 
     def request(request: String, metric: InstagramMetric, granularity: Granularity, range: Int) = exec(http(request)
-      .get(session => s"social_media/analytics/instagram/$metric?access_token=$accessToken&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
+      .get(session => s"social_media/analytics/instagram/$metric?access_token=$accessTokenParam&granularity=$granularity&${randomUtils.randomSinceUntil(range)}")
       .header("x-property", session => randomUtils.randomPropertyId)
       .check(status.is(200)))
   }
