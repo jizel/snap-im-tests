@@ -10,8 +10,8 @@ class GetAll extends AbstractIdentitySimulation {
 
   runScenario(scenario("Get token and get all customers").exec(
 //    getTokenByUser("testSnapshot", "Pass1234"),
-//    getTokenByUser("exampleCustomerUser", "pass1"),
-    getTokenByUser("ojx39s9krz", "pass1"),
+    getTokenByUser("exampleCustomerUser", "pass1"),
+//    getTokenByUser("ojx39s9krz", "pass1"),
     GetAllCustomers(),
     pause(1),
     GetAllProperties()
@@ -22,6 +22,8 @@ class GetAll extends AbstractIdentitySimulation {
     pause(1),
     GetAllApplications(),
     pause(1),
+    GetAllPropertySets(),
+    pause(1),
     GetAllCustomers(10),
     pause(1),
     GetAllProperties(10),
@@ -30,6 +32,8 @@ class GetAll extends AbstractIdentitySimulation {
     pause(1),
     GetAllPartners(10),
     pause(1),
-    GetAllApplications(10)
+    GetAllApplications(10),
+    pause(1),
+    GetAllPropertySets(10)
   ))
 }

@@ -12,7 +12,7 @@ Feature: Customers properties create update delete
       | id                                   | type     | username            | firstName | lastName     | email                         | timezone      | languageCode |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | Snapshotuser        | Snapshot  | SnapshotUser | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 9e678710-a1f6-47da-9468-0694466541df | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |
       | 621bd8a4-0b73-40b2-ab5e-cbe88dac9e4e | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 |
       | fc9e3171-e018-44fa-84f4-d74b86c538e9 | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | b13fde13-615a-48fd-a287-ba4a7314193b |
@@ -100,7 +100,7 @@ Feature: Customers properties create update delete
       | id                                   | name          | email          | salesforceId    | vatId      | isDemo         | phone         | website                    | timezone      | type  |
       | a792d2b2-3836-4207-a705-42bbecf3d881 | Deletion test | c1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL |
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
     When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
     Then Response code is "409"

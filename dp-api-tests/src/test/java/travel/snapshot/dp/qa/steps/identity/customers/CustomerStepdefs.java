@@ -32,7 +32,7 @@ import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -420,7 +420,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customerUsers returned$")
     public void There_are_returned_customerUsers_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipDto.class, count);
+        usersSteps.numberOfEntitiesInResponse(UserCustomerRelationshipDto.class, count);
     }
 
     @Then("^User \"([^\"]*)\" isn't there for customer with id \"([^\"]*)\"$")
@@ -499,7 +499,7 @@ public class CustomerStepdefs {
     public void relationBetweenUserAndCustomerWithIdHasIsPrimarySetTo(String username, String customerId) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
 
-        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
+        UserCustomerRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
         assertThat(existingCustomerUser, is(notNullValue()));
         assertThat(existingCustomerUser.getIsPrimary(), is(true));
     }
@@ -507,7 +507,7 @@ public class CustomerStepdefs {
     @And("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is not primary$")
     public void relationBetweenUserAndCustomerWithIdIsNotPrimary(String username, String customerId) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        CustomerUserRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
+        UserCustomerRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
         assertThat(existingCustomerUser.getIsPrimary(), is(false));
     }
 

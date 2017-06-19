@@ -25,7 +25,7 @@ For manually created property code the following rules hold
 
   Scenario Outline: Correct property code is returned when none sent
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-    | name           | email          | isDemo         | timezone      | anchorCustomerId                     |
+    | name           | email          | isDemo         | timezone      | customerId                           |
     | <name>         | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Body contains entity with attribute "property_code"
     And The "property_code" attribute in response contains only CAPITAL latin characters or numbers
@@ -78,7 +78,7 @@ For manually created property code the following rules hold
 
   Scenario Outline: Property code can be filled manually. Property code is always returned in response.
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | code           | name         | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | code           | name         | email              | isDemo         | timezone      | customerId                           |
       | <code       > | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Body contains entity with attribute "property_code" value "<code       >"
     Examples:
@@ -91,11 +91,11 @@ For manually created property code the following rules hold
 
   Scenario: Property code has to be unique
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | code           | name         | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | code           | name         | email              | isDemo         | timezone      | customerId                           |
       | nonunique      | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Body contains entity with attribute "property_code" value "nonunique"
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | code           | name         | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | code           | name         | email              | isDemo         | timezone      | customerId                           |
       | nonunique      | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "409"
     And Custom code is 40912
@@ -103,12 +103,12 @@ For manually created property code the following rules hold
 
   Scenario: Maximum property code length is 50 characters
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | code                                               | name         | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | code                                               | name         | email              | isDemo         | timezone      | customerId                           |
       | Lorem ipsum dolor sit amet, consectetuer adipiscin | property50   | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
     And Body contains entity with attribute "property_code"
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | code                                                | name         | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | code                                                | name         | email              | isDemo         | timezone      | customerId                           |
       | Lorem ipsum dolor sit amet, consectetuer adipisci+1 | property51   | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42201
@@ -116,7 +116,7 @@ For manually created property code the following rules hold
 
    Scenario: Property cannot be updated
      Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-       | id                                   | name         | email              | isDemo         | timezone      | anchorCustomerId                     |
+       | id                                   | name         | email              | isDemo         | timezone      | customerId                           |
        | 2f7a530b-199d-4662-a95e-866f43498c7d | property51   | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
      Then Response code is "201"
      When POST request is sent to "/identity/properties/2f7a530b-199d-4662-a95e-866f43498c7d" on module "identity" with

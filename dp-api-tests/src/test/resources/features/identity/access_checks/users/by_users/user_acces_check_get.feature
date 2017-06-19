@@ -39,7 +39,7 @@ Feature: User access check feature - GET
 
   Scenario: User has no access to users of another customer even when they share access to the same property
     Given The following properties exist with random address and billing address for user "user1OfC1"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     When List of users is got with limit "5" and cursor "0" and filter "/null" and sort "/null" and sort_desc "/null" by user "user1OfC1"
     Then Response code is "200"

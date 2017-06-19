@@ -3,7 +3,7 @@ customers:
     id: 00000000-3836-4207-a705-111111111111,
     name:  Creation test company1,
     email:  s1@tenants.biz,
-    salesforceId:  SALESFORCEID001,
+    salesforceId: SALESFORCEID001,
     vatId:  CZ00000001,
     isDemo:  true,
     phone:  +420123456789,

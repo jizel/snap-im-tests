@@ -18,7 +18,7 @@ Feature: Api subscription get
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
@@ -93,7 +93,7 @@ Feature: Api subscription get
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address
-      | id                                   | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | customerId                           |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1  | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz  | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2  | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz  | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
       | 4701c194-e39d-46fd-b70f-44dd15a82278 | salesforceid_3  | p3_list      | p3_list      | http://www.snapshot.travel | p3@tenants.biz  | true           | Europe/Prague | 83f16fc2-9e87-435c-9632-1aa8c08a7501 |
@@ -223,7 +223,7 @@ Feature: Api subscription get
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 7d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default3 | Default3  | User3    | def3@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 23fe2b58-de46-4330-b361-482f07286cce | salesforceid_1 | p1_list      | p1_list      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
       | 5e334ae2-c3a1-486e-b7e7-dd3209656188 | salesforceid_2 | p2_list      | p2_list      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 5e904539-68fa-4c54-a3ff-4b3fd1a9b683 |
       | 4701c194-e39d-46fd-b70f-44dd15a82278 | salesforceid_3 | p3_list      | p3_list      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 83f16fc2-9e87-435c-9632-1aa8c08a7501 |

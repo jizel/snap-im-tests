@@ -438,7 +438,6 @@ public class UserGroupsSteps extends BasicSteps {
     public void relationshipGroupRoleExist(String userGroupId, String roleId, Boolean isActive) throws JsonProcessingException {
         RoleRelationshipDto roleObject = new RoleRelationshipDto();
         roleObject.setRoleId(roleId);
-        roleObject.setIsActive(isActive);
 
         JSONObject roleInJson = retrieveData(roleObject);
 

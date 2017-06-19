@@ -1,13 +1,22 @@
 package travel.snapshot.dp.qa.serenity;
 
-import travel.snapshot.dp.api.identity.model.*;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.serenity.BasicSteps.DEFAULT_SNAPSHOT_HOSPITALITY_ID;
+
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.DbHelper;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static travel.snapshot.dp.qa.serenity.BasicSteps.*;
 
 /**
  * Created by sedlacek on 9/23/2015.

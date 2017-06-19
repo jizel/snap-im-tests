@@ -23,7 +23,7 @@ Feature: Properties access check feature - GET
     | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     | customer | userWithNoProp | Customer2 | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
   Given The following property is created with random address and billing address for user "userWithProp"
-    | id                                   | salesforceId   | name | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+    | id                                   | salesforceId   | name | code         | website                    | email          | isDemo         | timezone      | customerId                           |
     | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
   Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
@@ -126,7 +126,7 @@ Feature: Properties access check feature - GET
 
      Scenario Outline: Filtering properties with access checks
        Given The following properties exist with random address and billing address for user "userWithProp"
-         | salesforceId   | name | code         | email              | website                    | isDemo         | timezone      | anchorCustomerId                     | ttiId |
+         | salesforceId   | name | code         | email              | website                    | isDemo         | timezone      | customerId                           | ttiId |
          | salesforceid_2 | p2_name      | p2_code      | p2@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 1234  |
          | salesforceid_3 | p3_name      | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 4231  |
          | salesforceid_4 | p4_name      | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 5678  |

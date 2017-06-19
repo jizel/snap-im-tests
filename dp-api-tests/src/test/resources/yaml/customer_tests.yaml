@@ -59,3 +59,7 @@ checkErrorCodesForGettingListOfCustomerCommercialSubscriptions:
     limit: "10"
     cursor: "0"
     filter: "code=="
+
+#checkErrorCodesForGettingListOfCustomerCommercialSubscriptions2:
+#request: | limit: | cursor: | filter: | sort: | sort_desc: | response_code: | custom_code:
+#&REQUEST | "/null" | "/null" | "/null" | "/null" | "/null" | "400" | "40002"-

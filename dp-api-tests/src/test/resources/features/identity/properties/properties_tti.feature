@@ -57,7 +57,7 @@ Feature: Properties tti code - DP-757
 
     Scenario: Duplicate booking.com id send to property without defined tti_id (the original property has ttiId)
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+        | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
         | 888e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Add ttiId to booking.com id "123" mapping to property with code "p1_code"
       Then Response code is "201"
@@ -73,7 +73,7 @@ Feature: Properties tti code - DP-757
 
     Scenario: Map property with nonexistent ttiCode - new ttiCode is created and added to property
       Given The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | id                                   | salesforceId   | name              | code        | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+        | id                                   | salesforceId   | name              | code        | website                    | email          | isDemo         | timezone      | customerId                           |
         | 888e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | no_tti_prop_name  | no_tti_prop | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Body does not contain property with attribute "tti_id"
       When Add ttiId to booking.com id "123" mapping to property with code "no_tti_prop"
@@ -98,7 +98,7 @@ Feature: Properties tti code - DP-757
 
     Scenario: Duplicate booking.com id send to properties without defined tti_id
       Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-        | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+        | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
         | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
         | salesforceid_3 | p3_name      | p3_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       When Add ttiId to booking.com id "1234" mapping to property with code "p2_code"
