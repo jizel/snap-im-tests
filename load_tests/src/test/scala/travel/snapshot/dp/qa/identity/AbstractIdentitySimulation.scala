@@ -105,6 +105,17 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   }
 
   /**
+    * Gets list of all properties
+    */
+  object GetAllPropertySets extends AbstractRequest {
+    def apply() = getRequest("Get all property sets", None, "identity/property_sets", HttpStatus.SC_OK)
+
+    def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber") {
+      getRequest(s"Get all property sets $numberOfProperties times", None, "identity/property_sets", HttpStatus.SC_OK)
+    }
+  }
+
+  /**
     * Creates users and assigns it to a customer with id which was created in CreateCustomer object. Id of a user
     * is saved to session.
     *

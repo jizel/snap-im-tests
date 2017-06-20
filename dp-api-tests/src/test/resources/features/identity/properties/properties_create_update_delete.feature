@@ -14,13 +14,13 @@ Feature: Properties create update delete
       | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property is created with random address and billing address for user "default1"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
   Scenario: Creating property without parent with random address (with capital UUID letters - DP-1974)
     When The following property is created with random address and billing address for user "default1"
-      | id                                   | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | anchorCustomerId                     | hospitalityId                        |
+      | id                                   | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | customerId                           | hospitalityId                        |
       | 000E833E-50B8-4854-A233-289F00bC4A09 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 000000b2-3836-4207-a705-42bbec000000 |
     Then Response code is "201"
     And Body contains property with attribute "property_code" value "pn1_code"
@@ -71,7 +71,7 @@ Feature: Properties create update delete
 
   Scenario: Timezone parameter is mandatory (DP-1696)
     When The following property is created with random address and billing address for user "default1"
-      | salesforceId    | name         | code         | website                    | email           | isDemo         | anchorCustomerId                     |
+      | salesforceId    | name         | code         | website                    | email           | isDemo         | customerId                           |
       | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42201
@@ -183,13 +183,13 @@ Feature: Properties create update delete
 
   Scenario: Creating property with same name as previously deleted one - DP-1380
     Given The following property is created with random address and billing address for user "default1"
-      | salesforceId | name    | code         | website                    | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId | name    | code         | website                    | email              | isDemo         | timezone      | customerId                           |
       | sl_id_1      | p2_name | p2_code      | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is 201
     When Property with code "p2_code" is deleted
     Then Response code is 204
     Given The following property is created with random address and billing address for user "default1"
-      | salesforceId | name    | code         | website                    | email              | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId | name    | code         | website                    | email              | isDemo         | timezone      | customerId                           |
       | sl_id_1      | p2_name | p2_code      | http://www.snapshot.travel | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is 201
     And Body contains entity with attribute "property_code" value "p2_code"
@@ -212,11 +212,11 @@ Feature: Properties create update delete
 
     Scenario: Creating duplicate property returns correct error  - DP-1661
       When The following property is created with random address and billing address for user "default1"
-        | id                                   | name         | code         | website                    | email                | isDemo         | timezone      | anchorCustomerId                     |
+        | id                                   | name         | code         | website                    | email                | isDemo         | timezone      | customerId                           |
         | 00011223-50e8-4854-a233-289f00b54a09 | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "201"
       When The following property is created with random address and billing address for user "default1"
-        | id                                   | name         | code         | website                    | email                | isDemo         | timezone      | anchorCustomerId                     |
+        | id                                   | name         | code         | website                    | email                | isDemo         | timezone      | customerId                           |
         | 00011223-50e8-4854-a233-289f00b54a09 | original     | orig_code    | http://www.snapshot.travel | orig@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Then Response code is "409"
       And Custom code is 40902

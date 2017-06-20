@@ -49,7 +49,7 @@ Feature: Eventing tests for Customer related operations
 
   Scenario: Adding property to customer
     Given The following properties exist with random address and billing address
-      | name                              | code                         | website                    | email           | isDemo         | timezone      | anchorCustomerId                     |
+      | name                              | code                         | website                    | email           | isDemo         | timezone      | customerId                           |
       | Eventing property add to customer | cust_prop_add_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 00000000-3836-4207-a705-000000000000 |
     Given Subscription with name "Test" for topic "Notifications.crud" is created
     When Relation between property with code "cust_prop_add_property_event" and customer with id "00000000-3836-4207-a705-000000000000" exists
@@ -61,7 +61,7 @@ Feature: Eventing tests for Customer related operations
 
   Scenario: Updating property for customer
     Given The following properties exist with random address and billing address
-      | name                              | code                            | website                    | email           | isDemo         | timezone      | anchorCustomerId                     |
+      | name                              | code                            | website                    | email           | isDemo         | timezone      | customerId                           |
       | Eventing customer property update | cust_prop_update_property_event | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 00000000-3836-4207-a705-000000000000 |
     Given Relation between property with code "cust_prop_update_property_event" and customer with id "00000000-3836-4207-a705-000000000000" exists
     Given Subscription with name "Test" for topic "Notifications.crud" is created

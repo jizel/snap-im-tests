@@ -91,7 +91,7 @@ Feature: User Groups access check feature - GET
     @skipped
     Scenario Outline: User with no access rights to property sends GET request with parameters
        Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-         | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+         | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
          | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
        Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
        Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"
@@ -113,7 +113,7 @@ Feature: User Groups access check feature - GET
 
     Scenario Outline: Unauthorized request - GET request is send to all endpoints without X-Auth-UserId header
       Given The following property is created with random address and billing address for user "12329079-48f0-4f00-9bec-e2329a8bdaac"
-        | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+        | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
         | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "false"
       Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "userWithUserGroup"

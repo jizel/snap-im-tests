@@ -21,7 +21,7 @@ Feature: Api subscription create update delete
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 742529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
@@ -43,7 +43,7 @@ Feature: Api subscription create update delete
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 6d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default2 | Default2  | User2    | def2@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "6d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 842529dd-481f-430d-b6b6-686fbb687cab | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 2238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |

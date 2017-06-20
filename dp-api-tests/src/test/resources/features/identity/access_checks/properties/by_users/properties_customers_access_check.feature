@@ -17,7 +17,7 @@ Feature: Properties-Customers access check feature
       | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | userWithNoProp | Customer2 | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property is created with random address and billing address for user "userWithProp"
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
     Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"

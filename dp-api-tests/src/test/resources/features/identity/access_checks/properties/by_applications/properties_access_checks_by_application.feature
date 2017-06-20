@@ -27,7 +27,7 @@ Feature: Properties Application access check feature
       | id                                   | apiManagerId | name                       | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following properties exist with random address and billing address
-      | id                                   | salesforceId   | name                          | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | id                                   | salesforceId   | name                          | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 33300000-0000-4000-a000-000000000111 | salesforceid_1 | property_with_subscription    | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
       | 33300000-0000-4000-a000-000000000222 | salesforceid_2 | property_without_subscription | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given The following commercial subscriptions exist
@@ -50,7 +50,7 @@ Feature: Properties Application access check feature
 
   Scenario Outline: Filtering properties with application access checks
     Given The following properties exist with random address and billing address
-      | name     | code         | email              | website                    | isDemo         | timezone      | anchorCustomerId                     | ttiId |
+      | name     | code         | email              | website                    | isDemo         | timezone      | customerId                           | ttiId |
       | p3_name  | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 4231  |
       | p4_name  | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 5678  |
       | p5_name  | p5_cedo      | p5@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 | 8765  |
@@ -107,12 +107,12 @@ Feature: Properties Application access check feature
       | id                                   | name                          | email          | salesforceId   | vatId      | isDemo         | timezone      |
       | 23400000-0000-4000-a000-000000000111 | Customer Without Subscription | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     When The following property is created with random address and billing address for user "user1"
-      | salesforceId   | name         | code         | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_3 | p3_name      | p3_code      | p3@tenants.biz | true           | Europe/Prague | 23400000-0000-4000-a000-000000000111 |
     Then Response code is "422"
     And Custom code is 42202
     When Property with code "p1_code" is updated with data by user "user1"
-      | anchorCustomerId                     |
+      | customerId                           |
       | 23400000-0000-4000-a000-000000000111 |
     Then Response code is "422"
     And Custom code is 42202

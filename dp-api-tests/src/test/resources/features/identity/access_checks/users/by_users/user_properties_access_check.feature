@@ -20,7 +20,7 @@
       | customer | user2OfC2  | Customer  | User2C2  | usr2@snapshot.com    | Europe/Prague | cs-CZ   | true     |
     Given Switch for user property role tests
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000001" and property "p1_code"
@@ -28,7 +28,7 @@
 
   Scenario: User can view only list of property-users of his own customer and property he can access
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.com    | p2@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     # Wrong customer
     When User "user1OfC2" requests list of users for property "p1_code"
@@ -50,7 +50,7 @@
     Then Response code is "422"
     # Add user to wrong property
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.com    | p2@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p2_code"
     When User "user1OfC1" adds user "user2OfC1" to property "p2_code"

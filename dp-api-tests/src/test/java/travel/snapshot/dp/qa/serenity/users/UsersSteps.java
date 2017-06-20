@@ -17,6 +17,7 @@ import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
@@ -43,7 +44,7 @@ public class UsersSteps extends BasicSteps {
 
     public void followingUsersExist(List<UserCreateDto> users, String customerId, Boolean isPrimary, Boolean isActive) {
         users.forEach(user -> {
-            UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+            UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
             relation.setCustomerId(customerId);
             relation.setIsPrimary(isPrimary);
             relation.setIsActive(isActive);
@@ -59,7 +60,7 @@ public class UsersSteps extends BasicSteps {
     @Step
     public void createUserWithCustomer(UserCreateDto user, String customerId, Boolean isPrimary, Boolean isActive) {
         if (customerId != null) {
-            UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+            UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
             relation.setCustomerId(customerId);
             relation.setIsPrimary(isPrimary);
             relation.setIsActive(isActive);
@@ -235,7 +236,6 @@ public class UsersSteps extends BasicSteps {
         String path = buildPathForRoles(entityName, userId, entityId);
         RoleRelationshipDto role = new RoleRelationshipDto();
         role.setRoleId(roleId);
-        role.setIsActive(isActive);
         JSONObject jsonRole = null;
         try {
             jsonRole = retrieveData(role);
@@ -405,7 +405,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void createUserForCustomerByUser(String performerId, String customerId, UserCreateDto user, Boolean isPrimary) {
-        UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+        UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
         relation.setCustomerId(customerId);
         relation.setIsPrimary(isPrimary);
         user.setUserCustomerRelationship(relation);

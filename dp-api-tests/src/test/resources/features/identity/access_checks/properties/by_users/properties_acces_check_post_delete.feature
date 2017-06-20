@@ -18,7 +18,7 @@ Feature: Properties access check feature - POST and DELETE
       | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
       | customer | userWithNoProp | Customer2 | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
     Given The following property is created with random address and billing address for user "userWithProp"
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     | ttiId  |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           | ttiId  |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 654123 |
     Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
@@ -69,19 +69,19 @@ Feature: Properties access check feature - POST and DELETE
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
     When The user "userWithNoProp" creates the following property
-      | name         | code         | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | name         | code         | email          | isDemo         | timezone      | customerId                           |
       | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42202
     Given Relation between user "userWithNoProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
     When The user "userWithProp" creates the following property
-      | name         | code         | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | name         | code         | email          | isDemo         | timezone      | customerId                           |
       | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42202
     When Relation between user "userWithNoProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is activated
     When The following property is created with random address and billing address for user "userWithNoProp"
-      | name         | code         | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | name         | code         | email          | isDemo         | timezone      | customerId                           |
       | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "201"
 
@@ -91,19 +91,19 @@ Feature: Properties access check feature - POST and DELETE
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
     Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
     When Property with code "p1_code" is updated with data by user "userWithProp"
-      | anchorCustomerId                     |
+      | customerId                           |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42202
     Given Relation between user "userWithProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" exists with is_active "false"
     When Property with code "p1_code" is updated with data by user "userWithProp"
-      | anchorCustomerId                     |
+      | customerId                           |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "422"
     And Custom code is 42202
     When Relation between user "userWithProp" and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123" is activated
     When Property with code "p1_code" is updated with data by user "userWithProp"
-      | anchorCustomerId                     |
+      | customerId                           |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "204"
 

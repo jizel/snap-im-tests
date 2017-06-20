@@ -22,7 +22,7 @@
       | id                                   | applicationId                        | roleName | description      |
       | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000001" and property "p1_code"

@@ -12,7 +12,7 @@ Feature: Users customer roles CRUD
   Scenario: Assigning role to user customer
     Given Switch for user customer role tests
     Given The following roles exist
-      | id                                   | roleName    | description            | applicationId                                   |
+      | id                                   | roleName    | description            | applicationId                        |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
     When User "defaultSnapshotUser" assigns role "a318fd9a-a05d-42d8-8e84-42e904ace123" to relation between user "default1" and customer "11111111-0000-4000-a000-555555555555"
     Then Response code is "201"
@@ -21,7 +21,7 @@ Feature: Users customer roles CRUD
   Scenario: Assigning role to user property
     Given Switch for user property role tests
     Given The following properties exist with random address and billing address for user "default1"
-     | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+     | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
      | 721a284b-9dc4-48e6-8353-6ec55b89e291 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
     Given The following roles exist
       | id                                   | roleName    | description            | applicationId                                   |

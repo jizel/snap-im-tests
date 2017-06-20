@@ -82,7 +82,7 @@ Feature: Customers-Property Sets Application access check feature - GET
     # User with explicit access to the property will try to access the user with access to this property
     # through property set using application with commercial subscription to only one property in this property set
     Given The following property is created with random address and billing address
-      | salesforceId   | name    | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name    | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
     And Relation between user "user3" and property with code "p1_code" exists
     Given The following property set is created for customer with id "12300000-0000-4000-a000-000000000000"

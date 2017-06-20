@@ -61,7 +61,7 @@ Feature: facebook posts
       | id                                   | type     | username      | firstName | lastName | email                        | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     And The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone     | anchorCustomerId                     |
+      | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone     | customerId                           |
       | 99001099-9999-4999-a999-999999999999 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Asia/Bangkok | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     And List of facebook items "<url>" for property id "<property>" is got with limit "1" and cursor "/null"
     Then Response code is 200

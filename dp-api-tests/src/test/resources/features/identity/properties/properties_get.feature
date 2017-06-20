@@ -12,7 +12,7 @@ Feature: Properties get
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
   @Smoke
@@ -37,7 +37,7 @@ Feature: Properties get
 
   Scenario Outline: Getting list of properties
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | customerId                           |
       | salesforceid_01 | p01_name     | p01_code     | http://www.snapshot.travel | p01@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_02 | p02_name     | p02_code     | http://www.snapshot.travel | p02@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_03 | p03_name     | p03_code     | http://www.snapshot.travel | p03@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |

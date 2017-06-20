@@ -20,14 +20,13 @@ import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -267,8 +266,8 @@ public class PropertySteps extends BasicSteps {
         propertyCodes.forEach(c -> {
             PropertyDto property = getPropertyByCodeInternal(c);
             Response customerUsersResponse = getSecondLevelEntities(property.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
-            PartnerUserRelationshipDto[] propertyUsers = customerUsersResponse.as(PartnerUserRelationshipDto[].class);
-            for (PartnerUserRelationshipDto pu : propertyUsers) {
+            UserPartnerRelationshipDto[] propertyUsers = customerUsersResponse.as(UserPartnerRelationshipDto[].class);
+            for (UserPartnerRelationshipDto pu : propertyUsers) {
                 Response deleteResponse = deleteSecondLevelEntity(property.getId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
@@ -294,7 +293,7 @@ public class PropertySteps extends BasicSteps {
         if (isActive == null) {
             isActive = true;
         }
-        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        UserPropertyRelationshipDto relation = new UserPropertyRelationshipDto();
         relation.setUserId(userId);
         relation.setIsActive(isActive);
 
@@ -303,10 +302,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public PropertyUserRelationshipDto getUserForProperty(String propertyId, String userId) {
+    public UserPropertyRelationshipDto getUserForProperty(String propertyId, String userId) {
         Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId);
         if (customerUserResponse.statusCode() == HttpStatus.SC_OK) {
-            return customerUserResponse.as(PropertyUserRelationshipDto.class);
+            return customerUserResponse.as(UserPropertyRelationshipDto.class);
         } else {
             return null;
         }
@@ -345,16 +344,16 @@ public class PropertySteps extends BasicSteps {
 
     public void userDoesntExistForProperty(String userId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        PropertyUserRelationshipDto userForProperty = getUserForProperty(p.getId(), userId);
+        UserPropertyRelationshipDto userForProperty = getUserForProperty(p.getId(), userId);
         assertNull("User should not be present in property", userForProperty);
     }
 
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
-        PartnerUserRelationshipDto[] propertiesUsers = response.as(PartnerUserRelationshipDto[].class);
+        UserPartnerRelationshipDto[] propertiesUsers = response.as(UserPartnerRelationshipDto[].class);
         int i = 0;
-        for (PartnerUserRelationshipDto pu : propertiesUsers) {
-            //            userName is not part of new class - PartnerUserRelationshipDto, needs to be obtained via different endpoint
+        for (UserPartnerRelationshipDto pu : propertiesUsers) {
+            //            userName is not part of new class - UserPartnerRelationshipDto, needs to be obtained via different endpoint
             //            assertEquals("Propertyuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
             i++;
         }
@@ -411,7 +410,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
-        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        CustomerPropertyRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId());
         try {
@@ -425,7 +424,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
-        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        CustomerPropertyRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), null);
         setSessionResponse(response);
@@ -473,19 +472,19 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public PropertyCustomerRelationshipDto getPropertyCustomerRelationship(String customerId, String propertyId) {
+    public CustomerPropertyRelationshipDto getPropertyCustomerRelationship(String customerId, String propertyId) {
         return getPropertyCustomerRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, customerId, propertyId);
     }
 
-    public PropertyCustomerRelationshipDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
+    public CustomerPropertyRelationshipDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
         String filter = String.format("customer_id==%s", customerId);
-        PropertyCustomerRelationshipDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(PropertyCustomerRelationshipDto[].class);
+        CustomerPropertyRelationshipDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(CustomerPropertyRelationshipDto[].class);
         return stream(relations).findFirst().orElse(null);
     }
 
     @Step
     public void requestPropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
-        PropertyCustomerRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        CustomerPropertyRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId()));
     }
@@ -495,16 +494,16 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(resp);
     }
 
-
-    public Response assignTtiToProperty(String propertyId, TtiCrossreferenceDto ttiCrossreference) {
-      return assignTtiToPropertyByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId,ttiCrossreference);
-    }
-
-    public Response assignTtiToPropertyByUser(String userId, String propertyId, TtiCrossreferenceDto ttiCrossreference) {
-        Response response = createSecondLevelRelationshipByUser(userId, propertyId, SECOND_LEVEL_OBJECT_TTI, ttiCrossreference);
-        setSessionResponse(response);
-        return response;
-    }
+//  Tti functionality temporarily removed. Keeping this code in case it comes back
+//    public Response assignTtiToProperty(String propertyId, TtiCrossreferenceDto ttiCrossreference) {
+//      return assignTtiToPropertyByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId,ttiCrossreference);
+//    }
+//
+//    public Response assignTtiToPropertyByUser(String userId, String propertyId, TtiCrossreferenceDto ttiCrossreference) {
+//        Response response = createSecondLevelRelationshipByUser(userId, propertyId, SECOND_LEVEL_OBJECT_TTI, ttiCrossreference);
+//        setSessionResponse(response);
+//        return response;
+//    }
 
     public PropertyDto buildDefaultMinimalProperty(String propertyName, String customerId){
         PropertyDto property = new PropertyDto();
@@ -565,7 +564,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void addPropertyToUserByUserForApp(String requestorId, String applicationVersionId, String propertyId, String targetUserId) {
-        PropertyUserRelationshipDto relation = new PropertyUserRelationshipDto();
+        UserPropertyRelationshipDto relation = new UserPropertyRelationshipDto();
         relation.setUserId(targetUserId);
         setSessionResponse(createSecondLevelRelationshipByUserForApplication(requestorId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
     }

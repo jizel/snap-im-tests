@@ -25,8 +25,7 @@ import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateD
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.TtiCrossreferenceDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -382,35 +381,35 @@ public class PropertiesStepdefs {
     @And("^Check is active attribute is \"([^\"]*)\" for relation between user \"([^\"]*)\" and property with code \"([^\"]*)\"$")
     public void isActiveAttributeIsForRelationBetweenUserAndPropertyWithCode(Boolean isActive, String username, String propertyCode) throws Throwable {
         Map<String, String> ids = getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        PropertyUserRelationshipDto userPropertyRelation = propertySteps.getUserForProperty(ids.get(PROPERTY_ID), ids.get(USER_ID));
+        UserPropertyRelationshipDto userPropertyRelation = propertySteps.getUserForProperty(ids.get(PROPERTY_ID), ids.get(USER_ID));
         assertThat(userPropertyRelation, is(notNullValue()));
         assertThat(userPropertyRelation.getIsActive(), is(isActive));
     }
 
-    @When("^Add ttiId to booking.com id \"([^\"]*)\" mapping to property with code \"([^\"]*)\"$")
-    public void addTtiIdAndBookingComIdMappingToPropertyWithCode(Integer bookingComId, String propertyCode) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
-        ttiCrossreference.setCode(bookingComId);
-        propertySteps.assignTtiToProperty(propertyId, ttiCrossreference);
-    }
+//    @When("^Add ttiId to booking.com id \"([^\"]*)\" mapping to property with code \"([^\"]*)\"$")
+//    public void addTtiIdAndBookingComIdMappingToPropertyWithCode(Integer bookingComId, String propertyCode) throws Throwable {
+//        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+//        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
+//        ttiCrossreference.setCode(bookingComId);
+//        propertySteps.assignTtiToProperty(propertyId, ttiCrossreference);
+//    }
 
-    @When("^Add ttiId to booking.com id \"([^\"]*)\" mapping to property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
-    public void addTtiIdToBookingComIdMappingToPropertyWithCodeByUser(Integer bookingComId, String propertyCode, String username) throws Throwable {
-        Map<String, String> ids = getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
-        ttiCrossreference.setCode(bookingComId);
-
-        propertySteps.assignTtiToPropertyByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), ttiCrossreference);
-    }
-
-    @When("^Add ttiId to booking.com id mapping to property with code \"([^\"]*)\" without booking.com code$")
-    public void addTtiIdToBookingComIdMappingToPropertyWithCodeWithoutCode(String propertyCode) throws Throwable {
-        String propertyId = propertySteps.resolvePropertyId(propertyCode);
-
-        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
-        propertySteps.assignTtiToProperty(propertyId, ttiCrossreference);
-    }
+//    @When("^Add ttiId to booking.com id \"([^\"]*)\" mapping to property with code \"([^\"]*)\" by user \"([^\"]*)\"$")
+//    public void addTtiIdToBookingComIdMappingToPropertyWithCodeByUser(Integer bookingComId, String propertyCode, String username) throws Throwable {
+//        Map<String, String> ids = getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
+//        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
+//        ttiCrossreference.setCode(bookingComId);
+//
+//        propertySteps.assignTtiToPropertyByUser(ids.get(USER_ID), ids.get(PROPERTY_ID), ttiCrossreference);
+//    }
+//
+//    @When("^Add ttiId to booking.com id mapping to property with code \"([^\"]*)\" without booking.com code$")
+//    public void addTtiIdToBookingComIdMappingToPropertyWithCodeWithoutCode(String propertyCode) throws Throwable {
+//        String propertyId = propertySteps.resolvePropertyId(propertyCode);
+//
+//        TtiCrossreferenceDto ttiCrossreference = new TtiCrossreferenceDto();
+//        propertySteps.assignTtiToProperty(propertyId, ttiCrossreference);
+//    }
 
     @Given("^Property \"([^\"]*)\" is created with address for user \"([^\"]*)\" and customer with id \"([^\"]*)\"$")
     public void propertyIsCreatedWithAddress(String propertyName, String username, String customerId, List<AddressDto> addresses) throws Throwable {
@@ -491,7 +490,7 @@ public class PropertiesStepdefs {
         String performerId = ((performerName == null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         String userId = usersSteps.resolveUserId(userName);
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        PropertyUserRelationshipDto relation = propertySteps.getUserForProperty(propertyId, userId);
+        UserPropertyRelationshipDto relation = propertySteps.getUserForProperty(propertyId, userId);
         relation.setIsActive(isActive);
         usersSteps.updateUserPropertyRelationshipByUser(performerId, userId, propertyId, relation);
     }

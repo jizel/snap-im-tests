@@ -50,7 +50,7 @@ Feature: Eventing tests for Property Sets
 
   Scenario: Add and remove property to and from property set
     Given The following properties exist with random address and billing address
-      | salesforceId   | name         | code           | website                    | email          | isDemo         | timezone      | anchorCustomerId                     |
+      | salesforceId   | name         | code           | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name      | event_property | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | a792d2b2-3836-4207-a705-42bbecf3d881 |
     Given Subscription with name "Test" for topic "Notifications.crud" is created
 #    Add

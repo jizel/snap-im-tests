@@ -10,7 +10,7 @@ Feature: User groups properties
       | id                                   | customerId                           | name        | isActive |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 5be73595-bf57-4b10-8725-dad80531dbc3 | userGroup_1 | false    |
     Given The following properties exist with random address and billing address
-      | id                                   | name                | code                | email          | timezone      | anchorCustomerId                     | isDemo         |
+      | id                                   | name                | code                | email          | timezone      | customerId                           | isDemo         |
       | 896c2eac-4ef8-45d1-91fc-79a5933a0ed3 | property_userGroup1 | property_userGroup1 | p1@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
     Given Relation between user group "userGroup_1" and property with code "property_userGroup1" exists with isActive "false"
 
@@ -29,7 +29,7 @@ Feature: User groups properties
 
   Scenario: Relationship creation between user group and property - valid
     Given The following properties exist with random address and billing address
-      | id                                   | name                | code                | email          | timezone      | anchorCustomerId                     | isDemo         |
+      | id                                   | name                | code                | email          | timezone      | customerId                           | isDemo         |
       | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | property_userGroup2 | property_userGroup2 | p2@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "false"
     Then Response code is 201
@@ -87,7 +87,7 @@ Feature: User groups properties
 
   Scenario: Duplicate relationship creation between user group and property - DP-1661
     Given The following properties exist with random address and billing address
-      | id                                   | name                | code                | email          | timezone      | anchorCustomerId                     | isDemo         |
+      | id                                   | name                | code                | email          | timezone      | customerId                           | isDemo         |
       | 30f983ea-7a69-4e50-a369-d1278f1a0c40 | property_userGroup2 | property_userGroup2 | p2@tenants.biz | Europe/Prague | 5be73595-bf57-4b10-8725-dad80531dbc3 | true           |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "true"
     Then Response code is 201
