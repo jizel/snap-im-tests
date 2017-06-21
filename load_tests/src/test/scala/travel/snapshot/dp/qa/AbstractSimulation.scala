@@ -53,9 +53,9 @@ abstract class AbstractSimulation extends Simulation {
 
   /** Executes the scenario defined in descendant */
   protected def runScenario(scn: ScenarioBuilder): Unit = {
-    setUp(scn.inject(rampUsersPerSec(startUsers.toDouble) to endUsers.toDouble during (rampTime seconds))).protocols(httpConf)
+//    setUp(scn.inject(rampUsersPerSec(startUsers.toDouble) to endUsers.toDouble during (rampTime seconds))).protocols(httpConf)
 //    Alternative (simpler) ramping. Both approaches can be used
-//    setUp(scn.inject(rampUsers(startUsers) over rampTime)).protocols(httpConf)
+    setUp(scn.inject(rampUsers(startUsers) over rampTime)).protocols(httpConf)
   }
 
 
