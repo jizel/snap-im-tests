@@ -17,7 +17,6 @@ Feature: Properties access check feature - GET
   Given The following customers exist with random address
     | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
     | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-  Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
   Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
     | type     | username       | firstName | lastName | email                | timezone      | languageCode | isActive |
     | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -25,7 +24,6 @@ Feature: Properties access check feature - GET
   Given The following property is created with random address and billing address for user "userWithProp"
     | id                                   | salesforceId   | name | code         | website                    | email          | isDemo         | timezone      | customerId                           |
     | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-  Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
     Scenario: Inactive user-property relation does not grant user access to property
       Given Relation between user "userWithNoProp" and property with code "p1_code" exists with is_active "false"
@@ -131,10 +129,6 @@ Feature: Properties access check feature - GET
          | salesforceid_3 | p3_name      | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 4231  |
          | salesforceid_4 | p4_name      | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 5678  |
          | salesforceid_5 | p5_name      | p5_code      | p5@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8765  |
-       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
-       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p3_code"
-       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p4_code"
-       Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p5_code"
        When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithProp"
        Then Response code is "200"
        And There are <returned> properties returned
@@ -165,7 +159,6 @@ Feature: Properties access check feature - GET
       And Custom code is "40402"
       Examples:
         | url                                                                               |
-#        | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users                    |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers                |
@@ -177,7 +170,6 @@ Feature: Properties access check feature - GET
        And Custom code is "40402"
        Examples:
          | url                                                                                                                             |
-#         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions?filter=is_active=='false'&sort=customer_id    |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users?sortDesc=user_id&cursor=0                                        |
          | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers?limit=55&filter=company_name=='*'                            |
@@ -191,7 +183,6 @@ Feature: Properties access check feature - GET
         | url                                                                               |
         | identity/properties                                                               |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/                         |
-#        | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users                    |
         | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers                |

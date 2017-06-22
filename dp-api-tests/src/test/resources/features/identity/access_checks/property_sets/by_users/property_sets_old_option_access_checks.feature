@@ -9,7 +9,6 @@ Feature: Property sets old option access check feature - DP-1576
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | type     | username                | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | userWithImplicitPropSet | Customer1 | User1    | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -19,9 +18,6 @@ Feature: Property sets old option access check feature - DP-1576
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_1 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       | salesforceid_1 | p3_name      | p3_code      | http://www.snapshot.travel | p3@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p2_code"
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p3_code"
     Given The following property sets exist for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and user "userWithExplicitPropSet"
       | name            | type            | id                                   |
       | ps1_name        | brand           | 12300000-1111-4c57-91bd-30230d2c1bd0 |
@@ -54,7 +50,6 @@ Feature: Property sets old option access check feature - DP-1576
       Given The following properties exist with random address and billing address for user "userWithExplicitPropSet"
         | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
         | salesforceid_4 | p4_name      | p4_code      | http://www.snapshot.travel | p4@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-      Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p4_code"
       Given Relation between property "p4_code" and property set "ps1_name" exists
       When List of all property sets for customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" is requested by user "userWithImplicitPropSet"
       Then Response code is "200"

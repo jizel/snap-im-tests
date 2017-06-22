@@ -11,7 +11,6 @@ Feature: Properties-Property Sets access check feature
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | type     | username       | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | userWithProp   | Customer1 | User1    | cus1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -19,7 +18,6 @@ Feature: Properties-Property Sets access check feature
     Given The following property is created with random address and billing address for user "userWithProp"
       | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" and property "p1_code"
 
 
   Scenario: Second level entities - User sees only property sets he should for property he owns

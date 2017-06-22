@@ -21,10 +21,10 @@ Feature: Customers properties get
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 742529dd-481f-430d-b6b6-686fbb687cab | 11111111-0000-4000-a000-111111111111 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
-      | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
+#    Given The following api subscriptions exist
+#      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
+#      | 5c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
+#      | 6c6f61ff-810c-43da-96e2-ff6c8c9b8b2f | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb |
 
   #  DP-1775
   # All api subscription endpoints are disabled in 1.37

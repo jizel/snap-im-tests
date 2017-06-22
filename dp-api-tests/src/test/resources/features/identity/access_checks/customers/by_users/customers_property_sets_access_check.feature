@@ -23,8 +23,6 @@ Feature: Customers property sets access check feature (second level endpoints)
     Given The following property sets exist for customer with id "00000000-0000-4000-8000-123000000abc" and user "userWithCust2"
       | id                                   | name            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd2 | prop_set3       | brand           |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
-    Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"
 
 
   Scenario: Second level entities - User sees only property sets he should for customer he sees

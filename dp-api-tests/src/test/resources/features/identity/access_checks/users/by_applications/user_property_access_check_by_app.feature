@@ -21,9 +21,6 @@ Feature: User-property access check by app feature - GET
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | commercialSubscriptionId             |
-      | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | type     | username | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1    | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -44,9 +41,6 @@ Feature: User-property access check by app feature - GET
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000000 | 22222222-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | commercialSubscriptionId             | applicationVersionId                 |
-      | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" requests list of users for property "p1_code" for application version "versionWithoutSubscription"
     Then Response code is "403"
     And Custom code is 40301
@@ -65,9 +59,6 @@ Feature: User-property access check by app feature - GET
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000000 | 22222222-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | commercialSubscriptionId             | applicationVersionId                 |
-      | 22200000-0000-4000-a000-000000000333 | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 |
     When User "user1" adds user "user2" to property "p1_code" for application version "versionWithoutSubscription"
     Then Response code is "403"
     And Custom code is 40301

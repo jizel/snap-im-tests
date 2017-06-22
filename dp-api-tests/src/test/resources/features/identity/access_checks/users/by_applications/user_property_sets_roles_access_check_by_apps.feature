@@ -22,9 +22,6 @@ Feature: User-propertyset roles access check by app feature
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | commercialSubscriptionId             | applicationVersionId                 |
-      | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 | 22200000-0000-4000-a000-000000000333 |
     Given Switch for user property set role tests
     Given The following roles exist
       | id                                   | roleName | description      |

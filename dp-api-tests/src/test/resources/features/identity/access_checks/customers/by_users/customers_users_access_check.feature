@@ -17,8 +17,6 @@ Feature: Customers users access check feature (second level endpoints)
     Given The following users exist for customer "00000000-0000-4000-8000-123000000abc" as primary "false"
       | id                                   | type     | username      | firstName | lastName | email                | timezone      | languageCode | isActive |
       | 32129079-48f0-4f00-9bec-e2329a8bdaac | customer | userWithCust2 | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
-    Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"
     Given Relation between user "userWithCust1" and default property exists
     Given Relation between user "userWithCust2" and default property exists
 

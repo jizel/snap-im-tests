@@ -14,7 +14,6 @@ Feature: User Groups Properties Roles access check feature
     Given The following customers exist with random address
       | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
     Given The following user groups exist
       | id                                   | customerId                           | name        | isActive | description          |
       | 12345000-1111-4000-a000-000000000000 | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription |
@@ -26,7 +25,6 @@ Feature: User Groups Properties Roles access check feature
     Given The following properties exist with random address and billing address for user "userWithNoUserGroup"
       | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 999e833e-50e8-4854-a233-289f00b54a09 | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     Given The following partner exist
       | id                                   | name         | email                   | website                    |
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |

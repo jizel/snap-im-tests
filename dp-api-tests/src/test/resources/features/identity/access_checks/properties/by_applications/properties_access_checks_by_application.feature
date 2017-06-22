@@ -33,9 +33,6 @@ Feature: Properties Application access check feature
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 33300000-0000-4000-a000-000000000111 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given Relation between user "user1" and property with code "p1_code" exists with is_active "true"
     Given Relation between user "user1" and property with code "p2_code" exists with is_active "true"
 
@@ -59,9 +56,6 @@ Feature: Properties Application access check feature
     Given Relation between user "user1" and property with code "p4_code" exists
     Given Relation between user "user1" and property with code "p5_cedo" exists
     Given Relation between user "user1" and property with code "p6_cedo" exists
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p3_code"
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p4_code"
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p5_cedo"
     When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "user1" for application version "DefaultVersion"
     Then Response code is "200"
     And There are <returned> properties returned
@@ -125,7 +119,6 @@ Feature: Properties Application access check feature
     And Custom code is "40301"
     Examples:
       | url                                                                               |
-#      | identity/properties/33300000-0000-4000-a000-000000000111/api_subscriptions        |
       | identity/properties/33300000-0000-4000-a000-000000000111/commercial_subscriptions |
       | identity/properties/33300000-0000-4000-a000-000000000111/users                    |
       | identity/properties/33300000-0000-4000-a000-000000000111/customers                |
@@ -139,7 +132,6 @@ Feature: Properties Application access check feature
       | url                                                                               |
       | identity/properties                                                               |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/                         |
-#      | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/api_subscriptions        |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/commercial_subscriptions |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/users                    |
       | identity/properties/999e833e-50e8-4854-a233-289f00b54a09/customers                |

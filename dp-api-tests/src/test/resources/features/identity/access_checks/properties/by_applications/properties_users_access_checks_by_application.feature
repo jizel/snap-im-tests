@@ -33,9 +33,6 @@ Feature: Properties-Users Application access check feature
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 33300000-0000-4000-a000-000000000111 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given Relation between user "user1" and property with code "p1_code" exists with is_active "true"
     Given Relation between user "user1" and property with code "p2_code" exists with is_active "true"
 

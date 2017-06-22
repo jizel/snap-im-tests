@@ -37,9 +37,7 @@ Feature: Property sets- Users Application access check feature
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
+
 
   Scenario: Application sees only users for property set it has subscription to
     When List of all users for property set "ps1_name" is requested by user "userWithPropertySet" for application version "versionWithSubscription"
