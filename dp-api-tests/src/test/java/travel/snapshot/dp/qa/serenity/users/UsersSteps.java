@@ -16,10 +16,9 @@ import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -466,9 +465,9 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public UserCustomerRelationshipDto getCustomerForUser(String userId, String customerId) {
+    public UserCustomerRelationshipPartialDto getCustomerForUser(String userId, String customerId) {
         Response userCustomerResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
-        return stream(userCustomerResponse.as(UserCustomerRelationshipDto[].class)).findFirst().orElse(null);
+        return stream(userCustomerResponse.as(UserCustomerRelationshipPartialDto[].class)).findFirst().orElse(null);
     }
 
     @Step
@@ -486,13 +485,13 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void createUserPartnerRelationship(String userId, String partnerId){
-        UserPartnerRelationshipDto relation = new UserPartnerRelationshipDto();
+        UserPartnerRelationshipPartialDto relation = new UserPartnerRelationshipPartialDto();
         relation.setPartnerId(partnerId);
         JSONObject jsonRelation = null;
         try {
             jsonRelation = retrieveData(relation);
         } catch(JsonProcessingException exception){
-            fail("Exception thrown while getting JSON from UserPartnerRelationshipDto object");
+            fail("Exception thrown while getting JSON from UserPartnerRelationshipPartialDto object");
         }
         Response response = createSecondLevelRelationship(userId, SECOND_LEVEL_OBJECT_PARTNERS, jsonRelation.toString());
         setSessionResponse(response);

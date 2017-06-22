@@ -23,12 +23,12 @@ import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
@@ -219,7 +219,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public Response addUserToCustomerByUserForApp(String performerId, String applicationVersionId, String userId, String customerId, Boolean isPrimary, Boolean isActive) {
-        UserCustomerRelationshipDto relation = new UserCustomerRelationshipDto();
+        CustomerUserRelationshipPartialDto relation = new CustomerUserRelationshipPartialDto();
         relation.setUserId(userId);
         relation.setIsPrimary(isPrimary);
         relation.setIsActive(isActive);
@@ -477,7 +477,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void relationExistsBetweenUserAndCustomer(String userId, String customerId, Boolean isPrimary, Boolean isActive) {
-        UserCustomerRelationshipDto existingCustomerUser = getUserForCustomer(customerId, userId);
+        CustomerUserRelationshipPartialDto existingCustomerUser = getUserForCustomer(customerId, userId);
         if (existingCustomerUser != null) {
 
             Response deleteResponse = deleteSecondLevelEntity(customerId, SECOND_LEVEL_OBJECT_USERS, userId, null);
@@ -492,9 +492,9 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public UserCustomerRelationshipDto getUserForCustomer(String customerId, String userId) {
+    public CustomerUserRelationshipPartialDto getUserForCustomer(String customerId, String userId) {
         Response customerUserResponse = getSecondLevelEntities(customerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "user_id==" + userId, null, null, null);
-        return stream(customerUserResponse.as(UserCustomerRelationshipDto[].class)).findFirst().orElse(null);
+        return stream(customerUserResponse.as(CustomerUserRelationshipPartialDto[].class)).findFirst().orElse(null);
     }
 
     @Step
@@ -574,7 +574,7 @@ public class CustomerSteps extends BasicSteps {
 
     @Step
     public void userDoesntExistForCustomer(String userId, String customerId) {
-        UserCustomerRelationshipDto userForCustomer = getUserForCustomer(customerId, userId);
+        CustomerUserRelationshipPartialDto userForCustomer = getUserForCustomer(customerId, userId);
         assertNull("User should not be present in customer", userForCustomer);
     }
 
@@ -604,8 +604,8 @@ public class CustomerSteps extends BasicSteps {
             CustomerDto customer = getCustomerById(customerId);
             if (customer != null) {
                 Response customerUsersResponse = getSecondLevelEntities(customer.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
-                UserCustomerRelationshipDto[] customerUsers = customerUsersResponse.as(UserCustomerRelationshipDto[].class);
-                for (UserCustomerRelationshipDto cu : customerUsers) {
+                CustomerUserRelationshipPartialDto[] customerUsers = customerUsersResponse.as(CustomerUserRelationshipPartialDto[].class);
+                for (CustomerUserRelationshipPartialDto cu : customerUsers) {
                     Response deleteResponse = deleteSecondLevelEntity(customer.getId(), SECOND_LEVEL_OBJECT_USERS, cu.getUserId(), null);
                     if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                         fail("Property set cannot be deleted: " + deleteResponse.getBody().asString());
@@ -629,10 +629,10 @@ public class CustomerSteps extends BasicSteps {
 
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
-        UserCustomerRelationshipDto[] customerUsers = response.as(UserCustomerRelationshipDto[].class);
+        CustomerUserRelationshipPartialDto[] customerUsers = response.as(CustomerUserRelationshipPartialDto[].class);
         int i = 0;
-        for (UserCustomerRelationshipDto cu : customerUsers) {
-//            userName is not part of new class - UserCustomerRelationshipDto, needs to be obtained via different endpoint
+        for (CustomerUserRelationshipPartialDto cu : customerUsers) {
+//            userName is not part of new class - CustomerUserRelationshipPartialDto, needs to be obtained via different endpoint
 //          TODO: uncomment  assertEquals("Customeruser on index=" + i + " is not expected", usernames.get(i), cu.getUserName());
             i++;
         }

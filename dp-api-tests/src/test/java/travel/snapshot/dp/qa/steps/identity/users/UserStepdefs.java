@@ -25,7 +25,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.helpers.Resolvers;
@@ -174,7 +174,7 @@ public class UserStepdefs {
 
     @Then("^There are (\\d+) userCustomers returned$")
     public void There_are_returned_userCustomers_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(UserCustomerRelationshipDto.class, count);
+        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipPartialDto.class, count);
     }
 
     @Then("^There are users with following usernames returned in order: (.*)$")

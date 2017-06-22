@@ -34,7 +34,7 @@ import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
@@ -259,7 +259,7 @@ public class CustomerStepdefs {
     public void relationBetweenUserAndCustomerWithIdIsUpdatedWithIsPrimaryByUser(String username, String customerId, Boolean isPrimary, String performerName, String applicationVersionName) throws Throwable {
         Map<String, String> userIds = usersSteps.getUsersIds(performerName, username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
-        UserCustomerRelationshipDto userCustomerRelationship = new UserCustomerRelationshipDto();
+        CustomerUserRelationshipPartialDto userCustomerRelationship = new CustomerUserRelationshipPartialDto();
         userCustomerRelationship.setIsPrimary(isPrimary);
         customerSteps.updateUserCustomerRelationshipByUserForApp(userIds.get(REQUESTOR_ID), applicationVersionId, userIds.get(TARGET_ID), customerId, userCustomerRelationship);
     }
@@ -419,7 +419,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customerUsers returned$")
     public void There_are_returned_customerUsers_returned(int count) throws Throwable {
-        usersSteps.numberOfEntitiesInResponse(UserCustomerRelationshipDto.class, count);
+        usersSteps.numberOfEntitiesInResponse(CustomerUserRelationshipPartialDto.class, count);
     }
 
     @Then("^User \"([^\"]*)\" isn't there for customer with id \"([^\"]*)\"$")
@@ -498,7 +498,7 @@ public class CustomerStepdefs {
     public void relationBetweenUserAndCustomerWithIdHasIsPrimarySetTo(String username, String customerId) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
 
-        UserCustomerRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
+        CustomerUserRelationshipPartialDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
         assertThat(existingCustomerUser, is(notNullValue()));
         assertThat(existingCustomerUser.getIsPrimary(), is(true));
     }
@@ -506,7 +506,7 @@ public class CustomerStepdefs {
     @And("^Relation between user \"([^\"]*)\" and customer with id \"([^\"]*)\" is not primary$")
     public void relationBetweenUserAndCustomerWithIdIsNotPrimary(String username, String customerId) throws Throwable {
         String userId = usersSteps.resolveUserId(username);
-        UserCustomerRelationshipDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
+        CustomerUserRelationshipPartialDto existingCustomerUser = customerSteps.getUserForCustomer(customerId, userId);
         assertThat(existingCustomerUser.getIsPrimary(), is(false));
     }
 
