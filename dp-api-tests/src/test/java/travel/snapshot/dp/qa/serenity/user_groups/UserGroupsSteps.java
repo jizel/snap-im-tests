@@ -14,11 +14,11 @@ import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.helpers.RegexValueConverter;
@@ -235,7 +235,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void userGroupPropertySetRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertySetId, Boolean isActive){
-        UserGroupPropertySetRelationshipDto relation = new UserGroupPropertySetRelationshipDto();
+        UserGroupPropertySetRelationshipPartialDto relation = new UserGroupPropertySetRelationshipPartialDto();
         relation.setPropertySetId(propertySetId);
         relation.setIsActive(isActive);
 
@@ -256,7 +256,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void createUserGroupPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, Boolean isActive) {
-        UserGroupPropertyRelationshipDto relation = new UserGroupPropertyRelationshipDto();
+        UserGroupPropertyRelationshipPartialDto relation = new UserGroupPropertyRelationshipPartialDto();
         relation.setPropertyId(propertyId);
         relation.setIsActive(isActive);
 
@@ -281,7 +281,7 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void addUserToUserGroupByUserForApp(String performerId, String applicationVersionId, String userId, String userGroupId, Boolean isActive) {
-        UserGroupUserRelationshipDto relation = new UserGroupUserRelationshipDto();
+        UserGroupUserRelationshipPartialDto relation = new UserGroupUserRelationshipPartialDto();
         relation.setUserId(userId);
         relation.setIsActive(isActive);
 
@@ -383,7 +383,7 @@ public class UserGroupsSteps extends BasicSteps {
     @Step
     public void setGroupPropertyActivityByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, boolean activity) throws JsonProcessingException {
         String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).getHeader(HEADER_ETAG);
-        UserGroupPropertyRelationshipUpdateDto relation = new UserGroupPropertyRelationshipDto();
+        UserGroupPropertyRelationshipUpdateDto relation = new UserGroupPropertyRelationshipPartialDto();
         relation.setIsActive(activity);
         try {
             JSONObject obj = retrieveData(relation);
@@ -402,7 +402,7 @@ public class UserGroupsSteps extends BasicSteps {
     @Step
     public void setGroupPropertySetActivityByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertySetId, boolean isActive) throws JsonProcessingException {
         String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).getHeader(HEADER_ETAG);
-        UserGroupPropertySetRelationshipDto relation = new UserGroupPropertySetRelationshipDto();
+        UserGroupPropertySetRelationshipPartialDto relation = new UserGroupPropertySetRelationshipPartialDto();
         relation.setIsActive(isActive);
 
         JSONObject obj = retrieveData(relation);
@@ -507,17 +507,17 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     public void checkuserGroupPropertyRelationActivity(String userGroupId, String propertyId, boolean activity) {
-        UserGroupPropertyRelationshipDto relation = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).as(UserGroupPropertyRelationshipDto.class);
+        UserGroupPropertyRelationshipPartialDto relation = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).as(UserGroupPropertyRelationshipPartialDto.class);
         assertEquals(relation.getIsActive(), activity);
     }
 
     public void checkuserGroupPropertySetRelationActivity(String userGroupId, String propertySetId, boolean b) {
-        UserGroupPropertySetRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).as(UserGroupPropertySetRelationshipDto.class);
+        UserGroupPropertySetRelationshipPartialDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).as(UserGroupPropertySetRelationshipPartialDto.class);
         assertEquals(relationship.getIsActive(), b);
     }
 
     public Boolean getUserGroupUserRelationIsActive(String userGroupId, String userId){
-        UserGroupUserRelationshipDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId).as(UserGroupUserRelationshipDto.class);
+        UserGroupUserRelationshipPartialDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId).as(UserGroupUserRelationshipPartialDto.class);
         return relationship.getIsActive();
     }
 

@@ -17,10 +17,10 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.applications.ApplicationVersionsSteps;
@@ -250,7 +250,7 @@ public class PropertySetsStepdefs {
     @Then("^User(?: with)? \"([^\"]*)\" isn't there for property set \"([^\"]*)\"$")
     public void User_with_username_isn_t_there_for_property_set_with_name_for_customer_with_code(String username, String propertySetName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserPropertySetRelationshipDto relationship = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        PropertySetUserRelationshipPartialDto relationship = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
         assertThat("Relation between user " + username + " and property set " + propertySetName + "should not exist!",relationship, is(nullValue()));
     }
 
@@ -258,7 +258,7 @@ public class PropertySetsStepdefs {
     public void Property_with_code_isn_t_there_for_property_set_with_name_for_customer_with_code(String propertyCode, String propertySetName, String customerId) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId( propertyCode );
         String propertySetId = propertySetSteps.resolvePropertySetId( propertySetName );
-        PropertySetPropertyRelationshipDto existingPropertySetProperty = propertySetSteps.getPropertyForPropertySet( propertySetId, propertyId );
+        PropertySetPropertyRelationshipPartialDto existingPropertySetProperty = propertySetSteps.getPropertyForPropertySet( propertySetId, propertyId );
         assertNull("Property should not be present in propertyset", existingPropertySetProperty);
     }
 
@@ -279,12 +279,12 @@ public class PropertySetsStepdefs {
 
     @Then("^There are (\\d+) property set properties returned$")
     public void There_are_returned_property_set_properties_returned(int count) throws Throwable {
-        propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, count);
+        propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipPartialDto.class, count);
     }
 
     @Then("^There are (\\d+) property property sets returned$")
     public void There_are_returned_property_property_sets_returned(int count) throws Throwable {
-        propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, count);
+        propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipPartialDto.class, count);
     }
 
     @When("^Property set \"([^\"]*)\" is updated with following data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
@@ -312,7 +312,7 @@ public class PropertySetsStepdefs {
     @Given("^Check is active attribute is \"([^\"]*)\" for relation between user \"([^\"]*)\" and property set \"([^\"]*)\"$")
     public void checkIsActiveAttributeIsForRelationBetweenUserAndPropertySet(Boolean isActive, String username, String propertySetName) throws Throwable {
         Map<String, String> ids = getValidUserPropertySetIdsFromNames(username, propertySetName);
-        UserPropertySetRelationshipDto propertySetUserRelation = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
+        PropertySetUserRelationshipPartialDto propertySetUserRelation = propertySetSteps.getUserForPropertySet(ids.get(USER_ID), ids.get(PROPERTY_SET_ID));
         assertThat(propertySetUserRelation, is(notNullValue()));
         assertThat(propertySetUserRelation.getIsActive(), is(isActive));
     }

@@ -25,7 +25,7 @@ import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartial
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.serenity.BasicSteps;
@@ -381,7 +381,7 @@ public class PropertiesStepdefs {
     @And("^Check is active attribute is \"([^\"]*)\" for relation between user \"([^\"]*)\" and property with code \"([^\"]*)\"$")
     public void isActiveAttributeIsForRelationBetweenUserAndPropertyWithCode(Boolean isActive, String username, String propertyCode) throws Throwable {
         Map<String, String> ids = getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
-        UserPropertyRelationshipDto userPropertyRelation = propertySteps.getUserForProperty(ids.get(PROPERTY_ID), ids.get(USER_ID));
+        PropertyUserRelationshipPartialDto userPropertyRelation = propertySteps.getUserForProperty(ids.get(PROPERTY_ID), ids.get(USER_ID));
         assertThat(userPropertyRelation, is(notNullValue()));
         assertThat(userPropertyRelation.getIsActive(), is(isActive));
     }
@@ -490,7 +490,7 @@ public class PropertiesStepdefs {
         String performerId = ((performerName == null) ? DEFAULT_SNAPSHOT_USER_ID : usersSteps.resolveUserId(performerName));
         String userId = usersSteps.resolveUserId(userName);
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        UserPropertyRelationshipDto relation = propertySteps.getUserForProperty(propertyId, userId);
+        PropertyUserRelationshipPartialDto relation = propertySteps.getUserForProperty(propertyId, userId);
         relation.setIsActive(isActive);
         usersSteps.updateUserPropertyRelationshipByUser(performerId, userId, propertyId, relation);
     }

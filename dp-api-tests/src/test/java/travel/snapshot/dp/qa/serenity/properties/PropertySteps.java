@@ -22,11 +22,12 @@ import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
+import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.helpers.AddressUtils;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -265,9 +266,9 @@ public class PropertySteps extends BasicSteps {
         propertyCodes.forEach(c -> {
             PropertyDto property = getPropertyByCodeInternal(c);
             Response customerUsersResponse = getSecondLevelEntities(property.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
-            UserPartnerRelationshipDto[] propertyUsers = customerUsersResponse.as(UserPartnerRelationshipDto[].class);
-            for (UserPartnerRelationshipDto pu : propertyUsers) {
-                Response deleteResponse = deleteSecondLevelEntity(property.getId(), SECOND_LEVEL_OBJECT_USERS, pu.getUserId(), null);
+            PartnerUserRelationshipPartialDto[] propertyUsers = customerUsersResponse.as(PartnerUserRelationshipPartialDto[].class);
+            for (PartnerUserRelationshipPartialDto partnerUser : propertyUsers) {
+                Response deleteResponse = deleteSecondLevelEntity(property.getId(), SECOND_LEVEL_OBJECT_USERS, partnerUser.getUserId(), null);
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
                 }
@@ -292,7 +293,7 @@ public class PropertySteps extends BasicSteps {
         if (isActive == null) {
             isActive = true;
         }
-        UserPropertyRelationshipDto relation = new UserPropertyRelationshipDto();
+        PropertyUserRelationshipPartialDto relation = new PropertyUserRelationshipPartialDto();
         relation.setUserId(userId);
         relation.setIsActive(isActive);
 
@@ -301,10 +302,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public UserPropertyRelationshipDto getUserForProperty(String propertyId, String userId) {
+    public PropertyUserRelationshipPartialDto getUserForProperty(String propertyId, String userId) {
         Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId);
         if (customerUserResponse.statusCode() == HttpStatus.SC_OK) {
-            return customerUserResponse.as(UserPropertyRelationshipDto.class);
+            return customerUserResponse.as(PropertyUserRelationshipPartialDto.class);
         } else {
             return null;
         }
@@ -343,16 +344,16 @@ public class PropertySteps extends BasicSteps {
 
     public void userDoesntExistForProperty(String userId, String propertyCode) {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
-        UserPropertyRelationshipDto userForProperty = getUserForProperty(p.getId(), userId);
+        PropertyUserRelationshipPartialDto userForProperty = getUserForProperty(p.getId(), userId);
         assertNull("User should not be present in property", userForProperty);
     }
 
     public void usernamesAreInResponseInOrder(List<String> usernames) {
         Response response = getSessionResponse();
-        UserPartnerRelationshipDto[] propertiesUsers = response.as(UserPartnerRelationshipDto[].class);
+        UserPartnerRelationshipPartialDto[] propertiesUsers = response.as(UserPartnerRelationshipPartialDto[].class);
         int i = 0;
-        for (UserPartnerRelationshipDto pu : propertiesUsers) {
-            //            userName is not part of new class - UserPartnerRelationshipDto, needs to be obtained via different endpoint
+        for (UserPartnerRelationshipPartialDto pu : propertiesUsers) {
+            //            userName is not part of new class - UserPartnerRelationshipPartialDto, needs to be obtained via different endpoint
             //            assertEquals("Propertyuser on index=" + i + " is not expected", usernames.get(i), pu.getUserName());
             i++;
         }
@@ -563,7 +564,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void addPropertyToUserByUserForApp(String requestorId, String applicationVersionId, String propertyId, String targetUserId) {
-        UserPropertyRelationshipDto relation = new UserPropertyRelationshipDto();
+        PropertyUserRelationshipPartialDto relation = new PropertyUserRelationshipPartialDto();
         relation.setUserId(targetUserId);
         setSessionResponse(createSecondLevelRelationshipByUserForApplication(requestorId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
     }
