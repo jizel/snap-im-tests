@@ -20,8 +20,8 @@ import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
@@ -134,7 +134,6 @@ public class PropertySteps extends BasicSteps {
     @Step
     public void followingPropertyIsCreatedWithAddress(PropertyDto property, AddressDto address, String userId) {
         property.setAddress(address);
-
         Response response = createProperty(userId, property);
         setSessionResponse(response);
     }
@@ -409,8 +408,8 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) {
-        CustomerPropertyRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+    public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipPartialUpdateDto relationshipUpdate) {
+        CustomerPropertyRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId());
         try {
@@ -424,7 +423,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
-        CustomerPropertyRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        CustomerPropertyRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), null);
         setSessionResponse(response);
@@ -472,19 +471,19 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public CustomerPropertyRelationshipDto getPropertyCustomerRelationship(String customerId, String propertyId) {
+    public CustomerPropertyRelationshipPartialDto getPropertyCustomerRelationship(String customerId, String propertyId) {
         return getPropertyCustomerRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, customerId, propertyId);
     }
 
-    public CustomerPropertyRelationshipDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
+    public CustomerPropertyRelationshipPartialDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
         String filter = String.format("customer_id==%s", customerId);
-        CustomerPropertyRelationshipDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(CustomerPropertyRelationshipDto[].class);
+        CustomerPropertyRelationshipPartialDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(CustomerPropertyRelationshipPartialDto[].class);
         return stream(relations).findFirst().orElse(null);
     }
 
     @Step
     public void requestPropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
-        CustomerPropertyRelationshipDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        CustomerPropertyRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId()));
     }

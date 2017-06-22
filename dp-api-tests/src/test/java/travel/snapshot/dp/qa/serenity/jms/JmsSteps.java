@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import com.google.gson.Gson;
 import com.jayway.restassured.path.json.JsonPath;
+import lombok.NoArgsConstructor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
 import travel.snapshot.dp.qa.helpers.PropertiesHelper;
@@ -20,8 +21,10 @@ import javax.jms.Session;
 import javax.jms.Topic;
 
 /**
- * Created by sedlacek on 11/25/2015.
+ * Basic steps for handling JMS notifications
  */
+
+@NoArgsConstructor
 public class JmsSteps extends BasicSteps {
 
     public static final String SESSION_NOTIFICATION = "notification";
@@ -32,9 +35,6 @@ public class JmsSteps extends BasicSteps {
     private MessageConsumer consumer = null;
     private Gson gson = new Gson();
 
-    public JmsSteps() throws Exception {
-
-    }
 
     public void start() throws Exception {
         connectionFactory = new ActiveMQConnectionFactory(PropertiesHelper.getProperty("broker.url"));
@@ -49,7 +49,7 @@ public class JmsSteps extends BasicSteps {
         connection.close();
     }
 
-    public void receiveMessage(String destinationName, String subscriptionName) throws Exception {
+    public Map<String, Object> receiveMessage(String destinationName, String subscriptionName) throws Exception {
         start();
         Topic topic = new ActiveMQTopic(destinationName);
         consumer = session.createDurableSubscriber(topic, subscriptionName);
@@ -61,8 +61,9 @@ public class JmsSteps extends BasicSteps {
         byte[] byteArr = new byte[(int) message.getBodyLength()];
         message.readBytes(byteArr);
         String m = new String(byteArr, Charset.forName("utf-8"));
-        Map<String, Object> map = JsonPath.from(m).getJsonObject("");
-        setSessionVariable(SESSION_NOTIFICATION, map);
+        Map<String, Object> mapNotification = JsonPath.from(m).getJsonObject("");
+        setSessionVariable(SESSION_NOTIFICATION, mapNotification);
+        return mapNotification;
     }
 
     public void unsubscribe(String destinationName, String subscriptionName) throws Exception {
@@ -97,7 +98,7 @@ public class JmsSteps extends BasicSteps {
 
     public void notificationContainsId(String entityId) {
         Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        String value = (String) notification.get("id");
+        String value = (String) notification.get("entity_id");
         assertEquals(entityId, value);
     }
 

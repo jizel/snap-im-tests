@@ -5,6 +5,7 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadEntities;
 
 import lombok.Getter;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
@@ -26,11 +27,13 @@ public class EntitiesLoader {
     private EntityNonNullMap<String, CustomerCreateDto> customerDtos;
     private EntityNonNullMap<String, UserCreateDto> userDtos;
     private EntityNonNullMap<String, UserCreateDto> snapshotUserDtos;
+    private EntityNonNullMap<String, PropertyDto> propertyDtos;
 
     private EntitiesLoader() {
         loadCustomers();
         loadUsers();
         loadSnapshotUsers();
+        loadProperties();
     }
 
     public static EntitiesLoader getInstance() {
@@ -54,6 +57,11 @@ public class EntitiesLoader {
     private void loadSnapshotUsers() {
         Map<String, Object> yamlCustomers = loadEntities(String.format(YAML_DATA_PATH, "entities/users.yaml"));
         snapshotUserDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserCreateDto>) yamlCustomers.get("snapshotUsers"));
+    }
+
+    private void loadProperties() {
+        Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/properties.yaml"));
+        propertyDtos = new EntityNonNullMap<>((LinkedHashMap<String, PropertyDto>) yamlProperties.get("properties"));
     }
 
 

@@ -12,7 +12,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
-import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 
 import java.io.FileInputStream;
@@ -84,6 +84,17 @@ public class YamlLoader {
         return data;
     }
 
+    public static Map<String, Map<String, Object>> loadTestData(String filePath) {
+        try {
+            FileInputStream stream = new FileInputStream(filePath);
+            Yaml yaml = new Yaml();
+            return (Map<String, Map<String, Object>>) yaml.load(stream);
+        } catch (FileNotFoundException e) {
+            log.severe(String.format(FILEDONTEXIST_MSG, filePath));
+            return null;
+        }
+    }
+
 
     private static class YamlConstructor extends Constructor {
         public YamlConstructor() {
@@ -93,7 +104,7 @@ public class YamlLoader {
             addTypeDescription(new TypeDescription(ApplicationDto.class, "!application"));
             addTypeDescription(new TypeDescription(ApplicationVersionDto.class, "!applicationVersion"));
             addTypeDescription(new TypeDescription(UserCreateDto.class, "!user"));
-            addTypeDescription(new TypeDescription(CustomerRoleDto.class, "!customerRole"));
+            addTypeDescription(new TypeDescription(PropertyDto.class, "!property"));
         }
     }
 
@@ -104,8 +115,18 @@ public class YamlLoader {
         }
     }
 
-    //    Help methods
+
     public static List<Map<String, String>> selectExamplesForTest(Map<String, List<Map<String, String>>> testData, String testName) {
+        if(testData.get(testName) == null){
+            fail("No test data for test named " + testName);
+        }
+        return testData.get(testName);
+    }
+
+    public static Map<String, Object> getSingleTestData(Map<String, Map<String, Object>> testData, String testName) {
+        if(testData.get(testName) == null){
+            fail("No test data for test named " + testName);
+        }
         return testData.get(testName);
     }
 

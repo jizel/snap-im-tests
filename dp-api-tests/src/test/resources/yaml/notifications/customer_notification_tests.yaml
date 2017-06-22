@@ -1,0 +1,24 @@
+general_notification: &NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  user_id: 11111111-0000-4000-a000-000000000000
+  entity_type: Customer
+
+createCustomerNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_id: 00000000-3836-4207-a705-111111111111
+
+updateCustomerNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  entity_id: 00000000-3836-4207-a705-111111111111
+
+deleteCustomerNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_id: 00000000-3836-4207-a705-111111111111
+
+addPropertyToCustomerNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: CustomerPropertyRelationship
