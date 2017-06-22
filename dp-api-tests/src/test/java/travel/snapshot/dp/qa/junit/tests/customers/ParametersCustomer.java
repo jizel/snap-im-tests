@@ -11,10 +11,10 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.loaders.YamlLoader;
-import travel.snapshot.dp.qa.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
-import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
-import travel.snapshot.dp.qa.steps.DbStepDefs;
+import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 
 import java.util.Map;
 
