@@ -41,3 +41,5 @@ redeployDP/docker/builder/ssh/id_rsa
 redeployDP/docker/builder/ssh/config
 redeployDP/docker/dp_migrator/ssh/id_rsa
 redeployDP/docker/dp_migrator/ssh/config
+redeployDP/docker_shared/DB
+redeployDP/docker_shared/modules

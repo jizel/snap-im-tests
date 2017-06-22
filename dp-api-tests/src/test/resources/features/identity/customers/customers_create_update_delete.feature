@@ -44,7 +44,7 @@ Feature: Customers create update delete
       | /messages/identity/customers/create_customer_wrong_email_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_field_email.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_vatid_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
-      | /messages/identity/customers/create_customer_wrong_country_value.json  | POST   | identity | /identity/customers | 422        | 42202          |
+      | /messages/identity/customers/create_customer_wrong_country_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_phone_value.json    | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_website_value.json  | POST   | identity | /identity/customers | 422        | 42201          |
       | /messages/identity/customers/create_customer_wrong_type.json           | POST   | identity | /identity/customers | 422        | 42201          |
@@ -166,21 +166,21 @@ Feature: Customers create update delete
       | US      | Wisconsin                         | US12345678  |
       | US      | Wyoming                           | US12345678  |
      # Australia regions
-      | AU      | Ashmore and Cartier Islands       | 12345678901 |
-      | AU      | Australian Antarctic Territory    | 12345678901 |
-      | AU      | Australian Capital Territory      | 12345678901 |
-      | AU      | Christmas Island                  | 12345678901 |
-      | AU      | Cocos (Keeling) Islands           | 12345678901 |
-      | AU      | Coral Sea Islands                 | 12345678901 |
-      | AU      | Heard Island and McDonald Islands | 12345678901 |
-      | AU      | Jervis Bay Territory              | 12345678901 |
-      | AU      | New South Wales                   | 12345678901 |
-      | AU      | Norfolk Island                    | 12345678901 |
-      | AU      | Northern Territory                | 12345678901 |
-      | AU      | Queensland                        | 12345678901 |
-      | AU      | South Australia                   | 12345678901 |
-      | AU      | Tasmania                          | 12345678901 |
-      | AU      | Victoria                          | 12345678901 |
+      | AU      | Ashmore and Cartier Islands       | 51824753556 |
+      | AU      | Australian Antarctic Territory    | 51824753556 |
+      | AU      | Australian Capital Territory      | 51824753556 |
+      | AU      | Christmas Island                  | 51824753556 |
+      | AU      | Cocos (Keeling) Islands           | 51824753556 |
+      | AU      | Coral Sea Islands                 | 51824753556 |
+      | AU      | Heard Island and McDonald Islands | 51824753556 |
+      | AU      | Jervis Bay Territory              | 51824753556 |
+      | AU      | New South Wales                   | 51824753556 |
+      | AU      | Norfolk Island                    | 51824753556 |
+      | AU      | Northern Territory                | 51824753556 |
+      | AU      | Queensland                        | 51824753556 |
+      | AU      | South Australia                   | 51824753556 |
+      | AU      | Tasmania                          | 51824753556 |
+      | AU      | Victoria                          | 51824753556 |
     # Canada regions
       | CA      | Ontario                           | 123456789   |
       | CA      | Quebec                            | 123456789   |
