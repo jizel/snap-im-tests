@@ -42,6 +42,7 @@ class Generator(object):
         self.num_commercial_subscriptions = config['commercial_subscriptions']*config['multiplied_by']
         self.num_customers = config['customers']*config['multiplied_by']
         self.num_customer_properties = config['customer_properties']*config['multiplied_by']
+        self.num_customer_users = config['customer_users']*config['multiplied_by']
         self.num_partners = config['partners']*config['multiplied_by']
         self.num_partner_users = config['partner_users']*config['multiplied_by']
         self.num_properties = config['properties']*config['multiplied_by']
@@ -73,12 +74,17 @@ class Generator(object):
         self.com_subscr_ids = [self.genuuid() for _ in range(self.num_commercial_subscriptions)]
         self.customer_ids = [self.genuuid() for _ in range(self.num_customers)]
         self.customer_property_ids = [self.genuuid() for _ in range(self.num_customer_properties)]
+        self.customer_user_ids = [self.genuuid() for _ in range(self.num_customer_users)]
         self.partner_ids = [self.genuuid() for _ in range(self.num_partners)]
-        self.partner_user_ids = [self.genuuid() for _ in range(self.num_partner_users)]
+        self.partner_user_relation_ids = [self.genuuid() for _ in range(self.num_partner_users)]
         self.property_ids = [self.genuuid() for _ in range(self.num_properties)]
         self.propertyset_ids = [self.genuuid() for _ in range(self.num_property_sets)]
+        self.propertyset_property_ids = [self.genuuid() for _ in range(self.num_property_propertysets)]
         self.role_ids = [self.genuuid() for _ in range(self.num_roles)]
+        self.user_customer_role_ids = [self.genuuid() for _ in range(self.num_user_customer_roles)]
         self.user_type_partner_ids = [self.user_ids.pop() for _ in range(self.num_partner_users)]
+        self.user_property_ids = [self.genuuid() for _ in range(self.num_user_properties)]
+        self.user_propertyset_ids = [self.genuuid() for _ in range(self.num_user_propertysets)]
         self.snapshot_user_id = self.genuuid()
 
         # Trinities - are all possible combinations of customer_id application_id and property_id.
@@ -87,10 +93,10 @@ class Generator(object):
         # The same applies to couples - unique combinations of, for example,
         # customer and user to generate customer_user relations
         self.customer_property_combinations = self.gen_couples(self.customer_ids, self.property_ids, self.num_customer_properties)
-        self.customer_user_combinations = self.gen_couples(self.customer_ids, self.user_ids, self.num_users)
+        self.customer_user_combinations = self.gen_couples(self.customer_ids, self.user_ids, self.num_customer_users)
         self.partner_user_combinations = self.gen_couples(self.partner_ids, self.user_type_partner_ids, self.num_partner_users)
         self.property_propertyset_combinations = self.gen_couples(self.property_ids, self.propertyset_ids, self.num_property_propertysets)
-        self.user_customer_role_combinations = self.gen_user_customer_roles(self.customer_user_combinations, self.role_ids, self.num_user_customer_roles)
+        self.user_customer_role_combinations = self.gen_couples(self.customer_user_ids, self.role_ids, self.num_user_customer_roles)
         self.user_property_combinations = self.gen_couples(self.user_ids, self.property_ids, self.num_user_properties)
         self.user_propertyset_combinations = self.gen_couples(self.user_ids, self.propertyset_ids, self.num_user_propertysets)
 
@@ -104,18 +110,6 @@ class Generator(object):
             else:
                 result.append(trinity)
                 counter += 1
-        return result
-
-    def gen_user_customer_roles(self, customer_user_couples, roles, when_to_stop):
-        result = []
-        for _ in range(when_to_stop):
-            couple = list(random.choice(customer_user_couples))
-            couple.reverse()
-            couple.append(random.choice(roles))
-            if couple in result:
-                next
-            else:
-                result.append(tuple(couple))
         return result
 
     def gen_couples(self, seq1, seq2, when_to_stop):
@@ -162,12 +156,12 @@ class Generator(object):
         self.users = self.users_type_snapshot + self.users_type_customer + self.users_type_partner
         self.roles = [self.generate_role(i) for i in self.role_ids]
         self.cust_properties = [self.generate_customer_property(i, *self.customer_property_combinations.pop()) for i in self.customer_property_ids]
-        self.partner_users = [self.generate_partner_user(*self.partner_user_combinations.pop()) for _ in range(self.num_partner_users)]
-        self.customer_users = [self.generate_customer_user(*self.customer_user_combinations.pop()) for _ in range(self.num_users)]
-        self.propertyset_properties = [self.generate_prop_propset(*self.property_propertyset_combinations.pop()) for _ in range(self.num_property_propertysets)]
-        self.user_customer_roles = [self.generate_user_customer_role(*self.user_customer_role_combinations.pop()) for _ in range(self.num_user_customer_roles)]
-        self.user_properties = [self.generate_user_property(*self.user_property_combinations.pop()) for _ in range(self.num_user_properties)]
-        self.user_propertysets = [self.generate_user_property_set(*self.user_propertyset_combinations.pop()) for _ in range(self.num_user_propertysets)]
+        self.partner_user_relations = [self.generate_partner_user(i, *self.partner_user_combinations.pop()) for i in self.partner_user_relation_ids]
+        self.customer_users = [self.generate_customer_user(i, *self.customer_user_combinations.pop()) for i in self.customer_user_ids]
+        self.propertyset_properties = [self.generate_prop_propset(i, *self.property_propertyset_combinations.pop()) for i in self.propertyset_property_ids]
+        self.user_customer_roles = [self.generate_user_customer_role(i, *self.user_customer_role_combinations.pop()) for i in self.user_customer_role_ids]
+        self.user_properties = [self.generate_user_property(i, *self.user_property_combinations.pop()) for i in self.user_property_ids]
+        self.user_propertysets = [self.generate_user_property_set(i, *self.user_propertyset_combinations.pop()) for i in self.user_propertyset_ids]
         self.push_data(self.addresses)
         self.push_data(self.customers)
         self.push_data(self.partners)
@@ -181,12 +175,13 @@ class Generator(object):
         self.push_data(self.propset_hpaths)
         self.push_data(self.cust_hpaths)
         self.push_data(self.cust_properties)
-        self.push_data(self.partner_users)
+        self.push_data(self.partner_user_relations)
         self.push_data(self.customer_users)
         self.push_data(self.propertyset_properties)
         self.push_data(self.user_customer_roles)
         self.push_data(self.user_properties)
         self.push_data(self.user_propertysets)
+        self.session.commit()
 
     def gen_etag(self):
         return self.genuuid().replace('-', '')
@@ -301,10 +296,11 @@ class Generator(object):
                                  version=self.gen_etag()
                                  )
 
-    def generate_customer_user(self, customer_id, user_id):
-        return Customer_User(customer_id=customer_id,
+    def generate_customer_user(self, provided_id, customer_id, user_id):
+        return Customer_User(id=provided_id,
+                             customer_id=customer_id,
                              user_id=user_id,
-                             is_primary=1,
+                             is_primary=True,
                              is_active=True,
                              version=self.gen_etag()
                              )
@@ -320,8 +316,9 @@ class Generator(object):
                        version=self.gen_etag()
                        )
 
-    def generate_partner_user(self, partner_id, user_id):
-        return Partner_User(partner_id=partner_id,
+    def generate_partner_user(self, provided_id, partner_id, user_id):
+        return Partner_User(id=provided_id,
+                            partner_id=partner_id,
                             user_id=user_id,
                             is_active=True,
                             version=self.gen_etag()
@@ -345,8 +342,9 @@ class Generator(object):
                         version=self.gen_etag()
                         )
 
-    def generate_prop_propset(self, property_id, propertyset_id):
-        return Property_PropertySet(property_id=property_id,
+    def generate_prop_propset(self, provided_id, property_id, propertyset_id):
+        return Property_PropertySet(id=provided_id,
+                                    property_id=property_id,
                                     property_set_id=propertyset_id,
                                     is_active=random.choice((True, False)),
                                     version=self.gen_etag()
@@ -392,23 +390,24 @@ class Generator(object):
                     version=self.gen_etag()
                     )
 
-    def generate_user_customer_role(self, user_id, customer_id, role_id):
-        return User_Customer_Role(user_id=user_id,
-                                  customer_id=customer_id,
+    def generate_user_customer_role(self, provided_id, user_customer_id, role_id):
+        return User_Customer_Role(id=provided_id,
+                                  user_customer_id=user_customer_id,
                                   role_id=role_id,
-                                  is_active=True,
                                   version=self.gen_etag()
                                   )
 
-    def generate_user_property(self, user_id, property_id):
-        return User_Property(user_id=user_id,
+    def generate_user_property(self, provided_id, user_id, property_id):
+        return User_Property(id=provided_id, 
+                             user_id=user_id,
                              property_id=property_id,
                              is_active=True,
                              version=self.gen_etag()
                              )
 
-    def generate_user_property_set(self, user_id, propertyset_id):
-        return User_PropertySet(user_id=user_id,
+    def generate_user_property_set(self, provided_id, user_id, propertyset_id):
+        return User_PropertySet(id=provided_id,
+                                user_id=user_id,
                                 property_set_id=propertyset_id,
                                 is_active=True,
                                 version=self.gen_etag()
@@ -416,7 +415,7 @@ class Generator(object):
 
 
 class Address(Base):
-    __tablename__ = "Address"
+    __tablename__ = "address"
     id = Column(String(36), primary_key=True)
     line1 = Column(String(500))
     line2 = Column(String(500))
@@ -427,7 +426,7 @@ class Address(Base):
 
 
 class Application(Base):
-    __tablename__ = "Application"
+    __tablename__ = "application"
     id = Column(String(36), primary_key=True)
     name = Column(String(190))
     description = Column(String(500))
@@ -439,7 +438,7 @@ class Application(Base):
 
 
 class Application_Version(Base):
-    __tablename__ = "ApplicationVersion"
+    __tablename__ = "applicationversion"
     id = Column(String(36), primary_key=True)
     application_id = Column(String(36))
     api_manager_id = Column(String(255))
@@ -453,7 +452,7 @@ class Application_Version(Base):
 
 
 class Commercial_Subscription(Base):
-    __tablename__ = "CommercialSubscription"
+    __tablename__ = "commercialsubscription"
     id = Column(String(36), primary_key=True)
     customer_id = Column(String(36))
     property_id = Column(String(36))
@@ -463,7 +462,7 @@ class Commercial_Subscription(Base):
 
 
 class Customer(Base):
-    __tablename__ = "Customer"
+    __tablename__ = "customer"
     id = Column(String(36), primary_key=True)
     parent_id = Column(String(36))
     type = Column(String(40))
@@ -484,13 +483,13 @@ class Customer(Base):
 
 
 class Customer_Hierarchy_Path(Base):
-    __tablename__ = "CustomerHierarchyPath"
+    __tablename__ = "customerhierarchypath"
     parent_id = Column(String(36), primary_key=True)
     child_id = Column(String(36), primary_key=True)
 
 
 class Customer_Property(Base):
-    __tablename__ = "Customer_Property"
+    __tablename__ = "customer_property"
     id = Column(String(36), primary_key=True)
     customer_id = Column(String(36))
     property_id = Column(String(36))
@@ -502,16 +501,17 @@ class Customer_Property(Base):
 
 
 class Customer_User(Base):
-    __tablename__ = "User_Customer"
+    __tablename__ = "user_customer"
+    id = Column(String(36), primary_key=True)
     customer_id = Column(String(36), primary_key=True)
     user_id = Column(String(36), primary_key=True)
-    is_primary = Column(Integer)
+    is_primary = Column(Boolean)
     is_active = Column(Boolean, default=True)
     version = Column(String(32))
 
 
 class Partner(Base):
-    __tablename__ = "Partner"
+    __tablename__ = "partner"
     id = Column(String(36), primary_key=True)
     name = Column(String(255))
     email = Column(String(254))
@@ -523,7 +523,8 @@ class Partner(Base):
 
 
 class Partner_User(Base):
-    __tablename__ = "User_Partner"
+    __tablename__ = "user_partner"
+    id = Column(String(36), primary_key=True)
     partner_id = Column(String(36), primary_key=True)
     user_id = Column(String(36), primary_key=True)
     is_active = Column(Boolean, default=True)
@@ -531,7 +532,7 @@ class Partner_User(Base):
 
 
 class Property(Base):
-    __tablename__ = "Property"
+    __tablename__ = "property"
     id = Column(String(36), primary_key=True)
     name = Column(String(255))
     hospitality_id = Column(String(36))
@@ -550,13 +551,14 @@ class Property(Base):
 
 
 class PropertySet_Hierarchy_Path(Base):
-    __tablename__ = "PropertySetHierarchyPath"
+    __tablename__ = "propertysethierarchypath"
     parent_id = Column(String(36), primary_key=True)
     child_id = Column(String(36), primary_key=True)
 
 
 class Property_PropertySet(Base):
-    __tablename__ = "PropertySet_Property"
+    __tablename__ = "propertyset_property"
+    id = Column(String(36), primary_key=True)
     property_id = Column(String(36), primary_key=True)
     property_set_id = Column(String(36), primary_key=True)
     is_active = Column(Boolean, default=True)
@@ -564,7 +566,7 @@ class Property_PropertySet(Base):
 
 
 class Property_Set(Base):
-    __tablename__ = "PropertySet"
+    __tablename__ = "propertyset"
     id = Column(String(36), primary_key=True)
     parent_id = Column(String(36))
     customer_id = Column(String(36))
@@ -576,7 +578,7 @@ class Property_Set(Base):
 
 
 class Role(Base):
-    __tablename__ = "Role"
+    __tablename__ = "role"
     id = Column(String(36), primary_key=True)
     application_id = Column(String(36))
     type = Column(String(20))
@@ -588,7 +590,7 @@ class Role(Base):
 
 
 class User(Base):
-    __tablename__ = "User"
+    __tablename__ = "user"
     id = Column(String(36), primary_key=True)
     username = Column(String(150))
     type = Column(String(20))
@@ -607,16 +609,16 @@ class User(Base):
 
 
 class User_Customer_Role(Base):
-    __tablename__ = "User_Customer_Role"
-    user_id = Column(String(36), primary_key=True)
-    customer_id = Column(String(36), primary_key=True)
+    __tablename__ = "user_customer_role"
+    id = Column(String(36), primary_key=True)
+    user_customer_id = Column(String(36), primary_key=True)
     role_id = Column(String(36), primary_key=True)
-    is_active = Column(Boolean, default=True)
     version = Column(String(32))
 
 
 class User_Property(Base):
-    __tablename__ = "User_Property"
+    __tablename__ = "user_property"
+    id = Column(String(36), primary_key=True)
     user_id = Column(String(36), primary_key=True)
     property_id = Column(String(36), primary_key=True)
     is_active = Column(Boolean, default=True)
@@ -624,7 +626,8 @@ class User_Property(Base):
 
 
 class User_PropertySet(Base):
-    __tablename__ = "User_Propertyset"
+    __tablename__ = "user_propertyset"
+    id = Column(String(36), primary_key=True)
     user_id = Column(String(36), primary_key=True)
     property_set_id = Column(String(36), primary_key=True)
     is_active = Column(Boolean, default=True)

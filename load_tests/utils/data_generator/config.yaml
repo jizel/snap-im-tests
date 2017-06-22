@@ -7,6 +7,7 @@ application_versions: 30
 commercial_subscriptions: 120
 customers: 60
 customer_properties: 200
+customer_users: 1200
 partners: 20
 partner_users: 10
 properties: 300
@@ -17,5 +18,5 @@ user_customer_roles: 20
 user_properties: 200
 user_propertysets: 300
 multiplied_by: 200
-# db_url: "postgresql://postgres:postgres@localhost/identity"
-db_url: "mysql://root:root@127.0.0.1:3306/identity"
+db_url: postgresql://postgres:secret@localhost/identity
+#db_url: "mysql://root:root@127.0.0.1:3306/identity"
