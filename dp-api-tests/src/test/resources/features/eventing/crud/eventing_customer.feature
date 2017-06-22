@@ -16,7 +16,7 @@ Feature: Eventing tests for Customer related operations
     Then Response code is "201"
     Then Message is received with subscription "Test" from topic "Notifications.crud" and stored in session
     And Notification in session entity_type is "Customer"
-    And Notification in session operation is "Create"
+    And Notification in session operation is "create"
     And Notification in session id stands for customer with id "a792d2b2-3836-4207-a705-42bbecf3d881"
 
   Scenario: Eventing customer deleted

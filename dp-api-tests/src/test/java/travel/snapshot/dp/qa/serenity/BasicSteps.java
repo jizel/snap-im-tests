@@ -397,18 +397,19 @@ public class BasicSteps {
         return response;
     }
 
-    protected void deleteEntityWithEtag(String entityId) {
-        deleteEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
+    protected Response deleteEntityWithEtag(String entityId) {
+        return deleteEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    protected void deleteEntityWithEtagByUser(String userId, String entityId) {
-        deleteEntityWithEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
+    protected Response deleteEntityWithEtagByUser(String userId, String entityId) {
+        return deleteEntityWithEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    protected void deleteEntityWithEtagByUserForApp(String userId, String applicationVersionId, String entityId) {
+    protected Response deleteEntityWithEtagByUserForApp(String userId, String applicationVersionId, String entityId) {
         String etag = getEntityEtag(entityId);
         Response response = deleteEntityByUserForApplication(userId, applicationVersionId, entityId, etag);
         setSessionResponse(response);
+        return response;
     }
 
     public Response deleteEntityUrl(String url, String id) {

@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.qa.junit.helpers.UrlParamsWithResponse;
-import travel.snapshot.dp.qa.junit.tests.common.Common;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
  */
 
 @RunWith(SerenityRunner.class)
-public class YamlCustomer extends Common {
+public class YamlCustomer extends CommonTest {
 
     //    Load this test class specific test data
     private static Map<String, List<Map<String, String>>> testClassData = loadExamplesYaml(String.format(YAML_DATA_PATH, "customer_tests.yaml"));

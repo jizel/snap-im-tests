@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
@@ -466,7 +466,7 @@ public class PropertiesStepdefs {
 
     @When("^Property customer relationship for property with code \"([^\"]*)\" and customer with id \"([^\"]*)\" is updated(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")? with$")
     public void propertyCustomerRelationshipForPropertyWithCodeAndCustomerWithIdIsUpdatedByUserWith(String propertyCode, String customerId, String username, String applicationVersionName,
-                                                                                                    List<CustomerPropertyRelationshipUpdateDto> relationshipUpdates) throws Throwable {
+                                                                                                    List<CustomerPropertyRelationshipPartialUpdateDto> relationshipUpdates) throws Throwable {
         Map<String, String> ids = getValidUserPropertyIdsFromNameAndCode(username, propertyCode);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
@@ -510,7 +510,7 @@ public class PropertiesStepdefs {
             isActive = false;
         }
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
-        CustomerPropertyRelationshipUpdateDto relation = new CustomerPropertyRelationshipDto();
+        CustomerPropertyRelationshipPartialUpdateDto relation = new CustomerPropertyRelationshipPartialDto();
         relation.setIsActive(isActive);
         customerSteps.updateCustomerPropertyRelationship(propertyId, customerId, relation);
         Response response = customerSteps.getSessionResponse();

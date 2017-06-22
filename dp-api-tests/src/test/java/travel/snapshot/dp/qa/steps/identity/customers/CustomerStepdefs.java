@@ -28,11 +28,10 @@ import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerType;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
@@ -269,12 +268,12 @@ public class CustomerStepdefs {
     public void Property_with_code_for_customer_with_code_with_type_is_updating_field_to_value(String propertyCode,
                                                                                                String customerId, String fieldName, String value) throws Throwable {
         PropertyDto property = propertySteps.getPropertyByCodeInternal(propertyCode);
-        customerSteps.propertyIsUpdateForCustomer(property, customerId, fieldName, value);
+        customerSteps.propertyIsUpdatedForCustomerWith(property.getId(), customerId, fieldName, value);
     }
 
     @When("^Property with code \"([^\"]*)\" for customer with id \"([^\"]*)\" is updated(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")? with$")
     public void propertyWithCodeForCustomerWithIdFieldIsUpdatedToValueString(String propertyCode,String customerId,
-                                                                             String username, String applicationVersionName, List<CustomerPropertyRelationshipUpdateDto> relationshipUpdates) throws Throwable {
+                                                                             String username, String applicationVersionName, List<CustomerPropertyRelationshipPartialUpdateDto> relationshipUpdates) throws Throwable {
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String userId = usersSteps.resolveUserId(username);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
@@ -415,7 +414,7 @@ public class CustomerStepdefs {
 
     @Then("^There are (\\d+) customerProperties returned$")
     public void There_are_returned_customerProperties_returned(int count) throws Throwable {
-        customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipDto.class, count);
+        customerSteps.numberOfEntitiesInResponse(CustomerPropertyRelationshipPartialDto.class, count);
     }
 
     @Then("^There are (\\d+) customerUsers returned$")
