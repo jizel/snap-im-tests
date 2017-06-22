@@ -9,7 +9,7 @@ import lombok.extern.java.Log;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.qa.serenity.BasicSteps;
+import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 @Log
 public class UserHelpers extends BasicSteps {

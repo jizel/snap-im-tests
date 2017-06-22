@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.is;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.qa.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
 
 /**
  * Help methods for JUnit test for the Property entity

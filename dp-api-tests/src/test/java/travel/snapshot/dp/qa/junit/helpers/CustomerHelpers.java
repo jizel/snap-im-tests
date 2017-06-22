@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
-import travel.snapshot.dp.qa.serenity.customers.CustomerSteps;
+import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 
 @Log
 public class CustomerHelpers extends CustomerSteps {
