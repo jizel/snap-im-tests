@@ -91,32 +91,32 @@ Feature: Users customer roles CRUD
   Scenario Outline: Filtering list of roles for user customer relationship
     Given Switch for user customer role tests
     Given The following roles exist
-      | roleName           | description            |
-      | user_filter_role_1 | optional description 1 |
-      | user_filter_role_2 | optional description 2 |
-      | user_filter_role_3 | optional description 3 |
-      | user_filter_role_4 | optional description 4 |
-      | user_filter_role_5 | optional description 5 |
-      | user_filter_role_6 | optional description 6 |
+      | id                                   | roleName           | description            |
+      | 12396424-627e-4b21-a96f-382e61f1472d | user_filter_role_1 | optional description 1 |
+      | 45696424-627e-4b21-a96f-382e61f1472d | user_filter_role_2 | optional description 2 |
+      | 78996424-627e-4b21-a96f-382e61f1472d | user_filter_role_3 | optional description 3 |
+      | 32196424-627e-4b21-a96f-382e61f1472d | user_filter_role_4 | optional description 4 |
+      | 65496424-627e-4b21-a96f-382e61f1472d | user_filter_role_5 | optional description 5 |
+      | 98796424-627e-4b21-a96f-382e61f1472d | user_filter_role_6 | optional description 6 |
     Given Role with name "user_filter_role_1" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_2" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_3" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_4" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_5" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
-    Given Role with name "user_filter_role_6" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added with isActive "false"
+    Given Role with name "user_filter_role_6" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     When List of roles for user with username "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> user roles returned
     And Total count is "<total>"
     Examples:
-      | limit | cursor | returned | total | filter           | sort      | sort_desc |
-      | 5     | 0      | 5        | 5     | is_active==true  | is_active |           |
-      | 5     | 0      | 5        | 5     | is_active==true  |           | is_active |
-      | 5     | 2      | 3        | 5     | is_active==true  | is_active |           |
-      | 5     | 2      | 3        | 5     | is_active==true  |           | is_active |
-      | 5     | 0      | 5        | 6     | /null            |           | is_active |
-      | /null | /null  | 1        | 1     | is_active==false | /null     | /null     |
+      | limit | cursor | returned | total | filter                                       | sort      | sort_desc |
+      | 5     | 0      | 5        | 6     |  /null                                       | role_id   |           |
+      | 5     | 0      | 5        | 6     |  /null                                       |           | role_id   |
+      | 5     | 2      | 4        | 6     |  /null                                       | role_id   |           |
+      | 5     | 2      | 4        | 6     |  /null                                       |           | role_id   |
+      | 5     | 0      | 5        | 6     |  /null                                       |           | role_id   |
+      | /null | /null  | 1        | 1     | role_id==12396424-627e-4b21-a96f-382e61f1472d | /null     | /null     |
 
   Scenario Outline: Send POST request with empty body to all user-customer endpoints
     Given Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and customer "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
