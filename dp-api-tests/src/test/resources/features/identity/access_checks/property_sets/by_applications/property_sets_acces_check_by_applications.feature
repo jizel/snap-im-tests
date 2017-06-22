@@ -37,9 +37,6 @@ Feature: Property sets Application access check feature
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
 
     Scenario: Only property sets with valid commercial subscription are accessible
       When Property set "ps1_name" is requested by user "user1" for application version "versionWithSubscription"
@@ -106,7 +103,6 @@ Feature: Property sets Application access check feature
     Then Response code is "404"
     And Custom code is 40402
     When Property set "ps1_name" is deleted by user "user1" for application version "versionWithSubscription"
-#    User cannot delete entity when he has relation with it (but if he hasn't he gets 404). 409 is enough to see that access checks work
     Then Response code is "409"
     And Custom code is 40915
 

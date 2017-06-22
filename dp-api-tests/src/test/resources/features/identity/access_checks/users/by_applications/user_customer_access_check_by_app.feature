@@ -23,10 +23,6 @@ Feature: User Customers access check feature
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
       | 44400000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-000000000001 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
-      | 66600000-0000-4000-a000-000000000666 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000555 |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1OfC1  | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |

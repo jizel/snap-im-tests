@@ -31,9 +31,6 @@ Feature: Customers Application access check feature - GET
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     And Relation between user "userWithCust1" and default property exists
 
 
@@ -68,8 +65,6 @@ Feature: Customers Application access check feature - GET
     Given Relation between user "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
     Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
     Given Relation between user "userWithCust1" and customer with id "45645678-0000-4000-a000-000000000000" exists with isPrimary "true"
-    Given API subscriptions exist for application "App With Subscription" and customer with id "34545678-0000-4000-a000-000000000000"
-    Given API subscriptions exist for application "App With Subscription" and customer with id "23445678-0000-4000-a000-000000000000"
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithCust1" for application version "versionWithSubscription"
     Then Response code is "200"
     And There are <returned> customers returned
@@ -125,7 +120,6 @@ Feature: Customers Application access check feature - GET
     Then Response code is "200"
     Examples:
       | url                                                                              |
-#      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
       | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
       | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
       | identity/customers/12300000-0000-4000-a000-000000000000/properties               |
@@ -142,7 +136,6 @@ Feature: Customers Application access check feature - GET
       | url                                                                              |
       | identity/customers                                                               |
       | identity/customers/12300000-0000-4000-a000-000000000000/                         |
-#      | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
       | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
       | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
       | identity/customers/12300000-0000-4000-a000-000000000000/properties               |

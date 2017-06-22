@@ -29,9 +29,6 @@ Feature: User Groups Application access check feature
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
     Given The following user groups exist
       | id                                   | name        | isActive | description          | customerId                           |
       | 12300000-0000-4000-a000-000000000000 | userGroup_1 | false    | userGroupDescription | 12300000-0000-4000-a000-000000000000 |

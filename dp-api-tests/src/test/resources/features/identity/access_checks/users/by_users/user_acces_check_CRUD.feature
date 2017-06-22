@@ -7,8 +7,6 @@ Feature: Users can create, update and delete only users of the same customer
       | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | phone         | website                    | timezone      |
       | 12300000-0000-4000-a000-000000000000 | Company 1   | c1@tenants.biz | salesforceid_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
       | 12300000-0000-4000-a000-000000000001 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ10000002 | true           | +420123456780 | http://www.snapshot.com | Europe/Prague |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000001"
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1OfC1  | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -39,7 +37,6 @@ Feature: Users can create, update and delete only users of the same customer
     Then Response code is "404"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists
     When User "user1OfC1" deletes user "user1OfC2"
-#    409 is good enough to check access checks work
     Then Response code is "409"
     Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000001" is inactivated
     When User "user1OfC1" deletes user "user1OfC2"

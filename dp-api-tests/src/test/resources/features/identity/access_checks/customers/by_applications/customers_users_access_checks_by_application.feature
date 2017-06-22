@@ -35,10 +35,6 @@ Feature: Customers-Users Application access check feature - GET
       | id                                   | customerId                           | propertyId                           | applicationId                        |
       | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
       | 44400000-0000-4000-a000-000000000555 | 00000000-0000-4000-8000-123000000abc | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
-    Given The following api subscriptions exist
-      | id                                   | applicationVersionId                 | commercialSubscriptionId             |
-      | 55500000-0000-4000-a000-000000000555 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000444 |
-      | 55500000-0000-4000-a000-000000000666 | 22200000-0000-4000-a000-000000000333 | 44400000-0000-4000-a000-000000000555 |
     Given Relation between user "userWithCust1" and property "11111111-0000-4000-a000-666666666666" exists with is_active "true"
     Given Relation between user "userWithCust2" and property "11111111-0000-4000-a000-666666666666" exists with is_active "true"
 

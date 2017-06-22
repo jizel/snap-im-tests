@@ -23,8 +23,6 @@ Feature: Customers access check feature - GET
   Given The following users exist for customer "00000000-0000-4000-8000-123000000abc" as primary "false"
     | type     | username      | firstName | lastName | email                | timezone      | languageCode | isActive |
     | customer | userWithCust2 | Customer  | User2    | cus2@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-  Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000"
-  Given API subscriptions exist for default application and customer with id "00000000-0000-4000-8000-123000000abc"
 
 
     Scenario: User has direct relationship to customer
@@ -169,7 +167,7 @@ Feature: Customers access check feature - GET
     When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1"
     Then Response code is "200"
 
-#      -----------------------------< General negative scenarios for second level endpoints >------------------------------------
+    #      -----------------------------< General negative scenarios for second level endpoints >------------------------------------
 
     @skipped
     Scenario Outline: User with no access rights to property sends GET request to all general second level endpoints
@@ -178,7 +176,6 @@ Feature: Customers access check feature - GET
       And Custom code is "40402"
       Examples:
         | url                                                                              |
-#        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
         | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
         | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
         | identity/customers/12300000-0000-4000-a000-000000000000/properties               |
@@ -191,7 +188,6 @@ Feature: Customers access check feature - GET
      And Custom code is "40402"
      Examples:
        | url                                                                                                                            |
-#       | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions?sort=application_version_id&filter=is_active=='true' |
        | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions?filter=is_active=='false'&sort=customer_id    |
        | identity/customers/12300000-0000-4000-a000-000000000000/users?sortDesc=user_id&cursor=0                                        |
        | identity/customers/12300000-0000-4000-a000-000000000000/properties?limit=55&filter=property_code=='*'                          |
@@ -209,7 +205,6 @@ Feature: Customers access check feature - GET
         | url                                                                              |
         | identity/customers                                                               |
         | identity/customers/12300000-0000-4000-a000-000000000000/                         |
-#        | identity/customers/12300000-0000-4000-a000-000000000000/api_subscriptions        |
         | identity/customers/12300000-0000-4000-a000-000000000000/commercial_subscriptions |
         | identity/customers/12300000-0000-4000-a000-000000000000/users                    |
         | identity/customers/12300000-0000-4000-a000-000000000000/properties               |
