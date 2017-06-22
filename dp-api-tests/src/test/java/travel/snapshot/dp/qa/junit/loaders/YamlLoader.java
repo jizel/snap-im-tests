@@ -18,6 +18,8 @@ import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,17 @@ public class YamlLoader {
             FileInputStream stream = new FileInputStream(filePath);
             Yaml yaml = new Yaml();
             return (Map<String, List<Map<String, String>>>) yaml.load(stream);
+        } catch (FileNotFoundException e) {
+            log.severe(String.format(FILEDONTEXIST_MSG, filePath));
+            return null;
+        }
+    }
+
+    public static Map<String, Map<String, List<String>>> loadYamlTables(String filePath) {
+        try {
+            FileInputStream stream = new FileInputStream(filePath);
+            Yaml yaml = new Yaml();
+            return (Map<String, Map<String, List<String>>>) yaml.load(stream);
         } catch (FileNotFoundException e) {
             log.severe(String.format(FILEDONTEXIST_MSG, filePath));
             return null;
@@ -94,5 +107,25 @@ public class YamlLoader {
     //    Help methods
     public static List<Map<String, String>> selectExamplesForTest(Map<String, List<Map<String, String>>> testData, String testName) {
         return testData.get(testName);
+    }
+
+    public static List<Map<String, String>> selectExamplesForTestFromTable(Map<String, Map<String, List<String>>> dataSet, String testName) {
+        Map<String, List<String>> testData = dataSet.get(testName);
+        List<Map<String, String>> outputTestData = new LinkedList<>();
+
+//        Get size of the list containing scenario data and check it is the same for all the entries
+        int listSize = testData.entrySet().iterator().next().getValue().size();
+        testData.values().iterator().forEachRemaining(list -> assertEquals("Number of values must be the same for all attributes!", list.size(), listSize));
+
+        for(int i=0; i < listSize; i++) {
+            Map<String, String> valueMap = new LinkedHashMap<>();
+            for(String key: testData.keySet()) {
+                valueMap.put(key, testData.get(key).get(i));
+            }
+            outputTestData.add(valueMap);
+        }
+
+        return outputTestData;
+
     }
 }

@@ -60,6 +60,11 @@ checkErrorCodesForGettingListOfCustomerCommercialSubscriptions:
     cursor: "0"
     filter: "code=="
 
-#checkErrorCodesForGettingListOfCustomerCommercialSubscriptions2:
-#request: | limit: | cursor: | filter: | sort: | sort_desc: | response_code: | custom_code:
-#&REQUEST | "/null" | "/null" | "/null" | "/null" | "/null" | "400" | "40002"-
+checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingTable:
+  limit:         ["/null", "/null", ""     , "/null", "-1"   , "-1"   , "201"  , "21474836470", "text" , "10"   , "text" , "0"    , "10"                      , "10"       , "10"       , "10"       ]
+  cursor:        ["/null", "-1"   , "-1"   , "text" , "text" , ""     , "/null", "/null"      , ""     , "-1"   , "0"    , "text" , "0"                       , "0"        , "0"        , "0"        ]
+  filter:        ["/null", "/null", "/null", "/null", "/null", "/null", "/null", "/null"      , "/null", "/null", "/null", "/null", "/null"                   , "/null"    , "/null"    , "code=="   ]
+  sort:          ["/null", "/null", "/null", "/null", "/null", "/null", "/null", "/null"      , "/null", "/null", "/null", "/null", commercial_subscription_id, nonexistent, "/null"    , "/null"    ]
+  sort_desc:     ["/null", "/null", "/null", "/null", "/null", "/null", "/null", "/null"      , "/null", "/null", "/null", "/null", commercial_subscription_id, "/null"    , nonexistent, "/null"    ]
+  response_code: ["400"  , "400"  , "400"  , "400"  , "400"  , "400"  , "400"  , "400"        , "400"  , "400"  , "400"  , "400"  , "400"                     , "400"      , "400"      , "400"      ]
+  custom_code:   ["40002", "40002", "40002", "40002", "40002", "40002", "40002", "40002"      , "40002", "40002", "40002", "40002", "40002"                   , "40002"    , "40002"    , "40002"    ]
