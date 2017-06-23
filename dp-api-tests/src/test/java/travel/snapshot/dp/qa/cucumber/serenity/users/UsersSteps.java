@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.cucumber.serenity.users;
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonMap;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
@@ -13,6 +14,7 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
+import org.junit.Assert;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
@@ -50,7 +52,7 @@ public class UsersSteps extends BasicSteps {
             user.setUserCustomerRelationship(relation);
 
             Response createResp = createEntity(user);
-            if (createResp.getStatusCode() != HttpStatus.SC_CREATED) {
+            if (createResp.getStatusCode() != SC_CREATED) {
                 fail("User cannot be created! Status:" + createResp.getStatusCode() + " " + createResp.getBody().asString());
             }
         });
@@ -221,7 +223,7 @@ public class UsersSteps extends BasicSteps {
     @Step
     public void roleExistsBetweenUserAndEntity(String entityName, String roleId, String userName, String entityId, Boolean isActive) {
         Response response = createRoleBetweenUserAndEntity(entityName, roleId, userName, entityId, isActive);
-        assertThat("Role can not be assigned: " + response.body().toString(), response.statusCode(), is(HttpStatus.SC_CREATED));
+        assertThat("Role can not be assigned: " + response.body().toString(), response.statusCode(), is(SC_CREATED));
     }
 
     private Response deleteRoleFromUserWithRelationshipTypeEntity(String roleId, String userId, String relationshipType, String entityId) {
@@ -355,12 +357,12 @@ public class UsersSteps extends BasicSteps {
     @Step
     public void roleNameExistsBetweenUserAndEntity(String entityName, String roleId, String userId, String entityId, Boolean isActive) {
         Response resp = addRoleToUserEntity(roleId, userId, entityId, entityName, isActive);
-        setSessionResponse(resp);
+        assertTrue("Failed to add role to relationship between user and entity id " + entityId.toString(), resp.statusCode() == SC_CREATED);
     }
 
     @Step
-    public void getRolesBetweenUserAndEntity(String entityName, String userName, String entityId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        String path = buildPathForRoles(entityName, userName, entityId);
+    public void getRolesBetweenUserAndEntity(String entityName, String userId, String entityId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        String path = buildPathForRoles(entityName, userId, entityId);
         Response resp = getEntities(path, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(resp);
     }
@@ -395,12 +397,8 @@ public class UsersSteps extends BasicSteps {
         return createSecondLevelRelationshipByUser(performerId, userId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, singletonMap("property_set_id", propertySetId));
     }
 
-    private String buildPathForRoles(String entityName, String userName, String entityId) {
-        UserDto user = getUserByUsername(userName);
-        if (user == null) {
-            return String.format("%s/%s/%s/%s", userName, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
-        }
-        return String.format("%s/%s/%s/%s", user.getId(), entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
+    private String buildPathForRoles(String entityName, String userId, String entityId) {
+        return String.format("%s/%s/%s/%s", userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
     }
 
     public void createUserForCustomerByUser(String performerId, String customerId, UserCreateDto user, Boolean isPrimary) {
@@ -479,7 +477,7 @@ public class UsersSteps extends BasicSteps {
     public void userPartnerRelationshipExists(String userId, String partnerId) {
         createUserPartnerRelationship(userId, partnerId);
         Response response = getSessionResponse();
-        assertThat("Failed to create relationship: " + response.body().toString(), response.statusCode(), is(HttpStatus.SC_CREATED));
+        assertThat("Failed to create relationship: " + response.body().toString(), response.statusCode(), is(SC_CREATED));
 
     }
 

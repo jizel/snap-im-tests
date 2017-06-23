@@ -100,16 +100,15 @@ Feature: Properties create update delete
 
     Then Response code is "200"
     And Content type is "application/json"
-    And There are customers with following ids returned in order: <expected_ids>
     And Total count is "<total>"
 #    Expected names are incorrect - fix
     Examples:
-      | limit | cursor | total | filter                   | sort          | sort_desc     | expected_ids                 |
-      | 5     | 0      | 2     | customer_id=='*238fd9a*' | customer_id   |               |  1238fd9a-a05d-42d8-8e84-42e904ace123, 2238fd9a-a05d-42d8-8e84-42e904ace123 |
-      | 5     | 0      | 2     | customer_id=='*238fd9a*' |               | valid_from    |  1238fd9a-a05d-42d8-8e84-42e904ace123, 2238fd9a-a05d-42d8-8e84-42e904ace123 |
-      | 5     | 2      | 2     | customer_id=='*238fd9a*' | customer_id   |               |  1238fd9a-a05d-42d8-8e84-42e904ace123               |
-      | 5     | 2      | 2     | customer_id=='*238fd9a*' |               | valid_from    |  1238fd9a-a05d-42d8-8e84-42e904ace123               |
-      | /null | /null  | 1     | customer_id=='3239fd9a*' | /null         | /null         |  3239fd9a-a05d-42d8-8e84-42e904ace123                |
+      | limit | cursor | total | filter                                              | sort          | sort_desc     |
+      | 5     | 0      | 1     | customer_id=='1238fd9a-a05d-42d8-8e84-42e904ace123' | customer_id   |               |
+      | 5     | 0      | 1     | customer_id=='1238fd9a-a05d-42d8-8e84-42e904ace123' |               | valid_from    |
+      | 5     | 2      | 1     | customer_id=='1238fd9a-a05d-42d8-8e84-42e904ace123' | customer_id   |               |
+      | 5     | 2      | 1     | customer_id=='1238fd9a-a05d-42d8-8e84-42e904ace123' |               | valid_from    |
+      | /null | /null  | 1     | customer_id=='3239fd9a-a05d-42d8-8e84-42e904ace123' | /null         | /null         |
 
   Scenario Outline: Checking error codes for getting list of customers from properties
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "chain" from "2015-01-01" to "2030-02-28"

@@ -23,7 +23,6 @@ Feature: Customers properties create update delete
 
   @Smoke
   Scenario: Adding property to customer with some type valid from date to date
-    Given All customerProperties are deleted from DB for customer id "40ebf861-7549-46f1-a99f-249716c83b33" and property code "p2_code"
     When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"
     Then Response code is "201"
     And Body contains entity with attribute "property_id" value "621bd8a4-0b73-40b2-ab5e-cbe88dac9e4e"
@@ -36,18 +35,18 @@ Feature: Customers properties create update delete
     Then Response code is "<error_code>"
     And Custom code is "<custom_code>"
     Examples:
-      |                      | property_code | customer_id                          | type        | valid_from | valid_to   | error_code | custom_code |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | 2100-01-01 | 422        | 42201       |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | /null      | 422        | 42201       |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | /null      | 422        | 42201       |
-      | missing date         | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 422        | 42201       |
-      | from after to date   | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 422        | 42201       |
-      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 400        | 40001       |
-      | wrong date format    | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 400        | 40001       |
-      | wrong date           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2018-02-30 | 400        | 40001       |
-      | wrong type           | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
-      | duplicate entry      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 409        | 40907       |
-      | notexistent property | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
+      | property_code | customer_id                          | type        | valid_from | valid_to   | error_code | custom_code |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | 2100-01-01 | 422        | 42201       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | /null      | /null      | 422        | 42201       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | /null      | 422        | 42201       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       |            |            | 422        | 42201       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2014-12-31 | 422        | 42201       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-   | 2100-01-01 | 400        | 40001       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | asdfasdf   | 400        | 40001       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | chain       | 2015-01-01 | 2018-02-30 | 400        | 40001       |
+      | p2_code       | 58dd58d4-a56e-4cf5-a3a6-068fe37fef40 | nonexistent | 2015-01-01 | 2100-01-01 | 422        | 42201       |
+      | p1_code       | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 409        | 40907       |
+      | nonexistent   | 40ebf861-7549-46f1-a99f-249716c83b33 | chain       | 2015-01-01 | 2100-01-01 | 422        | 42202       |
 
 
     #add wrong dates, wrong type, not unique type, more anchor for one property, ...
@@ -59,7 +58,6 @@ Feature: Customers properties create update delete
 
   @Smoke
   Scenario: Updating customerProperty with etag
-    Given All customerProperties are deleted from DB for customer id "40ebf861-7549-46f1-a99f-249716c83b33" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
     When Property with code "p2_code" for customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updating field "valid_from" to value "2014-01-01"
     Then Response code is "204"
@@ -68,14 +66,12 @@ Feature: Customers properties create update delete
     And Field "valid_from" has value "2014-01-01" for property with code "p2_code" for customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" with type "chain"
 
   Scenario: Updating customerProperty with outdated etag
-    Given All customerProperties are deleted from DB for customer id "40ebf861-7549-46f1-a99f-249716c83b33" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
     When Property with code "p2_code" for customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updating field "valid_from" to value "2015-01-01" with invalid etag
     Then Response code is "412"
     And Custom code is "41202"
 
   Scenario Outline: Updating customerProperty error codes
-    Given All customerProperties are deleted from DB for customer id "40ebf861-7549-46f1-a99f-249716c83b33" and property code "p2_code"
     Given Relation between property with code "p2_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
     When Property with code "p2_code" for customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" is updating field "<field>" to value "<value>"
     Then Response code is "<status_code>"

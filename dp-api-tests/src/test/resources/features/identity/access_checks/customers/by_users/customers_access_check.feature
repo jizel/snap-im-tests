@@ -103,9 +103,6 @@ Feature: Customers access check feature - GET
          | 23445678-0000-4000-a000-000000000000 | Company 3   | c3@tenants.biz | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
          | 34545678-0000-4000-a000-000000000000 | Company 4   | c4@tenants.com | CZ10000004 | false          | +420987654321 | http://www.snapshot.travel | Europe/Prague |
          | 45645678-0000-4000-a000-000000000000 | Company 5   | c5@tenants.com | CZ10000005 | true           | +420987654321 | http://www.snapshot.travel | Europe/Prague |
-       Given API subscriptions exist for default application and customer with id "23445678-0000-4000-a000-000000000000"
-       Given API subscriptions exist for default application and customer with id "34545678-0000-4000-a000-000000000000"
-       Given API subscriptions exist for default application and customer with id "45645678-0000-4000-a000-000000000000"
        Given Relation between user "userWithCust1" and customer "12300000-0000-4000-a000-000000000000" is activated
        Given Relation between user "userWithCust1" and customer with id "23445678-0000-4000-a000-000000000000" exists with isPrimary "true"
        Given Relation between user "userWithCust1" and customer with id "34545678-0000-4000-a000-000000000000" exists with isPrimary "true"
@@ -122,7 +119,6 @@ Feature: Customers access check feature - GET
          | /null | 0      | salesforce_id=='DEFAULTSFID0001' | /null          | /null               | 3           |
          | /null | 0      | email=='*@tenants.biz'           | website        | /null               | 2           |
          | /null | 0      | vat_id=='CZ10000005'             | website        | /null               | 0           |
-         | /null | 0      | customer_id=='23445678-*'        | salesforce_id  | /null               | 1           |
 
 
   Scenario: User with access updates customer

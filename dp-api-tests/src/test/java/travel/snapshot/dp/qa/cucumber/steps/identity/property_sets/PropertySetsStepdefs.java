@@ -15,13 +15,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipPartialDto;
-import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.PropertySetUserRelationshipPartialDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
@@ -284,7 +278,7 @@ public class PropertySetsStepdefs {
 
     @Then("^There are (\\d+) property property sets returned$")
     public void There_are_returned_property_property_sets_returned(int count) throws Throwable {
-        propertySetSteps.numberOfEntitiesInResponse(PropertySetPropertyRelationshipPartialDto.class, count);
+        propertySetSteps.numberOfEntitiesInResponse(PropertyPropertySetRelationshipPartialDto.class, count);
     }
 
     @When("^Property set \"([^\"]*)\" is updated with following data(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")

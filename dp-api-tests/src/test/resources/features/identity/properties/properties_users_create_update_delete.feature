@@ -7,7 +7,6 @@ Feature: Properties users create update delete
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
-    Given API subscriptions exist for default application and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
@@ -67,16 +66,15 @@ Feature: Properties users create update delete
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> users returned
-    And There are property users with following usernames returned in order: <expected_usernames>
     And Total count is "<total>"
 
     Examples:
-      | limit | cursor | returned | total | filter           | sort      | sort_desc | expected_usernames                                                                                                           |
-      | 5     | 0      | 5        | 7     | /null            | is_active |           | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5                      |
-      | 5     | 0      | 3        | 3     | user_id==8b88*   |           | is_active | filter_pu_default_6, filter_pu_default_5, filter_pu_default_4, filter_pu_default_3, filter_pu_default_2                      |
-      | 5     | 2      | 5        | 7     | /null            | is_active |           | filter_pu_default_3, filter_pu_default_4, filter_pu_default_5, filter_pu_default_6                                           |
-      | 5     | 2      | 1        | 3     | user_id==9b88* |           | is_active | filter_pu_default_4, filter_pu_default_3, filter_pu_default_2, filter_pu_default_1                                           |
-      | /null | /null  | 7        | 7     | /null            | /null     | /null     | filter_pu_default_1, filter_pu_default_2, filter_pu_default_3, filter_pu_default_4, filter_pu_default_5  filter_pu_default_6 |
+      | limit | cursor | returned | total | filter                                        | sort      | sort_desc |
+      | 5     | 0      | 5        | 7     | /null                                         | is_active |           |
+      | 5     | 0      | 1        | 1     | user_id==8b88303f-f1b3-4174-98c3-eae169c94d3a |           | is_active |
+      | 5     | 2      | 5        | 7     | /null                                         | is_active |           |
+      | 5     | 2      | 0        | 1     | user_id==9b88303f-f1b3-4174-98c3-eae169c94d3d |           | is_active |
+      | /null | /null  | 7        | 7     | /null                                         | /null     | /null     |
 
 
   Scenario: Listing users of non-existent property
@@ -89,7 +87,7 @@ Feature: Properties users create update delete
     Then Response code is "201"
     When User "default3" is added to property with code "p2_code"
     Then Response code is "409"
-    And Custom code is 40902
+    And Custom code is 40907
     
     Scenario: Property cannot be deleted when it has a relationship with some user (and vice versa)
       Given User "default1" is removed from customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"

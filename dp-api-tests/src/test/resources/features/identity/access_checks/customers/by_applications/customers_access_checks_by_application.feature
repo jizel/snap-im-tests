@@ -73,13 +73,12 @@ Feature: Customers Application access check feature - GET
 
     Examples:
       | limit | cursor | filter                          | sort           | sort_desc           | returned    |
-      | /null | 0      | name=='*'                       | /null          | website             | 3           |
+      | /null | 0      | name=='*'                       | /null          | website             | 1           |
       | /null | 0      | name=='Company 5'               | /null          | /null               | 0           |
-      | 2     | 0      | website=='*www.*'               | /null          | /null               | 2           |
-      | /null | 0      | is_demo_customer=='true'        | /null          | salesforce_id       | 2           |
-      | /null | 0      | email=='*@tenants.biz'          | website        | /null               | 3           |
+      | 2     | 0      | website=='*www.*'               | /null          | /null               | 1           |
+      | /null | 0      | is_demo_customer=='true'        | /null          | salesforce_id       | 1           |
+      | /null | 0      | email=='*@tenants.biz'          | website        | /null               | 1           |
       | /null | 0      | vat_id=='CZ10000005'            | website        | /null               | 0           |
-      | /null | 0      | customer_id=='23445678-*'       | salesforce_id  | /null               | 1           |
 
   Scenario: Update customer with and without application access
     When Customer with id "12300000-0000-4000-a000-000000000000" is updated with data by user "userWithCust1" for application version "versionWithSubscription"

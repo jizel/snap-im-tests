@@ -17,17 +17,7 @@ import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
-import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipPartialDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipPartialDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
@@ -410,7 +400,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipPartialUpdateDto relationshipUpdate) {
-        CustomerPropertyRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId());
         try {
@@ -424,7 +414,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
-        CustomerPropertyRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), null);
         setSessionResponse(response);
@@ -472,19 +462,19 @@ public class PropertySteps extends BasicSteps {
         setSessionResponse(response);
     }
 
-    public CustomerPropertyRelationshipPartialDto getPropertyCustomerRelationship(String customerId, String propertyId) {
+    public PropertyCustomerRelationshipPartialDto getPropertyCustomerRelationship(String customerId, String propertyId) {
         return getPropertyCustomerRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, customerId, propertyId);
     }
 
-    public CustomerPropertyRelationshipPartialDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
+    public PropertyCustomerRelationshipPartialDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
         String filter = String.format("customer_id==%s", customerId);
-        CustomerPropertyRelationshipPartialDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(CustomerPropertyRelationshipPartialDto[].class);
+        PropertyCustomerRelationshipPartialDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(PropertyCustomerRelationshipPartialDto[].class);
         return stream(relations).findFirst().orElse(null);
     }
 
     @Step
     public void requestPropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
-        CustomerPropertyRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
+        PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
         setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId()));
     }

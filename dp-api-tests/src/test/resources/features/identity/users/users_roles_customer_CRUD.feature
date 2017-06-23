@@ -70,6 +70,8 @@ Feature: Users customer roles CRUD
       | role_id                              | customer_id                          |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
 
+  # DP-2180
+  @skipped
   Scenario Outline: Removing role from user customer
     Given Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is added
     When Role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is deleted
@@ -80,6 +82,8 @@ Feature: Users customer roles CRUD
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | 1234fd9a-a05d-42d8-8e84-42e904ace123 | default1  |
 
 
+  # DP-2180
+  @skipped
   Scenario Outline: Checking error code for removing not existing role from user customer
     When Nonexistent role with id "<role_id>" for user name "<user_name>" and customer id "<customer_id>" is deleted
     Then Response code is "404"
@@ -127,8 +131,11 @@ Feature: Users customer roles CRUD
       | url                                                                                                                                              |
       | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/customers/1234fd9a-a05d-42d8-8e84-42e904ace123                                               |
       | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles                                         |
-      | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles/a318fd9a-a05d-42d8-8e84-42e904ace123    |
+# DP-2180
+#      | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/customers/1234fd9a-a05d-42d8-8e84-42e904ace123/roles/a318fd9a-a05d-42d8-8e84-42e904ace123    |
 
+  # DP-2180
+  @skipped
   Scenario: Role cannot be deleted until User is (and vice versa)
     Given Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     When Role with name "user_role_1" is deleted

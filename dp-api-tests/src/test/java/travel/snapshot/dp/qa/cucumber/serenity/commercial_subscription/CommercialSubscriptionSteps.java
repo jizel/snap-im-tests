@@ -31,7 +31,7 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     @Step
     public void comSubscriptionsExists(List<CommercialSubscriptionDto> commSubcsriptions) {
         commSubcsriptions.forEach(s -> {
-            CommercialSubscriptionDto existingSubscription = getSubscriptionById(s.getId());
+            CommercialSubscriptionDto existingSubscription = getCommercialSubscriptionByCombination(s.getCustomerId(), s.getPropertyId(), s.getApplicationId());
             if (existingSubscription != null) {
                 deleteEntityWithEtag(existingSubscription.getId());
             }
@@ -107,6 +107,13 @@ public class CommercialSubscriptionSteps extends BasicSteps {
         CommercialSubscriptionDto[] comSubscription = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
                 "commercial_subscription_id==" + commSubscriptionId, null, null, null).as(CommercialSubscriptionDto[].class);
         return stream(comSubscription).findFirst().orElse(null);
+    }
+
+    public CommercialSubscriptionDto getCommercialSubscriptionByCombination(String customerId, String propertyId, String applicationId) {
+        CommercialSubscriptionDto[] comSubscription = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
+                String.format("customer_id==%s;property_id==%s;application_id==%s", customerId, propertyId, applicationId), null, null, null).as(CommercialSubscriptionDto[].class);
+        return stream(comSubscription).findFirst().orElse(null);
+
     }
 
     public void checkIsActive(String commSubscriptionId, boolean isActive) {

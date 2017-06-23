@@ -1,5 +1,6 @@
 @Identity
 @Properties
+@skipped
 Feature: Properties validation
 
   Background:

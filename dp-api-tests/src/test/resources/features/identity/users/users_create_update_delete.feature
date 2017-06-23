@@ -23,11 +23,11 @@ Feature: Users create update delete
     And Body contains entity with attribute "last_name" value "<lastName>"
     And Body contains entity with attribute "email" value "<email>"
     And Body contains entity with attribute "timezone" value "<timezone>"
-    And Body contains entity with attribute "languageCode" value "<languageCode>"
+    And Body contains entity with attribute "culture" value "<culture>"
     And Body contains entity with attribute "is_active" value "true"
     And Etag header is present
     Examples:
-      | type     | username | firstName | lastName | email                           | timezone      | languageCode |
+      | type     | username | firstName | lastName | email                           | timezone      | culture |
       | customer | snp      | Snap      | Shot     | snp@snapshot.travel             | Europe/Prague | cs-CZ   |
       | customer | snp1     | Snap1     | Shot1    | dummy_mail+32@gmail.com         | Europe/Prague | cs-CZ   |
       | customer | snp2     | Snap2     | Shot2    | dummy.test-mail@gmail.com       | Europe/Prague | cs-CZ   |
@@ -47,7 +47,7 @@ Feature: Users create update delete
   Scenario Outline: Creating users with wrong fields
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
-      | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
+      | <type>     | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
     Then Response code is "422"
     And Custom code is "42201"
     Examples:
@@ -76,7 +76,7 @@ Feature: Users create update delete
       | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
       | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
     Then Response code is "409"
-    And Custom code is 40912
+    And Custom code is 40901
     Examples:
       | type     | username | firstName | lastName | email                  | timezone      | languageCode |
       # Same name

@@ -13,7 +13,6 @@ Feature: User property relationship tests
     Given The following properties exist with random address and billing address
       | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 12300000-0000-4000-a000-000000000000 |
-    Given API subscriptions exist for default application and customer with id "12300000-0000-4000-a000-000000000000" and property "p1_code"
     Given Relation between user "customerUser1" and property with code "p1_code" exists with is_active "true"
 
   Scenario Outline: Empty update of (customer type) user - property relationship returns correct code - DP-1777

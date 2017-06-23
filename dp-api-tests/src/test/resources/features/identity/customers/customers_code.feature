@@ -12,7 +12,7 @@ Feature: Customer code feature
   Scenario Outline: Correct customer code is returned when none is sent for all company names
     Given Customer is created with random address
       | name            | email              | isDemo         | timezone      | type  | salesforceId    |
-      | <name       >   | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
+      | <name>          | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
     Then Body contains entity with attribute "customer_code"
     And The "customer_code" attribute in response contains only CAPITAL latin characters or numbers
 
@@ -30,7 +30,7 @@ Feature: Customer code feature
   Scenario: Customer code cannot be created manually
     When Customer is created with code
       | code        |  name        | email              | isDemo         | timezone      | type  | salesforceId    |
-      | manualCode | Company 1    | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
+      | manualCode  | Company 1    | c1@snaphsot.travel | true           | Europe/Prague | HOTEL | DEFAULTSFID0001 |
     Then Response code is "422"
     And Custom code is 42201
 
@@ -43,32 +43,32 @@ Feature: Customer code feature
     And Custom code is 42201
 
   Scenario Outline: Correct customer code is returned according to customers address
-    When Customer "<name       >" is created with address
-      | addressLine1   | city   | zipCode   | country   |
-      | <addressLine1> | <city> | <zipCode> | <country> |
+    When Customer "<name>" is created with address
+      | line1   | city   | zipCode   | countryCode  |
+      | <line1> | <city> | <zipCode> | <countryCode>     |
     Then Response code is "201"
     Then Body contains entity with attribute "customer_code" value "<resultCode>"
 #  Resulting code is Country Code + City Code + first 3 letters from Company Name (DP-1222)
     Examples:
-      | name        | addressLine1 | city       | zipCode | country | resultCode |
-      | Čéšká firma | line 1       | Brno       | 60200   | CZ      | CZBRQCES   |
-      | 21st Comp.  | line 2       | New York   | 11414   | US      | USNYC21S   |
-      | Union Comp. | line 2,5     | Union City | 9307    | US      | USUCGUNI   |
-      | Chinese Comp| line 3       | Beijing    | 23456   | CN      | CNBJSCHI   |
+      | name        | line1     | city       | zipCode | countryCode | resultCode |
+      | Čéšká firma | line 1    | Brno       | 60200   | CZ           | CZBRQCES   |
+      | 21st Comp.  | line 2    | New York   | 11414   | US           | USNYC21S   |
+      | Union Comp. | line 2,5  | Union City | 9307    | US           | USUCGUNI   |
+      | Chinese Comp| line 3    | Beijing    | 23456   | CN           | CNBJSCHI   |
 
   Scenario: When generated customer code is not unique, smallest possible integer is concatenated
     When Customer "Hilton" is created with address
-      | addressLine1 | city   | zipCode | country |
-      | line 1       | Brno   | 60200   | CZ      |
+      | line1   | city   | zipCode | countryCode |
+      | line 1  | Brno   | 60200   | CZ           |
     Then Response code is "201"
     Then Body contains entity with attribute "customer_code" value "CZBRQHIL"
     When Customer "Hilton" is created with address
-      | addressLine1 | city   | zipCode | country |
-      | line 1       | Brno   | 60200   | CZ      |
+      | line1   | city   | zipCode | countryCode |
+      | line 1  | Brno   | 60200   | CZ           |
     Then Response code is "201"
     Then Body contains entity with attribute "customer_code" value "CZBRQHIL1"
     When Customer "Hilton" is created with address
-      | addressLine1 | city   | zipCode | country |
-      | line 1       | Brno   | 60200   | CZ      |
+      | line1   | city   | zipCode | countryCode |
+      | line 1  | Brno   | 60200   | CZ           |
     Then Response code is "201"
     Then Body contains entity with attribute "customer_code" value "CZBRQHIL2"

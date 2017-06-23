@@ -48,6 +48,8 @@ Feature: User Customers Role by app access check feature
     Then Response code is "200"
     And Total count is "0"
 
+  # DP-2180
+  @skipped
   Scenario: User can assign and revoke roles to customer-users only when accessing app has subscription
     Given Switch for user customer role tests
     Given The following roles exist
@@ -58,6 +60,7 @@ Feature: User Customers Role by app access check feature
     And Custom code is 40301
     When User "user1OfC1" assigns role "NewRole" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithSubscription"
     Then Response code is "201"
+
     When User "user1OfC1" deletes role "NewRole" from relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
     Then Response code is "403"
     And Custom code is 40301

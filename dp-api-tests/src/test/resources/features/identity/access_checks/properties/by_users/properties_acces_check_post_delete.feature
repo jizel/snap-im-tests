@@ -65,7 +65,6 @@ Feature: Properties access check feature - POST and DELETE
     Given The following customers exist with random address
       | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
-    Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
     When The user "userWithNoProp" creates the following property
       | name         | code         | email          | isDemo         | timezone      | customerId                           |
       | p2_name      | p2_code      | p2@tenants.biz | true           | Europe/Prague | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -87,7 +86,6 @@ Feature: Properties access check feature - POST and DELETE
     Given The following customers exist with random address
       | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | timezone      |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 | Company 2   | c2@tenants.biz | salesforceid_2 | CZ20000001 | true           | Europe/Prague |
-    Given API subscriptions exist for default application and customer with id "2348fd9a-a05d-42d8-8e84-42e904ace123"
     When Property with code "p1_code" is updated with data by user "userWithProp"
       | customerId                           |
       | 2348fd9a-a05d-42d8-8e84-42e904ace123 |
@@ -107,17 +105,17 @@ Feature: Properties access check feature - POST and DELETE
 
   #    ----------------------------< Tti >----------------------------------
 
-  Scenario: Add tti to booking.com mapping to property with defined tti_id by user who has access to the property
-    When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithProp"
-    Then Response code is "201"
-    And Body contains entity with attribute "code" and integer value 1234
-
-  Scenario: Add tti to booking.com mapping to property with defined tti_id by user who does not have access to the property
-    When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithNoProp"
-    Then Response code is "404"
-    When Relation between user "userWithNoProp" and property with code "p1_code" exists with is_active "false"
-    And Add ttiId to booking.com id "1235" mapping to property with code "p1_code" by user "userWithNoProp"
-    Then Response code is "404"
-    When Relation between user "userWithNoProp" and property "p1_code" is activated
-    And Add ttiId to booking.com id "1235" mapping to property with code "p1_code" by user "userWithNoProp"
-    Then Response code is "201"
+#  Scenario: Add tti to booking.com mapping to property with defined tti_id by user who has access to the property
+#    When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithProp"
+#    Then Response code is "201"
+#    And Body contains entity with attribute "code" and integer value 1234
+#
+#  Scenario: Add tti to booking.com mapping to property with defined tti_id by user who does not have access to the property
+#    When Add ttiId to booking.com id "1234" mapping to property with code "p1_code" by user "userWithNoProp"
+#    Then Response code is "404"
+#    When Relation between user "userWithNoProp" and property with code "p1_code" exists with is_active "false"
+#    And Add ttiId to booking.com id "1235" mapping to property with code "p1_code" by user "userWithNoProp"
+#    Then Response code is "404"
+#    When Relation between user "userWithNoProp" and property "p1_code" is activated
+#    And Add ttiId to booking.com id "1235" mapping to property with code "p1_code" by user "userWithNoProp"
+#    Then Response code is "201"
