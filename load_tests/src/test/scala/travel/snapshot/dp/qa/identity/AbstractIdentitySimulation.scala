@@ -116,6 +116,17 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   }
 
   /**
+    * Gets list of all commercial subscriptions
+    */
+  object GetAllCommercialSubscriptions extends AbstractRequest {
+    def apply() = getRequest("Get all commercial subscriptions", None, "identity/commercial_subscriptions", HttpStatus.SC_OK)
+
+    def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber") {
+      getRequest(s"Get all commercial subscriptions $numberOfProperties times", None, "identity/commercial_subscriptions", HttpStatus.SC_OK)
+    }
+  }
+
+  /**
     * Creates users and assigns it to a customer with id which was created in CreateCustomer object. Id of a user
     * is saved to session.
     *

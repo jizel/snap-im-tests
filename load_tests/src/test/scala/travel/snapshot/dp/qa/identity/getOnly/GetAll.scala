@@ -24,6 +24,8 @@ class GetAll extends AbstractIdentitySimulation {
     pause(1),
     GetAllPropertySets(),
     pause(1),
+    GetAllCommercialSubscriptions(),
+    pause(1),
     GetAllCustomers(10),
     pause(1),
     GetAllProperties(10),
@@ -34,6 +36,8 @@ class GetAll extends AbstractIdentitySimulation {
     pause(1),
     GetAllApplications(10),
     pause(1),
-    GetAllPropertySets(10)
+    GetAllPropertySets(10),
+    pause(1),
+    GetAllCommercialSubscriptions(10)
   ))
 }
