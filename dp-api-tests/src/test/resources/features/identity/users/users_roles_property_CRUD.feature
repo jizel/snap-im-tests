@@ -77,7 +77,8 @@ Feature: Users property roles CRUD
       | role_id                              | property_code |
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | p1_code       |
 
-
+  # DP-2180
+  @skipped
   Scenario Outline: Removing role from user property
     When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is added
     When Role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is deleted
@@ -88,6 +89,8 @@ Feature: Users property roles CRUD
       | a318fd9a-a05d-42d8-8e84-42e904ace123 | p1_code       | default1  |
 
 
+  # DP-2180
+  @skipped
   Scenario Outline: Checking error code for removing not existing role from user property
     When Nonexistent role with id "<role_id>" for user name "<user_name>" and property code "<property_code>" is deleted
     Then Response code is "404"
@@ -99,13 +102,13 @@ Feature: Users property roles CRUD
   Scenario Outline: Filtering list of roles for user customer relationship
     Given Switch for user property role tests
     And The following roles exist
-      | roleName           | description            |
-      | user_filter_role_1 | optional description 1 |
-      | user_filter_role_2 | optional description 2 |
-      | user_filter_role_3 | optional description 3 |
-      | user_filter_role_4 | optional description 4 |
-      | user_filter_role_5 | optional description 5 |
-      | user_filter_role_6 | optional description 6 |
+      | id                                   | roleName           | description            |
+      | 1796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_1 | optional description 1 |
+      | 2796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_2 | optional description 2 |
+      | 3796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_3 | optional description 3 |
+      | 4796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_4 | optional description 4 |
+      | 5796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_5 | optional description 5 |
+      | 6796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_6 | optional description 6 |
     Given Role with name "user_filter_role_1" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_2" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_3" for user name "default1" and property code "p1_code" is added
@@ -118,13 +121,13 @@ Feature: Users property roles CRUD
     And There are <returned> user roles returned
     And Total count is "<total>"
     Examples:
-      | limit | cursor | returned | total | filter           | sort      | sort_desc |
-      | 5     | 0      | 5        | 5     | is_active==true  | is_active |           |
-      | 5     | 0      | 5        | 5     | is_active==true  |           | is_active |
-      | 5     | 2      | 3        | 5     | is_active==true  | is_active |           |
-      | 5     | 2      | 3        | 5     | is_active==true  |           | is_active |
-      | 5     | 0      | 5        | 6     | /null            |           |           |
-      | /null | /null  | 1        | 1     | is_active==false | /null     | /null     |
+      | limit | cursor | returned | total | filter                                        | sort      | sort_desc |
+      | 5     | 0      | 5        | 6     | /null                                         | role_id   |           |
+      | 5     | 0      | 5        | 6     | /null                                         |           | role_id   |
+      | 5     | 2      | 4        | 6     | /null                                         | role_id   |           |
+      | 5     | 2      | 4        | 6     | /null                                         |           | role_id   |
+      | 5     | 0      | 5        | 6     | /null                                         |           |           |
+      | /null | /null  | 1        | 1     | role_id==2796a238-39de-44fb-af67-c3c5e4c4d739 | /null     | /null     |
 
   Scenario Outline: Send POST request with empty body to all user-property endpoints
     And Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property "p1_code" is added
@@ -135,7 +138,8 @@ Feature: Users property roles CRUD
       | url                                                                                                                                            |
       | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab                                            |
       | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles                                      |
-      | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |
+# DP-2180
+#      | identity/users/33e9ddbe-c8f6-44e7-a536-27a0be3e90c3/properties/842529dd-481f-430d-b6b6-686fbb687cab/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |
 
   Scenario: Role cannot be deleted until User is (and vice versa)
     Given Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property code "p1_code" is added

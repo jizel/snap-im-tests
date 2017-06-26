@@ -172,14 +172,6 @@ Feature: Customers properties get
       | salesforceid_6 | filter_list_prop_cust_p6_name | filter_list_prop_cust_p6_code | http://www.snapshot.travel | fp6@tenants.biz | true           | Europe/Prague | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 |
       | salesforceid_7 | filter_list_prop_cust_p7_name | filter_list_prop_cust_p7_code | http://www.snapshot.travel | fp7@tenants.biz | true           | Europe/Prague | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 |
       | salesforceid_8 | filter_list_prop_cust_p8_name | filter_list_prop_cust_p8_code | http://www.snapshot.travel | fp8@tenants.biz | true           | Europe/Prague | 3964bc8b-082d-4d47-b300-9a7b26a3ce91 |
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p1_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p2_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p3_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p4_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p5_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p6_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p7_code"
-    Given All customerProperties are deleted from DB for customer id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" and property code "filter_list_prop_cust_p8_code"
     Given Relation between property with code "filter_list_prop_cust_p1_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-01-01" to "2030-02-28"
     Given Relation between property with code "filter_list_prop_cust_p2_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-02-01" to "2030-03-31"
     Given Relation between property with code "filter_list_prop_cust_p3_code" and customer with id "3964bc8b-082d-4d47-b300-9a7b26a3ce91" exists with type "chain" from "2015-03-01" to "2030-04-30"

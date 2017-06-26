@@ -566,14 +566,13 @@ public class UserGroupsdefs {
         userGroupSteps.listOfUserGroupUsersIsGotByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(USER_GROUP_ID), null, null, null, null, null);
     }
 
-    @When("^Relation between user group \"([^\"]*)\", property with code \"([^\"]*)\" and role with id \"([^\"]*)\" is created(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with is_active \"([^\"]*)\")?$")
-    public void relationBetweenUserGroupPropertyWithCodeAndRoleWithIdIsCreatedByUser(String userGroupName, String propertyCode, String roleId, String username, String applicationVersionName, String isActiveString) throws Throwable {
-        Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
+    @When("^Relation between user group \"([^\"]*)\", property with code \"([^\"]*)\" and role with id \"([^\"]*)\" is created(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")
+    public void relationBetweenUserGroupPropertyWithCodeAndRoleWithIdIsCreatedByUser(String userGroupName, String propertyCode, String roleId, String username, String applicationVersionName) throws Throwable {
         Map<String, String> ids = getNonNullIdsFromNames(userGroupName, username);
         String propertyId = propertySteps.resolvePropertyId(propertyCode);
         String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
 
-        userGroupSteps.userGroupPropertyRoleRelationshipIsCreatedByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(USER_GROUP_ID), propertyId, roleId, isActive);
+        userGroupSteps.userGroupPropertyRoleRelationshipIsCreatedByUserForApp(ids.get(USER_ID), applicationVersionId, ids.get(USER_GROUP_ID), propertyId, roleId);
     }
 
     @When("^Relation between user group \"([^\"]*)\", property with code \"([^\"]*)\" and role with id \"([^\"]*)\" is deleted(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?$")

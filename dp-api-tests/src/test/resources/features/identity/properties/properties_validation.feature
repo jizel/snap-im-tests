@@ -1,5 +1,7 @@
+# Skipped due to DP-2184
 @Identity
 @Properties
+@skipped
 Feature: Properties validation
 
   Background:

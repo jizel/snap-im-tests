@@ -1,4 +1,6 @@
+# Skipped due to DP-2184
 @Identity
+@skipped
 Feature: Customers validation
 
   Background:
@@ -113,12 +115,12 @@ Feature: Customers validation
 
   Scenario Outline: Object update - customer's address - invalid values
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
-      | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
-      | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
+      | countryCode  | city   | zipCode   | region   | line1   | line2   |
+      | <country>    | <city> | <zipCode> | <region> | <line1> | <line2> |
     Then Response code is 422
     And Custom code is "<custom_code>"
     Examples:
-      | country | city    | zipCode | region  | addressLine1 | addressLine2 | custom_code |
+      | country | city    | zipCode | region  | line1 | line2 | custom_code |
       | /null   | \w{256} | /null   | /null   | /null        | /null        | 42201       |
       | XX      | /null   | /null   | /null   | /null        | /null        | 42202       |
       | USA     | /null   | /null   | /null   | /null        | /null        | 42202       |
@@ -130,12 +132,12 @@ Feature: Customers validation
 
   Scenario Outline: Object update - customer's address - empty values
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
-      | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
-      | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
+      | countryCode | city   | zipCode   | region   | line1   | line2   |
+      | <country>   | <city> | <zipCode> | <region> | <line1> | <line2> |
     Then Response code is 422
     And Custom code is "<custom_code>"
     Examples:
-      | country | city  | zipCode | region | addressLine1 | addressLine2 | custom_code |
+      | country | city  | zipCode | region | line1 | line2 | custom_code |
       |         | /null | /null   | /null  | /null        | /null        | 42201       |
       | /null   |       | /null   | /null  | /null        | /null        | 42201       |
       | /null   | /null |         | /null  | /null        | /null        | 42201       |
@@ -144,13 +146,13 @@ Feature: Customers validation
 
   Scenario Outline: Object update - customer's address - valid values
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
-      | country   | city   | zipCode   | region   | addressLine1   | addressLine2   |
-      | <country> | <city> | <zipCode> | <region> | <addressLine1> | <addressLine2> |
+      | countryCode | city   | zipCode   | region   | line1   | line2   |
+      | <country>   | <city> | <zipCode> | <region> | <line1> | <line2> |
     Then Response code is 204
     And Body is empty
     And Etag header is present
     Examples:
-      | country | city      | zipCode | region | addressLine1         | addressLine2         |
+      | country | city      | zipCode | region | line1         | line2         |
       | CZ      | /null     | /null   | /null  | /null                | /null                |
       | US      | /null     | /null   | /null  | /null                | /null                |
       | EG      | /null     | /null   | /null  | /null                | /null                |
@@ -173,8 +175,8 @@ Feature: Customers validation
 
   Scenario: Object update - US customer's region
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
-      | country | city  | zipCode | region | addressLine1 | addressLine2 |
-      | US      | /null | /null   | Texas  | /null        | /null        |
+      | countryCode | city  | zipCode | region | line1 | line2 |
+      | US          | /null | /null   | Texas  | /null        | /null        |
     Then Response code is 204
     And Body is empty
     And Etag header is present

@@ -42,7 +42,8 @@ Feature: User Groups Property sets Roles Application access check feature
       | id                                   | applicationId                        | roleName |
       | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 22200000-0000-4000-a000-000000000222 | role1    |
 
-
+  # DP-2180
+  @skipped
   Scenario: UserGroup-PropertySet-Role relation is created, got and deleted by application with and withou access
     When Relation between user group "userGroup_1", property set "PropertySet_UserGroup" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" for application version "versionWithoutSubscription"
     Then Response code is "403"

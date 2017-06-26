@@ -76,13 +76,13 @@ Feature: Property sets Application access check feature
     Then Response code is "403"
     And Custom code is 40301
     Examples:
-      | limit | cursor | filter                        | sort        | sort_desc         | returned    |
-      | /null | 0      | name=='*'                     | /null       | name              | 4           |
-      | /null | 0      | name=='ps4_name'              | /null       | /null             | 1           |
-      | /null | 0      | is_active=='true'             | /null       | property_set_type | 2           |
-      | /null | 0      | property_set_type=='brand'    | /null       | property_set_type | 2           |
-      | /null | 0      | description=='desc*'          | description | /null             | 3           |
-      | /null | 0      | property_set_id=='43400000-*' | /null       | /null             | 1           |
+      | limit | cursor | filter                                                  | sort        | sort_desc         | returned    |
+      | /null | 0      | name=='*'                                               | /null       | name              | 4           |
+      | /null | 0      | name=='ps4_name'                                        | /null       | /null             | 1           |
+      | /null | 0      | is_active=='true'                                       | /null       | property_set_type | 2           |
+      | /null | 0      | property_set_type=='brand'                              | /null       | property_set_type | 2           |
+      | /null | 0      | description=='desc*'                                    | description | /null             | 3           |
+      | /null | 0      | property_set_id=='43400000-1111-4c57-91bd-30230d2c1bd0' | /null       | /null             | 1           |
 
   Scenario: Application with and without subscription updates property set
     When Property set "ps1_name" is updated with following data by user "user1" for application version "versionWithoutSubscription"

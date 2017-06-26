@@ -56,7 +56,7 @@ Feature: Properties-Users Application access check feature
     And Custom code is 40402
     When User "user1" is added to property with code "p1_code" by user "user1" for application version "versionWithSubscription"
     Then Response code is "409"
-    And Custom code is 40902
+    And Custom code is 40907
 
   Scenario: Delete user from property by application with and without access
     When User "user1" is removed from property with code "p1_code" by user "user1" for application version "versionWithoutSubscription"

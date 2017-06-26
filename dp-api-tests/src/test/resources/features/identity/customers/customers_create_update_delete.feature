@@ -75,13 +75,13 @@ Feature: Customers create update delete
       | 910cfc16-4597-479f-ae18-250b0a94752e | Some_Company  | cust1@email.cz | salesforceid   | CZ987654320 | +420123456789 | http://google.com | Europe/Prague | HOTEL  | true           | 111111b2-3836-4207-a705-42bbec111111 |
     When Customer "910cfc16-4597-479f-ae18-250b0a94752e" is updated with data
       | name          | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
-      | <name       > | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
+      | <name>        | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
     Then Response code is "204"
     And Body is empty
     And Etag header is present
     And Check updated customer "910cfc16-4597-479f-ae18-250b0a94752e" has data
       | name          | email   | vatId   | phone   | website   | notes   | timezone   | hospitalityId   |
-      | <name       > | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
+      | <name>        | <email> | <vatId> | <phone> | <website> | <notes> | <timezone> | <hospitalityId> |
     Examples:
       | name               | email             | vatId       | phone         | website              | notes         | timezone      | hospitalityId                        |
       | updatedCompanyName | /null             | /null       | /null         | /null                | /null         | /null         | /null                                |
@@ -166,6 +166,7 @@ Feature: Customers create update delete
       | US      | Wisconsin                         | US12345678  |
       | US      | Wyoming                           | US12345678  |
      # Australia regions
+      # DP-2177 - all Australia regions are affected
       | AU      | Ashmore and Cartier Islands       | 51824753556 |
       | AU      | Australian Antarctic Territory    | 51824753556 |
       | AU      | Australian Capital Territory      | 51824753556 |

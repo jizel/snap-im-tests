@@ -110,13 +110,13 @@ Feature: Property sets access check feature - GET
        Then Response code is "200"
        And There are 0 properties returned
        Examples:
-         | limit | cursor | filter                        | sort        | sort_desc         | returned    |
-         | /null | 0      | name=='*'                     | /null       | name              | 5           |
-         | /null | 0      | name=='ps5_name'              | /null       | /null             | 1           |
-         | /null | 0      | is_active=='true'             | /null       | property_set_type | 3           |
-         | /null | 0      | property_set_type=='brand'    | /null       | property_set_type | 3           |
-         | /null | 0      | description=='desc*'          | description | /null             | 4           |
-         | /null | 0      | property_set_id=='43400000-*' | /null       | /null             | 1           |
+         | limit | cursor | filter                                                  | sort        | sort_desc         | returned    |
+         | /null | 0      | name=='*'                                               | /null       | name              | 5           |
+         | /null | 0      | name=='ps5_name'                                        | /null       | /null             | 1           |
+         | /null | 0      | is_active=='true'                                       | /null       | property_set_type | 3           |
+         | /null | 0      | property_set_type=='brand'                              | /null       | property_set_type | 3           |
+         | /null | 0      | description=='desc*'                                    | description | /null             | 4           |
+         | /null | 0      | property_set_id=='43400000-1111-4c57-91bd-30230d2c1bd0' | /null       | /null             | 1           |
 
 #      -----------------------------< Second level entities accessibility check >------------------------------------
  

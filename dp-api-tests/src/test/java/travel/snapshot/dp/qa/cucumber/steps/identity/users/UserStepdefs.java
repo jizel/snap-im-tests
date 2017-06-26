@@ -30,6 +30,7 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.helpers.Resolvers;
 import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
+import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.partners.PartnerSteps;
@@ -40,6 +41,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.user_groups.UserGroupsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UserRolesSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
+import javax.print.DocFlavor;
 import java.util.List;
 import java.util.Map;
 
@@ -281,7 +283,8 @@ public class UserStepdefs {
         roleBaseSteps.setRolesPathCustomer();
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
-        userRolesSteps.roleNameExistsBetweenUserAndCustomer(role.getId(), userName, customerId, isActive);
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.roleNameExistsBetweenUserAndCustomer(role.getId(), userId, customerId, isActive);
     }
 
     @When("^List of roles for user with username \"([^\"]*)\" and customer id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -291,14 +294,16 @@ public class UserStepdefs {
                                                                                                                @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
-        userRolesSteps.getRolesBetweenUserAndCustomer(userName, customerId, limit, cursor, filter, sort, sortDesc);
+        String userId = usersSteps.resolveUserId(userName);
+        userRolesSteps.getRolesBetweenUserAndCustomer(userId, customerId, limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property(?: code)? \"([^\"]*)\" is added(?: with is(?:A|a)ctive \"([^\"]*)\")?$")
     public void roleWithIdForUserNameAndPropertyCodeIsAdded(String roleId, String userName, String propCode, String isActiveString) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
         String propertyId = propertySteps.resolvePropertyId(propCode);
-        userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userName, propertyId, isActive);
+        userRolesSteps.roleExistsBetweenUserAndProperty(roleId, userId, propertyId, isActive);
     }
 
     @When("^I (?:add|assign) role(?: with id)? \"([^\"]*)\" to user(?: name)? \"([^\"]*)\" and property(?: code| id)? \"([^\"]*)\"$")
@@ -335,11 +340,12 @@ public class UserStepdefs {
 
     @Given("^Role with name \"([^\"]*)\" for user name \"([^\"]*)\" and property code \"([^\"]*)\" is added(?: with is(?:A|a)ctive \"([^\"]*)\")?$")
     public void roleWithNameForUserNameAndPropertyCodeIsAdded(String roleName, String userName, String propCode, String isActiveString) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
         String propertyId = propertySteps.resolvePropertyId(propCode);
         roleBaseSteps.setRolesPathProperty();
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
         Boolean isActive = ((isActiveString==null) ? true : Boolean.valueOf(isActiveString));
-        userRolesSteps.roleNameExistsBetweenUserAndProperty(role.getId(), userName, propertyId, isActive);
+        userRolesSteps.roleNameExistsBetweenUserAndProperty(role.getId(), userId, propertyId, isActive);
     }
 
     @When("^List of roles for user with username \"([^\"]*)\" and property code \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"$")
@@ -349,8 +355,9 @@ public class UserStepdefs {
                                                                                                                  @Transform(NullEmptyStringConverter.class) String filter,
                                                                                                                  @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                  @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
+        String userId = usersSteps.resolveUserId(userName);
         PropertyDto prop = propertySteps.getPropertyByCodeInternal(propCode);
-        userRolesSteps.getRolesBetweenUserAndProperty(userName, prop.getId(), limit, cursor, filter, sort, sortDesc);
+        userRolesSteps.getRolesBetweenUserAndProperty(userId, prop.getId(), limit, cursor, filter, sort, sortDesc);
     }
 
     @Given("^Role with id \"([^\"]*)\" for user name \"([^\"]*)\" and property set name \"([^\"]*)\"(?: for customer \"([^\"]*)\")? is added(?: with is(?:A|a)ctive \"([^\"]*)\")?$")

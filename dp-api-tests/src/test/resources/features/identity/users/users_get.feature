@@ -188,7 +188,7 @@ Feature: Users get
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  | user_name |           | filter_default_3, filter_default_4, filter_default_5, filter_default_6                   |
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  |           | user_name | filter_default_4, filter_default_3, filter_default_2, filter_default_1                   |
       | /null | /null  | 1        | 1     | user_name==filter_default_6                   | /null     | /null     | filter_default_6                                                                         |
-      | /null | /null  | 2        | 2     | user_name==other_default_* and languageCode==sk-SK | user_name | /null     | other_default_8, other_default_9                                                         |
+      | /null | /null  | 2        | 2     | user_name==other_default_* and culture==sk-SK | user_name | /null     | other_default_8, other_default_9                                                         |
       | /null | /null  | 2        | 2     | user_type==snapshot                           | /null     | /null     | defaultSnapshotUser, other_default_9                                                     |
       | /null | /null  | 1        | 1     | email==filter_user4@snapshot.travel           | /null     | /null     | filter_default_4                                                                         |
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |

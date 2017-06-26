@@ -1,4 +1,6 @@
+# Skipped due to DP-2184
 @Identity
+@skipped
 Feature: Users validations
 
   Background:
@@ -18,7 +20,7 @@ Feature: Users validations
       | /email                      | String     | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | (([a-z]\|\d){9}\.){4}(\w\|\d){24}\@(([a-z]\|\d){191}\.)com |
       | /phone                      | String     | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
       | /timezone                   | String     | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
-      | /languageCode                    | String     | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
+      | /culture                    | String     | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
       | /comment                    | String     | false    | \w{255}                                                     | /null        | \w{256}    |
       | /user_customer_relationship | JSON       | true     | {"is_primary":false,"customer_id":"55656571-a3be-4f8b-bc05-02c0797912a6"}|  /null   |  \w{100}    |
       #| /is_active     | Integer | false    | (1\|0)                                                      | 2            |            |

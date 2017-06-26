@@ -4,7 +4,7 @@ Feature: Property code feature
 When creating a property, property code be entered manually or generated
 Unique property code is generated according to following rules:
   - property code is always returned (and unique)
-  - property code is generated from property name, country and city according to rules specified in DP-1222
+  - property code is generated from property name, countryCode and city according to rules specified in DP-1222
   - property code always contains only CAPITAL english (latin) letters. Even when property's name contains chinese, arabic or any other characters.
 For manually created property code the following rules hold
   - Property code is accepted as a field in create/update requests but it's not mandatory (but it's always returned!)
@@ -44,13 +44,13 @@ For manually created property code the following rules hold
   # DP-1222 Fixed only in master branch
   Scenario Outline: Correct property code is returned according to customers address
     Given Property "<name>" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-      | addressLine1   | city   | zipCode   | country   |
-      | <addressLine1> | <city> | <zipCode> | <country> |
+      | line1   | city   | zipCode   | countryCode   |
+      | <line1> | <city> | <zipCode> | <countryCode> |
     Then Response code is "201"
     Then Body contains entity with attribute "property_code" value "<resultCode>"
 #     Resulting code is Country Code + City Code + first 3 letters from Company Name (DP-1222)
     Examples:
-      | name         | addressLine1 | city       | zipCode | country | resultCode |
+      | name         | line1        | city       | zipCode | countryCode | resultCode |
       | Čéšký hotel  | line 1       | Brno       | 60200   | CZ      | CZBRQCES   |
       | 21st Prop.   | line 2       | New York   | 11414   | US      | USNYC21S   |
       | Union Prop.  | line 2,5     | Union City | 9307    | US      | USUCGUNI   |
@@ -59,17 +59,17 @@ For manually created property code the following rules hold
 
    Scenario: When Property code is not unique, the smallest possible integer is concatenated to it
      Given Property "Brno Hilton" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-       | addressLine1 | city | zipCode | country |
-       | line 1       | Brno | 60200   | CZ      |
+       | line1   | city | zipCode | countryCode |
+       | line 1  | Brno | 60200   | CZ           |
      Then Response code is "201"
      Then Body contains entity with attribute "property_code" value "CZBRQBRN"
      Given Property "Brno Hilton" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-       | addressLine1 | city | zipCode | country |
-       | line 1       | Brno | 60200   | CZ      |
+       | line1   | city | zipCode | countryCode |
+       | line 1  | Brno | 60200   | CZ           |
      Then Response code is "201"
      Then Body contains entity with attribute "property_code" value "CZBRQBRN1"
      Given Property "Brno Hilton" is created with address for user "snapUser" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123"
-       | addressLine1 | city | zipCode | country |
+       | line1 | city | zipCode | countryCode |
        | line 1       | Brno | 60200   | CZ      |
      Then Response code is "201"
      Then Body contains entity with attribute "property_code" value "CZBRQBRN2"
@@ -79,8 +79,8 @@ For manually created property code the following rules hold
   Scenario Outline: Property code can be filled manually. Property code is always returned in response.
     When The following property is created with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | code           | name         | email              | isDemo         | timezone      | customerId                           |
-      | <code       > | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Then Body contains entity with attribute "property_code" value "<code       >"
+      | <code> | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
+    Then Body contains entity with attribute "property_code" value "<code>"
     Examples:
     | code         |
     | prop_code_1  |
@@ -98,7 +98,7 @@ For manually created property code the following rules hold
       | code           | name         | email              | isDemo         | timezone      | customerId                           |
       | nonunique      | property1    | p1@snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
     Then Response code is "409"
-    And Custom code is 40912
+    And Custom code is 40901
 
 
   Scenario: Maximum property code length is 50 characters

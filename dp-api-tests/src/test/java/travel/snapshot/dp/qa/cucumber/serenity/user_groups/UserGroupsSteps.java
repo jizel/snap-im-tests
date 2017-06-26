@@ -446,10 +446,9 @@ public class UserGroupsSteps extends BasicSteps {
     }
 
     @Step
-    public void userGroupPropertyRoleRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, String roleId, Boolean isActive) {
+    public void userGroupPropertyRoleRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, String roleId) {
         Map<String, String> userGroupPropertyRoleRelation = new HashMap<>();
         userGroupPropertyRoleRelation.put(ROLE_ID, roleId);
-        userGroupPropertyRoleRelation.put(IS_ACTIVE, isActive.toString());
         Response response = createThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, userGroupPropertyRoleRelation);
         setSessionResponse(response);
     }

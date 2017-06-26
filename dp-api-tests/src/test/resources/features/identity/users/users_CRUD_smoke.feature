@@ -52,7 +52,7 @@ Feature: Users customer roles CRUD
     And Body contains entity with attribute "last_name" value "User1"
     And Body contains entity with attribute "email" value "def1@snapshot.travel"
     And Body contains entity with attribute "timezone" value "Europe/Prague"
-    And Body contains entity with attribute "languageCode" value "cs-CZ"
+    And Body contains entity with attribute "culture" value "cs-CZ"
     When User "default1" is inactivated
     Then Response code is "204"
     And Body is empty

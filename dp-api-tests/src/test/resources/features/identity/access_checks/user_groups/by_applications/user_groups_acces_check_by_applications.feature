@@ -61,10 +61,10 @@ Feature: User Groups Application access check feature
         | limit | cursor | filter                          | sort           | sort_desc           | returned    |
         | /null | 0      | name=='*'                       | /null          | is_active           | 3           |
         | /null | 0      | name=='Company 5'               | /null          | name                | 0           |
-        | /null | 0      | user_group_id=='22345000-*'     | /null          | picture             | 1           |
+        | /null | 0      | user_group_id=='22345000-1111-4000-a000-000000000000'     | /null          | picture             | 1           |
         | /null | 0      | is_active=='false'              | name           | /null               | 3           |
         | /null | 0      | description=='*'                | is_active      | /null               | 3           |
-        | /null | 0      | customer_id=='123*'             | /null          | /null               | 3           |
+        | /null | 0      | customer_id=='12300000-0000-4000-a000-000000000000'             | /null          | /null               | 3           |
 
     Scenario: Creating User Group is possible only with customer id with valid commercial subscription
       Given The following customers exist with random address
