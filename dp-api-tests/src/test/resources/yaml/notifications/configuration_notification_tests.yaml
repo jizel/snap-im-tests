@@ -1,0 +1,34 @@
+general_configuration_type_notification: &TYPE_NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  entity_type: ConfigurationType
+  id: NotificationTestConfType
+
+general_configuration_record_notification: &RECORD_NOTIFICATION
+  parent_entity_type: ConfigurationType
+  parent_id: NotificationTestConfType
+  entity_type: Configuration
+  id: notification_test_key
+
+createConfigurationTypeNotificationTest:
+  <<: *TYPE_NOTIFICATION
+  operation: Create
+
+updateConfigurationTypeNotificationTest:
+  <<: *TYPE_NOTIFICATION
+  operation: Update
+
+deleteConfigurationTypeNotificationTest:
+  <<: *TYPE_NOTIFICATION
+  operation: Delete
+
+createConfigurationRecordNotificationTest:
+  <<: *RECORD_NOTIFICATION
+  operation: Create
+
+updateConfigurationRecordNotificationTest:
+  <<: *RECORD_NOTIFICATION
+  operation: Update
+
+deleteConfigurationRecordNotificationTest:
+  <<: *RECORD_NOTIFICATION
+  operation: Delete

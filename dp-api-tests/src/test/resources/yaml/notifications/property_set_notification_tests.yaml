@@ -1,0 +1,39 @@
+general_notification: &NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  user_id: 11111111-0000-4000-a000-000000000000
+  entity_type: PropertySet
+
+createPropertySetNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_id: 44444444-3836-4207-a705-111111111111
+
+updatePropertySetNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  entity_id: 44444444-3836-4207-a705-111111111111
+
+deletePropertySetNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_id: 44444444-3836-4207-a705-111111111111
+
+createPropertySetPropertyNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: PropertySetPropertyRelationship
+
+deletePropertySetPropertyNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: PropertySetPropertyRelationship
+
+createPropertySetUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: PropertySetUserRelationship
+
+deletePropertySetUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: PropertySetUserRelationship

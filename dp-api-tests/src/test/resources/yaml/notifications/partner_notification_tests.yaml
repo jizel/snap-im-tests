@@ -1,0 +1,17 @@
+general_notification: &NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  user_id: 11111111-0000-4000-a000-000000000000
+  entity_type: Partner
+  entity_id: 55555555-3836-4207-a705-111111111111
+
+createPartnerNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+
+updatePartnerNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+
+deletePartnerNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete

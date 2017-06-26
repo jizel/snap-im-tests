@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
@@ -32,17 +31,14 @@ public class PropertyNotificationTests extends CommonTest{
 
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/property_notification_tests.yaml"));
     Map<String, List<Map<String, String>>> testClassData = loadExamplesYaml(String.format(YAML_DATA_PATH, "notifications/property_notification_tests.yaml"));
-    private PropertyDto testProperty1;
-    private PropertyDto testProperty2;
-    private CustomerDto testCustomer1;
+    private CustomerDto createdCustomer;
     Map<String, Object> receivedNotification;
 
     @Before
     public void setUp() throws Throwable {
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        testCustomer1 = customerHelpers.customerIsCreated(entitiesLoader.getCustomerDtos().get("customer1"));
-        testProperty1 = propertyHelpers.propertyIsCreated(entitiesLoader.getPropertyDtos().get("property1"));
-        testProperty2 = entitiesLoader.getPropertyDtos().get("property2");
+        createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
+        propertyHelpers.propertyIsCreated(testProperty1);
     }
 
     @After
@@ -63,7 +59,7 @@ public class PropertyNotificationTests extends CommonTest{
     @Test
     public void createPropertyByCustomerUserNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPropertyByCustomerUserNotificationTest");
-        UserDto customerUser = userHelpers.userWithCustomerIsCreated(entitiesLoader.getUserDtos().get("user1"), testCustomer1.getId());
+        UserDto customerUser = userHelpers.userWithCustomerIsCreated(entitiesLoader.getUserDtos().get("user1"), createdCustomer.getId());
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         propertyHelpers.propertyIsCreatedByUser(customerUser.getId(), testProperty2);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
@@ -123,15 +119,15 @@ public class PropertyNotificationTests extends CommonTest{
         expectedDeleteNotification.putAll(expectedNotifications.get(1));
         CustomerPropertyRelationshipPartialUpdateDto customerPropertyUpdate = new CustomerPropertyRelationshipPartialUpdateDto();
         customerPropertyUpdate.setType(OWNER);
-        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(testProperty1.getId(), testCustomer1.getId(), null, null, null, true);
+        customerSteps.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(testProperty1.getId(), createdCustomer.getId(), null, null, null, true);
 //        Subscribe and test
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         propertySteps.updatePropertyCustomerRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
-                testProperty1.getId(), testCustomer1.getId(), customerPropertyUpdate);
+                testProperty1.getId(), createdCustomer.getId(), customerPropertyUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedUpdateNotification, receivedNotification);
         propertySteps.deletePropertyCustomerRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
-                testProperty1.getId(), testCustomer1.getId());
+                testProperty1.getId(), createdCustomer.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

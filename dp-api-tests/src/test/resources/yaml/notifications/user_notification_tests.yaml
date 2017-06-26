@@ -1,0 +1,29 @@
+general_notification: &NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  user_id: 11111111-0000-4000-a000-000000000000
+  entity_type: User
+
+createUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_id: 11111111-0000-4000-a000-333333333333
+
+updateUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  entity_id: 11111111-0000-4000-a000-222222222222
+
+deleteUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_id: 11111111-0000-4000-a000-444444444444
+
+addRoleToUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: RoleRelationship
+
+deleteRoleFromUserNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: RoleRelationship

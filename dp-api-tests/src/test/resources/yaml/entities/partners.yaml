@@ -1,0 +1,10 @@
+partners:
+  partner1: !partner {
+  id: 55555555-3836-4207-a705-111111111111,
+  isActive: true,
+  name: Test Partner 1,
+  email: testPartner1@snapshot.travel,
+  website: "http://www.snapshot.travel",
+  vatId: CZ10000001,
+  notes: Test Partner 1 notes",
+  }
