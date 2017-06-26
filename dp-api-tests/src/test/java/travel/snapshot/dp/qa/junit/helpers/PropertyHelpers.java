@@ -15,18 +15,13 @@ public class PropertyHelpers extends PropertySteps{
 
 
     public PropertyDto propertyIsCreated(PropertyDto property) {
-        Response response = createProperty(DEFAULT_SNAPSHOT_USER_ID, property);
+        return propertyIsCreatedByUser(DEFAULT_SNAPSHOT_USER_ID, property);
+    }
+
+    public PropertyDto propertyIsCreatedByUser(String userId, PropertyDto property) {
+        Response response = createProperty(userId, property);
         assertThat(String.format("Failed to create property: %s", response.toString()), response.getStatusCode(), is(SC_CREATED));
         return response.as(PropertyDto.class);
     }
-//
-//    public void customerIsUpdated(String customerId, CustomerUpdateDto customerUpdate){
-//        Response response = updateCustomer(customerId, customerUpdate);
-//        assertThat(String.format("Failed to delete customer: %s", response.toString()), response.getStatusCode(), is(SC_NO_CONTENT));
-//    }
-//
-//    public void customerIsDeleted(String customerId){
-//        Response response = deleteCustomer(customerId);
-//        assertThat(String.format("Failed to delete customer: %s", response.toString()), response.getStatusCode(), is(SC_NO_CONTENT));
-//    }
+
 }

@@ -1,5 +1,6 @@
 properties:
   property1: !property {
+    id: 11111111-3836-4207-a705-111111111111,
     name: Property 1,
     code: property1code,
     website: "http://www.snapshot.travel",
@@ -16,3 +17,22 @@ properties:
           zipCode: 60200
           }
   }
+
+  property2: !property {
+      id: 11111111-3836-4207-a705-222222222222,
+      name: Property 2,
+      code: property2code,
+      website: "http://www.snapshot.travel",
+      email: property2@snapshot.travel,
+      isDemo: true,
+      timezone: Europe/Prague,
+      customerId: 00000000-3836-4207-a705-111111111111,
+      address: {
+            countryCode: CZ,
+            line1: Cejl 1,
+            line2: Bratislavska 2,
+            city: Brno,
+            region: null,
+            zipCode: 60201
+            }
+    }

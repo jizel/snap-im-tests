@@ -17,7 +17,17 @@ import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
+import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.PropertyCustomerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUserRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
@@ -401,7 +411,7 @@ public class PropertySteps extends BasicSteps {
     @Step
     public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipPartialUpdateDto relationshipUpdate) {
         PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
-        assertThat(propertyCustomerRelation, is(notNullValue()));
+        assertThat("Property-Customer relationship does not exists", propertyCustomerRelation, is(notNullValue()));
         String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId());
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);

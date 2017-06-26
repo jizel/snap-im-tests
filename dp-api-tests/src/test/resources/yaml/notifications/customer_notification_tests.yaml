@@ -6,7 +6,7 @@ general_notification: &NOTIFICATION
 createCustomerNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_id: 00000000-3836-4207-a705-111111111111
+  entity_id: 00000000-3836-4207-a705-222222222222
 
 updateCustomerNotificationTest:
   <<: *NOTIFICATION
@@ -22,3 +22,13 @@ addPropertyToCustomerNotificationTest:
   <<: *NOTIFICATION
   operation: create
   entity_type: CustomerPropertyRelationship
+
+updatePropertyForCustomerNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: CustomerPropertyRelationship
+
+addAndRemoveCustomerUser:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: CustomerUserRelationship

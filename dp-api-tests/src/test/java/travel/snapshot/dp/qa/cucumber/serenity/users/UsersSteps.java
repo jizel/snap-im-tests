@@ -59,7 +59,7 @@ public class UsersSteps extends BasicSteps {
     }
 
     @Step
-    public void createUserWithCustomer(UserCreateDto user, String customerId, Boolean isPrimary, Boolean isActive) {
+    public Response createUserWithCustomer(UserCreateDto user, String customerId, Boolean isPrimary, Boolean isActive) {
         if (customerId != null) {
             UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
             relation.setCustomerId(customerId);
@@ -73,17 +73,21 @@ public class UsersSteps extends BasicSteps {
         }
         Response response = createEntity(user);
         setSessionResponse(response);
+        return response;
     }
 
     @Step
-    public void createUser(UserCreateDto user) {
+    public Response createUser(UserCreateDto user) {
         Response response = createEntity(user);
         setSessionResponse(response);
+        return response;
     }
 
     @Step
-    public void createUserByUser(String requestorID, UserCreateDto user) {
-        setSessionResponse(createEntityByUser(requestorID, user));
+    public Response createUserByUser(String requestorID, UserCreateDto user) {
+        Response response = createEntityByUser(requestorID, user);
+        setSessionResponse(response);
+        return response;
     }
 
     @Step

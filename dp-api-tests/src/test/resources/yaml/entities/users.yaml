@@ -1,5 +1,6 @@
 users:
-  user1: &BASIC_USER !user {
+  user1: !user &BASIC_USER {
+    id: 11111111-0000-4000-a000-222222222222,
     type: CUSTOMER,
     username: johnSmith,
     firstName: John,
