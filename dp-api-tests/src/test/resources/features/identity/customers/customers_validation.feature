@@ -1,3 +1,4 @@
+# Skipped due to DP-2184
 @Identity
 @skipped
 Feature: Customers validation
