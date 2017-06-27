@@ -458,7 +458,9 @@ public class BasicSteps {
 
     protected Response createSecondLevelRelationshipByUserForApplication(String userId, String applicationId, String firstLevelId, String secondLevelName, Object jsonBody) {
         RequestSpecification requestSpecification = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(jsonBody);
-        return requestSpecification.post("/" + firstLevelId + "/" + secondLevelName);
+        Response response = requestSpecification.post("/" + firstLevelId + "/" + secondLevelName);
+        setSessionResponse(response);
+        return response;
     }
 
     protected Response createThirdLevelEntity(String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {

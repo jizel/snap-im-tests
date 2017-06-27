@@ -51,7 +51,7 @@ public class PartnerNotificationTests extends CommonTest{
         PartnerUpdateDto partnerUpdate = new PartnerUpdateDto();
         partnerUpdate.setName("Updated partner name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        partnerSteps.updatePartner(testPartner1.getId(), partnerUpdate);
+        partnerHelpers.updatePartner(testPartner1.getId(), partnerUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -61,7 +61,7 @@ public class PartnerNotificationTests extends CommonTest{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "deletePartnerNotificationTest");
         partnerHelpers.partnerIsCreated(testPartner1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        partnerSteps.deletePartner(testPartner1.getId());
+        partnerHelpers.deletePartner(testPartner1.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }

@@ -37,13 +37,7 @@ public class CommonTest extends BasicSteps{
 
     //    Steps
     protected static DbStepDefs dbStepDefs = new DbStepDefs();
-    protected static final CustomerSteps customerSteps = new CustomerSteps();
     protected static final JmsSteps jmsSteps = new JmsSteps();
-    protected static final PropertySteps propertySteps = new PropertySteps();
-    protected static final UsersSteps userSteps = new UsersSteps();
-    protected static final RoleBaseSteps roleBaseSteps = new RoleBaseSteps();
-    protected static final PropertySetSteps propertySetSteps = new PropertySetSteps();
-    protected static final PartnerSteps partnerSteps = new PartnerSteps();
     protected static final ConfigurationSteps configurationSteps = new ConfigurationSteps();
 
     //    Helpers
