@@ -1,0 +1,8 @@
+user_groups:
+  user_group1: !user_group {
+    id: 66666666-0000-4000-a000-222222222222,
+    isActive: true,
+    name: Test UserGroup 1,
+    description: Test UserGroup 1 description,
+    customerId: 11111111-0000-4000-a000-555555555555
+}

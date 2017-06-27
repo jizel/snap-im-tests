@@ -14,7 +14,6 @@ import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
-import org.junit.Assert;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
@@ -35,7 +34,7 @@ public class UsersSteps extends BasicSteps {
     private static final String SESSION_USER_ID = "user_id";
     private static final String SESSION_CREATED_USER = "created_user";
 
-    private static final String USERS_PATH = "/identity/users";
+    protected static final String USERS_PATH = "/identity/users";
 
     public UsersSteps() {
         super();
@@ -479,14 +478,14 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void userPartnerRelationshipExists(String userId, String partnerId) {
-        createUserPartnerRelationship(userId, partnerId);
+        createUserPartnerPartialRelationship(userId, partnerId);
         Response response = getSessionResponse();
         assertThat("Failed to create relationship: " + response.body().toString(), response.statusCode(), is(SC_CREATED));
 
     }
 
     @Step
-    public void createUserPartnerRelationship(String userId, String partnerId){
+    public void createUserPartnerPartialRelationship(String userId, String partnerId){
         UserPartnerRelationshipPartialDto relation = new UserPartnerRelationshipPartialDto();
         relation.setPartnerId(partnerId);
         JSONObject jsonRelation = null;

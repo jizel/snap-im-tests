@@ -27,15 +27,15 @@ deletePropertyNotificationTest:
 addRemovePropertyUserNotificationTest:
   -  <<: *NOTIFICATION
      operation: create
-     entity_type: PropertyUserRelationship
+     entity_type: UserPropertyRelationship
   -  <<: *NOTIFICATION
      operation: delete
-     entity_type: PropertyUserRelationship
+     entity_type: UserPropertyRelationship
 
 updateRemovePropertyCustomerNotificationTest:
   -  <<: *NOTIFICATION
      operation: update
-     entity_type: PropertyCustomerRelationship
+     entity_type: CustomerPropertyRelationship
   -  <<: *NOTIFICATION
      operation: delete
-     entity_type: PropertyCustomerRelationship
+     entity_type: CustomerPropertyRelationship

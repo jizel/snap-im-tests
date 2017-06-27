@@ -7,7 +7,6 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
@@ -94,7 +93,6 @@ public class CustomerNotificationTests extends CommonTest {
     }
 
     @Test
-    @Ignore
     public void addAndRemoveCustomerUser() throws Exception{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "addAndRemoveCustomerUser");
         UserDto testUser = userHelpers.userIsCreated(testSnapshotUser1);

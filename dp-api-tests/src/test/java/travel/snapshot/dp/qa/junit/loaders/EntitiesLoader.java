@@ -12,6 +12,7 @@ import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 import java.util.LinkedHashMap;
@@ -38,6 +39,7 @@ public class EntitiesLoader {
     private EntityNonNullMap<String, PropertyRoleDto> propertyRoleDtos;
     private EntityNonNullMap<String, PropertySetRoleDto> propertySetRoleDtos;
     private EntityNonNullMap<String, PartnerDto> partnerDtos;
+    private EntityNonNullMap<String, UserGroupDto> userGroupDtos;
 
     private EntitiesLoader() {
         loadCustomers();
@@ -47,6 +49,7 @@ public class EntitiesLoader {
         loadPropertySets();
         loadRoles();
         loadPartners();
+        loadUserGroups();
     }
 
     public static EntitiesLoader getInstance() {
@@ -92,6 +95,11 @@ public class EntitiesLoader {
     private void loadPartners() {
         Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/partners.yaml"));
         partnerDtos = new EntityNonNullMap<>((LinkedHashMap<String, PartnerDto>) yamlProperties.get("partners"));
+    }
+
+    private void loadUserGroups() {
+        Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/user_groups.yaml"));
+        userGroupDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserGroupDto>) yamlProperties.get("user_groups"));
     }
 
 

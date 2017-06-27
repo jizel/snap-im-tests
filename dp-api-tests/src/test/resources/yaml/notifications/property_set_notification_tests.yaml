@@ -31,9 +31,9 @@ deletePropertySetPropertyNotificationTest:
 createPropertySetUserNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_type: PropertySetUserRelationship
+  entity_type: UserPropertySetRelationship
 
 deletePropertySetUserNotificationTest:
   <<: *NOTIFICATION
   operation: delete
-  entity_type: PropertySetUserRelationship
+  entity_type: UserPropertySetRelationship
