@@ -96,7 +96,7 @@ public class RoleBaseSteps extends BasicSteps {
 
 
     @Step
-    public Response createRole(RoleDto role)throws Exception{
+    public Response createRole(RoleDto role){
         setSessionVariable(SESSION_CREATED_ROLE, role);
         Response response = createEntity(role);
         setSessionResponse(response);

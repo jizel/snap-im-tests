@@ -15,8 +15,8 @@ import travel.snapshot.dp.qa.utils._
   */
 abstract class AbstractSimulation extends Simulation {
 
-  val defaultClientId = "bfca82e6-984e-4b60-a400-1df0b49c70b3"
-  val defaultClientSecret = "3aa4d35c-fecf-48ba-a861-912949cf3336"
+  val defaultClientId = "11111111-0000-4000-a000-444444444444"
+  val defaultClientSecret = "6e456324-a911-40c7-a515-37981cf48961"
 
   val protocol = System.getProperty("protocol", "http")
   val host = System.getProperty("host", "localhost")

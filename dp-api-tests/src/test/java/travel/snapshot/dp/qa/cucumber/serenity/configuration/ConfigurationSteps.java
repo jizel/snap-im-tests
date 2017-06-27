@@ -181,7 +181,7 @@ public class ConfigurationSteps extends BasicSteps {
 
 
     @Step
-    public void followingConfigurationTypeIsCreated(ConfigurationTypeDto configurationType) {
+    public Response followingConfigurationTypeIsCreated(ConfigurationTypeDto configurationType) {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
@@ -189,6 +189,7 @@ public class ConfigurationSteps extends BasicSteps {
         }
         Response response = createEntity(configurationType);
         setSessionResponse(response);
+        return response;
     }
 
     @Step
@@ -217,8 +218,8 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void followingConfigurationIsCreated(ConfigurationRecordDto c, String identifier) {
-        Response response = createValueForKey(identifier, c.getKey(), c.getValue().toString(), c.getType().toString());
+    public void followingConfigurationIsCreated(ConfigurationRecordDto configurationRecord, String identifier) {
+        Response response = createValueForKey(identifier, configurationRecord.getKey(), configurationRecord.getValue().toString(), configurationRecord.getType().toString());
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
     }
 

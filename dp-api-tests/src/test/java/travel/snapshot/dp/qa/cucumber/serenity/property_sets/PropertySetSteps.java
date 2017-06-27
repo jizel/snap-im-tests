@@ -59,12 +59,15 @@ public class PropertySetSteps extends BasicSteps {
         });
     }
 
-    public void followingPropertySetIsCreated(PropertySetDto PropertySetDto, String customerId) {
-        PropertySetDto.setCustomerId(customerId);
+    public Response followingPropertySetIsCreated(PropertySetDto PropertySetDto, String customerId) {
+        if(customerId != null) {
+            PropertySetDto.setCustomerId(customerId);
+        }
 
-        Response resp = createEntity(PropertySetDto);
-        setSessionResponse(resp);
+        Response response = createEntity(PropertySetDto);
+        setSessionResponse(response);
         setSessionVariable(SERENITY_SESSION__CREATED_PROPERTY_SET, PropertySetDto);
+        return response;
     }
 
     @Step

@@ -139,12 +139,12 @@ public class UsersSteps extends BasicSteps {
 //    Delete?
 
     @Step
-    public void updateUser(String userId, UserUpdateDto updatedUser) throws Throwable {
+    public void updateUser(String userId, UserUpdateDto updatedUser) {
         updateUserByUser(DEFAULT_SNAPSHOT_USER_ID, userId, updatedUser);
     }
 
     @Step
-    public void updateUserByUser(String performerId, String targetId, UserUpdateDto updatedUser) throws Throwable {
+    public void updateUserByUser(String performerId, String targetId, UserUpdateDto updatedUser) {
         try {
             Response originalResponse = getEntity( targetId );
             JSONObject userData = retrieveData( updatedUser );

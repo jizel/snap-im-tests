@@ -12,7 +12,12 @@ import org.yaml.snakeyaml.nodes.Tag;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 
 import java.io.FileInputStream;
@@ -105,6 +110,11 @@ public class YamlLoader {
             addTypeDescription(new TypeDescription(ApplicationVersionDto.class, "!applicationVersion"));
             addTypeDescription(new TypeDescription(UserCreateDto.class, "!user"));
             addTypeDescription(new TypeDescription(PropertyDto.class, "!property"));
+            addTypeDescription(new TypeDescription(PropertySetDto.class, "!propertySet"));
+            addTypeDescription(new TypeDescription(CustomerRoleDto.class, "!customerRole"));
+            addTypeDescription(new TypeDescription(PropertyRoleDto.class, "!propertyRole"));
+            addTypeDescription(new TypeDescription(PropertySetRoleDto.class, "!propertySetRole"));
+            addTypeDescription(new TypeDescription(PartnerDto.class, "!partner"));
         }
     }
 

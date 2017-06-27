@@ -1,0 +1,31 @@
+customerRoles:
+  customerRole1: !customerRole {
+    id: 33333333-0000-4000-a000-222222222222,
+    isActive: true,
+    applicationId: 11111111-0000-4000-a000-111111111111,
+    name: Test Customer Role 1,
+    description: Test Customer Role 1 description,
+    isInitial: false
+}
+
+
+propertyRoles:
+  propertyRole1: !propertyRole {
+    id: 33333333-0000-4000-a000-333333333333,
+    isActive: true,
+    applicationId: 11111111-0000-4000-a000-111111111111,
+    name: Test Property Role 1,
+    description: Test Property Role 1 description,
+    isInitial: false
+}
+
+
+propertySetRoles:
+  propertySetRole1: !propertySetRole {
+    id: 33333333-0000-4000-a000-444444444444,
+    isActive: true,
+    applicationId: 11111111-0000-4000-a000-111111111111,
+    name: Test Property Set Role 1,
+    description: Test Property Set Role 1 description,
+    isInitial: false
+}

@@ -1,0 +1,17 @@
+general_notification: &NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  user_id: 11111111-0000-4000-a000-000000000000
+  entity_type: CustomerRole
+  entity_id: 33333333-0000-4000-a000-222222222222
+
+createRoleNotificationTest:
+  <<: *NOTIFICATION
+  operation: create
+
+updateRoleNotificationTest:
+  <<: *NOTIFICATION
+  operation: update
+
+deleteRoleNotificationTest:
+  <<: *NOTIFICATION
+  operation: delete

@@ -7,11 +7,17 @@ users:
     lastName: Smith,
     email: user1@snapshot.travel,
     timezone: Europe/Prague,
-    languageCode: cs-CZ
+    languageCode: cs-CZ,
+    userCustomerRelationship: {
+            "isActive": true,
+            "isPrimary": false,
+            "customerId": "11111111-0000-4000-a000-555555555555"
+        }
 }
 
   user2: !user {
     <<: *BASIC_USER,
+    id: 11111111-0000-4000-a000-333333333333,
     username: dickJames,
     firstName: Dick,
     lastName: James,
@@ -20,6 +26,7 @@ users:
 
 snapshotUsers:
   snapshotUser1: &BASIC_SNAPSHOT_USER !user {
+    id: 11111111-0000-4000-a000-444444444444,
     type: SNAPSHOT,
     username: snapUser1,
     firstName: Snap,

@@ -21,4 +21,9 @@ public class NotificationHelpers {
         assertTrue(actualMap.containsKey("entity_id"));
     }
 
+    public static void verifyConfigurationNotification(Map<String, Object> expectedMap, Map<String, Object> actualMap) {
+        expectedMap.forEach((k,v) -> assertThat(actualMap, hasEntry(k,v)));
+        assertTrue(actualMap.containsKey("timestamp"));
+    }
+
 }

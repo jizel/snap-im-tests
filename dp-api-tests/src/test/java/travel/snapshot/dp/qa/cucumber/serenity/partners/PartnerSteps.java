@@ -41,9 +41,10 @@ public class PartnerSteps extends BasicSteps {
         });
     }
 
-    public void followingPartnerIsCreated(PartnerDto partner) {
+    public Response followingPartnerIsCreated(PartnerDto partner) {
         Response createResponse = createEntity(partner);
         setSessionResponse(createResponse);
+        return createResponse;
     }
 
     @Step
