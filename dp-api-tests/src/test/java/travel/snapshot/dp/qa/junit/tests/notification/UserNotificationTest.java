@@ -21,7 +21,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 import java.util.Map;
 
 /**
- * JMS notification tests for Property entity
+ * JMS notification tests for User entity
  */
 @RunWith(SerenityRunner.class)
 public class UserNotificationTest extends CommonTest {

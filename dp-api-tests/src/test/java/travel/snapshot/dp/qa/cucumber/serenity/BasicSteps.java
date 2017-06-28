@@ -350,15 +350,15 @@ public class BasicSteps {
         return requestSpecification.body(data).when().post("/{id}", entityId);
     }
 
-    protected Response updateEntity(String entityId, String data, String etag) {
+    protected Response updateEntity(String entityId, Object data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUser(String userId, String entityId, String data, String etag) {
+    protected Response updateEntityByUser(String userId, String entityId, Object data, String etag) {
         return updateEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, String data, String etag) {
+    protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, Object data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)){
             fail("User ID to be send in request header is null.");

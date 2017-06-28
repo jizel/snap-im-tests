@@ -31,4 +31,4 @@ updatePropertyForCustomerNotificationTest:
 addAndRemoveCustomerUser:
   <<: *NOTIFICATION
   operation: create
-  entity_type: CustomerUserRelationship
+  entity_type: UserCustomerRelationship

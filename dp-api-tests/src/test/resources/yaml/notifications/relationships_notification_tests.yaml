@@ -1,0 +1,140 @@
+general_notification: &NOTIFICATION
+  application_version_id: 11111111-0000-4000-a000-444444444444
+  user_id: 11111111-0000-4000-a000-000000000000
+  entity_type: User
+
+
+userCustomerRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserCustomerRelationship
+
+userCustomerRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserCustomerRelationship
+
+userCustomerRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserCustomerRelationship
+
+userPartnerRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserPartnerRelationship
+
+userPartnerRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserPartnerRelationship
+
+userPartnerRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserPartnerRelationship
+
+userPropertyRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserPropertyRelationship
+
+userPropertyRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserPropertyRelationship
+
+userPropertyRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserPropertyRelationship
+
+userPropertySetRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserPropertySetRelationship
+
+userPropertySetRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserPropertySetRelationship
+
+userPropertySetRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserPropertySetRelationship
+
+customerPropertyRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: CustomerPropertyRelationship
+
+customerPropertyRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: CustomerPropertyRelationship
+
+customerPropertyRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: CustomerPropertyRelationship
+
+propertySetPropertyRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: PropertySetPropertyRelationship
+
+propertySetPropertyRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: PropertySetPropertyRelationship
+
+propertySetPropertyRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: PropertySetPropertyRelationship
+
+userGroupPropertyRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserGroupPropertyRelationship
+
+userGroupPropertyRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserGroupPropertyRelationship
+
+userGroupPropertyRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserGroupPropertyRelationship
+
+userGroupPropertySetRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserGroupPropertySetRelationship
+
+userGroupPropertySetRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserGroupPropertySetRelationship
+
+userGroupPropertySetRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserGroupPropertySetRelationship
+
+userGroupUserRelationshipNotificationCreate:
+  <<: *NOTIFICATION
+  operation: create
+  entity_type: UserGroupUserRelationship
+
+userGroupUserRelationshipNotificationUpdate:
+  <<: *NOTIFICATION
+  operation: update
+  entity_type: UserGroupUserRelationship
+
+userGroupUserRelationshipNotificationDelete:
+  <<: *NOTIFICATION
+  operation: delete
+  entity_type: UserGroupUserRelationship

@@ -27,5 +27,4 @@ public class UserHelpers extends UsersSteps {
         assertEquals(String.format("Failed to create user: %s", response.toString()), response.getStatusCode(), SC_CREATED);
         return response.as(UserDto.class);
     }
-
 }

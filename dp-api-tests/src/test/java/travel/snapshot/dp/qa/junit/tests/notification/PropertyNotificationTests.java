@@ -10,7 +10,6 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTe
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
@@ -89,7 +88,6 @@ public class PropertyNotificationTests extends CommonTest{
 //        -------------------< Second level entities >-----------------
 
     @Test
-    @Ignore
     public void addRemovePropertyUserNotificationTest() throws Exception{
 //        Prepare data - a way to employ selectExamplesForTest (list of maps) to have multiple notification objects for one test
         List<Map<String, String>> expectedNotifications = selectExamplesForTest(testClassData, "addRemovePropertyUserNotificationTest");
@@ -109,7 +107,6 @@ public class PropertyNotificationTests extends CommonTest{
     }
 
     @Test
-    @Ignore
     public void updateRemovePropertyCustomerNotificationTest() throws Exception{
 //        Prepare data - a way to employ selectExamplesForTest (list of maps) to have multiple notification objects for one test
         List<Map<String, String>> expectedNotifications = selectExamplesForTest(testClassData, "updateRemovePropertyCustomerNotificationTest");

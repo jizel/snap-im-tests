@@ -2,9 +2,11 @@ package travel.snapshot.dp.qa.junit.tests.common;
 
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.configuration.ConfigurationSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
@@ -19,7 +21,9 @@ import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PartnerHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PropertyHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PropertySetHelpers;
+import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
 import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
+import travel.snapshot.dp.qa.junit.helpers.UserGroupHelpers;
 import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 
@@ -49,6 +53,8 @@ public class CommonTest extends BasicSteps{
     protected static final UserHelpers userHelpers = new UserHelpers();
     protected static final RoleHelpers roleHelpers = new RoleHelpers();
     protected static final PartnerHelpers partnerHelpers = new PartnerHelpers();
+    protected static final RelationshipsHelpers relationshipsHelpers = new RelationshipsHelpers();
+    protected static final UserGroupHelpers userGroupHelpers = new UserGroupHelpers();
 
 //    Basic test entities
     protected static final UserCreateDto testUser1 = entitiesLoader.getUserDtos().get("user1");
@@ -58,4 +64,6 @@ public class CommonTest extends BasicSteps{
     protected static final PropertyDto testProperty2 = entitiesLoader.getPropertyDtos().get("property2");
     protected static final PropertySetDto testPropertySet1 = entitiesLoader.getPropertySetDtos().get("propertySet1");
     protected static final CustomerRoleDto testCustomerRole1 = entitiesLoader.getCustomerRoleDtos().get("customerRole1");
+    protected static final PartnerDto testPartner1 = entitiesLoader.getPartnerDtos().get("partner1");
+    protected static final UserGroupDto testUserGroup1 = entitiesLoader.getUserGroupDtos().get("user_group1");
 }

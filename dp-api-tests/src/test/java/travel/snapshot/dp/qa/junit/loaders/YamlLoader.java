@@ -19,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupDto;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -115,6 +116,7 @@ public class YamlLoader {
             addTypeDescription(new TypeDescription(PropertyRoleDto.class, "!propertyRole"));
             addTypeDescription(new TypeDescription(PropertySetRoleDto.class, "!propertySetRole"));
             addTypeDescription(new TypeDescription(PartnerDto.class, "!partner"));
+            addTypeDescription(new TypeDescription(UserGroupDto.class, "!user_group"));
         }
     }
 

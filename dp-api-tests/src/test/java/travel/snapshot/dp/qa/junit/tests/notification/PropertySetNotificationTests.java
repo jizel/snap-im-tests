@@ -7,7 +7,6 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
@@ -85,7 +84,6 @@ public class PropertySetNotificationTests extends CommonTest{
     }
 
     @Test
-    @Ignore
     public void addAndRemovePropertySetUserNotificationTest() throws Exception{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "createPropertySetUserNotificationTest");
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "deletePropertySetUserNotificationTest");
