@@ -57,7 +57,7 @@ public class UserNotificationTest extends CommonTest {
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         UserUpdateDto userUpdate = new UserUpdateDto();
         userUpdate.setUsername("Updated Username");
-        userSteps.updateUser(createdUser1.getId(), userUpdate);
+        userHelpers.updateUser(createdUser1.getId(), userUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -68,7 +68,7 @@ public class UserNotificationTest extends CommonTest {
 //        Customer type user cannot be deleted because it references customer and vice versa
         UserDto testSnapshotUser = userHelpers.userIsCreated(testSnapshotUser1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        userSteps.deleteUser(testSnapshotUser.getId());
+        userHelpers.deleteUser(testSnapshotUser.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -83,14 +83,14 @@ public class UserNotificationTest extends CommonTest {
         Map<String, Object> expectedDeleteNotification = getSingleTestData(notificationTestsData, "deleteRoleFromUserNotificationTest");
         RoleDto testRole = roleHelpers.roleIsCreated(entitiesLoader.getCustomerRoleDtos().get("customerRole1"), CUSTOMER);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        userSteps.userAssignsRoleToRelationWithApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
+        userHelpers.userAssignsRoleToRelationWithApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID,
                 createdUser1.getId(),
                 "customer",
                 DEFAULT_SNAPSHOT_CUSTOMER_ID,
                 testRole.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        userSteps.roleBetweenUserAndEntityIsDeleted("customers", testRole.getId(), createdUser1.getId(), BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID, null);
+        userHelpers.roleBetweenUserAndEntityIsDeleted("customers", testRole.getId(), createdUser1.getId(), BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID, null);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

@@ -26,24 +26,6 @@ Feature: Property sets create update delete
     | ps2_name        | ps2_description        | geolocation     |
     | ps3_name        | ps3_description        | hotel_type      |
 
-  Scenario: Add remove property to property set
-    # --------------- ADD ----------------------
-    Given The following property sets exist for customer "11111111-0000-4000-a000-555555555555" and user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
-      | id                                   | name      | description     | type  |
-      | ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4 | ps1_name  | ps1_description | brand |
-    Given The following properties exist with random address and billing address
-      | id                                   | salesforceId    | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
-      | 200749ac-a36e-416f-9f13-4d94a3db1267 | SALESFORCE12345 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 11111111-0000-4000-a000-555555555555 |
-    When Property "200749ac-a36e-416f-9f13-4d94a3db1267" is added to property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4"
-    Then Response code is "201"
-    # ---------------- CASCADE DELETE ----------------------------
-    When Property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4" is deleted
-    Then Response code is "409"
-    # ---------------- REMOVE RELATION --------------------------
-    When Property "200749ac-a36e-416f-9f13-4d94a3db1267" is removed from property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4"
-    Then Response code is "204"
-    And Body is empty
-    And Property "200749ac-a36e-416f-9f13-4d94a3db1267" isn't there for property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4" for customer "11111111-0000-4000-a000-555555555555"
 
   Scenario: Add remove user to property set
     # ----------------- ADD --------------------

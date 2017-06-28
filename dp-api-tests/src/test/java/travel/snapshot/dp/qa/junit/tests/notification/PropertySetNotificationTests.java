@@ -51,7 +51,7 @@ public class PropertySetNotificationTests extends CommonTest{
         PropertySetUpdateDto propertySetUpdate = new PropertySetUpdateDto();
         propertySetUpdate.setName("Updated name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        propertySetSteps.updatePropertySet(createdPropertySet.getId(), propertySetUpdate);
+        propertySetHelpers.updatePropertySet(createdPropertySet.getId(), propertySetUpdate);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -61,7 +61,7 @@ public class PropertySetNotificationTests extends CommonTest{
         Map<String, Object> expectedNotification = getSingleTestData(notificationTestsData, "deletePropertySetNotificationTest");
         PropertySetDto createdPropertySet = propertySetHelpers.propertySetIsCreated(testPropertySet1);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        propertySetSteps.deletePropertySet(createdPropertySet.getId());
+        propertySetHelpers.deletePropertySet(createdPropertySet.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedNotification, receivedNotification);
     }
@@ -75,10 +75,10 @@ public class PropertySetNotificationTests extends CommonTest{
         PropertySetDto createdPropertySet = propertySetHelpers.propertySetIsCreated(testPropertySet1);
         PropertyDto testProperty1 = propertyHelpers.propertyIsCreated(entitiesLoader.getPropertyDtos().get("property1"));
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        propertySetSteps.addPropertyToPropertySet(testProperty1.getId(), createdPropertySet.getId(), true);
+        propertySetHelpers.addPropertyToPropertySet(testProperty1.getId(), createdPropertySet.getId(), true);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        propertySetSteps.removePropertyFromPropertySet(testProperty1.getId(), createdPropertySet.getId());
+        propertySetHelpers.removePropertyFromPropertySet(testProperty1.getId(), createdPropertySet.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }
@@ -90,10 +90,10 @@ public class PropertySetNotificationTests extends CommonTest{
         PropertySetDto createdPropertySet = propertySetHelpers.propertySetIsCreated(testPropertySet1);
         UserDto createdUser = userHelpers.userIsCreated(entitiesLoader.getUserDtos().get("user1"));
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        propertySetSteps.addUserToPropertySet(createdUser.getId(), createdPropertySet.getId(), true);
+        propertySetHelpers.addUserToPropertySet(createdUser.getId(), createdPropertySet.getId(), true);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        propertySetSteps.removeUserFromPropertySet(createdUser.getId(), createdPropertySet.getId());
+        propertySetHelpers.removeUserFromPropertySet(createdUser.getId(), createdPropertySet.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

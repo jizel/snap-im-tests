@@ -28,7 +28,7 @@ public class RoleNotificationsTests extends CommonTest{
     @Before
     public void setUp() throws Throwable {
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        roleBaseSteps.setRolesPathCustomer();
+        roleHelpers.setRolesPathCustomer();
     }
 
     @After
@@ -52,7 +52,7 @@ public class RoleNotificationsTests extends CommonTest{
         RoleUpdateDto roleUpdate = new RoleUpdateDto();
         roleUpdate.setName("Updated Role Name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        roleBaseSteps.updateRole(createdRole.getId(), roleUpdate, roleBaseSteps.getEntityEtag(createdRole.getId()));
+        roleHelpers.updateRole(createdRole.getId(), roleUpdate, roleHelpers.getEntityEtag(createdRole.getId()));
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }
@@ -62,7 +62,7 @@ public class RoleNotificationsTests extends CommonTest{
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "deleteRoleNotificationTest");
         RoleDto createdRole = roleHelpers.roleIsCreated(testCustomerRole1, CUSTOMER);
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
-        roleBaseSteps.deleteRole(createdRole.getId());
+        roleHelpers.deleteRole(createdRole.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
     }

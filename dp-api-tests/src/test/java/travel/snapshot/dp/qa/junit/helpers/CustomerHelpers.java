@@ -29,6 +29,7 @@ public class CustomerHelpers extends CustomerSteps {
         } catch (JsonProcessingException e) {
             log.severe("Unable to convert customer object to json");
         }
+        setSessionResponse(createResponse);
         return createResponse;
     }
 
