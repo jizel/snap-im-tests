@@ -188,11 +188,14 @@ Feature: Users get
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  | user_name |           | filter_default_3, filter_default_4, filter_default_5, filter_default_6                   |
       | 5     | 2      | 4        | 6     | user_name=='filter_default*'                  |           | user_name | filter_default_4, filter_default_3, filter_default_2, filter_default_1                   |
       | /null | /null  | 1        | 1     | user_name==filter_default_6                   | /null     | /null     | filter_default_6                                                                         |
+      | /null | /null  | 1        | 1     | user_name==FILTER_DEFAULT_6                   | /null     | /null     | filter_default_6                                                                         |
       | /null | /null  | 2        | 2     | user_name==other_default_* and culture==sk-SK | user_name | /null     | other_default_8, other_default_9                                                         |
-      | /null | /null  | 2        | 2     | user_type==snapshot                           | /null     | /null     | defaultSnapshotUser, other_default_9                                                     |
+      | /null | /null  | 2        | 2     | user_type==snapshot                           | user_name | /null     | defaultSnapshotUser, other_default_9                                                     |
+      | /null | /null  | 2        | 2     | user_type==SNAPSHOT                           | user_name | /null     | defaultSnapshotUser, other_default_9                                                     |
       | /null | /null  | 1        | 1     | email==filter_user4@snapshot.travel           | /null     | /null     | filter_default_4                                                                         |
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |
       | /null | /null  | 1        | 1     | phone==+42010111218                           | /null     | /null     | other_default_7                                                                          |
-      | 5     | /null  | 5        | 14    | is_active=='true'                            | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
-      | /null | /null  | 0        | 0     | is_active=='false'                             | user_name |           |                                                                                          |
+      | 5     | /null  | 5        | 14    | is_active=='true'                             | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
+      | 5     | /null  | 5        | 14    | is_active=='TRUE'                             | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
+      | /null | /null  | 0        | 0     | is_active=='false'                            | user_name |           |                                                                                          |
   #add all fields
