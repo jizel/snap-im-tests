@@ -3,7 +3,6 @@ Feature: Users property roles CRUD
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1234fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
@@ -114,7 +113,7 @@ Feature: Users property roles CRUD
     Given Role with name "user_filter_role_3" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_4" for user name "default1" and property code "p1_code" is added
     Given Role with name "user_filter_role_5" for user name "default1" and property code "p1_code" is added
-    Given Role with name "user_filter_role_6" for user name "default1" and property code "p1_code" is added with isActive "false"
+    Given Role with name "user_filter_role_6" for user name "default1" and property code "p1_code" is added
     When List of roles for user with username "default1" and property code "p1_code" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"

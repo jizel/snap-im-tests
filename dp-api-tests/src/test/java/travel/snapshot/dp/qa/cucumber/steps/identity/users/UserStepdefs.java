@@ -19,18 +19,17 @@ import cucumber.api.java.en.When;
 import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
+import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.RoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
-import travel.snapshot.dp.api.identity.model.CustomerUserRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.helpers.Resolvers;
 import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
-import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.partners.PartnerSteps;
@@ -41,7 +40,6 @@ import travel.snapshot.dp.qa.cucumber.serenity.user_groups.UserGroupsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UserRolesSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
-import javax.print.DocFlavor;
 import java.util.List;
 import java.util.Map;
 
@@ -410,8 +408,9 @@ public class UserStepdefs {
                                                                                                                                    @Transform(NullEmptyStringConverter.class) String sort,
                                                                                                                                    @Transform(NullEmptyStringConverter.class) String sortDesc) throws Throwable {
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId);
+        String userId = resolvers.resolveEntityName("user", userName);
 
-        userRolesSteps.getRolesBetweenUserAndPropertySet(userName, propertySet.getId(), limit, cursor, filter, sort, sortDesc);
+        userRolesSteps.getRolesBetweenUserAndPropertySet(userId, propertySet.getId(), limit, cursor, filter, sort, sortDesc);
     }
 
     @When("^Role with id \"([^\"]*)\" for not existing user id and property set name \"([^\"]*)\" for customer id \"([^\"]*)\" is added(?: with is(?:Aa)ctive \"([^\"]*)\")?$")
