@@ -84,9 +84,8 @@ Feature: User groups roles
       | 3     | 1      | /null                            | /null   | /null     | 3        |                                                            | # cursor < limit, limit param is used          |
       | 1     | 10     | /null                            | /null   | /null     | 0        |                                                            | # there are < 10 records, 0 should be returned |
       | 20    | 5      | /null                            | /null   | /null     | 1        |                                                            | # cursor > limit, last 1 should be returned    |
-      | /null | /null  | /null                            | is_active| /null     | 6        | 19e8d1c2, 2d6e7db2, 5184fb6b, 540be550, 7b570693, f40a9bf7 |                                                |
-#  DP-1930
-#      | /null | /null  | /null                            | role_id | role_id   | 6        | f40a9bf7, 7b570693, 540be550, 5184fb6b, 2d6e7db2, 19e8d1c2 |                                                |
+      | /null | /null  | /null                            | /null   | role_id   | 6        | f40a9bf7, 7b570693, 540be550, 5184fb6b, 2d6e7db2, 19e8d1c2 |                                                |
+#  DP-2193
 #      | /null | /null  | role_id=='19*'                   | /null   | /null     | 1        |                                                            |                                                |
 #      | /null | /null  | role_id=='5*'                    | role_id | /null     | 2        | 5184fb6b,540be550                                          |                                                |
 #      | /null | /null  | role_id=='5*'                    | /null   | role_id   | 2        | 540be550,5184fb6b                                          |                                                |

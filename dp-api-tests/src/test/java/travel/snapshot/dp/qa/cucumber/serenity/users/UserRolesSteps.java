@@ -1,11 +1,10 @@
 package travel.snapshot.dp.qa.cucumber.serenity.users;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.assertj.core.api.Fail.fail;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
 import com.jayway.restassured.response.Response;
-import static org.hamcrest.Matchers.is;
 
 /**
  * Created by benka on 05-May-16.
@@ -87,8 +86,8 @@ public class UserRolesSteps extends UsersSteps {
         roleNameExistsBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTY_SETS, roleId, userId, propertySetId, isActive);
     }
 
-    public void getRolesBetweenUserAndPropertySet(String userName, String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        getRolesBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTY_SETS, userName, propertySetId, limit, cursor, filter, sort, sortDesc);
+    public void getRolesBetweenUserAndPropertySet(String userId, String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        getRolesBetweenUserAndEntity(SECOND_LEVEL_OBJECT_PROPERTY_SETS, userId, propertySetId, limit, cursor, filter, sort, sortDesc);
     }
 
     public void addRoleBetweenNotExistingUserAndPropertySet(String roleId, String userName, String propertySetId, Boolean isActive) {

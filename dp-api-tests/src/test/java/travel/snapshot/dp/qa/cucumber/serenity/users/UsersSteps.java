@@ -218,7 +218,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public Response createRoleBetweenUserAndEntity(String entityName, String roleId, String userId, String entityId, Boolean isActive) {
-        Response createResponse = addRoleToUserEntity(roleId, userId, entityId, entityName, isActive);
+        Response createResponse = addRoleToUserEntity(roleId, userId, entityId, entityName);
         setSessionResponse(createResponse);
         return createResponse;
     }
@@ -236,7 +236,7 @@ public class UsersSteps extends BasicSteps {
         return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_ROLES, roleId, queryParams);
     }
 
-    private Response addRoleToUserEntity(String roleId, String userId, String entityId, String entityName, Boolean isActive) {
+    private Response addRoleToUserEntity(String roleId, String userId, String entityId, String entityName) {
         String path = buildPathForRoles(entityName, userId, entityId);
         RoleRelationshipDto role = new RoleRelationshipDto();
         role.setRoleId(roleId);
@@ -359,7 +359,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void roleNameExistsBetweenUserAndEntity(String entityName, String roleId, String userId, String entityId, Boolean isActive) {
-        Response resp = addRoleToUserEntity(roleId, userId, entityId, entityName, isActive);
+        Response resp = addRoleToUserEntity(roleId, userId, entityId, entityName);
         assertTrue("Failed to add role to relationship between user and entity id " + entityId.toString(), resp.statusCode() == SC_CREATED);
     }
 

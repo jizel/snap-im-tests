@@ -84,39 +84,37 @@ Feature: Users property set roles CRUD
       | role_id                              | property_set_name | user_name | customer_id |
       | 1111fd9a-a11d-11d8-8e84-11e904ace123 | ps1_name          | default1  | 1234fd9a-a05d-42d8-8e84-42e904ace123           |
 
-  Scenario Outline: Filtering list of roles for user customer relationship
+  Scenario Outline: Filtering list of roles for property set customer relationship
     Given Switch for user property set role tests
     And Relation between user "default1" and property set "ps1_name" exists
     And The following roles exist
-      | roleName           | description            |
-      | user_filter_role_1 | optional description 1 |
-      | user_filter_role_2 | optional description 2 |
-      | user_filter_role_3 | optional description 3 |
-      | user_filter_role_4 | optional description 4 |
-      | user_filter_role_5 | optional description 5 |
-      | user_filter_role_6 | optional description 6 |
-
+      | id                                   | roleName           | description            |
+      | 1796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_1 | optional description 1 |
+      | 2796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_2 | optional description 2 |
+      | 3796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_3 | optional description 3 |
+      | 4796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_4 | optional description 4 |
+      | 5796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_5 | optional description 5 |
+      | 6796a238-39de-44fb-af67-c3c5e4c4d739 | user_filter_role_6 | optional description 6 |
     Given Role with name "user_filter_role_1" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_2" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_3" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_4" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     Given Role with name "user_filter_role_5" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
-    Given Role with name "user_filter_role_6" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added with isActive "false"
-
+    Given Role with name "user_filter_role_6" for user name "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is added
     When List of roles for user with username "default1" and property set name "ps1_name" for customer id "1234fd9a-a05d-42d8-8e84-42e904ace123" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "200"
     And Content type is "application/json"
     And There are <returned> user roles returned
     And Total count is "<total>"
-
     Examples:
-      | limit | cursor | returned | total | filter           | sort      | sort_desc |
-      | 5     | 0      | 5        | 5     | is_active==true  | is_active |           |
-      | 5     | 0      | 5        | 5     | is_active==true  |           | is_active |
-      | 5     | 2      | 3        | 5     | is_active==true  | is_active |           |
-      | 5     | 2      | 3        | 5     | is_active==true  |           | is_active |
-      | 5     | 0      | 5        | 6     | /null            |           | is_active |
-      | /null | /null  | 1        | 1     | is_active==false | /null     | /null     |
+      | limit | cursor | returned | total | filter                                        | sort      | sort_desc |
+      | 5     | 0      | 1        | 1     | role_id==1796a238-39de-44fb-af67-c3c5e4c4d739 |           |           |
+      | 5     | 0      | 1        | 1     | role_id==1796a238-39de-44fb-af67-c3c5e4c4d739 |           | role_id   |
+      | 5     | 2      | 4        | 6     | /null                                         | role_id   |           |
+      | 5     | 2      | 4        | 6     | /null                                         |           | role_id   |
+      | 5     | 0      | 5        | 6     | /null                                         |           |           |
+#  DP-2193
+#      | /null | /null  | 1        | 1     | role_id==*6*                                  | /null     | /null     |
 
 
   Scenario Outline: Send POST request with empty body to all user-property set endpoints
