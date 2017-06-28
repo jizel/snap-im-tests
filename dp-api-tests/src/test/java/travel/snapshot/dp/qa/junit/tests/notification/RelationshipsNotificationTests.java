@@ -32,7 +32,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 /**
- * JMS notification tests for User entity
+ * JMS notification tests for entity relationship endpoints
  */
 @RunWith(SerenityRunner.class)
 public class RelationshipsNotificationTests extends CommonTest{

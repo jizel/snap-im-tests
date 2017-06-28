@@ -52,12 +52,18 @@ public class CommonTest extends BasicSteps{
 
 //    Basic test entities
     protected static final UserCreateDto testUser1 = entitiesLoader.getUserDtos().get("user1");
+    protected static final UserCreateDto testUser2 = entitiesLoader.getUserDtos().get("user2");
     protected static final UserCreateDto testSnapshotUser1 = entitiesLoader.getSnapshotUserDtos().get("snapshotUser1");
     protected static final CustomerCreateDto testCustomer1 = entitiesLoader.getCustomerDtos().get("customer1");
+    protected static final CustomerCreateDto testCustomer2 = entitiesLoader.getCustomerDtos().get("customer2");
     protected static final PropertyDto testProperty1 = entitiesLoader.getPropertyDtos().get("property1");
     protected static final PropertyDto testProperty2 = entitiesLoader.getPropertyDtos().get("property2");
     protected static final PropertySetDto testPropertySet1 = entitiesLoader.getPropertySetDtos().get("propertySet1");
     protected static final CustomerRoleDto testCustomerRole1 = entitiesLoader.getCustomerRoleDtos().get("customerRole1");
     protected static final PartnerDto testPartner1 = entitiesLoader.getPartnerDtos().get("partner1");
     protected static final UserGroupDto testUserGroup1 = entitiesLoader.getUserGroupDtos().get("user_group1");
+
+//    Custom codes
+    protected static final int SEMANTIC_ERRORS_CUSTOM_CODE = 42201;
+    protected static final int NON_EXISTING_REFERENCE_CUSTOM_CODE = 42202;
 }
