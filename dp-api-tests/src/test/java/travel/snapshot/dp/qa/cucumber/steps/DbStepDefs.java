@@ -64,6 +64,7 @@ public class DbStepDefs {
         defaultCustomerIsCreated();
         defaultPropertyIsCreated();
         defaultCommercialSubscriptionIsCreated();
+        applicationPermissionPopulated();
     }
 
     @Given("^Database is cleaned$")
@@ -176,5 +177,10 @@ public class DbStepDefs {
         Map<String,Object> selectResult = dbSteps.selectColumnFromTableWhere(columnName, tableName, conditionColumnName, conditionColumnValue, schema).get(0);
         assertThat(selectResult.get(columnName).toString(), is(columnValue));
 
+    }
+
+    @And("^Application permission table is populated$")
+    public void applicationPermissionPopulated() throws Throwable {
+        dbSteps.populateApplicationPermissionsTable();
     }
 }
