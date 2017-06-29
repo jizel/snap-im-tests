@@ -28,6 +28,7 @@ import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.type.SalesforceId;
+import travel.snapshot.dp.qa.cucumber.helpers.Resolvers;
 import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
@@ -43,6 +44,8 @@ public class DbStepDefs {
     private CustomerSteps customerSteps;
     @Steps
     private PropertySteps propertySteps;
+    @Steps
+    private Resolvers resolvers;
 
     @Given("^All customerProperties are deleted from DB for customer id \"([^\"]*)\" and property code \"([^\"]*)\"$")
     public void All_customerProperties_are_deleted_from_DB_for_customer_code_and_property_code(String customerId, String propertyCode) throws Throwable {
@@ -64,7 +67,7 @@ public class DbStepDefs {
         defaultCustomerIsCreated();
         defaultPropertyIsCreated();
         defaultCommercialSubscriptionIsCreated();
-        applicationPermissionPopulated();
+        applicationPermissionPopulated(DEFAULT_SNAPSHOT_APPLICATION_ID);
     }
 
     @Given("^Database is cleaned$")
@@ -174,13 +177,14 @@ public class DbStepDefs {
 
     @And("^Column \"([^\"]*)\" has value \"([^\"]*)\" in table \"([^\"]*)\" where column \"([^\"]*)\" has value \"([^\"]*)\"(?: in \"([^\"]*)\" schema)?$")
     public void columnHasValueInTableForColumnWithValue(String columnName, String columnValue, String tableName, String conditionColumnName, String conditionColumnValue, String schema) throws Throwable {
-        Map<String,Object> selectResult = dbSteps.selectColumnFromTableWhere(columnName, tableName, conditionColumnName, conditionColumnValue, schema).get(0);
+        Map<String, Object> selectResult = dbSteps.selectColumnFromTableWhere(columnName, tableName, conditionColumnName, conditionColumnValue, schema).get(0);
         assertThat(selectResult.get(columnName).toString(), is(columnValue));
 
     }
 
-    @And("^Application permission table is populated$")
-    public void applicationPermissionPopulated() throws Throwable {
-        dbSteps.populateApplicationPermissionsTable();
+    @And("^Application permission table is populated(?: for application \"([^\"]*)\")?$")
+    public void applicationPermissionPopulated(String applicationName) throws Throwable {
+            String applicationId = resolvers.resolveEntityName("application", applicationName);
+            dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }
 }
