@@ -1,10 +1,5 @@
 package travel.snapshot.dp.qa.cucumber.serenity;
 
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_HOSPITALITY_ID;
-
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
@@ -17,6 +12,12 @@ import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_HOSPITALITY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -66,6 +67,8 @@ public class DbUtilsSteps {
     static final String CREATE_DB_COMMERCIAL_SUBSCRIPTION = "INSERT INTO CommercialSubscription (id, customer_id, property_id, application_id, is_active,  version) VALUES (?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO ApiSubscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
+    static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
+    static final String POPULATE_APPLICATION_PERMISSION = String.format("INSERT INTO ApplicationPermission (application_id, resource_operation_id) SELECT '%s', id FROM ResourceOperation;", DEFAULT_SNAPSHOT_APPLICATION_ID);
 
     static final String TTI_SCHEMA_NAME = "tti";
     static final String IDENTITY_SCHEMA_NAME = "identity";
@@ -130,6 +133,7 @@ public class DbUtilsSteps {
     }
 
     public void cleanDatabase() {
+        dbHelper.identityDb().update(DELETE_APPLICATION_PERMISSION);
         dbHelper.identityDb().update(DELETE_CUSTOMER_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_PROPERTY_SET_HIERARCHY_PATH);
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY);
@@ -166,5 +170,7 @@ public class DbUtilsSteps {
     }
 
 
-
+    public void populateApplicationPermissionsTable() {
+        dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION);
+    }
 }
