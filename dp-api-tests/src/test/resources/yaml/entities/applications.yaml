@@ -1,18 +1,40 @@
 applications:
   application1: !application {
-    id: "66600000-0000-4000-a000-000000000111",
-    isActive: true,
-    name: "Test App 1",
-    website: "http://www.snapshot.travel",
-    isInternal: true,
-    partnerId: "11111111-0000-4000-a000-222222222222"
+    id: 03000000-0000-4444-8888-000000000001,
+    name: "InternalApp1",
+    description: "Desc1",
+    partner_id: 55555555-3836-4207-a705-111111111111,
+    is_internal: true,
+    is_active: true,
+    website: "http://fabric.travel"
   }
 
   application2: !application {
-      id: "66600000-0000-4000-a000-000000000222",
-      isActive: true,
-      name: "Test App 2",
-      website: "http://www.snapshot.travel",
-      isInternal: true,
-      partnerId: "11111111-0000-4000-a000-222222222222"
+    id: 03000000-0000-4444-8888-000000000002,
+    name: "InternalApp2",
+    description: "Desc2",
+    partner_id: 55555555-3836-4207-a705-111111111111,
+    is_internal: true,
+    is_active: true,
+    website: "http://someapp1.travel"
+  }
+
+  application3: !application {
+    id: 03000000-0000-4444-8888-000000000003,
+    name: "ExternalApp1",
+    description: "Desc3",
+    partner_id: 55555555-3836-4207-a705-111111111111,
+    is_internal: false,
+    is_active: true,
+    website: "http://someapp2.travel"
+  }
+
+  application4: !application {
+    id: 03000000-0000-4444-8888-000000000004,
+    name: "ExternalApp2",
+    description: "Desc4",
+    partner_id: 55555555-3836-4207-a705-111111111111,
+    is_internal: false,
+    is_active: true,
+    website: "http://someapp3.travel"
   }

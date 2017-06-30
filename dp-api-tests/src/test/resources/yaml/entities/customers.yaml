@@ -1,6 +1,6 @@
 customers:
-  customer1: !customer {
-    id: 00000000-3836-4207-a705-111111111111,
+  customer1: !customer &BASIC_CUSTOMER {
+    id: 06000000-0000-4444-8888-000000000001,
     name:  Creation test company1,
     email:  s1@tenants.biz,
     salesforceId: SALESFORCEID001,
@@ -23,16 +23,12 @@ customers:
 }
 
   customer2: !customer {
-    id: 00000000-3836-4207-a705-222222222222,
+    <<: *BASIC_CUSTOMER,
+    id: 06000000-0000-4444-8888-000000000002,
     name:  Creation test company2,
     email:  s2@tenants.biz,
     salesforceId:  SALESFORCEID002,
-    vatId:  DE999999999,
-    isDemo:  true,
-    phone:  +420123456789,
-    website:  'http://www.snapshot.com',
-    timezone:  Europe/Prague,
-    type:  HOTEL,
+    vatId:  DE999999919,
     hospitalityId: 000000b2-3836-4207-a705-42bbec000001,
     address: {
       countryCode: DE,
@@ -40,6 +36,42 @@ customers:
       line1: Strasse 1,
       city: Berlin,
       region: null,
-      zipCode: 603
+      zipCode: 60300
+      }
+  }
+
+  customer3: !customer {
+    <<: *BASIC_CUSTOMER,
+    id: 06000000-0000-4444-8888-000000000003,
+    name:  Creation test company3,
+    email:  s3@tenants.biz,
+    salesforceId:  SALESFORCEID003,
+    vatId:  DE999999929,
+    hospitalityId: 000000b2-3836-4207-a705-42bbec000002,
+    address: {
+      countryCode: DE,
+      line2: Address 2,
+      line1: Strasse 1,
+      city: Berlin,
+      region: null,
+      zipCode: 60400
+      }
+  }
+
+  customer4: !customer {
+    <<: *BASIC_CUSTOMER,
+    id: 06000000-0000-4444-8888-000000000004,
+    name:  Creation test company4,
+    email:  s4@tenants.biz,
+    salesforceId:  SALESFORCEID004,
+    vatId:  DE999999939,
+    hospitalityId: 000000b2-3836-4207-a705-42bbec000003,
+    address: {
+      countryCode: DE,
+      line2: Address 2,
+      line1: Strasse 1,
+      city: Berlin,
+      region: null,
+      zipCode: 60400
       }
 }
