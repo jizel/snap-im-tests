@@ -14,6 +14,7 @@ Feature: Access to /identity/partners endpoint for internal commercial and exter
     And The following applications exist
       | name                | id                                   | partnerId                            | isInternal | website                 |
       | ExternalApplication | 22200000-0000-4000-a000-000000000222 | 11111111-0000-4000-a000-222222222222 | false      | http://www.snapshot.com |
+    Given Application permission table is populated for application "ExternalApplication"
     And The following application versions exists
       | id                                   | isNonCommercial | apiManagerId | name                        | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000555 | false           | 2            | externalWithSubscription    | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
@@ -49,6 +50,7 @@ Feature: Access to /identity/partners endpoint for internal commercial and exter
     And The following applications exist
       | name                   | id                                   | partnerId                            | isInternal | website                 |
       | InternalNoSubscription | 33300000-0000-4000-a000-000000000333 | 11111111-0000-4000-a000-222222222222 | true       | http://www.snapshot.com |
+    Given Application permission table is populated for application "InternalNoSubscription"
     Given The following application versions exists
       | id                                   | isNonCommercial | apiManagerId | name                        | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | false           | 2            | internalWithSubscription    | certified | Active version description   | 11111111-0000-4000-a000-111111111111 |

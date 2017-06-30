@@ -20,6 +20,8 @@ Feature: Properties Application access check feature
       | name                     | id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
+    Given Application permission table is populated for application "App With Subscription"
+    Given Application permission table is populated for application "App Without Subscription"
     Given The following application versions exists
       | Id                                   | apiManagerId | name                    | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
@@ -71,7 +73,8 @@ Feature: Properties Application access check feature
       | /null | 0      | property_code=='*_code'                                    | property_code  | /null               | 4           |
       | /null | 0      | property_code=='p3_code'                                   | /null          | /null               | 1           |
       | /null | 0      | is_active=='true'                                          | /null          | salesforce_id       | 6           |
-      | 5     | 0      | anchor_customer_id=='*23*'                                 | /null          | anchor_customer_id  | 5           |
+#  DP-2193
+#      | 5     | 0      | anchor_customer_id=='*23*'                                 | /null          | anchor_customer_id  | 5           |
       | /null | 0      | email=='*p3*@snapshot.travel'                              | property_id    | /null               | 1           |
 
   Scenario: Application with and without access updates property

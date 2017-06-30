@@ -20,6 +20,8 @@ Feature: Properties-Customers Application access check feature
       | name                     | id                                   | partnerId                            | isInternal | website                    |
       | App With Subscription    | 22200000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
       | App Without Subscription | 00000000-0000-4000-a000-000000000222 | 11100000-0000-4000-a000-000000000111 | true       | http://www.snapshot.travel |
+    Given Application permission table is populated for application "App With Subscription"
+    Given Application permission table is populated for application "App Without Subscription"
     Given The following application versions exists
     | id                                   | apiManagerId | name                    | status    | description                  | applicationId                        |
       | 22200000-0000-4000-a000-000000000333 | 1            | versionWithSubscription | certified | Active version description   | 22200000-0000-4000-a000-000000000222 |
