@@ -4,6 +4,7 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.YAML_DATA_PATH;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadEntities;
 
 import lombok.Getter;
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
@@ -40,6 +41,7 @@ public class EntitiesLoader {
     private EntityNonNullMap<String, PropertySetRoleDto> propertySetRoleDtos;
     private EntityNonNullMap<String, PartnerDto> partnerDtos;
     private EntityNonNullMap<String, UserGroupDto> userGroupDtos;
+    private EntityNonNullMap<String, ApplicationDto> applicationDtos;
 
     private EntitiesLoader() {
         loadCustomers();
@@ -50,6 +52,7 @@ public class EntitiesLoader {
         loadRoles();
         loadPartners();
         loadUserGroups();
+        loadApplications();
     }
 
     public static EntitiesLoader getInstance() {
@@ -102,7 +105,9 @@ public class EntitiesLoader {
         userGroupDtos = new EntityNonNullMap<>((LinkedHashMap<String, UserGroupDto>) yamlProperties.get("user_groups"));
     }
 
-
-
+    private void loadApplications() {
+        Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/applications.yaml"));
+        applicationDtos = new EntityNonNullMap<>((LinkedHashMap<String, ApplicationDto>) yamlProperties.get("applications"));
+    }
 
 }

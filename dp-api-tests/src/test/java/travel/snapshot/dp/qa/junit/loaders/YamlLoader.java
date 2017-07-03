@@ -117,6 +117,7 @@ public class YamlLoader {
             addTypeDescription(new TypeDescription(PropertySetRoleDto.class, "!propertySetRole"));
             addTypeDescription(new TypeDescription(PartnerDto.class, "!partner"));
             addTypeDescription(new TypeDescription(UserGroupDto.class, "!user_group"));
+            addTypeDescription(new TypeDescription(ApplicationDto.class, "!application"));
         }
     }
 

@@ -1,0 +1,18 @@
+applications:
+  application1: !application {
+    id: "66600000-0000-4000-a000-000000000111",
+    isActive: true,
+    name: "Test App 1",
+    website: "http://www.snapshot.travel",
+    isInternal: true,
+    partnerId: "11111111-0000-4000-a000-222222222222"
+  }
+
+  application2: !application {
+      id: "66600000-0000-4000-a000-000000000222",
+      isActive: true,
+      name: "Test App 2",
+      website: "http://www.snapshot.travel",
+      isInternal: true,
+      partnerId: "11111111-0000-4000-a000-222222222222"
+  }

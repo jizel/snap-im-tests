@@ -28,8 +28,8 @@ import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.type.SalesforceId;
-import travel.snapshot.dp.qa.cucumber.helpers.Resolvers;
 import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
+import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
 
@@ -44,8 +44,9 @@ public class DbStepDefs {
     private CustomerSteps customerSteps;
     @Steps
     private PropertySteps propertySteps;
-    @Steps
-    private Resolvers resolvers;
+
+//    @Steps annotation does not work with JUnit
+    private ApplicationsSteps applicationsSteps = new ApplicationsSteps();
 
     @Given("^All customerProperties are deleted from DB for customer id \"([^\"]*)\" and property code \"([^\"]*)\"$")
     public void All_customerProperties_are_deleted_from_DB_for_customer_code_and_property_code(String customerId, String propertyCode) throws Throwable {
@@ -184,7 +185,7 @@ public class DbStepDefs {
 
     @And("^Application permission table is populated(?: for application \"([^\"]*)\")?$")
     public void applicationPermissionPopulated(String applicationName) throws Throwable {
-            String applicationId = resolvers.resolveEntityName("application", applicationName);
+            String applicationId = applicationsSteps.resolveApplicationId(applicationName);
             dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }
 }

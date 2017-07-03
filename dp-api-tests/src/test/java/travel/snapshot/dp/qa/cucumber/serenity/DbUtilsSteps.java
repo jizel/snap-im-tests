@@ -67,7 +67,8 @@ public class DbUtilsSteps {
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO ApiSubscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
     static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
-    static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, resource_operation_id) SELECT ?, id FROM ResourceOperation;";
+    static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) SELECT ?, id FROM platformoperation;";
+    static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) VALUES (?, ?);";
 
     static final String TTI_SCHEMA_NAME = "tti";
     static final String IDENTITY_SCHEMA_NAME = "identity";
@@ -172,5 +173,11 @@ public class DbUtilsSteps {
     public void populateApplicationPermissionsTableForApplication(String applicationId) {
         UUID applicationUuid = UUID.fromString(applicationId);
         dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationUuid);
+    }
+
+    public void addApplicationPermission(String applicationId, String permissionId) {
+        UUID applicationUuid = UUID.fromString(applicationId);
+        UUID permissionUuid = UUID.fromString(permissionId);
+        dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, applicationUuid, permissionUuid);
     }
 }

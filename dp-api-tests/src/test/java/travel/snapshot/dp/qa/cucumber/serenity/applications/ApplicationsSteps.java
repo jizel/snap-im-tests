@@ -35,9 +35,10 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void followingApplicationIsCreated(ApplicationDto application) {
+    public Response followingApplicationIsCreated(ApplicationDto application) {
         Response response = createEntity(application);
         setSessionResponse(response);
+        return response;
     }
 
     @Step

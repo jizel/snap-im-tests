@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.cucumber.helpers;
 
+import net.thucydides.core.annotations.Step;
 import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
@@ -25,6 +26,7 @@ public class Resolvers {
     @Steps
     private ApplicationsSteps applicationsSteps;
 
+    @Step
     public String resolveEntityName(String type, String name) {
         switch (type) {
             case "customer":     return customerSteps.resolveCustomerId(name);
