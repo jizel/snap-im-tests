@@ -14,6 +14,7 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 import java.util.LinkedHashMap;
@@ -42,6 +43,7 @@ public class EntitiesLoader {
     private EntityNonNullMap<String, PartnerDto> partnerDtos;
     private EntityNonNullMap<String, UserGroupDto> userGroupDtos;
     private EntityNonNullMap<String, ApplicationDto> applicationDtos;
+    private EntityNonNullMap<String, ApplicationVersionDto> applicationVersionDtos;
 
     private EntitiesLoader() {
         loadCustomers();
@@ -110,4 +112,8 @@ public class EntitiesLoader {
         applicationDtos = new EntityNonNullMap<>((LinkedHashMap<String, ApplicationDto>) yamlProperties.get("applications"));
     }
 
+    private void loadApplicationVersions() {
+        Map<String, Object> yamlProperties = loadEntities(String.format(YAML_DATA_PATH, "entities/application_versions.yaml"));
+        applicationVersionDtos = new EntityNonNullMap<>((LinkedHashMap<String, ApplicationVersionDto>) yamlProperties.get("application_versions"));
+    }
 }

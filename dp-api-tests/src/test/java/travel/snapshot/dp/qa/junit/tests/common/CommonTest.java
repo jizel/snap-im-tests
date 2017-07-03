@@ -8,20 +8,13 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.configuration.ConfigurationSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.helpers.ApplicationHelpers;
-import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PartnerHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PropertyHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PropertySetHelpers;
-import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
-import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
-import travel.snapshot.dp.qa.junit.helpers.UserGroupHelpers;
-import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
+import travel.snapshot.dp.qa.junit.helpers.*;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 
 public class CommonTest extends BasicSteps{
@@ -48,6 +41,8 @@ public class CommonTest extends BasicSteps{
     protected static final RelationshipsHelpers relationshipsHelpers = new RelationshipsHelpers();
     protected static final UserGroupHelpers userGroupHelpers = new UserGroupHelpers();
     protected static final ApplicationHelpers applicationHelpers = new ApplicationHelpers();
+    protected static final ApplicationVersionHelpers applicationVersionHelpers = new ApplicationVersionHelpers();
+    protected static final CommercialSubscriptionHelpers commercialSubscriptionHelpers = new CommercialSubscriptionHelpers();
 
 //    Basic test entities
     protected static final UserCreateDto testUser1 = entitiesLoader.getUserDtos().get("user1");
@@ -55,6 +50,8 @@ public class CommonTest extends BasicSteps{
     protected static final UserCreateDto testSnapshotUser1 = entitiesLoader.getSnapshotUserDtos().get("snapshotUser1");
     protected static final CustomerCreateDto testCustomer1 = entitiesLoader.getCustomerDtos().get("customer1");
     protected static final CustomerCreateDto testCustomer2 = entitiesLoader.getCustomerDtos().get("customer2");
+    protected static final CustomerCreateDto testCustomer3 = entitiesLoader.getCustomerDtos().get("customer3");
+    protected static final CustomerCreateDto testCustomer4 = entitiesLoader.getCustomerDtos().get("customer4");
     protected static final PropertyDto testProperty1 = entitiesLoader.getPropertyDtos().get("property1");
     protected static final PropertyDto testProperty2 = entitiesLoader.getPropertyDtos().get("property2");
     protected static final PropertySetDto testPropertySet1 = entitiesLoader.getPropertySetDtos().get("propertySet1");
@@ -63,6 +60,12 @@ public class CommonTest extends BasicSteps{
     protected static final UserGroupDto testUserGroup1 = entitiesLoader.getUserGroupDtos().get("user_group1");
     protected static final ApplicationDto testApplication1 = entitiesLoader.getApplicationDtos().get("application1");
     protected static final ApplicationDto testApplication2 = entitiesLoader.getApplicationDtos().get("application2");
+    protected static final ApplicationDto testApplication3 = entitiesLoader.getApplicationDtos().get("application3");
+    protected static final ApplicationDto testApplication4 = entitiesLoader.getApplicationDtos().get("application4");
+    protected static final ApplicationVersionDto testAppVersion1 = entitiesLoader.getApplicationVersionDtos().get("app_version1");
+    protected static final ApplicationVersionDto testAppVersion2 = entitiesLoader.getApplicationVersionDtos().get("app_version2");
+    protected static final ApplicationVersionDto testAppVersion3 = entitiesLoader.getApplicationVersionDtos().get("app_version3");
+
 
 //    Custom codes
     protected static final int SEMANTIC_ERRORS_CUSTOM_CODE = 42201;

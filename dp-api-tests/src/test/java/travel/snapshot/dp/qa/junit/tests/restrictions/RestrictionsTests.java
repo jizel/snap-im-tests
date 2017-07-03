@@ -38,7 +38,7 @@ public class RestrictionsTests extends CommonTest{
         testAppVersion.setName("testAppVersion");
         testAppVersion.setStatus(CERTIFIED);
         testAppVersion.setApiManagerId("123");
-        createdAppVersion = applicationHelpers.applicationVersionIsCreated(testAppVersion);
+        createdAppVersion = applicationVersionHelpers.applicationVersionIsCreated(testAppVersion);
     }
 
     @After
