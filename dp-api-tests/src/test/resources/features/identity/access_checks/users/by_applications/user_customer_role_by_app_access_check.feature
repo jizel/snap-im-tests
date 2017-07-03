@@ -23,7 +23,7 @@ Feature: User Customers Role by app access check feature
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
-      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
+      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 08000000-0000-4444-8888-000000000001 | 22200000-0000-4000-a000-000000000222 |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1OfC1  | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -39,7 +39,7 @@ Feature: User Customers Role by app access check feature
     Given Switch for user customer role tests
     Given The following roles exist
       | applicationId                        | roleName | description      |
-      | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
     When User "user1OfC1" requests roles of user "user1OfC1" for customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
     Then Response code is "403"
     And Custom code is 40301
@@ -56,7 +56,7 @@ Feature: User Customers Role by app access check feature
     Given Switch for user customer role tests
     Given The following roles exist
       | applicationId                        | roleName | description      |
-      | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
     When User "user1OfC1" assigns role "NewRole" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000" for application version "versionWithoutSubscription"
     Then Response code is "403"
     And Custom code is 40301

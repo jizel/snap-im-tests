@@ -17,8 +17,8 @@ Feature: Users property set roles CRUD
     Given Switch for user property set role tests
     Given The following roles exist
       | id                                   | roleName    | description            | applicationId                        |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 03000000-0000-4444-8888-000000000000 |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 03000000-0000-4444-8888-000000000000 |
 
   Scenario Outline: Assigning not existing role
     And Relation between user "default1" and property set "ps1_name" exists
@@ -33,7 +33,7 @@ Feature: Users property set roles CRUD
     Given Switch for user property role tests
     Given The following roles exist
       | roleId                               | roleName        | description            | id                                   |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 03000000-0000-4444-8888-000000000000 |
     And Relation between user "default1" and property set "ps1_name" exists
     When I assign role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>"
     Then Response code is "422"
@@ -46,7 +46,7 @@ Feature: Users property set roles CRUD
     And Relation between user "default1" and property set "ps1_name" exists
     And The following roles exist
       | id                                   | roleName        | description            | applicationId                        |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 03000000-0000-4444-8888-000000000000 |
     When I assign role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>"
     Then Response code is "422"
     And Custom code is 42202

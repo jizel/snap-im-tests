@@ -23,11 +23,11 @@ Feature: User-propertyset roles access check by app feature
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
-      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
+      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 08000000-0000-4444-8888-000000000001 | 22200000-0000-4000-a000-000000000222 |
     Given Switch for user property set role tests
     Given The following roles exist
       | id                                   | roleName | description      |
-      | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | type     | username  | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1     | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |

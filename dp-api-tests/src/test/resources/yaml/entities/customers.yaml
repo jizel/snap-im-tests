@@ -1,34 +1,16 @@
 customers:
   customer1: !customer &BASIC_CUSTOMER {
-    id: 06000000-0000-4444-8888-000000000001,
+    id: 06000000-0000-4444-8888-000000000002,
     name:  Creation test company1,
     email:  s1@tenants.biz,
-    salesforceId: SALESFORCEID001,
-    vatId:  CZ00000001,
+    salesforceId:  SALESFORCEID001,
+    vatId:  DE999999919,
     isDemo:  true,
     phone:  +420123456789,
 #    Website must be enclosed in '' because it contains the : character which has semantics in yaml
     website:  'http://www.snapshot.travel',
     timezone:  Europe/Prague,
     type:  HOTEL,
-    hospitalityId: 000000b2-3836-4207-a705-42bbec000000,
-    address: {
-      countryCode: CZ,
-      line1: address 1,
-      line2: address 2,
-      city: Brno,
-      region: null,
-      zipCode: 60200
-      }
-}
-
-  customer2: !customer {
-    <<: *BASIC_CUSTOMER,
-    id: 06000000-0000-4444-8888-000000000002,
-    name:  Creation test company2,
-    email:  s2@tenants.biz,
-    salesforceId:  SALESFORCEID002,
-    vatId:  DE999999919,
     hospitalityId: 000000b2-3836-4207-a705-42bbec000001,
     address: {
       countryCode: DE,
@@ -40,12 +22,12 @@ customers:
       }
   }
 
-  customer3: !customer {
+  customer2: !customer {
     <<: *BASIC_CUSTOMER,
     id: 06000000-0000-4444-8888-000000000003,
-    name:  Creation test company3,
-    email:  s3@tenants.biz,
-    salesforceId:  SALESFORCEID003,
+    name:  Creation test company2,
+    email:  s2@tenants.biz,
+    salesforceId:  SALESFORCEID002,
     vatId:  DE999999929,
     hospitalityId: 000000b2-3836-4207-a705-42bbec000002,
     address: {
@@ -58,14 +40,32 @@ customers:
       }
   }
 
-  customer4: !customer {
+  customer3: !customer {
     <<: *BASIC_CUSTOMER,
     id: 06000000-0000-4444-8888-000000000004,
+    name:  Creation test company3,
+    email:  s3@tenants.biz,
+    salesforceId:  SALESFORCEID003,
+    vatId:  DE999999939,
+    hospitalityId: 000000b2-3836-4207-a705-42bbec000003,
+    address: {
+      countryCode: DE,
+      line2: Address 2,
+      line1: Strasse 1,
+      city: Berlin,
+      region: null,
+      zipCode: 60400
+      }
+}
+
+  customer4: !customer {
+    <<: *BASIC_CUSTOMER,
+    id: 06000000-0000-4444-8888-000000000005,
     name:  Creation test company4,
     email:  s4@tenants.biz,
     salesforceId:  SALESFORCEID004,
     vatId:  DE999999939,
-    hospitalityId: 000000b2-3836-4207-a705-42bbec000003,
+    hospitalityId: 000000b2-3836-4207-a705-42bbec000004,
     address: {
       countryCode: DE,
       line2: Address 2,

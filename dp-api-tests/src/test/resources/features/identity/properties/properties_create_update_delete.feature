@@ -143,7 +143,7 @@ Feature: Properties create update delete
       | 10          | 0      | vat==CZ* | /null        | /null        | 400           | 40002          |
 
   Scenario Outline: Validate that property regions belong to the correct country
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created by user "11111111-0000-4000-a000-000000000000"
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created by user "0b000000-0000-4444-8888-000000000000"
     Then Content type is "application/json"
     And Response code is 201
     And Body contains entity with attribute "address.region" value "<region>"
@@ -157,7 +157,7 @@ Feature: Properties create update delete
       | CA      | Ontario                           | propcode66 | mail66@mail.com |
 
   Scenario Outline: Checking error codes for regions
-    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created by user "11111111-0000-4000-a000-000000000000"
+    When A property for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" from country "<country>" region "<region>" code "<code>" email "<email>" is created by user "0b000000-0000-4444-8888-000000000000"
     Then Content type is "application/json"
     And Response code is <response_code>
     And Custom code is "<custom_code>"

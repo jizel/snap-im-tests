@@ -42,7 +42,7 @@ Feature: Rate shopper
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
-    And The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
+    And The following properties exist with random address and billing address for user "0b000000-0000-4444-8888-000000000000"
       | id                                   | salesforceId    | name         | code         | website                    | email           | isDemo         | timezone      | ttiId | customerId                           |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1 | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz | true           | Europe/Prague | 3     | 1e1aaece-b75b-41bd-80d4-9d5c0c7ff13a |
     When Getting BAR values for a given market for "<property>" since "<since>" until "<until>"

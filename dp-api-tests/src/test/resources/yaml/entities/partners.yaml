@@ -1,6 +1,6 @@
 partners:
   partner1: !partner {
-  id: 55555555-3836-4207-a705-111111111111,
+  id: 07000000-0000-4444-8888-000000000003,
   isActive: true,
   name: Test Partner 1,
   email: testPartner1@snapshot.travel,

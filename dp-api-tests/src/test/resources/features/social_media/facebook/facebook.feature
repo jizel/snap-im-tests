@@ -4,7 +4,7 @@ Feature: facebook
 
   Background:
     Given Database is cleaned and default entities are created
-#    Given API subscriptions exist for default application and customer with id "11111111-0000-4000-a000-555555555555" and property "99000099-9999-4999-a999-999999999999"
+#    Given API subscriptions exist for default application and customer with id "06000000-0000-4444-8888-000000000001" and property "99000099-9999-4999-a999-999999999999"
 
 
   Scenario Outline: Get facebook analytics data from API for a given wrong granularity

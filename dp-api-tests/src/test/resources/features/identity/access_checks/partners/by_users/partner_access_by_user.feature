@@ -9,7 +9,7 @@ Feature: Access to /identity/partners endpoint for internal non-commercial appli
     And The following user is created
       | type     | username      | firstName | lastName | email                 | timezone      | languageCode | isActive |
       | partner  | partnerUser   | Partner   | User1    | part1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
-    And The following user is created for customer "11111111-0000-4000-a000-555555555555" with is_active "false"
+    And The following user is created for customer "06000000-0000-4444-8888-000000000001" with is_active "false"
       | type     | username      | firstName | lastName | email                 | timezone      | languageCode | isActive |
       | customer | customerUser  | Customer  | User2    | cust1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
 
@@ -20,13 +20,13 @@ Feature: Access to /identity/partners endpoint for internal non-commercial appli
     And There are 1 <entity> returned
     When List of <entity> is requested by user "customerUser"
     Then Response code is "403"
-    Given Relation between user "customerUser" and customer "11111111-0000-4000-a000-555555555555" is activated
+    Given Relation between user "customerUser" and customer "06000000-0000-4444-8888-000000000001" is activated
     When List of <entity> is requested by user "customerUser"
     Then Response code is "200"
     And There are 1 <entity> returned
     When List of <entity> is requested by user "partnerUser"
     Then Response code is "403"
-    Given Relation between user "partnerUser" and partner "11111111-0000-4000-a000-222222222222" exists
+    Given Relation between user "partnerUser" and partner "07000000-0000-4444-8888-000000000002" exists
     When List of <entity> is requested by user "partnerUser"
     Then Response code is "200"
     And There are 1 <entity> returned

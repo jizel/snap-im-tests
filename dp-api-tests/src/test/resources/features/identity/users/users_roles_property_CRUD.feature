@@ -18,8 +18,8 @@ Feature: Users property roles CRUD
     Given Switch for user property role tests
     Given The following roles exist
       | id                                   | roleName    | description            | applicationId                        |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 11111111-0000-4000-a000-111111111111 |
-      | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 11111111-0000-4000-a000-111111111111 |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_1 | optional description 1 | 03000000-0000-4444-8888-000000000000 |
+      | b318fd9a-a05d-42d8-8e84-42e904ace123 | user_role_2 | optional description 2 | 03000000-0000-4444-8888-000000000000 |
 
 
   Scenario Outline: Assigning not existing role
@@ -35,7 +35,7 @@ Feature: Users property roles CRUD
     Given Switch for user customer role tests
     Given The following roles exist
       | id                                   | roleName        | description            | applicationId                        |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 03000000-0000-4444-8888-000000000000 |
     When I add role with id "<role_id>" to user name "<user_name>" and property code "<property_code>"
     Then Response code is "422"
     And Custom code is 42202
@@ -48,7 +48,7 @@ Feature: Users property roles CRUD
     Given Switch for user property set role tests
     Given The following roles exist
       | id                                   | roleName        | description            | applicationId                        |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 11111111-0000-4000-a000-111111111111 |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 03000000-0000-4444-8888-000000000000 |
     When I assign role with id "<role_id>" to user name "<user_name>" and property code "<property_code>"
     Then Response code is "422"
     And Custom code is 42202

@@ -5,7 +5,7 @@ Feature: Customers commercial subscriptions
     Given The following customers exist with random address
       | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      | id                                   |
       | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
-    Given The following properties exist with random address and billing address for user "11111111-0000-4000-a000-000000000000"
+    Given The following properties exist with random address and billing address for user "0b000000-0000-4444-8888-000000000000"
       | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | c37c3501-d309-4702-ad0b-fd53a98c01fd | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
@@ -13,7 +13,7 @@ Feature: Customers commercial subscriptions
   Scenario: Getting customers commercial subscriptions
     Given The following commercial subscriptions exist
       | applicationId                        | customerId                           | id                                   | propertyId                           |
-      | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | c37c3501-d309-4702-ad0b-fd53a98c01fd |
+      | 03000000-0000-4444-8888-000000000000 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | c37c3501-d309-4702-ad0b-fd53a98c01fd |
     When Customers commercial subscriptions for customer id "1238fd9a-a05d-42d8-8e84-42e904ace123" is got
     Then Response code is "200"
     And Content type is "application/json"
@@ -56,7 +56,7 @@ Feature: Customers commercial subscriptions
         | 11111111-d309-4702-ad0b-fd53a98c01fd | p2_name      | p2_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
       Given The following commercial subscriptions exist
         | applicationId                        | customerId                           | id                                   | propertyId                           |
-        | 11111111-0000-4000-a000-111111111111 | 00000000-a05d-42d8-8e84-000000000001 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 11111111-d309-4702-ad0b-fd53a98c01fd |
+        | 03000000-0000-4444-8888-000000000000 | 00000000-a05d-42d8-8e84-000000000001 | 8e238f8e-2c9c-4e32-9a63-40474a9728eb | 11111111-d309-4702-ad0b-fd53a98c01fd |
       When Customer with id "00000000-a05d-42d8-8e84-000000000001" is deleted
       Then Response code is "409"
       And Custom code is 40915

@@ -17,7 +17,7 @@ Feature: User groups roles
       | Application for UserGroup-Roles tests | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | true       |
     Given The following roles exist
       | id                                   | applicationId                        | roleName |
-      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 11111111-0000-4000-a000-111111111111 | UG role1 |
+      | 2d6e7db2-2ab8-40ae-8e71-3904d1512ec8 | 03000000-0000-4444-8888-000000000000 | UG role1 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" exists
 
   @Smoke
@@ -58,11 +58,11 @@ Feature: User groups roles
   Scenario Outline: Get list of userGroup's role - valid
     Given The following roles exist
       | id                                   | applicationId                        | roleName        |
-      | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | 11111111-0000-4000-a000-111111111111 | UG_filter_role1 |
-      | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | 11111111-0000-4000-a000-111111111111 | UG_filter_role2 |
-      | 540be550-1702-4e2e-b094-394de63f6c48 | 11111111-0000-4000-a000-111111111111 | UG_filter_role3 |
-      | 7b570693-daf5-4208-8d09-370ff9a950b6 | 11111111-0000-4000-a000-111111111111 | UG_filter_role4 |
-      | f40a9bf7-aa5e-473a-be31-2011324942fc | 11111111-0000-4000-a000-111111111111 | UG_filter_role5 |
+      | 5184fb6b-0ebd-4726-9481-4858a15a37a0 | 03000000-0000-4444-8888-000000000000 | UG_filter_role1 |
+      | 19e8d1c2-c4f7-44d7-b436-dd4e9249065d | 03000000-0000-4444-8888-000000000000 | UG_filter_role2 |
+      | 540be550-1702-4e2e-b094-394de63f6c48 | 03000000-0000-4444-8888-000000000000 | UG_filter_role3 |
+      | 7b570693-daf5-4208-8d09-370ff9a950b6 | 03000000-0000-4444-8888-000000000000 | UG_filter_role4 |
+      | f40a9bf7-aa5e-473a-be31-2011324942fc | 03000000-0000-4444-8888-000000000000 | UG_filter_role5 |
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "5184fb6b-0ebd-4726-9481-4858a15a37a0" exists
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "19e8d1c2-c4f7-44d7-b436-dd4e9249065d" exists
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and role "540be550-1702-4e2e-b094-394de63f6c48" exists

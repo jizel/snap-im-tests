@@ -1,8 +1,8 @@
 general_notification: &NOTIFICATION
-  application_version_id: 11111111-0000-4000-a000-444444444444
-  user_id: 11111111-0000-4000-a000-000000000000
+  application_version_id: 0b000000-0000-4444-8888-111111111111
+  user_id: 0b000000-0000-4444-8888-000000000000
   entity_type: Partner
-  entity_id: 55555555-3836-4207-a705-111111111111
+  entity_id: 07000000-0000-4444-8888-000000000003
 
 createPartnerNotificationTest:
   <<: *NOTIFICATION

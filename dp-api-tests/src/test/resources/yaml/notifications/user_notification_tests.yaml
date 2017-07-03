@@ -1,22 +1,22 @@
 general_notification: &NOTIFICATION
-  application_version_id: 11111111-0000-4000-a000-444444444444
-  user_id: 11111111-0000-4000-a000-000000000000
+  application_version_id: 0b000000-0000-4444-8888-111111111111
+  user_id: 0b000000-0000-4444-8888-000000000000
   entity_type: User
 
 createUserNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_id: 11111111-0000-4000-a000-333333333333
+  entity_id: 0b000000-0000-4444-8888-000000000002
 
 updateUserNotificationTest:
   <<: *NOTIFICATION
   operation: update
-  entity_id: 11111111-0000-4000-a000-222222222222
+  entity_id: 0b000000-0000-4444-8888-000000000001
 
 deleteUserNotificationTest:
   <<: *NOTIFICATION
   operation: delete
-  entity_id: 11111111-0000-4000-a000-444444444444
+  entity_id: 0b000000-0000-4444-8888-111111111111
 
 addRoleToUserNotificationTest:
   <<: *NOTIFICATION

@@ -1,28 +1,28 @@
 general_notification: &NOTIFICATION
-  application_version_id: 11111111-0000-4000-a000-444444444444
-  user_id: 11111111-0000-4000-a000-000000000000
+  application_version_id: 0b000000-0000-4444-8888-111111111111
+  user_id: 0b000000-0000-4444-8888-000000000000
   entity_type: Property
 
 createPropertyNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_id: 11111111-3836-4207-a705-222222222222
+  entity_id: 08000000-0000-4444-8888-000000000003
 
 createPropertyByCustomerUserNotificationTest:
   <<: *NOTIFICATION
   operation: create
-  entity_id: 11111111-3836-4207-a705-222222222222
-  user_id: 11111111-0000-4000-a000-222222222222
+  entity_id: 08000000-0000-4444-8888-000000000003
+  user_id: 0b000000-0000-4444-8888-000000000001
 
 updatePropertyNotificationTest:
   <<: *NOTIFICATION
   operation: update
-  entity_id: 11111111-3836-4207-a705-111111111111
+  entity_id: 08000000-0000-4444-8888-000000000002
 
 deletePropertyNotificationTest:
   <<: *NOTIFICATION
   operation: delete
-  entity_id: 11111111-3836-4207-a705-111111111111
+  entity_id: 08000000-0000-4444-8888-000000000002
 
 addRemovePropertyUserNotificationTest:
   -  <<: *NOTIFICATION
