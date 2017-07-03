@@ -1,27 +1,26 @@
 application_versions:
-  app_version1: !application_version &BASIC_VERSION {
+  app_version1: !applicationVersion &BASIC_VERSION {
     id: 04000000-0000-4444-8888-000000000001,
-    application_id: 11111111-0000-4000-a000-111111111111,
-    api_key: d75f360a-b947-4078-b3b0-4c1f793844a1,
+    applicationId: 11111111-0000-4000-a000-111111111111,
+    apiManagerId: d75f360a-b947-4078-b3b0-4c1f793844a1,
     name: version1,
-    status: certified,
-    release_date: "2016-04-11",
+    status: CERTIFIED,
     description: description,
-    is_non_commercial: false
+    isNonCommercial: false,
   }
 
-  app_version2: !application_version {
+  app_version2: !applicationVersion {
     <<: *BASIC_VERSION,
     id: 04000000-0000-4444-8888-000000000002,
-    api_key: d75f360a-b947-4078-b3b0-4c1f793844a2,
+    apiManagerId: d75f360a-b947-4078-b3b0-4c1f793844a2,
     name: version2,
-    status: inactive
+    status: INACTIVE
   }
 
-  app_version3: !application_version {
+  app_version3: !applicationVersion {
     <<: *BASIC_VERSION,
     id: 04000000-0000-4444-8888-000000000003,
-    api_key: d75f360a-b947-4078-b3b0-4c1f793844a3,
+    apiManagerId: d75f360a-b947-4078-b3b0-4c1f793844a3,
     name: version3,
-    status: under_review
+    status: UNDER_REVIEW
   }

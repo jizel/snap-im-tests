@@ -55,6 +55,7 @@ public class EntitiesLoader {
         loadPartners();
         loadUserGroups();
         loadApplications();
+        loadApplicationVersions();
     }
 
     public static EntitiesLoader getInstance() {

@@ -36,16 +36,6 @@ Feature: Customers Application access check feature - GET
     And Relation between user "userWithCust1" and default property exists
 
 
-  Scenario: There is active CommercialSubscription linking to the ApplicationVersion (through Application)
-    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithSubscription"
-    Then Response code is "200"
-    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "nonCommercialversion"
-    Then Response code is "200"
-    When Customer with customerId "00000000-0000-4000-8000-123000000abc" is requested by user "userWithCust1" for application version "versionWithSubscription"
-    Then Response code is "404"
-    When Customer with customerId "12300000-0000-4000-a000-000000000000" is requested by user "userWithCust1" for application version "versionWithoutSubscription"
-    Then Response code is "403"
-
   Scenario: There is active CommercialSubscription with parent customer entity
     Given The following customers exist with random address
       | parentId                             | id                                   | name        | email          | salesforceId   | vatId      | isDemo         | timezone      |

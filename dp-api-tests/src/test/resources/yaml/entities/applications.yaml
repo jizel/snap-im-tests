@@ -3,9 +3,9 @@ applications:
     id: 03000000-0000-4444-8888-000000000001,
     name: "InternalApp1",
     description: "Desc1",
-    partner_id: 55555555-3836-4207-a705-111111111111,
-    is_internal: true,
-    is_active: true,
+    partnerId: 07000000-0000-4444-8888-000000000002,
+    isInternal: true,
+    isActive: true,
     website: "http://fabric.travel"
   }
 
@@ -13,9 +13,9 @@ applications:
     id: 03000000-0000-4444-8888-000000000002,
     name: "InternalApp2",
     description: "Desc2",
-    partner_id: 55555555-3836-4207-a705-111111111111,
-    is_internal: true,
-    is_active: true,
+    partnerId: 07000000-0000-4444-8888-000000000002,
+    isInternal: true,
+    isActive: true,
     website: "http://someapp1.travel"
   }
 
@@ -23,9 +23,9 @@ applications:
     id: 03000000-0000-4444-8888-000000000003,
     name: "ExternalApp1",
     description: "Desc3",
-    partner_id: 55555555-3836-4207-a705-111111111111,
-    is_internal: false,
-    is_active: true,
+    partnerId: 07000000-0000-4444-8888-000000000002,
+    isInternal: false,
+    isActive: true,
     website: "http://someapp2.travel"
   }
 
@@ -33,8 +33,8 @@ applications:
     id: 03000000-0000-4444-8888-000000000004,
     name: "ExternalApp2",
     description: "Desc4",
-    partner_id: 55555555-3836-4207-a705-111111111111,
-    is_internal: false,
-    is_active: true,
+    partnerId: 07000000-0000-4444-8888-000000000002,
+    isInternal: false,
+    isActive: true,
     website: "http://someapp3.travel"
   }
