@@ -11,12 +11,14 @@ function fetch() {
     fi
     git pull
 }
-
-# First fetch and build all modules except identity
-fetch $NONPMS_REPO_NAME
-./gradlew build -x test
-find . -iname *.jar -exec mv {} /data/modules/ \;
-cp -r DB /data
+if [ -z $ONLY_IDENTITY ]
+then
+    # First fetch and build all modules except identity
+    fetch $NONPMS_REPO_NAME
+    ./gradlew build -x test
+    find . -iname *.jar -exec mv {} /data/modules/ \;
+    cp -r DB /data
+fi
 
 # Now do the same for identity module that as of Mon March 20 2017 resides in a
 # separate repo
