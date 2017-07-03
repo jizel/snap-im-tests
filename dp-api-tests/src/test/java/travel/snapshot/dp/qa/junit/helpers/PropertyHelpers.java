@@ -24,4 +24,10 @@ public class PropertyHelpers extends PropertySteps{
         return response.as(PropertyDto.class);
     }
 
+    public Response createPropertyByUserForApp(String userId, String appVersionId, PropertyDto property) {
+        Response response = createEntityByUserForApplication(userId, appVersionId, property);
+        setSessionResponse(response);
+        return response;
+    }
+
 }

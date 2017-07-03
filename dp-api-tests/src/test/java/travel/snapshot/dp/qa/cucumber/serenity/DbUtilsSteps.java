@@ -69,6 +69,7 @@ public class DbUtilsSteps {
     static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
     static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) SELECT ?, id FROM platformoperation;";
     static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) VALUES (?, ?);";
+    static final String SELECT_PERMISSION_ID = "SELECT id FROM platformoperation where uri_template = ? AND http_method = ?;";
 
     static final String TTI_SCHEMA_NAME = "tti";
     static final String IDENTITY_SCHEMA_NAME = "identity";
@@ -175,9 +176,9 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationUuid);
     }
 
-    public void addApplicationPermission(String applicationId, String permissionId) {
+    public void addApplicationPermission(String applicationId, String endpoint, String method) {
         UUID applicationUuid = UUID.fromString(applicationId);
-        UUID permissionUuid = UUID.fromString(permissionId);
-        dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, applicationUuid, permissionUuid);
+        UUID permissionId = (UUID) dbHelper.identityDb().queryForList(SELECT_PERMISSION_ID, endpoint, method).get(0).get("id");
+        dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, applicationUuid, permissionId);
     }
 }
