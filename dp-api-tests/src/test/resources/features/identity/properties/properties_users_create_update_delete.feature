@@ -72,6 +72,7 @@ Feature: Properties users create update delete
       | limit | cursor | returned | total | filter                                        | sort      | sort_desc |
       | 5     | 0      | 5        | 7     | /null                                         | is_active |           |
       | 5     | 0      | 1        | 1     | user_id==8b88303f-f1b3-4174-98c3-eae169c94d3a |           | is_active |
+      | 5     | 0      | 1        | 1     | user_id==8B88303F-F1B3-4174-98C3-EAE169C94D3A |           | is_active |
       | 5     | 2      | 5        | 7     | /null                                         | is_active |           |
       | 5     | 2      | 0        | 1     | user_id==9b88303f-f1b3-4174-98c3-eae169c94d3d |           | is_active |
       | /null | /null  | 7        | 7     | /null                                         | /null     | /null     |

@@ -172,6 +172,7 @@ Feature: Roles get user customer
       | /null | /null  | 1     | name=='Filter role name 6'                                                         | /null | /null     | Filter role name 6                                                                                 |
       | /null | /null  | 2     | name=='Filter role name*' and application_id==a318fd9a-a05d-42d8-8e84-42e904ace123 | name  | /null     | Filter role name 1, Filter role name 2                                                             |
       | /null | /null  | 4     | application_id==b318fd9a-a05d-42d8-8e84-42e904ace123                               | name  | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
+      | /null | /null  | 4     | application_id==B318Fd9A-A05D-42D8-8E84-42E904ACE123                               | name  | /null     | Filter role name 3, Filter role name 4, Filter role name 5, Filter role name 6                     |
       | /null | /null  | 2     | description=='different*'                                                          | name  | /null     | Filter role name 3, Filter role name 4                                                             |
       | 5     | 0      | 2     | name=='Filter role name*' and is_initial=='false'                           | name  |           | Filter role name 5, Filter role name 6                                                             |
 

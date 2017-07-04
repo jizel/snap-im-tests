@@ -124,11 +124,11 @@ Feature: Properties access check feature - GET
 
      Scenario Outline: Filtering properties with access checks
        Given The following properties exist with random address and billing address for user "userWithProp"
-         | salesforceId   | name | code         | email              | website                    | isDemo         | timezone      | customerId                           | ttiId |
-         | salesforceid_2 | p2_name      | p2_code      | p2@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 1234  |
-         | salesforceid_3 | p3_name      | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 4231  |
-         | salesforceid_4 | p4_name      | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 5678  |
-         | salesforceid_5 | p5_name      | p5_code      | p5@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8765  |
+         | salesforceId   | name    | code         | email              | website                    | isDemo         | timezone      | customerId                           | ttiId |
+         | salesforceid_2 | p2_name | p2_code      | p2@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 1234  |
+         | salesforceid_3 | p3_name | p3_code      | p3@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 4231  |
+         | salesforceid_4 | p4_name | p4_code      | p4@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 5678  |
+         | salesforceid_5 | p5_name | p5_code      | p5@snapshot.travel | http://www.snapshot.travel | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 | 8765  |
        When List of properties is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "userWithProp"
        Then Response code is "200"
        And There are <returned> properties returned
@@ -143,12 +143,12 @@ Feature: Properties access check feature - GET
          | /null | 0      | property_code=='*_code'                                    | property_code  | /null               | 5           |
          | /null | 0      | property_code=='p3_code'                                   | /null          | /null               | 1           |
          | /null | 0      | is_active=='true'                                          | /null          | salesforce_id       | 5           |
-         | /null | 0      | anchor_customer_id=='*23'                                  | /null          | anchor_customer_id  | 5           |
          | /null | 0      | anchor_customer_id=='2228fd9a-a05d-42d8-8e84-42e904ace222' | /null          | /null               | 0           |
-         | /null | 0      | tti_id=='*23*'                                             | /null          | /null               | 2           |
+         | /null | 0      | anchor_customer_id=='2228Fd9A-A05D-42D8-8E84-42E904ACE222' | /null          | /null               | 0           |
+         | /null | 0      | tti_id=='1234'                                             | /null          | /null               | 1           |
          | /null | 0      | is_demo_property=='true'                                   | email          | /null               | 5           |
          | /null | 0      | email=='*@snapshot.travel'                                 | property_id   | /null                | 4           |
-         | /null | 0      | property_id=='999e833e-*'                                  | salesforce_id  | /null               | 1           |
+         | /null | 0      | property_id=='999e833e-50e8-4854-a233-289f00b54a09'        | salesforce_id  | /null               | 1           |
 
 
 #      -----------------------------< Second level entities General negative scenarios >------------------------------------

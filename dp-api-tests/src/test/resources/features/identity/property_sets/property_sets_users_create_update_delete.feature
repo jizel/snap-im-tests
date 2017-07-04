@@ -61,8 +61,6 @@ Feature: Property sets users create update delete
       | 5     | 2      | 5        | is_active==true  | is_active |             | filter_psu_default_3, filter_psu_default_4, filter_psu_default_5, filter_psu_default_6, default0              |
       | 5     | 2      | 5        | is_active==true  |           | user_id     | filter_psu_default_5, filter_psu_default_4, filter_psu_default_3, filter_psu_default_2, filter_psu_default_1  |
       | 1     | 0      | 1        | is_active==true  |           |             | filter_psu_default_6                                                                                          |
-      | 2     | 0      | 1        | user_id=='*aac'  | user_id   |             | default0                                                                                                      |
-      | 5     | 0      | 1        | user_id=='5d829*'| user_id   |             | default0                                                                                                      |
 
   Scenario Outline: Filtering list of users for property set - negative scenarios
     Given Relation between user "default0" and property set with name "ps1_name" exists

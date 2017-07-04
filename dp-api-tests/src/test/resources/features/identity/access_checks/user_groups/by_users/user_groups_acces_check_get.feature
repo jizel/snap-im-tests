@@ -78,10 +78,8 @@ Feature: User Groups access check feature - GET
          | limit | cursor | filter                          | sort           | sort_desc           | returned    |
          | /null | 0      | name=='*'                       | /null          | is_active           | 3           |
          | /null | 0      | name=='Company 5'               | /null          | name                | 0           |
-         | /null | 0      | user_group_id=='22345000-*'     | /null          | picture             | 1           |
          | /null | 0      | is_active=='false'              | name           | /null               | 2           |
          | /null | 0      | description=='*'                | is_active      | /null               | 3           |
-         | /null | 0      | customer_id=='123*'             | /null          | /null               | 3           |
 
 #      -----------------------------< Second level entities accessibility check - General negative scenarios >------------------------------------
  
