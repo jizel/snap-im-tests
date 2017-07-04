@@ -18,7 +18,7 @@
     Given Switch for user property set role tests
     Given The following roles exist
       | id                                   | applicationId                        | roleName | description      |
-      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
     Given The following property sets exist for customer with id "12300000-0000-4000-a000-000000000000" and user "user1OfC1"
       | id                                   | name            | description            | type            |
       | 00002111-cdaf-439a-8bef-3140f56c657e | ps1_name        | ps1_description        | brand           |

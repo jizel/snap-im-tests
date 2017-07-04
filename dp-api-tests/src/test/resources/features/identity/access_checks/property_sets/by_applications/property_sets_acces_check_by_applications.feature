@@ -38,7 +38,7 @@ Feature: Property sets Application access check feature
     Given Relation between user "user1" and property set "ps2_name" exists
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
-      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
+      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 08000000-0000-4444-8888-000000000001 | 22200000-0000-4000-a000-000000000222 |
 
     Scenario: Only property sets with valid commercial subscription are accessible
       When Property set "ps1_name" is requested by user "user1" for application version "versionWithSubscription"

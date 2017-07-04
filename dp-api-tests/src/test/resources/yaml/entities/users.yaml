@@ -1,6 +1,6 @@
 users:
   user1: !user &BASIC_USER {
-    id: 11111111-0000-4000-a000-222222222222,
+    id: 0b000000-0000-4444-8888-000000000001,
     type: CUSTOMER,
     username: johnSmith,
     firstName: John,
@@ -17,7 +17,7 @@ users:
 
   user2: !user {
     <<: *BASIC_USER,
-    id: 11111111-0000-4000-a000-333333333333,
+    id: 0b000000-0000-4444-8888-000000000002,
     username: dickJames,
     firstName: Dick,
     lastName: James,
@@ -26,7 +26,7 @@ users:
 
 snapshotUsers:
   snapshotUser1: &BASIC_SNAPSHOT_USER !user {
-    id: 11111111-0000-4000-a000-444444444444,
+    id: 0b000000-0000-4444-8888-111111111111,
     type: SNAPSHOT,
     username: snapUser1,
     firstName: Snap,
@@ -35,3 +35,14 @@ snapshotUsers:
     timezone: Europe/Prague,
     languageCode: cs-CZ
 }
+
+partnerUsers:
+  partnerUser1: !user {
+    <<: *BASIC_USER,
+    id: 0b000000-0000-4444-8888-000000000005,
+    username: bartSimpson,
+    firstName: Bart,
+    lastName: Simpson,
+    type: PARTNER,
+    email: partneruser1@snapshot.travel
+  }

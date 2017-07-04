@@ -13,14 +13,14 @@ Feature: Applications commercial subscriptions
   Scenario: Getting applications commercial subscriptions
     Given The following commercial subscriptions exist
       | applicationId                        | customerId                           | propertyId                           |
-      | 11111111-0000-4000-a000-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
-    When Applications commercial subscriptions for application id "11111111-0000-4000-a000-111111111111" is got
+      | 03000000-0000-4444-8888-000000000000 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd |
+    When Applications commercial subscriptions for application id "03000000-0000-4444-8888-000000000000" is got
     Then Response code is "200"
     And Content type is "application/json"
     And Body contains entity with attribute "commercial_subscription_id"
 
   Scenario Outline: Checking error codes for getting list of applications commercial subscriptions
-    When List of application commercial subscriptions is got for application with id "11111111-0000-4000-a000-111111111111" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
+    When List of application commercial subscriptions is got for application with id "03000000-0000-4444-8888-000000000000" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"
     And Custom code is "<custom_code>"
 
@@ -47,7 +47,7 @@ Feature: Applications commercial subscriptions
   Scenario: Application cannot be deleted when it plays role in commercial subscription
     Given The following applications exist
       | id                                   | name               | description               | website                    | partnerId                            |
-      | 00000000-a05d-42d8-8e84-111111111111 | Application test 1 | Application description 1 | http://www.snapshot.travel | 11111111-0000-4000-a000-222222222222 |
+      | 00000000-a05d-42d8-8e84-111111111111 | Application test 1 | Application description 1 | http://www.snapshot.travel | 07000000-0000-4444-8888-000000000002 |
     Given The following commercial subscriptions exist
       | applicationId                        | customerId                           | propertyId                           | id                                   |
       | 00000000-a05d-42d8-8e84-111111111111 | 1238fd9a-a05d-42d8-8e84-42e904ace123 | c37c3501-d309-4702-ad0b-fd53a98c01fd | 00000000-a05d-42d8-8e84-222222222222 |

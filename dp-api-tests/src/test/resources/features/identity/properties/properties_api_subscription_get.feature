@@ -14,8 +14,8 @@ Feature: Properties get
       | 6f552105-0bae-4410-b4bb-bee31567d4fa | Application test company 1 | Application description 1 | http://www.snapshot.travel | abc8fd9a-a05d-42d8-8e84-42e904ace123 | false      |
     Given The following application versions exists
       | id                                   | apiManagerId | name        | status   | description            | applicationId                        |
-      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 11111111-0000-4000-a000-111111111111 |
-      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 11111111-0000-4000-a000-111111111111 |
+      | b595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 1   | inactive | Versions description 1 | 03000000-0000-4444-8888-000000000000 |
+      | c595fc9d-f5ca-45e7-a15d-c8a97108d884 | 1            | Version 2   | inactive | Versions description 2 | 03000000-0000-4444-8888-000000000000 |
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |

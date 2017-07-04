@@ -1,13 +1,13 @@
 properties:
   property1: !property {
-    id: 11111111-3836-4207-a705-111111111111,
+    id: 08000000-0000-4444-8888-000000000002,
     name: Property 1,
     code: property1code,
     website: "http://www.snapshot.travel",
     email: property1@snapshot.travel,
     isDemo: true,
     timezone: Europe/Prague,
-    customerId: 11111111-0000-4000-a000-555555555555,
+    customerId: 06000000-0000-4444-8888-000000000001,
     address: {
           countryCode: CZ,
           line1: address line 1,
@@ -19,14 +19,14 @@ properties:
   }
 
   property2: !property {
-      id: 11111111-3836-4207-a705-222222222222,
+      id: 08000000-0000-4444-8888-000000000003,
       name: Property 2,
       code: property2code,
       website: "http://www.snapshot.travel",
       email: property2@snapshot.travel,
       isDemo: true,
       timezone: Europe/Prague,
-      customerId: 00000000-3836-4207-a705-111111111111,
+      customerId: 06000000-0000-4444-8888-000000000001,
       address: {
             countryCode: CZ,
             line1: Cejl 1,

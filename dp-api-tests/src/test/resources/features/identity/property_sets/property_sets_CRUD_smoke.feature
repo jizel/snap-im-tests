@@ -7,7 +7,7 @@ Feature: Property sets create update delete
 
 
   Scenario Outline: Create, delete property set
-    When The following property set is created for customer with id "11111111-0000-4000-a000-555555555555"
+    When The following property set is created for customer with id "06000000-0000-4444-8888-000000000001"
       | name    | description    | type    |
       | <name>  | <description>  | <type>  |
     Then Response code is "201"
@@ -29,10 +29,10 @@ Feature: Property sets create update delete
 
   Scenario: Add remove user to property set
     # ----------------- ADD --------------------
-    Given The following users exist for customer "11111111-0000-4000-a000-555555555555" as primary "false"
+    Given The following users exist for customer "06000000-0000-4444-8888-000000000001" as primary "false"
       | id                                   | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | 5d829079-48f0-4f00-9bec-e2329a8bdaac | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
-    When The following property sets exist for customer "11111111-0000-4000-a000-555555555555"
+    When The following property sets exist for customer "06000000-0000-4444-8888-000000000001"
       | id                                   | name      | description     | type  |
       | ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4 | ps1_name  | ps1_description | brand |
     When User "5d829079-48f0-4f00-9bec-e2329a8bdaac" is added to property set "ad0fe5c3-e46f-474a-b1d1-73e9393dbdc4"

@@ -9,8 +9,8 @@ Feature: Roles get user property
       | e595fc9d-f5ca-45e7-a15d-c8a97108d884 | PartnerName1 | partner@snapshot.travel | http://www.snapshot.travel |
     Given The following applications exist
       | name                       | description               | website                    | id                                   | partnerId                           | isInternal |
-      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
-      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |11111111-0000-4000-a000-222222222222 | false      |
+      | Application test company 1 | Application description 1 | http://www.snapshot.travel | a318fd9a-a05d-42d8-8e84-42e904ace123 |07000000-0000-4444-8888-000000000002 | false      |
+      | Application test company 2 | Application description 2 | http://www.snapshot.travel | b318fd9a-a05d-42d8-8e84-42e904ace123 |07000000-0000-4444-8888-000000000002 | false      |
 
     Given The following roles exist
       | applicationId                        | roleName    | description            |

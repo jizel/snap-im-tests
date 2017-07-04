@@ -97,7 +97,7 @@ Feature: Customers create update delete
 
   #TODO update cutomer with not matched etag/empty etag/missing etag
   Scenario: Updating customer with outdated etag
-    When Customer with id "11111111-0000-4000-a000-555555555555" is updated with outdated etag
+    When Customer with id "06000000-0000-4444-8888-000000000001" is updated with outdated etag
     Then Response code is "412"
     And Custom code is "41202"
 
@@ -159,7 +159,7 @@ Feature: Customers create update delete
     And Body contains entity with attribute "name" value "Company 1"
 
   Scenario Outline: Send POST request with empty body to all configurations endpoints
-    Given The following users exist for customer "11111111-0000-4000-a000-555555555555"
+    Given The following users exist for customer "06000000-0000-4444-8888-000000000001"
       | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
     When Empty POST request is sent to "<url>" on module "identity"
@@ -168,10 +168,10 @@ Feature: Customers create update delete
     Examples:
       | url                                                                                                |
       | identity/customers/                                                                                |
-      | identity/customers/11111111-0000-4000-a000-555555555555                                            |
-      | identity/customers/11111111-0000-4000-a000-555555555555/properties                                 |
-      | identity/customers/11111111-0000-4000-a000-555555555555/users                                      |
-      | identity/customers/11111111-0000-4000-a000-555555555555/users/00029079-48f0-4f00-9bec-e2329a8bdaac |
+      | identity/customers/06000000-0000-4444-8888-000000000001                                            |
+      | identity/customers/06000000-0000-4444-8888-000000000001/properties                                 |
+      | identity/customers/06000000-0000-4444-8888-000000000001/users                                      |
+      | identity/customers/06000000-0000-4444-8888-000000000001/users/00029079-48f0-4f00-9bec-e2329a8bdaac |
 
   Scenario: Customer ID must be unique when creating customer - DP-1661
     Given The following customers exist with random address

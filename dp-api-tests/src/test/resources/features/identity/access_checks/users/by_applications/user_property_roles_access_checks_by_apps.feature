@@ -23,11 +23,11 @@ Feature: User-property roles access check by app feature - GET
       | 22200000-0000-4000-a000-000000000444 | 1            | versionWithoutSubscription | certified | Active version description   | 00000000-0000-4000-a000-000000000222 |
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
-      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 11111111-0000-4000-a000-666666666666 | 22200000-0000-4000-a000-000000000222 |
+      | 44400000-0000-4000-a000-000000000444 | 12300000-0000-4000-a000-000000000000 | 08000000-0000-4444-8888-000000000001 | 22200000-0000-4000-a000-000000000222 |
     Given Switch for user property role tests
     Given The following roles exist
       | id                                   | applicationId                        | roleName | description      |
-      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
     Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
       | type     | username | firstName | lastName | email                | timezone      | languageCode | isActive |
       | customer | user1    | Customer  | User1C1  | usr1@snapshot.travel | Europe/Prague | cs-CZ   | true     |
@@ -52,7 +52,7 @@ Feature: User-property roles access check by app feature - GET
     # Now let's give the second app access to the same property and let it try accessing user-property roles for the user of the inaccessible customer
     Given The following commercial subscriptions exist
       | id                                   | customerId                           | propertyId                           | applicationId                        |
-      | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-111111111111 | 11111111-0000-4000-a000-666666666666 | 00000000-0000-4000-a000-000000000222 |
+      | 55500000-0000-4000-a000-000000000555 | 12300000-0000-4000-a000-111111111111 | 08000000-0000-4444-8888-000000000001 | 00000000-0000-4000-a000-000000000222 |
     And Relation between user "user1" and customer with id "12300000-0000-4000-a000-111111111111" exists
     When User "user1" requests roles of user "user2" for property "defaultPropertyCode" for application version "versionWithoutSubscription"
     Then Response code is "404"
@@ -69,7 +69,7 @@ Feature: User-property roles access check by app feature - GET
     Given Switch for user property set role tests
     Given The following roles exist
       | id                                   | applicationId                        | roleName  | description      |
-      | 1d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | FalseRole | Some description |
+      | 1d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 03000000-0000-4444-8888-000000000000 | FalseRole | Some description |
     When User "defaultSnapshotUser" assigns role "1d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1" and property "defaultPropertyCode" for application version "versionWithSubscription"
     Then Response code is "422"
     And Body contains property with attribute "message" value "Reference does not exist. The entity PropertyRole with ID 1d07159e-855a-4fc3-bcf2-a0cdbf54a44d cannot be found."

@@ -25,7 +25,7 @@
     Given Switch for user customer role tests
     Given The following roles exist
       | id                                   | applicationId                        | roleName | description      |
-      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
     When User "defaultSnapshotUser" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
     Given Relation between user "user2OfC1" and customer with id "12300000-0000-4000-a000-000000000001" exists with isPrimary "false"
     When User "user1OfC1" requests roles of user "user2OfC1" for customer "12300000-0000-4000-a000-000000000001"
@@ -46,7 +46,7 @@
     Given Switch for user customer role tests
     Given The following roles exist
       | id                                   | applicationId                        | roleName | description      |
-      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 11111111-0000-4000-a000-111111111111 | NewRole  | Some description |
+      | 0d07159e-855a-4fc3-bcf2-a0cdbf54a44d | 03000000-0000-4444-8888-000000000000 | NewRole  | Some description |
       Given Relation between user "user1OfC1" and customer with id "12300000-0000-4000-a000-000000000000" is deactivated
       When User "user1OfC1" assigns role "0d07159e-855a-4fc3-bcf2-a0cdbf54a44d" to relation between user "user1OfC1" and customer "12300000-0000-4000-a000-000000000000"
     Then Response code is "403"
