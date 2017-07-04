@@ -5,13 +5,13 @@ import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
+import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsSteps;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.assertEquals;
 
 @Log
-public class ApplicationVersionHelpers extends ApplicationsSteps {
+public class ApplicationVersionHelpers extends ApplicationVersionsSteps {
 
     public ApplicationVersionHelpers() { super();}
 

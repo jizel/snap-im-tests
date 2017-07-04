@@ -123,9 +123,7 @@ public class YamlLoader {
 
     private static class LocalDateConstructor extends AbstractConstruct {
 
-        public Object construct(Node node) {
-            return LocalDate.now();
-        }
+        public Object construct(Node node) {  return LocalDate.now(); }
     }
 
 
