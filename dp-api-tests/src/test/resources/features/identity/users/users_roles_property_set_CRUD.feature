@@ -113,8 +113,7 @@ Feature: Users property set roles CRUD
       | 5     | 2      | 4        | 6     | /null                                         | role_id   |           |
       | 5     | 2      | 4        | 6     | /null                                         |           | role_id   |
       | 5     | 0      | 5        | 6     | /null                                         |           |           |
-#  DP-2193
-#      | /null | /null  | 1        | 1     | role_id==*6*                                  | /null     | /null     |
+      | /null | /null  | 1        | 1     | role_id==6796a238-39de-44fb-af67-c3c5e4c4d739 | /null     | /null     |
 
 
   Scenario Outline: Send POST request with empty body to all user-property set endpoints

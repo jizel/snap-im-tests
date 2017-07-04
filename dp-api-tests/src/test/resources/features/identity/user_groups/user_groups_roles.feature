@@ -74,24 +74,18 @@ Feature: User groups roles
     And There are "<returned>" relationships returned
     And There are relationships start with following IDs returned in order: "<order>"
     Examples:
-      | limit | cursor | filter                           | sort    | sort_desc | returned | order                                                      | #note                                          |
-      | /null | /null  | /null                            | /null   | /null     | 6        |                                                            | # all should be returned                       |
-      |       |        | /null                            | /null   | /null     | 6        |                                                            | # empty parameter are ignored                  |
-      |       | /null  | /null                            | /null   | /null     | 6        |                                                            | # empty limit parameter are ignored            |
-      | /null | 0      | /null                            | /null   | /null     | 6        |                                                            | # cursor can be 0, all should be returned      |
-      | /null |        | /null                            | /null   | /null     | 6        |                                                            | # empty cursor parameter are ignored           |
-      | 1     | /null  | /null                            | /null   | /null     | 1        |                                                            | # limit param used                             |
-      | 3     | 1      | /null                            | /null   | /null     | 3        |                                                            | # cursor < limit, limit param is used          |
-      | 1     | 10     | /null                            | /null   | /null     | 0        |                                                            | # there are < 10 records, 0 should be returned |
-      | 20    | 5      | /null                            | /null   | /null     | 1        |                                                            | # cursor > limit, last 1 should be returned    |
-      | /null | /null  | /null                            | /null   | role_id   | 6        | f40a9bf7, 7b570693, 540be550, 5184fb6b, 2d6e7db2, 19e8d1c2 |                                                |
-#  DP-2193
-#      | /null | /null  | role_id=='19*'                   | /null   | /null     | 1        |                                                            |                                                |
-#      | /null | /null  | role_id=='5*'                    | role_id | /null     | 2        | 5184fb6b,540be550                                          |                                                |
-#      | /null | /null  | role_id=='5*'                    | /null   | role_id   | 2        | 540be550,5184fb6b                                          |                                                |
-#      | /null | /null  | role_id=='NotExistent'           | /null   | /null     | 0        |                                                            |                                                |
-#      | /null | /null  | role_id=='5*' and role_id=='19*' | /null   | /null     | 0        |                                                            |                                                |
-#      | /null | /null  | role_id=='5*' or role_id=='19*'  | /null   | /null     | 3        |                                                            |                                                |
+      | limit | cursor | filter                                          | sort    | sort_desc | returned | order                                                      | #note                                          |
+      | /null | /null  | /null                                           | /null   | /null     | 6        |                                                            | # all should be returned                       |
+      |       |        | /null                                           | /null   | /null     | 6        |                                                            | # empty parameter are ignored                  |
+      |       | /null  | /null                                           | /null   | /null     | 6        |                                                            | # empty limit parameter are ignored            |
+      | /null | 0      | /null                                           | /null   | /null     | 6        |                                                            | # cursor can be 0, all should be returned      |
+      | /null |        | /null                                           | /null   | /null     | 6        |                                                            | # empty cursor parameter are ignored           |
+      | 1     | /null  | /null                                           | /null   | /null     | 1        |                                                            | # limit param used                             |
+      | 3     | 1      | /null                                           | /null   | /null     | 3        |                                                            | # cursor < limit, limit param is used          |
+      | 1     | 10     | /null                                           | /null   | /null     | 0        |                                                            | # there are < 10 records, 0 should be returned |
+      | 20    | 5      | /null                                           | /null   | /null     | 1        |                                                            | # cursor > limit, last 1 should be returned    |
+      | /null | /null  | /null                                           | /null   | role_id   | 6        | f40a9bf7, 7b570693, 540be550, 5184fb6b, 2d6e7db2, 19e8d1c2 |                                                |
+      | /null | /null  | role_id=='540be550-1702-4e2e-b094-394de63f6c48' | /null   | /null     | 1        | 540be550                                                   |                                                |
 
   Scenario Outline: Get list of userGroup's role - invalid
     When List of relationships userGroups-Roles for userGroup "userGroup_1" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
