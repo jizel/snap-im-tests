@@ -78,4 +78,19 @@ public class CustomerAccessCheckTests extends CommonTest {
         responseCodeIs(SC_FORBIDDEN);
     }
 
+    @Test
+    public void thereIsActiveCommercialSubscriptionWithParentCustomerEntity() throws Throwable {
+        testCustomer3.setParentId(createdCustomer1.getId());
+        CustomerDto newCustomer1 = customerHelpers.customerIsCreated(testCustomer3);
+        testCustomer4.setParentId(newCustomer1.getId());
+        CustomerDto newCustomer2 = customerHelpers.customerIsCreated(testCustomer4);
+        customerHelpers.customerWithIdIsGotByUserForApplication(createdUser.getId(), versionWithSubscription.getId(), newCustomer2.getId());
+        responseCodeIs(SC_OK);
+        customerHelpers.customerWithIdIsGotByUserForApplication(createdUser.getId(), nonCommercialVersion.getId(), newCustomer2.getId());
+        responseCodeIs(SC_OK);
+        customerHelpers.customerWithIdIsGotByUserForApplication(createdUser.getId(), versionWithoutSubscription.getId(), newCustomer2.getId());
+        responseCodeIs(SC_FORBIDDEN);
+
+    }
+
 }
