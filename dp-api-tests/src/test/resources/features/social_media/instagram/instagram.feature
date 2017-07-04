@@ -234,24 +234,6 @@ Feature: Instagram
       | /analytics/instagram/likes      |
       | /analytics/instagram/comments   |
 
-#    DP-1991
-  @skipped
-  Scenario Outline: Get analytics data from API with missing granularity
-    When Get instagram "<url>" data with "/null" granularity for "99000099-9999-4999-a999-999999999999" since "2017-01-01" until "2050-01-01"
-    Then Response code is 400
-    And Content type is "application/json"
-    And Custom code is 40002
-    And Body contains entity with attribute "message" value "Mandatory parameter 'granularity' is missing."
-
-    Examples:
-      | url                             |
-      | /analytics/instagram/pictures   |
-      | /analytics/instagram/engagement |
-      | /analytics/instagram/followers  |
-      | /analytics/instagram/tags       |
-      | /analytics/instagram/reach      |
-      | /analytics/instagram/likes      |
-      | /analytics/instagram/comments   |
 
   Scenario Outline: Get analytics data from API from 1800s
     When Get instagram "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"

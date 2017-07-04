@@ -79,8 +79,6 @@ Feature: Social media - Commons
 
     Examples: 
       | url                   | granularity | start_date | end_date   |
-#      DP-1991
-#      | /analytics/followers  |             | 2015-12-03 | 2015-12-03 |
       | /analytics/engagement | day         |            | 2015-12-03 |
       | /analytics/reach      | day         | 2015-12-03 |            |
       | /analytics/           | day         |            |            |

@@ -232,8 +232,6 @@ Feature: web_performance
       | /analytics/visits | 2     | week        | 2016-02-01 | 2016-02-14 | 2            | singleStatsDto | 9086  | false      |
 
   # TODO: DP-2014 - time based collection pagination is disabled, the test fails when it is enabled
-#  DP-2043
-  @skipped
   Scenario Outline: Get analytics data with granularity and large interval
     When Get web_performance "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 200
@@ -243,7 +241,6 @@ Feature: web_performance
     And Response since is "<real_since>" for granularity "<granularity>"
     And Response until is "<real_until>" for granularity "<granularity>"
     And Response contains <count> amount of values for global stats dto
-
     Examples:
       | url        | granularity | count | since      | until      | real_since | real_until | property                             |
       | /analytics | day         | 1461  | 2015-01-01 | 2018-12-31 | 2015-01-01 | 2018-12-31 | 99000099-9999-4999-a999-999999999999 |
