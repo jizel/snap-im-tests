@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
@@ -71,4 +73,11 @@ public class CommonTest extends BasicSteps{
     protected static final int SEMANTIC_ERRORS_CUSTOM_CODE = 42201;
     protected static final int NON_EXISTING_REFERENCE_CUSTOM_CODE = 42202;
     protected static final int NOT_FOUND_CUSTOM_CODE = 40401;
+
+
+//    Help methods
+    protected void responseIsNotFound(){
+        responseCodeIs(SC_NOT_FOUND);
+        customCodeIs(NOT_FOUND_CUSTOM_CODE);
+    }
 }

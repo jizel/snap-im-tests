@@ -118,7 +118,7 @@ public class BasicSteps {
     protected RequestSpecification spec = null;
     public static final String REQUESTOR_ID = "requestorId";
     public static final String TARGET_ID = "targetId";
-    public static final String ROLE_ID = "role_id" ;
+    public static final String ROLE_ID = "role_id";
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
     public static final String USER_ID = "user_id";
@@ -272,7 +272,7 @@ public class BasicSteps {
         String baseUri = "";
         switch (module) {
             case "identity": {
-                 baseUri = PropertiesHelper.getProperty(IDENTITY_BASE_URI);
+                baseUri = PropertiesHelper.getProperty(IDENTITY_BASE_URI);
                 break;
             }
             case "configurations": {
@@ -326,7 +326,7 @@ public class BasicSteps {
     }
 
     protected Response createEntityByUserForApplication(String userId, String applicationId, Object entity) {
-        Response response =  given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
+        Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
         setSessionResponse(response);
         return response;
     }
@@ -341,7 +341,7 @@ public class BasicSteps {
 
     protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, Map<String, Object> data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
         if (isNotBlank(etag)) {
@@ -361,7 +361,7 @@ public class BasicSteps {
 
     protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, Object data, String etag) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
         if (isNotBlank(etag)) {
@@ -380,19 +380,18 @@ public class BasicSteps {
     }
 
     protected Response deleteEntityByUser(String userId, String entityId, String etag) {
-      return deleteEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
+        return deleteEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
     }
 
     protected Response deleteEntityByUserForApplication(String userId, String applicationId, String entityId, String etag) {
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is blank.");
         }
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        else {
+        } else {
             requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
         }
         Response response = requestSpecification.when().delete("/{id}", entityId);
@@ -419,7 +418,7 @@ public class BasicSteps {
         return given().spec(spec).when().delete(url + "/{id}", id);
     }
 
-    public String getEntityEtag(String entityId){
+    public String getEntityEtag(String entityId) {
         return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
@@ -444,7 +443,7 @@ public class BasicSteps {
 
     public Response getEntityByUserForApplication(String userId, String applicationId, String entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
@@ -467,7 +466,7 @@ public class BasicSteps {
     }
 
     protected Response createThirdLevelEntity(String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
-        return createThirdLevelEntityByUser( DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, jsonBody);
+        return createThirdLevelEntityByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelType, secondLevelId, thirdLevelType, jsonBody);
     }
 
     protected Response createThirdLevelEntityByUser(String userId, String firstLevelId, String secondLevelType, String secondLevelId, String thirdLevelType, Object jsonBody) {
@@ -551,8 +550,7 @@ public class BasicSteps {
         String etag = getSecondLevelEntityEtag(firstLevelId, secondLevelObjectName, secondLevelId);
         if (isNotBlank(etag)) {
             requestSpecification.header(HEADER_IF_MATCH, etag);
-        }
-        else {
+        } else {
             requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
         }
         if (isNotBlank(userId)) {
@@ -586,27 +584,27 @@ public class BasicSteps {
         if (isNotBlank(etag)) {
             requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
         }
-        if(isNotBlank(userId)){
+        if (isNotBlank(userId)) {
             requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         }
-        if(isNotBlank(applicationVersionId)) {
+        if (isNotBlank(applicationVersionId)) {
             requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId);
         }
         return requestSpecification.body(object.toString()).when().post("/{firstLevelId}/{secondLevelName}/{secondLevelId}", firstLevelId, secondLevelObjectName, secondLevelId);
     }
 
     @Step
-    public void sendBlankPost(String url, String module){
-        sendPostWithBody(url,module,"");
+    public void sendBlankPost(String url, String module) {
+        sendPostWithBody(url, module, "");
     }
 
     @Step
-    public void sendPostWithBody(String url, String module, String body){
+    public void sendPostWithBody(String url, String module, String body) {
         setBaseUriForModule(module);
         Response response = given().spec(spec).basePath(url).body(body).when().post();
 
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
-        if(response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED){
+        if (response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED) {
             RequestSpecification requestSpecification = given().spec(spec).basePath(url);
             String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).when().head().getHeader(HEADER_ETAG);
             assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
@@ -620,7 +618,7 @@ public class BasicSteps {
 
     @Step
     public void sendGetRequestToUrl(String url, String module) {
-       sendGetRequestToUrlByUser(DEFAULT_SNAPSHOT_USER_ID, url, module);
+        sendGetRequestToUrlByUser(DEFAULT_SNAPSHOT_USER_ID, url, module);
     }
 
     @Step
@@ -638,19 +636,18 @@ public class BasicSteps {
         String baseUri = setBaseUriForModule(module);
         RequestSpecification requestSpecification = given().spec(spec);
 //        asParam is a workaround for Dp inconsistency. Remove when DP-1957 is solved.
-        if(xproperty != null && asParam != null){
+        if (xproperty != null && asParam != null) {
             requestSpecification.param("property_id", xproperty);
-        }
-        else if(xproperty != null){
+        } else if (xproperty != null) {
             requestSpecification.header(HEADER_XPROPERTY, xproperty);
         }
-        if(since != null){
+        if (since != null) {
             requestSpecification.param("since", since);
         }
-        if(until != null){
+        if (until != null) {
             requestSpecification.param("until", until);
         }
-        if(granularity != null){
+        if (granularity != null) {
             requestSpecification.param("granularity", granularity);
         }
         Response response = requestSpecification
@@ -699,7 +696,7 @@ public class BasicSteps {
     }
 
     protected Response getEntitiesByUserForApp(String userId, String appId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
         if (url == null) {
@@ -794,10 +791,10 @@ public class BasicSteps {
 
     protected Response getThirdLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String secondLevelId, String thirdLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
-        if (isBlank(appId)){
+        if (isBlank(appId)) {
             fail("Application ID to be send in request header is null.");
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, appId);
@@ -810,10 +807,10 @@ public class BasicSteps {
 
     protected Response getSecondLevelEntitiesByUserForApp(String userId, String appId, String firstLevelId, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         RequestSpecification requestSpecification = given().spec(spec);
-        if (isBlank(userId)){
+        if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
-        if (isBlank(appId)){
+        if (isBlank(appId)) {
             fail("Application ID to be send in request header is null.");
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, appId);
@@ -838,8 +835,8 @@ public class BasicSteps {
         module.addSerializer(SalesforceId.class, new SalesforceIdStdSerializer());
         mapper.registerModule(module);
 
-        String customerData = mapper.writeValueAsString(value);
-        return NullStringObjectValueConverter.transform(customerData);
+        String data = mapper.writeValueAsString(value);
+        return NullStringObjectValueConverter.transform(data);
     }
 
     protected <T> Map<String, Object> retrieveDataOld(Class<T> c, T entity) throws IntrospectionException, ReflectiveOperationException {
@@ -910,12 +907,24 @@ public class BasicSteps {
     public String resolveObjectName(String name) {
         String objectName = null;
         switch (name) {
-            case "customer":     objectName = SECOND_LEVEL_OBJECT_CUSTOMERS;
-                                 break;
-            case "property":     objectName = SECOND_LEVEL_OBJECT_PROPERTIES;
-                                 break;
-            case "property set": objectName = SECOND_LEVEL_OBJECT_PROPERTY_SETS;
-                                 break;
+            case "customer":
+                objectName = SECOND_LEVEL_OBJECT_CUSTOMERS;
+                break;
+            case "property":
+                objectName = SECOND_LEVEL_OBJECT_PROPERTIES;
+                break;
+            case "property set":
+                objectName = SECOND_LEVEL_OBJECT_PROPERTY_SETS;
+                break;
+            case SECOND_LEVEL_OBJECT_PROPERTIES:
+                objectName = SECOND_LEVEL_OBJECT_PROPERTIES;
+                break;
+            case SECOND_LEVEL_OBJECT_CUSTOMERS:
+                objectName = SECOND_LEVEL_OBJECT_CUSTOMERS;
+                break;
+            case SECOND_LEVEL_OBJECT_PROPERTY_SETS:
+                objectName = SECOND_LEVEL_OBJECT_PROPERTY_SETS;
+                break;
         }
         return objectName;
     }
