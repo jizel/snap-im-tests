@@ -267,8 +267,6 @@ Feature: Twitter metrics
 
     Examples:
       | url                                 | granularity | since           | until      |
-      #    DP-1991
-#      | /analytics/twitter/number_of_tweets |             | 2015-12-03      | 2015-12-03 |
       | /analytics/twitter/engagement       | week        | 2015-12-03      |            |
       | /analytics/twitter/followers        | month       |                 | today      |
       | /analytics/twitter/impressions      | day         | today - 1 month |            |

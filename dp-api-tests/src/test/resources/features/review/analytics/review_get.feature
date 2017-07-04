@@ -21,8 +21,6 @@ Feature: Review GET feature
     Given Relation between property with code "p1_code" and customer with id "1238fd9a-a05d-42d8-8e84-42e904ace123" exists with type "owner" from "2015-01-01" to "2016-12-31"
 
 
-#  DP-1991
-  @skipped
   Scenario Outline: Get trip advisor analytics data from API for a given wrong granularity
     When Get trip advisor "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
     Then Response code is 400
@@ -32,11 +30,8 @@ Feature: Review GET feature
     Examples:
       | url                                         | granularity | property                             | since      | until      |
       | /analytics/                                 | dd          | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
-      | /analytics/                                 |             | 99000199-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
       | /analytics/rating_score                     | MONTHS      | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
-      | /analytics/rating_score                     |             | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
       | /analytics/travellers/                      | W33K        | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
-      | /analytics/travellers/                      |             | 99000199-9999-4999-a999-999999999999 | 2015-11-03 | 2015-12-03 |
       | /analytics/travellers/overall_bubble_rating | WEEKS       | 99000199-9999-4999-a999-999999999999 | 2015-10-03 | 2015-12-03 |
       | /analytics/travellers/number_of_reviews     | m0nth       | 99000199-9999-4999-a999-999999999999 | 2015-10-03 | 2015-12-03 |
       | /analytics/travellers/aspects_of_business   | years       | 99000199-9999-4999-a999-999999999999 | 2015-10-03 | 2015-12-03 |
