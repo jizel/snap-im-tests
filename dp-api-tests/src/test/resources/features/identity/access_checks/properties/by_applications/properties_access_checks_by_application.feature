@@ -73,8 +73,7 @@ Feature: Properties Application access check feature
       | /null | 0      | property_code=='*_code'                                    | property_code  | /null               | 4           |
       | /null | 0      | property_code=='p3_code'                                   | /null          | /null               | 1           |
       | /null | 0      | is_active=='true'                                          | /null          | salesforce_id       | 6           |
-#  DP-2193
-#      | 5     | 0      | anchor_customer_id=='*23*'                                 | /null          | anchor_customer_id  | 5           |
+      | 5     | 0      | anchor_customer_id=='12300000-0000-4000-a000-000000000000' | /null          | anchor_customer_id  | 5           |
       | /null | 0      | email=='*p3*@snapshot.travel'                              | property_id    | /null               | 1           |
 
   Scenario: Application with and without access updates property
