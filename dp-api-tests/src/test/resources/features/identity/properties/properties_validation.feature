@@ -1,12 +1,9 @@
-# Skipped due to DP-2184
 @Identity
 @Properties
-@skipped
 Feature: Properties validation
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given The following customers exist with random address
       | id                                   | name            | email          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone          |
       | 1238fd9a-a05d-42d8-8e84-42e904ace123 | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
@@ -16,13 +13,13 @@ Feature: Properties validation
       | path                   | type   | required | correct                                                     | invalid  | longer     |
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
       | /property_code         | String | true     | \w{50}                                                      | /null    | \w{256}    |
-      | /name                  | String | true     | \w{255}                                                     | /null    | \w{256}    |
+      | /name                  | String | true     | \w{100}                                                     | /null    | \w{101}    |
       | /anchor_customer_id    | String | true     | 1238fd9a-a05d-42d8-8e84-42e904ace123                        | /null    | \w{101}    |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}   | \w{1001}   |
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}   | \w{101}    |
       | /timezone              | String | true     | (America/New_York\|Europe/Prague)                           | UTC+1:00 | UTC+001:00 |
       | /is_demo_property      | Bool   | true     | (true\|false)                                               | /null    |            |
-      | /is_active             | String | false    | (true\|false)                                                      | x        |            |
+      | /is_active             | String | false    | (true\|false)                                               | x        |            |
       | /address/address_line1 | String | true     | \w{100}                                                     | /null    | \w{101}    |
       | /address/address_line2 | String | false    | \w{100}                                                     | /null    | \w{101}    |
       | /address/city          | String | true     | \w{50}                                                      | /null    | \w{51}     |
@@ -31,18 +28,18 @@ Feature: Properties validation
 
   # --- happy path ---
 
-#  @Smoke
-#  Scenario: Object creation - correct values
-#    When create "property" object with correct field values
-#    Then Response code is "201"
-#    And location header is set and points to the same object
-#    And returned "property" object matches
+  @Smoke
+  Scenario: Object creation - correct values
+    When create "property" object with correct field values
+    Then Response code is "201"
+    And location header is set and points to the same object
+    And returned "property" object matches
 
-#  @Smoke
-#  Scenario: Object update - correct values
-#    When update "property" object with correct field values
-#    Then Response code is "204"
-#    And returned "property" object matches
+  @Smoke
+  Scenario: Object update - correct values
+    When update "property" object with correct field values
+    Then Response code is "204"
+    And returned "property" object matches
 
   Scenario: Object update - correct values one by one
     When update "property" objects each with one correct field value
@@ -65,7 +62,7 @@ Feature: Properties validation
       | /website         | 422          | 42201      |
       | /email           | 422          | 42201      |
       | /timezone        | 422          | 42201      |
-      | /address/country | 422          | 42202      |
+      | /address/country | 422          | 42201      |
       | /is_active       | 422          | 42201      |
 
   Scenario: Object creation - missing values
@@ -91,7 +88,7 @@ Feature: Properties validation
       | /website         | 422          | 42201      |
       | /email           | 422          | 42201      |
       | /timezone        | 422          | 42201      |
-      | /address/country | 422          | 42202      |
+      | /address/country | 422          | 42201      |
 
 #   TODO when field lengths are stabilized
 #

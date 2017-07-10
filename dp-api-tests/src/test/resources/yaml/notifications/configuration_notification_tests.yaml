@@ -23,7 +23,7 @@ deleteConfigurationTypeNotificationTest:
 
 createConfigurationRecordNotificationTest:
   <<: *RECORD_NOTIFICATION
-    operation: Create
+  operation: Create
 
 updateConfigurationRecordNotificationTest:
   <<: *RECORD_NOTIFICATION

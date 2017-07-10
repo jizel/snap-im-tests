@@ -26,12 +26,6 @@ public enum FieldType {
         public JsonNode getJsonNode(String value) {
             return factory.booleanNode(Boolean.parseBoolean(value));
         }
-
-        @Override
-        public String getFilterValue(String source) {
-            return "true".equalsIgnoreCase(source) ? "1" : "0";
-        }
-
     };
 
     private static final JsonNodeFactory factory = new JsonNodeFactory(false);

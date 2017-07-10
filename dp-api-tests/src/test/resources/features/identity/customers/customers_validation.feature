@@ -1,24 +1,20 @@
-# Skipped due to DP-2184
 @Identity
-@skipped
 Feature: Customers validation
 
   Background:
     Given Database is cleaned and default entities are created
-
     Given the location "identity/customers" for object "customer"
     Given unique identifier "customer_id" for object "customer"
     Given the following "customer" object definition
       | path                   | type   | required | correct                                                     | invalid   | longer      |
       #----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | /name                  | String | true     | \w{255}                                                     | /null     | \w{256}     |
+      | /name                  | String | true     | \w{100}                                                     | /null     | \w{101}     |
       | /salesforce_id         | String | false    | DEFAULTSFID0001                                             | /null     | \w{101}     |
       | /vat_id                | String | true     | CZ[0-9]{9}                                                  | /null     | \w{101}     |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | \.{10}    | \w{1001}    |
       | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}    | \w{101}     |
       | /phone                 | String | false    | +[0-9]{12}                                                  | \.{10}    | \w{101}     |
       | /is_demo_customer      | Bool   | true     | (true\|false)                                               | /null     |             |
-      #| /is_active             | String | false    | (0\|1)                                                       | x         |          |
       | /notes                 | String | false    | \w{255}                                                     | /null     | \w{256}     |
       | /headquarters_timezone | String | true     | (America/New_York\|Europe/Prague)                           | UTC+01:00 |             |
       | /address/address_line1 | String | true     | \w{100}                                                     | /null     | \w{101}     |
@@ -29,9 +25,6 @@ Feature: Customers validation
       | /type                  | String | true     | hotel                                                       | xx        | CONSULTANCY |
       | /is_active             | Bool   | false    | (true\|false)                                               | \.{10}    |             |
 
-    Given The following customers exist with random address
-      | id                                   | name                 | email                   | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
-      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
 
   # --- happy path ---
 
@@ -58,7 +51,6 @@ Feature: Customers validation
       | /address/country       | 204          |
       | /headquarters_timezone | 204          |
 
-
   Scenario: Object filtering
     When create 50 "customer" objects
     Then filtering by top-level fields returns matching "customer" objects
@@ -72,7 +64,7 @@ Feature: Customers validation
       | /email                 | 422          | 42201      |
       | /phone                 | 422          | 42201      |
       | /headquarters_timezone | 422          | 42201      |
-      | /address/country       | 422          | 42202      |
+      | /address/country       | 422          | 42201      |
 
   Scenario: Object creation - missing values
     When create "customer" objects each with one missing field
@@ -94,9 +86,12 @@ Feature: Customers validation
       | /website         | 422          | 42201      |
       | /email           | 422          | 42201      |
       | /phone           | 422          | 42201      |
-      | /address/country | 422          | 42202      |
+      | /address/country | 422          | 42201      |
 
   Scenario Outline: Object update - customer - invalid values
+    Given The following customers exist with random address
+      | id                                   | name                 | email                   | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     When Update customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", field "<updated_field>", its value "<value>"
     Then Response code is 422
     And Custom code is "<custom_code>"
@@ -114,6 +109,9 @@ Feature: Customers validation
       | website       | 42201       | www.snapshot.com |
 
   Scenario Outline: Object update - customer's address - invalid values
+    Given The following customers exist with random address
+      | id                                   | name                 | email                   | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
       | countryCode  | city   | zipCode   | region   | line1   | line2   |
       | <country>    | <city> | <zipCode> | <region> | <line1> | <line2> |
@@ -122,15 +120,17 @@ Feature: Customers validation
     Examples:
       | country | city    | zipCode | region  | line1 | line2 | custom_code |
       | /null   | \w{256} | /null   | /null   | /null        | /null        | 42201       |
-      | XX      | /null   | /null   | /null   | /null        | /null        | 42202       |
-      | USA     | /null   | /null   | /null   | /null        | /null        | 42202       |
+      | XX      | /null   | /null   | /null   | /null        | /null        | 42201       |
+      | USA     | /null   | /null   | /null   | /null        | /null        | 42201       |
       | /null   | /null   | \w{101} | /null   | /null        | /null        | 42201       |
       | /null   | /null   | /null   | \w{101} | /null        | /null        | 42201       |
       | /null   | /null   | /null   | /null   | \w{501}      | /null        | 42201       |
       | /null   | /null   | /null   | /null   | /null        | \w{501}      | 42201       |
 
-
   Scenario Outline: Object update - customer's address - empty values
+    Given The following customers exist with random address
+      | id                                   | name                 | email                   | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
       | countryCode | city   | zipCode   | region   | line1   | line2   |
       | <country>   | <city> | <zipCode> | <region> | <line1> | <line2> |
@@ -143,8 +143,10 @@ Feature: Customers validation
       | /null   | /null |         | /null  | /null        | /null        | 42201       |
       | /null   | /null | /null   | /null  |              | /null        | 42201       |
 
-
   Scenario Outline: Object update - customer's address - valid values
+    Given The following customers exist with random address
+      | id                                   | name                 | email                   | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
       | countryCode | city   | zipCode   | region   | line1   | line2   |
       | <country>   | <city> | <zipCode> | <region> | <line1> | <line2> |
@@ -152,7 +154,7 @@ Feature: Customers validation
     And Body is empty
     And Etag header is present
     Examples:
-      | country | city      | zipCode | region | line1         | line2         |
+      | country | city      | zipCode | region | line1                | line2                |
       | CZ      | /null     | /null   | /null  | /null                | /null                |
       | US      | /null     | /null   | /null  | /null                | /null                |
       | EG      | /null     | /null   | /null  | /null                | /null                |
@@ -160,28 +162,24 @@ Feature: Customers validation
       | /null   | Prague    | /null   | /null  | /null                | /null                |
       | /null   | NewYork   | /null   | /null  | /null                | /null                |
       | /null   | NewYork11 | /null   | /null  | /null                | /null                |
-      | /null   | 上海市       | /null   | /null  | /null                | /null                |
-      | /null   | 上海市2      | /null   | /null  | /null                | /null                |
+      | /null   | 上海市    | /null   | /null  | /null                | /null                |
+      | /null   | 上海市2   | /null   | /null  | /null                | /null                |
       | /null   | /null     | 60200   | /null  | /null                | /null                |
       | /null   | /null     | 123456  | /null  | /null                | /null                |
       | /null   | /null     | /null   |        | /null                | /null                |
       | /null   | /null     | /null   | /null  | 1                    | /null                |
       | /null   | /null     | /null   | /null  | AddressLineNumberOne | /null                |
-      | /null   | /null     | /null   | /null  | 无锡市 99/1A-BC         | /null                |
+      | /null   | /null     | /null   | /null  | 无锡市 99/1A-BC      | /null                |
       | /null   | /null     | /null   | /null  | /null                |                      |
       | /null   | /null     | /null   | /null  | /null                | AddressLineNumberTwo |
       | /null   | /null     | /null   | /null  | /null                | 2                    |
       | /null   | /null     | /null   | /null  | /null                | /null                |
-
-  Scenario: Object update - US customer's region
-    When Customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", update address with following data
-      | countryCode | city  | zipCode | region | line1 | line2 |
-      | US          | /null | /null   | Texas  | /null        | /null        |
-    Then Response code is 204
-    And Body is empty
-    And Etag header is present
+      | US      | /null     | /null   | Texas  | /null                | /null                |
 
   Scenario Outline: Object update - customer - valid values
+    Given The following customers exist with random address
+      | id                                   | name                 | email                   | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
+      | 79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e | Validation company 1 | validation1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     When Update customer with id "79e1ac09-17d7-4c58-b8d3-c2b583bdbb0e", field "<updated_field>", its value "<value>"
     Then Response code is 204
     And  Body is empty
