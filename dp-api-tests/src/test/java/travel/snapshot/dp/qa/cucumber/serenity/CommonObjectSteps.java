@@ -438,7 +438,7 @@ public class CommonObjectSteps extends BasicSteps {
      */
     private Map<String, ObjectNode> generateObjects(String objectName, BiConsumer<ObjectNode, ObjectField> op, Predicate<ObjectField> filter) {
         return getObjectDefinition(objectName).stream().filter(filter).collect(Collectors.toMap(
-                (f) -> f.getPath(),
+                ObjectField::getPath,
                 (f) -> applyNodeOperation(getCorrectObject(objectName), f, op)));
     }
 

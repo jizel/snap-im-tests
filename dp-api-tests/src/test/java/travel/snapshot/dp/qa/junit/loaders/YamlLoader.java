@@ -123,19 +123,21 @@ public class YamlLoader {
 
     private static class LocalDateConstructor extends AbstractConstruct {
 
-        public Object construct(Node node) {  return LocalDate.now(); }
+        public Object construct(Node node) {
+            return LocalDate.now();
+        }
     }
 
 
     public static List<Map<String, String>> selectExamplesForTest(Map<String, List<Map<String, String>>> testData, String testName) {
-        if(testData.get(testName) == null){
+        if (testData.get(testName) == null) {
             fail("No test data for test named " + testName);
         }
         return testData.get(testName);
     }
 
     public static Map<String, Object> getSingleTestData(Map<String, Map<String, Object>> testData, String testName) {
-        if(testData.get(testName) == null){
+        if (testData.get(testName) == null) {
             fail("No test data for test named " + testName);
         }
         return testData.get(testName);
@@ -149,9 +151,9 @@ public class YamlLoader {
         int listSize = testData.entrySet().iterator().next().getValue().size();
         testData.values().iterator().forEachRemaining(list -> assertEquals("Number of values must be the same for all attributes!", list.size(), listSize));
 
-        for(int i=0; i < listSize; i++) {
+        for (int i = 0; i < listSize; i++) {
             Map<String, String> valueMap = new LinkedHashMap<>();
-            for(String key: testData.keySet()) {
+            for (String key : testData.keySet()) {
                 valueMap.put(key, testData.get(key).get(i));
             }
             outputTestData.add(valueMap);
