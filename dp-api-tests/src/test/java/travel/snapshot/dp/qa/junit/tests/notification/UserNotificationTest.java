@@ -32,13 +32,14 @@ public class UserNotificationTest extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         user2 = entitiesLoader.getUserDtos().get("user2");
     }
 
     @After
-    public void cleanUp() throws Exception {
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 

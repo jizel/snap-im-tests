@@ -29,13 +29,9 @@ public class UserCustomerRelationshipTests extends CommonTest{
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
-    }
-
-    @After
-    public void cleanUp() throws Exception {
     }
 
     @Test

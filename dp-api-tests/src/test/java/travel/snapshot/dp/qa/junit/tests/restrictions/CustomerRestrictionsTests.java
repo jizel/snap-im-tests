@@ -20,25 +20,11 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 @RunWith(SerenityRunner.class)
 public class CustomerRestrictionsTests extends CommonRestrictionTest {
 
-    private ApplicationDto restrictedApp;
-    private ApplicationVersionDto createdAppVersion;
 
     private static final String ALL_CUSTOMERS_ENDPOINT = "/identity/customers";
     private static final String SINGLE_CUSTOMER_ENDPOINT = "/identity/customers/{customer_id}";
     private static final String CUSTOMER_PROPERTIES_ENDPOINT = "/identity/customers/{customer_id}/properties";
     private static final String CUSTOMER_USERS_ENDPOINT = "/identity/customers/{customer_id}/users";
-
-
-    @Before
-    public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
-        createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
-    }
-
-    @After
-    public void cleanUp() throws Exception {
-    }
 
     @Test
     public void getCustomerRestrictionTest(){

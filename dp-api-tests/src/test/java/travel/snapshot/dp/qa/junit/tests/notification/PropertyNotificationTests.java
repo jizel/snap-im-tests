@@ -35,13 +35,14 @@ public class PropertyNotificationTests extends CommonTest{
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
         propertyHelpers.propertyIsCreated(testProperty1);
     }
 
     @After
-    public void cleanUp() throws Exception{
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 

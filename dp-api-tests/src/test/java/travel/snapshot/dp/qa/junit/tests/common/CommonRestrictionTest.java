@@ -2,6 +2,8 @@ package travel.snapshot.dp.qa.junit.tests.common;
 
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 
+import org.junit.Before;
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 
 /**
@@ -12,6 +14,8 @@ public class CommonRestrictionTest extends CommonTest {
     protected static final String GET_METHOD = "GET";
     protected static final String POST_METHOD = "POST";
     protected static final String DELETE_METHOD = "DELETE";
+    protected ApplicationDto restrictedApp;
+    protected ApplicationVersionDto createdAppVersion;
 
     //    Help methods
 
@@ -25,4 +29,12 @@ public class CommonRestrictionTest extends CommonTest {
         testAppVersion.setApiManagerId("123");
         return applicationVersionHelpers.applicationVersionIsCreated(testAppVersion);
     }
+
+    @Before
+    public void setUp() throws Throwable {
+        super.setUp();
+        restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
+        createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
+    }
+
 }

@@ -36,14 +36,8 @@ public class UserRestrictionTests extends CommonRestrictionTest{
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
-        createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
+        super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
-    }
-
-    @After
-    public void cleanUp() throws Exception {
     }
 
     @Test

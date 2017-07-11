@@ -29,13 +29,9 @@ public class UserPropertyRelationshipTests extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdProperty1 = propertyHelpers.propertyIsCreated(testProperty1);
         createdUser1 = userHelpers.userIsCreated(testUser1);
-    }
-
-    @After
-    public void cleanUp() throws Exception {
     }
 
     @Test

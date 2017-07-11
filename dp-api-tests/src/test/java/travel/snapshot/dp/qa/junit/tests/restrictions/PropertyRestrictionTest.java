@@ -26,18 +26,6 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     private static final String PROPERTY_USERS_ENDPOINT = "/identity/properties/{property_id}/users";
     private static final String PROPERTY_PROPERTY_SETS_ENDPOINT = "/identity/properties/{property_id}/property_sets";
 
-
-    @Before
-    public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
-        createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
-    }
-
-    @After
-    public void cleanUp() throws Exception {
-    }
-
     @Test
     public void getPropertyRestrictionTest(){
         propertyHelpers.getListOfPropertiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, "name==*", null, "name");

@@ -29,13 +29,9 @@ public class UserGroupUserRelationshipTests extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdUserGroup1 = userGroupHelpers.userGroupIsCreated(testUserGroup1);
-    }
-
-    @After
-    public void cleanUp() throws Exception {
     }
 
     @Test

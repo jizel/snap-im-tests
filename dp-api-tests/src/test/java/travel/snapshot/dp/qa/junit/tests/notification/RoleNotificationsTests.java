@@ -27,12 +27,13 @@ public class RoleNotificationsTests extends CommonTest{
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         roleHelpers.setRolesPathCustomer();
     }
 
     @After
-    public void cleanUp() throws Exception {
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 
