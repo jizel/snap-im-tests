@@ -17,4 +17,10 @@ public class PartnerHelpers extends PartnerSteps{
         assertEquals(String.format("Failed to create partner: %s", response.toString()), response.getStatusCode(), SC_CREATED);
         return response.as(PartnerDto.class);
     }
+
+    public void getUsersForPartnerByUserForApp(String partnerId, String userId, String appVersionId) {
+        Response response = getSecondLevelEntitiesByUserForApp(userId, appVersionId, partnerId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null);
+        setSessionResponse(response);
+    }
+
 }

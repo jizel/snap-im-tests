@@ -61,4 +61,10 @@ public class UserHelpers extends UsersSteps {
     public Response deleteUserByUserForApp(String requestorId, String applicationVersionId, String userId){
         return  deleteEntityByUserForApplication(requestorId, applicationVersionId, userId, getEntityEtag(userId));
     }
+
+    public void getPartnersForUserByUserForApp(String userId, String requestorId, String appVersionId) {
+        Response response = getSecondLevelEntitiesByUserForApp(requestorId, appVersionId, userId, SECOND_LEVEL_OBJECT_PARTNERS, null, null, null, null, null, null);
+        setSessionResponse(response);
+    }
+
 }
