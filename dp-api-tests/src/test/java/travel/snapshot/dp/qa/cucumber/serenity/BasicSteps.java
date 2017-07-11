@@ -62,12 +62,13 @@ public class BasicSteps {
     public static final String DEFAULT_CUSTOMER_TYPE = "HOTEL";
     public static final String SNAPSHOT_WEBSITE = "http://www.snapshot.travel";
     public static final String HEADER_IF_MATCH = "If-Match";
-    public static final String HEADER_IF_NONE_MATCH = "If-None-Match";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String OAUTH_PARAMETER_NAME = "access_token";
     public static final String HEADER_XAUTH_USER_ID = "X-Auth-UserId";
     public static final String HEADER_XAUTH_APPLICATION_ID = "X-Auth-AppId";
     public static final String HEADER_XPROPERTY = "X-Property";
     public static final String DEFAULT_SNAPSHOT_USER_ID = "0b000000-0000-4444-8888-000000000000";
+    public static final String DEFAULT_SNAPSHOT_USER_NAME = "defaultSnapshotUser";
     public static final String DEFAULT_SNAPSHOT_APPLICATION_ID = "03000000-0000-4444-8888-000000000000";
     public static final String DEFAULT_SNAPSHOT_PARTNER_ID = "07000000-0000-4444-8888-000000000002";
     public static final String DEFAULT_SNAPSHOT_PARTNER_VAT_ID = "CZ10000001";
@@ -83,6 +84,9 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
     public static final String SESSION_RESPONSE = "response";
+    public static final String SESSION_TOKEN = "token";
+    public static final String KEYCLOAK_TOKEN = "keycloak_token";
+
     public static final String SESSION_RESPONSE_MAP = "response_map";
     public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
     public static final String INSTAGRAM_BASE_URI = "instagram.baseURI";
@@ -120,17 +124,14 @@ public class BasicSteps {
     public static final String ROLE_ID = "role_id";
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
-    public static final String USER_ID = "user_id";
-    public static final String USER_GROUP_ID = "user_group_id";
-    public static final String APPLICATION_ID = "application_id";
     public static final String PROPERTY_ID = "property_id";
     public static final String RELATIONSHIP_TYPE = "relationship_type";
     public static final String VALID_FROM = "valid_from";
     public static final String VALID_TO = "valid_to";
     public static final String SNAPSHOT_PHONE = "+420530514301";
-    public static final String USER_TYPE_PARTNER = "PARTNER";
-    public static final String USER_TYPE_SNAPSHOT = "SNAPSHOT";
-    public static final String USER_TYPE_CUSTOMER = "CUSTOMER";
+    public static final String DEFAULT_PASSWORD = "P@ssw0rd";
+    public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
+    public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
 
     protected RequestSpecification spec = null;
 
@@ -335,6 +336,12 @@ public class BasicSteps {
         return response;
     }
 
+    public Response createEntityWithAuthorization(Object entity) {
+        spec.baseUri(PropertiesHelper.getProperty("identity_nginx.baseURI"));
+        Response response = given().spec(spec).header(HEADER_AUTHORIZATION, "Bearer " + getSessionVariable(SESSION_TOKEN)).body(entity).when().post();
+        setSessionResponse(response);
+        return response;
+    }
     protected Response updateEntity(String entityId, Map<String, Object> data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }

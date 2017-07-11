@@ -1,0 +1,2 @@
+Please run the init.sh after you executed `docker-compose up`
+This will pre-configure local keycloak installation

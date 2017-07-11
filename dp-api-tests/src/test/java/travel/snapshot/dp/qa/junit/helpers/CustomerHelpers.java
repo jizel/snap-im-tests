@@ -31,6 +31,24 @@ public class CustomerHelpers extends CustomerSteps {
         return createCustomerByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customer);
     }
 
+    public Response createCustomerWithAuthorization(CustomerCreateDto customer) {
+        /*
+         I made a dedicated createCustomerWithAuthorization method only because of salesforceId field
+         that does not get translated from yaml properly and requires additional magic performed by retrieveData
+         method. This applies only to customers. For all other entities it is enough to call
+         %entity%Helpers.createEntityWithAuthorization(entity) directly
+        */
+        JSONObject jsonCustomer = null;
+        try {
+            jsonCustomer = retrieveData(customer);
+        } catch (JsonProcessingException e) {
+            fail(e.getMessage());
+        }
+        Response createResponse = createEntityWithAuthorization(jsonCustomer.toString());
+        setSessionResponse(createResponse);
+        return createResponse;
+    }
+
     public Response createCustomerByUserForApp(String userId, String applicationId, CustomerCreateDto customer) {
         JSONObject jsonCustomer = null;
         try {

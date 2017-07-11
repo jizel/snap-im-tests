@@ -1,33 +1,30 @@
-package travel.snapshot.dp.qa.junit.tests.identity.customers;
+package travel.snapshot.dp.qa.junit.tests.identity.authorization;
 
-
-import static org.apache.http.HttpStatus.SC_CREATED;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+import travel.snapshot.dp.qa.junit.tests.common.CommonAuthorizationTest;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
+
+import static org.apache.http.HttpStatus.SC_CREATED;
 
 /**
  * Sample customer tests using YAML data
  */
 
 @RunWith(SerenityRunner.class)
-public class CustomerTests extends CommonTest {
-
+public class CustomerAuthorizationTests extends CommonAuthorizationTest {
     //    Load this test class specific test data
     private static EntityNonNullMap<String, CustomerCreateDto> customerDtos = entitiesLoader.getCustomerDtos();
 
     @Test
-    public void createAllCustomersTest() {
+    public void createAllCustomersUsingAuthorizationTest() {
         customerDtos.values().forEach(customer -> {
-            customerHelpers.followingCustomerIsCreated(customer);
+            customerHelpers.createCustomerWithAuthorization(customer);
             responseCodeIs(SC_CREATED);
             bodyContainsEntityWith("name");
         });
-//            TODO: Use existing/make new matchers for DTOs. Assert that createdCustomer has all the attributes the customer has
     }
 }

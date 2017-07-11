@@ -18,19 +18,10 @@ import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.configuration.ConfigurationSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-import travel.snapshot.dp.qa.junit.helpers.ApplicationHelpers;
-import travel.snapshot.dp.qa.junit.helpers.ApplicationVersionHelpers;
-import travel.snapshot.dp.qa.junit.helpers.CommercialSubscriptionHelpers;
-import travel.snapshot.dp.qa.junit.helpers.ConfigurationHelpers;
-import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PartnerHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PropertyHelpers;
-import travel.snapshot.dp.qa.junit.helpers.PropertySetHelpers;
-import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
-import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
-import travel.snapshot.dp.qa.junit.helpers.UserGroupHelpers;
-import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
+import travel.snapshot.dp.qa.junit.helpers.*;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
+
+import java.util.Map;
 
 
 /**
@@ -71,6 +62,8 @@ public abstract class CommonTest {
     protected static final ApplicationVersionHelpers applicationVersionHelpers = new ApplicationVersionHelpers();
     protected static final CommercialSubscriptionHelpers commercialSubscriptionHelpers = new CommercialSubscriptionHelpers();
     protected static final ConfigurationHelpers configurationHelpers = new ConfigurationHelpers();
+    protected static final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
+    protected static final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
 
     //    Basic test entities
     protected static final UserCreateDto testUser1 = entitiesLoader.getUserDtos().get("user1");
@@ -113,7 +106,6 @@ public abstract class CommonTest {
 
     @After
     public void cleanUp() throws Throwable {
-
     }
 
     //    Help methods
