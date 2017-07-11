@@ -136,6 +136,12 @@ class Generator(object):
             self.session.add_all(i)
             self.session.commit()
 
+    def grant_permissions_to_apps(self):
+        self.engine.execute("delete from applicationpermission;")
+        self.engine.execute("""insert into applicationpermission (application_id,
+        platform_operation_id) select a.id, r.id from Application a left join
+        platformoperation r on r.id is not null;""")
+
     def doyourjob(self):
         self.addresses = [self.generate_address(i) for i in self.address_ids]
         self.customers = [self.generate_customer(i) for i in self.customer_ids]
@@ -182,6 +188,7 @@ class Generator(object):
         self.push_data(self.user_properties)
         self.push_data(self.user_propertysets)
         self.session.commit()
+        self.grant_permissions_to_apps()
 
     def gen_etag(self):
         return self.genuuid().replace('-', '')
@@ -648,4 +655,4 @@ if __name__ == '__main__':
         f.write("""Random selection of users type customers and corresponding
 commercial application versions they have access to:\nuser_id                              | app_version_id\n""")
         for i in user_app_version:
-            f.write(" | ".join(i) + "\n")
+            f.write("%s | %s\n" % (str(i[0]), str(i[1])))
