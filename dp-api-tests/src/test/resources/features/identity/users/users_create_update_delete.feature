@@ -14,8 +14,8 @@ Feature: Users create update delete
 
   Scenario Outline: Creating users
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
-      | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
-      | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> |
+      | type   | username   | firstName   | lastName   | email   | timezone   | languageCode   |
+      | <type> | <username> | <firstName> | <lastName> | <email> | <timezone> | <culture> |
     Then Response code is "201"
     And Body contains entity with attribute "user_type" value "<type>"
     And Body contains entity with attribute "user_name" value "<username>"
@@ -52,25 +52,25 @@ Feature: Users create update delete
     And Custom code is "42201"
     Examples:
       | type     | username | firstName | lastName | email                  | timezone      | languageCode |
-      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | snpsnapshot.travel     | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel    | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel | Europe/Prague | cs-CZ   |
-      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | snp      |           | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      |          | snp@snpsnapshot.travel | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     |                        | Europe/Prague | cs-CZ   |
-      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs-CZ   |
+      | customer | snp7     | Snap7     | Shot7    | snp@snapshot.          | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | snpsnapshot.travel     | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | @snpsnapshot.travel    | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot,travel | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | snp$snpsnapshot.travel | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | snp&snpsnapshot.travel | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | snp^snpsnapshot.travel | Europe/Prague | cs      |
+      | customer |          | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs      |
+      | customer | snp      |           | Shot     | snp@snpsnapshot.travel | Europe/Prague | cs      |
+      | customer | snp      | Snap      |          | snp@snpsnapshot.travel | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     |                        | Europe/Prague | cs      |
+      | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel |               | cs      |
       | customer | snp      | Snap      | Shot     | snp@snpsnapshot.travel | Europe/Prague |         |
 
 
   Scenario Outline: Create user with same name or email
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | type       | username   | firstName   | lastName   | email               | timezone      | languageCode   |
-      | customer   | snp        |  Snap       |   Shot     | snp@snapshot.travel | Europe/Prague | cs-CZ     |
+      | customer   | snp        |  Snap       |   Shot     | snp@snapshot.travel | Europe/Prague | cs        |
     Then Response code is "201"
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | type       | username   | firstName   | lastName   | email   | timezone   | languageCode   |
@@ -80,9 +80,9 @@ Feature: Users create update delete
     Examples:
       | type     | username | firstName | lastName | email                  | timezone      | languageCode |
       # Same name
-      | customer | snp      | Snap7     | Shot7    | snp@snapshot.com       | Europe/Prague | cs-CZ   |
+      | customer | snp      | Snap7     | Shot7    | snp@snapshot.com       | Europe/Prague | cs      |
       # Same email
-      | customer | snp1     | Snap1     | Shot1    | snp@snapshot.travel    | Europe/Prague | cs-CZ   |
+      | customer | snp1     | Snap1     | Shot1    | snp@snapshot.travel    | Europe/Prague | cs      |
 
 
   Scenario Outline: Checking error codes for creating user with invalid json
@@ -122,7 +122,7 @@ Feature: Users create update delete
       | <type> | <firstName> | <lastName> | <email> | <timezone> | <languageCode> | <comment> |
     Examples:
       | type     | firstName | lastName | email                 | timezone         | languageCode | comment  |
-      | partner  | FNUp1     | LNUp1    | EMUp1@snapshot.travel | Europe/Prague    | cs-CZ   | VIP user |
+      | partner  | FNUp1     | LNUp1    | EMUp1@snapshot.travel | Europe/Prague    | cs      | VIP user |
       | guest    | FNUp2     | LNUp2    | EMUp2@snapshot.travel | America/New_York | en-US   | /null    |
 
   Scenario: Updating user with outdated ETag
@@ -145,14 +145,14 @@ Feature: Users create update delete
   Scenario: Creating user with same name as previously deleted user - DP-1380
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
-      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs      |
     Then Response code is 201
     Given Relation between user "snapshotUser1" and customer with id "55656571-a3be-4f8b-bc05-02c0797912a6" is deleted
     When User "snapshotUser1" is deleted
     Then Response code is 204
     When The following user is created for customer "55656571-a3be-4f8b-bc05-02c0797912a6" as primary "false"
       | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
-      | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 6d829079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snaphostUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs      |
     Then Response code is 201
     And Body contains entity with attribute "user_id" value "6d829079-48f0-4f00-9bec-e2329a8bdaac"
     And Body contains entity with attribute "user_name" value "snaphostUser1"
@@ -160,7 +160,7 @@ Feature: Users create update delete
   Scenario: Snapshot user can be created without relationship to customer (DP-1427)
     When Following snapshot user is created without customer
       | username      | firstName | lastName | email                         | timezone      | languageCode |
-      | snapshotUser1 | Snapshot  | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | snapshotUser1 | Snapshot  | User1    | snapshotUser1@snapshot.travel | Europe/Prague | cs      |
     Then Response code is "201"
     And Body contains entity with attribute "user_type" value "snapshot"
     And Body does not contain property with attribute "user_customer_relationship"
@@ -168,7 +168,7 @@ Feature: Users create update delete
   Scenario: Partner user can be created without relationship to customer (DP-1934)
     When Following partner user is created without customer
       | username     | firstName | lastName | email                        | timezone      | languageCode |
-      | partnerUser1 | Partner   | User1    | partnerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | partnerUser1 | Partner   | User1    | partnerUser1@snapshot.travel | Europe/Prague | cs      |
     Then Response code is "201"
     And Body contains entity with attribute "user_type" value "partner"
     And Body does not contain property with attribute "user_customer_relationship"
@@ -183,8 +183,6 @@ Feature: Users create update delete
       | identity/users/                                                                                       |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac                                                   |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/partners/                                         |
-#  Uncomment when partner tests (create partner) are implemented
-#      | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/partners/77729079-48f0-4f00-9bec-e2329a8bdaac     |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/customers/                                        |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/properties/                                       |
       | identity/users/55529079-48f0-4f00-9bec-e2329a8bdaac/property_sets/                                    |
@@ -197,12 +195,12 @@ Feature: Users create update delete
       | Customer2          | Customer2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456790 | http://www.snapshot.com | Europe/Prague |
     Given The following users exist for customer "Customer2" as primary "false"
       | type     | username  | firstName        | lastName | email             | timezone      | languageCode |
-      | snapshot | User1OfC2 | User1OfCustomer2 | User1    | usr1@snapshot.com | Europe/Prague | cs-CZ   |
+      | snapshot | User1OfC2 | User1OfCustomer2 | User1    | usr1@snapshot.com | Europe/Prague | cs      |
     When User "User1" is updated with data
       | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
-      | customer | User1  | Customer  | User1C1  | usr1@snapshot.com    | Europe/Prague | cs-CZ   | true     |
+      | customer | User1  | Customer  | User1C1  | usr1@snapshot.com    | Europe/Prague | cs      | true     |
     Then Response code is "409"
     When User "User1" is updated with data
       | type     | username   | firstName | lastName | email                | timezone      | languageCode | isActive |
-      | customer | user1OfC2  | Customer  | User1C1  | User1@snapshot.travel    | Europe/Prague | cs-CZ   | true     |
+      | customer | user1OfC2  | Customer  | User1C1  | User1@snapshot.travel    | Europe/Prague | cs      | true     |
     Then Response code is "409"

@@ -52,7 +52,7 @@ Feature: Roles create update delete user property
 
   Scenario Outline: Updating role
     When Role with name "<roleName>" for application id "a318fd9a-a05d-42d8-8e84-42e904ace123" is updated with data
-      | applicationId   | roleName           | description       |
+      | applicationId   | name               | description   |
       | <applicationId> | <updated_roleName> | <description> |
     Then Response code is "204"
     And Body is empty
@@ -70,7 +70,7 @@ Feature: Roles create update delete user property
 
   Scenario: Updating role with outdated etag
     When Role with name "Role name 1" is updated with data if updated before
-      | roleName          | description |
+      | name              | description |
       | Updated role name |             |
     Then Response code is "412"
     And Custom code is "41202"
@@ -78,7 +78,7 @@ Feature: Roles create update delete user property
 
   Scenario Outline: Updating with invalid data
     When Role with name "<roleName>" for application id "<applicationId>" is updated with data
-      | applicationId           | roleName           | description           |
+      | applicationId           | name               | description           |
       | <updated_applicationId> | <updated_roleName> | <updated_description> |
     Then Response code is "<responseCode>"
     And Custom code is "<customCode>"

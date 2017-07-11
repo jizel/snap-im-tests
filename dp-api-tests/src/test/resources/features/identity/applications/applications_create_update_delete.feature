@@ -101,10 +101,10 @@ Feature: Applications create update delete
     Then Response code is "409"
     And Custom code is 40902
     When Application is created
-      | name            | description            | website                    | Id                                   | isInternal | partnerId                            |
+      | name            | description            | website                    | partnerId                            | isInternal | id                                   |
       | App Name 1      | Different ID same name | http://www.snapshot.travel | 07000000-0000-4444-8888-000000000002 | false      | 0b000000-0000-4444-8888-000000000001 |
     Then Response code is "409"
-    And Custom code is 40912
+    And Custom code is 40901
 
   Scenario: Trying to create application with non-existing partner id - DP-1732
       When Application is created

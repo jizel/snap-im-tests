@@ -158,7 +158,7 @@ Feature: Customers create update delete
     And Body contains entity with attribute "customer_id" value "1112d2b2-3836-4207-a705-42bbecf3d881"
     And Body contains entity with attribute "name" value "Company 1"
 
-  Scenario Outline: Send POST request with empty body to all configurations endpoints
+  Scenario Outline: Send POST request with empty body to all customers endpoints
     Given The following users exist for customer "06000000-0000-4444-8888-000000000001"
       | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
       | 00029079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |

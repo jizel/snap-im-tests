@@ -173,7 +173,7 @@ Feature: Customers get
       | /null | /null  | 2        | 2     | email==Filter_c* and phone==+22222222      | email | /null     | Filter_c6, Filter_c7                                  |
       | /null | /null  | 1        | 1     | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1                                             |
       | /null | /null  | 1        | 1     | vat_id==CZ*73                              | /null | /null     | Filter_c3                                             |
-      | /null | /null  | 1        | 1     | is_demo_customer==0                        | /null | /null     | Filter_c7                                             |
+      | /null | /null  | 1        | 1     | is_demo_customer==false                    | /null | /null     | Filter_c7                                             |
       | /null | /null  | 1        | 1     | website==http://www.snapshot.cz            | /null | /null     | Filter_c6                                             |
   #add all fields
 

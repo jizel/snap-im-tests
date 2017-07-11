@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
  *
  */
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features", glue = "travel.snapshot.dp.qa", tags = {"@Identity", "~@skipped"})
+@CucumberOptions(features = "src/test/resources/features/identity/*", glue = "travel.snapshot.dp.qa", tags = {"~@skipped"})
 public class RunIdentityTests {
 
 }

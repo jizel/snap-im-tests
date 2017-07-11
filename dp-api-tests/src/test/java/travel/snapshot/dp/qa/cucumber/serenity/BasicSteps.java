@@ -601,7 +601,10 @@ public class BasicSteps {
     @Step
     public void sendPostWithBody(String url, String module, String body) {
         setBaseUriForModule(module);
-        Response response = given().spec(spec).basePath(url).body(body).when().post();
+        Response response = given().spec(spec).basePath(url)
+                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
+                .body(body).when().post();
 
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
         if (response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED) {
