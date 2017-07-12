@@ -200,20 +200,3 @@ Feature: Customers properties get
   #add all fields
 
     #TODO add test for wrong parameters in url
-
-  Scenario Outline: Getting customers of a property
-    Given Relation between property with code "p1_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p1_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p2_code" and customer with id "40ebf861-7549-46f1-a99f-249716c83b33" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p2_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p2_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    Given Relation between property with code "p3_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "chain" from "2015-01-01" to "2015-12-31"
-    When List of customers for property with code "<code>" is got with limit "/null" and cursor "/null" and filter "/null" and sort "/null" and sort_desc "/null"
-    Then Response code is "200"
-    And Content type is "application/json"
-    And All customers are customers of property with code "<code>"
-    Examples:
-      | code     |
-      | p1_code |
-      | p2_code |
-      | p3_code |

@@ -196,6 +196,7 @@ Feature: Users get
       | /null | /null  | 1        | 1     | timezone==Europe/Bratislava                   | /null     | /null     | filter_default_2                                                                         |
       | /null | /null  | 1        | 1     | phone==+42010111218                           | /null     | /null     | other_default_7                                                                          |
       | 5     | /null  | 5        | 14    | is_active=='true'                             | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
-      | 5     | /null  | 5        | 14    | is_active=='TRUE'                             | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
+#  DP-2214
+#      | 5     | /null  | 5        | 14    | is_active=='TRUE'                             | user_name |           | default1, default2, default3, default4, defaultSnapshotUser                              |
       | /null | /null  | 0        | 0     | is_active=='false'                            | user_name |           |                                                                                          |
   #add all fields
