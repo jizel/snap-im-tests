@@ -25,13 +25,9 @@ public class PropertySetNotificationTests extends CommonTest{
     private static Map<String, Map<String, Object>> notificationTestsData = loadTestData(String.format(YAML_DATA_PATH, "notifications/property_set_notification_tests.yaml"));
     Map<String, Object> receivedNotification;
 
-    @Before
-    public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-    }
-
     @After
-    public void cleanUp() throws Exception{
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 

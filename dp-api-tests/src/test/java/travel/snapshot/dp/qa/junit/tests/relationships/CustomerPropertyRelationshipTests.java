@@ -36,14 +36,11 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdProperty1 = propertyHelpers.propertyIsCreated(testProperty1);
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
     }
 
-    @After
-    public void cleanUp() throws Exception {
-    }
 
     @Test
     public void createCustomerPropertyRelationship() {

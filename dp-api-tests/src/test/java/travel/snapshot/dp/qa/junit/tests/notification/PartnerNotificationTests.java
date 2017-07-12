@@ -25,13 +25,9 @@ public class PartnerNotificationTests extends CommonTest{
     Map<String, Object> receivedNotification;
     PartnerDto testPartner1 = entitiesLoader.getPartnerDtos().get("partner1");
 
-    @Before
-    public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-    }
-
     @After
-    public void cleanUp() throws Exception{
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
     }
 

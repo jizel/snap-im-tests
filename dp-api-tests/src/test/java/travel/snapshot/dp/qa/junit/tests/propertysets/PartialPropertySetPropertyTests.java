@@ -30,16 +30,12 @@ public class PartialPropertySetPropertyTests extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
         relation.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         createdProperty = propertyHelpers.propertyIsCreated(testProperty1);
         createdPropertySet = propertySetHelpers.propertySetIsCreated(testPropertySet1);
 
-    }
-
-    @After
-    public void cleanUp() {
     }
 
     @Test

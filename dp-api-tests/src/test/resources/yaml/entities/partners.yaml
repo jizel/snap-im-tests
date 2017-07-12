@@ -1,5 +1,5 @@
 partners:
-  partner1: !partner {
+  partner1: !partner &BASIC_PARTNER {
   id: 07000000-0000-4444-8888-000000000003,
   isActive: true,
   name: Test Partner 1,
@@ -7,4 +7,18 @@ partners:
   website: "http://www.snapshot.travel",
   vatId: CZ10000001,
   notes: Test Partner 1 notes",
+  }
+
+  partner2: !partner {
+  <<: *BASIC_PARTNER,
+  name: Test Partner 2,
+  email: testPartner2@snapshot.travel,
+  vatId: CZ10000002
+  }
+
+  partner3: !partner {
+  <<: *BASIC_PARTNER,
+  name: Test Partner 3,
+  email: testPartner3@snapshot.travel,
+  vatId: CZ10000003
   }

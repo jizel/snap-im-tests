@@ -26,14 +26,15 @@ public class ConfigurationTypeNotificationTests extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier("NotificationTestConfType");
         testConfigurationType1.setDescription("Notification Test Configuration Type Description");
     }
 
     @After
-    public void cleanUp() throws Exception{
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
         jmsSteps.unsubscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         configurationSteps.tryDeleteConfigurationType(testConfigurationType1.getIdentifier());
     }

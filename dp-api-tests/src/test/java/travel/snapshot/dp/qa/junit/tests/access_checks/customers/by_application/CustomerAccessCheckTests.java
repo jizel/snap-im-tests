@@ -40,7 +40,7 @@ public class CustomerAccessCheckTests extends CommonTest {
 
     @Before
     public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        super.setUp();
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
         createdCustomer2 = customerHelpers.customerIsCreated(testCustomer2);
         createdApp1 = applicationHelpers.applicationIsCreated(testApplication1);
@@ -60,10 +60,6 @@ public class CustomerAccessCheckTests extends CommonTest {
         testAppVersion3.setIsNonCommercial(true);
         nonCommercialVersion = applicationVersionHelpers.applicationVersionIsCreated(testAppVersion3);
         propertyHelpers.relationExistsBetweenUserAndProperty(createdUser.getId(), DEFAULT_PROPERTY_ID, true);
-    }
-
-    @After
-    public void cleanUp() {
     }
 
     @Test

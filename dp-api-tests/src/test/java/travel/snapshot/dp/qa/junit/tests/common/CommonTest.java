@@ -2,6 +2,8 @@ package travel.snapshot.dp.qa.junit.tests.common;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
+import org.junit.After;
+import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
@@ -59,6 +61,8 @@ public class CommonTest extends BasicSteps{
     protected static final PropertySetDto testPropertySet1 = entitiesLoader.getPropertySetDtos().get("propertySet1");
     protected static final CustomerRoleDto testCustomerRole1 = entitiesLoader.getCustomerRoleDtos().get("customerRole1");
     protected static final PartnerDto testPartner1 = entitiesLoader.getPartnerDtos().get("partner1");
+    protected static final PartnerDto testPartner2 = entitiesLoader.getPartnerDtos().get("partner2");
+    protected static final PartnerDto testPartner3 = entitiesLoader.getPartnerDtos().get("partner3");
     protected static final UserGroupDto testUserGroup1 = entitiesLoader.getUserGroupDtos().get("user_group1");
     protected static final ApplicationDto testApplication1 = entitiesLoader.getApplicationDtos().get("application1");
     protected static final ApplicationDto testApplication2 = entitiesLoader.getApplicationDtos().get("application2");
@@ -79,5 +83,14 @@ public class CommonTest extends BasicSteps{
     protected void responseIsNotFound(){
         responseCodeIs(SC_NOT_FOUND);
         customCodeIs(NOT_FOUND_CUSTOM_CODE);
+    }
+
+    @Before
+    public void setUp() throws Throwable {
+        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+    }
+
+    @After
+    public void cleanUp() throws Throwable {
     }
 }

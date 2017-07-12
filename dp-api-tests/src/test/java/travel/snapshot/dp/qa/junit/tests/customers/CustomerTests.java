@@ -38,16 +38,6 @@ public class CustomerTests extends CommonTest {
     private static Map<String, Map<String, List<String>>> testClassDataFromYamlTables = loadYamlTables(String.format(YAML_DATA_PATH, "customer_tests.yaml"));
     private static EntityNonNullMap<String, CustomerCreateDto> customerDtos = entitiesLoader.getCustomerDtos();
 
-
-    @Before
-    public void setUp() throws Throwable {
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-    }
-
-    @After
-    public void cleanUp() {
-    }
-
     @Test
     public void createAllCustomersTest() {
         customerDtos.values().forEach(customer -> {
