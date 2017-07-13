@@ -19,7 +19,7 @@ tag_image snapshot/base 2.0
 
 docker build --force-rm=true -t snapshot/java java
 tag_image snapshot/java latest
-tag_image snapshot/java 8u121
+tag_image snapshot/java 8u131
 
 docker build --force-rm=true -t snapshot/db_migrator db_migrator
 tag_image snapshot/db_migrator latest

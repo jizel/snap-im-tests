@@ -1,11 +1,11 @@
 FROM docker.snapshot.travel:5000/snapshot/base:2.0
 MAINTAINER stefan.miklosovic@snapshot.travel
 
-ENV JAVA_VERSION=8u121
-ENV JAVA_BUILD_VERSION=b13
+ENV JAVA_VERSION=8u131
+ENV JAVA_BUILD_VERSION=b11
 ENV JAVA_DOWNLOAD=/tmp/jdk-8-linux-x64.rpm
 ENV JAVA_HOME=/usr/java/latest
-ENV JAVA_TOKEN=e9e7ea248e2c4826b92b3f075a80e441
+ENV JAVA_TOKEN=d54c1d3a095b4ff2b6607d096fa80163
 
 # Install Java 8
 
