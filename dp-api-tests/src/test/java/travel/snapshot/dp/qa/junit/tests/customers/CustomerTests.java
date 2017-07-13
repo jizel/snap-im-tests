@@ -90,13 +90,14 @@ public class CustomerTests extends CommonTest {
     }
 
     @Test
-    public void validateCustomerHasValidVatId() throws Throwable {
+    public void validateCustomerHasValidVatId() {
         List<Map<String, String>> listOfExamples = selectExamplesForTestFromTable(testClassDataFromYamlTables, "validateValidVatId");
         listOfExamples.forEach( example -> {
             AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, example.get("country"), null);
             testCustomer1.setAddress(address);
             String vatId = example.get("vatId");
             testCustomer1.setVatId(vatId);
+            customerHelpers.createRandomCustomer(testCustomer1);
             responseCodeIs(SC_CREATED);
             bodyContainsEntityWith("vat_id", vatId);
         });
@@ -110,6 +111,7 @@ public class CustomerTests extends CommonTest {
             testCustomer1.setAddress(address);
             String vatId = example.get("vatId");
             testCustomer1.setVatId(vatId);
+            customerHelpers.createRandomCustomer(testCustomer1);
             responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         });
     }
@@ -122,6 +124,7 @@ public class CustomerTests extends CommonTest {
             testCustomer1.setAddress(address);
             String vatId = example.get("vatId");
             testCustomer1.setVatId(vatId);
+            customerHelpers.createRandomCustomer(testCustomer1);
             responseCodeIs(SC_CREATED);
             bodyContainsEntityWith("vat_id", vatId);
         });

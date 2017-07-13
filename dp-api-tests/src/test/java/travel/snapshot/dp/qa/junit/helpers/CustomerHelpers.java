@@ -8,10 +8,12 @@ import static org.junit.Assert.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
+import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
+
 
 @Log
 public class CustomerHelpers extends CustomerSteps {
@@ -20,8 +22,23 @@ public class CustomerHelpers extends CustomerSteps {
         super();
     }
 
-    public Response createCustomerByUserForApp(String userId, String applicationId, CustomerCreateDto customer) throws JsonProcessingException {
-        Response createResponse = createEntityByUserForApplication(userId, applicationId, retrieveData(customer).toString());
+    public void createRandomCustomer(CustomerCreateDto customer) {
+        customer.setId(null);
+        createCustomer(customer);
+    }
+
+    public Response createCustomer(CustomerCreateDto customer) {
+        return createCustomerByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customer);
+    }
+
+    public Response createCustomerByUserForApp(String userId, String applicationId, CustomerCreateDto customer) {
+        JSONObject jsonCustomer = null;
+        try {
+            jsonCustomer = retrieveData(customer);
+        } catch (JsonProcessingException e) {
+            fail(e.getMessage());
+        }
+        Response createResponse = createEntityByUserForApplication(userId, applicationId, jsonCustomer.toString());
         setSessionResponse(createResponse);
         return createResponse;
     }
