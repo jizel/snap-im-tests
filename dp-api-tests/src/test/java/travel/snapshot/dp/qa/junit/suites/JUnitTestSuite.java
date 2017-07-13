@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import travel.snapshot.dp.qa.junit.tests.customers.CustomerTests;
+import travel.snapshot.dp.qa.junit.tests.identity.customers.CustomerTests;
 
 @RunWith(Suite.class)
 @SuiteClasses({CustomerTests.class})

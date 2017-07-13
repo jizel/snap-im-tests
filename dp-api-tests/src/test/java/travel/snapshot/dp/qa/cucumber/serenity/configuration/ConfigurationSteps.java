@@ -218,9 +218,12 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void followingConfigurationIsCreated(ConfigurationRecordDto configurationRecord, String identifier) {
-        Response response = createValueForKey(identifier, configurationRecord.getKey(), configurationRecord.getValue().toString(), configurationRecord.getType().toString());
+    public Response followingConfigurationIsCreated(ConfigurationRecordDto configurationRecord, String identifier) {
+        String value = configurationRecord.getValue() == null ? null : String.valueOf(configurationRecord.getValue());
+        String type = configurationRecord.getType() == null ? null : String.valueOf(configurationRecord.getType());
+        Response response = createValueForKey(identifier, configurationRecord.getKey(), value, type);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);//store to session
+        return response;
     }
 
     /**
@@ -354,7 +357,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     @Step
-    public void configurationHasValue(String identifier, String key, String value) {
+    public void configurationHasValue(String identifier, String key, Object value) {
         Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
         response.then().body("value", is(value));
     }

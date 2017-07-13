@@ -24,7 +24,7 @@ public class UrlParamsWithResponse {
     private String responseCode;
     private String customCode;
 
-    public UrlParamsWithResponse(Map<String, String> data) {
+    private UrlParamsWithResponse(Map<String, String> data) {
         limit = data.get("limit");
         cursor = data.get("cursor");
         filter = data.get("filter");

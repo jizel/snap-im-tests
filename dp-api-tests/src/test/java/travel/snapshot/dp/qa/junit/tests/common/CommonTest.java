@@ -47,6 +47,7 @@ public class CommonTest extends BasicSteps{
     protected static final ApplicationHelpers applicationHelpers = new ApplicationHelpers();
     protected static final ApplicationVersionHelpers applicationVersionHelpers = new ApplicationVersionHelpers();
     protected static final CommercialSubscriptionHelpers commercialSubscriptionHelpers = new CommercialSubscriptionHelpers();
+    protected static final ConfigurationHelpers configurationHelpers = new ConfigurationHelpers();
 
 //    Basic test entities
     protected static final UserCreateDto testUser1 = entitiesLoader.getUserDtos().get("user1");
@@ -77,6 +78,7 @@ public class CommonTest extends BasicSteps{
     protected static final int SEMANTIC_ERRORS_CUSTOM_CODE = 42201;
     protected static final int NON_EXISTING_REFERENCE_CUSTOM_CODE = 42202;
     protected static final int NOT_FOUND_CUSTOM_CODE = 40401;
+    protected static final int CONFLICT_CUSTOM_CODE = 40902;
 
 
 //    Help methods
@@ -92,5 +94,18 @@ public class CommonTest extends BasicSteps{
 
     @After
     public void cleanUp() throws Throwable {
+        
+    }
+
+    protected void verifyResponseAndCustomCode(String responseCode, String customCode){
+        responseCodeIs(Integer.valueOf(responseCode));
+        customCodeIs(Integer.valueOf(customCode));
+    }
+
+    public static String transformNull(String value) {
+        if ("/null".equals(value)) {
+            return null;
+        }
+        return value;
     }
 }

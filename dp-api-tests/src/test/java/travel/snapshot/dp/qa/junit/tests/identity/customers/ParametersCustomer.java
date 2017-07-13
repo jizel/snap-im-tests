@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.customers;
+package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 
 import junitparams.JUnitParamsRunner;
