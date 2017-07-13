@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.access_checks.customers.by_application;
+package travel.snapshot.dp.qa.junit.tests.identity.access_checks;
 
 
 import net.serenitybdd.junit.runners.SerenityRunner;

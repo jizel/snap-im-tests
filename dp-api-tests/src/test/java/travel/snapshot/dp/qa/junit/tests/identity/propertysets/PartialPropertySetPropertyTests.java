@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.propertysets;
+package travel.snapshot.dp.qa.junit.tests.identity.propertysets;
 
 
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;

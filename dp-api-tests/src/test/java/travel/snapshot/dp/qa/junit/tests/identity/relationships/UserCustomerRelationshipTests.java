@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.relationships;
+package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;

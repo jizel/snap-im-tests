@@ -1,0 +1,21 @@
+configurationTypesForFiltering:
+  identifier:  ['filter_conf_id_1'                     , 'filter_conf_id_2'                     , 'id_1_filter'                          , 'id_2_filter']
+  description: ['Descriptionofconfigurationidentifier1', 'Descriptionofconfigurationidentifier2', 'Descriptionofconfigurationidentifier3', 'spec']
+
+configurationTypesFilteringData:
+  limit:                ['1'                             , '5'                                , '5'                             , '5'                             , '/null'                  , '/null'                                 , '/null']
+  cursor:               ['0'                             , '0'                                , '1'                             , '1'                             , '/null'                  , '/null'                                 , '/null']
+  returned:             ['1'                             , '2'                                , '3'                             , '3'                             , '1'                      , '1'                                     , '1']
+  filter:               ["identifier=='filter_conf_id_*'", "identifier=='filter_conf_id_*'"   , "identifier=='filter_conf_id_*'", "identifier=='filter_conf_id_*'", 'identifier==id_1_filter', "identifier=='id_*'anddescription==spec", 'description==spec']
+  sort:                 ['identifier'                    , ''                                 , 'identifier'                    , ''                              , '/null'                  , 'identifier'                            , '/null']
+  sort_desc:            [''                              , 'identifier'                       , ''                              , 'identifier'                    , '/null'                  , '/null'                                 , '/null']
+  expected_identifiers: ['filter_conf_id_1'              , 'filter_conf_id_2,filter_conf_id_1', 'filter_conf_id_2'              , 'filter_conf_id_1'              , 'id_1_filter'            , 'id_2_filter'                           , 'id_2_filter']
+
+configurationTypesGetErrorCodes:
+  limit:         ['/null', ''     , '/null', ''     , '-1'   , '-1'   , 'text' , 'text' , '10'   , 'text' , '10'   , '10'        , '10'         , '10'         , '10'          , '10']
+  cursor:        ['-1'   , '-1'   , 'text' , 'text' , ''     , '/null', ''     , '/null', '-1'   , '0'    , 'text' , '0'         , '0'          , '0'          , '0'           , '0']
+  filter:        ['/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null'     , '/null'      , '/null'      , 'identifier==', 'nonexistent==CZ*']
+  sort:          ['/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', 'identifier', '/null'      , 'nonexistent', '/null'       , '/null']
+  sort_desc:     ['/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', '/null', 'identifier', 'nonexistent', '/null'      , '/null'       , '/null']
+  response_code: ['400'  , '400'  , '400'  , '400'  , '400'  , '400'  , '400'  , '400'  , '400'  , '400'  , '400'  , '400'       , '400'        , '400'        , '400'         , '400']
+  custom_code:   ['40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002', '40002'     , '40002'      , '40002'      , '40002'       , '40002']

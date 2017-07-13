@@ -17,6 +17,7 @@ Feature: Social media - External applications access checks
       | id                                   | apiManagerId | name                 | status   | description            | applicationId                        |
       | 00000000-a05d-42d8-8e84-222222222222 | 123          | External App Version | inactive | Versions description 1 | 00000000-a05d-42d8-8e84-111111111111 |
       | 00000000-a05d-42d8-8e84-333333333333 | 321          | Internal App Version | inactive | Versions description 2 | 00000000-a05d-42d8-8e84-111111100000 |
+    Given Application permission table is populated for application "Internal App"
 
     
     Scenario Outline: External application requests social media endpoints with valid parameters

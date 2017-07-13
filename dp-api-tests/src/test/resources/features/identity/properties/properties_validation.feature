@@ -59,8 +59,7 @@ Feature: Properties validation
     When create "property" objects each with one invalid field value
     Then there are following responses
       | testedField      | responseCode | customCode |
-#  DP-2212
-#      | /website         | 422          | 42201      |
+      | /website         | 422          | 42201      |
       | /email           | 422          | 42201      |
       | /timezone        | 422          | 42201      |
       | /address/country | 422          | 42201      |

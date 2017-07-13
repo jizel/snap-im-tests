@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.restrictions;
+package travel.snapshot.dp.qa.junit.tests.identity.restrictions;
 
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;

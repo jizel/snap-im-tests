@@ -1,5 +1,5 @@
 Feature: Web Performance - External applications access checks
-  - Application should have acccess to Web Performance endpoints only if it's is_internal attribute is set to true
+  - Application should have access to Web Performance endpoints only if it's is_internal attribute is set to true
   - Positive cases are tested in separate features. This feature should test that external applications don't have access
 
   Background:
@@ -19,8 +19,11 @@ Feature: Web Performance - External applications access checks
     Given The following properties exist with random address and billing address
       | id                                   | salesforceId     | name         | code         | website                    | email            | isDemo         | timezone      | ttiId | customerId                           |
       | 99000099-9999-4999-a999-999999999999 | salesforceid_n1  | pn1_name     | pn1_code     | http://www.snapshot.travel | pn1@tenants.biz  | true           | Europe/Prague | 0     | 06000000-0000-4444-8888-000000000001 |
+    Given Application permission table is populated for application "Internal App"
 
 
+  #DP-2163
+  @skipped
   Scenario Outline: External application requests social media endpoints with valid parameters
     When GET request is sent to "<url>" on module "<module>" for application version "External App Version"
     Then Response code is "403"
