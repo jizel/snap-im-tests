@@ -297,13 +297,17 @@ public class UsersSteps extends BasicSteps {
         }
     }
 
-    public void setUserPasswordByUsername(String username, String password) {
-        UserDto u = getUserByUsername(username);
-        setUserPassword(u.getId(), password);
+    public Response setUserPasswordByUser(String requestorId, String userId, String password) {
+        Response response = given().spec(spec)
+                .header(HEADER_XAUTH_USER_ID, requestorId)
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
+                .body(password).post("{id}/password", userId);
+        setSessionResponse(response);
+        return response;
     }
 
-    public void setUserPassword(String id, String password) {
-        given().spec(spec).body(password).post("{id}/password", id);
+    public Response setUserPassword(String userId, String password) {
+        return setUserPasswordByUser(DEFAULT_SNAPSHOT_USER_ID, userId, password);
     }
 
     @Step

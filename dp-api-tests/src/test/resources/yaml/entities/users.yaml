@@ -11,7 +11,7 @@ users:
     userCustomerRelationship: {
             "isActive": true,
             "isPrimary": false,
-            "customerId": "11111111-0000-4000-a000-555555555555"
+            "customerId": "06000000-0000-4444-8888-000000000001"
         }
 }
 
@@ -22,6 +22,17 @@ users:
     firstName: Dick,
     lastName: James,
     email: user2@snapshot.travel
+}
+
+  user3: !user {
+    <<: *BASIC_USER,
+    id: 0b000000-0000-4444-8888-000000000003,
+    type: PARTNER,
+    username: partnerUser,
+    firstName: Partner,
+    lastName: User,
+    email: partneruser1@snapshot.travel
+
 }
 
 snapshotUsers:

@@ -224,7 +224,7 @@ public class UserStepdefs {
 
     @Given("^The password of user \"([^\"]*)\" is \"([^\"]*)\"$")
     public void setting_the_password_of_user_to(String username, String password) {
-        usersSteps.setUserPasswordByUsername(username, password);
+        usersSteps.setUserPassword(usersSteps.resolveUserId(username), password);
     }
 
     @When("^User \"([^\"]*)\" is activated$")
