@@ -15,7 +15,7 @@ import travel.snapshot.dp.qa.utils._
   */
 abstract class AbstractSimulation extends Simulation {
 
-  val defaultClientId = "11111111-0000-4000-a000-444444444444"
+  val defaultClientId = "04000000-0000-4444-8888-000000000000"
   val defaultClientSecret = "6e456324-a911-40c7-a515-37981cf48961"
 
   val protocol = System.getProperty("protocol", "http")
@@ -47,8 +47,8 @@ abstract class AbstractSimulation extends Simulation {
   val request_headers = Map(
     "Accept-Encoding" -> "gzip, deflate, br",
     "Content-Type" -> "application/json;charset=UTF-8",
-    "X-Auth-AppId" -> "11111111-0000-4000-a000-444444444444",
-    "X-Auth-UserId" -> "11111111-0000-4000-a000-000000000000"
+    "X-Auth-AppId" -> "04000000-0000-4444-8888-000000000000",
+    "X-Auth-UserId" -> "0b000000-0000-4444-8888-000000000000"
   )
 
   /** Executes the scenario defined in descendant */
