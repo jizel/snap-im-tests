@@ -52,6 +52,7 @@ public class CommonTest extends BasicSteps{
 //    Basic test entities
     protected static final UserCreateDto testUser1 = entitiesLoader.getUserDtos().get("user1");
     protected static final UserCreateDto testUser2 = entitiesLoader.getUserDtos().get("user2");
+    protected static final UserCreateDto testUser3 = entitiesLoader.getUserDtos().get("user3");
     protected static final UserCreateDto testSnapshotUser1 = entitiesLoader.getSnapshotUserDtos().get("snapshotUser1");
     protected static final CustomerCreateDto testCustomer1 = entitiesLoader.getCustomerDtos().get("customer1");
     protected static final CustomerCreateDto testCustomer2 = entitiesLoader.getCustomerDtos().get("customer2");
@@ -79,6 +80,7 @@ public class CommonTest extends BasicSteps{
     protected static final int NON_EXISTING_REFERENCE_CUSTOM_CODE = 42202;
     protected static final int NOT_FOUND_CUSTOM_CODE = 40401;
     protected static final int CONFLICT_CUSTOM_CODE = 40902;
+    protected static final int INSUFFICIENT_PERMISSIONS_CUSTOM_CODE = 40301;
 
 
 //    Help methods
