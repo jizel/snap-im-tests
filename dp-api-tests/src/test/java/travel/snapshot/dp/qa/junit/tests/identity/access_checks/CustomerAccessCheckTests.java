@@ -1,21 +1,19 @@
 package travel.snapshot.dp.qa.junit.tests.identity.access_checks;
 
 
-import net.serenitybdd.junit.runners.SerenityRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.*;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-import java.util.List;
-import java.util.Map;
-
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.*;
+
+import net.serenitybdd.junit.runners.SerenityRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 
 /**
@@ -26,7 +24,6 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.*;
 public class CustomerAccessCheckTests extends CommonTest {
 
     //    Load this test class specific test data
-    private static Map<String, Map<String, List<String>>> testClassDataFromYamlTables = loadYamlTables(String.format(YAML_DATA_PATH, "customer_tests.yaml"));
     private static UserDto createdUser = null;
     private static CustomerDto createdCustomer1 = null;
     private static CustomerDto createdCustomer2 = null;

@@ -1,22 +1,14 @@
 package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 
+import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
-import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
-import travel.snapshot.dp.qa.junit.loaders.YamlLoader;
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
-import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
-
-import java.util.Map;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 /**
  * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data
@@ -25,55 +17,22 @@ import java.util.Map;
 
 
 @RunWith(JUnitParamsRunner.class)
-public class ParametersCustomer extends BasicSteps {
+public class ParametersCustomer extends CommonTest {
 
-    private static CustomerHelpers helpers = new CustomerHelpers();
-    private static CustomerSteps customerSteps = new CustomerSteps();
-    private static DbStepDefs dbStepDefs = new DbStepDefs();
-    private static String YAML_DATA_PATH = "src/test/resources/yaml/%s";
-    private static final String BASE_PATH_CUSTOMERS = "/identity/customers";
-    Map<String, Object> data = YamlLoader.loadData(String.format(YAML_DATA_PATH, "customers.yaml"));
-    private static final EntitiesLoader entitiesLoader = EntitiesLoader.getInstance();
     private CustomerDto createdCustomer = null;
-
-    public ParametersCustomer() throws Throwable {
-        super();
-        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
-        spec.basePath(BASE_PATH_CUSTOMERS);
-    }
 
 
     @Before
     public void setUp() throws Throwable {
+        super.setUp();
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        helpers.customerIsCreated(entitiesLoader.getCustomerDtos().get("customer1"));
+        createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
     }
 
-    @After
-    public void cleanUp() {
-        // If Converters are used once in the class, they stay registered and then mess up test using jsonObjects - those should not use converters (or should use specialized ones).
-    }
 
+//    Value of a string given to any annotation must be known at compile time. Hence String.format or concatenation cannot be used here and we must always give a "full path' to the test file.
+    @FileParameters("src/test/resources/csv/customers/getCustomerCommSubscriptionErrorCodesTestExamples.csv")
     @Test
-    @Parameters({
-        "/null, -1,/null,/null,/null,400,40002",
-        ",-1,/null,/null,/null,400,40002",
-        "/null,text,/null,/null,/null,400,40002",
-        ",text,/null,/null,/null,400,40002",
-        "-1,,/null,/null,/null,400,40002",
-        "-1,/null,/null,/null,/null,400,40002",
-        "201,/null,/null,/null,/null,400,40002",
-        "21474836470,/null,/null,/null,/null,400,40002",
-        "text,,/null,/null,/null,400,40002",
-        "text,/null,/null,/null,/null,400,40002",
-        "10,-1,/null,/null,/null,400,40002",
-        "text,0,/null,/null,/null,400,40002",
-        "10,text,/null,/null,/null,400,40002",
-        "10,0,/null,commercial_subscription_id,commercial_subscription_id,400,40002",
-        "10,0,/null,/null,nonexistent,400,40002",
-        "10,0,/null,nonexistent,/null,400,40002",
-        "10,0,code==,/null,/null,400,40002"
-    })
     public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams(String limit,
                                                                                           String cursor,
                                                                                           String filter,
@@ -81,7 +40,7 @@ public class ParametersCustomer extends BasicSteps {
                                                                                           String sortDesc,
                                                                                           String responseCode,
                                                                                           String customCode) throws Throwable {
-        customerSteps.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
+        customerHelpers.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
         responseCodeIs(Integer.valueOf(responseCode));
         customCodeIs(Integer.valueOf(customCode));
     }
@@ -95,7 +54,7 @@ public class ParametersCustomer extends BasicSteps {
                                                                                           String sortDesc,
                                                                                           String responseCode,
                                                                                           String customCode) throws Throwable {
-        customerSteps.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
+        customerHelpers.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
         responseCodeIs(Integer.valueOf(responseCode));
         customCodeIs(Integer.valueOf(customCode));
     }
