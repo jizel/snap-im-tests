@@ -1,4 +1,4 @@
-FROM docker.snapshot.travel:5000/snapshot/java:8u121
+FROM docker.snapshot.travel:5000/snapshot/java:8u131
 MAINTAINER oleg.fayans@snapshot.travel
 
 ENV ACTIVEMQ_VERSION=5.14.2
