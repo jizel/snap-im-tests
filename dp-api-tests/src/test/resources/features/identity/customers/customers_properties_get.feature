@@ -11,8 +11,8 @@ Feature: Customers properties get
       | b13fde13-615a-48fd-a287-ba4a7314193b | Given company 3 | c3@tenants.biz | salesforceid_given_3 | CZ10000003 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "40ebf861-7549-46f1-a99f-249716c83b33" as primary "true"
       | id                                   | type     | username     | firstName | lastName     | email                                | timezone      | languageCode |
-      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
-      | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1    | customer  | property     | customerProperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | b63edcc6-6830-457c-89b1-7801730bd0ae | customer | custProp1    | customer  | property     | customerproperty1@snapshot.travel    | Europe/Prague | cs-CZ   |
     Given The following properties exist with random address and billing address for user "a63edcc6-6830-457c-89b1-7801730bd0ae"
       | id                                   | salesforceId   | name         | code         | website                    | email          | isDemo         | timezone      | customerId                           |
       | 4d266045-1cf1-4735-8ef9-216de1370f2e | salesforceid_1 | p1_name      | p1_code      | http://www.snapshot.travel | p1@tenants.biz | true           | Europe/Prague | 40ebf861-7549-46f1-a99f-249716c83b33 |

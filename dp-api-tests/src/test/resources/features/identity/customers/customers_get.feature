@@ -8,7 +8,7 @@ Feature: Customers get
       | 87ae86b7-f5b5-4288-a59e-6bbf9fca4096 | Given company 1 | c1@tenants.biz | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" as primary "true"
       | id                                   | type     | username     | firstName | lastName     | email                         | timezone      | languageCode |
-      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
   @Smoke
   Scenario: Getting customer
@@ -147,13 +147,13 @@ Feature: Customers get
   Scenario Outline: Filtering list of customers
     Given The following customers exist with random address
       | name                                  | email                 | vatId      | isDemo         | phone         | website                    | timezone      |
-      | Filter test Given company 1           | Filter_c1@tenants.biz | CZ12345671 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 2           | Filter_c2@tenants.biz | CZ12345672 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 3           | Filter_c3@tenants.biz | CZ12345673 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 4           | Filter_c4@tenants.biz | CZ12345674 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter test Given company 5           | Filter_c5@tenants.biz | CZ12345675 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
-      | Filter different test Given company 6 | Filter_c6@tenants.biz | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
-      | Filter different test Given company 7 | Filter_c7@tenants.biz | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 1           | filter_c1@tenants.biz | CZ12345671 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 2           | filter_c2@tenants.biz | CZ12345672 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 3           | filter_c3@tenants.biz | CZ12345673 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 4           | filter_c4@tenants.biz | CZ12345674 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter test Given company 5           | filter_c5@tenants.biz | CZ12345675 | true           | +111111111111 | http://www.snapshot.travel | Europe/Berlin |
+      | Filter different test Given company 6 | filter_c6@tenants.biz | CZ12345676 | true           | +22222222     | http://www.snapshot.cz     | Europe/Berlin |
+      | Filter different test Given company 7 | filter_c7@tenants.biz | CZ12345677 | false          | +22222222     | http://www.snapshot.travel | Europe/Berlin |
 
     When List of customers is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>" by user "snapshotUser"
     Then Response code is "200"
@@ -164,17 +164,17 @@ Feature: Customers get
 
     Examples:
       | limit | cursor | returned | total | filter                                     | sort  | sort_desc | expected_emails                                       |
-      | 5     | 0      | 5        | 5     | name=='Filter test*'                       | email |           | Filter_c1, Filter_c2, Filter_c3, Filter_c4, Filter_c5 |
-      | 5     | 0      | 5        | 5     | name=='Filter test*'                       |       | email     | Filter_c5, Filter_c4, Filter_c3, Filter_c2, Filter_c1 |
-      | 5     | 2      | 3        | 5     | name=='Filter test*'                       | email |           | Filter_c3, Filter_c4, Filter_c5                       |
-      | 5     | 2      | 3        | 5     | name=='Filter test*'                       |       | email     | Filter_c3, Filter_c2, Filter_c1                       |
-      | 5     | 3      | 2        | 5     | name=='Filter test*'                       | email |           | Filter_c4, Filter_c5                                  |
-      | /null | /null  | 1        | 1     | email=='Filter_c7*'                        | /null | /null     | Filter_c7                                             |
-      | /null | /null  | 2        | 2     | email==Filter_c* and phone==+22222222      | email | /null     | Filter_c6, Filter_c7                                  |
-      | /null | /null  | 1        | 1     | email==Filter_c1@tenants.biz               | /null | /null     | Filter_c1                                             |
-      | /null | /null  | 1        | 1     | vat_id==CZ*73                              | /null | /null     | Filter_c3                                             |
-      | /null | /null  | 1        | 1     | is_demo_customer==false                    | /null | /null     | Filter_c7                                             |
-      | /null | /null  | 1        | 1     | website==http://www.snapshot.cz            | /null | /null     | Filter_c6                                             |
+      | 5     | 0      | 5        | 5     | name=='Filter test*'                       | email |           | filter_c1, filter_c2, filter_c3, filter_c4, filter_c5 |
+      | 5     | 0      | 5        | 5     | name=='Filter test*'                       |       | email     | filter_c5, filter_c4, filter_c3, filter_c2, filter_c1 |
+      | 5     | 2      | 3        | 5     | name=='Filter test*'                       | email |           | filter_c3, filter_c4, filter_c5                       |
+      | 5     | 2      | 3        | 5     | name=='Filter test*'                       |       | email     | filter_c3, filter_c2, filter_c1                       |
+      | 5     | 3      | 2        | 5     | name=='Filter test*'                       | email |           | filter_c4, filter_c5                                  |
+      | /null | /null  | 1        | 1     | email=='filter_c7*'                        | /null | /null     | filter_c7                                             |
+      | /null | /null  | 2        | 2     | email==filter_c* and phone==+22222222      | email | /null     | filter_c6, filter_c7                                  |
+      | /null | /null  | 1        | 1     | email==filter_c1@tenants.biz               | /null | /null     | filter_c1                                             |
+      | /null | /null  | 1        | 1     | vat_id==CZ*73                              | /null | /null     | filter_c3                                             |
+      | /null | /null  | 1        | 1     | is_demo_customer==false                    | /null | /null     | filter_c7                                             |
+      | /null | /null  | 1        | 1     | website==http://www.snapshot.cz            | /null | /null     | filter_c6                                             |
   #add all fields
 
     #TODO add test for wrong parameters in url

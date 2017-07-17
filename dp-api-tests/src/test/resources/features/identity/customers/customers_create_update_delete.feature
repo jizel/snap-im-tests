@@ -161,7 +161,7 @@ Feature: Customers create update delete
   Scenario Outline: Send POST request with empty body to all customers endpoints
     Given The following users exist for customer "06000000-0000-4444-8888-000000000001"
       | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
-      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | customer   | customerUser1 | customer  | User1    | customeruser1@snapshot.travel | Europe/Prague | cs-CZ   |
     When Empty POST request is sent to "<url>" on module "identity"
     Then Response code is "422"
     And Custom code is "42201"

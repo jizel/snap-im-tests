@@ -6,7 +6,7 @@ Feature: Users get
 
     Given The following customers exist with random address
       | id                                   | name         | email                    | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
-      | 728c45dd-a964-4f78-afe0-88d108c682ed | UserCustomer | userCustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
+      | 728c45dd-a964-4f78-afe0-88d108c682ed | UserCustomer | usercustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "728c45dd-a964-4f78-afe0-88d108c682ed" as primary "false"
       | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |

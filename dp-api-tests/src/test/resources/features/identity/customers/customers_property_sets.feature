@@ -9,7 +9,7 @@ Feature: Customers property sets
       | 0fdc1123-b242-46a7-8377-f95210df8c66 | Given company 2 | c2@tenants.biz | salesforceid_given_2 | CZ10000002 | true           | +420123456789 | http://www.snapshot.travel | Europe/Berlin |
     Given The following users exist for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" as primary "false"
       | id                                   | type     | username     | firstName | lastName     | email                         | timezone      | languageCode |
-      | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | snapshotUser | Snapshot  | User         | snapshotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | ae912431-b6aa-4d78-a6d9-f8620ccd9d0b | snapshot | snapshotUser | Snapshot  | User         | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
 
   Scenario Outline: getting list of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" on customers side

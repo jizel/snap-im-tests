@@ -21,7 +21,7 @@ import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.helpers.*;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 
-public class CommonTest extends BasicSteps{
+public abstract class CommonTest extends BasicSteps {
     protected static String YAML_DATA_PATH = "src/test/resources/yaml/%s";
     protected static final String NOTIFICATION_CRUD_TOPIC = "Notifications.crud";
     protected static final String JMS_SUBSCRIPTION_NAME = "Test";
