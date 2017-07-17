@@ -9,7 +9,7 @@ Feature: Property sets create update delete
       | 49ae92d9-2d80-47d9-994b-77f5f598336a | Given company 1 | c1@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Bratislava |
     Given The following users exist for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" as primary "false"
       | id                                   | type     | username      | firstName | lastName | email                        | timezone      | languageCode |
-      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 5d829079-48f0-4f00-9bec-e2329a8bdaac | snapshot | snaphotUser1  | Snaphot   | User1    | snaphotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
       | id                                   | name            | description            | type            |
       | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | ps1_name        | ps1_description        | brand           |

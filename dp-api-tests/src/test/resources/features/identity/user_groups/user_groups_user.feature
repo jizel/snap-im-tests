@@ -7,7 +7,7 @@ Feature: User groups user relationship feature
       | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | UserGroupsCustomer | ug@tenants.biz | ug_sf_1      | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given The following users exist for customer "45a5f9e4-5351-4e41-9d20-fdb4609e9353" as primary "true"
       | id                                    | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
-      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+      | 00029079-48f0-4f00-9bec-e2329a8bdaac  | snapshot   | snapshotUser1 | Snapshot  | User1    | snaphostuser1@snapshot.travel | Europe/Prague | cs-CZ   |
     Given The following user groups exist
       | id                                   | customerId                           | name        | isActive | description          |
       | a8b40d08-de38-4246-bb69-ad39c31c025c | 45a5f9e4-5351-4e41-9d20-fdb4609e9353 | userGroup_1 | false    | userGroupDescription |
@@ -22,9 +22,9 @@ Feature: User groups user relationship feature
       And Body contains entity with attribute "is_active" value "true"
       Examples:
     | username     | type     | firstName | lastName | email                        | timezone          | languageCode |
-    | userPartner1 | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel | Europe/Prague     | cs-CZ   |
-    | userGuest    | guest    | FNU2      | LNU2     | userGuest@snapshot.travel    | America/New_York  | en-US   |
-    | snaphostUser2| snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel| Asia/Tokyo        | en-US   |
+    | userPartner1 | partner  | FNU1      | LNU1     | userpartner1@snapshot.travel | Europe/Prague     | cs-CZ   |
+    | userGuest    | guest    | FNU2      | LNU2     | userguest@snapshot.travel    | America/New_York  | en-US   |
+    | snaphostUser2| snapshot | FNU3      | LNU3     | snaphostuser2@snapshot.travel| Asia/Tokyo        | en-US   |
 
   Scenario: User is added as to User Group as inactive
     Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "false"
@@ -115,10 +115,10 @@ Feature: User groups user relationship feature
     And There are "1" user groups returned
     Examples:
       | username      | type     | firstName | lastName | email                         | timezone          | languageCode | id                                    |
-      | userPartner1  | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
-      | userGuest     | guest    | FNU2      | LNU2     | userGuest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
-      | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
-      | userCustomer1 | customer | FNU4      | LNU4     | userCustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userPartner1  | partner  | FNU1      | LNU1     | userpartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userGuest     | guest    | FNU2      | LNU2     | userguest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
+      | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostuser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userCustomer1 | customer | FNU4      | LNU4     | usercustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
 
 #  DP-1769
   @skipped
@@ -143,10 +143,10 @@ Feature: User groups user relationship feature
     Then Response code is 200
     Examples:
       | username      | type     | firstName | lastName | email                         | timezone          | languageCode | id                                    |
-      | userPartner1  | partner  | FNU1      | LNU1     | userPartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
-      | userGuest     | guest    | FNU2      | LNU2     | userGuest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
-      | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostUser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
-      | userCustomer1 | customer | FNU4      | LNU4     | userCustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userPartner1  | partner  | FNU1      | LNU1     | userpartner1@snapshot.travel  | Europe/Prague     | cs-CZ   | 11129079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userGuest     | guest    | FNU2      | LNU2     | userguest@snapshot.travel     | America/New_York  | en-US   | 22229079-48f0-4f00-9bec-e2329a8bdaac  |
+      | snapshotUser2 | snapshot | FNU3      | LNU3     | snaphostuser2@snapshot.travel | Asia/Tokyo        | en-US   | 33329079-48f0-4f00-9bec-e2329a8bdaac  |
+      | userCustomer1 | customer | FNU4      | LNU4     | usercustomer1@snapshot.travel | Europe/Prague     | cs-CZ   | 44429079-48f0-4f00-9bec-e2329a8bdaac  |
 
 
   Scenario Outline: Send POST request with empty body to all user groups endpoints

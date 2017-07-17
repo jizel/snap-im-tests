@@ -11,7 +11,7 @@ Feature: User customer relationship tests
     Scenario: User-customer-relationship attribute of created user creates correct relation between entities (covers DP-1804)
       Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "false"
         | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
-        | customer   | customerUser1 | Customer  | User1    | customerUser1@snapshot.travel | Europe/Prague | cs-CZ   |
+        | customer   | customerUser1 | Customer  | User1    | customeruser1@snapshot.travel | Europe/Prague | cs-CZ   |
       When Relation between user "customerUser1" and customer "12300000-0000-4000-a000-000000000000" is requested by user "defaultSnapshotUser"
       Then Response code is "200"
       And Body contains entity with attribute "is_primary" value "false"
@@ -19,7 +19,7 @@ Feature: User customer relationship tests
       And Body contains entity with attribute "customer_id" value "12300000-0000-4000-a000-000000000000"
       Given The following users exist for customer "12300000-0000-4000-a000-000000000000" as primary "true"
         | type       | username      | firstName | lastName | email                         | timezone      | languageCode |
-        | customer   | customerUser2 | Customer  | User1    | customerUser2@snapshot.travel | Europe/Prague | cs-CZ   |
+        | customer   | customerUser2 | Customer  | User1    | customeruser2@snapshot.travel | Europe/Prague | cs-CZ   |
       When Relation between user "customerUser2" and customer "12300000-0000-4000-a000-000000000000" is requested by user "defaultSnapshotUser"
       Then Response code is "200"
       And Body contains entity with attribute "is_primary" value "true"
