@@ -4,6 +4,8 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import qa.tools.ikeeper.test.IKeeperJUnitConnector;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
@@ -20,6 +22,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.jms.JmsSteps;
 import travel.snapshot.dp.qa.cucumber.steps.DbStepDefs;
 import travel.snapshot.dp.qa.junit.helpers.*;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
+import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
 
 import java.util.Map;
 
@@ -99,6 +102,11 @@ public abstract class CommonTest {
     protected static final int INSUFFICIENT_PERMISSIONS_CUSTOM_CODE = 40301;
 
 
+    @Rule
+    public IKeeperJUnitConnector issueKeeper = new IKeeperJUnitConnector(
+            new JiraCredentialsClient("https://conhos.atlassian.net")
+    );
+
     @Before
     public void setUp() throws Throwable {
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
@@ -107,6 +115,7 @@ public abstract class CommonTest {
     @After
     public void cleanUp() throws Throwable {
     }
+
 
     //    Help methods
 

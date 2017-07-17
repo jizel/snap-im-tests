@@ -6,6 +6,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -16,9 +17,9 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 @RunWith(SerenityRunner.class)
 public class userRestrictionTests extends CommonTest {
 
-//    DP-1985
+    @Jira("DP-1985")
     @Test
-    public void userPasswordRestrictionTes() throws Exception {
+    public void userPasswordRestrictionTest() throws Exception {
         UserDto customerUser1 = userHelpers.userIsCreated(testUser1);
         UserDto customerUser2 = userHelpers.userIsCreated(testUser2);
         UserDto partnerUser = userHelpers.userIsCreated(testUser3);
