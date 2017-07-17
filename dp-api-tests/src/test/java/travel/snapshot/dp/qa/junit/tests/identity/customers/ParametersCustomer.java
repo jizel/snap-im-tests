@@ -3,12 +3,16 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 
 /**
  * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data
@@ -20,18 +24,18 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 public class ParametersCustomer extends CommonTest {
 
     private CustomerDto createdCustomer = null;
+    private static final String EXAMPLES = "src/test/resources/csv/customers/";
 
 
     @Before
     public void setUp() throws Throwable {
         super.setUp();
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
     }
 
 
 //    Value of a string given to any annotation must be known at compile time. Hence String.format or concatenation cannot be used here and we must always give a "full path' to the test file.
-    @FileParameters("src/test/resources/csv/customers/getCustomerCommSubscriptionErrorCodesTestExamples.csv")
+    @FileParameters(EXAMPLES + "getCustomerCommSubscriptionErrorCodesTestExamples.csv")
     @Test
     public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams(String limit,
                                                                                           String cursor,
@@ -45,42 +49,37 @@ public class ParametersCustomer extends CommonTest {
         customCodeIs(Integer.valueOf(customCode));
     }
 
+    @FileParameters(EXAMPLES + "validateCustomerRegionsBelongToCorrectCountry.csv")
     @Test
-    @Parameters(method = "paramValues")
-    public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams2(String limit,
-                                                                                          String cursor,
-                                                                                          String filter,
-                                                                                          String sort,
-                                                                                          String sortDesc,
-                                                                                          String responseCode,
-                                                                                          String customCode) throws Throwable {
-        customerHelpers.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
-        responseCodeIs(Integer.valueOf(responseCode));
-        customCodeIs(Integer.valueOf(customCode));
+    public void validateCustomerRegionsBelongToCorrectCountry(String country,
+                                                              String region,
+                                                              String vatId) {
+            AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, region);
+            testCustomer1.setAddress(address);
+            testCustomer1.setVatId(vatId);
+            customerHelpers.createRandomCustomer(testCustomer1);
+            responseCodeIs(SC_CREATED);
+            bodyContainsEntityWith("vat_id", vatId);
     }
 
+    @FileParameters(EXAMPLES + "validateInvalidVatId.csv")
+    @Test
+    public void validateCustomerHasInvalidVatId(String country, String vatId) throws Throwable {
+            AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, null);
+            testCustomer1.setAddress(address);
+            testCustomer1.setVatId(vatId);
+            customerHelpers.createRandomCustomer(testCustomer1);
+            responseCodeIs(SC_UNPROCESSABLE_ENTITY);
+    }
 
-    //help
-    private Object[] paramValues(){
-        return new Object[]{
-                "/null, -1,/null,/null,/null,400,40002",
-                ",-1,/null,/null,/null,400,40002",
-                "/null,text,/null,/null,/null,400,40002",
-                ",text,/null,/null,/null,400,40002",
-                "-1,,/null,/null,/null,400,40002",
-                "-1,/null,/null,/null,/null,400,40002",
-                "201,/null,/null,/null,/null,400,40002",
-                "21474836470,/null,/null,/null,/null,400,40002",
-                "text,,/null,/null,/null,400,40002",
-                "text,/null,/null,/null,/null,400,40002",
-                "10,-1,/null,/null,/null,400,40002",
-                "text,0,/null,/null,/null,400,40002",
-                "10,text,/null,/null,/null,400,40002",
-                "10,0,/null,commercial_subscription_id,commercial_subscription_id,400,40002",
-                "10,0,/null,/null,nonexistent,400,40002",
-                "10,0,/null,nonexistent,/null,400,40002",
-                "10,0,code==,/null,/null,400,40002"
-        };
+    @FileParameters(EXAMPLES + "validateValidVatId.csv")
+    @Test
+    public void validateCustomerHasValidVatId(String country, String vatId) throws Throwable {
+            AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, null);
+            testCustomer1.setAddress(address);
+            testCustomer1.setVatId(vatId);
+            customerHelpers.createRandomCustomer(testCustomer1);
+            responseCodeIs(SC_CREATED);
     }
 }
 
