@@ -680,6 +680,7 @@ public class CustomerSteps extends BasicSteps {
         updateData.setPhone(SNAPSHOT_PHONE);
         updateData.setSalesforceId(SalesforceId.of(DEFAULT_SNAPSHOT_SALESFORCE_ID));
         updateData.setVatId(DEFAULT_SNAPSHOT_PARTNER_VAT_ID);
+        updateData.setEmail("updatedemail@gmail.com");
         String etag = getEntityEtag(customerId);
         updateEntity(customerId, retrieveData(updateData).toString(), etag);
         Response secondUpdate = updateEntity(customerId, retrieveData(updateData).toString(), etag);

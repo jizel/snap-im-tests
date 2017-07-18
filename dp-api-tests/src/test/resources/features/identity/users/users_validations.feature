@@ -9,18 +9,18 @@ Feature: Users validations
       | id                                   | name               | email                          | salesforceId         | vatId      | isDemo         | phone         | website                    | timezone      |
       | 55656571-a3be-4f8b-bc05-02c0797912a6 | UserCreateCustomer | usercreatecustomer@tenants.biz | salesforceid_given_1 | CZ10000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague |
     Given the following "user" object definition
-      | path                        | type   | required | correct                                                     | invalid      | longer     |
+      | path                        | type   | required | correct                                                        | invalid      | longer     |
       #---------------------------------------------------------------------------------------------------------------------------------------------------------
-      | /first_name                 | String | true     | \w{100}                                                     | /null        | \w{101}    |
-      | /last_name                  | String | true     | \w{100}                                                     | /null        | \w{101}    |
-      | /user_type                  | String | true     | (snapshot\|customer\|partner\|guest)                        | nonexisstent | \w{256}    |
-      | /user_name                  | String | true     | \w{100}                                                     | /null        | \w{101}    |
-      | /email                      | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | (([a-z]\|\d){9}\.){4}(\w\|\d){24}\@(([a-z]\|\d){191}\.)com |
-      | /phone                      | String | false    | +[0-9]{12}                                                  | \.{10}       | \w{101}    |
-      | /timezone                   | String | true     | (America/New_York\|Europe/Prague\|GMT)                      | UTC+1:00     | UTC+001:00 |
-      | /culture                    | String | true     | (cs-CZ\|sk-SK)                                              | xx           |            |
-      | /comment                    | String | false    | \w{255}                                                     | /null        | \w{256}    |
-      | /is_active                  | String | false    | (true\|false)                                               | x            |            |
+      | /first_name                 | String | true     | \w{100}                                                        | /null        | \w{101}    |
+      | /last_name                  | String | true     | \w{100}                                                        | /null        | \w{101}    |
+      | /user_type                  | String | true     | (snapshot\|customer\|partner\|guest)                           | nonexisstent | \w{256}    |
+      | /user_name                  | String | true     | \w{100}                                                        | /null        | \w{101}    |
+      | /email                      | String | true     | (([a-z]\|\d){9}\.){4}([a-z]\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}       | (([a-z]\|\d){9}\.){4}(\w\|\d){24}\@(([a-z]\|\d){191}\.)com |
+      | /phone                      | String | false    | +[0-9]{12}                                                     | \.{10}       | \w{101}    |
+      | /timezone                   | String | true     | (America/New_York\|Europe/Prague\|GMT)                         | UTC+1:00     | UTC+001:00 |
+      | /culture                    | String | true     | (cs-CZ\|sk-SK)                                                 | xx           |            |
+      | /comment                    | String | false    | \w{255}                                                        | /null        | \w{256}    |
+      | /is_active                  | String | false    | (true\|false)                                                  | x            |            |
       | /user_customer_relationship | JSON   | true     | {"is_primary":false,"customer_id":"55656571-a3be-4f8b-bc05-02c0797912a6"}| /null | \w{100} |
 
 

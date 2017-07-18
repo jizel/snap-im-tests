@@ -92,7 +92,7 @@ Feature: Customers create update delete
       | /null              | /null             | /null       | /null         | /null                | updatedNotes  | /null         | /null                                |
       | /null              | /null             | /null       | /null         | /null                | /null         | Pacific/Fiji  | /null                                |
       | severalUpdates     | /null             | /null       | +420111222333 | http://several.cz    | several_notes | Europe/Prague | /null                                |
-      | allUpdates         | all@all.com       | CZ999888777 | +420444555666 | http://allUpdated.cz | all_notes     | Asia/Tokyo    | 000000b2-3836-4207-a705-42bbec000000 |
+      | allUpdates         | all@all.com       | CZ999888777 | +420444555666 | http://allupdated.cz | all_notes     | Asia/Tokyo    | 000000b2-3836-4207-a705-42bbec000000 |
 
 
   #TODO update cutomer with not matched etag/empty etag/missing etag

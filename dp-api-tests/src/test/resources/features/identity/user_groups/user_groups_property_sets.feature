@@ -31,9 +31,9 @@ Feature: User groups property sets
 
   Scenario: Relationship creation between user group and property set - valid
     Given The following property sets exist for customer with id "67adbc2d-f6ad-4e6a-9ed8-8ba93c430481"
-      | id                                   | name                  | description            | type            |
-      | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true"
+      | id                                   | name                   | description            | type            |
+      | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup1 | PropertySet_UserGroup1 | brand           |
+    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup1" is created with isActive "true"
     Then Response code is 201
     And Content type is "application/json"
     And Body contains entity with attribute "property_set_id" value "e11352e6-44ff-45bb-bd51-28f62ca8f33c"
@@ -55,7 +55,7 @@ Feature: User groups property sets
   Scenario: Create duplicate relationship userGroup-propertySet
     When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" exists with isActive "false"
     Then Response code is "409"
-    And Custom code is "40902"
+    And Custom code is "40907"
 
 
   Scenario: Delete userGroup-propertySet relationship - valid
@@ -93,16 +93,6 @@ Feature: User groups property sets
       | url                                                                                                                |
       | identity/user_groups/922913b0-877c-45f3-b650-df8022608d61/property_sets/fb141231-4d8c-4d75-9433-5d01cc665556       |
       | identity/user_groups/922913b0-877c-45f3-b650-df8022608d61/property_sets/fb141231-4d8c-4d75-9433-5d01cc665556/roles |
-
-  Scenario: Duplicate relationship creation between user group and property set - DP-1661
-    Given The following property sets exist for customer with id "67adbc2d-f6ad-4e6a-9ed8-8ba93c430481"
-      | id                                   | name                  | description            | type            |
-      | e11352e6-44ff-45bb-bd51-28f62ca8f33c | PropertySet_UserGroup | PropertySet_UserGroup1 | brand           |
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true"
-    Then Response code is 201
-    When Relation between user group "userGroup_1" and property set "PropertySet_UserGroup" is created with isActive "true"
-    Then Response code is 409
-    And Custom code is 40902
 
   Scenario: Property Set cannot be deleted until User Group is (and vice versa)
     When Property set "PropertySet_UserGroup" is deleted

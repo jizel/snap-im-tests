@@ -32,14 +32,14 @@ Feature: Users property set roles CRUD
   Scenario Outline: Assigning property type of role to user property set
     Given Switch for user property role tests
     Given The following roles exist
-      | roleId                               | roleName        | description            | id                                   |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | user_role_wrong | optional description 1 | 03000000-0000-4444-8888-000000000000 |
+      | roleId    | roleName        | description            | id                                   |
+      | <role_id> | user_role_wrong | optional description 1 | 03000000-0000-4444-8888-000000000000 |
     And Relation between user "default1" and property set "ps1_name" exists
     When I assign role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>"
     Then Response code is "422"
     Examples:
-      | role_id                              | user_name | property_set_name | customer_id                          |
-      | a111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
+      | role_id                              | user_name | property_set_name |
+      | a111fd9a-a05d-42d8-8e84-42e904ace123 | default1  | ps1_name          |
 
   Scenario Outline: Assigning customer type of role to user property set
     Given Switch for user customer role tests
@@ -70,10 +70,9 @@ Feature: Users property set roles CRUD
     When Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" is deleted
     Then Response code is "204"
     And Role with id "<role_id>" for user name "<user_name>" and property set name "<property_set_name>" for customer "<customer_id>" does not exist
-
     Examples:
-      | role_id                              | property_set_name | user_name | customer_id |
-      | a318fd9a-a05d-42d8-8e84-42e904ace123 | ps1_name          | default1  | 1234fd9a-a05d-42d8-8e84-42e904ace123           |
+      | role_id                              | property_set_name | user_name | customer_id                          |
+      | a318fd9a-a05d-42d8-8e84-42e904ace123 | ps1_name          | default1  | 1234fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
   Scenario Outline: Checking error code for removing not existing role from user property set
@@ -126,7 +125,6 @@ Feature: Users property set roles CRUD
       | url                                                                                                                                               |
       | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0                                            |
       | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/roles                                      |
-      | identity/users/2048b11e-eff2-477c-b322-015bbd931e46/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/roles/a318fd9a-a05d-42d8-8e84-42e904ace123 |
 
   Scenario: Role cannot be deleted until User is (and vice versa)
     When Role with id "a318fd9a-a05d-42d8-8e84-42e904ace123" for user name "default1" and property set name "ps1_name" for customer "1234fd9a-a05d-42d8-8e84-42e904ace123" is added

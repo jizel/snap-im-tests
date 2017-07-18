@@ -130,20 +130,9 @@ Feature: User groups get
       | /null                                               | /null       | is_active   | 26       |                              |
       | /null                                               | /null       | description | 26       |                              |
       | /null                                               | /null       | name        | 26       |                              |
-      | user_group_id=='5*'                                 | /null       | /null       | 3        |                              |
-      | user_group_id=='*a'                                 | /null       | /null       | 4        |                              |
-      | user_group_id=='*-4*'                               | /null       | /null       | 26       |                              |
-      | user_group_id=='z*'                                 | /null       | /null       | 0        |                              |
-      | user_group_id=='5*'                                 | customer_id | /null       | 3        | ug1,ug14,ug24                |
-      | user_group_id=='5*'                                 | is_active   | /null       | 3        | ug1,ug14,ug24                |
-      | user_group_id=='5*'                                 | description | /null       | 3        | ug1,ug14,ug24                |
-      | user_group_id=='5*'                                 | name        | /null       | 3        | ug1,ug14,ug24                |
-      | user_group_id=='5*'                                 | /null       | customer_id | 3        | ug1,ug14,ug24                |
-      | user_group_id=='5*'                                 | /null       | is_active   | 3        | ug1,ug14,ug24                |
-      | user_group_id=='5*'                                 | /null       | description | 3        | ug24,ug14,ug1                |
-      | user_group_id=='5*'                                 | /null       | name        | 3        | ug24,ug14,ug1                |
+      | user_group_id=='580bc988-885c-4ca6-b369-37dfcd123665' | customer_id | /null       | 1        | ug1                          |
       | customer_id=='45a5f9e4-5351-4e41-9d20-fdb4609e9353' | /null       | /null       | 26       |                              |
-      | customer_id=='NotExistentShit'                      | /null       | /null       | 0        |                              |
+      | customer_id=='00000000-0000-4000-a000-000000000000' | /null       | /null       | 0        |                              |
       | is_active==false                                    | /null       | /null       | 26       |                              |
       | is_active==true                                     | /null       | /null       | 0        |                              |
       | description=='ug1'                                  | /null       | /null       | 1        |                              |
