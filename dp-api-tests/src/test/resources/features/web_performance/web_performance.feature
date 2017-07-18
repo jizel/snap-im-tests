@@ -205,15 +205,6 @@ Feature: web_performance
       | invalid | ascending  | 400           | 40002       |
       | invalid | descending | 400           | 40002       |
 
-  Scenario Outline: Checking ISO country codes
-    When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
-    Then Response code is "200"
-    And All web performance analytics country codes in "<json_argument>" are in ISO format
-
-    Examples:
-      | url        | granularity | since            | until | json_argument                 |
-      | /analytics | day         | today - 3 months | today | top_values.country_conversion |
-      | /analytics | day         | today - 30 days  | today | top_values.country_visits     |
 
   Scenario Outline: Testing holes in Fact_web_performance tables
     When Get web_performance "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
