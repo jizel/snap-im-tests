@@ -16,7 +16,7 @@ Feature: Properties validation
       | /name                  | String | true     | \w{100}                                                     | /null           | \w{101}    |
       | /anchor_customer_id    | String | true     | 1238fd9a-a05d-42d8-8e84-42e904ace123                        | /null           | \w{101}    |
       | /website               | String | false    | http:\/\/[a-z0-9]{63}\.com                                  | http://www\.{5} | \w{101}    |
-      | /email                 | String | true     | (([a-z]\|\d){9}\.){4}(\w\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}          | \w{101}    |
+      | /email                 | String | true     | (([a-z]\|\d){9}\.){4}([a-z]\|\d){10}\@(([a-z]\|\d){9}\.){4}com | \.{10}          | \w{101}    |
       | /timezone              | String | true     | (America/New_York\|Europe/Prague)                           | UTC+1:00        | UTC+001:00 |
       | /is_demo_property      | Bool   | true     | (true\|false)                                               | /null           |            |
       | /is_active             | String | false    | (true\|false)                                               | x               |            |

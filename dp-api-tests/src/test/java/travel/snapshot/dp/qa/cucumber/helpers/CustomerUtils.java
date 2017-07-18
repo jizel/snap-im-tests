@@ -35,7 +35,7 @@ public class CustomerUtils {
     public static CustomerCreateDto createRandomCustomer(String vatId) {
         return createRandomCustomer(
                 RandomStringUtils.randomAlphabetic(10),
-                RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + "." + RandomStringUtils.randomAlphabetic(2),
+                RandomStringUtils.randomAlphabetic(5).toLowerCase() + "@" + RandomStringUtils.randomAlphabetic(5).toLowerCase() + "." + RandomStringUtils.randomAlphabetic(2).toLowerCase(),
                 DEFAULT_SNAPSHOT_SALESFORCE_ID,
                 vatId,
                 Boolean.TRUE,

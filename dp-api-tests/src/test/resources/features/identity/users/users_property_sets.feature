@@ -22,7 +22,7 @@ Feature: User to Property set relationship feature
     Then Response code is "201"
     When Property set "ps1_name" is added to user "userWithNoSet"
     Then Response code is "409"
-    And Custom code is 40902
+    And Custom code is 40907
 
   Scenario Outline: Empty update of (customer type) user - property set relationship returns correct code - DP-1771
     When Empty POST request is sent to "<url>" on module "identity"

@@ -93,7 +93,7 @@ Feature: User groups properties
     Then Response code is 201
     When Relation between user group "a8b40d08-de38-4246-bb69-ad39c31c025c" and property "30f983ea-7a69-4e50-a369-d1278f1a0c40" is created with isActive "true"
     Then Response code is 409
-    And Custom code is 40902
+    And Custom code is 40907
 
   Scenario: Property cannot be deleted until User Group is (and vice versa)
     When Property with code "property_userGroup1" is deleted

@@ -260,8 +260,8 @@ public class UsersSteps extends BasicSteps {
         return stream((userRolesResponse.as(RoleDto[].class))).findFirst().orElse(null);
     }
 
-    private RoleDto getRoleForUserEntity(String roleId, String userName, String entityId, String entityName) {
-        String path = buildPathForRoles(entityName, userName, entityId);
+    private RoleDto getRoleForUserEntity(String roleId, String userId, String entityId, String entityName) {
+        String path = buildPathForRoles(entityName, userId, entityId);
         Response userRolesUserEntity = getEntities(path, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, null);
         return stream((userRolesUserEntity.as(RoleDto[].class))).findFirst().orElse(null);
     }
@@ -355,7 +355,7 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public void roleBetweenUserAndEntityNotExists(String entityName, String roleId, String userName, String entityId) {
-        RoleDto roleDto = getRoleForUserEntity(roleId, userName, entityId, entityName);
+        RoleDto roleDto = getRoleForUserEntity(roleId, resolveUserId(userName), entityId, entityName);
         if (roleDto != null) {
             fail("Role exists and should not ! Role id = " + roleId);
         }

@@ -166,7 +166,7 @@ Feature: User groups user relationship feature
     Then Response code is "201"
     Given User "snapshotUser1" is added to userGroup "userGroup_1" as isActive "true"
     Then Response code is "409"
-    And Custom code is 40902
+    And Custom code is 40907
 
   Scenario: User cannot be deleted until User Group is (and vice versa)
     When User "snapshotUser1" is removed from customer with id "45a5f9e4-5351-4e41-9d20-fdb4609e9353"
