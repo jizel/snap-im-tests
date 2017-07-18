@@ -4,6 +4,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.access_checks;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;

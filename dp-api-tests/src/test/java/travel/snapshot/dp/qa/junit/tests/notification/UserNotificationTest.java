@@ -1,6 +1,9 @@
 package travel.snapshot.dp.qa.junit.tests.notification;
 
 import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.CUSTOMER;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -15,7 +18,6 @@ import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
@@ -91,7 +93,7 @@ public class UserNotificationTest extends CommonTest {
                 testRole.getId());
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedCreateNotification, receivedNotification);
-        userHelpers.roleBetweenUserAndEntityIsDeleted("customers", testRole.getId(), createdUser1.getId(), BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID, null);
+        userHelpers.roleBetweenUserAndEntityIsDeleted("customers", testRole.getId(), createdUser1.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, null);
         receivedNotification = jmsSteps.receiveMessage(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         verifyNotification(expectedDeleteNotification, receivedNotification);
     }

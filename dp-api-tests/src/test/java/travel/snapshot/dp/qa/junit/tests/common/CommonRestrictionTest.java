@@ -19,7 +19,15 @@ public abstract class CommonRestrictionTest extends CommonTest {
 
     //    Help methods
 
-    protected ApplicationVersionDto createTestApplicationVersionForApp(String applicationId){
+
+    @Before
+    public void setUp() throws Throwable {
+        super.setUp();
+        restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
+        createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
+    }
+
+    private ApplicationVersionDto createTestApplicationVersionForApp(String applicationId){
         ApplicationVersionDto testAppVersion = testAppVersion = new ApplicationVersionDto();
         testAppVersion.setApplicationId(applicationId);
         testAppVersion.setIsActive(true);
@@ -28,13 +36,6 @@ public abstract class CommonRestrictionTest extends CommonTest {
         testAppVersion.setStatus(CERTIFIED);
         testAppVersion.setApiManagerId("123");
         return applicationVersionHelpers.applicationVersionIsCreated(testAppVersion);
-    }
-
-    @Before
-    public void setUp() throws Throwable {
-        super.setUp();
-        restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
-        createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
     }
 
 }

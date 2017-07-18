@@ -1,19 +1,21 @@
 package travel.snapshot.dp.qa.junit.tests.identity.propertysets;
 
 
-import net.serenitybdd.junit.runners.SerenityRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.*;
-import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+
+import net.serenitybdd.junit.runners.SerenityRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
+import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 
 /**

@@ -3,14 +3,12 @@ package travel.snapshot.dp.qa.junit.tests.identity.restrictions;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 

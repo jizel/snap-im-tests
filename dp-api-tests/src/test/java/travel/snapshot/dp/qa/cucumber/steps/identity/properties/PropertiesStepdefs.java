@@ -7,6 +7,8 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.bodyContainsEntityWith;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 
 import com.jayway.restassured.response.Response;
 import cucumber.api.Transform;
@@ -232,7 +234,7 @@ public class PropertiesStepdefs {
 
     @Then("^Body contains property with attribute \"([^\"]*)\"$")
     public void Body_contains_property_with_attribute(String atributeName) throws Throwable {
-        propertySteps.bodyContainsEntityWith(atributeName);
+        bodyContainsEntityWith(atributeName);
     }
 
     @Then("^Body contains property with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
@@ -247,7 +249,7 @@ public class PropertiesStepdefs {
 
     @Then("^There are (\\d+) properties returned$")
     public void There_are_properties_returned(int count) throws Throwable {
-        propertySteps.numberOfEntitiesInResponse(PropertyDto.class, count);
+        numberOfEntitiesInResponse(PropertyDto.class, count);
     }
 
     @Then("^All customers are customers of property with code \"([^\"]*)\"$")

@@ -7,6 +7,8 @@ import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static travel.snapshot.dp.api.configuration.model.ValueType.STRING;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadYamlTables;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTestFromTable;
 
