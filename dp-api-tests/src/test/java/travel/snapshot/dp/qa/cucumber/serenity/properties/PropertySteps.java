@@ -372,12 +372,6 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void bodyContainsEntityWith(String attributeName, String attributeValue) {
-        Response response = getSessionResponse();
-        response.then().body(attributeName, is(Integer.valueOf(attributeValue)));
-    }
-
-    @Step
     public void setPropertyIsActive(String propertyId, Boolean isActive) {
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setIsActive(isActive);

@@ -5,7 +5,7 @@ propertySets:
     description: Some desc 1,
     type: BRAND,
     isActive: true,
-    customerId: "11111111-0000-4000-a000-555555555555",
+    customerId: 06000000-0000-4444-8888-000000000001
   }
 
   propertySet2: !propertySet {

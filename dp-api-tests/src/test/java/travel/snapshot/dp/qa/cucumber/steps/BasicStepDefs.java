@@ -4,6 +4,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.seleniumhq.jetty9.util.StringUtil.isNotBlank;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.bodyContainsEntityWith;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.bodyIsEmpty;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.contentTypeIs;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.customCodeIs;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendPostWithBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.DataTable;
@@ -32,12 +39,12 @@ public class BasicStepDefs {
 
     @Then("^Response code is (\\d+)$")
     public void response_code_is(int responseCode) throws Throwable {
-        basicSteps.responseCodeIs(responseCode);
+        responseCodeIs(responseCode);
     }
 
     @Then("^Response code is \"([^\"]*)\"$")
     public void response_code_is_string(String responseCode) throws Throwable {
-        basicSteps.responseCodeIs(Integer.valueOf(responseCode));
+        responseCodeIs(Integer.valueOf(responseCode));
     }
 
     @When("^\"([^\"]*)\" is called without token using \"([^\"]*)\"$")
@@ -47,22 +54,22 @@ public class BasicStepDefs {
 
     @Then("^Custom code is (\\d+)$")
     public void Custom_code_is(Integer customCode) throws Throwable {
-        basicSteps.customCodeIs(customCode);
+        customCodeIs(customCode);
     }
 
     @Then("^Custom code is \"([^\"]*)\"$")
     public void custom_code_is(Integer customCode) throws Throwable {
-        basicSteps.customCodeIs(customCode);
+        customCodeIs(customCode);
     }
 
     @Then("^Content type is \"([^\"]*)\"$")
     public void content_type_is(String contentType) throws Throwable {
-        basicSteps.contentTypeIs(contentType);
+        contentTypeIs(contentType);
     }
 
     @Then("^Body is empty$")
     public void body_is_empty() throws Throwable {
-        basicSteps.bodyIsEmpty();
+        bodyIsEmpty();
     }
 
     @Then("^Etag header is present$")
@@ -77,7 +84,7 @@ public class BasicStepDefs {
 
     @When("^Empty POST request is sent to \"([^\"]*)\" on module \"([^\"]*)\"$")
     public void emptyPOSTRequestIsSentToOn(String url, String module) throws Throwable {
-        basicSteps.sendBlankPost(url, module);
+        sendBlankPost(url, module);
     }
 
     @When("^POST request is sent to \"([^\"]*)\" on module \"([^\"]*)\" with$")
@@ -87,22 +94,22 @@ public class BasicStepDefs {
             contentsMap.put(row.getCells().get(0), row.getCells().get(1));
         }
         String body = new ObjectMapper().writeValueAsString(contentsMap);
-        basicSteps.sendPostWithBody(url, module, body);
+        sendPostWithBody(url, module, body);
     }
 
     @Then("^Body contains entity with attribute \"([^\"]*)\" value \"([^\"]*)\"$")
     public void Body_contains_entity_with_attribute_value(String atributeName, String value) throws Throwable {
-        basicSteps.bodyContainsEntityWith(atributeName, value);
+        bodyContainsEntityWith(atributeName, value);
     }
 
     @Then("^Body contains entity with attribute \"([^\"]*)\" and integer value (\\d+)$")
     public void Body_contains_entity_with_attribute_value(String atributeName, Integer value) throws Throwable {
-        basicSteps.bodyContainsEntityWith(atributeName, value);
+        bodyContainsEntityWith(atributeName, value);
     }
 
     @Then("^Body contains entity with attribute \"([^\"]*)\"$")
     public void Body_contains_entity_with_attribute(String atributeName) throws Throwable {
-        basicSteps.bodyContainsEntityWith(atributeName);
+        bodyContainsEntityWith(atributeName);
     }
 
     @Then("^Body doesn't contain entity with attribute \"([^\"]*)\"$")

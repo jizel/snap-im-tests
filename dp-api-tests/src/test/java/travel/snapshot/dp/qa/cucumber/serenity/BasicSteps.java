@@ -82,40 +82,39 @@ public class BasicSteps {
     public static final String DEFAULT_SNAPSHOT_HOSPITALITY_ID = "a8d4e1b1-4f15-47b0-be00-db03c2c9a3c4";
     public static final String DEFAULT_SNAPSHOT_ETAG = "11111111111111111111111111111111";
     public static final String NON_EXISTENT_ID = "00000000-0000-4000-a000-000000000000";
-    protected static final String SESSION_RESPONSE = "response";
-    protected static final String SESSION_RESPONSE_MAP = "response_map";
-    protected static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
-    protected static final String INSTAGRAM_BASE_URI = "instagram.baseURI";
-    protected static final String FACEBOOK_BASE_URI = "facebook.baseURI";
-    protected static final String REVIEW_BASE_URI = "review.baseURI";
-    protected static final String TWITTER_BASE_URI = "twitter.baseURI";
-    protected static final String WEB_PERFORMANCE_BASE_URI = "web_performance.baseURI";
-    protected static final String RATE_SHOPPER_BASE_URI = "rate_shopper.baseURI";
-    protected static final String IDENTITY_BASE_URI = "identity.baseURI";
-    protected static final String IDENTITY_NGINX_BASE_URI = "identity_nginx.baseURI";
-    protected static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
-    protected static final String CONFIGURATION_NGINX_BASE_URI = "configuration_nginx.baseURI";
-    protected static final String LIMIT_TO_ALL = "200";
-    protected static final String LIMIT_TO_ONE = "1";
-    protected static final String CURSOR_FROM_FIRST = "0";
-    protected static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
-    protected static final String SECOND_LEVEL_OBJECT_USERS = "users";
-    protected static final String SECOND_LEVEL_OBJECT_PARTNERS = "partners";
-    protected static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
-    protected static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
-    protected static final String SECOND_LEVEL_OBJECT_RECORDS = "records";
-    protected static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
-    protected static final String SECOND_LEVEL_OBJECT_API_SUBSCRIPTION = "api_subscriptions";
-    protected static final String SECOND_LEVEL_OBJECT_TTI = "tti";
-    protected static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
-    protected static final String HEADER_ETAG = "ETag";
-    protected static final String SECOND_LEVEL_OBJECT_APPLICATIONS = "applications";
-    protected static final String SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS = "commercial_subscriptions";
-    protected static final String CURLY_BRACES_EMPTY = "{}";
+    public static final String SESSION_RESPONSE = "response";
+    public static final String SESSION_RESPONSE_MAP = "response_map";
+    public static final String SOCIAL_MEDIA_BASE_URI = "social_media.baseURI";
+    public static final String INSTAGRAM_BASE_URI = "instagram.baseURI";
+    public static final String FACEBOOK_BASE_URI = "facebook.baseURI";
+    public static final String REVIEW_BASE_URI = "review.baseURI";
+    public static final String TWITTER_BASE_URI = "twitter.baseURI";
+    public static final String WEB_PERFORMANCE_BASE_URI = "web_performance.baseURI";
+    public static final String RATE_SHOPPER_BASE_URI = "rate_shopper.baseURI";
+    public static final String IDENTITY_BASE_URI = "identity.baseURI";
+    public static final String IDENTITY_NGINX_BASE_URI = "identity_nginx.baseURI";
+    public static final String CONFIGURATION_BASE_URI = "configuration.baseURI";
+    public static final String CONFIGURATION_NGINX_BASE_URI = "configuration_nginx.baseURI";
+    public static final String LIMIT_TO_ALL = "200";
+    public static final String LIMIT_TO_ONE = "1";
+    public static final String CURSOR_FROM_FIRST = "0";
+    public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
+    public static final String SECOND_LEVEL_OBJECT_USERS = "users";
+    public static final String SECOND_LEVEL_OBJECT_PARTNERS = "partners";
+    public static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
+    public static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
+    public static final String SECOND_LEVEL_OBJECT_RECORDS = "records";
+    public static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
+    public static final String SECOND_LEVEL_OBJECT_API_SUBSCRIPTION = "api_subscriptions";
+    public static final String SECOND_LEVEL_OBJECT_TTI = "tti";
+    public static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
+    public static final String HEADER_ETAG = "ETag";
+    public static final String SECOND_LEVEL_OBJECT_APPLICATIONS = "applications";
+    public static final String SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS = "commercial_subscriptions";
+    public static final String CURLY_BRACES_EMPTY = "{}";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_STATUS = "http_response_log_status";
-    protected RequestSpecification spec = null;
     public static final String REQUESTOR_ID = "requestorId";
     public static final String TARGET_ID = "targetId";
     public static final String ROLE_ID = "role_id";
@@ -132,6 +131,8 @@ public class BasicSteps {
     public static final String USER_TYPE_PARTNER = "PARTNER";
     public static final String USER_TYPE_SNAPSHOT = "SNAPSHOT";
     public static final String USER_TYPE_CUSTOMER = "CUSTOMER";
+
+    protected RequestSpecification spec = null;
 
     public BasicSteps() {
 
@@ -172,22 +173,22 @@ public class BasicSteps {
         return IOUtils.toString(inputStream, Charset.forName("utf-8"));
     }
 
-    public void responseCodeIs(int responseCode) {
+    public static void responseCodeIs(int responseCode) {
         Response response = getSessionResponse();
         response.then().statusCode(responseCode);
     }
 
-    public void contentTypeIs(String contentType) {
+    public static void contentTypeIs(String contentType) {
         Response response = getSessionResponse();
         response.then().contentType(contentType);
     }
 
-    public void customCodeIs(Integer customCode) {
+    public static void customCodeIs(Integer customCode) {
         Response response = getSessionResponse();
         response.then().body("code", is(customCode));
     }
 
-    public void bodyIsEmpty() {
+    public static void bodyIsEmpty() {
         Response response = getSessionResponse();
         response.then().body(isEmptyOrNullString());
     }
@@ -214,18 +215,18 @@ public class BasicSteps {
     }
 
     @Step
-    public void bodyContainsEntityWith(String attributeName, String attributeValue) {
+    public static void bodyContainsEntityWith(String attributeName, String attributeValue) {
         Response response = getSessionResponse();
         response.then().body(attributeName, isOneOf(attributeValue, Boolean.valueOf(attributeValue)));
     }
 
     @Step
-    public void bodyContainsEntityWith(String attributeName, Integer attributeValue) {
+    public static void bodyContainsEntityWith(String attributeName, Integer attributeValue) {
         Response response = getSessionResponse();
         response.then().body(attributeName, is(attributeValue));
     }
 
-    public void bodyContainsEntityWith(String attributeName) {
+    public static void bodyContainsEntityWith(String attributeName) {
         Response response = getSessionResponse();
         response.then().body(attributeName, notNullValue());
     }
@@ -267,7 +268,7 @@ public class BasicSteps {
         return response.getBody().jsonPath().get(attributeName).toString();
     }
 
-    protected String setBaseUriForModule(String module) {
+    private static String getBaseUriForModule(String module) {
         module = (module == null) ? "" : module;
         String baseUri = "";
         switch (module) {
@@ -313,8 +314,11 @@ public class BasicSteps {
             }
             default:
         }
-        spec.baseUri(baseUri);
         return baseUri;
+    }
+
+    private void setBaseUriForModule(String module){
+        spec.baseUri(getBaseUriForModule(module));
     }
 
     protected Response createEntity(Object entity) {
@@ -594,21 +598,21 @@ public class BasicSteps {
     }
 
     @Step
-    public void sendBlankPost(String url, String module) {
+    public static void sendBlankPost(String url, String module) {
         sendPostWithBody(url, module, "");
     }
 
     @Step
-    public void sendPostWithBody(String url, String module, String body) {
-        setBaseUriForModule(module);
-        Response response = given().spec(spec).basePath(url)
+    public static void sendPostWithBody(String url, String module, String body) {
+        RequestSpecification requestSpecification = given().baseUri(getBaseUriForModule(module)).header("Content-Type", "application/json;charset=UTF-8");
+        Response response = given().spec(requestSpecification).basePath(url)
                 .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
                 .body(body).when().post();
 
 //        If request needs ETag header (for updates). I know this looks awful and it makes a few redundant api calls but other solutions involve needles meta-information in gherkin scenario (boolean needsETag or something like that).
         if (response.getStatusCode() == HttpStatus.SC_PRECONDITION_FAILED) {
-            RequestSpecification requestSpecification = given().spec(spec).basePath(url);
+            requestSpecification.basePath(url);
             String etag = requestSpecification.header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID).header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID).when().head().getHeader(HEADER_ETAG);
             assertThat("ETag was not obtained", etag, not(isEmptyOrNullString()));
             requestSpecification.header(HEADER_IF_MATCH, etag);
@@ -636,7 +640,7 @@ public class BasicSteps {
 
     @Step
     public void sendGetRequestToUrlByUserForAppWithParams(String userId, String applicationVersionId, String url, String module, String since, String until, String granularity, String xproperty, String asParam) {
-        String baseUri = setBaseUriForModule(module);
+        setBaseUriForModule(module);
         RequestSpecification requestSpecification = given().spec(spec);
 //        asParam is a workaround for Dp inconsistency. Remove when DP-1957 is solved.
         if (xproperty != null && asParam != null) {
@@ -656,7 +660,6 @@ public class BasicSteps {
         Response response = requestSpecification
                 .header(HEADER_XAUTH_USER_ID, userId)
                 .header(HEADER_XAUTH_APPLICATION_ID, applicationVersionId)
-                .baseUri(baseUri)
                 .basePath(url).when().get();
         setSessionResponse(response);
     }
@@ -860,11 +863,11 @@ public class BasicSteps {
 
     // --- session access ---
 
-    public Response getSessionResponse() {
+    public static Response getSessionResponse() {
         return Serenity.<Response>sessionVariableCalled(SESSION_RESPONSE);
     }
 
-    public void setSessionResponse(Response response) {
+    public static void setSessionResponse(Response response) {
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
@@ -886,7 +889,7 @@ public class BasicSteps {
     }
 
     @Step
-    public <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Exception {
+    public static <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Exception {
         Response response = getSessionResponse();
         List<T> objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());

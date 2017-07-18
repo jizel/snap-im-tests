@@ -4,8 +4,12 @@ import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OBJECT_CUSTOMERS;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OBJECT_PROPERTIES;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OBJECT_PROPERTY_SETS;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
@@ -14,7 +18,6 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 
 /**
@@ -62,18 +65,18 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     @Test
     public void crudUserRestrictionTest(){
 //        Create
-        userHelpers.createUserByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2);
+        userHelpers.createUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2);
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_USERS_ENDPOINT, POST_METHOD);
-        userHelpers.createUserByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2);
+        userHelpers.createUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2);
         responseCodeIs(SC_CREATED);
 //        Update
         UserUpdateDto userUpdate = new UserUpdateDto();
         userUpdate.setUsername("UpdatedUsername");
-        userHelpers.updateUserByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId(), userUpdate);
+        userHelpers.updateUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId(), userUpdate);
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_USER_ENDPOINT, POST_METHOD);
-        userHelpers.updateUserByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId(), userUpdate);
+        userHelpers.updateUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId(), userUpdate);
         responseCodeIs(SC_NO_CONTENT);
 //        Delete
         userHelpers.deleteUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId());

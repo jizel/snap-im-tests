@@ -3,28 +3,24 @@ package travel.snapshot.dp.qa.junit.tests.identity.restrictions;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 
 /**
  *  Endpoint restrictions for properties
  */
 public class PropertyRestrictionTest extends CommonRestrictionTest{
-    private ApplicationDto restrictedApp;
-    private ApplicationVersionDto createdAppVersion;
 
     private static final String ALL_PROPERTIES_ENDPOINT = "/identity/properties";
     private static final String SINGLE_PROPERTY_ENDPOINT = "/identity/properties/{property_id}";
     private static final String PROPERTY_CUSTOMERS_ENDPOINT = "/identity/properties/{property_id}/customers";
     private static final String PROPERTY_USERS_ENDPOINT = "/identity/properties/{property_id}/users";
     private static final String PROPERTY_PROPERTY_SETS_ENDPOINT = "/identity/properties/{property_id}/property_sets";
+
 
     @Test
     public void getPropertyRestrictionTest(){
@@ -44,10 +40,10 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     @Test
     public void crudPropertyRestrictionTest(){
 //        Create
-        propertyHelpers.createPropertyByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
+        propertyHelpers.createPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_PROPERTIES_ENDPOINT, POST_METHOD);
-        propertyHelpers.createPropertyByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
+        propertyHelpers.createPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
         responseCodeIs(SC_CREATED);
 //        Update
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
@@ -58,10 +54,10 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
         propertyHelpers.updatePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId(), propertyUpdate);
         responseCodeIs(SC_NO_CONTENT);
 //        Delete
-        propertyHelpers.deletePropertyByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId());
+        propertyHelpers.deletePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId());
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_PROPERTY_ENDPOINT, DELETE_METHOD);
-        propertyHelpers.deletePropertyByUserForApp(BasicSteps.DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId());
+        propertyHelpers.deletePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId());
         responseCodeIs(SC_NO_CONTENT);
     }
 
