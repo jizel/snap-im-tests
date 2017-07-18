@@ -38,7 +38,7 @@ Feature: User Groups Properties Roles access check feature
 
   Scenario: Get relationship UserGroup property and Role by users with and without access
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
-    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup" with is_active "true"
+    When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     When List of all roles for user group "userGroup_1" and property with code "p1_code" is requested by user "userWithUserGroup"
     Then Response code is "200"
     And Total count is "1"
@@ -58,7 +58,6 @@ Feature: User Groups Properties Roles access check feature
     Given Relation between user group "userGroup_1" and property with code "p1_code" exists with isActive "true"
     When Relation between user group "userGroup_1", property with code "p1_code" and role with id "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8" is created by user "userWithUserGroup"
     And Body contains entity with attribute "role_id" value "2d6e7db2-2ab8-40ae-8e71-3904d1512ec8"
-    And Body contains entity with attribute "is_active"
 
   Scenario: Create relationship UserGroup property and Role is created by user without (or with inactive) access to user group, property
    Given The following property is created with random address and billing address for user "32129079-48f0-4f00-9bec-e2329a8bdaac"
