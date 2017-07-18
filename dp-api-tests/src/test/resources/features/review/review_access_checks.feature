@@ -8,6 +8,8 @@ Feature: Review application access checks
       | id                                   | isInternal | name            | description          | website                    | partnerId                            |
       | 00000000-a05d-42d8-8e84-111111111111 | false      | External App    | External Application | http://www.snapshot.travel | 07000000-0000-4444-8888-000000000002 |
       | 00000000-a05d-42d8-8e84-111111100000 | true       | Internal App    | Internal Application | http://www.snapshot.travel | 07000000-0000-4444-8888-000000000002 |
+    Given Application permission table is populated for application "External App"
+    Given Application permission table is populated for application "Internal App"
     Given The following commercial subscriptions exist
       | customerId                           | propertyId                           | applicationId                        |
       | 06000000-0000-4444-8888-000000000001 | 08000000-0000-4444-8888-000000000001 | 00000000-a05d-42d8-8e84-111111111111 |
