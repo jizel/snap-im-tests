@@ -1,6 +1,0 @@
-      | username   | count | names              | order |
-      | snapshot   | 2     | ps1_name, ps2_name | name  |
-      | everything | 2     |                    | /null |
-      | everything | 2     | ps1_name, ps2_name | name  |
-      | limited    | 1     | ps2_name           | name  |
-      | random     | 0     |                    | /null |

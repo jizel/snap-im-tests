@@ -1,7 +1,0 @@
-This util transforms a cucumber example table into a yaml example table used by
-plain junit tests.
-The script expects two parameters:
-1. The file containing cucumber example table
-2. The name of the output file that would contain the result.
-The output file will be automatically created
-Just copy the output contents and paste it into your yaml source.
