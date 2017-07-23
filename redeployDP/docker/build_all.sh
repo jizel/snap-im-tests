@@ -37,10 +37,6 @@ docker build --force-rm=true -t snapshot/mariadb mariadb
 tag_image snapshot/mariadb latest
 tag_image snapshot/mariadb 10.1.22
 
-docker build --force-rm=true -t snapshot/postgres postgres
-tag_image snapshot/postgres latest
-tag_image snapshot/postgres 9.6
-
 docker build --force-rm=true -t snapshot/nonpms_integrations nonpms_integrations
 tag_image snapshot/nonpms_integrations latest
 tag_image snapshot/nonpms_integrations 1.37

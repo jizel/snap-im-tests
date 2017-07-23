@@ -184,7 +184,7 @@ mariadb:
         MYSQL_DATABASE: "identity"
 
 postgresql:
-    image: docker.snapshot.travel:5000/snapshot/postgres:9.6
+    image: postgres:9.6
     environment:
         - POSTGRES_PASSWORD=secret
         - POSTGRES_DB=identity
