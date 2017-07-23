@@ -1,0 +1,5 @@
+1. Copy the example table from cucumber scenario outline to a new balnk file
+2. Run the tabletocsv.py script with the path to the examples file as a script
+parameter, like so: ./tabletocsv.py $path_to_example_file
+3. collect the resulting csv either from stdoutput or from the result.csv file
+that is created/updated by the script
