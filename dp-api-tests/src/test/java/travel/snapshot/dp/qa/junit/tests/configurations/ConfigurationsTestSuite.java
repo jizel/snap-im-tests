@@ -1,9 +1,7 @@
-package travel.snapshot.dp.qa.junit.suites;
+package travel.snapshot.dp.qa.junit.tests.configurations;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import travel.snapshot.dp.qa.junit.tests.configurations.ConfigurationTypesTests;
-import travel.snapshot.dp.qa.junit.tests.configurations.ConfigurationsTests;
 
 /**
  * Test suite for configuration module

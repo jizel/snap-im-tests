@@ -84,6 +84,8 @@ dependencies {
     testCompile 'com.github.mifmif:generex:0.0.4'
     testCompile 'org.apache.commons:commons-lang3:3.4'
     testCompile 'org.springframework:spring-jdbc:4.2.2.RELEASE'
+    testCompile 'com.googlecode.junit-toolbox:junit-toolbox:2.3'
+
     testRuntime 'mysql:mysql-connector-java:5.1.37'
 
 }
