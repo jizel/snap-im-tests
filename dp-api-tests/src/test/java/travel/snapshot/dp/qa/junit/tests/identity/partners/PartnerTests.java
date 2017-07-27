@@ -1,11 +1,10 @@
-package travel.snapshot.dp.qa.junit.tests.partners;
+package travel.snapshot.dp.qa.junit.tests.identity.partners;
 
 import org.junit.Before;
 import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 import static org.apache.http.HttpStatus.SC_OK;
 

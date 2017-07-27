@@ -16,9 +16,11 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.io.IOException;
@@ -51,6 +53,7 @@ public class ConfigurationsTests extends CommonTest {
     }
 
     @Test
+    @Category(Categories.SmokeTests.class)
     public void createGetConfigurationsKeyValueTest() throws IOException {
         List<Map<String, String>> listOfExamples = selectExamplesForTestFromTable(configurationsTestsTables, "createConfigurationsKeyValueTest");
         for (Map<String, String> configurationMap : listOfExamples) {

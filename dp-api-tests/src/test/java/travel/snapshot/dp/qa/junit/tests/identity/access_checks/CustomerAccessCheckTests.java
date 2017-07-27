@@ -18,7 +18,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 
 /**
- * Sample customer tests using YAML data
+ * Access check tests for customers
  */
 
 @RunWith(SerenityRunner.class)

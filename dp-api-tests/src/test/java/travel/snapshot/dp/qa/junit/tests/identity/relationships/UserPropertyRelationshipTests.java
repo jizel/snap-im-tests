@@ -12,10 +12,12 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 /**
@@ -25,7 +27,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 public class UserPropertyRelationshipTests extends CommonTest {
     private PropertyDto createdProperty1;
     private UserDto createdUser1;
-    private Response response;
 
     @Before
     public void setUp() throws Throwable {
@@ -35,8 +36,9 @@ public class UserPropertyRelationshipTests extends CommonTest {
     }
 
     @Test
+    @Category(Categories.SmokeTests.class)
     public void createUserPropertyRelationship() {
-        response = relationshipsHelpers.createUserPropertyRelationship(createdUser1.getId(), createdProperty1.getId(), true);
+        Response response = relationshipsHelpers.createUserPropertyRelationship(createdUser1.getId(), createdProperty1.getId(), true);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("id");
         UserPropertyRelationshipDto returnedRelationship = response.as(UserPropertyRelationshipDto.class);

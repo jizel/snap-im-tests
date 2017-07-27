@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.suites;
+package travel.snapshot.dp.qa.junit.tests;
 
 /**
  * Just markers for JUnit categories that can be used in test suites
@@ -6,6 +6,6 @@ package travel.snapshot.dp.qa.junit.suites;
  * See https://github.com/junit-team/junit4/wiki/Categories for details
  */
 public interface Categories {
-    interface IdentityModuleTests {}
     interface SmokeTests {}
+    interface SlowTests {}
 }

@@ -63,7 +63,7 @@ public class CustomerHelpers extends CustomerSteps {
 
     public CustomerDto customerIsCreated(CustomerCreateDto customer) throws JsonProcessingException {
         Response response = createCustomerByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customer);
-        assertEquals(String.format("Failed to create customer: %s", response.toString()), response.getStatusCode(), SC_CREATED);
+        assertThat(String.format("Failed to create customer: %s", response.toString()), response.getStatusCode(), is(SC_CREATED));
         setSessionResponse(response);
         return response.as(CustomerDto.class);
     }
