@@ -65,17 +65,19 @@ public class AuthorizationSteps extends BasicSteps {
         getIdentityData(url, access_token);
     }
 
-    public void getToken(String username, String password) {
+    public void getToken(String username, String password, String clientId, String clientSecret) {
         RequestSpecification requestSpecification = given()
                 .baseUri(PropertiesHelper.getProperty(AUTHORIZATION_BASE_URI))
-                .parameter("client_id", "fad6b992")
-                .parameter("client_secret", "133707cc5837af1b6a87a1dbb117b978")
+                .parameter("client_id", clientId)
+                .parameter("client_secret", clientSecret)
                 .parameter("grant_type", "password")
                 .parameter("username", username)
-                .parameter("password", password);
+                .parameter("password", password)
+                .log().all();
 
-        Response response = requestSpecification.get("/oauth/token");
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
+        String response = requestSpecification.post("/oauth/token")
+                                                .path("access_token");
+        Serenity.setSessionVariable(SESSION_TOKEN).to(response);
     }
 
 }

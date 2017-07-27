@@ -17,6 +17,7 @@ import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class EntitiesLoader {
     private EntityNonNullMap<String, UserGroupDto> userGroupDtos;
     private EntityNonNullMap<String, ApplicationDto> applicationDtos;
     private EntityNonNullMap<String, ApplicationVersionDto> applicationVersionDtos;
+    private LinkedHashMap<String, Map<String, Object>> clients;
 
     private EntitiesLoader() {
         loadCustomers();
@@ -56,6 +58,7 @@ public class EntitiesLoader {
         loadUserGroups();
         loadApplications();
         loadApplicationVersions();
+        loadClients();
     }
 
     public static EntitiesLoader getInstance() {
@@ -63,6 +66,11 @@ public class EntitiesLoader {
             instance = new EntitiesLoader();
         }
         return instance;
+    }
+
+    private void loadClients() {
+        Map<String, Object> yamlClients = loadEntities(String.format(YAML_DATA_PATH, "entities/clients.yaml"));
+        clients = (LinkedHashMap<String, Map<String, Object>>) yamlClients.get("clients");
     }
 
     private void loadCustomers() {

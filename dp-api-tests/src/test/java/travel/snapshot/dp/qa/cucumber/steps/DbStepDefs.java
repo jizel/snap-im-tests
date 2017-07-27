@@ -4,17 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_VAT_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_SALESFORCE_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_TIMEZONE;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SNAPSHOT_WEBSITE;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -81,7 +71,7 @@ public class DbStepDefs {
         UserCreateDto defaultSnapshotUser = new UserCreateDto();
         defaultSnapshotUser.setId(DEFAULT_SNAPSHOT_USER_ID);
         defaultSnapshotUser.setType(SNAPSHOT);
-        defaultSnapshotUser.setUsername("defaultSnapshotUser");
+        defaultSnapshotUser.setUsername(DEFAULT_SNAPSHOT_USER_NAME);
         defaultSnapshotUser.setFirstName("Default");
         defaultSnapshotUser.setLastName("SnapshotUser");
         defaultSnapshotUser.setEmail("defaultSnapshotUser1@snapshot.travel");

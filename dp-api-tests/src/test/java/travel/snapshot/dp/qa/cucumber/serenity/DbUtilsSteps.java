@@ -1,10 +1,5 @@
 package travel.snapshot.dp.qa.cucumber.serenity;
 
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_HOSPITALITY_ID;
-
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
@@ -17,6 +12,8 @@ import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -56,7 +53,7 @@ public class DbUtilsSteps {
     static final String DELETE_PARTNER = "delete from Partner";
     static final String DELETE_PARTNER_USER = "delete from User_Partner";
     static final String DELETE_USER_CUSTOMER_ROLE = "delete from User_Customer_Role";
-    static final String CREATE_DB_USER = "INSERT INTO public.user (id, type, username, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
+    static final String CREATE_DB_USER = "INSERT INTO public.user (id, type, username, password, first_name, last_name, email, timezone, language_code, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_PARTNER = "INSERT INTO Partner (id, name, email, notes, website, vat_id, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION = "INSERT INTO Application (id, name, description, website, partner_id, is_internal, is_active, version) VALUES (?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_DB_APPLICATION_VERSION = "INSERT INTO ApplicationVersion (id, application_id, api_manager_id, name, status, release_date, description, is_active, is_non_commercial, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
@@ -85,7 +82,7 @@ public class DbUtilsSteps {
     }
 
     public void createDBUser(UserDto user) {
-        dbHelper.identityDb().update(CREATE_DB_USER, UUID.fromString(user.getId()), user.getType().toString(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_USER, UUID.fromString(user.getId()), user.getType().toString(), user.getUsername(), DEFAULT_ENCRYPTED_PASSWORD, user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
     }
 
     public void createDBPartner(PartnerDto partner) {

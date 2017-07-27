@@ -1,0 +1,42 @@
+clients:
+  client1: &BASIC_CLIENT {
+    id: aaad765c-b6ed-4061-895a-8a90bb22c37e,
+    clientId: 04000000-0000-4444-8888-000000000000,
+    enabled: true,
+    clientAuthenticatorType: client-secret,
+    secret: a4000000-0000-4444-8888-000000000000,
+    directAccessGrantsEnabled: true,
+    redirectUris: [
+      "*"
+    ],
+    protocolMappers:
+    [
+      {
+        name: "Identity ID",
+        protocol: "openid-connect",
+        protocolMapper: "oidc-usermodel-attribute-mapper",
+        consentRequired: false,
+        config: {
+          user.attribute: identity-id,
+          access.token.claim: true,
+          claim.name: identity_id,
+          jsonType.label: String
+        }
+      }
+    ]
+  }
+
+  client2: {
+    <<: *BASIC_CLIENT,
+    id: bbbd765c-b6ed-4061-895a-8a90bb22c37e,
+    clientId: 04000000-0000-4444-8888-000000000001,
+    secret: a4000000-0000-4444-8888-000000000001,
+  }
+
+  client3: {
+    <<: *BASIC_CLIENT,
+    id: cccd765c-b6ed-4061-895a-8a90bb22c37e,
+    clientId: 04000000-0000-4444-8888-000000000002,
+    secret: a4000000-0000-4444-8888-000000000002,
+  }
+

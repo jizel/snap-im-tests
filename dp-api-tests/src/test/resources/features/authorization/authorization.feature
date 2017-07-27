@@ -3,13 +3,10 @@
 Feature: authorization
 
   Background: 
-    Given The following users exist
-      | type     | username  | firstName | lastName  | email          | timezone | languageCode |
-      | customer | testauth1 | Auth1     | AuthUser1 | auth1@mail.com | GMT      | bg      |
-    Given The password of user "testauth1" is "somepassword22"
+    Given The password of user "defaultSnapshotUser" is "somepassword22"
 
   Scenario: Get access token for a specific existing user
-    When Getting token for user "testauth1" with password "somepassword22"
+    When Getting token for user "defaultSnapshotUser" with password "somepassword22"
     Then Content type is "application/json"
     And Response code is "200"
     And Body contains entity with attribute "access_token"
