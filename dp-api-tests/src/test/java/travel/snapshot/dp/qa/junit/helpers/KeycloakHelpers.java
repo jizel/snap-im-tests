@@ -4,12 +4,16 @@ import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
+import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.asList;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.junit.Assert.assertTrue;
 import static travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper.getProperty;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
 
@@ -37,7 +41,7 @@ public class KeycloakHelpers {
                 .body(jsonClient)
                 .when().post("/admin/realms/Snapshot/clients");
         setSessionResponse(response);
-        responseCodeIs(SC_CREATED);
+        assertTrue(asList(SC_CREATED, SC_CONFLICT).contains(response.getStatusCode()));
     }
 
     public void deleteClient(String clientId) {

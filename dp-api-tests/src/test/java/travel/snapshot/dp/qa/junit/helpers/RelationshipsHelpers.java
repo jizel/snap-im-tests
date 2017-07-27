@@ -34,16 +34,17 @@ import java.time.LocalDate;
  */
 public class RelationshipsHelpers extends BasicSteps {
 
-    private static final String USER_CUSTOMER_RELATIONSHIP_PATH = "api/identity/user_customer_relationships";
-    private static final String USER_PARTNER_RELATIONSHIP_PATH = "api/identity/user_partner_relationships";
-    private static final String USER_PROPERTY_RELATIONSHIP_PATH = "api/identity/user_property_relationships";
-    private static final String USER_PROPERTY_SET_RELATIONSHIP_PATH = "api/identity/user_property_set_relationships";
-    private static final String CUSTOMER_PROPERTY_RELATIONSHIP_PATH = "api/identity/customer_property_relationships";
-    private static final String PROPERTY_SET_PROPERTY_RELATIONSHIP_PATH = "api/identity/property_set_property_relationships";
-    private static final String USER_GROUP_PROPERTY_RELATIONSHIP_PATH = "api/identity/user_group_property_relationships";
-    private static final String USER_GROUP_PROPERTY_SET_RELATIONSHIP_PATH = "api/identity/user_group_property_set_relationships";
-    private static final String USER_GROUP_USER_RELATIONSHIP_PATH = "api/identity/user_group_user_relationships";
-
+    private static final String USER_CUSTOMER_RELATIONSHIP_PATH = "identity/user_customer_relationships";
+    private static final String USER_PARTNER_RELATIONSHIP_PATH = "identity/user_partner_relationships";
+    private static final String USER_PROPERTY_RELATIONSHIP_PATH = "identity/user_property_relationships";
+    private static final String USER_PROPERTY_SET_RELATIONSHIP_PATH = "identity/user_property_set_relationships";
+    private static final String CUSTOMER_PROPERTY_RELATIONSHIP_PATH = "identity/customer_property_relationships";
+    private static final String PROPERTY_SET_PROPERTY_RELATIONSHIP_PATH = "identity/property_set_property_relationships";
+    private static final String USER_GROUP_PROPERTY_RELATIONSHIP_PATH = "identity/user_group_property_relationships";
+    private static final String USER_GROUP_PROPERTY_SET_RELATIONSHIP_PATH = "identity/user_group_property_set_relationships";
+    private static final String USER_GROUP_USER_RELATIONSHIP_PATH = "identity/user_group_user_relationships";
+    private final CommonHelpers commonHelpers = new CommonHelpers();
+    private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
 
     //    User Customer Relationships
 
@@ -189,6 +190,15 @@ public class RelationshipsHelpers extends BasicSteps {
         return createEntity(CustomerPropertyRelationship);
     }
 
+    public void createCustomerPropertyRelationshipWithAuth(String customerId, String propertyId, Boolean isActive,
+                                                           CustomerPropertyRelationshipType type,
+                                                           LocalDate validFrom,
+                                                           LocalDate validTo) {
+        CustomerPropertyRelationshipDto CustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(customerId, propertyId, isActive, type, validFrom, validTo);
+        CustomerPropertyRelationshipDto customerProperty = authorizationHelpers.createEntity(CUSTOMER_PROPERTY_RELATIONSHIP_PATH, CustomerPropertyRelationship).as(CustomerPropertyRelationshipDto.class);
+        commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, customerProperty.getId());
+    }
+
     public CustomerPropertyRelationshipDto customerPropertyRelationshipIsCreated(String customerId, String propertyId,
                                                                                  Boolean isActive,
                                                                                  CustomerPropertyRelationshipType type,
@@ -215,6 +225,10 @@ public class RelationshipsHelpers extends BasicSteps {
     public Response deleteCustomerPropertyRelationship(String relationshipId) {
         spec.basePath(CUSTOMER_PROPERTY_RELATIONSHIP_PATH);
         return deleteEntityWithEtag(relationshipId);
+    }
+
+    public void deleteCustomerPropertyRelationshipWithAuth(String relationshipId) {
+        authorizationHelpers.deleteEntity(CUSTOMER_PROPERTY_RELATIONSHIP_PATH, relationshipId);
     }
 
     public CustomerPropertyRelationshipDto getCustomerPropertyRelationship(String relationshipId) {

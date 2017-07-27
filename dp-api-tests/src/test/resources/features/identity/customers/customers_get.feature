@@ -10,17 +10,6 @@ Feature: Customers get
       | id                                   | type     | username     | firstName | lastName     | email                         | timezone      | languageCode |
       | a63edcc6-6830-457c-89b1-7801730bd0ae | snapshot | snapshotUser | Snapshot  | User         | snapshotuser1@snapshot.travel | Europe/Prague | cs-CZ   |
 
-  @Smoke
-  Scenario: Getting customer
-    When Customer with customerId "87ae86b7-f5b5-4288-a59e-6bbf9fca4096" is got
-    Then Response code is "200"
-    And Content type is "application/json"
-    And Etag header is present
-    And Body contains entity with attribute "customer_code"
-    And Body contains entity with attribute "name" value "Given company 1"
-    And Body contains entity with attribute "email" value "c1@tenants.biz"
-    And Body contains entity with attribute "vat_id" value "CZ10000001"
-
 
   Scenario: Checking error code for getting customer
     When Customer with customerId "invalidUUID" is got

@@ -22,7 +22,9 @@ import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
+import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,6 +36,9 @@ public class DbStepDefs {
     private CustomerSteps customerSteps;
     @Steps
     private PropertySteps propertySteps;
+
+    protected static final CommonHelpers commonHelpers = new CommonHelpers();
+
 
 //    @Steps annotation does not work with JUnit
     private ApplicationsSteps applicationsSteps = new ApplicationsSteps();
@@ -51,6 +56,11 @@ public class DbStepDefs {
     @Given("^Database is cleaned and default entities are created$")
     public void databaseIsCleanedAndEntitiesAreCreated() throws Throwable {
         dbSteps.cleanDatabase();
+        defaultEntitiesAreCreated();
+    }
+
+    @Given("^Default entities are created$")
+    public void defaultEntitiesAreCreated() throws Throwable {
         defaultSnapshotUserIsCreated();
         defaultPartnerIsCreated();
         defaultSnapshotApplicationIsCreated();
@@ -59,6 +69,20 @@ public class DbStepDefs {
         defaultPropertyIsCreated();
         defaultCommercialSubscriptionIsCreated();
         applicationPermissionPopulated(DEFAULT_SNAPSHOT_APPLICATION_ID);
+    }
+
+    @Given("^Default entities are deleted$")
+    public void defaultEntitiesAreDeleted() throws Throwable {
+        dbSteps.deleteAppVersion(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+        dbSteps.revokeAppPermissions(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        dbSteps.deleteCommercialSubscription(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        dbSteps.deleteProperty(DEFAULT_PROPERTY_ID);
+        dbSteps.deleteCustomer(DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        dbSteps.deleteApplication(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        dbSteps.deletePartner(DEFAULT_SNAPSHOT_PARTNER_ID);
+        dbSteps.deleteDbUser(DEFAULT_SNAPSHOT_USER_ID);
+        dbSteps.deleteDbAddress(DEFAULT_ADDRESS_ID);
+
     }
 
     @Given("^Database is cleaned$")
@@ -177,5 +201,16 @@ public class DbStepDefs {
     public void applicationPermissionPopulated(String applicationName) throws Throwable {
             String applicationId = applicationsSteps.resolveApplicationId(applicationName);
             dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
+    }
+
+    public void removeCreatedEntities(Map<String, ArrayList<String>> registry) {
+        ArrayList<String> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTIES, registry);
+        ArrayList<String> customerIds = commonHelpers.getArrayFromMap(SECOND_LEVEL_OBJECT_CUSTOMERS, registry);
+        customerPropertyIds.forEach(id -> {
+            dbSteps.deleteCustomerProperty(id);
+        });
+        customerIds.forEach(customerId -> {
+            dbSteps.deleteCustomer(customerId);
+        });
     }
 }

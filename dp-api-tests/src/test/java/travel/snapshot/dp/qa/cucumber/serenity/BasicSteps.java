@@ -132,6 +132,8 @@ public class BasicSteps {
     public static final String DEFAULT_PASSWORD = "P@ssw0rd";
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
     public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
+    public static final String ENTITIES_TO_DELETE = "deleteThese" ;
+    public static final String CUSTOMER_PROPERTIES = "customer_properties" ;
 
     protected RequestSpecification spec = null;
 
@@ -336,12 +338,6 @@ public class BasicSteps {
         return response;
     }
 
-    public Response createEntityWithAuthorization(Object entity) {
-        spec.baseUri(PropertiesHelper.getProperty("identity_nginx.baseURI"));
-        Response response = given().spec(spec).header(HEADER_AUTHORIZATION, "Bearer " + getSessionVariable(SESSION_TOKEN)).body(entity).when().post();
-        setSessionResponse(response);
-        return response;
-    }
     protected Response updateEntity(String entityId, Map<String, Object> data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }

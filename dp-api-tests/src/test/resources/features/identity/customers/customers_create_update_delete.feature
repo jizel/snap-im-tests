@@ -5,34 +5,6 @@ Feature: Customers create update delete
   Background:
     Given Database is cleaned and default entities are created
 
-  @Smoke
-  Scenario: Creating/activating/deleting Customer
-    When Customer is created with random address
-      | id                                   | name                  | email          | salesforceId    | vatId      | isDemo         | phone         | website                    | timezone      | type  | hospitalityId                        |
-      | a792d2b2-3836-4207-a705-42bbecf3d881 | Creation test company | s1@tenants.biz | SALESFORCEID001 | CZ00000001 | true           | +420123456789 | http://www.snapshot.travel | Europe/Prague | HOTEL | 000000b2-3836-4207-a705-42bbec000000 |
-    Then Response code is "201"
-    And Body contains entity with attribute "name" value "Creation test company"
-    And Body contains entity with attribute "email" value "s1@tenants.biz"
-    And Body contains entity with attribute "salesforce_id" value "SALESFORCEID001"
-    And Body contains entity with attribute "phone" value "+420123456789"
-    And Body contains entity with attribute "customer_code"
-    And Body contains entity with attribute "is_active" value "true"
-    And Body contains entity with attribute "type" value "hotel"
-    And Body contains entity with attribute "hospitality_id" value "000000b2-3836-4207-a705-42bbec000000"
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is activated
-    Then Response code is "204"
-    And Body is empty
-    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is active
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is inactivated
-    Then Response code is "204"
-    And Body is empty
-    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is not active
-    When Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" is deleted
-    Then Response code is "204"
-    And Body is empty
-    And Customer with id "a792d2b2-3836-4207-a705-42bbecf3d881" doesn't exist
-
-
   Scenario Outline: Checking error codes for creating customer
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
     Then Response code is "<error_code>"
