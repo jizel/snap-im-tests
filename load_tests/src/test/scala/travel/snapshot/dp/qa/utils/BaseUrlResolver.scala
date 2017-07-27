@@ -43,7 +43,7 @@ trait SystemPropertiesGatherer {
   val localEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
     System.getProperty("protocol", "http"),
     System.getProperty("host", "localhost"),
-    System.getProperty("port", "18080"),
+    System.getProperty("port", "8080"),
     resolveScenario
   )
 

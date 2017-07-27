@@ -41,7 +41,6 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
     }
 
-
     @Test
     public void createCustomerPropertyRelationship() {
         response = relationshipsHelpers.createCustomerPropertyRelationship(createdCustomer1.getId(), createdProperty1.getId(),
