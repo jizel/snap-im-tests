@@ -6,6 +6,7 @@ import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +26,22 @@ public class ParametersCustomer extends CommonTest {
 
     private CustomerDto createdCustomer = null;
     private static final String EXAMPLES = "src/test/resources/csv/customers/";
+    private static AddressDto address;
+    private static String vatId;
 
 
     @Before
     public void setUp() throws Throwable {
         super.setUp();
-        dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-        createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
+        address = testCustomer1.getAddress();
+        vatId = testCustomer1.getVatId();
+    }
+
+    @After
+    public void cleanUp() throws Throwable {
+        super.cleanUp();
+        testCustomer1.setVatId(vatId);
+        testCustomer1.setAddress(address);
     }
 
 
@@ -45,6 +55,7 @@ public class ParametersCustomer extends CommonTest {
                                                                                           String sortDesc,
                                                                                           String responseCode,
                                                                                           String customCode) throws Throwable {
+        createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
         customerHelpers.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
         responseCodeIs(Integer.valueOf(responseCode));
         customCodeIs(Integer.valueOf(customCode));
