@@ -28,7 +28,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 public class ParametersCustomer extends CommonTest {
 
     private static final String EXAMPLES = "src/test/resources/csv/customers/";
-    private static final CustomerCreateDto customerVatTests = testCustomer1;
 
 
     @Before
@@ -64,37 +63,37 @@ public class ParametersCustomer extends CommonTest {
 
     @FileParameters(EXAMPLES + "validateCustomerRegionsBelongToCorrectCountry.csv")
     @Test
-    @Category(Categories.SmokeTests.class)
+    @Category(Categories.SlowTests.class)
     public void validateCustomerRegionsBelongToCorrectCountry(String country,
                                                               String region,
                                                               String vatId) {
         AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, region);
-        customerVatTests.setAddress(address);
-        customerVatTests.setVatId(vatId);
-        customerHelpers.createRandomCustomer(customerVatTests);
+        testCustomer1.setAddress(address);
+        testCustomer1.setVatId(vatId);
+        customerHelpers.createRandomCustomer(testCustomer1);
         responseCodeIs(SC_CREATED);
         bodyContainsEntityWith("vat_id", vatId);
     }
 
     @FileParameters(EXAMPLES + "validateInvalidVatId.csv")
     @Test
-    @Category(Categories.SmokeTests.class)
+    @Category(Categories.SlowTests.class)
     public void validateCustomerHasInvalidVatId(String country, String vatId) throws Throwable {
         AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, null);
-        customerVatTests.setAddress(address);
-        customerVatTests.setVatId(vatId);
-        customerHelpers.createRandomCustomer(customerVatTests);
+        testCustomer1.setAddress(address);
+        testCustomer1.setVatId(vatId);
+        customerHelpers.createRandomCustomer(testCustomer1);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
     }
 
     @FileParameters(EXAMPLES + "validateValidVatId.csv")
     @Test
-    @Category(Categories.SmokeTests.class)
+    @Category(Categories.SlowTests.class)
     public void validateCustomerHasValidVatId(String country, String vatId) throws Throwable {
         AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, null);
-        customerVatTests.setAddress(address);
-        customerVatTests.setVatId(vatId);
-        customerHelpers.createRandomCustomer(customerVatTests);
+        testCustomer1.setAddress(address);
+        testCustomer1.setVatId(vatId);
+        customerHelpers.createRandomCustomer(testCustomer1);
         responseCodeIs(SC_CREATED);
     }
 }

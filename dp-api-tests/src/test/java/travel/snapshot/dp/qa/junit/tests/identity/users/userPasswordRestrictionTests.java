@@ -15,7 +15,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
  */
 
 @RunWith(SerenityRunner.class)
-public class userRestrictionTests extends CommonTest {
+public class userPasswordRestrictionTests extends CommonTest {
 
     @Jira("DP-1985")
     @Test
