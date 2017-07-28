@@ -5,6 +5,7 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadEntities;
 
 import lombok.Getter;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
@@ -14,10 +15,8 @@ import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -62,10 +61,11 @@ public class EntitiesLoader {
     }
 
     public static EntitiesLoader getInstance() {
-        if(instance == null) {
-            instance = new EntitiesLoader();
-        }
-        return instance;
+//        if(instance == null) {
+//            instance = new EntitiesLoader();
+//        }
+//        return instance;
+        return new EntitiesLoader();
     }
 
     private void loadClients() {

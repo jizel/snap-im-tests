@@ -12,8 +12,6 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OB
 
 import org.junit.Before;
 import org.junit.Test;
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
@@ -24,8 +22,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
  *  Endpoint restrictions for customers
  */
 public class UserRestrictionTests extends CommonRestrictionTest{
-    private ApplicationDto restrictedApp;
-    private ApplicationVersionDto createdAppVersion;
     private UserDto createdUser1;
 
     private static final String ALL_USERS_ENDPOINT = "/identity/users";

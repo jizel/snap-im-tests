@@ -1,7 +1,7 @@
 application_versions:
   app_version1: !applicationVersion &BASIC_VERSION {
     id: 04000000-0000-4444-8888-000000000001,
-    applicationId: 11111111-0000-4000-a000-111111111111,
+    applicationId: 03000000-0000-4444-8888-000000000000,
     apiManagerId: d75f360a-b947-4078-b3b0-4c1f793844a1,
     name: version1,
     status: CERTIFIED,
