@@ -89,10 +89,10 @@ public class UserRestrictionTests extends CommonRestrictionTest{
 
     @Test
     public void getUserSecondLevelEntitiesRestrictionTest(){
-        userHelpers.getUserCustomerRelationByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, createdUser1.getId());
+        userHelpers.getUserCustomerRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, createdUser1.getId());
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), USER_CUSTOMER_RELATIONSHIP_ENDPOINT, GET_METHOD);
-        userHelpers.getUserCustomerRelationByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, createdUser1.getId());
+        userHelpers.getUserCustomerRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, createdUser1.getId());
         responseCodeIs(SC_OK);
 
         userHelpers.getAllUserPropertiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), createdUser1.getId());

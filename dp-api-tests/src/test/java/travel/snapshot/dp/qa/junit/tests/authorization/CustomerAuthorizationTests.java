@@ -1,4 +1,4 @@
-package travel.snapshot.dp.qa.junit.tests.identity.authorization;
+package travel.snapshot.dp.qa.junit.tests.authorization;
 
 
 import net.serenitybdd.junit.runners.SerenityRunner;

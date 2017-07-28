@@ -17,8 +17,6 @@ public abstract class CommonRestrictionTest extends CommonTest {
     protected ApplicationDto restrictedApp;
     protected ApplicationVersionDto createdAppVersion;
 
-    //    Help methods
-
 
     @Before
     public void setUp() throws Throwable {
@@ -27,6 +25,7 @@ public abstract class CommonRestrictionTest extends CommonTest {
         createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());
     }
 
+    //    Help methods
     private ApplicationVersionDto createTestApplicationVersionForApp(String applicationId){
         ApplicationVersionDto testAppVersion = testAppVersion = new ApplicationVersionDto();
         testAppVersion.setApplicationId(applicationId);

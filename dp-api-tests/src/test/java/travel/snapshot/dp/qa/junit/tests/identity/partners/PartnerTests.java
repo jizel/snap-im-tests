@@ -1,12 +1,17 @@
 package travel.snapshot.dp.qa.junit.tests.identity.partners;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+
 import org.junit.Before;
 import org.junit.Test;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.PartnerDto;
+import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
-
-import static org.apache.http.HttpStatus.SC_OK;
 
 /**
  * Created by ofayans on 7/11/17.
@@ -30,9 +35,9 @@ public class PartnerTests extends CommonTest{
         partnerHelpers.createPartnerUserRelationship(createdPartner1.getId(), requestorId);
         partnerHelpers.getUsersForPartnerByUserForApp(createdPartner1.getId(), requestorId, BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         responseCodeIs(SC_OK);
-        partnerHelpers.numberOfEntitiesInResponse(PartnerUserRelationshipPartialDto.class, 1);
+        numberOfEntitiesInResponse(PartnerUserRelationshipPartialDto.class, 1);
         userHelpers.getPartnersForUserByUserForApp(requestorId, requestorId, BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         responseCodeIs(SC_OK);
-        partnerHelpers.numberOfEntitiesInResponse(UserPartnerRelationshipPartialDto.class, 1);
+        numberOfEntitiesInResponse(UserPartnerRelationshipPartialDto.class, 1);
     }
 }

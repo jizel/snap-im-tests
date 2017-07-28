@@ -28,30 +28,27 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 public class ParametersCustomer extends CommonTest {
 
     private static final String EXAMPLES = "src/test/resources/csv/customers/";
-    private static AddressDto address;
-    private static String vatId;
     private static final CustomerCreateDto customerVatTests = testCustomer1;
 
 
     @Before
     public void setUp() throws Throwable {
         super.setUp();
-        address = testCustomer1.getAddress();
-        vatId = testCustomer1.getVatId();
     }
 
     @After
     public void cleanUp() throws Throwable {
         super.cleanUp();
-        testCustomer1.setVatId(vatId);
-        testCustomer1.setAddress(address);
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+//        Reloading all default entities to to undo changes made on testCustomer1 between tests.
+        loadDefaultTestEntities();
     }
 
 
     //    Value of a string given to any annotation must be known at compile time. Hence String.format or concatenation cannot be used here and we must always give a "full path' to the test file.
     @FileParameters(EXAMPLES + "getCustomerCommSubscriptionErrorCodesTestExamples.csv")
     @Test
+    @Category(Categories.SlowTests.class)
     public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams(String limit,
                                                                                           String cursor,
                                                                                           String filter,
