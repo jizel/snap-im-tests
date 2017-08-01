@@ -1,12 +1,12 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
+
 import org.junit.After;
 import org.junit.Before;
 
 import java.util.Map;
-
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
 
 
 /*
@@ -17,9 +17,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
  */
 public abstract class CommonAuthorizationTest extends CommonTest {
 
-    protected static final Map<String, Object> testClient1 = entitiesLoader.getClients().get("client1");
-    protected static final Map<String, Object> testClient2 = entitiesLoader.getClients().get("client2");
-    protected static final Map<String, Object> testClient3 = entitiesLoader.getClients().get("client3");
+    protected final Map<String, Object> testClient1 = entitiesLoader.getClients().get("client1");
+    protected final Map<String, Object> testClient2 = entitiesLoader.getClients().get("client2");
+    protected final Map<String, Object> testClient3 = entitiesLoader.getClients().get("client3");
 
     @Before
     public void setUp() throws Throwable {
