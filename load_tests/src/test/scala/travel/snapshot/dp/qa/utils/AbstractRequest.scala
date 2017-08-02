@@ -30,6 +30,6 @@ abstract class AbstractRequest extends AbstractSimulation {
   }
 
   def setAuthToken(session: Session): String = {
-    if (SessionUtils.containsValue(session, "accessToken")) s"Bearer ${SessionUtils.getValue(session, "accessToken")}" else accessTokenParam
+    if (SessionUtils.containsValue(session, "accessToken")) s"Bearer ${SessionUtils.getValue(session, "accessToken")}" else s"Bearer $accessTokenParam"
   }
 }
