@@ -207,7 +207,7 @@ services:
             - main
 
     postgresql:
-        image: docker.snapshot.travel:5000/snapshot/postgres:9.6
+        image: postgres:9.6
         environment:
             - POSTGRES_PASSWORD=secret
         volumes:
@@ -234,7 +234,7 @@ services:
         networks:
             - main
     keycloak:
-        image: snapshothub/keycloak:master-33
+        image: docker.snapshot.travel:5000/snapshot/keycloak:latest
         ports:
             - 8081:8080
             - 9991:9990
@@ -254,7 +254,7 @@ services:
         networks:
             - main
     nginx:
-        image: snapshothub/dp-nginx:master-49
+        image: docker.snapshot.travel:5000/snapshot/nginx:latest
         ports:
             - 81:80
         volumes:

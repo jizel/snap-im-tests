@@ -44,3 +44,10 @@ tag_image snapshot/nonpms_integrations 1.37
 docker build --force-rm=true -t snapshot/dataplatform_builder builder
 tag_image snapshot/dataplatform_builder latest
 tag_image snapshot/dataplatform_builder 1.37
+
+docker build --force-rm=true -t snapshot/keycloak keycloak
+tag_image snapshot/keycloak latest
+tag_image snapshot/keycloak 1.9
+
+docker build --force-rm=true -t snapshot/nginx nginx
+tag_image snapshot/nginx latest
