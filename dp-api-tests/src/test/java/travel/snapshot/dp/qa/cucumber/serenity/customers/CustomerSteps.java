@@ -54,10 +54,10 @@ public class CustomerSteps extends BasicSteps {
     private static final String SESSION_CREATED_CUSTOMER = "created_customer";
     private static final String SESSION_CUSTOMER_ID = "customer_id";
     private static final String SESSION_CREATED_CUSTOMER_PROPERTY = "created_customer_property";
-    private static final String BASE_PATH_CUSTOMERS = "/identity/customers";
+    public static final String BASE_PATH_CUSTOMERS = "/identity/customers";
     private static final String DEFAULT_VALID_FROM = "2015-12-31";
     private static final String DEFAULT_VALID_TO = "2050-12-31";
-    private static final String DEFAULT_RELATION_TYPE = "chain";
+    public static final String DEFAULT_RELATION_TYPE = "chain";
 
     public CustomerSteps() {
         super();
@@ -200,7 +200,7 @@ public class CustomerSteps extends BasicSteps {
         customerPropertyRelationMap.put(VALID_TO, validTo);
         customerPropertyRelationMap.put(IS_ACTIVE, isActive.toString());
         customerPropertyRelationMap.put(PROPERTY_ID, propertyId);
-        Response response =  createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationMap);
+        Response response = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, customerPropertyRelationMap);
         setSessionResponse(response);
         return response;
     }

@@ -9,6 +9,7 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
 
+import javax.ejb.DuplicateKeyException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +20,18 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
  * Created by sedlacek on 9/23/2015.
  */
 public class DbUtilsSteps {
+
+    static final String DELETE_SINGLE_USER = "delete from public.User where id = '%s';";
+    static final String DELETE_SINGLE_PROPERTY = "delete from Property where id = '%s';";
+    static final String DELETE_SINGLE_CUSTOMER = "delete from Customer where id = '%s';";
+    static final String DELETE_SINGLE_COMMERCIAL_SUBSCRIPTION = "delete from CommercialSubscription where id = '%s';";
+    static final String REVOKE_APP_PERMISSIONS = "delete from applicationpermission where application_id = '%s';";
+    static final String DELETE_SINGLE_APPLICATION = "delete from Application where id = '%s';";
+    static final String DELETE_SINGLE_APPLICATION_VERSION = "delete from ApplicationVersion where id = '%s';";
+    static final String DELETE_SINGLE_PARTNER = "delete from Partner where id = '%s';";
+    static final String DELETE_SINGLE_CUSTOMER_HIERARCHY = "delete from customerhierarchypath where parent_id = '%s';";
+    static final String DELETE_SINGLE_ADDRESS = "delete from Address where id = '%s';";
+    static final String DELETE_SINGLE_CUSTOMER_PROPERTY = "delete from customer_property where id = '%s';";
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
     static final String DELETE_CUSTOMER_USER = "delete  from User_Customer";
@@ -83,6 +96,43 @@ public class DbUtilsSteps {
 
     public void createDBUser(UserDto user) {
         dbHelper.identityDb().update(CREATE_DB_USER, UUID.fromString(user.getId()), user.getType().toString(), user.getUsername(), DEFAULT_ENCRYPTED_PASSWORD, user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
+    }
+
+    public void deleteDbUser(String userId) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER, userId));
+    }
+
+    public void deleteDbAddress(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_ADDRESS, id));
+    }
+
+    public void revokeAppPermissions(String applicationId) {
+        dbHelper.identityDb().update(String.format(REVOKE_APP_PERMISSIONS, applicationId));
+    }
+
+    public void deleteAppVersion(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_APPLICATION_VERSION, id));
+    }
+
+    public void deleteCommercialSubscription(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_COMMERCIAL_SUBSCRIPTION, id));
+    }
+
+    public void deleteProperty(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTY, id));
+    }
+
+    public void deleteCustomer(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_HIERARCHY, id));
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER, id));
+    }
+
+    public void deleteApplication(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_APPLICATION, id));
+    }
+
+    public void deletePartner(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_PARTNER, id));
     }
 
     public void createDBPartner(PartnerDto partner) {
@@ -177,5 +227,9 @@ public class DbUtilsSteps {
         UUID applicationUuid = UUID.fromString(applicationId);
         UUID permissionId = (UUID) dbHelper.identityDb().queryForList(SELECT_PERMISSION_ID, endpoint, method).get(0).get("id");
         dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, applicationUuid, permissionId);
+    }
+
+    public void deleteCustomerProperty(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_PROPERTY, id));
     }
 }

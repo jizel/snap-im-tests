@@ -21,15 +21,6 @@ Feature: Customers properties create update delete
     Given Relation between property with code "p1_code" and customer with id "58dd58d4-a56e-4cf5-a3a6-068fe37fef40" exists with type "data_owner" from "2015-01-01" to "2015-12-31"
     Given Relation between property with code "p1_code" and customer with id "b13fde13-615a-48fd-a287-ba4a7314193b" exists with type "asset_management" from "2015-01-01" to "2015-12-31"
 
-  @Smoke
-  Scenario: Adding property to customer with some type valid from date to date
-    When Property with code "p2_code" is added to customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with type "chain" from "2015-01-01" to "2015-10-31"
-    Then Response code is "201"
-    And Body contains entity with attribute "property_id" value "621bd8a4-0b73-40b2-ab5e-cbe88dac9e4e"
-    And Body contains entity with attribute "valid_from" value "2015-01-01"
-    And Body contains entity with attribute "valid_to" value "2015-10-31"
-    And Body contains entity with attribute "relationship_type" value "chain"
-
   Scenario Outline: Checking error codes for creating customerProperty
     When Property with code "<property_code>" is added to customer with id "<customer_id>" with type "<type>" from "<valid_from>" to "<valid_to>" with error "true"
     Then Response code is "<error_code>"
