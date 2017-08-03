@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.cucumber.serenity.analytics;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -15,7 +16,6 @@ import travel.snapshot.dp.api.analytics.model.SingleStatsDto;
 import travel.snapshot.dp.api.webperformance.model.PeriodAverageStatsDto;
 import travel.snapshot.dp.api.webperformance.model.ReferralStatsDto;
 import travel.snapshot.dp.qa.cucumber.helpers.LegacyReferralStatsDto;
-import travel.snapshot.dp.qa.cucumber.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 
@@ -96,7 +96,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
     @Step
     public void valueRecordIsOfValue(int valueNumber, Class valueType, String value, boolean incomplete) throws Exception {
 
-        Object object = ObjectMappers.OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), valueType);
+        Object object = createObjectMapper().readValue(getSessionResponse().body().prettyPrint(), valueType);
 
         RecordDto recordDto = null;
 
@@ -128,7 +128,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
 
     @Step
     public void referralsAreSorted(String metric, boolean ascending) throws Exception {
-        ReferralStatsDto referralStatsDto = ObjectMappers.OBJECT_MAPPER.readValue(getSessionResponse().body().prettyPrint(), LegacyReferralStatsDto.class);
+        ReferralStatsDto referralStatsDto = createObjectMapper().readValue(getSessionResponse().body().prettyPrint(), LegacyReferralStatsDto.class);
 
         List values = referralStatsDto.getValues().stream().map(recordDto -> {
             switch (metric) {

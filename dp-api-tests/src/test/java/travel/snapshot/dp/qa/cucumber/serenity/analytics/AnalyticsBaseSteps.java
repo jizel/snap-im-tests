@@ -5,11 +5,11 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
 import org.apache.commons.lang3.StringUtils;
-import travel.snapshot.dp.qa.cucumber.helpers.ObjectMappers;
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
@@ -227,7 +227,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
             data = getRequestDataFromFile(stream);
         }
 
-        T expectedStatistics = ObjectMappers.OBJECT_MAPPER.readValue(data, type);
+        T expectedStatistics = createObjectMapper().readValue(data, type);
         T actualStatistics = getSessionResponse().as(type);
 
         assertStatement.accept(expectedStatistics, actualStatistics);

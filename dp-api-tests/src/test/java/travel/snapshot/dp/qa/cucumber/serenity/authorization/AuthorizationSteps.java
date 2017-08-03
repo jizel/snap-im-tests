@@ -73,6 +73,7 @@ public class AuthorizationSteps extends BasicSteps {
                 .parameter("grant_type", "password")
                 .parameter("username", username)
                 .parameter("password", password)
+                .relaxedHTTPSValidation()
                 .log().all();
 
         String response = requestSpecification.post("/oauth/token")
