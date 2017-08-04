@@ -39,6 +39,9 @@ abstract class AbstractSimulation extends Simulation {
   // access_token query property for social modules
   val accessTokenParam: String = System.getProperty("accessToken", "default_access_token")
 
+  // Default property for integrations testing
+  val propertyId: String = System.getProperty("propertyId", "")
+
   val httpConf: HttpProtocolBuilder = http
     .baseURL(BaseUrlResolver())
     .contentTypeHeader("application/json")
@@ -71,17 +74,12 @@ abstract class AbstractSimulation extends Simulation {
   private val atOnce: InjectionStep = atOnceUsers(startUsers)
 
 
-  /** Executes the scenario defined in descendant with specified injection method*/
+  /** Executes the scenario defined in descendant with specified injection method */
   protected def runScenario(scn: ScenarioBuilder): Unit = {
-    if (injectionMethod == "atOnce") {
-      setUp(scn.inject(atOnce).protocols(httpConf))
-    }
-    else if (injectionMethod == "rampSimple") {
-      setUp(scn.inject(rampSimple).protocols(httpConf))
-    }
-    else {
-      // Default value
-      setUp(scn.inject(rampPerSec).protocols(httpConf))
+    injectionMethod match {
+      case "atOnce" => setUp(scn.inject(atOnce).protocols(httpConf))
+      case "rampSimple" => setUp(scn.inject(rampSimple).protocols(httpConf))
+      case _ => setUp(scn.inject(rampPerSec).protocols(httpConf))
     }
   }
 

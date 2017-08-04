@@ -6,6 +6,8 @@ class AllAnalyticsSimulation extends AbstractAnalyticsSimulation {
 
   runScenario(
     scenario("Aggregated social analytics").exec(
-      GetAllAnalytics()
+      getToken(),
+      GetAllAnalytics(),
+      GetAllAnalyticsReach()
     ))
 }

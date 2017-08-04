@@ -21,7 +21,8 @@ Load tests exercising Data Platform REST API.
   * -DendUsers=<final number of users used for load> , default is 30
   * -Dramp=<time in second how long to run test and increase number of  user from start to end number> , default is 60
   * -Dgatling_log_level=<ERROR|WARN|INFO|DEBUG>
-  * -Daccess_token=<access token for requests>
+  * -DaccessToken=<access token for requests>
+  * -DpropertyId=<ID of property used for integrations tests>, default is empty string overridden by random id in AbstractIntegrationsSimulation
   
   You have to specify environment against which load tests will be executed. This is specified by system property
   

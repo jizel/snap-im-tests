@@ -3,10 +3,11 @@ package travel.snapshot.dp.qa.performance
 import io.gatling.core.Predef._
 import travel.snapshot.dp.qa.utils.WebPerformanceReferralsSortKey
 
-class WebPerformanceSimulation extends AbstractWebPerformaceSimulation {
+class WebPerformanceSimulation extends AbstractWebPerformanceSimulation {
 
   runScenario(
     scenario("WebPerformance analytics").exec(
+      getToken(),
       GetAnalytics(),
       GetAnalytics("analytics/visits"),
       GetAnalytics("analytics/visits/countries"),

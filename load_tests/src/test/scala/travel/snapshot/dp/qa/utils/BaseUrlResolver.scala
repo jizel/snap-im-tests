@@ -92,7 +92,7 @@ trait SystemPropertiesGatherer {
 
   val StableEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
     System.getProperty("protocol", "https"),
-    System.getProperty("host", "europewest-api-stable.snapshot.technology/"),
+    System.getProperty("host", "europewest-api-stable.snapshot.technology"),
     System.getProperty("port", "8080"),
     System.getProperty("version", "v1"),
     resolveScenario
