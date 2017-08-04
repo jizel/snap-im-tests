@@ -6,6 +6,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -49,7 +51,7 @@ public class CustomerHelpers extends CustomerSteps {
         } catch (JsonProcessingException e) {
             fail(e.getMessage());
         }
-        Response createResponse = authorizationHelpers.createEntity(BASE_PATH_CUSTOMERS, jsonCustomer.toString());
+        Response createResponse = authorizationHelpers.createEntity(CUSTOMERS_PATH, jsonCustomer.toString());
         setSessionResponse(createResponse);
     }
 
@@ -95,8 +97,8 @@ public class CustomerHelpers extends CustomerSteps {
         customerUpdate.setIsActive(isActive);
         String updatedCustomerString = retrieveData(customerUpdate).toString();
         assertThat("Empty property update", updatedCustomerString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
-        String etag = authorizationHelpers.getEntityEtag(BASE_PATH_CUSTOMERS, id);
-        authorizationHelpers.updateEntity(BASE_PATH_CUSTOMERS, id, updatedCustomerString);
+        String etag = authorizationHelpers.getEntityEtag(CUSTOMERS_PATH, id);
+        authorizationHelpers.updateEntity(CUSTOMERS_PATH, id, updatedCustomerString);
     }
 
     public String addPropertyToCustomerWithAuthUsingPartialDto(String propertyId, String customerId) {
@@ -106,7 +108,7 @@ public class CustomerHelpers extends CustomerSteps {
         relation.setType(CustomerPropertyRelationshipType.CHAIN);
         relation.setValidFrom(LocalDate.parse("2015-01-01"));
         relation.setValidTo(LocalDate.parse("2019-01-01"));
-        CustomerPropertyRelationshipPartialDto customerProperty = authorizationHelpers.createSecondLevelRelation(BASE_PATH_CUSTOMERS, DEFAULT_SNAPSHOT_CUSTOMER_ID, SECOND_LEVEL_OBJECT_PROPERTIES, relation)
+        CustomerPropertyRelationshipPartialDto customerProperty = authorizationHelpers.createSecondLevelRelation(CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, PROPERTIES_RESOURCE, relation)
                 .as(CustomerPropertyRelationshipPartialDto.class);
         String relationId = customerProperty.getId();
         commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
@@ -114,6 +116,6 @@ public class CustomerHelpers extends CustomerSteps {
     }
 
     public void removeCustomerPropertyWithAuthUsingPartialDto(String customerId, String propertyId) {
-        authorizationHelpers.deleteSecondLevelEntity(BASE_PATH_CUSTOMERS, customerId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        authorizationHelpers.deleteSecondLevelEntity(CUSTOMERS_PATH, customerId, PROPERTIES_RESOURCE, propertyId);
     }
 }

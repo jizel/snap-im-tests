@@ -12,6 +12,9 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -102,19 +105,10 @@ public class BasicSteps {
     public static final String LIMIT_TO_ALL = "200";
     public static final String LIMIT_TO_ONE = "1";
     public static final String CURSOR_FROM_FIRST = "0";
-    public static final String SECOND_LEVEL_OBJECT_PROPERTIES = "properties";
-    public static final String SECOND_LEVEL_OBJECT_USERS = "users";
-    public static final String SECOND_LEVEL_OBJECT_PARTNERS = "partners";
-    public static final String SECOND_LEVEL_OBJECT_PROPERTY_SETS = "property_sets";
-    public static final String SECOND_LEVEL_OBJECT_CUSTOMERS = "customers";
-    public static final String SECOND_LEVEL_OBJECT_RECORDS = "records";
-    public static final String SECOND_LEVEL_OBJECT_ROLES = "roles";
     public static final String SECOND_LEVEL_OBJECT_API_SUBSCRIPTION = "api_subscriptions";
     public static final String SECOND_LEVEL_OBJECT_TTI = "tti";
     public static final String AUTHORIZATION_BASE_URI = "authorization.baseURI";
     public static final String HEADER_ETAG = "ETag";
-    public static final String SECOND_LEVEL_OBJECT_APPLICATIONS = "applications";
-    public static final String SECOND_LEVEL_OBJECT_COMMERCIAL_SUBSCRIPTIONS = "commercial_subscriptions";
     public static final String CURLY_BRACES_EMPTY = "{}";
     private static final String CONFIGURATION_REQUEST_HTTP_LOG_LEVEL = "http_request_log_level";
     private static final String CONFIGURATION_RESPONSE_HTTP_LOG_LEVEL = "http_response_log_level";
@@ -137,6 +131,7 @@ public class BasicSteps {
     public static final String CUSTOMER_USERS = "customer_users";
     public static final String USERS = "users";
     public static final String CUSTOMERS = "customers";
+    public static final String PARTNERS_RESOURCE = "partners";
 
     protected RequestSpecification spec = null;
 
@@ -920,22 +915,22 @@ public class BasicSteps {
         String objectName = null;
         switch (name) {
             case "customer":
-                objectName = SECOND_LEVEL_OBJECT_CUSTOMERS;
+                objectName = CUSTOMERS_RESOURCE;
                 break;
             case "property":
-                objectName = SECOND_LEVEL_OBJECT_PROPERTIES;
+                objectName = PROPERTIES_RESOURCE;
                 break;
             case "property set":
-                objectName = SECOND_LEVEL_OBJECT_PROPERTY_SETS;
+                objectName = PROPERTY_SETS_RESOURCE;
                 break;
-            case SECOND_LEVEL_OBJECT_PROPERTIES:
-                objectName = SECOND_LEVEL_OBJECT_PROPERTIES;
+            case PROPERTIES_RESOURCE:
+                objectName = PROPERTIES_RESOURCE;
                 break;
-            case SECOND_LEVEL_OBJECT_CUSTOMERS:
-                objectName = SECOND_LEVEL_OBJECT_CUSTOMERS;
+            case CUSTOMERS_RESOURCE:
+                objectName = CUSTOMERS_RESOURCE;
                 break;
-            case SECOND_LEVEL_OBJECT_PROPERTY_SETS:
-                objectName = SECOND_LEVEL_OBJECT_PROPERTY_SETS;
+            case PROPERTY_SETS_RESOURCE:
+                objectName = PROPERTY_SETS_RESOURCE;
                 break;
         }
         return objectName;

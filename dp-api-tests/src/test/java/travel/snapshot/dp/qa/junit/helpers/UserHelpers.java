@@ -2,6 +2,8 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -16,7 +18,6 @@ import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 @Log
 public class UserHelpers extends UsersSteps {
 
-    public static final String BASE_PATH_USERS = "/identity/users";
     private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
     private final CommonHelpers commonHelpers = new CommonHelpers();
     private final RelationshipsHelpers relationshipHelpers = new RelationshipsHelpers();
@@ -32,7 +33,7 @@ public class UserHelpers extends UsersSteps {
     }
 
     public void createUserWithAuth(UserCreateDto userObject) {
-        authorizationHelpers.createEntity(BASE_PATH_USERS, userObject);
+        authorizationHelpers.createEntity(USERS_PATH, userObject);
     }
 
     public String userIsCreatedWithAuth(UserCreateDto userObject) throws Throwable {
@@ -61,7 +62,7 @@ public class UserHelpers extends UsersSteps {
     }
 
     public Response getAllUserPropertiesByUserForApp(String requestorId, String applicationVersionId, String userId) {
-        Response response = getSecondLevelEntitiesByUserForApp(requestorId, applicationVersionId, userId, SECOND_LEVEL_OBJECT_PROPERTIES, null, null, null, null, null, null);
+        Response response = getSecondLevelEntitiesByUserForApp(requestorId, applicationVersionId, userId, PROPERTIES_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
         return response;
     }
@@ -86,7 +87,7 @@ public class UserHelpers extends UsersSteps {
     }
 
     public void getPartnersForUserByUserForApp(String userId, String requestorId, String appVersionId) {
-        Response response = getSecondLevelEntitiesByUserForApp(requestorId, appVersionId, userId, SECOND_LEVEL_OBJECT_PARTNERS, null, null, null, null, null, null);
+        Response response = getSecondLevelEntitiesByUserForApp(requestorId, appVersionId, userId, PARTNERS_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
     }
 

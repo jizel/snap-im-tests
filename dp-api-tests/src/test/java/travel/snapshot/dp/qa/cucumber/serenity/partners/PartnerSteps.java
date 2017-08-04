@@ -6,6 +6,8 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_RESOURCE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -119,7 +121,7 @@ public class PartnerSteps extends BasicSteps {
 
     @Step
     public void getApplicationsForPartnerId(String partnerId) {
-        Response partnerApplications = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_APPLICATIONS, LIMIT_TO_ALL,
+        Response partnerApplications = getSecondLevelEntities(partnerId, APPLICATIONS_RESOURCE, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerApplications);
     }
@@ -127,21 +129,21 @@ public class PartnerSteps extends BasicSteps {
     @Step
     public void listOfPartnerApplicationsIsGotWith(String partnerId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
-        Response partnerApplications = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_APPLICATIONS, limit,
+        Response partnerApplications = getSecondLevelEntities(partnerId, APPLICATIONS_RESOURCE, limit,
                 cursor, filter, sort, sortDesc, null);
         setSessionResponse(partnerApplications);
     }
 
     @Step
     public void getUsersForPartnerId(String partnerId) {
-        Response partnerUsers = getSecondLevelEntities(partnerId, SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL,
+        Response partnerUsers = getSecondLevelEntities(partnerId, USERS_RESOURCE, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerUsers);
     }
 
     @Step
     public void createPartnerUserRelationship(String partnerId, String userId){
-        Response response = createSecondLevelRelationship(partnerId, SECOND_LEVEL_OBJECT_USERS, singletonMap(USER_ID_KEY, userId));
+        Response response = createSecondLevelRelationship(partnerId, USERS_RESOURCE, singletonMap(USER_ID_KEY, userId));
         setSessionResponse(response);
     }
 
