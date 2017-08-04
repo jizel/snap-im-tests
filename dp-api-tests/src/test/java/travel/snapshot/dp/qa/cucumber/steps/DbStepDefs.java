@@ -40,7 +40,7 @@ public class DbStepDefs {
     protected static final CommonHelpers commonHelpers = new CommonHelpers();
 
 
-//    @Steps annotation does not work with JUnit
+    //    @Steps annotation does not work with JUnit
     private ApplicationsSteps applicationsSteps = new ApplicationsSteps();
 
     @Given("^All customerProperties are deleted from DB for customer id \"([^\"]*)\" and property code \"([^\"]*)\"$")
@@ -199,18 +199,26 @@ public class DbStepDefs {
 
     @And("^Application permission table is populated(?: for application \"([^\"]*)\")?$")
     public void applicationPermissionPopulated(String applicationName) throws Throwable {
-            String applicationId = applicationsSteps.resolveApplicationId(applicationName);
-            dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
+        String applicationId = applicationsSteps.resolveApplicationId(applicationName);
+        dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }
 
     public void removeCreatedEntities(Map<String, ArrayList<String>> registry) {
         ArrayList<String> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTIES, registry);
-        ArrayList<String> customerIds = commonHelpers.getArrayFromMap(SECOND_LEVEL_OBJECT_CUSTOMERS, registry);
-        customerPropertyIds.forEach(id -> {
-            dbSteps.deleteCustomerProperty(id);
+        ArrayList<String> customerUserIds = commonHelpers.getArrayFromMap(CUSTOMER_USERS, registry);
+        ArrayList<String> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS, registry);
+        ArrayList<String> userIds = commonHelpers.getArrayFromMap(USERS, registry);
+        customerPropertyIds.forEach(customerPropertyId -> {
+            dbSteps.deleteCustomerProperty(customerPropertyId);
+        });
+        customerUserIds.forEach(customerUserId -> {
+            dbSteps.deleteCustomerUser(customerUserId);
         });
         customerIds.forEach(customerId -> {
             dbSteps.deleteCustomer(customerId);
+        });
+        userIds.forEach(userId -> {
+            dbSteps.deleteUser(userId);
         });
     }
 }

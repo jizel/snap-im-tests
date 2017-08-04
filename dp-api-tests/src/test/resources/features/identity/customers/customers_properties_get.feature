@@ -33,7 +33,6 @@ Feature: Customers properties get
     And Body contains entity with attribute "valid_to" value "2015-12-31"
     And Body contains entity with attribute "relationship_type" value "chain"
 
-
   Scenario: Checking error code for getting customerProperty
     When Nonexistent customerPropety id is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33"
     Then Response code is "404"

@@ -42,7 +42,7 @@ public class CustomerHelpers extends CustomerSteps {
      * method. This applies only to customers. For all other entities it is enough to call
      * entity%Helpers.createEntityWithAuthorization(entity) directly
      */
-    public void createCustomerWithAuthorization(CustomerCreateDto customer) {
+    public void createCustomerWithAuth(CustomerCreateDto customer) {
         JSONObject jsonCustomer = null;
         try {
             jsonCustomer = retrieveData(customer);
@@ -54,7 +54,7 @@ public class CustomerHelpers extends CustomerSteps {
     }
 
     public String customerIsCreatedWithAuth(CustomerCreateDto customer) {
-        createCustomerWithAuthorization(customer);
+        createCustomerWithAuth(customer);
         responseCodeIs(SC_CREATED);
         String customerId = getSessionResponse().as(CustomerDto.class).getId();
         commonHelpers.updateRegistryOfDeletables("customers", customerId);
@@ -96,7 +96,7 @@ public class CustomerHelpers extends CustomerSteps {
         String updatedCustomerString = retrieveData(customerUpdate).toString();
         assertThat("Empty property update", updatedCustomerString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
         String etag = authorizationHelpers.getEntityEtag(BASE_PATH_CUSTOMERS, id);
-        authorizationHelpers.updateEntity(BASE_PATH_CUSTOMERS, id, updatedCustomerString, etag);
+        authorizationHelpers.updateEntity(BASE_PATH_CUSTOMERS, id, updatedCustomerString);
     }
 
     public String addPropertyToCustomerWithAuthUsingPartialDto(String propertyId, String customerId) {

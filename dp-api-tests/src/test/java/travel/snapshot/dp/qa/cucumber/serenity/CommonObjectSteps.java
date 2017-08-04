@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.cucumber.helpers.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -183,7 +183,7 @@ public class CommonObjectSteps extends BasicSteps {
         for (ObjectField field : definition) {
             String fieldType = field.getType();
             // skip processing any relationship fields since the system does not expose them for filtering
-            if(fieldType.equals("JSON")) {
+            if (fieldType.equals("JSON")) {
                 continue;
             }
             // filter only top-level fields, ignore inner objects
@@ -233,7 +233,7 @@ public class CommonObjectSteps extends BasicSteps {
         // customer_code is always generated
         ((ObjectNode) returnedObject).remove("customer_code");
         ((ObjectNode) returnedObject).remove("property_code");
-        assert(originalObject.equals(returnedObject));
+        assert (originalObject.equals(returnedObject));
     }
 
     // --- rest ---
@@ -362,7 +362,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @throws IOException for mapper failures (invalid JSON in response body, etc.)
      */
     private JsonNode getJsonNode(Response response) throws IOException {
-        return OBJECT_MAPPER.readTree(response.body().asString());
+        return createObjectMapper().readTree(response.body().asString());
     }
 
     /**
@@ -373,7 +373,7 @@ public class CommonObjectSteps extends BasicSteps {
      * @throws JsonProcessingException for invalid structures
      */
     private String getJsonString(JsonNode root) throws JsonProcessingException {
-        return OBJECT_MAPPER.writeValueAsString(root);
+        return createObjectMapper().writeValueAsString(root);
     }
 
     // --- other ---
@@ -462,7 +462,7 @@ public class CommonObjectSteps extends BasicSteps {
                 // remove property_code since it can not be changed
                 correctObject.remove(PROPERTY_CODE);
                 Response correctObjectResponse = restCreateObject(getObjectLocation(objectName),
-                        OBJECT_MAPPER.writeValueAsString(correctObject));
+                        createObjectMapper().writeValueAsString(correctObject));
 
                 // #2 extract object ID and ETag from response
                 String objectID = getJsonNode(correctObjectResponse).get(getObjectIDField(objectName)).asText();
@@ -474,7 +474,7 @@ public class CommonObjectSteps extends BasicSteps {
                 // #4 update object server-side
                 correctObject.remove(SERENITY__USER_CUSTOMER_RELATION);
                 Response updatedObjectResponse = restUpdateObject(getObjectLocation(objectName),
-                        objectID, etag, OBJECT_MAPPER.writeValueAsString(correctObject));
+                        objectID, etag, createObjectMapper().writeValueAsString(correctObject));
 
                 // #5 store responses for evaluation in next steps
                 responses.put(field.getPath(), updatedObjectResponse);

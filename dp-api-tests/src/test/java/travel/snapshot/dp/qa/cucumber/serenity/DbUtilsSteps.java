@@ -32,6 +32,7 @@ public class DbUtilsSteps {
     static final String DELETE_SINGLE_CUSTOMER_HIERARCHY = "delete from customerhierarchypath where parent_id = '%s';";
     static final String DELETE_SINGLE_ADDRESS = "delete from Address where id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER_PROPERTY = "delete from customer_property where id = '%s';";
+    static final String DELETE_SINGLE_CUSTOMER_USER = "delete from user_customer where id = '%s';";
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
     static final String DELETE_CUSTOMER_USER = "delete  from User_Customer";
@@ -127,6 +128,10 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER, id));
     }
 
+    public void deleteUser(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER, id));
+    }
+
     public void deleteApplication(String id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_APPLICATION, id));
     }
@@ -169,13 +174,12 @@ public class DbUtilsSteps {
 //        dbHelper.identityDb().update(CREATE_DB_API_SUBSCRIPTION, apiSubscription.getId(), apiSubscription.getCommercialSubscriptionId(), apiSubscription.getApplicationVersionId(), apiSubscription.getIsActive());
 //    }
 
-    public List<Map<String,Object>> selectColumnFromTableWhere(String column, String tableName, String conditionColumn, String conditionValue, String schemaName){
-        String sqlSelect = "SELECT " + column + " FROM "+ tableName +" WHERE "+ conditionColumn +" = ?";
+    public List<Map<String, Object>> selectColumnFromTableWhere(String column, String tableName, String conditionColumn, String conditionValue, String schemaName) {
+        String sqlSelect = "SELECT " + column + " FROM " + tableName + " WHERE " + conditionColumn + " = ?";
 //        Only tti and identity schemes are used in tests now. New schemas constants can be added if needed. Identity should always be default.
-        if (schemaName != null && schemaName.equals(TTI_SCHEMA_NAME)){
+        if (schemaName != null && schemaName.equals(TTI_SCHEMA_NAME)) {
             return dbHelper.ttiDb().queryForList(sqlSelect, conditionValue);
-        }
-        else {
+        } else {
             return dbHelper.identityDb().queryForList(sqlSelect, conditionValue);
         }
     }
@@ -231,5 +235,9 @@ public class DbUtilsSteps {
 
     public void deleteCustomerProperty(String id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_PROPERTY, id));
+    }
+
+    public void deleteCustomerUser(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_USER, id));
     }
 }

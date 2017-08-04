@@ -4,7 +4,6 @@ import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
-import org.apache.commons.lang.ArrayUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 
@@ -30,13 +29,14 @@ public class KeycloakHelpers {
         builder.setBaseUri(getProperty("keyCloakURI"));
         spec = builder.build();
         spec.log().all();
+        spec.relaxedHTTPSValidation();
     }
 
     public void createClient(Object client) throws Throwable {
         String jsonClient = new ObjectMapper().writeValueAsString(client);
         getKeyCloakToken();
         Response response = given().spec(spec)
-                .header("Authorization","Bearer " + Serenity.sessionVariableCalled(KEYCLOAK_TOKEN))
+                .header("Authorization", "Bearer " + Serenity.sessionVariableCalled(KEYCLOAK_TOKEN))
                 .header("Content-Type", "application/json")
                 .body(jsonClient)
                 .when().post("/admin/realms/Snapshot/clients");
@@ -47,7 +47,7 @@ public class KeycloakHelpers {
     public void deleteClient(String clientId) {
         getKeyCloakToken();
         Response response = given().spec(spec)
-                .header("Authorization","Bearer " + Serenity.sessionVariableCalled(KEYCLOAK_TOKEN))
+                .header("Authorization", "Bearer " + Serenity.sessionVariableCalled(KEYCLOAK_TOKEN))
                 .header("Content-Type", "application/json")
                 .when().delete("/admin/realms/Snapshot/clients/" + clientId);
         setSessionResponse(response);
@@ -55,7 +55,7 @@ public class KeycloakHelpers {
     }
 
     private void getKeyCloakToken() {
-        String response = given().spec(spec)
+        String token = given().spec(spec)
                 .contentType("application/x-www-form-urlencoded")
                 .parameter("client_id", "admin-cli")
                 .parameter("username", getProperty("keyCloakUsername"))
@@ -63,6 +63,6 @@ public class KeycloakHelpers {
                 .parameter("grant_type", "password")
                 .when().post("/realms/master/protocol/openid-connect/token")
                 .path("access_token");
-        Serenity.setSessionVariable(KEYCLOAK_TOKEN).to(response);
+        Serenity.setSessionVariable(KEYCLOAK_TOKEN).to(token);
     }
 }

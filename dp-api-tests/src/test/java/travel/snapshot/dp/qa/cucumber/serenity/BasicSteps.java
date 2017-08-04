@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.qa.cucumber.helpers.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -132,15 +132,18 @@ public class BasicSteps {
     public static final String DEFAULT_PASSWORD = "P@ssw0rd";
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
     public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
-    public static final String ENTITIES_TO_DELETE = "deleteThese" ;
-    public static final String CUSTOMER_PROPERTIES = "customer_properties" ;
+    public static final String ENTITIES_TO_DELETE = "deleteThese";
+    public static final String CUSTOMER_PROPERTIES = "customer_properties";
+    public static final String CUSTOMER_USERS = "customer_users";
+    public static final String USERS = "users";
+    public static final String CUSTOMERS = "customers";
 
     protected RequestSpecification spec = null;
 
     public BasicSteps() {
 
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
+                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> createObjectMapper()));
 
         RequestSpecBuilder builder = new RequestSpecBuilder();
 
@@ -320,7 +323,7 @@ public class BasicSteps {
         return baseUri;
     }
 
-    private void setBaseUriForModule(String module){
+    private void setBaseUriForModule(String module) {
         spec.baseUri(getBaseUriForModule(module));
     }
 
@@ -762,7 +765,7 @@ public class BasicSteps {
         return queryParams;
     }
 
-    private Map<String, String> buildQueryParamMapForPaging(String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParameters) {
+    public Map<String, String> buildQueryParamMapForPaging(String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParameters) {
         Map<String, String> queryParams = new HashMap<>();
         if (cursor != null) {
             queryParams.put("cursor", cursor);
@@ -894,7 +897,7 @@ public class BasicSteps {
     @Step
     public static <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Exception {
         Response response = getSessionResponse();
-        List<T> objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        List<T> objects = createObjectMapper().readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
 

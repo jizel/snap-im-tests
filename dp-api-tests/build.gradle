@@ -48,9 +48,13 @@ dependencies {
     // Groovy library for groovy building!
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
     compile group: 'io.swagger', name: 'swagger-core', version: '1.5.3'
-    compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.6.2'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.6.2'
+    compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
     compile group: 'pl.pragmatists', name: 'JUnitParams', version: '1.0.5'
+    compile (group: 'travel.snapshot.dp', name: 'Json', version: '1.1') {
+        exclude module: 'lombok'
+    }
     compile 'org.json:json:20150729'
     compile 'com.google.code.gson:gson:2.4'
     compile 'org.apache.commons:commons-csv:1.4'
