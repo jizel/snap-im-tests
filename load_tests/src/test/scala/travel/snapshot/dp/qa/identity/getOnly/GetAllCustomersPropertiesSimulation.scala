@@ -6,8 +6,8 @@ import travel.snapshot.dp.qa.identity.AbstractIdentitySimulation
 class GetAllCustomersPropertiesSimulation extends AbstractIdentitySimulation {
 
   runScenario(scenario("create and list customers and their users").exec(
-    getTokenByUser("exampleCustomerUser", "pass1"),
-    GetAllCustomers()
+    getToken(),
+    GetAllCustomers(),
     pause(1),
     GetAllProperties(),
     pause(1),
