@@ -6,6 +6,7 @@ class FacebookSimulation extends AbstractFacebookSimulation {
 
   runScenario(
     scenario("Facebook analytics").exec(
+      getToken(),
       GetOverallFacebook(),
       GetFacebookMetric(),
       GetFacebookPosts()))

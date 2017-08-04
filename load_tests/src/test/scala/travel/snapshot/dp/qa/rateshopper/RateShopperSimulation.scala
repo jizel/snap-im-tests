@@ -6,6 +6,7 @@ class RateShopperSimulation extends AbstractRateShopperSimulation {
 
   runScenario(
     scenario("RateShopper analytics").exec(
+      getToken(),
       GetLARForProperty(),
       GetAnalyticsMarket(),
       GetAnalyticsMarketProperties()

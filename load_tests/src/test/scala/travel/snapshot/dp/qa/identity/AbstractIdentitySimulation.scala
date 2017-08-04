@@ -97,10 +97,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     * Gets list of all properties
     */
   object GetAllProperties extends AbstractRequest {
-    def apply() = getRequest("Get all properties", None, "identity/properties", HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all properties", None, "identity/properties", HttpStatus.SC_OK))
 
     def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber") {
-      getRequest(s"Get all properties $numberOfProperties times", None, "identity/properties", HttpStatus.SC_OK)
+      exec(getRequest(s"Get all properties $numberOfProperties times", None, "identity/properties", HttpStatus.SC_OK))
     }
   }
 
@@ -108,10 +108,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     * Gets list of all properties
     */
   object GetAllPropertySets extends AbstractRequest {
-    def apply() = getRequest("Get all property sets", None, "identity/property_sets", HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all property sets", None, "identity/property_sets", HttpStatus.SC_OK))
 
     def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber") {
-      getRequest(s"Get all property sets $numberOfProperties times", None, "identity/property_sets", HttpStatus.SC_OK)
+      exec(getRequest(s"Get all property sets $numberOfProperties times", None, "identity/property_sets", HttpStatus.SC_OK))
     }
   }
 
@@ -119,10 +119,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
     * Gets list of all commercial subscriptions
     */
   object GetAllCommercialSubscriptions extends AbstractRequest {
-    def apply() = getRequest("Get all commercial subscriptions", None, "identity/commercial_subscriptions", HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all commercial subscriptions", None, "identity/commercial_subscriptions", HttpStatus.SC_OK))
 
     def apply(numberOfProperties: Integer) = repeat(numberOfProperties.toInt, "requestNumber") {
-      getRequest(s"Get all commercial subscriptions $numberOfProperties times", None, "identity/commercial_subscriptions", HttpStatus.SC_OK)
+      exec(getRequest(s"Get all commercial subscriptions $numberOfProperties times", None, "identity/commercial_subscriptions", HttpStatus.SC_OK))
     }
   }
 
@@ -269,10 +269,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   object GetAllCustomers extends AbstractRequest {
     val customersUrl = "identity/customers"
 
-    def apply() = getRequest("Get all customers", None, customersUrl, HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all customers", None, customersUrl, HttpStatus.SC_OK))
 
     def apply(numberOfCustomers: Integer) = repeat(numberOfCustomers.toInt, "requestNumber") {
-      getRequest(s"Get all customers $numberOfCustomers times", None, customersUrl, HttpStatus.SC_OK)
+      exec(getRequest(s"Get all customers $numberOfCustomers times", None, customersUrl, HttpStatus.SC_OK))
     }
   }
 
@@ -353,10 +353,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   object GetAllUsers extends AbstractRequest {
     val usersUrl = "identity/users"
 
-    def apply() = getRequest("Get all users", None, usersUrl, HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all users", None, usersUrl, HttpStatus.SC_OK))
 
     def apply(numberOfUsers: Integer) = repeat(numberOfUsers.toInt, "requestNumber") {
-      getRequest(s"Get all users $numberOfUsers times", None, usersUrl, HttpStatus.SC_OK)
+      exec(getRequest(s"Get all users $numberOfUsers times", None, usersUrl, HttpStatus.SC_OK))
     }
   }
 
@@ -366,10 +366,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   object GetAllPartners extends AbstractRequest {
     val partnersUrl = "identity/partners"
 
-    def apply() = getRequest("Get all partners", None, partnersUrl, HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all partners", None, partnersUrl, HttpStatus.SC_OK))
 
     def apply(numberOfPartners: Integer) = repeat(numberOfPartners.toInt, "requestNumber") {
-      getRequest(s"Get all partners $numberOfPartners times", None, partnersUrl, HttpStatus.SC_OK)
+      exec(getRequest(s"Get all partners $numberOfPartners times", None, partnersUrl, HttpStatus.SC_OK))
     }
   }
 
@@ -379,10 +379,10 @@ abstract class AbstractIdentitySimulation extends AbstractSimulation {
   object GetAllApplications extends AbstractRequest {
     val applicationsUrl = "identity/applications"
 
-    def apply() = getRequest("Get all applications", None, applicationsUrl, HttpStatus.SC_OK)
+    def apply() = exec(getRequest("Get all applications", None, applicationsUrl, HttpStatus.SC_OK))
 
     def apply(numberOfPartners: Integer) = repeat(numberOfPartners.toInt, "requestNumber") {
-      getRequest(s"Get all applications $numberOfPartners times", None, applicationsUrl, HttpStatus.SC_OK)
+      exec(getRequest(s"Get all applications $numberOfPartners times", None, applicationsUrl, HttpStatus.SC_OK))
     }
   }
 

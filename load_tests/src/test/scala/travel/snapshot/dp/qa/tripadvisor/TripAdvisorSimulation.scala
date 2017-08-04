@@ -7,6 +7,7 @@ class TripAdvisorSimulation extends AbstractTripAdvisorSimulation {
 
   runScenario(
     scenario("TripAdvisor analytics").exec(
+      getToken(),
       GetReviewAnalytics("Returns key review metrics for the property.", ReviewAnalyticsContext.BASE),
       GetReviewAnalytics("Returns overall bubble rating.", ReviewAnalyticsContext.OVERALL_BUBBLE_RATING),
       GetReviewAnalytics("Returns number of reviews.", ReviewAnalyticsContext.NUMBER_OF_REVIEWS),

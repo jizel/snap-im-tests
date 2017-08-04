@@ -6,6 +6,7 @@ class InstagramSimulation extends AbstractInstagramSimulation {
 
   runScenario(
     scenario("Instagram analytics").exec(
+      getToken(),
       GetOverallInstagram(),
       GetInstagramMetric()))
 }

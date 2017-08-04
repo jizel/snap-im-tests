@@ -13,15 +13,15 @@ import travel.snapshot.dp.qa.AbstractSimulation
   */
 abstract class AbstractRequest extends AbstractSimulation {
 
-  def getRequest(request: String, additionalQueries: Option[String], url: String, expectedStatus: Int) = {
-    exec(http(request)
-      .get(if (additionalQueries.isEmpty) s"$url" else s"$url$additionalQueries")
+  def getRequest(request: String, additionalQueries: Option[String], url: String, expectedStatus: Int): HttpRequestBuilder = {
+    http(request)
+      .get(s"$url${additionalQueries.getOrElse("")}")
       .headers(request_headers)
       .header("Authorization",  session => setAuthToken(session))
-      .check(status.is(expectedStatus)))
+      .check(status.is(expectedStatus))
   }
 
-  def postRequest(request: String, requestBody: String, url: String, expectedStatus: Int) = {
+  def postRequest(request: String, requestBody: String, url: String, expectedStatus: Int): HttpRequestBuilder = {
     http(request).post(url)
       .headers(request_headers)
       .header("Authorization",  session => setAuthToken(session))

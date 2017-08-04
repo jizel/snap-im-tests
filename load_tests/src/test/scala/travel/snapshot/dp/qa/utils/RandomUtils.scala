@@ -78,8 +78,8 @@ class RandomUtils {
     * @param numberOfDays how long the interval is
     * @return
     */
-  def randomSinceUntil(numberOfDays: Int) = {
-    val since = LocalDate.of(2015, 1, 1).plusDays(randomInt(600))
+  def randomSinceUntil(numberOfDays: Int): String = {
+    val since = LocalDate.now().minusMonths(randomInt(6))
     val until = since.plusDays(numberOfDays)
     s"""since=${since.format(DateTimeFormatter.ISO_LOCAL_DATE)}&until=${until.format(DateTimeFormatter.ISO_LOCAL_DATE)}"""
   }
@@ -97,7 +97,7 @@ class RandomUtils {
     (since.format(DateTimeFormatter.ISO_LOCAL_DATE), until.format(DateTimeFormatter.ISO_LOCAL_DATE))
   }
 
-  def randomPropertyId = s"""990${"%03d".format(randomInt(999))}99-9999-4999-a999-999999999999"""
+  def randomPropertyId: String = UUID.randomUUID().toString
 
   def randomTripAdvisorPropertyId = s"""990${"%03d".format(randomInt(11))}99-9999-4999-a999-999999999999"""
 
