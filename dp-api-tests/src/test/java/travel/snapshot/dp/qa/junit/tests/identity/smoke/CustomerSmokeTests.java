@@ -1,17 +1,20 @@
 package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
-import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 import java.time.LocalDate;
 
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_METHOD_NOT_ALLOWED;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
@@ -22,7 +25,6 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHO
 public class CustomerSmokeTests extends CommonSmokeTest {
 
     private EntityNonNullMap<String, CustomerCreateDto> customerDtos = entitiesLoader.getCustomerDtos();
-    protected RequestSpecification spec = null;
 
     @Test
     public void customerCRUDWithAuthorization() throws Throwable {
@@ -75,8 +77,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         relationshipsHelpers.updateCustomerPropertyRelationshipWithAuth(relationId, null, CustomerPropertyRelationshipType.DATA_OWNER, null, null);
         responseCodeIs(SC_NO_CONTENT);
         // delete
-        relationshipsHelpers.deleteCustomerPropertyRelationshipWithAuth(relationId);
-        responseCodeIs(SC_NO_CONTENT);
+        authorizationHelpers.entityIsDeleted(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
     }
 
     @Test
@@ -98,8 +99,14 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         bodyContainsEntityWith("customer_id", customerId);
         bodyContainsEntityWith("is_active", "true");
         bodyContainsEntityWith("is_primary", "false");
+        // update
+        UserCustomerRelationshipUpdateDto update = new UserCustomerRelationshipUpdateDto();
+        update.setIsActive(false);
+        authorizationHelpers.entityIsUpdated(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId, update);
+        // make sure changes applied
+        authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
+        bodyContainsEntityWith("is_active", "false");
         // delete relation
-        authorizationHelpers.deleteEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
-        responseCodeIs(SC_NO_CONTENT);
+        authorizationHelpers.entityIsDeleted(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
     }
 }

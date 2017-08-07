@@ -129,9 +129,12 @@ public class BasicSteps {
     public static final String ENTITIES_TO_DELETE = "deleteThese";
     public static final String CUSTOMER_PROPERTIES = "customer_properties";
     public static final String CUSTOMER_USERS = "customer_users";
+    public static final String USER_PROPERTIES = "user_properties";
     public static final String USERS = "users";
-    public static final String CUSTOMERS = "customers";
+    public static final String PROPERTYSET_PROPERTIES = "propertyset_properties";
     public static final String PARTNERS_RESOURCE = "partners";
+    public static final String USER_PROPERTYSETS = "user_propertysets";
+    public static final String ADDRESS_LINE1_PATTERN = "CoreQA";
 
     protected RequestSpecification spec = null;
 

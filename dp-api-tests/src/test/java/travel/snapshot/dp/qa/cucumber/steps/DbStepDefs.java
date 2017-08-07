@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.ApplicationVersionStatus.CERTIFIED;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.SNAPSHOT;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
 
 import cucumber.api.java.en.And;
@@ -204,10 +205,39 @@ public class DbStepDefs {
     }
 
     public void removeCreatedEntities(Map<String, ArrayList<String>> registry) {
+
+        ArrayList<String> roleIds = commonHelpers.getArrayFromMap(ROLES_RESOURCE, registry);
+        ArrayList<String> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_RESOURCE, registry);
+        ArrayList<String> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTYSETS, registry);
+        ArrayList<String> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTIES, registry);
+        ArrayList<String> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTYSET_PROPERTIES, registry);
+        ArrayList<String> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_RESOURCE, registry);
+        ArrayList<String> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_RESOURCE, registry);
         ArrayList<String> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTIES, registry);
         ArrayList<String> customerUserIds = commonHelpers.getArrayFromMap(CUSTOMER_USERS, registry);
-        ArrayList<String> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS, registry);
-        ArrayList<String> userIds = commonHelpers.getArrayFromMap(USERS, registry);
+        ArrayList<String> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_RESOURCE, registry);
+        ArrayList<String> userIds = commonHelpers.getArrayFromMap(USERS_RESOURCE, registry);
+        roleIds.forEach(roleId -> {
+            dbSteps.deleteRole(roleId);
+        });
+        userGroupIds.forEach(userGroupId -> {
+            dbSteps.deleteUserPropertySet(userGroupId);
+        });
+        userPropertySetIds.forEach(userPropertySetId -> {
+            dbSteps.deleteUserPropertySet(userPropertySetId);
+        });
+        userPropertyIds.forEach(userPropertyId -> {
+            dbSteps.deleteUserProperty(userPropertyId);
+        });
+        propertySetPropertyIds.forEach(propertySetPropertyId -> {
+            dbSteps.deletePropertySetProperty(propertySetPropertyId);
+        });
+        propertySetIds.forEach(propertySetId -> {
+            dbSteps.deletePropertySet(propertySetId);
+        });
+        propertyIds.forEach(propertyId -> {
+            dbSteps.deleteProperty(propertyId);
+        });
         customerPropertyIds.forEach(customerPropertyId -> {
             dbSteps.deleteCustomerProperty(customerPropertyId);
         });
@@ -220,5 +250,6 @@ public class DbStepDefs {
         userIds.forEach(userId -> {
             dbSteps.deleteUser(userId);
         });
+        dbSteps.deleteAddress();
     }
 }

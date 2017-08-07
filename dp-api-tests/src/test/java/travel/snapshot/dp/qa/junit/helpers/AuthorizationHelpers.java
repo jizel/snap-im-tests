@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static net.serenitybdd.core.Serenity.sessionVariableCalled;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
@@ -53,7 +54,12 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return response;
     }
 
-    public Response updateEntity(String basePath, String entityId, Object data) {
+    public void entityIsUpdated(String basePath, String entityId, Object data) {
+        updateEntity(basePath, entityId, data);
+        responseCodeIs(SC_NO_CONTENT);
+    }
+
+    public void updateEntity(String basePath, String entityId, Object data) {
         String etag = getEntityEtag(basePath, entityId);
         RequestSpecification specification = constructRequestSpecification(basePath, etag);
         Response response = specification
@@ -61,7 +67,6 @@ public class AuthorizationHelpers extends AuthorizationSteps {
                 .when()
                 .post("/{id}", entityId);
         setSessionResponse(response);
-        return response;
     }
 
     public Response deleteEntity(String basePath, String entityId) {
@@ -74,8 +79,12 @@ public class AuthorizationHelpers extends AuthorizationSteps {
     }
 
     public void entityIsDeleted(String basePath, String entityId) {
+        // delete entity
         deleteEntity(basePath, entityId);
         responseCodeIs(SC_NO_CONTENT);
+        // verify it's not there
+        getEntity(basePath, entityId);
+        responseCodeIs(SC_NOT_FOUND);
     }
 
     public String getEntityEtag(String basePath, String entityId) {

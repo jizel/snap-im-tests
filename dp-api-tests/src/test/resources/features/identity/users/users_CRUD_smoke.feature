@@ -3,7 +3,9 @@
 Feature: Users customer roles CRUD
 
   Background:
-    Given Database is cleaned and default entities are created
+
+    Given Database is cleaned
+#    Given Database is cleaned and default entities are created
     Given The following users exist for customer "06000000-0000-4444-8888-000000000001"
       | type     | username | firstName | lastName | email                | timezone      | languageCode |
       | customer | default1 | Default1  | User1    | def1@snapshot.travel | Europe/Prague | cs-CZ   |
