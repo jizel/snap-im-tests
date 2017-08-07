@@ -62,10 +62,11 @@ trait SystemPropertiesGatherer {
     resolveScenario
   )
 
-  val productionEnvironmentProperties = Tuple4[String, String, String, LoadTestContext.LoadTestContextValue](
+  val productionEnvironmentProperties = Tuple5[String, String, String, String, LoadTestContext.LoadTestContextValue](
     System.getProperty("protocol", "https"),
-    System.getProperty("host", "de.api.snapshot.technology"),
+    System.getProperty("host", "europewest-api.snapshot.technology"),
     System.getProperty("port", "443"),
+    System.getProperty("version", "v1"),
     resolveScenario
   )
 
