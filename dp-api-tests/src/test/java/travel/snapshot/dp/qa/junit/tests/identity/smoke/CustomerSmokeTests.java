@@ -12,11 +12,11 @@ import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 import java.time.LocalDate;
 
 import static org.apache.http.HttpStatus.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps.BASE_PATH_CUSTOMERS;
-import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.CUSTOMER_PROPERTY_RELATIONSHIP_PATH;
-import static travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers.USER_CUSTOMER_RELATIONSHIP_PATH;
 
 @RunWith(SerenityRunner.class)
 public class CustomerSmokeTests extends CommonSmokeTest {
@@ -34,7 +34,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
             bodyContainsEntityWith("name");
         });
         //request
-        authorizationHelpers.getEntity(BASE_PATH_CUSTOMERS, customerId);
+        authorizationHelpers.getEntity(CUSTOMERS_PATH, customerId);
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("customer_code");
         bodyContainsEntityWith("name", "Creation test company1");
@@ -43,7 +43,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         customerHelpers.setCustomerIsActiveWithAuthorization(testCustomer1.getId(), false);
         responseCodeIs(SC_NO_CONTENT);
         //delete
-        authorizationHelpers.entityIsDeleted(BASE_PATH_CUSTOMERS, customerId);
+        authorizationHelpers.entityIsDeleted(CUSTOMERS_PATH, customerId);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
                 LocalDate.parse("2015-01-01"),
                 LocalDate.parse("2020-01-01"));
         // get
-        authorizationHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIP_PATH, relationId);
+        authorizationHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID);
         bodyContainsEntityWith("customer_id", DEFAULT_SNAPSHOT_CUSTOMER_ID);
         bodyContainsEntityWith("valid_from", "2015-01-01");
@@ -92,14 +92,14 @@ public class CustomerSmokeTests extends CommonSmokeTest {
                 true,
                 false);
         // get relation
-        authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIP_PATH, relationId);
+        authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("user_id", userId);
         bodyContainsEntityWith("customer_id", customerId);
         bodyContainsEntityWith("is_active", "true");
         bodyContainsEntityWith("is_primary", "false");
         // delete relation
-        authorizationHelpers.deleteEntity(USER_CUSTOMER_RELATIONSHIP_PATH, relationId);
+        authorizationHelpers.deleteEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_NO_CONTENT);
     }
 }

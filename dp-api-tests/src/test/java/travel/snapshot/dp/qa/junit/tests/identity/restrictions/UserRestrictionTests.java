@@ -4,11 +4,12 @@ import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OBJECT_CUSTOMERS;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OBJECT_PROPERTIES;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.SECOND_LEVEL_OBJECT_PROPERTY_SETS;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -103,26 +104,26 @@ public class UserRestrictionTests extends CommonRestrictionTest{
 //        Property roles
         PropertyDto createdProperty1 = propertyHelpers.propertyIsCreated(testProperty1);
         propertyHelpers.relationExistsBetweenUserAndProperty(createdUser1.getId(), createdProperty1.getId(), true);
-        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), SECOND_LEVEL_OBJECT_PROPERTIES, createdProperty1.getId());
+        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTIES_RESOURCE, createdProperty1.getId());
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), USER_PROPERTIES_ROLES_ENDPOINT, GET_METHOD);
-        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), SECOND_LEVEL_OBJECT_PROPERTIES, testProperty1.getId());
+        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTIES_RESOURCE, testProperty1.getId());
         responseCodeIs(SC_OK);
 
 //        Customer roles
-        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), SECOND_LEVEL_OBJECT_CUSTOMERS, DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), CUSTOMERS_RESOURCE, DEFAULT_SNAPSHOT_CUSTOMER_ID);
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), USER_CUSTOMERS_ROLES_ENDPOINT, GET_METHOD);
-        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), SECOND_LEVEL_OBJECT_CUSTOMERS, DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), CUSTOMERS_RESOURCE, DEFAULT_SNAPSHOT_CUSTOMER_ID);
         responseCodeIs(SC_OK);
 
 //        Property Set roles
         PropertySetDto createdPropertySet = propertySetHelpers.propertySetIsCreated(testPropertySet1);
         propertySetHelpers.addUserToPropertySet(createdUser1.getId(), createdPropertySet.getId(), true);
-        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, createdPropertySet.getId());
+        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTY_SETS_RESOURCE, createdPropertySet.getId());
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), USER_PROPERTY_SETS_ROLES_ENDPOINT, GET_METHOD);
-        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), SECOND_LEVEL_OBJECT_PROPERTY_SETS, createdPropertySet.getId());
+        userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTY_SETS_RESOURCE, createdPropertySet.getId());
         responseCodeIs(SC_OK);
     }
 }

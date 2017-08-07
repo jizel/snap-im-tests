@@ -8,6 +8,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_RESOURCE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -265,10 +268,10 @@ public class PropertySteps extends BasicSteps {
     public void removeAllUsersFromPropertiesWithCodes(List<String> propertyCodes) {
         propertyCodes.forEach(c -> {
             PropertyDto property = getPropertyByCodeInternal(c);
-            Response customerUsersResponse = getSecondLevelEntities(property.getId(), SECOND_LEVEL_OBJECT_USERS, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
+            Response customerUsersResponse = getSecondLevelEntities(property.getId(), USERS_RESOURCE, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
             PartnerUserRelationshipPartialDto[] propertyUsers = customerUsersResponse.as(PartnerUserRelationshipPartialDto[].class);
             for (PartnerUserRelationshipPartialDto partnerUser : propertyUsers) {
-                Response deleteResponse = deleteSecondLevelEntity(property.getId(), SECOND_LEVEL_OBJECT_USERS, partnerUser.getUserId(), null);
+                Response deleteResponse = deleteSecondLevelEntity(property.getId(), USERS_RESOURCE, partnerUser.getUserId(), null);
                 if (deleteResponse.statusCode() != HttpStatus.SC_NO_CONTENT) {
                     fail("User cannot be deleted: " + deleteResponse.asString());
                 }
@@ -297,13 +300,13 @@ public class PropertySteps extends BasicSteps {
         relation.setUserId(userId);
         relation.setIsActive(isActive);
 
-        Response resp = createSecondLevelRelationshipByUserForApplication(performerId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation);
+        Response resp = createSecondLevelRelationshipByUserForApplication(performerId, applicationVersionId, propertyId, USERS_RESOURCE, relation);
         setSessionResponse(resp);
     }
 
     @Step
     public PropertyUserRelationshipPartialDto getUserForProperty(String propertyId, String userId) {
-        Response customerUserResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_USERS, userId);
+        Response customerUserResponse = getSecondLevelEntity(propertyId, USERS_RESOURCE, userId);
         if (customerUserResponse.statusCode() == HttpStatus.SC_OK) {
             return customerUserResponse.as(PropertyUserRelationshipPartialDto.class);
         } else {
@@ -313,7 +316,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public CustomerDto getCustomerForProperty(String propertyId, String customerId) {
-        Response customerResponse = getSecondLevelEntity(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
+        Response customerResponse = getSecondLevelEntity(propertyId, CUSTOMERS_RESOURCE, customerId);
         return customerResponse.as(CustomerDto.class);
     }
 
@@ -333,12 +336,12 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void userIsDeletedFromPropertyByUserForApp(String performerId, String applicationVersionId, String userId, String propertyId) {
-        Response deleteResponse = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response deleteResponse = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, propertyId, USERS_RESOURCE, userId, null);
         setSessionResponse(deleteResponse);
     }
 
     public void propertySetIsDeletedFromPropertyByUserForApp(String userId, String applicationVersionId, String propertyId, String propertySetId) {
-        Response deleteResponse = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response deleteResponse = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, PROPERTY_SETS_RESOURCE, propertySetId, null);
         setSessionResponse(deleteResponse);
     }
 
@@ -366,7 +369,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public Response listOfPropertyUsersIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, USERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
         return response;
     }
@@ -392,10 +395,10 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void updatePropertyPropertySetRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) {
-        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        String etag = getSecondLevelEntityEtag(propertyId, PROPERTY_SETS_RESOURCE, propertySetId);
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
-            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, PROPERTY_SETS_RESOURCE, propertySetId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException e) {
             fail("Exception thrown when trying to map PropertySetPropertyRelationshipUpdateDto to JSONObject: " +  e);
@@ -406,10 +409,10 @@ public class PropertySteps extends BasicSteps {
     public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipPartialUpdateDto relationshipUpdate) {
         PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat("Property-Customer relationship does not exists", propertyCustomerRelation, is(notNullValue()));
-        String etag = getSecondLevelEntityEtag(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId());
+        String etag = getSecondLevelEntityEtag(propertyId, CUSTOMERS_RESOURCE, propertyCustomerRelation.getId());
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
-            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), jsonUpdate, etag);
+            Response response = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, CUSTOMERS_RESOURCE, propertyCustomerRelation.getId(), jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException e) {
             fail("Exception thrown when trying to map PropertySetPropertyRelationshipUpdateDto to JSONObject: " +  e);
@@ -420,13 +423,13 @@ public class PropertySteps extends BasicSteps {
     public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
         PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
-        Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId(), null);
+        Response response = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, CUSTOMERS_RESOURCE, propertyCustomerRelation.getId(), null);
         setSessionResponse(response);
     }
 
     @Step
     public void deletePropertyUserRelationshipByUserForApp(String performerId, String applicationVersionId, String propertyId, String userId){
-        Response response = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response response = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, propertyId, USERS_RESOURCE, userId, null);
         setSessionResponse(response);
     }
 
@@ -437,7 +440,7 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public Response propertyPropertySetIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String propertySetId) {
-        Response propertyPropertySet = getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        Response propertyPropertySet = getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, PROPERTY_SETS_RESOURCE, propertySetId);
         setSessionResponse(propertyPropertySet);
         return propertyPropertySet;
     }
@@ -449,20 +452,20 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public Response listOfPropertiesPropertySetsIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, PROPERTY_SETS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
         return response;
     }
 
     @Step
     public void listOfCustomersIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntities(propertyId, CUSTOMERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     @Step
     public void listOfCustomersIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId, CUSTOMERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -472,7 +475,7 @@ public class PropertySteps extends BasicSteps {
 
     public PropertyCustomerRelationshipPartialDto getPropertyCustomerRelationshipByUser(String userId, String customerId, String propertyId) {
         String filter = String.format("customer_id==%s", customerId);
-        PropertyCustomerRelationshipPartialDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, filter, null, null, null).as(PropertyCustomerRelationshipPartialDto[].class);
+        PropertyCustomerRelationshipPartialDto[] relations = getSecondLevelEntitiesByUser(userId, propertyId, CUSTOMERS_RESOURCE, null, null, filter, null, null, null).as(PropertyCustomerRelationshipPartialDto[].class);
         return stream(relations).findFirst().orElse(null);
     }
 
@@ -480,7 +483,7 @@ public class PropertySteps extends BasicSteps {
     public void requestPropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) {
         PropertyCustomerRelationshipPartialDto propertyCustomerRelation = getPropertyCustomerRelationship(customerId, propertyId);
         assertThat(propertyCustomerRelation, is(notNullValue()));
-        setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_CUSTOMERS, propertyCustomerRelation.getId()));
+        setSessionResponse(getSecondLevelEntityByUserForApp(userId, applicationVersionId, propertyId, CUSTOMERS_RESOURCE, propertyCustomerRelation.getId()));
     }
 
     public void listOfApiSubscriptionsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
@@ -554,12 +557,12 @@ public class PropertySteps extends BasicSteps {
     }
 
     public void listUsersForPropertyByUserForApp(String userId, String appId, String propertyId) {
-        setSessionResponse(getSecondLevelEntitiesByUserForApp(userId, appId, propertyId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null));
+        setSessionResponse(getSecondLevelEntitiesByUserForApp(userId, appId, propertyId, USERS_RESOURCE, null, null, null, null, null, null));
     }
 
     public void addPropertyToUserByUserForApp(String requestorId, String applicationVersionId, String propertyId, String targetUserId) {
         PropertyUserRelationshipPartialDto relation = new PropertyUserRelationshipPartialDto();
         relation.setUserId(targetUserId);
-        setSessionResponse(createSecondLevelRelationshipByUserForApplication(requestorId, applicationVersionId, propertyId, SECOND_LEVEL_OBJECT_USERS, relation));
+        setSessionResponse(createSecondLevelRelationshipByUserForApplication(requestorId, applicationVersionId, propertyId, USERS_RESOURCE, relation));
     }
 }

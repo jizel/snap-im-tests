@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_RESOURCE;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
@@ -19,7 +20,7 @@ public class PartnerHelpers extends PartnerSteps{
     }
 
     public void getUsersForPartnerByUserForApp(String partnerId, String userId, String appVersionId) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, appVersionId, partnerId, SECOND_LEVEL_OBJECT_USERS, null, null, null, null, null, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, appVersionId, partnerId, USERS_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
     }
 

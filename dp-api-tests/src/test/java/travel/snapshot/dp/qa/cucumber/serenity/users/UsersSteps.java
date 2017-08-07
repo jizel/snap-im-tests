@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType.CUSTOMER;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -34,7 +35,6 @@ public class UsersSteps extends BasicSteps {
     private static final String SESSION_USER_ID = "user_id";
     private static final String SESSION_CREATED_USER = "created_user";
 
-    protected static final String USERS_PATH = "/identity/users";
 
     public UsersSteps() {
         super();
@@ -233,7 +233,7 @@ public class UsersSteps extends BasicSteps {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
-        return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_ROLES, roleId, queryParams);
+        return deleteSecondLevelEntity(userId, ROLES_RESOURCE, roleId, queryParams);
     }
 
     private Response addRoleToUserEntity(String roleId, String userId, String entityId, String entityName) {
@@ -256,7 +256,7 @@ public class UsersSteps extends BasicSteps {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
-        Response userRolesResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_ROLES, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
+        Response userRolesResponse = getSecondLevelEntities(userId, ROLES_RESOURCE, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "role_id==" + roleId, null, null, queryParams);
         return stream((userRolesResponse.as(RoleDto[].class))).findFirst().orElse(null);
     }
 
@@ -283,7 +283,7 @@ public class UsersSteps extends BasicSteps {
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("relationship_type", relationshipType);
         queryParams.put("relationship_id", entityId);
-        Response response = getSecondLevelEntities(u.getId(), SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, queryParams);
+        Response response = getSecondLevelEntities(u.getId(), ROLES_RESOURCE, limit, cursor, filter, sort, sortDesc, queryParams);
         setSessionResponse(response);
     }
 
@@ -336,7 +336,7 @@ public class UsersSteps extends BasicSteps {
         data.put("role_id", roleId);
 
         Response resp = given().spec(spec).body(data).when()
-                .post(String.format("%s/%s/%s/%s", userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES));
+                .post(String.format("%s/%s/%s/%s", userId, entityName, entityId, ROLES_RESOURCE));
 
         setSessionResponse(resp);
     }
@@ -345,11 +345,11 @@ public class UsersSteps extends BasicSteps {
     public void roleBetweenUserAndEntityIsDeleted(String entityName, String roleId, String userId, String entityId, String nonExistent) {
         String etag;
         if (nonExistent == null) {
-            etag = getThirdLevelEntityEtag(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+            etag = getThirdLevelEntityEtag(userId, entityName, entityId, ROLES_RESOURCE, roleId);
         } else {
             etag = DEFAULT_SNAPSHOT_ETAG;
         }
-        Response deleteResponse = deleteThirdLevelEntity(userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
+        Response deleteResponse = deleteThirdLevelEntity(userId, entityName, entityId, ROLES_RESOURCE, roleId, etag);
         setSessionResponse(deleteResponse);
     }
 
@@ -384,8 +384,8 @@ public class UsersSteps extends BasicSteps {
         try {
             JSONObject jsonUpdate = retrieveData(userPropertyRelationship);
             jsonUpdate.remove(SESSION_USER_ID);
-            String etag = getSecondLevelEntityEtag(userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
-            Response response = updateSecondLevelEntityByUser(performerId, userId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, jsonUpdate, etag);
+            String etag = getSecondLevelEntityEtag(userId, PROPERTIES_RESOURCE, propertyId);
+            Response response = updateSecondLevelEntityByUser(performerId, userId, PROPERTIES_RESOURCE, propertyId, jsonUpdate, etag);
             setSessionResponse(response);
         } catch(JsonProcessingException exception){
             fail("Exception thrown while getting JSON from UserPropertyRelationshipUpdateDto object");
@@ -401,11 +401,11 @@ public class UsersSteps extends BasicSteps {
 
     @Step
     public Response addPropertySetToUserByUser(String performerId, String propertySetId, String userId){
-        return createSecondLevelRelationshipByUser(performerId, userId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, singletonMap("property_set_id", propertySetId));
+        return createSecondLevelRelationshipByUser(performerId, userId, PROPERTY_SETS_RESOURCE, singletonMap("property_set_id", propertySetId));
     }
 
     private String buildPathForRoles(String entityName, String userId, String entityId) {
-        return String.format("%s/%s/%s/%s", userId, entityName, entityId, SECOND_LEVEL_OBJECT_ROLES);
+        return String.format("%s/%s/%s/%s", userId, entityName, entityId, ROLES_RESOURCE);
     }
 
     public void createUserForCustomerByUser(String performerId, String customerId, UserCreateDto user, Boolean isPrimary) {
@@ -423,17 +423,17 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void getUserCustomerRelationByUserForApp(String requestorId, String appVersionId, String customerId, String targetUserId) {
-        Response response = getSecondLevelEntityByUserForApp(requestorId, appVersionId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, customerId);
+        Response response = getSecondLevelEntityByUserForApp(requestorId, appVersionId, targetUserId, CUSTOMERS_RESOURCE, customerId);
         setSessionResponse(response);
     }
 
     public void listUserCustomersByUser(String requestorId, String targetUserId) {
-        Response response = getSecondLevelEntitiesByUser(requestorId, targetUserId, SECOND_LEVEL_OBJECT_CUSTOMERS, null, null, null, null, null, null);
+        Response response = getSecondLevelEntitiesByUser(requestorId, targetUserId, CUSTOMERS_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
     }
 
     public void listRolesForRelationByUserForApp(String requestorId,  String appVersionId, String targetUserId, String secondLevelName, String secondLevelId) {
-        Response response = getThirdLevelEntitiesByUserForApp(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        Response response = getThirdLevelEntitiesByUserForApp(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, ROLES_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
     }
 
@@ -459,25 +459,25 @@ public class UsersSteps extends BasicSteps {
     }
 
     public void userAssignsRoleToRelationWithApp(String requestorId, String appVersionId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
-        Response response = createThirdLevelEntityByUserForApplication(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
+        Response response = createThirdLevelEntityByUserForApplication(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, ROLES_RESOURCE, singletonMap(ROLE_ID, roleId));
         setSessionResponse(response);
     }
 
     public void userDeletesRoleFromRelationWithApp(String requestorId, String appVersionId, String targetUserId, String secondLevelName, String secondLevelId, String roleId) {
-        String eTag = getThirdLevelEntityEtag(targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId);
-        Response response = deleteThirdLevelEntityByUserForApplication(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, SECOND_LEVEL_OBJECT_ROLES, roleId, eTag);
+        String eTag = getThirdLevelEntityEtag(targetUserId, resolveObjectName(secondLevelName), secondLevelId, ROLES_RESOURCE, roleId);
+        Response response = deleteThirdLevelEntityByUserForApplication(requestorId, appVersionId, targetUserId, resolveObjectName(secondLevelName), secondLevelId, ROLES_RESOURCE, roleId, eTag);
         setSessionResponse(response);
     }
 
     @Step
     public UserCustomerRelationshipPartialDto getCustomerForUser(String userId, String customerId) {
-        Response userCustomerResponse = getSecondLevelEntities(userId, SECOND_LEVEL_OBJECT_CUSTOMERS, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
+        Response userCustomerResponse = getSecondLevelEntities(userId, CUSTOMERS_RESOURCE, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "customer_id==" + customerId, null, null, null);
         return stream(userCustomerResponse.as(UserCustomerRelationshipPartialDto[].class)).findFirst().orElse(null);
     }
 
     @Step
     public Response deleteUserPartnerRelationship(String userId, String partnerId){
-        return deleteSecondLevelEntity(userId, SECOND_LEVEL_OBJECT_PARTNERS, partnerId, null);
+        return deleteSecondLevelEntity(userId, PARTNERS_RESOURCE, partnerId, null);
     }
 
     @Step
@@ -498,7 +498,7 @@ public class UsersSteps extends BasicSteps {
         } catch(JsonProcessingException exception){
             fail("Exception thrown while getting JSON from UserPartnerRelationshipPartialDto object");
         }
-        Response response = createSecondLevelRelationship(userId, SECOND_LEVEL_OBJECT_PARTNERS, jsonRelation.toString());
+        Response response = createSecondLevelRelationship(userId, PARTNERS_RESOURCE, jsonRelation.toString());
         setSessionResponse(response);
     }
 }

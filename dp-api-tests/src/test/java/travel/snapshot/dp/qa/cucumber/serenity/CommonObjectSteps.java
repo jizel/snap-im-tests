@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.fasterxml.jackson.core.JsonPointer;
@@ -44,7 +45,6 @@ public class CommonObjectSteps extends BasicSteps {
     private static final String SERENITY__PREFIX_OBJECT_ID_FIELD = "object_id_field:";
     private static final String SERENITY__PREFIX_OBJECT_SENT = "object_sent:";
     private static final String SERENITY__PREFIX_OBJECT_RECEIVED = "object_received:";
-    private static final String SERENITY__USER_CUSTOMER_RELATION = "user_customer_relationship";
     private final Logger logger = LoggerFactory.getLogger(CommonObjectSteps.class);
     private final JsonNodeFactory factory;
 
@@ -82,7 +82,7 @@ public class CommonObjectSteps extends BasicSteps {
 
         // create a completely new object for update
         ObjectNode updateObject = getCorrectObject(objectName);
-        updateObject.remove(SERENITY__USER_CUSTOMER_RELATION);
+        updateObject.remove(USER_CUSTOMER_RELATIONSHIPS_PATH);
         // propertyCode can not be changed
         updateObject.remove(PROPERTY_CODE);
 
@@ -472,7 +472,7 @@ public class CommonObjectSteps extends BasicSteps {
                 applyNodeOperation(correctObject, field, op);
 
                 // #4 update object server-side
-                correctObject.remove(SERENITY__USER_CUSTOMER_RELATION);
+                correctObject.remove(USER_CUSTOMER_RELATIONSHIPS_PATH);
                 Response updatedObjectResponse = restUpdateObject(getObjectLocation(objectName),
                         objectID, etag, createObjectMapper().writeValueAsString(correctObject));
 

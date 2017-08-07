@@ -41,6 +41,7 @@ public class ConfigurationSteps extends BasicSteps {
     private static final String SESSION_CONFIGURATION_TYPES = "configuration_types";
     private static final String SESSION_CREATED_CONFIGURATION_TYPE = "created_configuration_type";
     private static final String SESSION_CONFIGURATIONS = "configurations";
+    private static final String RECORDS_RESOURCE = "records";
 
     public ConfigurationSteps() {
         spec.baseUri(PropertiesHelper.getProperty(CONFIGURATION_BASE_URI)).basePath(CONFIGURATION_BASE_PATH);
@@ -51,7 +52,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private boolean isConfigurationExist(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
         int statusCode = response.statusCode();
         if (statusCode == HttpStatus.SC_OK) {
             return true;
@@ -290,7 +291,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationDoesntExistForIdentifier(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
@@ -299,7 +300,7 @@ public class ConfigurationSteps extends BasicSteps {
     public void followingConfigurationsExist(List<ConfigurationRecordDto> configurations, String identifier) {
         configurations.forEach(configuration -> {
             if (isConfigurationExist(configuration.getKey(), identifier)) {
-                deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, configuration.getKey(), null);
+                deleteSecondLevelEntity(identifier, RECORDS_RESOURCE, configuration.getKey(), null);
             }
             Response createResponse = createValueForKey(identifier, configuration.getKey(), configuration.getValue().toString(), configuration.getType().toString());
             assertThat("Configuration cannot be created", createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
@@ -309,13 +310,13 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void getConfigurationWithKeyForIdentifier(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
         setSessionResponse(response);
     }
 
     @Step
     public void listOfConfigurationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String identifier) {
-        Response response = getSecondLevelEntities(identifier, SECOND_LEVEL_OBJECT_RECORDS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntities(identifier, RECORDS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -327,7 +328,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfiguration(String key, String identifier) {
-        Response resp = deleteSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key, null);
+        Response resp = deleteSecondLevelEntity(identifier, RECORDS_RESOURCE, key, null);
         setSessionResponse(resp);
     }
 
@@ -350,7 +351,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void updateConfigurationValue(String identifier, String key, String value, String type) {
-        String etag = getSecondLevelEntityEtag(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        String etag = getSecondLevelEntityEtag(identifier, RECORDS_RESOURCE, key);
 
         Response resp = updateValueForKey(identifier, key, value, type, etag);
         setSessionResponse(resp);
@@ -358,7 +359,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationHasValue(String identifier, String key, Object value) {
-        Response response = getSecondLevelEntity(identifier, SECOND_LEVEL_OBJECT_RECORDS, key);
+        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
         response.then().body("value", is(value));
     }
 

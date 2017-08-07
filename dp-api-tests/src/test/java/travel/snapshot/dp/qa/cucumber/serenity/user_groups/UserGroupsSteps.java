@@ -4,6 +4,7 @@ import static java.util.Collections.singletonMap;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
 import static travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps.getResponseAsRoles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,47 +85,47 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void listGroupRoleIsGot(String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntities(userGroupId, ROLES_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     @Step
     public void listGroupRolesIsGotByUserForApp(String userId, String applicationVersionId, String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, ROLES_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
     @Step
     public Response listOfUserGroupPropertiesIsGotByUserForApp(String userId, String applicationVersionId, String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
         return response;
     }
 
     @Step
     public Response listOfUserGroupPropertySetsIsGotByUserForApp(String userId, String applicationVersionId, String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
         return response;
     }
 
     @Step
     public Response listOfUserGroupUsersIsGotByUserForApp(String userId, String applicationVersionId, String userGroupId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_USERS, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, USERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
         return response;
     }
 
     @Step
     public Response listOfUserGroupPropertyRolesIsGotByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId){
-        Response response = getThirdLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        Response response = getThirdLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, propertyId, ROLES_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
         return response;
     }
 
     @Step
     public Response listOfUserGroupPropertySetRolesIsGotByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId){
-        Response response = getThirdLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertyId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        Response response = getThirdLevelEntitiesByUserForApp(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertyId, ROLES_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
         return response;
     }
@@ -239,7 +240,7 @@ public class UserGroupsSteps extends BasicSteps {
         relation.setPropertySetId(propertySetId);
         relation.setIsActive(isActive);
 
-        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, relation);
+        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, relation);
         setSessionResponse(resp);
     }
 
@@ -260,7 +261,7 @@ public class UserGroupsSteps extends BasicSteps {
         relation.setPropertyId(propertyId);
         relation.setIsActive(isActive);
 
-        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, relation);
+        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, relation);
         setSessionResponse(resp);
     }
 
@@ -270,7 +271,7 @@ public class UserGroupsSteps extends BasicSteps {
         userGroupPropertyRelation.put(PROPERTY_ID, propertyId);
         userGroupPropertyRelation.put(IS_ACTIVE, isActive.toString());
 
-        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, userGroupPropertyRelation);
+        Response resp = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, userGroupPropertyRelation);
         setSessionResponse(resp);
     }
 
@@ -285,91 +286,91 @@ public class UserGroupsSteps extends BasicSteps {
         relation.setUserId(userId);
         relation.setIsActive(isActive);
 
-        Response resp = createSecondLevelRelationshipByUserForApplication(performerId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_USERS, relation);
+        Response resp = createSecondLevelRelationshipByUserForApplication(performerId, applicationVersionId, userGroupId, USERS_RESOURCE, relation);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsProperty(String userGroupId, String propertyId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        Response resp = getSecondLevelEntity(userGroupId, PROPERTIES_RESOURCE, propertyId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsPropertyByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId) {
-        Response resp = getSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        Response resp = getSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, propertyId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsPropertySet(String userGroupId, String propertySetId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        Response resp = getSecondLevelEntity(userGroupId, PROPERTY_SETS_RESOURCE, propertySetId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsPropertySetByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertySetId) {
-        Response resp = getSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        Response resp = getSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertySetId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsUser(String userGroupId, String userId){
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
+        Response resp = getSecondLevelEntity(userGroupId, USERS_RESOURCE, userId);
         setSessionResponse(resp);
     }
 
     @Step
     public void getUserGroupsUserRelationshipByUserForApp(String performerId, String applicationVersionId, String userGroupId, String userId){
-        Response resp = getSecondLevelEntityByUserForApp(performerId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
+        Response resp = getSecondLevelEntityByUserForApp(performerId, applicationVersionId, userGroupId, USERS_RESOURCE, userId);
         setSessionResponse(resp);
     }
 
     @Step
     public void deleteUserGroupPropertyRelationship(String userGroupId, String propertyId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        Response resp = deleteSecondLevelEntity(userGroupId, PROPERTIES_RESOURCE, propertyId, null);
         setSessionResponse(resp);
     }
 
     @Step
     public void deleteUserGroupPropertyRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId) {
-        Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, null);
+        Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, propertyId, null);
         setSessionResponse(resp);
     }
 
     @Step
     public void relationshipGroupPropertySetIsDeleted(String userGroupId, String propertySetId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response resp = deleteSecondLevelEntity(userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, null);
         setSessionResponse(resp);
     }
 
     @Step
     public void relationshipGroupPropertySetIsDeletedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertySetId) {
-        Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, null);
+        Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, null);
         setSessionResponse(resp);
     }
 
     @Step
     public void relationshipGroupUserIsDeleted(String userGroupId, String userId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response resp = deleteSecondLevelEntity(userGroupId, USERS_RESOURCE, userId, null);
         setSessionResponse(resp);
     }
 
     @Step
     public void userGroupUserRelationshipIsDeletedByUserForApp(String performerId, String applicationVersionId, String userGroupId, String userId) {
-        Response resp = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, null);
+        Response resp = deleteSecondLevelEntityByUserForApplication(performerId, applicationVersionId, userGroupId, USERS_RESOURCE, userId, null);
         setSessionResponse(resp);
     }
 
     public void checkGroupPropertyExistence(String userGroupId, String propertyId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId);
+        Response resp = getSecondLevelEntity(userGroupId, PROPERTIES_RESOURCE, propertyId);
         if (resp.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
             fail("Relationship userGroup-property still exists!");
         }
     }
 
     public void checkGroupPropertySetExistence(String userGroupId, String propertySetId) {
-        Response resp = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId);
+        Response resp = getSecondLevelEntity(userGroupId, PROPERTY_SETS_RESOURCE, propertySetId);
         if (resp.getStatusCode() != HttpStatus.SC_NOT_FOUND) {
             fail("Relationship userGroup-propertySet still exists!");
         }
@@ -382,12 +383,12 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setGroupPropertyActivityByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, boolean activity) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntity(userGroupId, PROPERTIES_RESOURCE, propertyId).getHeader(HEADER_ETAG);
         UserGroupPropertyRelationshipUpdateDto relation = new UserGroupPropertyRelationshipPartialDto();
         relation.setIsActive(activity);
         try {
             JSONObject obj = retrieveData(relation);
-            Response resp = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, obj, etag);
+            Response resp = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, propertyId, obj, etag);
             setSessionResponse(resp);
         } catch (JsonProcessingException e){
             fail("Exception while retrieving JSON from UserGroupPropertyRelationshipUpdateDto object: " + e.toString());
@@ -401,13 +402,13 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setGroupPropertySetActivityByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertySetId, boolean isActive) throws JsonProcessingException {
-        String etag = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).getHeader(HEADER_ETAG);
+        String etag = getSecondLevelEntity(userGroupId, PROPERTY_SETS_RESOURCE, propertySetId).getHeader(HEADER_ETAG);
         UserGroupPropertySetRelationshipPartialDto relation = new UserGroupPropertySetRelationshipPartialDto();
         relation.setIsActive(isActive);
 
         JSONObject obj = retrieveData(relation);
 
-        Response resp = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, obj, etag);
+        Response resp = updateSecondLevelEntityByUserForApp(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, obj, etag);
         setSessionResponse(resp);
     }
 
@@ -418,19 +419,19 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void setUserGroupUserActivityByUserForApp(String performerId, String applicationVersionId, String userGroupId, String userId, Boolean isActive) throws JsonProcessingException {
-        String etag = getSecondLevelEntityEtag(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId);
+        String etag = getSecondLevelEntityEtag(userGroupId, USERS_RESOURCE, userId);
         UserGroupUserRelationshipUpdateDto relation = new UserGroupUserRelationshipUpdateDto();
         relation.setIsActive(isActive);
 
         JSONObject jsonRelation = retrieveData(relation);
 
-        Response resp = updateSecondLevelEntityByUserForApp(performerId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_USERS, userId, jsonRelation, etag);
+        Response resp = updateSecondLevelEntityByUserForApp(performerId, applicationVersionId, userGroupId, USERS_RESOURCE, userId, jsonRelation, etag);
         setSessionResponse(resp);
     }
 
     @Step
     public void userGroupRoleRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String roleId) {
-        Response response = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, singletonMap(ROLE_ID, roleId));
+        Response response = createSecondLevelRelationshipByUserForApplication(userId, applicationVersionId, userGroupId, ROLES_RESOURCE, singletonMap(ROLE_ID, roleId));
         setSessionResponse(response);
     }
 
@@ -441,7 +442,7 @@ public class UserGroupsSteps extends BasicSteps {
 
         JSONObject roleInJson = retrieveData(roleObject);
 
-        Response response = createSecondLevelRelationship(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleInJson.toString());
+        Response response = createSecondLevelRelationship(userGroupId, ROLES_RESOURCE, roleInJson.toString());
         setSessionResponse(response);
     }
 
@@ -449,7 +450,7 @@ public class UserGroupsSteps extends BasicSteps {
     public void userGroupPropertyRoleRelationshipIsCreatedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, String roleId) {
         Map<String, String> userGroupPropertyRoleRelation = new HashMap<>();
         userGroupPropertyRoleRelation.put(ROLE_ID, roleId);
-        Response response = createThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, userGroupPropertyRoleRelation);
+        Response response = createThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, propertyId, ROLES_RESOURCE, userGroupPropertyRoleRelation);
         setSessionResponse(response);
     }
 
@@ -458,28 +459,28 @@ public class UserGroupsSteps extends BasicSteps {
         RoleRelationshipDto roleRelationship = new RoleRelationshipDto();
         roleRelationship.setRoleId(roleId);
 
-        Response response = createThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, SECOND_LEVEL_OBJECT_ROLES, roleRelationship);
+        Response response = createThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, ROLES_RESOURCE, roleRelationship);
         setSessionResponse(response);
     }
 
     @Step
     public void userGroupPropertyRoleRelationshipIsDeletedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertyId, String roleId) {
-        String etag = getThirdLevelEntityEtag(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+        String etag = getThirdLevelEntityEtag(userGroupId, PROPERTIES_RESOURCE, propertyId, ROLES_RESOURCE, roleId);
 
-        Response response = deleteThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
+        Response response = deleteThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTIES_RESOURCE, propertyId, ROLES_RESOURCE, roleId, etag);
         setSessionResponse(response);
     }
 
     @Step
     public void userGroupPropertySetRoleRelationshipIsDeletedByUserForApp(String userId, String applicationVersionId, String userGroupId, String propertySetId, String roleId) {
-        String etag = getThirdLevelEntityEtag(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, SECOND_LEVEL_OBJECT_ROLES, roleId);
+        String etag = getThirdLevelEntityEtag(userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, ROLES_RESOURCE, roleId);
 
-        Response response = deleteThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId, SECOND_LEVEL_OBJECT_ROLES, roleId, etag);
+        Response response = deleteThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, ROLES_RESOURCE, roleId, etag);
         setSessionResponse(response);
     }
 
     public void checkUserGroupRoleRelationExistency(String userGroupId, String roleId, Boolean existency) {
-        Response response = getSecondLevelEntities(userGroupId, SECOND_LEVEL_OBJECT_ROLES, null, null, null, null, null, null);
+        Response response = getSecondLevelEntities(userGroupId, ROLES_RESOURCE, null, null, null, null, null, null);
         List<RoleDto> listOfRoles = getResponseAsRoles(response);
         Boolean found = false;
         for (RoleDto role : listOfRoles) {
@@ -495,28 +496,28 @@ public class UserGroupsSteps extends BasicSteps {
 
     @Step
     public void deleteUserGroupRoleRelationship(String userGroupId, String roleId) {
-        Response resp = deleteSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleId, null);
+        Response resp = deleteSecondLevelEntity(userGroupId, ROLES_RESOURCE, roleId, null);
         setSessionResponse(resp);
     }
 
     @Step
     public void deleteUserGroupRoleRelationshipByUserForApp(String userId, String applicationVersionId, String userGroupId, String roleId) {
-        Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, SECOND_LEVEL_OBJECT_ROLES, roleId, null);
+        Response resp = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, ROLES_RESOURCE, roleId, null);
         setSessionResponse(resp);
     }
 
     public void checkuserGroupPropertyRelationActivity(String userGroupId, String propertyId, boolean activity) {
-        UserGroupPropertyRelationshipPartialDto relation = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTIES, propertyId).as(UserGroupPropertyRelationshipPartialDto.class);
+        UserGroupPropertyRelationshipPartialDto relation = getSecondLevelEntity(userGroupId, PROPERTIES_RESOURCE, propertyId).as(UserGroupPropertyRelationshipPartialDto.class);
         assertEquals(relation.getIsActive(), activity);
     }
 
     public void checkuserGroupPropertySetRelationActivity(String userGroupId, String propertySetId, boolean b) {
-        UserGroupPropertySetRelationshipPartialDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_PROPERTY_SETS, propertySetId).as(UserGroupPropertySetRelationshipPartialDto.class);
+        UserGroupPropertySetRelationshipPartialDto relationship = getSecondLevelEntity(userGroupId, PROPERTY_SETS_RESOURCE, propertySetId).as(UserGroupPropertySetRelationshipPartialDto.class);
         assertEquals(relationship.getIsActive(), b);
     }
 
     public Boolean getUserGroupUserRelationIsActive(String userGroupId, String userId){
-        UserGroupUserRelationshipPartialDto relationship = getSecondLevelEntity(userGroupId, SECOND_LEVEL_OBJECT_USERS, userId).as(UserGroupUserRelationshipPartialDto.class);
+        UserGroupUserRelationshipPartialDto relationship = getSecondLevelEntity(userGroupId, USERS_RESOURCE, userId).as(UserGroupUserRelationshipPartialDto.class);
         return relationship.getIsActive();
     }
 
