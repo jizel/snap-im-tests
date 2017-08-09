@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.ENTITIES_TO_DELETE;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
 
 /**
  * Created by ofayans on 7/27/17.

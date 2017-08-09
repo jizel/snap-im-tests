@@ -24,10 +24,10 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
 
     @Test
     public void getPropertyRestrictionTest(){
-        propertyHelpers.getListOfPropertiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, "name==*", null, "name");
+        propertyHelpers.getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, null,"name==*", null, "name", null);
         responseIsNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_PROPERTIES_ENDPOINT, GET_METHOD);
-        propertyHelpers.getListOfPropertiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, "name==*", null, "name");
+        propertyHelpers.getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, null, "name==*", null, "name", null);
         responseCodeIs(SC_OK);
 
         propertyHelpers.getPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID);
@@ -62,7 +62,7 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     }
 
     @Test
-    public void getPropertySecondLevelEntitiesRestrictionTest(){
+    public void getPropertySecondLevelEntitiesRestrictionTest() throws Throwable {
 //        Customers
         propertyHelpers.listOfCustomersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
         responseIsNotFound();

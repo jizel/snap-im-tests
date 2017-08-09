@@ -4,6 +4,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -127,7 +128,6 @@ public class BasicSteps {
     public static final String DEFAULT_PASSWORD = "P@ssw0rd";
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
     public static final String DEFAULT_CLIENT_SECRET = "a4000000-0000-4444-8888-000000000000";
-    public static final String ENTITIES_TO_DELETE = "deleteThese";
     public static final String CUSTOMER_PROPERTIES = "customer_properties";
     public static final String CUSTOMER_USERS = "customer_users";
     public static final String USER_PROPERTIES = "user_properties";
@@ -326,6 +326,11 @@ public class BasicSteps {
         spec.baseUri(getBaseUriForModule(module));
     }
 
+    protected void entityIsCreatedByUser(String userId, Object entity) {
+        createEntityByUser(userId, entity);
+        responseCodeIs(SC_CREATED);
+    }
+
     protected Response createEntity(Object entity) {
         return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entity);
     }
@@ -349,15 +354,21 @@ public class BasicSteps {
     }
 
     protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, Map<String, Object> data, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
-        if (isNotBlank(etag)) {
-            requestSpecification = requestSpecification.header(HEADER_IF_MATCH, etag);
+        if (isBlank(etag)) {
+            fail("Etag to be send in request header is null.");
         }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
-        return requestSpecification.body(data).when().post("/{id}", entityId);
+        RequestSpecification requestSpecification = given()
+                .spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
+                .header(HEADER_IF_MATCH, etag);
+        return requestSpecification
+                .body(data)
+                .when()
+                .post("/{id}", entityId);
     }
 
     protected Response updateEntity(String entityId, Object data, String etag) {
@@ -369,18 +380,26 @@ public class BasicSteps {
     }
 
     protected Response updateEntityByUserForApplication(String userId, String applicationId, String entityId, Object data, String etag) {
-        RequestSpecification requestSpecification = given().spec(spec);
         if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
-        if (isNotBlank(etag)) {
-            requestSpecification.header(HEADER_IF_MATCH, etag);
+        if (isBlank(etag)) {
+            fail("Etag to be send in request header is null.");
         }
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
-        Response response = requestSpecification.body(data).when().post("/{id}", entityId);
+        RequestSpecification requestSpecification = given()
+                .spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
+                .header(HEADER_IF_MATCH, etag);
+        Response response = requestSpecification
+                .body(data)
+                .when()
+                .post("/{id}", entityId);
         setSessionResponse(response);
         return response;
     }
+
+    // manual delete methods - require explicitly passed etags
 
     public Response deleteEntity(String entityId, String etag) {
         Response response = deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
@@ -396,17 +415,23 @@ public class BasicSteps {
         if (isBlank(userId)) {
             fail("User ID to be send in request header is blank.");
         }
-        RequestSpecification requestSpecification = given().spec(spec);
-        requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
-        if (isNotBlank(etag)) {
-            requestSpecification.header(HEADER_IF_MATCH, etag);
-        } else {
-            requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
+        if (isBlank(etag)) {
+            fail("Etag to be send in request header is null.");
         }
-        Response response = requestSpecification.when().delete("/{id}", entityId);
+        RequestSpecification requestSpecification = given()
+                .spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
+                .header(HEADER_IF_MATCH, etag);
+        Response response = requestSpecification
+                .when()
+                .delete("/{id}", entityId);
         setSessionResponse(response);
         return response;
     }
+
+
+
 
     protected Response deleteEntityWithEtag(String entityId) {
         return deleteEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
@@ -423,24 +448,21 @@ public class BasicSteps {
         return response;
     }
 
-    public Response deleteEntityUrl(String url, String id) {
-        return given().spec(spec).when().delete(url + "/{id}", id);
-    }
-
     public String getEntityEtag(String entityId) {
         return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
     public String getEntityEtagByUser(String userId, String entityId) {
-        return getEntityEtagByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
+        return getEntityEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    public String getEntityEtagByUserForApplication(String userId, String applicationId, String entityId) {
+    public String getEntityEtagByUserForApp(String userId, String applicationId, String entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
 
         return requestSpecification.when().head("/{id}", entityId).getHeader(HEADER_ETAG);
     }
+
 
     public Response getEntity(String entityId) {
         return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
@@ -458,6 +480,8 @@ public class BasicSteps {
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         return requestSpecification.when().get("/{id}", entityId);
     }
+
+
 
     protected Response createSecondLevelRelationship(String firstLevelId, String secondLevelId, Object jsonBody) {
         return createSecondLevelRelationshipByUser(DEFAULT_SNAPSHOT_USER_ID, firstLevelId, secondLevelId, jsonBody);
@@ -706,19 +730,22 @@ public class BasicSteps {
         return getEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, url, limit, cursor, filter, sort, sortDesc, queryParams);
     }
 
-    protected Response getEntitiesByUserForApp(String userId, String appId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+    public Response getEntitiesByUserForApp(String userId, String appId, String url, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
         if (isBlank(userId)) {
             fail("User ID to be send in request header is null.");
         }
         if (url == null) {
             url = "";
         }
-        RequestSpecification requestSpecification = given().spec(spec);
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, appId);
+        RequestSpecification requestSpecification = given()
+                .spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, appId);
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
         requestSpecification.parameters(params);
-        return requestSpecification.when().get(url);
+        Response response = requestSpecification.when().get(url);
+        setSessionResponse(response);
+        return response;
     }
 
     protected Response getEntitiesForUrlWihDates(String url, String limit, String cursor, String since, String until, String granularity, Map<String, String> queryParams) {
