@@ -161,7 +161,7 @@ public class RelationshipsHelpers extends BasicSteps {
     //    User Property Set Relationships
 
     public Response createUserPropertySetRelationship(String userId, String propertyId, Boolean isActive) {
-        spec.basePath(USER_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_PROPERTY_SET_RELATIONSHIPS_PATH);
         UserPropertySetRelationshipDto UserPropertySetRelationship = constructUserPropertySetRelationshipDto(userId, propertyId, isActive);
         return createEntity(UserPropertySetRelationship);
     }
@@ -173,19 +173,19 @@ public class RelationshipsHelpers extends BasicSteps {
     }
 
     public Response updateUserPropertySetRelationship(String relationshipId, Boolean isActive) {
-        spec.basePath(USER_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_PROPERTY_SET_RELATIONSHIPS_PATH);
         UserPropertySetRelationshipUpdateDto UserPropertySetRelationshipUpdate = new UserPropertySetRelationshipUpdateDto();
         UserPropertySetRelationshipUpdate.setIsActive(isActive);
         return updateEntity(relationshipId, UserPropertySetRelationshipUpdate, getEntityEtag(relationshipId));
     }
 
     public Response deleteUserPropertySetRelationship(String relationshipId) {
-        spec.basePath(USER_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_PROPERTY_SET_RELATIONSHIPS_PATH);
         return deleteEntityWithEtag(relationshipId);
     }
 
     public UserPropertySetRelationshipDto getUserPropertySetRelationship(String relationshipId) {
-        spec.basePath(USER_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_PROPERTY_SET_RELATIONSHIPS_PATH);
         String filter = String.format("id==%s", relationshipId);
         UserPropertySetRelationshipDto[] relationshipDtos = getEntities(null, null, null, filter, null, null, null).as(UserPropertySetRelationshipDto[].class);
         return stream(relationshipDtos).findFirst().orElse(null);
@@ -275,7 +275,7 @@ public class RelationshipsHelpers extends BasicSteps {
     //    Property Set Property Relationships
 
     public Response createPropertySetPropertyRelationship(String propertySetId, String propertyId, Boolean isActive) {
-        spec.basePath(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH);
         PropertySetPropertyRelationshipDto propertySetPropertyRelationship = constructPropertySetPropertyRelationship(propertySetId, propertyId, isActive);
         return createEntity(propertySetPropertyRelationship);
     }
@@ -287,19 +287,19 @@ public class RelationshipsHelpers extends BasicSteps {
     }
 
     public Response updatePropertySetPropertyRelationship(String relationshipId, Boolean isActive) {
-        spec.basePath(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH);
         PropertySetPropertyRelationshipUpdateDto PropertySetPropertyRelationshipUpdate = new PropertySetPropertyRelationshipUpdateDto();
         PropertySetPropertyRelationshipUpdate.setIsActive(isActive);
         return updateEntity(relationshipId, PropertySetPropertyRelationshipUpdate, getEntityEtag(relationshipId));
     }
 
     public Response deletePropertySetPropertyRelationship(String relationshipId) {
-        spec.basePath(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH);
         return deleteEntityWithEtag(relationshipId);
     }
 
     public PropertySetPropertyRelationshipDto getPropertySetPropertyRelationship(String relationshipId) {
-        spec.basePath(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH);
         String filter = String.format("id==%s", relationshipId);
         PropertySetPropertyRelationshipDto[] relationshipDtos = getEntities(null, null, null, filter, null, null, null).as(PropertySetPropertyRelationshipDto[].class);
         return stream(relationshipDtos).findFirst().orElse(null);
@@ -308,7 +308,7 @@ public class RelationshipsHelpers extends BasicSteps {
     //    User Group Property Relationships
 
     public Response createUserGroupPropertyRelationship(String userGroupId, String propertyId, Boolean isActive) {
-        spec.basePath(USERGROUP_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH);
         UserGroupPropertyRelationshipDto UserGroupPropertyRelationship = constructUserGroupPropertyRelationship(userGroupId, propertyId, isActive);
         return createEntity(UserGroupPropertyRelationship);
     }
@@ -320,19 +320,19 @@ public class RelationshipsHelpers extends BasicSteps {
     }
 
     public Response updateUserGroupPropertyRelationship(String relationshipId, Boolean isActive) {
-        spec.basePath(USERGROUP_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH);
         UserGroupPropertyRelationshipUpdateDto UserGroupPropertyRelationshipUpdate = new UserGroupPropertyRelationshipUpdateDto();
         UserGroupPropertyRelationshipUpdate.setIsActive(isActive);
         return updateEntity(relationshipId, UserGroupPropertyRelationshipUpdate, getEntityEtag(relationshipId));
     }
 
     public Response deleteUserGroupPropertyRelationship(String relationshipId) {
-        spec.basePath(USERGROUP_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH);
         return deleteEntityWithEtag(relationshipId);
     }
 
     public UserGroupPropertyRelationshipDto getUserGroupPropertyRelationship(String relationshipId) {
-        spec.basePath(USERGROUP_PROPERTY_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH);
         String filter = String.format("id==%s", relationshipId);
         UserGroupPropertyRelationshipDto[] relationshipDtos = getEntities(null, null, null, filter, null, null, null).as(UserGroupPropertyRelationshipDto[].class);
         return stream(relationshipDtos).findFirst().orElse(null);
@@ -341,7 +341,7 @@ public class RelationshipsHelpers extends BasicSteps {
     //    User Group Property Set Relationships
 
     public Response createUserGroupPropertySetRelationship(String userGroupId, String propertyId, Boolean isActive) {
-        spec.basePath(USERGROUP_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH);
         UserGroupPropertySetRelationshipDto UserGroupPropertySetRelationship = constructUserGroupPropertySetRelationship(userGroupId, propertyId, isActive);
         return createEntity(UserGroupPropertySetRelationship);
     }
@@ -353,19 +353,19 @@ public class RelationshipsHelpers extends BasicSteps {
     }
 
     public Response updateUserGroupPropertySetRelationship(String relationshipId, Boolean isActive) {
-        spec.basePath(USERGROUP_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH);
         UserGroupPropertySetRelationshipUpdateDto UserGroupPropertySetRelationshipUpdate = new UserGroupPropertySetRelationshipUpdateDto();
         UserGroupPropertySetRelationshipUpdate.setIsActive(isActive);
         return updateEntity(relationshipId, UserGroupPropertySetRelationshipUpdate, getEntityEtag(relationshipId));
     }
 
     public Response deleteUserGroupPropertySetRelationship(String relationshipId) {
-        spec.basePath(USERGROUP_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH);
         return deleteEntityWithEtag(relationshipId);
     }
 
     public UserGroupPropertySetRelationshipDto getUserGroupPropertySetRelationship(String relationshipId) {
-        spec.basePath(USERGROUP_PROPERTYSET_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH);
         String filter = String.format("id==%s", relationshipId);
         UserGroupPropertySetRelationshipDto[] relationshipDtos = getEntities(null, null, null, filter, null, null, null).as(UserGroupPropertySetRelationshipDto[].class);
         return stream(relationshipDtos).findFirst().orElse(null);
@@ -374,7 +374,7 @@ public class RelationshipsHelpers extends BasicSteps {
     //    User Group User Relationships
 
     public Response createUserGroupUserRelationship(String userGroupId, String propertyId, Boolean isActive) {
-        spec.basePath(USERGROUP_USER_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_USER_RELATIONSHIPS_PATH);
         UserGroupUserRelationshipDto UserGroupUserRelationship = constructUserGroupUserRelationship(userGroupId, propertyId, isActive);
         return createEntity(UserGroupUserRelationship);
     }
@@ -386,19 +386,19 @@ public class RelationshipsHelpers extends BasicSteps {
     }
 
     public Response updateUserGroupUserRelationship(String relationshipId, Boolean isActive) {
-        spec.basePath(USERGROUP_USER_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_USER_RELATIONSHIPS_PATH);
         UserGroupUserRelationshipUpdateDto UserGroupUserRelationshipUpdate = new UserGroupUserRelationshipUpdateDto();
         UserGroupUserRelationshipUpdate.setIsActive(isActive);
         return updateEntity(relationshipId, UserGroupUserRelationshipUpdate, getEntityEtag(relationshipId));
     }
 
     public Response deleteUserGroupUserRelationship(String relationshipId) {
-        spec.basePath(USERGROUP_USER_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_USER_RELATIONSHIPS_PATH);
         return deleteEntityWithEtag(relationshipId);
     }
 
     public UserGroupUserRelationshipDto getUserGroupUserRelationship(String relationshipId) {
-        spec.basePath(USERGROUP_USER_RELATIONSHIPS_PATH);
+        spec.basePath(USER_GROUP_USER_RELATIONSHIPS_PATH);
         String filter = String.format("id==%s", relationshipId);
         UserGroupUserRelationshipDto[] relationshipDtos = getEntities(null, null, null, filter, null, null, null).as(UserGroupUserRelationshipDto[].class);
         return stream(relationshipDtos).findFirst().orElse(null);
