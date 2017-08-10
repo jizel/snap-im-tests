@@ -14,10 +14,10 @@ import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.selectExamplesForTe
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
 import travel.snapshot.dp.api.configuration.model.ConfigurationTypeDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
@@ -36,13 +36,12 @@ import java.util.Map;
 public class ConfigurationsTests extends CommonTest {
 
     private static Map<String, Map<String, List<String>>> configurationsTestsTables = loadYamlTables(String.format(YAML_DATA_PATH, "configurations/configuration_crud.yaml"));
-    private ConfigurationTypeDto testConfigurationType1;
     private ConfigurationRecordDto testConfigurationRecord1;
     private static final String CONF_TYPE_IDENTIFIER = "NotificationTestConfType";
 
     @Before
     public void setUp() throws Throwable {
-        testConfigurationType1 = new ConfigurationTypeDto();
+        ConfigurationTypeDto testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier(CONF_TYPE_IDENTIFIER);
         testConfigurationType1.setDescription("Notification Test Configuration Type Description");
         configurationSteps.followingConfigurationTypeIsCreated(testConfigurationType1);
@@ -80,9 +79,8 @@ public class ConfigurationsTests extends CommonTest {
         responseCodeIs(SC_NO_CONTENT);
         bodyIsEmpty();
         configurationHelpers.configurationDoesntExistForIdentifier(configurationRecord.getKey(), CONF_TYPE_IDENTIFIER);
-//        DP-1773
-//        configurationHelpers.tryDeleteConfiguration(configurationRecord.getKey(), "nonexistent");
-//        responseCodeIs(SC_NOT_FOUND);
+        configurationHelpers.tryDeleteConfiguration(configurationRecord.getKey(), "nonexistent");
+        responseCodeIs(SC_NOT_FOUND);
     }
 
     @Test
@@ -93,9 +91,8 @@ public class ConfigurationsTests extends CommonTest {
         configurationHelpers.configurationHasValue(CONF_TYPE_IDENTIFIER, configurationRecord.getKey(), TRUE);
     }
 
-    //    DP-2219
     @Test
-    @Ignore
+    @Jira("DPNP-6")
     public void filteringConfigurationsTest() throws Exception {
 //        Prepare data
         List<Map<String, String>> listOfConfigurations = selectExamplesForTestFromTable(configurationsTestsTables, "configurationsForFiltering");
