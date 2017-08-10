@@ -23,6 +23,9 @@ public class DbUtilsSteps {
 
     static final String DELETE_SINGLE_USER = "delete from public.User where id = '%s';";
     static final String DELETE_SINGLE_PROPERTY = "delete from Property where id = '%s';";
+    static final String DELETE_SINGLE_PROPERTYSET = "delete from Propertyset where id = '%s';";
+    static final String DELETE_SINGLE_PROPERTYSET_PROPERTY = "delete from Propertyset_Property where id = '%s';";
+    static final String DELETE_SINGLE_PROPERTYSET_HIERARCHY = "delete from PropertysetHierarchyPath where parent_id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER = "delete from Customer where id = '%s';";
     static final String DELETE_SINGLE_COMMERCIAL_SUBSCRIPTION = "delete from CommercialSubscription where id = '%s';";
     static final String REVOKE_APP_PERMISSIONS = "delete from applicationpermission where application_id = '%s';";
@@ -30,9 +33,14 @@ public class DbUtilsSteps {
     static final String DELETE_SINGLE_APPLICATION_VERSION = "delete from ApplicationVersion where id = '%s';";
     static final String DELETE_SINGLE_PARTNER = "delete from Partner where id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER_HIERARCHY = "delete from customerhierarchypath where parent_id = '%s';";
-    static final String DELETE_SINGLE_ADDRESS = "delete from Address where id = '%s';";
+    static final String DELETE_SINGLE_ADDRESS = "delete from Address where line1 = '%s';";
+    static final String DELETE_DB_ADDRESS = "delete from Address where id = '%s';";
     static final String DELETE_SINGLE_CUSTOMER_PROPERTY = "delete from customer_property where id = '%s';";
-    static final String DELETE_SINGLE_CUSTOMER_USER = "delete from user_customer where id = '%s';";
+    static final String DELETE_SINGLE_USER_CUSTOMER = "delete from user_customer where id = '%s';";
+    static final String DELETE_SINGLE_USER_PROPERTY = "delete from user_property where id = '%s';";
+    static final String DELETE_SINGLE_USER_PROPERTYSET = "delete from user_propertyset where id = '%s';";
+    static final String DELETE_SINGLE_ROLE = "delete from Role where id = '%s';";
+
 
     static final String DELETE_CUSTOMER_PROPERTY = "delete  from Customer_Property";
     static final String DELETE_CUSTOMER_USER = "delete  from User_Customer";
@@ -104,7 +112,7 @@ public class DbUtilsSteps {
     }
 
     public void deleteDbAddress(String id) {
-        dbHelper.identityDb().update(String.format(DELETE_SINGLE_ADDRESS, id));
+        dbHelper.identityDb().update(String.format(DELETE_DB_ADDRESS, id));
     }
 
     public void revokeAppPermissions(String applicationId) {
@@ -123,13 +131,38 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTY, id));
     }
 
+    public void deletePropertySet(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET_HIERARCHY, id));
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET, id));
+    }
+
     public void deleteCustomer(String id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_HIERARCHY, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER, id));
     }
 
+    public void deletePropertySetProperty(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET_PROPERTY, id));
+    }
+
+    public void deleteUserProperty(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_PROPERTY, id));
+    }
+
+    public void deleteUserPropertySet(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_PROPERTYSET, id));
+    }
+
     public void deleteUser(String id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER, id));
+    }
+
+    public void deleteRole(String id) {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_ROLE, id));
+    }
+
+    public void deleteAddress() {
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_ADDRESS, ADDRESS_LINE1_PATTERN));
     }
 
     public void deleteApplication(String id) {
@@ -238,6 +271,6 @@ public class DbUtilsSteps {
     }
 
     public void deleteCustomerUser(String id) {
-        dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_USER, id));
+        dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_CUSTOMER, id));
     }
 }

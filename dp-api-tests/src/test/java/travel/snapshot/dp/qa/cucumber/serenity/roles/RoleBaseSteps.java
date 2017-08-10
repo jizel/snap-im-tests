@@ -4,6 +4,9 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLES_PATH;
 import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.CUSTOMER;
 import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.PROPERTY;
 import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.PROPERTY_SET;
@@ -32,9 +35,6 @@ public class RoleBaseSteps extends BasicSteps {
 
     private static final String SESSION_ROLE_ID = "role_id";
     private static final String SESSION_CREATED_ROLE = "created_role";
-    public static final String USER_CUSTOMER_ROLES_PATH = "/identity/user_customer_roles";
-    public static final String USER_PROPERTY_SET_ROLES_PATH = "/identity/user_property_set_roles";
-    public static final String USER_PROPERTY_ROLES_PATH = "/identity/user_property_roles";
     private String roleBasePath = "";
     private static RoleType roleBaseType;
 

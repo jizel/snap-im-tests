@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,7 +60,7 @@ public class CustomerHelpers extends CustomerSteps {
         createCustomerWithAuth(customer);
         responseCodeIs(SC_CREATED);
         String customerId = getSessionResponse().as(CustomerDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables("customers", customerId);
+        commonHelpers.updateRegistryOfDeletables(CUSTOMERS_RESOURCE, customerId);
         return customerId;
     }
 
@@ -84,7 +85,7 @@ public class CustomerHelpers extends CustomerSteps {
 
     public void customerIsUpdated(String customerId, CustomerUpdateDto customerUpdate) {
         Response response = updateCustomer(customerId, customerUpdate);
-        assertThat(String.format("Failed to delete customer: %s", response.toString()), response.getStatusCode(), is(SC_NO_CONTENT));
+        assertThat(String.format("Failed to update customer: %s", response.toString()), response.getStatusCode(), is(SC_NO_CONTENT));
     }
 
     public void customerIsDeleted(String customerId) {

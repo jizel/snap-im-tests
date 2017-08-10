@@ -36,7 +36,5 @@ public class CommonSmokeTest extends CommonTest {
         dbStepDefs.removeCreatedEntities(Serenity.sessionVariableCalled(ENTITIES_TO_DELETE));
         dbStepDefs.defaultEntitiesAreDeleted();
     }
-
-
 }
 

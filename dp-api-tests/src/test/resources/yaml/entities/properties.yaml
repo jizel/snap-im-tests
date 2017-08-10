@@ -1,5 +1,5 @@
 properties:
-  property1: !property {
+  property1: !property &BASIC_PROPERTY {
     id: 08000000-0000-4444-8888-000000000002,
     name: Property 1,
     code: property1code,
@@ -10,7 +10,7 @@ properties:
     customerId: 06000000-0000-4444-8888-000000000001,
     address: {
           countryCode: CZ,
-          line1: address line 1,
+          line1: CoreQA,
           line2: address line 2,
           city: Brno,
           region: null,
@@ -19,20 +19,10 @@ properties:
   }
 
   property2: !property {
+      <<: *BASIC_PROPERTY,
       id: 08000000-0000-4444-8888-000000000003,
       name: Property 2,
       code: property2code,
-      website: "http://www.snapshot.travel",
+      website: "http://www.snapshot.com",
       email: property2@snapshot.travel,
-      isDemo: true,
-      timezone: Europe/Prague,
-      customerId: 06000000-0000-4444-8888-000000000001,
-      address: {
-            countryCode: CZ,
-            line1: Cejl 1,
-            line2: Bratislavska 2,
-            city: Brno,
-            region: null,
-            zipCode: 60201
-            }
     }

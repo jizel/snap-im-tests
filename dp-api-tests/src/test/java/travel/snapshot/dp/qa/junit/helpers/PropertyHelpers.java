@@ -3,6 +3,8 @@ package travel.snapshot.dp.qa.junit.helpers;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 
 import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
@@ -12,6 +14,9 @@ import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
  * Help methods for JUnit test for the Property entity
  */
 public class PropertyHelpers extends PropertySteps{
+
+    private final CommonHelpers commonHelpers = new CommonHelpers();
+    private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
 
 
     public PropertyDto propertyIsCreated(PropertyDto property) {
@@ -30,4 +35,16 @@ public class PropertyHelpers extends PropertySteps{
         return response;
     }
 
+    public String propertyIsCreatedWithAuth(PropertyDto property) {
+        createPropertyWithAuth(property);
+        responseCodeIs(SC_CREATED);
+        String propertyId = getSessionResponse().as(PropertyDto.class).getId();
+        commonHelpers.updateRegistryOfDeletables(PROPERTIES_RESOURCE, propertyId);
+        return propertyId;
+
+    }
+
+    public void createPropertyWithAuth(PropertyDto property) {
+        authorizationHelpers.createEntity(PROPERTIES_PATH, property);
+    }
 }
