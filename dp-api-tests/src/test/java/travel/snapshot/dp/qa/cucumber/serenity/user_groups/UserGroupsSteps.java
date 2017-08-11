@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class UserGroupsSteps extends BasicSteps {
 
-    private static final String USER_GROUPS_PATH = "/identity/user_groups";
+    private static final String USER_GROUPS_PATH = "/user_groups";
 
     public UserGroupsSteps() {
         super();

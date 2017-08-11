@@ -24,7 +24,7 @@ import java.util.List;
 
 public class PartnerSteps extends BasicSteps {
 
-    private static final String PARTNERS_PATH = "/identity/partners";
+    private static final String PARTNERS_PATH = "/partners";
     private static final String SESSION_PARTNER_ID = "partner_id";
     private static final String USER_ID_KEY = "user_id";
 

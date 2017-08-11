@@ -28,7 +28,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
     private static final String SESSION_APPLICATION_ID = "application_id";
     private static final String SESSION_APPLICATION_VERSION_ID = "version_id";
     private static final String SESSION_CREATED_APPLICATION_VERSIONS = "created_application_version";
-    private static final String APPLICATIONS_VERSIONS_PATH = "/identity/application_versions";
+    private static final String APPLICATIONS_VERSIONS_PATH = "/application_versions";
 
     public ApplicationVersionsSteps() {
         super();
@@ -55,7 +55,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
         applicationVersions.forEach(applicationVersion -> {
             Response createResponse = createApplicationVersion(applicationVersion);
             if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Application version cannot be created" + createResponse.getBody());
+                fail("Application version cannot be created" + createResponse.getBody().asString());
             }
         });
         Serenity.setSessionVariable(SESSION_APPLICATIONS).to(applicationVersions);

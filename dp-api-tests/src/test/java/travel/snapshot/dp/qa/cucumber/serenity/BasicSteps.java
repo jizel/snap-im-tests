@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
+import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -141,7 +142,7 @@ public class BasicSteps {
     public BasicSteps() {
 
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> createObjectMapper()));
+                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> OBJECT_MAPPER));
 
         RequestSpecBuilder builder = new RequestSpecBuilder();
 

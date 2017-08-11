@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
@@ -8,10 +12,6 @@ import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
-
-import static org.apache.http.HttpStatus.SC_OK;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTYSET_RELATIONSHIPS_PATH;
 
 @RunWith(SerenityRunner.class)
 public class PropertySetSmokeTests extends CommonSmokeTest {
@@ -51,7 +51,7 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
         // create relation
         String relationId = relationshipsHelpers.userPropertySetRelationIsCreatedWithAuth(userId, propertySetId, true);
         // request
-        authorizationHelpers.getEntity(USER_PROPERTYSET_RELATIONSHIPS_PATH, relationId);
+        authorizationHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("user_id", userId);
         bodyContainsEntityWith("property_set_id", propertySetId);
@@ -59,11 +59,11 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
         // update
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();
         update.setIsActive(false);
-        authorizationHelpers.entityIsUpdated(USER_PROPERTYSET_RELATIONSHIPS_PATH, relationId, update);
+        authorizationHelpers.entityIsUpdated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId, update);
         // make sure changes applied
-        authorizationHelpers.getEntity(USER_PROPERTYSET_RELATIONSHIPS_PATH, relationId);
+        authorizationHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "false");
         // delete
-        authorizationHelpers.entityIsDeleted(USER_PROPERTYSET_RELATIONSHIPS_PATH, relationId);
+        authorizationHelpers.entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
     }
 }
