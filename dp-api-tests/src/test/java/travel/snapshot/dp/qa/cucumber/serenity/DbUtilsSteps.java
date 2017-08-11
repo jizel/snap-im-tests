@@ -86,7 +86,7 @@ public class DbUtilsSteps {
     static final String CREATE_DB_API_SUBSCRIPTION = "INSERT INTO ApiSubscription (id, commercial_subscription_id, app_version_id, is_active,  version) VALUES (?, ?, ?, ?, '" + DEFAULT_SNAPSHOT_ETAG + "');";
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
     static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
-    static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) SELECT ?, id FROM platformoperation;";
+    static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) SELECT uuid_generate_v4(), ?, id FROM platformoperation;";
     static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) VALUES (?, ?);";
     static final String SELECT_PERMISSION_ID = "SELECT id FROM platformoperation where uri_template = ? AND http_method = ?;";
 
