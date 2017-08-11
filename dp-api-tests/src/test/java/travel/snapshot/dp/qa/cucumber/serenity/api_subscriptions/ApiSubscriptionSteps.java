@@ -12,7 +12,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
  */
 public class ApiSubscriptionSteps extends BasicSteps {
 
-    private static final String BASE_PATH_API_SUBSCRIPTIONS = "/identity/api_subscriptions";
+    private static final String BASE_PATH_API_SUBSCRIPTIONS = "/api_subscriptions";
     private static final String API_SUBSCRIPTIONS_ID = "api_subscription_id";
 
     public ApiSubscriptionSteps() {

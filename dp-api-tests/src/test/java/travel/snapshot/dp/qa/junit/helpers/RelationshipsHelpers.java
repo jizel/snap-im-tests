@@ -161,7 +161,7 @@ public class RelationshipsHelpers extends BasicSteps {
         relation.setUserId(userId);
         relation.setPropertySetId(propertySetId);
         relation.setIsActive(isActive);
-        authorizationHelpers.createEntity(USER_PROPERTYSET_RELATIONSHIPS_PATH, relation);
+        authorizationHelpers.createEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relation);
     }
 
     public String userPropertySetRelationIsCreatedWithAuth(String userId, String propertySetId, Boolean isActive) {
@@ -295,7 +295,7 @@ public class RelationshipsHelpers extends BasicSteps {
         relation.setPropertySetId(propertySetId);
         relation.setPropertyId(propertyId);
         relation.setIsActive(isActive);
-        authorizationHelpers.createEntity(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH, relation);
+        authorizationHelpers.createEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
     }
 
     public Response createPropertySetPropertyRelationship(String propertySetId, String propertyId, Boolean isActive) {

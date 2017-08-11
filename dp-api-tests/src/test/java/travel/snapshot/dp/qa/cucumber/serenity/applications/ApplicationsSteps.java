@@ -27,7 +27,7 @@ public class ApplicationsSteps extends BasicSteps {
     private static final String SESSION_APPLICATION_ID = "application_id";
     private static final String SESSION_APPLICATION_VERSION_ID = "version_id";
     private static final String SESSION_CREATED_APPLICATION_VERSIONS = "created_application_version";
-    private static final String APPLICATIONS_PATH = "/identity/applications";
+    private static final String APPLICATIONS_PATH = "/applications";
 
     public ApplicationsSteps() {
         super();

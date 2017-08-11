@@ -1,15 +1,19 @@
 package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
-
-import static org.apache.http.HttpStatus.SC_OK;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 
 
 @RunWith(SerenityRunner.class)
@@ -50,7 +54,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // create propertyset-property relation
         String relationId = relationshipsHelpers.propertySetPropertyIsCreatedWithAuth(propertySetId, DEFAULT_PROPERTY_ID, true);
         // request
-        authorizationHelpers.getEntity(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        authorizationHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
         bodyContainsEntityWith("property_set_id", propertySetId);
         bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID);
@@ -58,9 +62,9 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // update
         PropertySetPropertyRelationshipUpdateDto update = new PropertySetPropertyRelationshipUpdateDto();
         update.setIsActive(false);
-        authorizationHelpers.entityIsUpdated(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
+        authorizationHelpers.entityIsUpdated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId, update);
         // delete
-        authorizationHelpers.entityIsDeleted(PROPERTYSET_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        authorizationHelpers.entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
     }
 
     @Test

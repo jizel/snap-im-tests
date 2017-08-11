@@ -25,13 +25,13 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 public class UserRestrictionTests extends CommonRestrictionTest{
     private UserDto createdUser1;
 
-    private static final String ALL_USERS_ENDPOINT = "/identity/users";
-    private static final String SINGLE_USER_ENDPOINT = "/identity/users/{user_id}";
-    private static final String USER_CUSTOMER_RELATIONSHIP_ENDPOINT = "/identity/users/{user_id}/customers/{customer_id}";
-    private static final String USER_PROPERTIES_ENDPOINT = "/identity/users/{user_id}/properties";
-    private static final String USER_PROPERTIES_ROLES_ENDPOINT = "/identity/users/{user_id}/properties/{property_id}/roles";
-    private static final String USER_PROPERTY_SETS_ROLES_ENDPOINT = "/identity/users/{user_id}/property_sets/{property_set_id}/roles";
-    private static final String USER_CUSTOMERS_ROLES_ENDPOINT = "/identity/users/{user_id}/customers/{customer_id}/roles";
+    private static final String ALL_USERS_ENDPOINT = "/users";
+    private static final String SINGLE_USER_ENDPOINT = "/users/{user_id}";
+    private static final String USER_CUSTOMER_RELATIONSHIP_ENDPOINT = "/users/{user_id}/customers/{customer_id}";
+    private static final String USER_PROPERTIES_ENDPOINT = "/users/{user_id}/properties";
+    private static final String USER_PROPERTIES_ROLES_ENDPOINT = "/users/{user_id}/properties/{property_id}/roles";
+    private static final String USER_PROPERTY_SETS_ROLES_ENDPOINT = "/users/{user_id}/property_sets/{property_set_id}/roles";
+    private static final String USER_CUSTOMERS_ROLES_ENDPOINT = "/users/{user_id}/customers/{customer_id}/roles";
 
 
     @Before

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CommercialSubscriptionSteps extends BasicSteps {
 
-    private static final String COMMERCIAL_SUBSCRIPTION_PATH = "/identity/commercial_subscriptions";
+    private static final String COMMERCIAL_SUBSCRIPTION_PATH = "/commercial_subscriptions";
     private static final String SESSION_COMMERCIAL_SUBSCRIPTIONS = "commercial_subcsriptions";
     private static final String SESSION_COMMERCIAL_SUBSCRIPTION_ID = "commercial_subscription_id";
 

@@ -42,7 +42,7 @@ public class PropertySetSteps extends BasicSteps {
     private static final String SERENITY_SESSION__PROPERTY_SET_ID = "property_set_id";
     private static final String PROPERTY_ID_KEY = "property_id";
 
-    private static final String BASE_PATH__PROPERTY_SETS = "/identity/property_sets";
+    private static final String BASE_PATH__PROPERTY_SETS = "/property_sets";
 
     public PropertySetSteps() {
         super();

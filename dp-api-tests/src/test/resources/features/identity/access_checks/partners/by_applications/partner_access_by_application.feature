@@ -1,6 +1,6 @@
 @Identity
 Feature: Access to /identity/partners endpoint for internal commercial and external applications
-  - The acces is denied in external application to all types of users
+  - The access is denied in external application to all types of users
   - The access is granted to internal commercial application only if it has a commercial subscription
 
   Background:

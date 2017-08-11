@@ -49,7 +49,7 @@ public class PropertySteps extends BasicSteps {
     private static final String SERENITY_SESSION__PROPERTIES = "properties";
     private static final String SERENITY_SESSION__CREATED_PROPERTY = "created_property";
     private static final String SERENITY_SESSION__PROPERTY_ID = "property_id";
-    private static final String BASE_PATH__PROPERTIES = "/identity/properties";
+    private static final String BASE_PATH__PROPERTIES = "/properties";
     private static final String USER_ID_KEY = "user_id";
     private static final String PROPERTY_SET_ID_KEY = "property_set_id";
 
