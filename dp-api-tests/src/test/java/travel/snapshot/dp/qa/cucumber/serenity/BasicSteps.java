@@ -342,15 +342,15 @@ public class BasicSteps {
         return response;
     }
 
-    protected Response updateEntity(String entityId, Map<String, Object> data, String etag) {
+    protected Response updateEntity(UUID entityId, Map<String, Object> data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUser(UUID userId, String entityId, Map<String, Object> data, String etag) {
+    protected Response updateEntityByUser(UUID userId, UUID entityId, Map<String, Object> data, String etag) {
         return updateEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUserForApplication(UUID userId, UUID applicationId, String entityId, Map<String, Object> data, String etag) {
+    protected Response updateEntityByUserForApplication(UUID userId, UUID applicationId, UUID entityId, Map<String, Object> data, String etag) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
@@ -368,15 +368,15 @@ public class BasicSteps {
                 .post("/{id}", entityId);
     }
 
-    protected Response updateEntity(String entityId, Object data, String etag) {
+    protected Response updateEntity(UUID entityId, Object data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUser(UUID userId, String entityId, Object data, String etag) {
+    protected Response updateEntityByUser(UUID userId, UUID entityId, Object data, String etag) {
         return updateEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, data, etag);
     }
 
-    protected Response updateEntityByUserForApplication(UUID userId, UUID applicationId, String entityId, Object data, String etag) {
+    protected Response updateEntityByUserForApplication(UUID userId, UUID applicationId, UUID entityId, Object data, String etag) {
 
         if (userId == null) {
 
@@ -400,17 +400,17 @@ public class BasicSteps {
 
     // manual delete methods - require explicitly passed etags
 
-    public Response deleteEntity(String entityId, String etag) {
+    public Response deleteEntity(UUID entityId, String etag) {
         Response response = deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId, etag);
         setSessionResponse(response);
         return response;
     }
 
-    protected Response deleteEntityByUser(UUID userId, String entityId, String etag) {
+    protected Response deleteEntityByUser(UUID userId, UUID entityId, String etag) {
         return deleteEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId, etag);
     }
 
-    protected Response deleteEntityByUserForApplication(UUID userId, UUID applicationId, String entityId, String etag) {
+    protected Response deleteEntityByUserForApplication(UUID userId, UUID applicationId, UUID entityId, String etag) {
         if (userId == null) {
             fail("User ID to be send in request header is blank.");
         }
@@ -432,30 +432,30 @@ public class BasicSteps {
 
 
 
-    protected Response deleteEntityWithEtag(String entityId) {
+    protected Response deleteEntityWithEtag(UUID entityId) {
         return deleteEntityWithEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    protected Response deleteEntityWithEtagByUser(UUID userId, String entityId) {
+    protected Response deleteEntityWithEtagByUser(UUID userId, UUID entityId) {
         return deleteEntityWithEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    protected Response deleteEntityWithEtagByUserForApp(UUID userId, UUID applicationVersionId, String entityId) {
+    protected Response deleteEntityWithEtagByUserForApp(UUID userId, UUID applicationVersionId, UUID entityId) {
         String etag = getEntityEtag(entityId);
         Response response = deleteEntityByUserForApplication(userId, applicationVersionId, entityId, etag);
         setSessionResponse(response);
         return response;
     }
 
-    public String getEntityEtag(String entityId) {
+    public String getEntityEtag(UUID entityId) {
         return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    public String getEntityEtagByUser(UUID userId, String entityId) {
+    public String getEntityEtagByUser(UUID userId, UUID entityId) {
         return getEntityEtagByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    public String getEntityEtagByUserForApplication(UUID userId, UUID applicationId, String entityId) {
+    public String getEntityEtagByUserForApplication(UUID userId, UUID applicationId, UUID entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
 
@@ -463,15 +463,15 @@ public class BasicSteps {
     }
 
 
-    public Response getEntity(String entityId) {
+    public Response getEntity(UUID entityId) {
         return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, entityId);
     }
 
-    public Response getEntityByUser(UUID userId, String entityId) {
+    public Response getEntityByUser(UUID userId, UUID entityId) {
         return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, entityId);
     }
 
-    public Response getEntityByUserForApplication(UUID userId, UUID applicationId, String entityId) {
+    public Response getEntityByUserForApplication(UUID userId, UUID applicationId, UUID entityId) {
         RequestSpecification requestSpecification = given().spec(spec);
         if (userId == null) {
             fail("User ID to be send in request header is null.");
