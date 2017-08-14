@@ -17,6 +17,8 @@ import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipPart
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.UUID;
+
 
 /**
  * Sample customer tests using YAML data
@@ -41,8 +43,8 @@ public class PartialPropertySetPropertyTests extends CommonTest {
 
     @Test
     public void addRemovePropertyToPropertySet() {
-        String propertySetId = createdPropertySet.getId();
-        String propertyId = createdProperty.getId();
+        UUID propertySetId = createdPropertySet.getId();
+        UUID propertyId = createdProperty.getId();
         propertySetHelpers.addPropertyToPropertySet(propertyId, propertySetId, true);
         responseCodeIs(SC_CREATED);
         propertyHelpers.deleteProperty(propertyId);

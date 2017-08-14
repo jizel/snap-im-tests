@@ -8,6 +8,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.jayway.restassured.RestAssured.given;
 import static net.serenitybdd.core.Serenity.sessionVariableCalled;
@@ -54,12 +55,12 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return response;
     }
 
-    public void entityIsUpdated(String basePath, String entityId, Object data) {
+    public void entityIsUpdated(String basePath, UUID entityId, Object data) {
         updateEntity(basePath, entityId, data);
         responseCodeIs(SC_NO_CONTENT);
     }
 
-    public void updateEntity(String basePath, String entityId, Object data) {
+    public void updateEntity(String basePath, UUID entityId, Object data) {
         String etag = getEntityEtag(basePath, entityId);
         RequestSpecification specification = constructRequestSpecification(basePath, etag);
         Response response = specification
@@ -69,7 +70,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         setSessionResponse(response);
     }
 
-    public Response deleteEntity(String basePath, String entityId) {
+    public Response deleteEntity(String basePath, UUID entityId) {
         RequestSpecification specification = constructRequestSpecification(basePath, getEntityEtag(basePath, entityId));
         Response response = specification
                 .when()
@@ -78,7 +79,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return response;
     }
 
-    public void entityIsDeleted(String basePath, String entityId) {
+    public void entityIsDeleted(String basePath, UUID entityId) {
         // delete entity
         deleteEntity(basePath, entityId);
         responseCodeIs(SC_NO_CONTENT);
@@ -87,7 +88,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         responseCodeIs(SC_NOT_FOUND);
     }
 
-    public String getEntityEtag(String basePath, String entityId) {
+    public String getEntityEtag(String basePath, UUID entityId) {
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         return specification
                 .when()
@@ -95,7 +96,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
                 .getHeader(HEADER_ETAG);
     }
 
-    public Response getEntity(String basePath, String entityId) {
+    public Response getEntity(String basePath, UUID entityId) {
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         Response response = specification
                 .when()
@@ -104,7 +105,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return response;
     }
 
-    public Response createSecondLevelRelation(String basePath, String firstLevelId, String secondLevelName, Object jsonBody) {
+    public Response createSecondLevelRelation(String basePath, UUID firstLevelId, String secondLevelName, Object jsonBody) {
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         Response response = specification
                 .body(jsonBody)
@@ -113,7 +114,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return response;
     }
 
-    public String getSecondLevelEntityEtag(String basePath, String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+    public String getSecondLevelEntityEtag(String basePath, UUID firstLevelId, String secondLevelObjectName, UUID secondLevelId) {
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         return specification
                 .when()
@@ -121,7 +122,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
                 .getHeader(HEADER_ETAG);
     }
 
-    public void getSecondLevelEntities(String basePath, String firstLevelId, String secondLevelName) {
+    public void getSecondLevelEntities(String basePath, UUID firstLevelId, String secondLevelName) {
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         Response response = specification
                 .when()
@@ -129,7 +130,7 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         setSessionResponse(response);
     }
 
-    public void deleteSecondLevelEntity(String basePath, String firstLevelId, String secondLevelObjectName, String secondLevelId) {
+    public void deleteSecondLevelEntity(String basePath, UUID firstLevelId, String secondLevelObjectName, UUID secondLevelId) {
         String etag = getSecondLevelEntityEtag(basePath, firstLevelId, secondLevelObjectName, secondLevelId);
         RequestSpecification specification = constructRequestSpecification(basePath, etag);
         Response response = specification
