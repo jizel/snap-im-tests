@@ -37,6 +37,7 @@ import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
 import travel.snapshot.dp.qa.junit.helpers.RoleHelpers;
 import travel.snapshot.dp.qa.junit.helpers.UserGroupHelpers;
 import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
+import travel.snapshot.dp.qa.junit.helpers.CommonHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
@@ -83,6 +84,7 @@ public abstract class CommonTest {
     protected static final ConfigurationHelpers configurationHelpers = new ConfigurationHelpers();
     protected static final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
     protected static final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
+    protected static final CommonHelpers commonHelpers = new CommonHelpers();
 
 
     //    Custom codes

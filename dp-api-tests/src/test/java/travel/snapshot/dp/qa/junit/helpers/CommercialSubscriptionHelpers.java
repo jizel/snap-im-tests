@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
@@ -14,29 +15,21 @@ import java.util.UUID;
 
 @Log
 public class CommercialSubscriptionHelpers extends CommercialSubscriptionSteps {
+    private final CommonHelpers commonHelpers = new CommonHelpers();
 
     public CommercialSubscriptionHelpers() { super();}
 
-    public Response createCommercialSubscription(UUID customerId, UUID propertyId, UUID applicationId) {
+    private void createCommercialSubscription(UUID customerId, UUID propertyId, UUID applicationId) {
         CommercialSubscriptionDto subscription = new CommercialSubscriptionDto();
         subscription.setApplicationId(applicationId);
         subscription.setCustomerId(customerId);
         subscription.setPropertyId(propertyId);
-        Response createResponse = null;
-        try {
-            JSONObject jsonSubscription = retrieveData(subscription);
-            createResponse = createEntity(jsonSubscription.toString());
-        } catch (JsonProcessingException e) {
-            log.severe("Unable to convert Commertial Subscription object to json");
-        }
-        setSessionResponse(createResponse);
-        return createResponse;
+        commonHelpers.createEntity(COMMERCIAL_SUBSCRIPTIONS_PATH, subscription);
     }
 
-    public CommercialSubscriptionDto commercialSubscriptionIsCreated(UUID customerId, UUID propertyId, UUID applicationId) {
-        Response response = createCommercialSubscription(customerId, propertyId, applicationId);
-        assertEquals(String.format("Failed to create commercial subscription: %s", response.toString()), response.getStatusCode(), SC_CREATED);
-        setSessionResponse(response);
-        return response.as(CommercialSubscriptionDto.class);
+    public UUID commercialSubscriptionIsCreated(UUID customerId, UUID propertyId, UUID applicationId) {
+        createCommercialSubscription(customerId, propertyId, applicationId);
+        responseCodeIs(SC_CREATED);
+        return getSessionResponse().as(CommercialSubscriptionDto.class).getId();
     }
 }

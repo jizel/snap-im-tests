@@ -3,7 +3,6 @@ package travel.snapshot.dp.qa.junit.helpers;
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.util.TextUtils.isBlank;
-import static org.junit.Assert.*;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
@@ -15,9 +14,18 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.junit.Assert.fail;
+
 public class CommonHelpers extends BasicSteps {
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
+
+
+    public CommonHelpers() {
+       spec.baseUri(getBaseUriForModule("identity"));
+    }
 
     public void updateRegistryOfDeleTables(String entityType, UUID id) {
         // Retrieve the map from serenity session variable
@@ -184,6 +192,13 @@ public class CommonHelpers extends BasicSteps {
 
     // Manual delete method. Expect explicitly passed etag
 
+    public void entityIsDeleted(String basePath, UUID entityId, String etag) {
+        deleteEntity(basePath, entityId, etag);
+        responseCodeIs(SC_NO_CONTENT);
+        getEntity(basePath, entityId);
+        responseCodeIs(SC_NOT_FOUND);
+    }
+
     public void deleteEntity(String basePath, UUID entityId, String etag) {
         deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, etag);
     }
@@ -213,6 +228,13 @@ public class CommonHelpers extends BasicSteps {
     }
 
     // Automatic delete methods - do not require explicit etags, get it themselves
+
+    public void entityIsDeletedWithEtag(String basePath, UUID entityId) {
+        deleteEntityWithEtag(basePath, entityId);
+        responseCodeIs(SC_NO_CONTENT);
+        getEntity(basePath, entityId);
+        responseCodeIs(SC_NOT_FOUND);
+    }
 
     public void deleteEntityWithEtag(String basePath, UUID entityId) {
         deleteEntityByUserWithEtag(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
