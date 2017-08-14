@@ -49,7 +49,8 @@ Feature: Properties create update delete
     When Property with code "p1_code" is deleted
     Then Response code is "204"
     And Body is empty
-    And Property with same id doesn't exist
+    When Property "p1_code" is requested
+    Then Response code is "404"
 
   Scenario: Checking error code for deleting property
     When Nonexistent property id is deleted

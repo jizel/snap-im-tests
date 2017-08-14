@@ -24,7 +24,7 @@ public class PropertyHelpers extends PropertySteps{
     }
 
     public PropertyDto propertyIsCreatedByUser(String userId, PropertyDto property) {
-        Response response = createProperty(userId, property);
+        Response response = createPropertyByUser(userId, property);
         assertThat(String.format("Failed to create property: %s", response.toString()), response.getStatusCode(), is(SC_CREATED));
         return response.as(PropertyDto.class);
     }

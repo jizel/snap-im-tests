@@ -14,10 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.LinkedHashMap;
@@ -91,7 +88,7 @@ public class PropertyNotificationTests extends CommonTest{
 //        -------------------< Second level entities >-----------------
 
     @Test
-    public void addRemovePropertyUserNotificationTest() throws Exception{
+    public void addRemovePropertyUserNotificationTest() throws Throwable {
 //        Prepare data - a way to employ selectExamplesForTest (list of maps) to have multiple notification objects for one test
         List<Map<String, String>> expectedNotifications = selectExamplesForTest(testClassData, "addRemovePropertyUserNotificationTest");
         Map<String, Object> expectedCreateNotification = new LinkedHashMap<>();
@@ -110,14 +107,14 @@ public class PropertyNotificationTests extends CommonTest{
     }
 
     @Test
-    public void updateRemovePropertyCustomerNotificationTest() throws Exception{
+    public void updateRemovePropertyCustomerNotificationTest() throws Throwable {
 //        Prepare data - a way to employ selectExamplesForTest (list of maps) to have multiple notification objects for one test
         List<Map<String, String>> expectedNotifications = selectExamplesForTest(testClassData, "updateRemovePropertyCustomerNotificationTest");
         Map<String, Object> expectedUpdateNotification = new LinkedHashMap<>();
         Map<String, Object> expectedDeleteNotification = new LinkedHashMap<>();
         expectedUpdateNotification.putAll(expectedNotifications.get(0));
         expectedDeleteNotification.putAll(expectedNotifications.get(1));
-        CustomerPropertyRelationshipPartialUpdateDto customerPropertyUpdate = new CustomerPropertyRelationshipPartialUpdateDto();
+        CustomerPropertyRelationshipUpdateDto customerPropertyUpdate = new CustomerPropertyRelationshipUpdateDto();
         customerPropertyUpdate.setType(OWNER);
         customerHelpers.relationExistsBetweenPropertyAndCustomerWithTypeFromTo(testProperty1.getId(), createdCustomer.getId(), null, null, null, true);
 //        Subscribe and test
