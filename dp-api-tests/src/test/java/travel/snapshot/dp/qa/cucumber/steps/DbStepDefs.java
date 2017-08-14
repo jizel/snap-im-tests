@@ -45,7 +45,7 @@ public class DbStepDefs {
     private ApplicationsSteps applicationsSteps = new ApplicationsSteps();
 
     @Given("^All customerProperties are deleted from DB for customer id \"([^\"]*)\" and property code \"([^\"]*)\"$")
-    public void All_customerProperties_are_deleted_from_DB_for_customer_code_and_property_code(String customerId, String propertyCode) throws Throwable {
+    public void All_customerProperties_are_deleted_from_DB_for_customer_code_and_property_code(UUID customerId, String propertyCode) throws Throwable {
         CustomerDto c = customerSteps.getCustomerById(customerId);
         PropertyDto p = propertySteps.getPropertyByCodeInternal(propertyCode);
         if (c != null && p != null) {
@@ -69,7 +69,7 @@ public class DbStepDefs {
         defaultCustomerIsCreated();
         defaultPropertyIsCreated();
         defaultCommercialSubscriptionIsCreated();
-        applicationPermissionPopulated(DEFAULT_SNAPSHOT_APPLICATION_ID);
+        applicationPermissionPopulated(DEFAULT_SNAPSHOT_APPLICATION_ID.toString());
     }
 
     @Given("^Default entities are deleted$")
@@ -160,7 +160,7 @@ public class DbStepDefs {
         customer.setVatId("DEF0000001");
         customer.setWebsite("https://www.defaultCustomerForTests.com");
         dbSteps.createDBCustomer(customer);
-        dbSteps.populateCustomerHierarchyPath(UUID.fromString(customer.getId()));
+        dbSteps.populateCustomerHierarchyPath(customer.getId());
     }
 
     @Given("^Default property is created$")
@@ -200,23 +200,23 @@ public class DbStepDefs {
 
     @And("^Application permission table is populated(?: for application \"([^\"]*)\")?$")
     public void applicationPermissionPopulated(String applicationName) throws Throwable {
-        String applicationId = applicationsSteps.resolveApplicationId(applicationName);
+        UUID applicationId = applicationsSteps.resolveApplicationId(applicationName);
         dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }
 
-    public void removeCreatedEntities(Map<String, ArrayList<String>> registry) {
+    public void removeCreatedEntities(Map<String, ArrayList<UUID>> registry) {
 
-        ArrayList<String> roleIds = commonHelpers.getArrayFromMap(ROLES_RESOURCE, registry);
-        ArrayList<String> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_RESOURCE, registry);
-        ArrayList<String> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTYSETS, registry);
-        ArrayList<String> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTIES, registry);
-        ArrayList<String> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTYSET_PROPERTIES, registry);
-        ArrayList<String> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_RESOURCE, registry);
-        ArrayList<String> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_RESOURCE, registry);
-        ArrayList<String> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTIES, registry);
-        ArrayList<String> customerUserIds = commonHelpers.getArrayFromMap(CUSTOMER_USERS, registry);
-        ArrayList<String> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_RESOURCE, registry);
-        ArrayList<String> userIds = commonHelpers.getArrayFromMap(USERS_RESOURCE, registry);
+        ArrayList<UUID> roleIds = commonHelpers.getArrayFromMap(ROLES_RESOURCE, registry);
+        ArrayList<UUID> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_RESOURCE, registry);
+        ArrayList<UUID> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTYSETS, registry);
+        ArrayList<UUID> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTIES, registry);
+        ArrayList<UUID> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTYSET_PROPERTIES, registry);
+        ArrayList<UUID> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_RESOURCE, registry);
+        ArrayList<UUID> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_RESOURCE, registry);
+        ArrayList<UUID> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTIES, registry);
+        ArrayList<UUID> customerUserIds = commonHelpers.getArrayFromMap(CUSTOMER_USERS, registry);
+        ArrayList<UUID> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_RESOURCE, registry);
+        ArrayList<UUID> userIds = commonHelpers.getArrayFromMap(USERS_RESOURCE, registry);
         roleIds.forEach(roleId -> {
             dbSteps.deleteRole(roleId);
         });

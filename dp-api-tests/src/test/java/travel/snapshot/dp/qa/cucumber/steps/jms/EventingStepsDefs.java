@@ -21,6 +21,8 @@ import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
+import java.util.UUID;
+
 /**
  * Created by sedlacek on 11/18/2015.
  */
@@ -109,12 +111,12 @@ public class EventingStepsDefs {
     }
 
     @Then("^Notification in session id stands for customer with id \"([^\"]*)\"$")
-    public void Notification_in_session_id_stands_for_customer_with_code(String customerId) throws Throwable {
+    public void Notification_in_session_id_stands_for_customer_with_code(UUID customerId) throws Throwable {
         steps.notificationContainsId(customerId);
     }
 
     @Given("^Customer with id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
-    public void Customer_with_code_is_stored_in_session_under_key(String customerId, String sessionKey) throws Throwable {
+    public void Customer_with_code_is_stored_in_session_under_key(UUID customerId, String sessionKey) throws Throwable {
         steps.setSessionVariable(sessionKey, customerSteps.getCustomerById(customerId));
     }
 
@@ -125,7 +127,7 @@ public class EventingStepsDefs {
     }
 
     @Then("^Notification in session id stands for configuration type with identifier \"([^\"]*)\"$")
-    public void Notification_in_session_id_stands_for_configuration_type_with_identifier(String configurationTypeIdentifier) throws Throwable {
+    public void Notification_in_session_id_stands_for_configuration_type_with_identifier(UUID configurationTypeIdentifier) throws Throwable {
         steps.notificationContainsId(configurationTypeIdentifier);
     }
 
@@ -137,7 +139,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session id stands for user(?: with username)? \"([^\"]*)\"$")
     public void Notification_in_session_id_stands_for_user_with_username(String username) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
+        UUID userId = usersSteps.resolveUserId(username);
         steps.notificationContainsId(userId);
     }
 
@@ -154,7 +156,7 @@ public class EventingStepsDefs {
     }
 
     @Then("^Notification in session parent id stands for customer with id \"([^\"]*)\"$")
-    public void Notification_in_session_parent_id_stands_for_customer_with_code(String customerId) throws Throwable {
+    public void Notification_in_session_parent_id_stands_for_customer_with_code(UUID customerId) throws Throwable {
         steps.notificationContainsParentId(customerId);
     }
 
@@ -172,7 +174,7 @@ public class EventingStepsDefs {
 
     @Then("^Notification in session parent id stands for user(?: with username)? \"([^\"]*)\"$")
     public void Notification_in_session_parent_id_stands_for_user_with_username(String username) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
+        UUID userId = usersSteps.resolveUserId(username);
         steps.notificationContainsParentId(userId);
     }
 
@@ -190,7 +192,7 @@ public class EventingStepsDefs {
     }
 
     @Given("^Property set with name \"([^\"]*)\" for customer with id \"([^\"]*)\" is stored in session under key \"([^\"]*)\"$")
-    public void Property_set_with_name_for_customer_with_code_is_stored_in_session_under_key(String propertySetName, String customerId, String sessionKey) throws Throwable {
+    public void Property_set_with_name_for_customer_with_code_is_stored_in_session_under_key(String propertySetName, UUID customerId, String sessionKey) throws Throwable {
         steps.setSessionVariable(sessionKey, propertySetSteps.getPropertySetByNameForCustomer(propertySetName, customerId));
     }
 
@@ -235,7 +237,7 @@ public class EventingStepsDefs {
     }
 
     @And("^Parent id in notification is \"([^\"]*)\"$")
-    public void parentIdInNotificationIs(String parentId) throws Throwable {
+    public void parentIdInNotificationIs(UUID parentId) throws Throwable {
         steps.notificationContainsParentId(parentId);
     }
 }

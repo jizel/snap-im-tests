@@ -14,10 +14,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
+import travel.snapshot.dp.api.identity.model.CustomerDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
+import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 
 @Log
@@ -56,15 +61,15 @@ public class CustomerHelpers extends CustomerSteps {
         setSessionResponse(createResponse);
     }
 
-    public String customerIsCreatedWithAuth(CustomerCreateDto customer) {
+    public UUID customerIsCreatedWithAuth(CustomerCreateDto customer) {
         createCustomerWithAuth(customer);
         responseCodeIs(SC_CREATED);
-        String customerId = getSessionResponse().as(CustomerDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(CUSTOMERS_RESOURCE, customerId);
+        UUID customerId = getSessionResponse().as(CustomerDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(CUSTOMERS_RESOURCE, customerId);
         return customerId;
     }
 
-    public Response createCustomerByUserForApp(String userId, String applicationId, CustomerCreateDto customer) {
+    public Response createCustomerByUserForApp(UUID userId, UUID applicationId, CustomerCreateDto customer) {
         JSONObject jsonCustomer = null;
         try {
             jsonCustomer = retrieveData(customer);
@@ -83,17 +88,17 @@ public class CustomerHelpers extends CustomerSteps {
         return response.as(CustomerDto.class);
     }
 
-    public void customerIsUpdated(String customerId, CustomerUpdateDto customerUpdate) {
+    public void customerIsUpdated(UUID customerId, CustomerUpdateDto customerUpdate) {
         Response response = updateCustomer(customerId, customerUpdate);
         assertThat(String.format("Failed to update customer: %s", response.toString()), response.getStatusCode(), is(SC_NO_CONTENT));
     }
 
-    public void customerIsDeleted(String customerId) {
+    public void customerIsDeleted(UUID customerId) {
         Response response = deleteCustomer(customerId);
         assertThat(String.format("Failed to delete customer: %s", response.toString()), response.getStatusCode(), is(SC_NO_CONTENT));
     }
 
-    public void setCustomerIsActiveWithAuthorization(String id, boolean isActive) throws Throwable {
+    public void setCustomerIsActiveWithAuthorization(UUID id, boolean isActive) throws Throwable {
         CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
         customerUpdate.setIsActive(isActive);
         String updatedCustomerString = retrieveData(customerUpdate).toString();
@@ -102,7 +107,7 @@ public class CustomerHelpers extends CustomerSteps {
         authorizationHelpers.updateEntity(CUSTOMERS_PATH, id, updatedCustomerString);
     }
 
-    public String addPropertyToCustomerWithAuthUsingPartialDto(String propertyId, String customerId) {
+    public UUID addPropertyToCustomerWithAuthUsingPartialDto(UUID propertyId, UUID customerId) {
         CustomerPropertyRelationshipPartialDto relation = new CustomerPropertyRelationshipPartialDto();
         relation.setPropertyId(DEFAULT_PROPERTY_ID);
         relation.setIsActive(true);
@@ -111,12 +116,12 @@ public class CustomerHelpers extends CustomerSteps {
         relation.setValidTo(LocalDate.parse("2019-01-01"));
         CustomerPropertyRelationshipPartialDto customerProperty = authorizationHelpers.createSecondLevelRelation(CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, PROPERTIES_RESOURCE, relation)
                 .as(CustomerPropertyRelationshipPartialDto.class);
-        String relationId = customerProperty.getId();
-        commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
+        UUID relationId = customerProperty.getId();
+        commonHelpers.updateRegistryOfDeleTables(CUSTOMER_PROPERTIES, relationId);
         return relationId;
     }
 
-    public void removeCustomerPropertyWithAuthUsingPartialDto(String customerId, String propertyId) {
+    public void removeCustomerPropertyWithAuthUsingPartialDto(UUID customerId, UUID propertyId) {
         authorizationHelpers.deleteSecondLevelEntity(CUSTOMERS_PATH, customerId, PROPERTIES_RESOURCE, propertyId);
     }
 }

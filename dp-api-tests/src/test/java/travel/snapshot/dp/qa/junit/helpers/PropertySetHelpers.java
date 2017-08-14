@@ -1,14 +1,15 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 
 import com.jayway.restassured.response.Response;
-import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
+
+import java.util.UUID;
 
 /**
  * Created by zelezny on 6/26/2017.
@@ -25,11 +26,11 @@ public class PropertySetHelpers extends PropertySetSteps {
         return response.as(PropertySetDto.class);
     }
 
-    public String propertySetIsCreatedWithAuth(PropertySetDto propertySet) {
+    public UUID propertySetIsCreatedWithAuth(PropertySetDto propertySet) {
         createPropertySetWithAuth(propertySet);
         responseCodeIs(SC_CREATED);
-        String propertySetId = getSessionResponse().as(PropertySetDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(PROPERTY_SETS_RESOURCE, propertySetId);
+        UUID propertySetId = getSessionResponse().as(PropertySetDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(PROPERTY_SETS_RESOURCE, propertySetId);
         return propertySetId;
     }
 

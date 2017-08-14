@@ -7,6 +7,8 @@ import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
 
+import java.util.UUID;
+
 public class ReviewMultipropertyPropertySetSteps extends AnalyticsBaseSteps {
 
     private static final String BASE_PATH_PROPERTY_SET = "/review/analytics/property_set/";
@@ -17,7 +19,7 @@ public class ReviewMultipropertyPropertySetSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getAggregatedStatisticsForPropertySet(String metric, String pSetCode, String customerId, String since, String until, String granularity, String limit, String cursor) {
+    public void getAggregatedStatisticsForPropertySet(String metric, String pSetCode, UUID customerId, String since, String until, String granularity, String limit, String cursor) {
         PropertySetSteps propertySetSteps = new PropertySetSteps();
         PropertySetDto propertySet = propertySetSteps.getPropertySetByNameForCustomer(pSetCode, customerId);
 

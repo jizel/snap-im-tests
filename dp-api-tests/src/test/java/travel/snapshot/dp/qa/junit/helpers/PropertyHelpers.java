@@ -10,6 +10,8 @@ import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
 
+import java.util.UUID;
+
 /**
  * Help methods for JUnit test for the Property entity
  */
@@ -23,23 +25,23 @@ public class PropertyHelpers extends PropertySteps{
         return propertyIsCreatedByUser(DEFAULT_SNAPSHOT_USER_ID, property);
     }
 
-    public PropertyDto propertyIsCreatedByUser(String userId, PropertyDto property) {
+    public PropertyDto propertyIsCreatedByUser(UUID userId, PropertyDto property) {
         Response response = createPropertyByUser(userId, property);
         assertThat(String.format("Failed to create property: %s", response.toString()), response.getStatusCode(), is(SC_CREATED));
         return response.as(PropertyDto.class);
     }
 
-    public Response createPropertyByUserForApp(String userId, String appVersionId, PropertyDto property) {
+    public Response createPropertyByUserForApp(UUID userId, UUID appVersionId, PropertyDto property) {
         Response response = createEntityByUserForApplication(userId, appVersionId, property);
         setSessionResponse(response);
         return response;
     }
 
-    public String propertyIsCreatedWithAuth(PropertyDto property) {
+    public UUID propertyIsCreatedWithAuth(PropertyDto property) {
         createPropertyWithAuth(property);
         responseCodeIs(SC_CREATED);
-        String propertyId = getSessionResponse().as(PropertyDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(PROPERTIES_RESOURCE, propertyId);
+        UUID propertyId = getSessionResponse().as(PropertyDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(PROPERTIES_RESOURCE, propertyId);
         return propertyId;
 
     }

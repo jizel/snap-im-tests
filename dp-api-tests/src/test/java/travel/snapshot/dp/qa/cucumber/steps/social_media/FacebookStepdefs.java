@@ -1,20 +1,20 @@
 package travel.snapshot.dp.qa.cucumber.steps.social_media;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.*;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.FacebookSteps;
 
-import static org.hamcrest.Matchers.everyItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
+import java.util.UUID;
 
 
 /**
@@ -28,7 +28,7 @@ public class FacebookStepdefs {
     private FacebookSteps facebookSteps;
 
     @When("^Get facebook \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
+    public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, UUID propertyId, String since, String until) throws Throwable {
         // Express the Regexp above with the code you wish you had
         facebookSteps.getPropertiesWithDate("/social_media" + url, granularity, propertyId, since, until);
     }

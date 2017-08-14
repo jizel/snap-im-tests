@@ -16,6 +16,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.commercial_subscription.Commercia
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CommercialSubscriptionStepdef {
 
@@ -42,7 +43,7 @@ public class CommercialSubscriptionStepdef {
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is deleted$")
-    public void Commercial_subscription_with_id_is_deleted(String commSubcriptionId) {
+    public void Commercial_subscription_with_id_is_deleted(UUID commSubcriptionId) {
         commSubscriptionSteps.deleteCommSubscriptionWithId(commSubcriptionId);
     }
 
@@ -57,7 +58,7 @@ public class CommercialSubscriptionStepdef {
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is (?:got|requested)$")
-    public void Commercial_subscription_with_id_is_got(String commSubscriptionId) {
+    public void Commercial_subscription_with_id_is_got(UUID commSubscriptionId) {
         commSubscriptionSteps.commSubscriptionWithIdIsGot(commSubscriptionId);
     }
 
@@ -75,8 +76,8 @@ public class CommercialSubscriptionStepdef {
             @Transform(NullEmptyStringConverter.class) String sortDesc,
             @Transform(NullEmptyStringConverter.class) String userName,
             @Transform(NullEmptyStringConverter.class) String appVersionName) {
-        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
-        String userId = usersSteps.resolveUserId(userName);
+        UUID appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        UUID userId = usersSteps.resolveUserId(userName);
         commSubscriptionSteps.listOfCommSubscriptionsIsGotWith(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
@@ -91,7 +92,7 @@ public class CommercialSubscriptionStepdef {
     }
 
     @When("^Commercial subscription with id \"([^\"]*)\" is (in|de)?activated$")
-    public void commercialSubscriptionWithIdIsActivated(String commSubscriptionId, String negation) throws Exception {
+    public void commercialSubscriptionWithIdIsActivated(UUID commSubscriptionId, String negation) throws Exception {
         Boolean isActive = (negation == null);
         CommercialSubscriptionUpdateDto commercialSubscriptionUpdate = new CommercialSubscriptionDto();
         commercialSubscriptionUpdate.setIsActive(isActive);
@@ -99,12 +100,12 @@ public class CommercialSubscriptionStepdef {
     }
 
     @Then("^Commercial subscription with id \"([^\"]*)\" is activate$")
-    public void commercialSubscriptionWithIdIsActivate(String commSubscriptionId) throws Throwable {
+    public void commercialSubscriptionWithIdIsActivate(UUID commSubscriptionId) throws Throwable {
         commSubscriptionSteps.checkIsActive(commSubscriptionId, true);
     }
 
     @Then("^Commercial subscription with id \"([^\"]*)\" is not activate$")
-    public void commercialSubscriptionWithIdIsNotActivate(String commSubscriptionId) throws Throwable {
+    public void commercialSubscriptionWithIdIsNotActivate(UUID commSubscriptionId) throws Throwable {
         commSubscriptionSteps.checkIsActive(commSubscriptionId, false);
     }
 }

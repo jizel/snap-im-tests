@@ -25,10 +25,9 @@ import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationVersionsS
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class BasicStepDefs {
-
-    public static final String NONEXISTENT_ID = "00000000-0000-4000-a000-000000000000";
 
     @Steps
     private BasicSteps basicSteps;
@@ -146,8 +145,8 @@ public class BasicStepDefs {
     @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")?(?: by user \"([^\"]*)\")?(?: for application version \"([^\"]*)\")?(?: with since \"([^\"]*)\", until \"([^\"]*)\", granularity \"([^\"]*)\" and property \"([^\"]*)\")?( in path)?$")
     public void getRequestIsSentToOnModule(String url, String module, String username, String applicationVersionName,
                                            String since, String until, String granularity, String property, String asParam) throws Throwable {
-        String userId = usersSteps.resolveUserId(username);
-        String applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
+        UUID userId = usersSteps.resolveUserId(username);
+        UUID applicationVersionId = applicationVersionSteps.resolveApplicationVersionId(applicationVersionName);
         basicSteps.sendGetRequestToUrlByUserForAppWithParams(userId, applicationVersionId, url, module, since, until, granularity, property, asParam);
     }
 
@@ -158,7 +157,7 @@ public class BasicStepDefs {
 
     @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? with empty X-Auth-UserId header$")
     public void getRequestIsSentToOnModuleWithEmptyXAuthUserIdHeader(String url, String module) throws Throwable {
-        basicSteps.sendGetRequestToUrlByUser("", url, module);
+        basicSteps.sendGetRequestToUrlByUser(null, url, module);
     }
 
     @When("^DELETE request is sent to \"([^\"]*)\" on module \"([^\"]*)\"$")
@@ -173,6 +172,6 @@ public class BasicStepDefs {
 
     @When("^GET request is sent to \"([^\"]*)\"(?: on module \"([^\"]*)\")? with empty X-Auth-AppId header$")
     public void getRequestIsSentToOnModuleWithEmptyXAuthAppIdHeader(String url, String module) throws Throwable {
-        basicSteps.sendGetRequestToUrlByUserForApp(DEFAULT_SNAPSHOT_USER_ID, "", url, module);
+        basicSteps.sendGetRequestToUrlByUserForApp(DEFAULT_SNAPSHOT_USER_ID, null, url, module);
     }
 }

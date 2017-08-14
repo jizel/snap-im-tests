@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class RoleBaseSteps extends BasicSteps {
@@ -63,7 +64,7 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     public void setRolesPath(RoleType roleType) {
-        switch(roleType){
+        switch (roleType) {
             case CUSTOMER: {
                 spec.basePath(USER_CUSTOMER_ROLES_PATH);
                 roleBasePath = USER_CUSTOMER_ROLES_PATH;
@@ -82,7 +83,8 @@ public class RoleBaseSteps extends BasicSteps {
                 roleBaseType = PROPERTY_SET;
             }
             break;
-            default: fail("Invalid role type given");
+            default:
+                fail("Invalid role type given");
         }
     }
 
@@ -96,7 +98,7 @@ public class RoleBaseSteps extends BasicSteps {
 
 
     @Step
-    public Response createRole(RoleDto role){
+    public Response createRole(RoleDto role) {
         setSessionVariable(SESSION_CREATED_ROLE, role);
         Response response = createEntity(role);
         setSessionResponse(response);
@@ -104,7 +106,7 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public void followingRolesExist(List<Map<String, Object>> rolesMap)throws Exception {
+    public void followingRolesExist(List<Map<String, Object>> rolesMap) throws Exception {
         for (Map<String, Object> roleAttributes : rolesMap) {
             RoleDto role = getRoleBaseType().getDtoClassType().newInstance();
             setRoleAttributes(role, roleAttributes);
@@ -126,18 +128,18 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public void updateRole(String roleId, RoleUpdateDto roleUpdate, String etag) {
+    public void updateRole(UUID roleId, RoleUpdateDto roleUpdate, String etag) {
         try {
             String updatedRoleString = retrieveData(roleUpdate).toString();
             Response response = updateEntity(roleId, updatedRoleString, etag);
             setSessionResponse(response);
-        }catch(JsonProcessingException jsonException){
+        } catch (JsonProcessingException jsonException) {
             fail("Error while converting object to JSON: " + jsonException);
         }
     }
 
     @Step
-    public Response getRole(String id) {
+    public Response getRole(UUID id) {
         Response response = getEntity(id);
         setSessionResponse(response);
         return response;
@@ -156,7 +158,7 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public void getRoleWithNameForApplicationId(String name, String applicationId) {
+    public void getRoleWithNameForApplicationId(String name, UUID applicationId) {
         //TODO implement actual customer search
         RoleDto roleByName = getRoleByName(name);
 
@@ -165,14 +167,14 @@ public class RoleBaseSteps extends BasicSteps {
     }
 
     @Step
-    public void deleteRole(String roleId) {
+    public void deleteRole(UUID roleId) {
         deleteEntityWithEtag(roleId);
         setSessionVariable(SESSION_ROLE_ID, roleId);
     }
 
     @Step
     public void roleIdInSessionDoesntExist() {
-        String roleId = Serenity.sessionVariableCalled(SESSION_ROLE_ID);
+        UUID roleId = Serenity.sessionVariableCalled(SESSION_ROLE_ID);
 
         Response response = getRole(roleId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
@@ -204,14 +206,17 @@ public class RoleBaseSteps extends BasicSteps {
         }
     }
 
-    public static List<RoleDto> getResponseAsRoles(Response response){
+    public static List<RoleDto> getResponseAsRoles(Response response) {
         RoleDto[] roles = null;
-        switch(getRoleBaseType()){
-            case CUSTOMER : roles = response.as(CustomerRoleDto[].class);
+        switch (getRoleBaseType()) {
+            case CUSTOMER:
+                roles = response.as(CustomerRoleDto[].class);
                 break;
-            case PROPERTY: roles =response.as(PropertyRoleDto[].class);
+            case PROPERTY:
+                roles = response.as(PropertyRoleDto[].class);
                 break;
-            case PROPERTY_SET: roles = response.as(PropertySetRoleDto[].class);
+            case PROPERTY_SET:
+                roles = response.as(PropertySetRoleDto[].class);
         }
         return Arrays.asList(roles);
     }
@@ -227,10 +232,10 @@ public class RoleBaseSteps extends BasicSteps {
                 .body("name", is(originalRole.getName()));
     }
 
-    public String resolveRoleId(String roleName) {
-        String roleId;
+    public UUID resolveRoleId(String roleName) {
+        UUID roleId;
         if (isUUID(roleName)) {
-            roleId = roleName;
+            roleId = UUID.fromString(roleName);
         } else {
             RoleDto role = getRoleByName(roleName);
             assertThat(String.format("Role with name \"%s\" does not exist", roleName), role, is(notNullValue()));
@@ -239,15 +244,15 @@ public class RoleBaseSteps extends BasicSteps {
         return roleId;
     }
 
-    public RoleDto setRoleAttributes(RoleDto roleDto, Map<String, Object> roleAttributes){
-        roleDto.setId(Objects.toString(roleAttributes.get("id"), null));
+    public RoleDto setRoleAttributes(RoleDto roleDto, Map<String, Object> roleAttributes) {
+        roleDto.setId(UUID.fromString(Objects.toString(roleAttributes.get("id"), null)));
         roleDto.setDescription(Objects.toString(roleAttributes.get("description")));
-        roleDto.setApplicationId(Objects.toString(roleAttributes.get("applicationId"), null));
+        roleDto.setApplicationId(UUID.fromString(Objects.toString(roleAttributes.get("applicationId"), null)));
         roleDto.setName(Objects.toString(roleAttributes.get("roleName"), null));
-        if(roleAttributes.containsKey("isActive")) {
+        if (roleAttributes.containsKey("isActive")) {
             roleDto.setIsActive(Boolean.valueOf(Objects.toString(roleAttributes.get("isActive"))));
         }
-        if(roleAttributes.containsKey("isInitial")) {
+        if (roleAttributes.containsKey("isInitial")) {
             roleDto.setIsInitial(Boolean.valueOf(Objects.toString(roleAttributes.get("isInitial"))));
         }
         return roleDto;

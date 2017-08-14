@@ -1,5 +1,15 @@
 package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_METHOD_NOT_ALLOWED;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,16 +20,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 import java.time.LocalDate;
-
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.apache.http.HttpStatus.SC_METHOD_NOT_ALLOWED;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import java.util.UUID;
 
 @RunWith(SerenityRunner.class)
 public class CustomerSmokeTests extends CommonSmokeTest {
@@ -28,7 +29,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
 
     @Test
     public void customerCRUDWithAuthorization() throws Throwable {
-        String customerId = customerDtos.get("customer1").getId();
+        UUID customerId = customerDtos.get("customer1").getId();
         //create
         customerDtos.values().forEach(customer -> {
             customerHelpers.customerIsCreatedWithAuth(customer);
@@ -51,7 +52,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     @Test
     public void addRemovePropertyToCustomerUsingOldWay() {
         customerHelpers.addPropertyToCustomerWithAuthUsingPartialDto(DEFAULT_PROPERTY_ID, DEFAULT_SNAPSHOT_CUSTOMER_ID);
-        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID);
+        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID.toString());
         bodyContainsEntityWith("relationship_type", "chain");
         customerHelpers.removeCustomerPropertyWithAuthUsingPartialDto(DEFAULT_SNAPSHOT_CUSTOMER_ID, DEFAULT_PROPERTY_ID);
         responseCodeIs(SC_METHOD_NOT_ALLOWED);
@@ -60,7 +61,7 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     @Test
     public void customerPropertyCRUD() {
         // create
-        String relationId = relationshipsHelpers.customerPropertyRelationIsCreatedWithAuth(
+        UUID relationId = relationshipsHelpers.customerPropertyRelationIsCreatedWithAuth(
                 DEFAULT_SNAPSHOT_CUSTOMER_ID,
                 DEFAULT_PROPERTY_ID,
                 true,
@@ -69,8 +70,8 @@ public class CustomerSmokeTests extends CommonSmokeTest {
                 LocalDate.parse("2020-01-01"));
         // get
         authorizationHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationId);
-        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID);
-        bodyContainsEntityWith("customer_id", DEFAULT_SNAPSHOT_CUSTOMER_ID);
+        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID.toString());
+        bodyContainsEntityWith("customer_id", DEFAULT_SNAPSHOT_CUSTOMER_ID.toString());
         bodyContainsEntityWith("valid_from", "2015-01-01");
 
         // update
@@ -83,11 +84,11 @@ public class CustomerSmokeTests extends CommonSmokeTest {
     @Test
     public void customerUserCRUD() throws Throwable {
         // create a user
-        String userId = userHelpers.userIsCreatedWithAuth(testUser1);
+        UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create a customer
-        String customerId = customerHelpers.customerIsCreatedWithAuth(testCustomer1);
+        UUID customerId = customerHelpers.customerIsCreatedWithAuth(testCustomer1);
         // create relation
-        String relationId = relationshipsHelpers.userCustomerRelationIsCreatedWithAuth(
+        UUID relationId = relationshipsHelpers.userCustomerRelationIsCreatedWithAuth(
                 userId,
                 customerId,
                 true,
@@ -95,8 +96,8 @@ public class CustomerSmokeTests extends CommonSmokeTest {
         // get relation
         authorizationHelpers.getEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
-        bodyContainsEntityWith("user_id", userId);
-        bodyContainsEntityWith("customer_id", customerId);
+        bodyContainsEntityWith("user_id", userId.toString());
+        bodyContainsEntityWith("customer_id", customerId.toString());
         bodyContainsEntityWith("is_active", "true");
         bodyContainsEntityWith("is_primary", "false");
         // update

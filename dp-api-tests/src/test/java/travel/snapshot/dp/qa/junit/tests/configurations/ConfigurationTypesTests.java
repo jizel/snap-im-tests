@@ -129,7 +129,7 @@ public class ConfigurationTypesTests extends CommonTest {
     @Test
     @Ignore
     public void deleteNonExistentConfigurationTypeTest() {
-        configurationHelpers.tryDeleteConfigurationType(NON_EXISTENT_ID);
+        configurationHelpers.tryDeleteConfigurationType(NON_EXISTENT_ID.toString());
         responseCodeIs(SC_NOT_FOUND);
     }
 

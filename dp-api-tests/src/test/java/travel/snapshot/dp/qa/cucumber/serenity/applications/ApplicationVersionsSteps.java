@@ -17,6 +17,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by zelezny on 2/16/2017.
@@ -38,12 +39,12 @@ public class ApplicationVersionsSteps extends BasicSteps {
 
 
     @Step
-    public Response getApplicationVersion(String versionId){
+    public Response getApplicationVersion(UUID versionId){
         return getApplicationVersionByUser(DEFAULT_SNAPSHOT_USER_ID, versionId);
     }
 
     @Step
-    public Response getApplicationVersionByUser(String requestorId, String versionId){
+    public Response getApplicationVersionByUser(UUID requestorId, UUID versionId){
         Response response = getEntityByUser(requestorId, versionId);
         setSessionResponse(response);
         return response;
@@ -62,7 +63,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void deleteApplicationVersion(String appVersionId) {
+    public void deleteApplicationVersion(UUID appVersionId) {
         String etag = getEntityEtag(appVersionId);
         Response response = deleteEntity(appVersionId, etag);
         setSessionResponse(response);
@@ -70,7 +71,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void updateApplicationVersion(String appVersionId, ApplicationVersionUpdateDto applicationVersionUpdate, String etag) throws Throwable {
+    public void updateApplicationVersion(UUID appVersionId, ApplicationVersionUpdateDto applicationVersionUpdate, String etag) throws Throwable {
         JSONObject update = retrieveData(applicationVersionUpdate);
 
         Response response = updateEntity(appVersionId, update.toString(), etag);
@@ -78,7 +79,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void applicationVersionWithIdHasData(String appVersionId, ApplicationVersionDto applicationVersion) throws Throwable {
+    public void applicationVersionWithIdHasData(UUID appVersionId, ApplicationVersionDto applicationVersion) throws Throwable {
         Map<String, Object> originalData = retrieveDataOld(ApplicationVersionDto.class, getApplicationVersion(appVersionId).as(ApplicationVersionDto.class));
         Map<String, Object> expectedData = retrieveDataOld(ApplicationVersionDto.class, applicationVersion);
 
@@ -94,7 +95,7 @@ public class ApplicationVersionsSteps extends BasicSteps {
     }
 
     @Step
-    public void listOfApplicationVersionsIsGotWith(String userId, String appVersionId, String limit, String cursor, String filter,
+    public void listOfApplicationVersionsIsGotWith(UUID userId, UUID appVersionId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
         Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
@@ -127,12 +128,12 @@ public class ApplicationVersionsSteps extends BasicSteps {
         return stream(applicationVersion).findFirst().orElse(null);
     }
 
-    public String resolveApplicationVersionId(String applicationVersionName) {
+    public UUID resolveApplicationVersionId(String applicationVersionName) {
         if (applicationVersionName == null) return DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
 
-        String applicationVersionId;
+        UUID applicationVersionId;
         if (isUUID(applicationVersionName)) {
-            applicationVersionId = applicationVersionName;
+            applicationVersionId = UUID.fromString(applicationVersionName);
         } else {
             ApplicationVersionDto applicationVersion = getApplicationVersionByName(applicationVersionName);
             assertThat(String.format("Application version with name \"%s\" does not exist", applicationVersionName), applicationVersion , is(notNullValue()));

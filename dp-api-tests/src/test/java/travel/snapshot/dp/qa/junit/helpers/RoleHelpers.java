@@ -13,6 +13,8 @@ import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.qa.cucumber.helpers.RoleType;
 import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
 
+import java.util.UUID;
+
 /**
  * Created by zelezny on 6/26/2017.
  */
@@ -27,19 +29,19 @@ public class RoleHelpers extends RoleBaseSteps {
         return response.as(roleType.getDtoClassType());
     }
 
-    public String customerRoleIsCreatedWithAuth(Object role) {
+    public UUID customerRoleIsCreatedWithAuth(Object role) {
         authorizationHelpers.createEntity(USER_CUSTOMER_ROLES_PATH, role);
         responseCodeIs(SC_CREATED);
-        String roleId = getSessionResponse().as(CustomerRoleDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(ROLES_RESOURCE, roleId);
+        UUID roleId = getSessionResponse().as(CustomerRoleDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(ROLES_RESOURCE, roleId);
         return roleId;
     }
 
-    public String propertyRoleIsCreatedWithAuth(Object role) {
+    public UUID propertyRoleIsCreatedWithAuth(Object role) {
         authorizationHelpers.createEntity(USER_PROPERTY_ROLES_PATH, role);
         responseCodeIs(SC_CREATED);
-        String roleId = getSessionResponse().as(PropertyRoleDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(ROLES_RESOURCE, roleId);
+        UUID roleId = getSessionResponse().as(PropertyRoleDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(ROLES_RESOURCE, roleId);
         return roleId;
     }
 }

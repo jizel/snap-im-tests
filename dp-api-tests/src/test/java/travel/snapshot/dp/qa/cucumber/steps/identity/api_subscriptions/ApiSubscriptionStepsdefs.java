@@ -11,6 +11,8 @@ import travel.snapshot.dp.qa.cucumber.serenity.customers.CustomerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
+import java.util.UUID;
+
 /**
  * Created by vlcek on 3/17/2016.
  *
@@ -53,7 +55,7 @@ public class ApiSubscriptionStepsdefs {
 //    }
 
     @When("^Api subscription with id \"([^\"]*)\" is got$")
-    public void apiSubscriptionWithIdIsGot(String apiSubscriptionId) throws Throwable {
+    public void apiSubscriptionWithIdIsGot(UUID apiSubscriptionId) throws Throwable {
         apiSteps.apiWithIdIsGot(apiSubscriptionId);
     }
 
@@ -63,17 +65,17 @@ public class ApiSubscriptionStepsdefs {
 //    }
 //
 //    @When("^Api subscription with id \"([^\"]*)\" is activated$")
-//    public void apiSubscriptionWithIdIsActivated(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsActivated(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.setActivateFieldApiSubscription(apiSubscriptionId, true);
 //    }
 //
 //    @When("^Api subscription with id \"([^\"]*)\" is deactivated$")
-//    public void apiSubscriptionWithIdIsDeactivated(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsDeactivated(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.setActivateFieldApiSubscription(apiSubscriptionId, false);
 //    }
 //
 //    @When("^Api subscription with id \"([^\"]*)\" is deleted$")
-//    public void apiSubscriptionWithIdIsDeleted(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsDeleted(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.deleteApiSubscription(apiSubscriptionId);
 //    }
 
@@ -86,34 +88,34 @@ public class ApiSubscriptionStepsdefs {
 //            @Transform(NullEmptyStringConverter.class) String sortDesc,
 //            @Transform(NullEmptyStringConverter.class) String userName,
 //            @Transform(NullEmptyStringConverter.class) String appVersionName) {
-//        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
-//        String userId = usersSteps.resolveUserId(userName);
+//        UUID appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+//        UUID userId = usersSteps.resolveUserId(userName);
 //        apiSteps.listApiSubscriptiosIsGot(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
 //    }
 //
 ////    @When("^Api subscription with id \"([^\"]*)\" is updated with following data$")
-////    public void apiSubscriptionWithIdIsUpdatedWithFollowingData(String apiSubscriptionId, List<ApiSubscriptionDto> updateData) throws Throwable {
+////    public void apiSubscriptionWithIdIsUpdatedWithFollowingData(UUID apiSubscriptionId, List<ApiSubscriptionDto> updateData) throws Throwable {
 ////        apiSteps.updateApiSubscription(apiSubscriptionId, updateData.get(0));
 ////    }
 //
 //
 //    @Then("^Api subscription with id \"([^\"]*)\" is among all api subscriptions$")
-//    public void apiSubscriptionWithIdIsAmongAllApiSubscriptions(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsAmongAllApiSubscriptions(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.apiSubscriptionInListOfAll(apiSubscriptionId, true);
 //    }
 //
 //    @Then("^Api subscription with id \"([^\"]*)\" is not among all api subscriptions$")
-//    public void apiSubscriptionWithIdIsNotAmongAllApiSubscriptions(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsNotAmongAllApiSubscriptions(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.apiSubscriptionInListOfAll(apiSubscriptionId, false);
 //    }
 //
 //    @Then("^Api subscription with id \"([^\"]*)\" is active$")
-//    public void apiSubscriptionWithIdIsActive(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsActive(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.apiSubscriptionActivity(apiSubscriptionId, true);
 //    }
 //
 //    @Then("^Api subscription with id \"([^\"]*)\" is not active$")
-//    public void apiSubscriptionWithIdIsNotActive(String apiSubscriptionId) throws Throwable {
+//    public void apiSubscriptionWithIdIsNotActive(UUID apiSubscriptionId) throws Throwable {
 //        apiSteps.apiSubscriptionActivity(apiSubscriptionId, false);
 //    }
 //
@@ -128,15 +130,15 @@ public class ApiSubscriptionStepsdefs {
 //    }
 
 //    @Given("^API subscriptions exist for(?: default)? application(?: \"([^\"]*)\")? and customer (?:with id)? \"([^\"]*)\"(?: and property \"([^\"]*)\")?$")
-//    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String applicationName, String customerId, String propertyCode) throws Throwable {
-//        String propertyId = ((propertyCode==null) ? DEFAULT_PROPERTY_ID : propertySteps.resolvePropertyId(propertyCode));
-//        String applicationId = applicationsSteps.resolveApplicationId(applicationName);
+//    public void apiSubscriptionsExistForDefaultApplicationAndCustomerWithId(String applicationName, UUID customerId, String propertyCode) throws Throwable {
+//        UUID propertyId = ((propertyCode==null) ? DEFAULT_PROPERTY_ID : propertySteps.resolvePropertyId(propertyCode));
+//        UUID applicationId = applicationsSteps.resolveApplicationId(applicationName);
 //        CommercialSubscriptionDto commercialSubscription = new CommercialSubscriptionDto();
 //        commercialSubscription.setPropertyId(propertyId);
 //        commercialSubscription.setApplicationId(applicationId);
 //        commercialSubscription.setIsActive(true);
 //        commercialSubscription.setCustomerId(customerId);
-//        String commercialSubscriptionId = randomUUID().toString();
+//        UUID commercialSubscriptionId = randomUUID().toString();
 //        commercialSubscription.setId(commercialSubscriptionId);
 //        commercialSubscriptionSteps.comSubscriptionsExists(singletonList(commercialSubscription));
 //

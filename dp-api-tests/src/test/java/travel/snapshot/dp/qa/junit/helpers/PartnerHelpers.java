@@ -8,6 +8,8 @@ import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.qa.cucumber.serenity.partners.PartnerSteps;
 
+import java.util.UUID;
+
 /**
  * Help methods for JUnit test for the Partner entity
  */
@@ -19,7 +21,7 @@ public class PartnerHelpers extends PartnerSteps{
         return response.as(PartnerDto.class);
     }
 
-    public void getUsersForPartnerByUserForApp(String partnerId, String userId, String appVersionId) {
+    public void getUsersForPartnerByUserForApp(UUID partnerId, UUID userId, UUID appVersionId) {
         Response response = getSecondLevelEntitiesByUserForApp(userId, appVersionId, partnerId, USERS_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
     }

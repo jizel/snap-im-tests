@@ -1,15 +1,15 @@
 package travel.snapshot.dp.qa.cucumber.steps.social_media;
 
-import net.thucydides.core.annotations.Steps;
-
-import java.util.Arrays;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
 import travel.snapshot.dp.qa.cucumber.helpers.ClassStringConverter;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.TwitterSteps;
+
+import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -22,7 +22,7 @@ public class TwitterStepdefs {
     @When("^Get twitter \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
     public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
         // Express the Regexp above with the code you wish you had
-        steps.getPropertiesWithDate("/social_media" + url, granularity, propertyId, since, until);
+        steps.getPropertiesWithDate("/social_media" + url, granularity, UUID.fromString(propertyId), since, until);
     }
 
     @When("^Get twitter \"([^\"]*)\" with missing property header$")

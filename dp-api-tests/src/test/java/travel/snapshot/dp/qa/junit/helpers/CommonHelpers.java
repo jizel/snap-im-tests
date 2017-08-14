@@ -1,5 +1,10 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.util.TextUtils.isBlank;
+import static org.junit.Assert.*;
+
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -8,21 +13,17 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.util.TextUtils.isBlank;
-import static org.junit.Assert.fail;
+import java.util.UUID;
 
 public class CommonHelpers extends BasicSteps {
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
-    public void updateRegistryOfDeletables(String entityType, String id) {
+    public void updateRegistryOfDeleTables(String entityType, UUID id) {
         // Retrieve the map from serenity session variable
-        Map<String, ArrayList<String>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
+        Map<String, ArrayList<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
         // Retrieve the array of ids of the certain enity type
-        ArrayList<String> listIds = getArrayFromMap(entityType, registry);
+        ArrayList<UUID> listIds = getArrayFromMap(entityType, registry);
         // Update this list
         listIds.add(id);
         // Put it back to the map and map to session variable
@@ -30,7 +31,7 @@ public class CommonHelpers extends BasicSteps {
         Serenity.setSessionVariable(ENTITIES_TO_DELETE).to(registry);
     }
 
-    public ArrayList<String> getArrayFromMap(String aKey, Map<String, ArrayList<String>> inputMap) {
+    public ArrayList<UUID> getArrayFromMap(String aKey, Map<String, ArrayList<UUID>> inputMap) {
         return (inputMap.get(aKey) == null) ? new ArrayList<>() : inputMap.get(aKey);
     }
 
@@ -40,12 +41,12 @@ public class CommonHelpers extends BasicSteps {
         return getEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, queryParams);
     }
 
-    public Response getEntitiesByUser(String userId, String basePath, Map<String, String> queryParams)  {
+    public Response getEntitiesByUser(UUID userId, String basePath, Map<String, String> queryParams)  {
         return getEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, queryParams);
     }
 
-    public Response getEntitiesByUserForApp(String userId, String appId, String basePath, Map<String, String> queryParams) {
-        if (isBlank(userId)) {
+    public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
+        if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
         spec.basePath(basePath);
@@ -61,18 +62,18 @@ public class CommonHelpers extends BasicSteps {
     // Get
 
 
-    public Response getEntity(String basePath, String entityId) {
+    public Response getEntity(String basePath, UUID entityId) {
         return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
     }
 
-    public Response getEntityByUser(String userId, String basePath, String entityId) {
+    public Response getEntityByUser(UUID userId, String basePath, UUID entityId) {
         return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public Response getEntityByUserForApplication(String userId, String applicationId, String basePath, String entityId) {
+    public Response getEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId) {
         spec.basePath(basePath);
         RequestSpecification requestSpecification = given().spec(spec);
-        if (isBlank(userId)) {
+        if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
@@ -83,15 +84,15 @@ public class CommonHelpers extends BasicSteps {
 
     // Get etag
 
-    public String getEntityEtag(String basePath, String entityId) {
+    public String getEntityEtag(String basePath, UUID entityId) {
         return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
     }
 
-    public String getEntityEtagByUser(String userId, String basePath, String entityId) {
+    public String getEntityEtagByUser(UUID userId, String basePath, UUID entityId) {
         return getEntityEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public String getEntityEtagByUserForApp(String userId, String applicationId, String basePath, String entityId) {
+    public String getEntityEtagByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId) {
         spec.basePath(basePath);
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification.header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId);
@@ -112,11 +113,11 @@ public class CommonHelpers extends BasicSteps {
         return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entity);
     }
 
-    public Response createEntityByUser(String userId, String basePath, Object entity) {
+    public Response createEntityByUser(UUID userId, String basePath, Object entity) {
         return createEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
     }
 
-    public Response createEntityByUserForApplication(String userId, String applicationId, String basePath, Object entity) {
+    public Response createEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, Object entity) {
         spec.basePath(basePath);
         Response response = given().spec(spec).header(HEADER_XAUTH_USER_ID, userId).header(HEADER_XAUTH_APPLICATION_ID, applicationId).body(entity).when().post();
         setSessionResponse(response);
@@ -125,16 +126,16 @@ public class CommonHelpers extends BasicSteps {
 
     // Update
 
-    public Response updateEntityWithEtag(String basePath, String entityId, Object data) {
+    public Response updateEntityWithEtag(String basePath, UUID entityId, Object data) {
         return updateEntityByUserWithEtag(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, data);
     }
 
-    public Response updateEntityByUserWithEtag(String userId, String basePath, String entityId, Object data) {
+    public Response updateEntityByUserWithEtag(UUID userId, String basePath, UUID entityId, Object data) {
         return updateEntityByUserForAppWithEtag(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
     }
 
-    public Response updateEntityByUserForAppWithEtag(String userId, String applicationId, String basePath, String entityId, Object data) {
-        if (isBlank(userId)) {
+    public Response updateEntityByUserForAppWithEtag(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data) {
+        if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
         String etag = getEntityEtagByUserForApp(userId, applicationId, basePath, entityId);
@@ -151,16 +152,16 @@ public class CommonHelpers extends BasicSteps {
         return response;
     }
 
-    public Response updateEntity(String basePath, String entityId, Object data, String etag) {
+    public Response updateEntity(String basePath, UUID entityId, Object data, String etag) {
         return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, data, etag);
     }
 
-    public Response updateEntityByUser(String userId, String basePath, String entityId, Object data, String etag) {
+    public Response updateEntityByUser(UUID userId, String basePath, UUID entityId, Object data, String etag) {
         return updateEntityByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data, etag);
     }
 
-    public Response updateEntityByUserForApp(String userId, String applicationId, String basePath, String entityId, Object data, String etag) {
-        if (isBlank(userId)) {
+    public Response updateEntityByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data, String etag) {
+        if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
         if (isBlank(etag)) {
@@ -183,16 +184,16 @@ public class CommonHelpers extends BasicSteps {
 
     // Manual delete method. Expect explicitly passed etag
 
-    public void deleteEntity(String basePath, String entityId, String etag) {
+    public void deleteEntity(String basePath, UUID entityId, String etag) {
         deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, etag);
     }
 
-    public void deleteEntityByUser(String userId, String basePath, String entityId, String etag) {
+    public void deleteEntityByUser(UUID userId, String basePath, UUID entityId, String etag) {
         deleteEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, etag);
     }
 
-    public void deleteEntityByUserForApplication(String userId, String applicationId, String basePath, String entityId, String etag) {
-        if (isBlank(userId)) {
+    public void deleteEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId, String etag) {
+        if (userId == null) {
             fail("User ID to be send in request header is blank.");
         }
         if (isBlank(etag)) {
@@ -213,16 +214,16 @@ public class CommonHelpers extends BasicSteps {
 
     // Automatic delete methods - do not require explicit etags, get it themselves
 
-    public void deleteEntityWithEtag(String basePath, String entityId) {
+    public void deleteEntityWithEtag(String basePath, UUID entityId) {
         deleteEntityByUserWithEtag(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
     }
 
-    public void deleteEntityByUserWithEtag(String userId, String basePath, String entityId) {
+    public void deleteEntityByUserWithEtag(UUID userId, String basePath, UUID entityId) {
         deleteEntityByUserForAppWithEtag(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
-    public void deleteEntityByUserForAppWithEtag(String userId, String applicationId, String basePath, String entityId) {
-        if (isBlank(userId)) {
+    public void deleteEntityByUserForAppWithEtag(UUID userId, UUID applicationId, String basePath, UUID entityId) {
+        if (userId == null) {
             fail("User ID to be send in request header is blank.");
         }
         String etag = getEntityEtag(basePath, entityId);

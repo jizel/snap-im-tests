@@ -4,6 +4,10 @@ package travel.snapshot.dp.qa.junit.helpers;
 /**
  * Created by zelezny on 6/30/2017.
  */
+
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.junit.Assert.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
@@ -12,8 +16,7 @@ import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.qa.cucumber.serenity.DbUtilsSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.applications.ApplicationsSteps;
 
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.junit.Assert.assertEquals;
+import java.util.UUID;
 
 @Log
 public class ApplicationHelpers extends ApplicationsSteps {
@@ -40,7 +43,7 @@ public class ApplicationHelpers extends ApplicationsSteps {
         return response.as(ApplicationDto.class);
     }
 
-    public void grantAllPermissions(String applicationId) {
+    public void grantAllPermissions(UUID applicationId) {
         dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }
 }

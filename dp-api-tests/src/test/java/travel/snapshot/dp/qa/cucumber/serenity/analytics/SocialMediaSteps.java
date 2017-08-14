@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -73,7 +74,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getPropertiesWithDate(String url, String granularity, String propertyId, String since, String until) {
+    public void getPropertiesWithDate(String url, String granularity, UUID propertyId, String since, String until) {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
 
@@ -98,7 +99,7 @@ public class SocialMediaSteps extends AnalyticsBaseSteps {
 
 
     @Step
-    public void getPropertiesWithPaging(String url, String propertyId, String limit, String cursor) {
+    public void getPropertiesWithPaging(String url, UUID propertyId, String limit, String cursor) {
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath(url)
                 .header("x-property", propertyId)

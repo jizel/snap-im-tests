@@ -9,14 +9,26 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.AddressDto;
+import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.type.SalesforceId;
 import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
@@ -25,6 +37,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author martin.konkol(at)snapshot.travel Created by Martin Konkol on 9/23/2015.
@@ -47,7 +60,7 @@ public class PropertySteps extends BasicSteps {
         spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI)).basePath(BASE_PATH__PROPERTIES);
     }
 
-    public void followingPropertiesExist(List<PropertyDto> properties, String userId) throws IOException {
+    public void followingPropertiesExist(List<PropertyDto> properties, UUID userId) throws IOException {
         properties.forEach(property -> {
             property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
             if (property.getSalesforceId() == null) {
@@ -58,30 +71,30 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void getProperty(String id) {
+    public void getProperty(UUID id) {
         getEntity(id);
     }
 
     @Step
-    public void getPropertyByUserForApp(String userId, String applicationVersionId, String propertyId) {
+    public void getPropertyByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId) {
         Response resp = getEntityByUserForApplication(userId, applicationVersionId, propertyId);
         setSessionResponse(resp);
     }
 
     @Step
-    public void followingPropertyIsCreatedByUser(String userId, PropertyDto property) throws IOException {
+    public void followingPropertyIsCreatedByUser(UUID userId, PropertyDto property) throws IOException {
         property.setAddress(AddressUtils.createRandomAddress(10, 7, 3, "CZ", null));
         entityIsCreatedByUser(userId, property);
     }
 
     @Step
-    public void createDefaultMinimalPropertyWithAddressByUser(String propertyName, String userId, String customerId, AddressDto address) {
+    public void createDefaultMinimalPropertyWithAddressByUser(String propertyName, UUID userId, UUID customerId, AddressDto address) {
         PropertyDto property = buildDefaultMinimalProperty(propertyName, customerId);
         followingPropertyIsCreatedWithAddressByUser(property, address, userId);
     }
 
     @Step
-    public void followingPropertyIsCreatedWithAddressByUser(PropertyDto property, AddressDto address, String userId) {
+    public void followingPropertyIsCreatedWithAddressByUser(PropertyDto property, AddressDto address, UUID userId) {
         property.setAddress(address);
         Response response = createPropertyByUser(userId, property);
         setSessionResponse(response);
@@ -108,7 +121,7 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     @Step
-    public Response createPropertyByUser(String userId, PropertyDto property) {
+    public Response createPropertyByUser(UUID userId, PropertyDto property) {
         Response response = null;
         try {
             JSONObject jsonProperty = retrieveData(property);
@@ -120,17 +133,17 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void updateProperty(String propertyId, PropertyUpdateDto updatedProperty) {
+    public void updateProperty(UUID propertyId, PropertyUpdateDto updatedProperty) {
         updatePropertyByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId, updatedProperty);
     }
 
     @Step
-    public void updatePropertyByUser(String userId, String propertyId, PropertyUpdateDto updatedProperty) {
+    public void updatePropertyByUser(UUID userId, UUID propertyId, PropertyUpdateDto updatedProperty) {
         updatePropertyByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, updatedProperty);
     }
 
     @Step
-    public void updatePropertyByUserForApp(String userId, String applicationVersionId, String propertyId, PropertyUpdateDto updatedProperty) {
+    public void updatePropertyByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, PropertyUpdateDto updatedProperty) {
         try {
             String updatedPropertyString = retrieveData(updatedProperty).toString();
             assertThat("Empty property update", updatedPropertyString, not(equalToIgnoringCase(CURLY_BRACES_EMPTY)));
@@ -149,13 +162,13 @@ public class PropertySteps extends BasicSteps {
      * @return server response
      */
     @Step
-    public Response deleteProperty(String id) {
+    public Response deleteProperty(UUID id) {
         deleteEntityWithEtag(id);
         return getSessionResponse();
     }
 
     @Step
-    public Response deletePropertyByUserForApp(String userId, String applicationVersionId, String propertyId) {
+    public Response deletePropertyByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId) {
         setSessionVariable(SERENITY_SESSION__PROPERTY_ID, propertyId);
         deleteEntityWithEtagByUserForApp(userId, applicationVersionId, propertyId);
         return getSessionResponse();
@@ -174,7 +187,7 @@ public class PropertySteps extends BasicSteps {
     }
 
 
-    public void relationExistsBetweenUserAndProperty(String userId, String propertyId, Boolean isActive) {
+    public void relationExistsBetweenUserAndProperty(UUID userId, UUID propertyId, Boolean isActive) {
         addUserToProperty(userId, propertyId, isActive);
         Response response = getSessionResponse();
         if (response.getStatusCode() != SC_CREATED) {
@@ -182,12 +195,12 @@ public class PropertySteps extends BasicSteps {
         }
     }
 
-    public void addUserToProperty(String userId, String propertyId, Boolean isActive) {
+    public void addUserToProperty(UUID userId, UUID propertyId, Boolean isActive) {
         addUserToPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userId, propertyId, isActive);
     }
 
     @Step
-    public void addUserToPropertyByUserForApp(String performerId, String applicationVersionId, String userId, String propertyId, Boolean isActive) {
+    public void addUserToPropertyByUserForApp(UUID performerId, UUID applicationVersionId, UUID userId, UUID propertyId, Boolean isActive) {
         if (isActive == null) {
             isActive = true;
         }
@@ -199,28 +212,28 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public UserPropertyRelationshipDto getUserForProperty(String propertyId, String userId) throws IOException {
+    public UserPropertyRelationshipDto getUserForProperty(UUID propertyId, UUID userId) throws IOException {
         return stream(getEntities(USER_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s&user_id==%s", propertyId, userId), null, null, null).as(UserPropertyRelationshipDto[].class)).findFirst().orElse(null);
     }
 
-    public void userIsDeletedFromProperty(String userId, String propertyId) throws Throwable {
+    public void userIsDeletedFromProperty(UUID userId, UUID propertyId) throws Throwable {
         userIsDeletedFromPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, userId, propertyId);
 
     }
 
-    public void userIsDeletedFromPropertyByUserForApp(String performerId, String applicationVersionId, String userId, String propertyId) throws Throwable {
+    public void userIsDeletedFromPropertyByUserForApp(UUID performerId, UUID applicationVersionId, UUID userId, UUID propertyId) throws Throwable {
         UserPropertyRelationshipDto[] relations = getEntitiesByUserForApp(performerId, applicationVersionId, USER_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s&user_id==%s", propertyId, userId), null, null, null).as(UserPropertyRelationshipDto[].class);
-        String relationId = stream(relations).findFirst().orElse(null).getId();
+        UUID relationId = stream(relations).findFirst().orElse(null).getId();
         deleteEntityWithEtagByUserForApp(performerId, applicationVersionId, relationId);
         responseCodeIs(SC_NO_CONTENT);
     }
 
-    public void propertySetIsDeletedFromPropertyByUserForApp(String userId, String applicationVersionId, String propertyId, String propertySetId) {
+    public void propertySetIsDeletedFromPropertyByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, UUID propertySetId) {
         Response deleteResponse = deleteSecondLevelEntityByUserForApplication(userId, applicationVersionId, propertyId, PROPERTY_SETS_RESOURCE, propertySetId, null);
         setSessionResponse(deleteResponse);
     }
 
-    public void userDoesntExistForProperty(String userId, String propertyCode) throws IOException {
+    public void userDoesntExistForProperty(UUID userId, String propertyCode) throws IOException {
         PropertyDto p = getPropertyByCodeInternal(propertyCode);
         UserPropertyRelationshipDto userForProperty = getUserForProperty(p.getId(), userId);
         assertNull("User should not be present in property", userForProperty);
@@ -238,39 +251,39 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void listOfUsersIsGotWith(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
+    public void listOfUsersIsGotWith(UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
         listOfPropertyUsersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Step
-    public void listOfPropertyUsersIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
+    public void listOfPropertyUsersIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
         getEntitiesByUserForApp(userId, applicationVersionId, USER_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s", propertyId), null, null, null);
     }
 
     @Step
-    public void setPropertyIsActive(String propertyId, Boolean isActive) {
+    public void setPropertyIsActive(UUID propertyId, Boolean isActive) {
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setIsActive(isActive);
         updateProperty(propertyId, propertyUpdate);
     }
 
     @Step
-    public void updatePropertyAddress(String propertyId, AddressUpdateDto addressUpdate) {
+    public void updatePropertyAddress(UUID propertyId, AddressUpdateDto addressUpdate) {
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setAddress(addressUpdate);
         updateProperty(propertyId, propertyUpdate);
     }
 
     @Step
-    public void updatePropertyPropertySetRelationship(String propertyId, String propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) throws Throwable {
+    public void updatePropertyPropertySetRelationship(UUID propertyId, UUID propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) throws Throwable {
         updatePropertyPropertySetRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, propertySetId, relationshipUpdate);
     }
 
     @Step
-    public void updatePropertyPropertySetRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) throws Throwable {
+    public void updatePropertyPropertySetRelationshipByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, UUID propertySetId, PropertySetPropertyRelationshipUpdateDto relationshipUpdate) throws Throwable {
 
         PropertySetPropertyRelationshipDto[] relations = getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s&property_set_id==%s", propertyId, propertySetId), null, null, null).as(PropertySetPropertyRelationshipDto[].class);
-        String relationId = stream(relations).findFirst().orElse(null).getId();
+        UUID relationId = stream(relations).findFirst().orElse(null).getId();
         String etag = getEntityEtag(relationId);
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
@@ -281,10 +294,10 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void updatePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) throws IOException {
+    public void updatePropertyCustomerRelationshipByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, UUID customerId, CustomerPropertyRelationshipUpdateDto relationshipUpdate) throws IOException {
         CustomerPropertyRelationshipDto[] relations = getEntitiesByUserForApp(userId, applicationVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("customer_id==%s&property_id==%s", customerId, propertyId), null, null, null).as(CustomerPropertyRelationshipDto[].class);
         assertThat("Property-Customer relationship does not exists", relations, is(notNullValue()));
-        String relationId = stream(relations).findFirst().orElse(null).getId();
+        UUID relationId = stream(relations).findFirst().orElse(null).getId();
         String etag = getEntityEtag(relationId);
         try {
             JSONObject jsonUpdate = retrieveData(relationshipUpdate);
@@ -296,61 +309,61 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void deletePropertyCustomerRelationshipByUserForApp(String userId, String applicationVersionId, String propertyId, String customerId) throws Throwable {
+    public void deletePropertyCustomerRelationshipByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, UUID customerId) throws Throwable {
         CustomerPropertyRelationshipDto[] propertyCustomerRelations = getPropertyCustomerRelationships(customerId, propertyId);
         assertThat(propertyCustomerRelations, is(notNullValue()));
         deleteEntityWithEtagByUserForApp(userId, applicationVersionId, stream(propertyCustomerRelations).findFirst().orElse(null).getId());
     }
 
     @Step
-    public void deletePropertyUserRelationshipByUserForApp(String performerId, String applicationVersionId, String propertyId, String userId) throws Throwable {
+    public void deletePropertyUserRelationshipByUserForApp(UUID performerId, UUID applicationVersionId, UUID propertyId, UUID userId) throws Throwable {
         UserPropertyRelationshipDto relation = stream(getEntities(USER_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("user_id==%s&property_id==%s", userId, propertyId), null, null, null).as(UserPropertyRelationshipDto[].class)).
                 findFirst().orElse(null);
-        String relationId = relation.getId();
+        UUID relationId = relation.getId();
         deleteEntityWithEtagByUserForApp(performerId, applicationVersionId, relationId);
     }
 
     @Step
-    public void propertyPropertySetIsGot(String propertyId, String propertySetId) throws Throwable {
+    public void propertyPropertySetIsGot(UUID propertyId, UUID propertySetId) throws Throwable {
         propertyPropertySetIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, propertySetId);
     }
 
     @Step
-    public void propertyPropertySetIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String propertySetId) throws Throwable {
+    public void propertyPropertySetIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, UUID propertySetId) throws Throwable {
         getEntitiesByUserForApp(userId, applicationVersionId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s&property_set_id==%s", propertyId, propertySetId), null, null,   null);
     }
 
     @Step
-    public void listOfPropertiesPropertySetsIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
+    public void listOfPropertiesPropertySetsIsGot(UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
         listOfPropertiesPropertySetsIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
     @Step
-    public void listOfPropertiesPropertySetsIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
+    public void listOfPropertiesPropertySetsIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
         getEntitiesByUserForApp(userId, applicationVersionId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s&%s", propertyId, filter), null, null, null);
     }
 
     @Step
-    public void listOfCustomersIsGot(String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
+    public void listOfCustomersIsGot(UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
         Map<String, String> queryParameters = buildQueryParamMapForPaging(limit, cursor, String.format("property_id==%s&%s", propertyId, filter), sort, sortDesc, null);
         getEntities(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, null, null, null, null, null,   queryParameters);
     }
 
     @Step
-    public void listOfCustomersIsGotByUserForApp(String userId, String applicationVersionId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
+    public void listOfCustomersIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
         Map<String, String> queryParameters = buildQueryParamMapForPaging(limit, cursor, String.format("property_id==%s&%s", propertyId, filter), sort, sortDesc, null);
         getEntitiesByUserForApp(userId, applicationVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, null, null, null, null, null, queryParameters);
     }
 
-    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationships(String customerId, String propertyId) throws Throwable {
+    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationships(UUID customerId, UUID propertyId) throws Throwable {
         return getPropertyCustomerRelationshipsByUser(DEFAULT_SNAPSHOT_USER_ID, customerId, propertyId);
     }
 
-    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationshipsByUser(String userId, String customerId, String propertyId) throws Throwable {
+    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationshipsByUser(UUID userId, UUID customerId, UUID propertyId) throws Throwable {
         return getPropertyCustomerRelationshipsByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, customerId, propertyId);
     }
 
-    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationshipsByUserForApp(String userId, String appVersionId, String customerId, String propertyId) throws Throwable {
+    public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationshipsByUserForApp(UUID userId, UUID appVersionId, UUID customerId, UUID propertyId) throws Throwable {
 
         Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("customer_id==%s&property_id==%s", customerId, propertyId), null, null, null);
         return getEntitiesByUserForApp(userId, appVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, null, null, null, null, null,  queryParams)
@@ -359,17 +372,17 @@ public class PropertySteps extends BasicSteps {
 
 
 //  Tti functionality temporarily removed. Keeping this code in case it comes back
-//    public Response assignTtiToProperty(String propertyId, TtiCrossreferenceDto ttiCrossreference) {
+//    public Response assignTtiToProperty(UUID propertyId, TtiCrossreferenceDto ttiCrossreference) {
 //      return assignTtiToPropertyByUser(DEFAULT_SNAPSHOT_USER_ID, propertyId,ttiCrossreference);
 //    }
 //
-//    public Response assignTtiToPropertyByUser(String userId, String propertyId, TtiCrossreferenceDto ttiCrossreference) {
+//    public Response assignTtiToPropertyByUser(UUID userId, UUID propertyId, TtiCrossreferenceDto ttiCrossreference) {
 //        Response response = createSecondLevelRelationshipByUser(userId, propertyId, SECOND_LEVEL_OBJECT_TTI, ttiCrossreference);
 //        setSessionResponse(response);
 //        return response;
 //    }
 
-    public PropertyDto buildDefaultMinimalProperty(String propertyName, String customerId){
+    public PropertyDto buildDefaultMinimalProperty(String propertyName, UUID customerId){
         PropertyDto property = new PropertyDto();
         property.setName(propertyName);
         property.setCustomerId(customerId);
@@ -407,10 +420,10 @@ public class PropertySteps extends BasicSteps {
         return value;
     }
 
-    public String resolvePropertyId(String propertyCode) {
-        String propertyId;
+    public UUID resolvePropertyId(String propertyCode) {
+        UUID propertyId;
         if (isUUID(propertyCode)) {
-            propertyId = propertyCode;
+            propertyId = UUID.fromString(propertyCode);
         } else {
             PropertyDto property = getPropertyByCodeInternal(propertyCode);
             assertThat(String.format("Property with code \"%s\" does not exist", propertyCode), property, is(notNullValue()));
@@ -419,12 +432,12 @@ public class PropertySteps extends BasicSteps {
         return propertyId;
     }
 
-    public void listUsersForPropertyByUserForApp(String userId, String appId, String propertyId) throws Throwable {
+    public void listUsersForPropertyByUserForApp(UUID userId, UUID appId, UUID propertyId) throws Throwable {
         Map<String, String> queryParams = buildQueryParamMapForPaging(null, null, String.format("property_id==%s", propertyId), null, null, null);
         getEntitiesByUserForApp(userId, appId, USER_PROPERTY_RELATIONSHIPS_PATH, null, null, null, null, null, queryParams);
     }
 
-    public void addPropertyToUserByUserForApp(String requestorId, String applicationVersionId, String propertyId, String targetUserId) {
+    public void addPropertyToUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID propertyId, UUID targetUserId) {
         UserPropertyRelationshipDto relation = new UserPropertyRelationshipDto();
         relation.setUserId(targetUserId);
         relation.setPropertyId(propertyId);

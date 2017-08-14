@@ -15,6 +15,7 @@ import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CommercialSubscriptionSteps extends BasicSteps {
 
@@ -51,20 +52,20 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     }
 
     @Step
-    public void deleteCommSubscriptionWithId(String subscriptionId) {
+    public void deleteCommSubscriptionWithId(UUID subscriptionId) {
         deleteEntityWithEtag(subscriptionId);
         Serenity.setSessionVariable(SESSION_COMMERCIAL_SUBSCRIPTION_ID).to(subscriptionId);
     }
 
     @Step
     public void commSubscriptionWithSameIdDoesNotExist() {
-        String commSubcriptionId = Serenity.sessionVariableCalled(SESSION_COMMERCIAL_SUBSCRIPTION_ID);
+        UUID commSubcriptionId = Serenity.sessionVariableCalled(SESSION_COMMERCIAL_SUBSCRIPTION_ID);
         Response response = getEntity(commSubcriptionId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
-    public void updateCommSubscription(String commSubscriptionId, CommercialSubscriptionUpdateDto updatedCommSubscription) {
+    public void updateCommSubscription(UUID commSubscriptionId, CommercialSubscriptionUpdateDto updatedCommSubscription) {
         try {
             JSONObject jsonUpdate = retrieveData(updatedCommSubscription);
             Response response = updateEntity(commSubscriptionId, jsonUpdate.toString(), getEntityEtag(commSubscriptionId));
@@ -75,13 +76,13 @@ public class CommercialSubscriptionSteps extends BasicSteps {
     }
 
     @Step
-    public void commSubscriptionWithIdIsGot(String commSubscriptionId) {
+    public void commSubscriptionWithIdIsGot(UUID commSubscriptionId) {
         Response response = getEntity(commSubscriptionId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
     @Step
-    public void listOfCommSubscriptionsIsGotWith(String userId, String appVersionId, String limit, String cursor, String filter, String sort,
+    public void listOfCommSubscriptionsIsGotWith(UUID userId, UUID appVersionId, String limit, String cursor, String filter, String sort,
                                                  String sortDesc) {
         Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
@@ -103,20 +104,20 @@ public class CommercialSubscriptionSteps extends BasicSteps {
         }
     }
 
-    public CommercialSubscriptionDto getSubscriptionById(String commSubscriptionId) {
+    public CommercialSubscriptionDto getSubscriptionById(UUID commSubscriptionId) {
         CommercialSubscriptionDto[] comSubscription = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
                 "commercial_subscription_id==" + commSubscriptionId, null, null, null).as(CommercialSubscriptionDto[].class);
         return stream(comSubscription).findFirst().orElse(null);
     }
 
-    public CommercialSubscriptionDto getCommercialSubscriptionByCombination(String customerId, String propertyId, String applicationId) {
+    public CommercialSubscriptionDto getCommercialSubscriptionByCombination(UUID customerId, UUID propertyId, UUID applicationId) {
         CommercialSubscriptionDto[] comSubscription = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST,
                 String.format("customer_id==%s;property_id==%s;application_id==%s", customerId, propertyId, applicationId), null, null, null).as(CommercialSubscriptionDto[].class);
         return stream(comSubscription).findFirst().orElse(null);
 
     }
 
-    public void checkIsActive(String commSubscriptionId, boolean isActive) {
+    public void checkIsActive(UUID commSubscriptionId, boolean isActive) {
         CommercialSubscriptionDto comSub = getSubscriptionById(commSubscriptionId);
         assertEquals(comSub.getIsActive(), isActive);
     }

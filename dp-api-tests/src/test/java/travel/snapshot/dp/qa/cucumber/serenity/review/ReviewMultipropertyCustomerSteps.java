@@ -5,6 +5,8 @@ import net.thucydides.core.annotations.Step;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
 
+import java.util.UUID;
+
 public class ReviewMultipropertyCustomerSteps extends AnalyticsBaseSteps {
 
     private static final String BASE_PATH_CUSTOMER = "/review/analytics/customer/";
@@ -15,7 +17,7 @@ public class ReviewMultipropertyCustomerSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getCustomerPropertiesMetric(String metric, String customerId, String since, String until, String granularity, String limit, String cursor) {
+    public void getCustomerPropertiesMetric(String metric, UUID customerId, String since, String until, String granularity, String limit, String cursor) {
         Response customerProperties = getSecondLevelEntitiesForDates(customerId, metric, limit, cursor, since, until, granularity, null, null, null);
         setSessionResponse(customerProperties);
     }

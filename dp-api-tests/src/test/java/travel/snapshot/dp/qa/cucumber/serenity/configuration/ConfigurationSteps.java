@@ -2,6 +2,8 @@ package travel.snapshot.dp.qa.cucumber.serenity.configuration;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
@@ -15,7 +17,6 @@ import com.jayway.restassured.specification.RequestSpecification;
 import lombok.NonNull;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import travel.snapshot.dp.api.configuration.model.ConfigurationRecordDto;
@@ -30,7 +31,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -52,7 +52,7 @@ public class ConfigurationSteps extends BasicSteps {
     }
 
     private boolean isConfigurationExist(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
+        Response response = getSecondLevelConfigurationEntity(identifier, RECORDS_RESOURCE, key);
         int statusCode = response.statusCode();
         if (statusCode == HttpStatus.SC_OK) {
             return true;
@@ -123,7 +123,7 @@ public class ConfigurationSteps extends BasicSteps {
         if (StringUtils.isBlank(identifier)) {
             return false;
         }
-        Response response = getEntity(identifier);
+        Response response = getConfigurationEntity(identifier);
         int statusCode = response.statusCode();
         if (statusCode == HttpStatus.SC_OK) {
             return true;
@@ -136,48 +136,13 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfigurationType(String identifier) {
-        deleteEntityWithEtag(identifier);
+        deleteConfigurationEntityWithEtag(identifier);
     }
 
     @Step
     public void getConfigurationTypeWithId(String configType) {
-        Response resp = getEntity(configType);
+        Response resp = getConfigurationEntity(configType);
         setSessionResponse(resp);
-    }
-
-    @Step
-    public void followingConfigurationTypesExist(List<ConfigurationTypeDto> configurationTypes, Integer count) {
-        configurationTypes.forEach(type -> {
-
-            if (isConfigurationTypeExist(type.getIdentifier())) {
-                deleteEntityWithEtag(type.getIdentifier());
-            }
-
-            Response createResponse = createEntity(type);
-            if (createResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                fail("Configuration type cannot be created");
-            }
-            IntStream.rangeClosed(1, count).forEach(i -> {
-                Response createKeyResponse = createValueForKey(type.getIdentifier(), String.format("key_%d_%s", i, RandomStringUtils.randomNumeric(4)), RandomStringUtils.randomAlphanumeric(20), "string");
-                if (createKeyResponse.getStatusCode() != HttpStatus.SC_CREATED) {
-                    fail("Configuration key cannot be created");
-                }
-            });
-
-        });
-        Serenity.setSessionVariable(SESSION_CONFIGURATION_TYPES).to(configurationTypes);
-    }
-
-    @Step
-    public void dataIsUsedForCreation(String jsonData, boolean deleteBeforeCreate) {
-        ConfigurationTypeDto configurationType = getConfigurationTypeFromString(jsonData);
-
-        if (deleteBeforeCreate && isConfigurationTypeExist(configurationType.getIdentifier())) {
-            deleteEntityWithEtag(configurationType.getIdentifier());
-        }
-
-        Response response = createEntity(configurationType);
-        Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
 
@@ -186,7 +151,7 @@ public class ConfigurationSteps extends BasicSteps {
         Serenity.setSessionVariable(SESSION_CREATED_CONFIGURATION_TYPE).to(configurationType);
 
         if (isConfigurationTypeExist(configurationType.getIdentifier())) {
-            deleteEntityWithEtag(configurationType.getIdentifier());
+            deleteConfigurationEntityWithEtag(configurationType.getIdentifier());
         }
         Response response = createEntity(configurationType);
         setSessionResponse(response);
@@ -201,7 +166,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationTypeDoesntExist(String identifier) {
-        Response response = getEntity(identifier);
+        Response response = getConfigurationEntity(identifier);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
@@ -291,7 +256,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationDoesntExistForIdentifier(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
+        Response response = getSecondLevelConfigurationEntity(identifier, RECORDS_RESOURCE, key);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
         //TODO validate more that it doesnt exist
     }
@@ -300,7 +265,7 @@ public class ConfigurationSteps extends BasicSteps {
     public void followingConfigurationsExist(List<ConfigurationRecordDto> configurations, String identifier) {
         configurations.forEach(configuration -> {
             if (isConfigurationExist(configuration.getKey(), identifier)) {
-                deleteSecondLevelEntity(identifier, RECORDS_RESOURCE, configuration.getKey(), null);
+                deleteSecondLevelConfigurationEntity(identifier, RECORDS_RESOURCE, configuration.getKey(), null);
             }
             Response createResponse = createValueForKey(identifier, configuration.getKey(), configuration.getValue().toString(), configuration.getType().toString());
             assertThat("Configuration cannot be created", createResponse.getStatusCode(), is(HttpStatus.SC_CREATED));
@@ -310,13 +275,13 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void getConfigurationWithKeyForIdentifier(String key, String identifier) {
-        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
+        Response response = getSecondLevelConfigurationEntity(identifier, RECORDS_RESOURCE, key);
         setSessionResponse(response);
     }
 
     @Step
     public void listOfConfigurationsIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String identifier) {
-        Response response = getSecondLevelEntities(identifier, RECORDS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelConfigurationEntities(identifier, RECORDS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
@@ -328,7 +293,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void tryDeleteConfiguration(String key, String identifier) {
-        Response resp = deleteSecondLevelEntity(identifier, RECORDS_RESOURCE, key, null);
+        Response resp = deleteSecondLevelConfigurationEntity(identifier, RECORDS_RESOURCE, key, null);
         setSessionResponse(resp);
     }
 
@@ -336,7 +301,7 @@ public class ConfigurationSteps extends BasicSteps {
     public void updateConfigurationTypeDescription(String identifier, String newDescription) {
         Map<String, Object> updateObject = new HashMap<>();
         updateObject.put("description", newDescription);
-        Response resp = updateEntity(identifier, updateObject, getEntityEtag(identifier));
+        Response resp = updateConfigurationEntity(identifier, updateObject, getConfigurationEntityEtag(identifier));
         setSessionResponse(resp);
     }
 
@@ -351,7 +316,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void updateConfigurationValue(String identifier, String key, String value, String type) {
-        String etag = getSecondLevelEntityEtag(identifier, RECORDS_RESOURCE, key);
+        String etag = getSecondLevelConfigurationEntityEtag(identifier, RECORDS_RESOURCE, key);
 
         Response resp = updateValueForKey(identifier, key, value, type, etag);
         setSessionResponse(resp);
@@ -359,7 +324,7 @@ public class ConfigurationSteps extends BasicSteps {
 
     @Step
     public void configurationHasValue(String identifier, String key, Object value) {
-        Response response = getSecondLevelEntity(identifier, RECORDS_RESOURCE, key);
+        Response response = getSecondLevelConfigurationEntity(identifier, RECORDS_RESOURCE, key);
         response.then().body("value", is(value));
     }
 
@@ -383,5 +348,66 @@ public class ConfigurationSteps extends BasicSteps {
             assertEquals("Config on index=" + i + " is not expected", configs.get(i), c.getIdentifier());
             i++;
         }
+    }
+
+//    Private help methods
+
+    private Response getConfigurationEntity(String entityId) {
+        return given().spec(spec).when().get("/{id}", entityId);
+    }
+
+    private Response deleteConfigurationEntityWithEtag(String identifier) {
+        Response response = given().spec(spec)
+                .header(HEADER_IF_MATCH, getConfigurationEntityEtag(identifier))
+                .when()
+                .delete("/{id}", identifier);
+        setSessionResponse(response);
+        return response;
+    }
+
+    private String getConfigurationEntityEtag(String identifier) {
+        return given().spec(spec).when().head("/{id}", identifier).getHeader(HEADER_ETAG);
+    }
+
+    private String getSecondLevelConfigurationEntityEtag(String identifier, String secondLevelObjectName, String key) {
+        return given().spec(spec).when().head("/{firstLevelId}/{secondLevelName}/{secondLevelId}", identifier, secondLevelObjectName, key).getHeader(HEADER_ETAG);
+    }
+
+    private Response getSecondLevelConfigurationEntity(String identifier, String secondLevelObjectName, String key) {
+        return given().spec(spec).when().get("/{firstLevelId}/{secondLevelName}/{secondLevelId}", identifier, secondLevelObjectName, key);
+    }
+
+    private Response deleteSecondLevelConfigurationEntity(String identifier, String secondLevelObjectName, String key, Map<String, String> queryParams) {
+        RequestSpecification requestSpecification = given().spec(spec);
+        String etag = getSecondLevelConfigurationEntityEtag(identifier, secondLevelObjectName, key);
+        if (isNotBlank(etag)) {
+            requestSpecification.header(HEADER_IF_MATCH, etag);
+        } else {
+            requestSpecification.header(HEADER_IF_MATCH, DEFAULT_SNAPSHOT_ETAG);
+        }
+        if (queryParams != null) {
+            requestSpecification.parameters(queryParams);
+        }
+        return requestSpecification
+                .when().delete("/{firstLevelId}/{secondLevelName}/{secondLevelId}", identifier, secondLevelObjectName, key);
+    }
+
+    private Response getSecondLevelConfigurationEntities(String identifier, String secondLevelObjectName, String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParams) {
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, queryParams);
+
+        Response response = given().spec(spec).parameters(params).when().get("{id}/{secondLevelName}", identifier, secondLevelObjectName);
+        setSessionResponse(response);
+        return response;
+    }
+
+    private Response updateConfigurationEntity(String entityId, Map<String, Object> data, String etag) {
+        if (isBlank(etag)) {
+            fail("Etag to be send in request header is null.");
+        }
+        return given().spec(spec)
+                .header(HEADER_IF_MATCH, etag)
+                .body(data)
+                .when()
+                .post("/{id}", entityId);
     }
 }

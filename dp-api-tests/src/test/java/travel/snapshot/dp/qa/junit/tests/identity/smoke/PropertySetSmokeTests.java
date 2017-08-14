@@ -13,6 +13,8 @@ import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
+import java.util.UUID;
+
 @RunWith(SerenityRunner.class)
 public class PropertySetSmokeTests extends CommonSmokeTest {
     protected RequestSpecification spec = null;
@@ -20,7 +22,7 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
     @Test
     public void propertySetCRUD() {
         // create
-        String propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
+        UUID propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
         // request
         authorizationHelpers.getEntity(PROPERTY_SETS_PATH, propertySetId);
         responseCodeIs(SC_OK);
@@ -45,16 +47,16 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
     @Test
     public void userPropertySetCRUD() throws Throwable {
         // create user
-        String userId = userHelpers.userIsCreatedWithAuth(testUser1);
+        UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create PS
-        String propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
+        UUID propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
         // create relation
-        String relationId = relationshipsHelpers.userPropertySetRelationIsCreatedWithAuth(userId, propertySetId, true);
+        UUID relationId = relationshipsHelpers.userPropertySetRelationIsCreatedWithAuth(userId, propertySetId, true);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
-        bodyContainsEntityWith("user_id", userId);
-        bodyContainsEntityWith("property_set_id", propertySetId);
+        bodyContainsEntityWith("user_id", userId.toString());
+        bodyContainsEntityWith("property_set_id", propertySetId.toString());
         bodyContainsEntityWith("is_active", "true");
         // update
         UserPropertySetRelationshipUpdateDto update = new UserPropertySetRelationshipUpdateDto();

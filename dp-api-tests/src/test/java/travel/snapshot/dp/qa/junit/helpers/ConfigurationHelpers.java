@@ -32,7 +32,7 @@ public class ConfigurationHelpers extends ConfigurationSteps {
         return configurationRecord;
     }
 
-    public Response createConfigurationType(ConfigurationTypeDto configurationType){
+    public Response createConfigurationType(ConfigurationTypeDto configurationType) {
         Response response = createEntity(configurationType);
         setSessionResponse(response);
         return response;

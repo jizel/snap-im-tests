@@ -1,13 +1,15 @@
 package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
+
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
-import static org.apache.http.HttpStatus.SC_OK;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
+import java.util.UUID;
 
 @RunWith(SerenityRunner.class)
 public class UserGroupSmokeTests extends CommonSmokeTest {
@@ -15,7 +17,7 @@ public class UserGroupSmokeTests extends CommonSmokeTest {
     @Test
     public void userGroupCRUD() {
         // create
-        String userGroupId = userGroupHelpers.userGroupIsCreatedWithAuth(testUserGroup1);
+        UUID userGroupId = userGroupHelpers.userGroupIsCreatedWithAuth(testUserGroup1);
         // request
         authorizationHelpers.getEntity(USER_GROUPS_PATH, userGroupId);
         responseCodeIs(SC_OK);
