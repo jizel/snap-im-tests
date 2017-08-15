@@ -11,6 +11,7 @@ import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ReviewLocationSteps extends AnalyticsBaseSteps {
 
@@ -41,7 +42,7 @@ public class ReviewLocationSteps extends AnalyticsBaseSteps {
 
     @Step
     public void listOfLocationPropertiesIsGot(String limit, String cursor, String filter, String sort, String sortDesc, String id) {
-        Response response = getSecondLevelEntities(id, "properties", limit, cursor, filter, sort, sortDesc, null);
+        Response response = getSecondLevelEntities(UUID.fromString(id), "properties", limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 

@@ -1,23 +1,25 @@
 package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
-import org.junit.Test;
-import travel.snapshot.dp.api.identity.model.UserUpdateDto;
-import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
-
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 
+import org.junit.Test;
+import travel.snapshot.dp.api.identity.model.UserUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
+
+import java.util.UUID;
+
 public class UserSmokeTests extends CommonSmokeTest {
-    protected String userId;
-    protected String userCustomerRelationId;
+    protected UUID userId;
+    protected UUID userCustomerRelationId;
 
 
     @Test
     public void userCRUD() throws Throwable {
         // create
-        String userId = userHelpers.userIsCreatedWithAuth(testUser1);
+        UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         userCustomerRelationId = relationshipsHelpers
                .getUserCustomerRelationsForUserWithAuth(userId)
                .get(0)
@@ -44,9 +46,9 @@ public class UserSmokeTests extends CommonSmokeTest {
     @Test
     public void assignRoleToUserCustomer() {
         // Create role
-        String roleId = roleHelpers.customerRoleIsCreatedWithAuth(testCustomerRole1);
+        UUID roleId = roleHelpers.customerRoleIsCreatedWithAuth(testCustomerRole1);
         // Assign role to relation
-        String relationRoleId = relationshipsHelpers.userCustomerRoleRelationIsCreatedWithAuth(userCustomerRelationId, roleId);
+        UUID relationRoleId = relationshipsHelpers.userCustomerRoleRelationIsCreatedWithAuth(userCustomerRelationId, roleId);
         // get relation role
         authorizationHelpers.getEntity(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, relationRoleId);
         responseCodeIs(SC_OK);

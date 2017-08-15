@@ -12,6 +12,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
@@ -96,7 +97,7 @@ public class JmsSteps extends BasicSteps {
         assertEquals(operation, value);
     }
 
-    public void notificationContainsId(String entityId) {
+    public void notificationContainsId(UUID entityId) {
         Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
         String value = (String) notification.get("entity_id");
         assertEquals(entityId, value);
@@ -108,9 +109,9 @@ public class JmsSteps extends BasicSteps {
         assertEquals(entityType, value);
     }
 
-    public void notificationContainsParentId(String entityId) {
+    public void notificationContainsParentId(UUID entityId) {
         Map<String, Object> notification = getSessionVariable(SESSION_NOTIFICATION);
-        String value = (String) notification.get("parent_id");
+        UUID value = (UUID) notification.get("parent_id");
         assertEquals(entityId, value);
     }
 

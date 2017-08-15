@@ -1,20 +1,21 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
-import net.serenitybdd.core.Serenity;
-import org.codehaus.jackson.map.ObjectMapper;
-
-
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper.getProperty;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.KEYCLOAK_TOKEN;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.responseCodeIs;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.setSessionResponse;
+
+import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.specification.RequestSpecification;
+import net.serenitybdd.core.Serenity;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Created by ofayans on 7/23/17.

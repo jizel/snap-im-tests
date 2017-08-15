@@ -23,6 +23,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 public class RolesStepdefs {
@@ -67,7 +68,7 @@ public class RolesStepdefs {
 
     @When("^Role(?: with name)? \"([^\"]*)\" is deleted$")
     public void role_with_name_for_application_id_is_deleted(String roleName) throws Throwable {
-        String roleId = roleBaseSteps.resolveRoleId(roleName);
+        UUID roleId = roleBaseSteps.resolveRoleId(roleName);
         roleBaseSteps.deleteRole(roleId);
     }
 
@@ -77,7 +78,7 @@ public class RolesStepdefs {
     }
 
     @When("^Role with name \"([^\"]*)\" for application id \"([^\"]*)\" is updated with data$")
-    public void role_with_name_for_application_id_is_updated_with_data(String roleName, String applicationId, List<RoleUpdateDto> roles) throws Throwable {
+    public void role_with_name_for_application_id_is_updated_with_data(String roleName, UUID applicationId, List<RoleUpdateDto> roles) throws Throwable {
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
         assertThat(role,is(notNullValue()));
         String etag = roleBaseSteps.getEntityEtag(role.getId());
@@ -99,7 +100,7 @@ public class RolesStepdefs {
     }
 
     @Then("^Role with same id doesn't exist for application id \"([^\"]*)\"$")
-    public void Role_with_same_id_doesn_t_exist_for_application_id(String applicationId) throws Throwable {
+    public void Role_with_same_id_doesn_t_exist_for_application_id(UUID applicationId) throws Throwable {
         roleBaseSteps.roleIdInSessionDoesntExist();
     }
 
@@ -129,7 +130,7 @@ public class RolesStepdefs {
     }
 
     @When("^Role with name \"([^\"]*)\"(?: for application id \"([^\"]*)\")? is got$")
-    public void Role_with_name_for_application_id_is_got(String roleName, String applicationId) throws Throwable {
+    public void Role_with_name_for_application_id_is_got(String roleName, UUID applicationId) throws Throwable {
         roleBaseSteps.getRoleWithNameForApplicationId(roleName, applicationId);
     }
 

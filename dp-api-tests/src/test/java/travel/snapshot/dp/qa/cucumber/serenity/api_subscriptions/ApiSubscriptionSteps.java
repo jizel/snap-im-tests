@@ -4,6 +4,8 @@ import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
+import java.util.UUID;
+
 /**
  * Created by vlcek on 3/17/2016.
  *
@@ -21,8 +23,8 @@ public class ApiSubscriptionSteps extends BasicSteps {
         spec.basePath(BASE_PATH_API_SUBSCRIPTIONS);
     }
 
-    public void apiWithIdIsGot(String apiCode) {
-        Response response = getEntity(apiCode);
+    public void apiWithIdIsGot(UUID apiId) {
+        Response response = getEntity(apiId);
         setSessionResponse(response);
     }
 

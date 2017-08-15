@@ -1,22 +1,20 @@
 package travel.snapshot.dp.qa.cucumber.serenity.analytics;
 
-import com.jayway.restassured.response.Response;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
+import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
-
 import org.apache.commons.lang3.StringUtils;
+import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
+import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-
-import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
-import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
+import java.util.UUID;
 
 public class RateShopperSteps extends AnalyticsBaseSteps {
 
@@ -31,7 +29,7 @@ public class RateShopperSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getPropertyRateData(String property_id, String since, String until, String fetched) {
+    public void getPropertyRateData(UUID property_id, String since, String until, String fetched) {
         Map<String, String> queryParams = new HashMap<>();
 
         if (StringUtils.isNotBlank(fetched)) {
@@ -43,20 +41,20 @@ public class RateShopperSteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getMarketRateData(String propertyId, String since, String until) {
+    public void getMarketRateData(UUID propertyId, String since, String until) {
         Map<String, String> queryParams = new HashMap<>();
 
-        queryParams.put("property_id", propertyId);
+        queryParams.put("property_id", propertyId.toString());
 
         Response response = getEntitiesForUrlWihDates("/rate_shopper/analytics/market", null, null, since, until, null, queryParams);
         setSessionResponse(response);
     }
 
     @Step
-    public void getProperties(String propertyId, String limit, String cursor, String fetchDateTime) {
+    public void getProperties(UUID propertyId, String limit, String cursor, String fetchDateTime) {
         Map<String, String> queryParams = new HashMap<>();
 
-        queryParams.put("property_id", propertyId);
+        queryParams.put("property_id", propertyId.toString());
 
         if (fetchDateTime != null) {
             queryParams.put("fetch_datetime", fetchDateTime);
@@ -68,7 +66,7 @@ public class RateShopperSteps extends AnalyticsBaseSteps {
 
     // Response validation
 
-    public void dateFieldForProperty(String fieldName, String propertyId, String value) {
+    public void dateFieldForProperty(String fieldName, UUID propertyId, String value) {
         Response response = getSessionResponse();
         String unparsedExpectedDate;
         LocalDate actualDate = StringUtil.parseDate(response.body().path(fieldName));
@@ -83,11 +81,11 @@ public class RateShopperSteps extends AnalyticsBaseSteps {
         assertEquals(expectedDate, actualDate);
     }
 
-    public String getFirstFetchDateTime(String property_id) {
+    public String getFirstFetchDateTime(UUID property_id) {
         return given().spec(spec).param("fetch_datetime", "2001-01-01T00:00:01").get("/rate_shopper/analytics/property/{id}", property_id).path("fetch_datetime");
     }
 
-    public String getLastFetchDateTime(String property_id) {
+    public String getLastFetchDateTime(UUID property_id) {
         return given().spec(spec).get("/rate_shopper/analytics/property/{id}", property_id).path("fetch_datetime");
     }
 

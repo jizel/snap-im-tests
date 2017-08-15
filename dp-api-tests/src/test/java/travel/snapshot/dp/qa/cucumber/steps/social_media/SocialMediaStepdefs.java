@@ -9,6 +9,7 @@ import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.SocialMediaSteps;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -26,7 +27,7 @@ public class SocialMediaStepdefs {
     }
 
     @When("^Get social media \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
+    public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, UUID propertyId, String since, String until) throws Throwable {
         // Express the Regexp above with the code you wish you had
         steps.getPropertiesWithDate("/social_media" + url, granularity, propertyId, since, until);
 
@@ -43,7 +44,7 @@ public class SocialMediaStepdefs {
     }
 
     @When("^List of social media items \"([^\"]*)\" for property id \"([^\"]*)\" is got with limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void List_of_items_is_got_with_limit_and_cursor(String url, String propertyId,
+    public void List_of_items_is_got_with_limit_and_cursor(String url, UUID propertyId,
                                                            @Transform(NullEmptyStringConverter.class) String limit,
                                                            @Transform(NullEmptyStringConverter.class) String cursor) throws Throwable {
         steps.getPropertiesWithPaging("/social_media" + url, propertyId, limit, cursor);

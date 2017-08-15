@@ -15,6 +15,8 @@ import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
+import java.util.UUID;
+
 
 @RunWith(SerenityRunner.class)
 public class PropertySmokeTests extends CommonSmokeTest {
@@ -25,7 +27,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
     public void propertyCRUD() {
         // create
         testProperty1.setIsActive(false);
-        String propertyId = propertyHelpers.propertyIsCreatedWithAuth(testProperty1);
+        UUID propertyId = propertyHelpers.propertyIsCreatedWithAuth(testProperty1);
         // request
         authorizationHelpers.getEntity(PROPERTIES_PATH, propertyId);
         responseCodeIs(SC_OK);
@@ -50,14 +52,14 @@ public class PropertySmokeTests extends CommonSmokeTest {
     @Test
     public void propertyPropertySetCRUD() {
         // create PS
-        String propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
+        UUID propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
         // create propertyset-property relation
-        String relationId = relationshipsHelpers.propertySetPropertyIsCreatedWithAuth(propertySetId, DEFAULT_PROPERTY_ID, true);
+        UUID relationId = relationshipsHelpers.propertySetPropertyIsCreatedWithAuth(propertySetId, DEFAULT_PROPERTY_ID, true);
         // request
         authorizationHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
-        bodyContainsEntityWith("property_set_id", propertySetId);
-        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID);
+        bodyContainsEntityWith("property_set_id", propertySetId.toString());
+        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID.toString());
         bodyContainsEntityWith("is_active", "true");
         // update
         PropertySetPropertyRelationshipUpdateDto update = new PropertySetPropertyRelationshipUpdateDto();
@@ -70,14 +72,14 @@ public class PropertySmokeTests extends CommonSmokeTest {
     @Test
     public void userPropertyCRUD() throws Throwable {
         // create user
-        String userId = userHelpers.userIsCreatedWithAuth(testUser1);
+        UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create property-user relation
-        String relationId = relationshipsHelpers.userPropertyRelationIsCreatedWithAuth(userId, DEFAULT_PROPERTY_ID, true);
+        UUID relationId = relationshipsHelpers.userPropertyRelationIsCreatedWithAuth(userId, DEFAULT_PROPERTY_ID, true);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
-        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID);
-        bodyContainsEntityWith("user_id", userId);
+        bodyContainsEntityWith("property_id", DEFAULT_PROPERTY_ID.toString());
+        bodyContainsEntityWith("user_id", userId.toString());
         bodyContainsEntityWith("is_active", "true");
         // update
         UserPropertyRelationshipUpdateDto update = new UserPropertyRelationshipUpdateDto();

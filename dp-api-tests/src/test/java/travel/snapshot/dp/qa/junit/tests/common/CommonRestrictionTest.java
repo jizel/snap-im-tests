@@ -6,6 +6,8 @@ import org.junit.Before;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 
+import java.util.UUID;
+
 /**
  * Commons for Restriction tests.
  */
@@ -26,7 +28,7 @@ public abstract class CommonRestrictionTest extends CommonTest {
     }
 
     //    Help methods
-    private ApplicationVersionDto createTestApplicationVersionForApp(String applicationId){
+    private ApplicationVersionDto createTestApplicationVersionForApp(UUID applicationId){
         ApplicationVersionDto testAppVersion = testAppVersion = new ApplicationVersionDto();
         testAppVersion.setApplicationId(applicationId);
         testAppVersion.setIsActive(true);

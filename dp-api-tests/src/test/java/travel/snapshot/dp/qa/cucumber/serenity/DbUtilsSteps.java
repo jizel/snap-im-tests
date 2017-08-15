@@ -1,5 +1,12 @@
 package travel.snapshot.dp.qa.cucumber.serenity;
 
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.ADDRESS_LINE1_PATTERN;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ENCRYPTED_PASSWORD;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_HOSPITALITY_ID;
+
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
@@ -9,12 +16,9 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
 
-import javax.ejb.DuplicateKeyException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.*;
 
 /**
  * Created by sedlacek on 9/23/2015.
@@ -95,69 +99,69 @@ public class DbUtilsSteps {
 
     private DbHelper dbHelper = new DbHelper();
 
-    public void deleteAllPropertyCustomersFromDb(String customerId, String propertyId) {
+    public void deleteAllPropertyCustomersFromDb(UUID customerId, UUID propertyId) {
         dbHelper.identityDb().update(DELETE_CUSTOMER_PROPERTY_BY_CUSTOMER_ID_PROPERTY_ID, customerId, propertyId);
     }
 
-    public void deletePropertyUserFromDb(String userId, String propertyId) {
+    public void deletePropertyUserFromDb(UUID userId, UUID propertyId) {
         dbHelper.identityDb().update(DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID, userId, propertyId);
     }
 
     public void createDBUser(UserDto user) {
-        dbHelper.identityDb().update(CREATE_DB_USER, UUID.fromString(user.getId()), user.getType().toString(), user.getUsername(), DEFAULT_ENCRYPTED_PASSWORD, user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_USER, (user.getId()), user.getType().toString(), user.getUsername(), DEFAULT_ENCRYPTED_PASSWORD, user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
     }
 
-    public void deleteDbUser(String userId) {
+    public void deleteDbUser(UUID userId) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER, userId));
     }
 
-    public void deleteDbAddress(String id) {
+    public void deleteDbAddress(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_DB_ADDRESS, id));
     }
 
-    public void revokeAppPermissions(String applicationId) {
+    public void revokeAppPermissions(UUID applicationId) {
         dbHelper.identityDb().update(String.format(REVOKE_APP_PERMISSIONS, applicationId));
     }
 
-    public void deleteAppVersion(String id) {
+    public void deleteAppVersion(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_APPLICATION_VERSION, id));
     }
 
-    public void deleteCommercialSubscription(String id) {
+    public void deleteCommercialSubscription(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_COMMERCIAL_SUBSCRIPTION, id));
     }
 
-    public void deleteProperty(String id) {
+    public void deleteProperty(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTY, id));
     }
 
-    public void deletePropertySet(String id) {
+    public void deletePropertySet(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET_HIERARCHY, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET, id));
     }
 
-    public void deleteCustomer(String id) {
+    public void deleteCustomer(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_HIERARCHY, id));
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER, id));
     }
 
-    public void deletePropertySetProperty(String id) {
+    public void deletePropertySetProperty(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PROPERTYSET_PROPERTY, id));
     }
 
-    public void deleteUserProperty(String id) {
+    public void deleteUserProperty(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_PROPERTY, id));
     }
 
-    public void deleteUserPropertySet(String id) {
+    public void deleteUserPropertySet(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_PROPERTYSET, id));
     }
 
-    public void deleteUser(String id) {
+    public void deleteUser(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER, id));
     }
 
-    public void deleteRole(String id) {
+    public void deleteRole(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_ROLE, id));
     }
 
@@ -165,29 +169,29 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_ADDRESS, ADDRESS_LINE1_PATTERN));
     }
 
-    public void deleteApplication(String id) {
+    public void deleteApplication(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_APPLICATION, id));
     }
 
-    public void deletePartner(String id) {
+    public void deletePartner(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_PARTNER, id));
     }
 
     public void createDBPartner(PartnerDto partner) {
-        dbHelper.identityDb().update(CREATE_DB_PARTNER, UUID.fromString(partner.getId()), partner.getName(), partner.getEmail(), partner.getNotes(), partner.getWebsite(), partner.getVatId(), partner.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_PARTNER, (partner.getId()), partner.getName(), partner.getEmail(), partner.getNotes(), partner.getWebsite(), partner.getVatId(), partner.getIsActive());
     }
 
     public void createDBApplication(ApplicationDto application) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION, UUID.fromString(application.getId()), application.getName(), application.getDescription(), application.getWebsite(), UUID.fromString(application.getPartnerId()), application.getIsInternal(), application.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION, (application.getId()), application.getName(), application.getDescription(), application.getWebsite(), (application.getPartnerId()), application.getIsInternal(), application.getIsActive());
     }
 
     public void createDBApplicationVersion(ApplicationVersionDto applicationVersion) {
-        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, UUID.fromString(applicationVersion.getId()), UUID.fromString(applicationVersion.getApplicationId()), applicationVersion.getApiManagerId(), applicationVersion.getName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
+        dbHelper.identityDb().update(CREATE_DB_APPLICATION_VERSION, (applicationVersion.getId()), (applicationVersion.getApplicationId()), applicationVersion.getApiManagerId(), applicationVersion.getName(), applicationVersion.getStatus().toString(), applicationVersion.getReleaseDate(), applicationVersion.getDescription(), applicationVersion.getIsActive(), applicationVersion.getIsNonCommercial());
     }
 
     public void createDBCustomer(CustomerCreateDto customer) {
-        dbHelper.identityDb().update(CREATE_DB_ADDRESS, UUID.fromString(DEFAULT_ADDRESS_ID), "address line 1", "address line 2", "city", "12345", "CZ");
-        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, UUID.fromString(customer.getId()), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemo(), customer.getNotes(), UUID.fromString(DEFAULT_ADDRESS_ID), customer.getTimezone());
+        dbHelper.identityDb().update(CREATE_DB_ADDRESS, (DEFAULT_ADDRESS_ID), "address line 1", "address line 2", "city", "12345", "CZ");
+        dbHelper.identityDb().update(CREATE_DB_CUSTOMER, (customer.getId()), customer.getIsActive(), customer.getSalesforceId().toString(), customer.getName(), customer.getPhone(), customer.getEmail(), customer.getWebsite(), customer.getVatId(), customer.getIsDemo(), customer.getNotes(), (DEFAULT_ADDRESS_ID), customer.getTimezone());
     }
 
     public void populateCustomerHierarchyPath(UUID customerId) {
@@ -195,11 +199,11 @@ public class DbUtilsSteps {
     }
 
     public void createDBProperty(PropertyDto property) {
-        dbHelper.identityDb().update(CREATE_DB_PROPERTY, UUID.fromString(property.getId()), property.getIsActive(), property.getSalesforceId().toString(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemo(), UUID.fromString(DEFAULT_ADDRESS_ID), property.getTimezone(), property.getCode(), property.getDescription(), UUID.fromString(property.getCustomerId()));
+        dbHelper.identityDb().update(CREATE_DB_PROPERTY, (property.getId()), property.getIsActive(), property.getSalesforceId().toString(), property.getName(), property.getEmail(), property.getWebsite(), property.getIsDemo(), (DEFAULT_ADDRESS_ID), property.getTimezone(), property.getCode(), property.getDescription(), (property.getCustomerId()));
     }
 
     public void createDbCommercialSubscription(CommercialSubscriptionDto commercialSubscription) {
-        dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, UUID.fromString(commercialSubscription.getId()), UUID.fromString(commercialSubscription.getCustomerId()), UUID.fromString(commercialSubscription.getPropertyId()), UUID.fromString(commercialSubscription.getApplicationId()), commercialSubscription.getIsActive());
+        dbHelper.identityDb().update(CREATE_DB_COMMERCIAL_SUBSCRIPTION, (commercialSubscription.getId()), (commercialSubscription.getCustomerId()), (commercialSubscription.getPropertyId()), (commercialSubscription.getApplicationId()), commercialSubscription.getIsActive());
     }
 
 //    Don't delete, can be reused in the future when api subscriptions are reintroduced
@@ -255,22 +259,22 @@ public class DbUtilsSteps {
     }
 
 
-    public void populateApplicationPermissionsTableForApplication(String applicationId) {
-        UUID applicationUuid = UUID.fromString(applicationId);
+    public void populateApplicationPermissionsTableForApplication(UUID applicationId) {
+        UUID applicationUuid = (applicationId);
         dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationUuid);
     }
 
-    public void addApplicationPermission(String applicationId, String endpoint, String method) {
-        UUID applicationUuid = UUID.fromString(applicationId);
+    public void addApplicationPermission(UUID applicationId, String endpoint, String method) {
+        UUID applicationUuid = (applicationId);
         UUID permissionId = (UUID) dbHelper.identityDb().queryForList(SELECT_PERMISSION_ID, endpoint, method).get(0).get("id");
         dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, applicationUuid, permissionId);
     }
 
-    public void deleteCustomerProperty(String id) {
+    public void deleteCustomerProperty(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_CUSTOMER_PROPERTY, id));
     }
 
-    public void deleteCustomerUser(String id) {
+    public void deleteCustomerUser(UUID id) {
         dbHelper.identityDb().update(String.format(DELETE_SINGLE_USER_CUSTOMER, id));
     }
 }

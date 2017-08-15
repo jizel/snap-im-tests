@@ -19,6 +19,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ApplicationsSteps extends BasicSteps {
 
@@ -45,7 +46,7 @@ public class ApplicationsSteps extends BasicSteps {
     @Step
     public void followingApplicationsExist(List<ApplicationDto> applications) {
         applications.forEach((application) -> {
-            String partnerId = application.getId();
+            UUID partnerId = application.getId();
             Boolean isInternal = application.getIsInternal();
             if (partnerId == null) {
                 application.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
@@ -61,28 +62,28 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void applicationWithIdIsDeleted(String applicationId) {
+    public void applicationWithIdIsDeleted(UUID applicationId) {
         deleteEntityWithEtag(applicationId);
         Serenity.setSessionVariable(SESSION_APPLICATION_ID).to(applicationId);
     }
 
     @Step
     public void applicationIdInSessionDoesntExist() {
-        String applicationId = Serenity.sessionVariableCalled(SESSION_APPLICATION_ID);
+        UUID applicationId = Serenity.sessionVariableCalled(SESSION_APPLICATION_ID);
 
         Response response = getEntity(applicationId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
-    public void updateApplication(String applicationId, ApplicationUpdateDto applicationUpdate, String etag) throws Throwable {
+    public void updateApplication(UUID applicationId, ApplicationUpdateDto applicationUpdate, String etag) throws Throwable {
         JSONObject update = retrieveData(applicationUpdate);
         Response response = updateEntity(applicationId, update.toString(), etag);
         setSessionResponse(response);
     }
 
     @Step
-    public void applicationWithIdHasData(String applicationId, ApplicationDto applicationData) throws Throwable {
+    public void applicationWithIdHasData(UUID applicationId, ApplicationDto applicationData) throws Throwable {
         Map<String, Object> originalData = retrieveDataOld(ApplicationDto.class, getApplicationById(applicationId));
         Map<String, Object> expectedData = retrieveDataOld(ApplicationDto.class, applicationData);
 
@@ -98,26 +99,26 @@ public class ApplicationsSteps extends BasicSteps {
     }
 
     @Step
-    public void applicationWithIdIsRequested(String applicationId) {
+    public void applicationWithIdIsRequested(UUID applicationId) {
 
         Response resp = getEntity(applicationId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(resp);
     }
 
     @Step
-    public void applicationWithIdIsGotWithEtag(String applicationId) {
+    public void applicationWithIdIsGotWithEtag(UUID applicationId) {
         Response resp = getEntity(applicationId);
         setSessionResponse(resp);
     }
 
     @Step
-    public void listOfApplicationsIsGotWith(String userId, String appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public void listOfApplicationsIsGotWith(UUID userId, UUID appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
 
 
-    public ApplicationDto getApplicationById(String applicationId) {
+    public ApplicationDto getApplicationById(UUID applicationId) {
         ApplicationDto[] applications =
                 getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "application_id==" + applicationId, null, null, null)
                         .as(ApplicationDto[].class);
@@ -137,14 +138,14 @@ public class ApplicationsSteps extends BasicSteps {
 
 
     @Step
-    public void getCommSubscriptionForApplicationId(String applicationId) {
+    public void getCommSubscriptionForApplicationId(UUID applicationId) {
         Response appCommSubscriptionResponse = getSecondLevelEntities(applicationId, COMMERCIAL_SUBSCRIPTIONS_RESOURCE, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(appCommSubscriptionResponse);
     }
 
     @Step
-    public void listOfApplicationCommSubscriptionsIsGotWith(String applicationId, String limit, String cursor, String filter,
+    public void listOfApplicationCommSubscriptionsIsGotWith(UUID applicationId, String limit, String cursor, String filter,
                                                             String sort, String sortDesc) {
         Response response = getSecondLevelEntities(applicationId, COMMERCIAL_SUBSCRIPTIONS_RESOURCE, limit, cursor, filter,
                 sort, sortDesc, null);
@@ -157,12 +158,12 @@ public class ApplicationsSteps extends BasicSteps {
         return stream(application).findFirst().orElse(null);
     }
 
-    public String resolveApplicationId(String applicationName) {
+    public UUID resolveApplicationId(String applicationName) {
         if (applicationName == null) return DEFAULT_SNAPSHOT_APPLICATION_ID;
 
-        String applicationId;
+        UUID applicationId;
         if (isUUID(applicationName)) {
-            applicationId = applicationName;
+            applicationId = UUID.fromString(applicationName);
         } else {
             ApplicationDto application = getApplicationByName(applicationName);
             assertThat(String.format("Application with name \"%s\" does not exist", applicationName), application , is(notNullValue()));

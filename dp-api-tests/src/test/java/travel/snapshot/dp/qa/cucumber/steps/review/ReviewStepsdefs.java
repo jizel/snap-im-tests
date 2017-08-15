@@ -36,6 +36,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.review.ReviewTravelersSteps;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 
 public class ReviewStepsdefs {
@@ -70,7 +71,7 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get trip advisor \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, String propertyId, String since, String until) throws Throwable {
+    public void Get_social_media_data_with_granularity_for_since_until(String url, String granularity, UUID propertyId, String since, String until) throws Throwable {
         reviewSteps.getPropertiesWithDate("/review" + url, granularity, propertyId, since, until);
     }
 
@@ -171,7 +172,7 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get trip advisor travellers \"([^\"]*)\" data with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void getTripAdvisorTravellersDataWithGranularityForSinceUntil(String url, String granularity, String propertyId, String since, String until) throws Throwable {
+    public void getTripAdvisorTravellersDataWithGranularityForSinceUntil(String url, String granularity, UUID propertyId, String since, String until) throws Throwable {
         reviewTravelersSteps.getPropertiesWithDate(url, granularity, propertyId, since, until);
     }
 
@@ -244,7 +245,7 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get \"([^\"]*)\" for list of properties for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void getForListOfPropertiesForCustomerWithSinceUntilAndGranularity(String metric, String customerId,
+    public void getForListOfPropertiesForCustomerWithSinceUntilAndGranularity(String metric, UUID customerId,
                                                                               @Transform(NullEmptyStringConverter.class) String since,
                                                                               @Transform(NullEmptyStringConverter.class) String until,
                                                                               @Transform(NullEmptyStringConverter.class) String granularity,
@@ -255,7 +256,7 @@ public class ReviewStepsdefs {
 
 
     @When("^Get \"([^\"]*)\" for single property \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" and granularity \"([^\"]*)\"$")
-    public void getForSinglePropertyWithSinceUntilAndGranularity(String metric, String property_id,
+    public void getForSinglePropertyWithSinceUntilAndGranularity(String metric, UUID property_id,
                                                                  @Transform(NullEmptyStringConverter.class) String since,
                                                                  @Transform(NullEmptyStringConverter.class) String until,
                                                                  @Transform(NullEmptyStringConverter.class) String granularity) throws Throwable {
@@ -263,7 +264,7 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get \"([^\"]*)\" for statistics agg?regated for property set \"([^\"]*)\" for customer \"([^\"]*)\" with since \"([^\"]*)\" until \"([^\"]*)\" granularity \"([^\"]*)\" limit \"([^\"]*)\" and cursor \"([^\"]*)\"$")
-    public void getForStatisticsAgregatedForPropertySetForCustomerWithSinceUntilGranularityLimitAndCursor(String metric, String pSetCode, String customerId,
+    public void getForStatisticsAgregatedForPropertySetForCustomerWithSinceUntilGranularityLimitAndCursor(String metric, String pSetCode, UUID customerId,
                                                                                                           @Transform(NullEmptyStringConverter.class) String since,
                                                                                                           @Transform(NullEmptyStringConverter.class) String until,
                                                                                                           @Transform(NullEmptyStringConverter.class) String granularity,
@@ -278,7 +279,7 @@ public class ReviewStepsdefs {
     }
 
     @When("^Get trip advisor travellers \"([^\"]*)\" data for \"([^\"]*)\" with \"([^\"]*)\" granularity for \"([^\"]*)\" since \"([^\"]*)\" until \"([^\"]*)\"$")
-    public void getTripAdvisorTravellersDataForWithGranularityForSinceUntil(String url, String traveler, String granularity, String propertyId, String since, String until) throws Throwable {
+    public void getTripAdvisorTravellersDataForWithGranularityForSinceUntil(String url, String traveler, String granularity, UUID propertyId, String since, String until) throws Throwable {
         reviewTravelersSteps.getDataForSpecificTraveler(url, traveler, granularity, propertyId, since, until);
     }
 

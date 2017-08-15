@@ -1,15 +1,12 @@
 package travel.snapshot.dp.qa.cucumber.steps.authorization;
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import cucumber.api.java.en.When;
-import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
-import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
-
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CLIENT_SECRET;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+
+import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
+import travel.snapshot.dp.qa.cucumber.serenity.authorization.AuthorizationSteps;
 
 public class AuthorizationStepdefs {
 
@@ -20,7 +17,7 @@ public class AuthorizationStepdefs {
 
     @When("^Getting token for user \"([^\"]*)\" with password \"([^\"]*)\"$")
     public void getting_token_for_user_with_username_and_password(String username, String password) {
-        authorizationSteps.getToken(username, password, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, DEFAULT_CLIENT_SECRET);
+        authorizationSteps.getToken(username, password, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID.toString(), DEFAULT_CLIENT_SECRET.toString());
     }
 
     @When("^Getting configuration data for \"([^\"]*)\" with token \"([^\"]*)\"$")

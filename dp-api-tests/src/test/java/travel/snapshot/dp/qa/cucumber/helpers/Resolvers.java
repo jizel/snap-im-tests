@@ -8,6 +8,8 @@ import travel.snapshot.dp.qa.cucumber.serenity.properties.PropertySteps;
 import travel.snapshot.dp.qa.cucumber.serenity.property_sets.PropertySetSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
+import java.util.UUID;
+
 public class Resolvers {
 
 
@@ -27,7 +29,7 @@ public class Resolvers {
     private ApplicationsSteps applicationsSteps;
 
     @Step
-    public String resolveEntityName(String type, String name) {
+    public UUID resolveEntityName(String type, String name) {
         switch (type) {
             case "customer":     return customerSteps.resolveCustomerId(name);
             case "property":     return propertySteps.resolvePropertyId(name);

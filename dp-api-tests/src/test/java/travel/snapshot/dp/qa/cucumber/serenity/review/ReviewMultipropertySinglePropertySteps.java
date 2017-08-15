@@ -1,11 +1,11 @@
 package travel.snapshot.dp.qa.cucumber.serenity.review;
 
 import com.jayway.restassured.response.Response;
-
 import net.thucydides.core.annotations.Step;
-
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.AnalyticsBaseSteps;
+
+import java.util.UUID;
 
 public class ReviewMultipropertySinglePropertySteps extends AnalyticsBaseSteps {
 
@@ -17,7 +17,7 @@ public class ReviewMultipropertySinglePropertySteps extends AnalyticsBaseSteps {
     }
 
     @Step
-    public void getStatisticsForSingleProperty(String metric, String property_id, String since, String until, String granularity) {
+    public void getStatisticsForSingleProperty(String metric, UUID property_id, String since, String until, String granularity) {
         Response propertyStatistics = getSecondLevelEntitiesForDates(property_id, metric, null, null, since, until, granularity, null, null, null);
 
         setSessionResponse(propertyStatistics);

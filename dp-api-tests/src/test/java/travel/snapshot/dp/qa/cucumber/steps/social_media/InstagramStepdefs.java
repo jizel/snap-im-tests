@@ -1,17 +1,16 @@
 package travel.snapshot.dp.qa.cucumber.steps.social_media;
 
 
-import net.thucydides.core.annotations.Steps;
-
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import net.thucydides.core.annotations.Steps;
+import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.qa.cucumber.helpers.NullEmptyStringConverter;
 import travel.snapshot.dp.qa.cucumber.serenity.analytics.InstagramSteps;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by sedlacek on 9/18/2015.
@@ -29,7 +28,7 @@ public class InstagramStepdefs {
                                                                        @Transform(NullEmptyStringConverter.class) String propertyId,
                                                                        @Transform(NullEmptyStringConverter.class) String since,
                                                                        @Transform(NullEmptyStringConverter.class) String until) throws Throwable {
-        instagramSteps.getPropertiesWithDate("/social_media" + url, granularity, propertyId, since, until);
+        instagramSteps.getPropertiesWithDate("/social_media" + url, granularity, UUID.fromString(propertyId), since, until);
     }
 
     @When("^Get instagram \"([^\"]*)\" with missing property header$")

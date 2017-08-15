@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
+
 import net.serenitybdd.core.Serenity;
 import org.junit.After;
 import org.junit.Before;
@@ -7,10 +11,7 @@ import org.junit.Before;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PASSWORD;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_NAME;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ENTITIES_TO_DELETE;
+import java.util.UUID;
 
 /**
  * Created by ofayans on 7/27/17.

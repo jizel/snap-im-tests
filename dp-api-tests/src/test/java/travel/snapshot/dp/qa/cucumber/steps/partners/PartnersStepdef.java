@@ -21,6 +21,7 @@ import travel.snapshot.dp.qa.cucumber.serenity.partners.PartnerSteps;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PartnersStepdef {
 
@@ -63,37 +64,37 @@ public class PartnersStepdef {
     }
 
     @When("^Partner with id \"([^\"]*)\" is activated$")
-    public void Partner_with_id_is_activated(String partnerId) {
+    public void Partner_with_id_is_activated(UUID partnerId) {
         partnerSteps.setPartnerIsActive(partnerId, true);
     }
 
     @When("Partner with id \"([^\"]*)\" is active")
-    public void Partner_with_id_is_active(String partnerId) {
+    public void Partner_with_id_is_active(UUID partnerId) {
         assertThat("Partner should be active but it is not", partnerSteps.getPartnerById(partnerId).getIsActive(), is(true));
     }
 
     @When("Partner with id \"([^\"]*)\" is not active")
-    public void Partner_with_id_is_not_active(String partnerId) {
+    public void Partner_with_id_is_not_active(UUID partnerId) {
         assertThat("Partner should be inactive but it's still active", partnerSteps.getPartnerById(partnerId).getIsActive(), is(false));
     }
 
     @When("^Partner with id \"([^\"]*)\" is inactivated$")
-    public void Partner_with_id_is_inactivated(String partnerId) {
+    public void Partner_with_id_is_inactivated(UUID partnerId) {
         partnerSteps.setPartnerIsActive(partnerId, false);
     }
 
     @When("^Partner with id \"([^\"]*)\" is updated with data$")
-    public void Partner_with_id_is_updated_with_data(String partnerId, List<PartnerUpdateDto> updatedPartner) throws Exception {
+    public void Partner_with_id_is_updated_with_data(UUID partnerId, List<PartnerUpdateDto> updatedPartner) throws Exception {
         partnerSteps.updatePartner(partnerId, updatedPartner.get(0));
     }
 
     @Then("^Updated partner with id \"([^\"]*)\" has data$")
-    public void Updated_partner_with_id_has_data(String partnerId, List<PartnerDto> partnerData) throws Exception {
+    public void Updated_partner_with_id_has_data(UUID partnerId, List<PartnerDto> partnerData) throws Exception {
         partnerSteps.partnerWithIdHasData(partnerId, partnerData.get(0));
     }
 
     @When("^Partner with id \"([^\"]*)\" is got$")
-    public void Partner_with_id_is_got(String partnerId) {
+    public void Partner_with_id_is_got(UUID partnerId) {
         partnerSteps.partnerWithIdIsGot(partnerId);
     }
 
@@ -111,8 +112,8 @@ public class PartnersStepdef {
             @Transform(NullEmptyStringConverter.class) String sortDesc,
             @Transform(NullEmptyStringConverter.class) String userName,
             @Transform(NullEmptyStringConverter.class) String appVersionName) {
-        String appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
-        String userId = userSteps.resolveUserId(userName);
+        UUID appVersionId = applicationVersionsSteps.resolveApplicationVersionId(appVersionName);
+        UUID userId = userSteps.resolveUserId(userName);
         partnerSteps.listOfPartnersIsGotWith(userId, appVersionId, limit, cursor, filter, sort, sortDesc);
     }
 
@@ -127,13 +128,13 @@ public class PartnersStepdef {
     }
 
     @When("^Partners applications for partner with id \"([^\"]*)\" is got$")
-    public void Partners_applications_for_partner_with_id_is_got(String partnerId) {
+    public void Partners_applications_for_partner_with_id_is_got(UUID partnerId) {
         partnerSteps.getApplicationsForPartnerId(partnerId);
     }
 
     @When("List of partner applications is got for partner with id \"([^\"]*)\" with limit \"([^\"]*)\" and cursor \"([^\"]*)\" and filter \"([^\"]*)\" and sort \"([^\"]*)\" and sort_desc \"([^\"]*)\"")
     public void List_of_partner_applications_is_got_for_partner_id_with_limit_and_cursor_and_filter_and_sort_and_sort_desc(
-            String partnerId, @Transform(NullEmptyStringConverter.class) String limit,
+            UUID partnerId, @Transform(NullEmptyStringConverter.class) String limit,
             @Transform(NullEmptyStringConverter.class) String cursor,
             @Transform(NullEmptyStringConverter.class) String filter,
             @Transform(NullEmptyStringConverter.class) String sort,
@@ -147,7 +148,7 @@ public class PartnersStepdef {
     }
 
     @When("^Partner users for partner with id \"([^\"]*)\" is got$")
-    public void Partner_users_for_partner_with_id_is_got(String partnerId) {
+    public void Partner_users_for_partner_with_id_is_got(UUID partnerId) {
         partnerSteps.getUsersForPartnerId(partnerId);
     }
 

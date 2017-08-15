@@ -21,6 +21,7 @@ import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PartnerSteps extends BasicSteps {
 
@@ -50,28 +51,28 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void deletePartner(String partnerId) {
+    public void deletePartner(UUID partnerId) {
         deleteEntityWithEtag(partnerId);
         Serenity.setSessionVariable(SESSION_PARTNER_ID).to(partnerId);
     }
 
     @Step
     public void partnerWithSameIdInSessionDoesNotExists() {
-        String partnerId = Serenity.sessionVariableCalled(SESSION_PARTNER_ID);
+        UUID partnerId = Serenity.sessionVariableCalled(SESSION_PARTNER_ID);
 
         Response response = getEntity(partnerId);
         response.then().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Step
-    public void setPartnerIsActive(String partnerId, boolean isActive){
+    public void setPartnerIsActive(UUID partnerId, boolean isActive){
         PartnerUpdateDto partnerUpdate = new PartnerUpdateDto();
         partnerUpdate.setIsActive(isActive);
         updatePartner(partnerId, partnerUpdate);
     }
 
     @Step
-    public void updatePartner(String partnerId, PartnerUpdateDto updatedPartner) {
+    public void updatePartner(UUID partnerId, PartnerUpdateDto updatedPartner) {
         String etag = getEntityEtag(partnerId);
         try {
             JSONObject partnerData = retrieveData(updatedPartner);
@@ -83,7 +84,7 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void partnerWithIdHasData(String partnerId, PartnerDto partnerData) throws Exception {
+    public void partnerWithIdHasData(UUID partnerId, PartnerDto partnerData) throws Exception {
         JSONObject originalData = retrieveData(getPartnerById(partnerId));
         JSONObject expectedData = retrieveData(partnerData);
         for (String key : expectedData.keySet()){
@@ -97,13 +98,13 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void partnerWithIdIsGot(String partnerId) {
+    public void partnerWithIdIsGot(UUID partnerId) {
         Response response = getEntity(partnerId);
         Serenity.setSessionVariable(SESSION_RESPONSE).to(response);
     }
 
     @Step
-    public void listOfPartnersIsGotWith(String userId, String appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public void listOfPartnersIsGotWith(UUID userId, UUID appVersionId, String limit, String cursor, String filter, String sort, String sortDesc) {
         Response response = getEntitiesByUserForApp(userId, appVersionId, null, limit, cursor, filter, sort, sortDesc, null);
         setSessionResponse(response);
     }
@@ -120,14 +121,14 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void getApplicationsForPartnerId(String partnerId) {
+    public void getApplicationsForPartnerId(UUID partnerId) {
         Response partnerApplications = getSecondLevelEntities(partnerId, APPLICATIONS_RESOURCE, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerApplications);
     }
 
     @Step
-    public void listOfPartnerApplicationsIsGotWith(String partnerId, String limit, String cursor, String filter,
+    public void listOfPartnerApplicationsIsGotWith(UUID partnerId, String limit, String cursor, String filter,
                                                    String sort, String sortDesc) {
         Response partnerApplications = getSecondLevelEntities(partnerId, APPLICATIONS_RESOURCE, limit,
                 cursor, filter, sort, sortDesc, null);
@@ -135,14 +136,14 @@ public class PartnerSteps extends BasicSteps {
     }
 
     @Step
-    public void getUsersForPartnerId(String partnerId) {
+    public void getUsersForPartnerId(UUID partnerId) {
         Response partnerUsers = getSecondLevelEntities(partnerId, USERS_RESOURCE, LIMIT_TO_ALL,
                 CURSOR_FROM_FIRST, null, null, null, null);
         setSessionResponse(partnerUsers);
     }
 
     @Step
-    public void createPartnerUserRelationship(String partnerId, String userId){
+    public void createPartnerUserRelationship(UUID partnerId, UUID userId){
         Response response = createSecondLevelRelationship(partnerId, USERS_RESOURCE, singletonMap(USER_ID_KEY, userId));
         setSessionResponse(response);
     }
@@ -153,18 +154,18 @@ public class PartnerSteps extends BasicSteps {
         return stream(partners).findFirst().orElse(null);
     }
 
-    public PartnerDto getPartnerById(String partnerId) {
+    public PartnerDto getPartnerById(UUID partnerId) {
         PartnerDto[] partners = getEntities(null, LIMIT_TO_ONE, CURSOR_FROM_FIRST, "partner_id==" + partnerId, null, null, null)
                 .as(PartnerDto[].class);
         return stream(partners).findFirst().orElse(null);
     }
 
-    public String resolvePartnerId(String partnerName) {
+    public UUID resolvePartnerId(String partnerName) {
         if (partnerName == null) return DEFAULT_SNAPSHOT_USER_ID;
 
-        String partnerId;
+        UUID partnerId;
         if (isUUID(partnerName)) {
-            partnerId = partnerName;
+            partnerId = UUID.fromString(partnerName);
         } else {
             PartnerDto partner = getPartnerByName(partnerName);
             assertThat(String.format("Partner with name \"%s\" does not exist", partnerName), partner, is(notNullValue()));

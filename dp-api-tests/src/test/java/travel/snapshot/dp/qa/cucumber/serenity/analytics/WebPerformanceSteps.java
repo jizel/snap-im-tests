@@ -22,6 +22,7 @@ import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -40,7 +41,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
     // Special case for web performance
 
     @Step
-    public void getData(String url, String granularity, String propertyId, String since, String until, String metric,
+    public void getData(String url, String granularity, UUID propertyId, String since, String until, String metric,
                         String direction) {
         LocalDate sinceDate = StringUtil.parseDate(since);
         LocalDate untilDate = StringUtil.parseDate(until);
@@ -49,7 +50,7 @@ public class WebPerformanceSteps extends AnalyticsBaseSteps {
                 .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
                 .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
 
-        if (StringUtils.isNotBlank(propertyId)) {
+        if (propertyId != null) {
             requestSpecification.header("x-property", propertyId);
         }
         if (StringUtils.isNotBlank(granularity)) {

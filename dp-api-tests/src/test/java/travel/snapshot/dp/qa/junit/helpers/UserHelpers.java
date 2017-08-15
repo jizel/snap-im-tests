@@ -15,6 +15,8 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.cucumber.serenity.users.UsersSteps;
 
+import java.util.UUID;
+
 @Log
 public class UserHelpers extends UsersSteps {
 
@@ -36,42 +38,42 @@ public class UserHelpers extends UsersSteps {
         authorizationHelpers.createEntity(USERS_PATH, userObject);
     }
 
-    public String userIsCreatedWithAuth(UserCreateDto userObject) throws Throwable {
+    public UUID userIsCreatedWithAuth(UserCreateDto userObject) throws Throwable {
         createUserWithAuth(userObject);
         responseCodeIs(SC_CREATED);
-        String userId = getSessionResponse().as(UserDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USERS, userId);
+        UUID userId = getSessionResponse().as(UserDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(USERS, userId);
 
         // now we need to mark default user_customer relationship for deletion
         UserCustomerRelationshipDto relation = relationshipHelpers.getUserCustomerRelationsForUserWithAuth(userId).get(0);
-        commonHelpers.updateRegistryOfDeletables(CUSTOMER_USERS, relation.getId());
+        commonHelpers.updateRegistryOfDeleTables(CUSTOMER_USERS, relation.getId());
 
         return getSessionResponse().as(UserDto.class).getId();
     }
 
-    public UserDto userWithCustomerIsCreated(UserCreateDto createdUser, String customerId) {
+    public UserDto userWithCustomerIsCreated(UserCreateDto createdUser, UUID customerId) {
         Response response = createUserWithCustomer(createdUser, customerId, true, true);
         responseCodeIs(SC_CREATED);
         return response.as(UserDto.class);
     }
 
-    public Response getUserByUserForApp(String requestorId, String applicationVersionId, String userId) {
+    public Response getUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
         Response response = getEntityByUserForApplication(requestorId, applicationVersionId, userId);
         setSessionResponse(response);
         return response;
     }
 
-    public Response getAllUserPropertiesByUserForApp(String requestorId, String applicationVersionId, String userId) {
+    public Response getAllUserPropertiesByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
         Response response = getSecondLevelEntitiesByUserForApp(requestorId, applicationVersionId, userId, PROPERTIES_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
         return response;
     }
 
-    public Response createUserByUserForApp(String requestorId, String applicationVersionId, UserCreateDto user) {
+    public Response createUserByUserForApp(UUID requestorId, UUID applicationVersionId, UserCreateDto user) {
         return createEntityByUserForApplication(requestorId, applicationVersionId, user);
     }
 
-    public Response updateUserByUserForApp(String requestorId, String applicationVersionId, String userId, UserUpdateDto userUpdate) {
+    public Response updateUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId, UserUpdateDto userUpdate) {
         Response response = null;
         try {
             JSONObject userData = retrieveData(userUpdate);
@@ -82,11 +84,11 @@ public class UserHelpers extends UsersSteps {
         return response;
     }
 
-    public Response deleteUserByUserForApp(String requestorId, String applicationVersionId, String userId) {
+    public Response deleteUserByUserForApp(UUID requestorId, UUID applicationVersionId, UUID userId) {
         return deleteEntityByUserForApplication(requestorId, applicationVersionId, userId, getEntityEtag(userId));
     }
 
-    public void getPartnersForUserByUserForApp(String userId, String requestorId, String appVersionId) {
+    public void getPartnersForUserByUserForApp(UUID userId, UUID requestorId, UUID appVersionId) {
         Response response = getSecondLevelEntitiesByUserForApp(requestorId, appVersionId, userId, PARTNERS_RESOURCE, null, null, null, null, null, null);
         setSessionResponse(response);
     }

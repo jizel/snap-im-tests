@@ -9,7 +9,6 @@ import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 import com.jayway.restassured.response.Response;
 import net.thucydides.core.annotations.Step;
-import org.apache.commons.lang3.StringUtils;
 import travel.snapshot.dp.qa.cucumber.helpers.StringUtil;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
@@ -19,6 +18,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -48,11 +48,9 @@ public class AnalyticsBaseSteps extends BasicSteps {
     /**
      * returns entities for certain property for certain date granularity
      */
-    public void getPropertiesWithDate(String url, String granularity, String propertyId, String since, String until) {
+    public void getPropertiesWithDate(String url, String granularity, UUID propertyId, String since, String until) {
         Map<String, String> prepareParams = new HashMap<>();
-        if (StringUtils.isNotBlank(propertyId)) {
-            prepareParams.put("property", propertyId);
-        }
+        prepareParams.put("property", propertyId.toString());
 
         Response response = getEntitiesForUrlWihDates(url, null, null, since, until, granularity, prepareParams);
         setSessionResponse(response);
@@ -65,18 +63,14 @@ public class AnalyticsBaseSteps extends BasicSteps {
      */
     public void getPropertiesWithPaging(String url, String propertyId, String limit, String cursor) {
         Map<String, String> queryParams = new HashMap<>();
-        if (StringUtils.isNotBlank(propertyId)) {
-            queryParams.put("property", propertyId);
-        }
+        queryParams.put("property", propertyId);
         Response response = getEntities(url, limit, cursor, null, null, null, queryParams);
         setSessionResponse(response);
     }
 
     public void getPropertiesWithPagingAndDate(String url, String propertyId, String limit, String cursor, String granularity, String since, String until) {
         Map<String, String> queryParams = new HashMap<>();
-        if (StringUtils.isNotBlank(propertyId)) {
-            queryParams.put("property", propertyId);
-        }
+        queryParams.put("property", propertyId);
 
         Response response = getEntitiesForUrlWihDates(url, limit, cursor, since, until, granularity, queryParams);
         setSessionResponse(response);
@@ -205,8 +199,7 @@ public class AnalyticsBaseSteps extends BasicSteps {
     }
 
     /**
-     * @param assertStatement lambda with assert statement checking the object from session
-     *                        response
+     * @param assertStatement lambda with assert statement checking the object from session response
      * @param type            class with type of object receiving from response
      */
     @Step

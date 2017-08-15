@@ -8,6 +8,8 @@ import com.jayway.restassured.response.Response;
 import travel.snapshot.dp.api.identity.model.UserGroupDto;
 import travel.snapshot.dp.qa.cucumber.serenity.user_groups.UserGroupsSteps;
 
+import java.util.UUID;
+
 /**
  * Created by zelezny on 6/27/2017.
  */
@@ -29,11 +31,11 @@ public class UserGroupHelpers extends UserGroupsSteps{
         authorizationHelpers.createEntity(USER_GROUPS_PATH, userGroup);
     }
 
-    public String userGroupIsCreatedWithAuth(UserGroupDto userGroup) {
+    public UUID userGroupIsCreatedWithAuth(UserGroupDto userGroup) {
         createUserGroupWithAuth(userGroup);
         responseCodeIs(SC_CREATED);
-        String groupId = getSessionResponse().as(UserGroupDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USER_GROUPS_RESOURCE, groupId);
+        UUID groupId = getSessionResponse().as(UserGroupDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(USER_GROUPS_RESOURCE, groupId);
         return groupId;
     }
 }

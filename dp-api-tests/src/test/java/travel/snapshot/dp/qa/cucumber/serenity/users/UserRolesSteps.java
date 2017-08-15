@@ -9,91 +9,93 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 
 import com.jayway.restassured.response.Response;
 
+import java.util.UUID;
+
 /**
  * Created by benka on 05-May-16.
  */
 public class UserRolesSteps extends UsersSteps {
 
 
-    public void roleExistsBetweenUserAndCustomer(String roleId, String userId, String customerId, Boolean isActive) {
+    public void roleExistsBetweenUserAndCustomer(UUID roleId, UUID userId, UUID customerId, Boolean isActive) {
         Response response = createRoleBetweenUserAndCustomer(roleId, userId, customerId, isActive);
         assertThat("Failed to assign role: " + response.body().toString(), response.statusCode(), is(SC_CREATED));
     }
 
-    public Response createRoleBetweenUserAndCustomer(String roleId, String userId, String customerId, Boolean isActive) {
+    public Response createRoleBetweenUserAndCustomer(UUID roleId, UUID userId, UUID customerId, Boolean isActive) {
         return createRoleBetweenUserAndEntity(CUSTOMERS_RESOURCE, roleId, userId, customerId, isActive);
     }
 
-    public void roleBetweenUserAndCustomerIsDeleted(String roleId, String userId, String customerId, String nonExistent) {
+    public void roleBetweenUserAndCustomerIsDeleted(UUID roleId, UUID userId, UUID customerId, String nonExistent) {
         roleBetweenUserAndEntityIsDeleted(CUSTOMERS_RESOURCE, roleId, userId, customerId, nonExistent);
     }
 
-    public void roleBetweenUserAndCustomerNotExists(String roleId, String userName, String customerId) {
+    public void roleBetweenUserAndCustomerNotExists(UUID roleId, String userName, UUID customerId) {
         roleBetweenUserAndEntityNotExists(CUSTOMERS_RESOURCE, roleId, userName, customerId);
     }
 
-    public void roleNameExistsBetweenUserAndCustomer(String roleId, String userId, String customerId, Boolean isActive) {
+    public void roleNameExistsBetweenUserAndCustomer(UUID roleId, UUID userId, UUID customerId, Boolean isActive) {
         roleNameExistsBetweenUserAndEntity(CUSTOMERS_RESOURCE, roleId, userId, customerId, isActive);
     }
 
-    public void getRolesBetweenUserAndCustomer(String userName, String customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
-        getRolesBetweenUserAndEntity(CUSTOMERS_RESOURCE, userName, customerId, limit, cursor, filter, sort, sortDesc);
+    public void getRolesBetweenUserAndCustomer(UUID userId, UUID customerId, String limit, String cursor, String filter, String sort, String sortDesc) {
+        getRolesBetweenUserAndEntity(CUSTOMERS_RESOURCE, userId, customerId, limit, cursor, filter, sort, sortDesc);
     }
 
 //------------------------------------------------------------------------------------------------------------
 
-    public void addRoleBetweenUserAndProperty(String roleId, String userId, String propId, Boolean isActive) {
+    public void addRoleBetweenUserAndProperty(UUID roleId, UUID userId, UUID propId, Boolean isActive) {
         createRoleBetweenUserAndEntity(PROPERTIES_RESOURCE, roleId, userId, propId, isActive);
     }
 
-    public void roleExistsBetweenUserAndProperty(String roleId, String userId, String propId, Boolean isActive) {
+    public void roleExistsBetweenUserAndProperty(UUID roleId, UUID userId, UUID propId, Boolean isActive) {
         roleExistsBetweenUserAndEntity(PROPERTIES_RESOURCE, roleId, userId, propId, isActive);
     }
 
-    public void roleBetweenUserAndPropertyIsDeleted(String roleId, String userId, String propertyId, String nonExistent) {
+    public void roleBetweenUserAndPropertyIsDeleted(UUID roleId, UUID userId, UUID propertyId, String nonExistent) {
         roleBetweenUserAndEntityIsDeleted(PROPERTIES_RESOURCE, roleId, userId, propertyId, nonExistent);
     }
 
-    public void roleBetweenUserAndPropertyNotExists(String roleId, String userName, String propertyId) {
+    public void roleBetweenUserAndPropertyNotExists(UUID roleId, String userName, UUID propertyId) {
         roleBetweenUserAndEntityNotExists(PROPERTIES_RESOURCE, roleId, userName, propertyId);
     }
 
-    public void roleNameExistsBetweenUserAndProperty(String roleId, String userId, String propertyId, Boolean isActive) {
+    public void roleNameExistsBetweenUserAndProperty(UUID roleId, UUID userId, UUID propertyId, Boolean isActive) {
         roleNameExistsBetweenUserAndEntity(PROPERTIES_RESOURCE, roleId, userId, propertyId, isActive);
     }
 
-    public void getRolesBetweenUserAndProperty(String userId, String propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public void getRolesBetweenUserAndProperty(UUID userId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) {
         getRolesBetweenUserAndEntity(PROPERTIES_RESOURCE, userId, propertyId, limit, cursor, filter, sort, sortDesc);
     }
 
 
 //------------------------------------------------------------------------------------------------------------
 
-    public void roleExistsBetweenUserAndPropertySet(String roleId, String userName, String propertySetId, Boolean isActive) {
-        roleExistsBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userName, propertySetId, isActive);
+    public void roleExistsBetweenUserAndPropertySet(UUID roleId, UUID userId, UUID propertySetId, Boolean isActive) {
+        roleExistsBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userId, propertySetId, isActive);
     }
 
-    public void addRoleToUserPropertySet(String roleId, String userName, String propertySetId, Boolean isActive) {
-        createRoleBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userName, propertySetId, isActive);
+    public void addRoleToUserPropertySet(UUID roleId, UUID userId, UUID propertySetId, Boolean isActive) {
+        createRoleBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userId, propertySetId, isActive);
     }
 
-    public void roleBetweenUserAndPropertySetIsDeleted(String roleId, String userId, String propertySetId, String nonExistent) {
+    public void roleBetweenUserAndPropertySetIsDeleted(UUID roleId, UUID userId, UUID propertySetId, String nonExistent) {
         roleBetweenUserAndEntityIsDeleted(PROPERTY_SETS_RESOURCE, roleId, userId, propertySetId, nonExistent);
     }
 
-    public void roleBetweenUserAndPropertySetNotExists(String roleId, String userName, String propertySetId) {
+    public void roleBetweenUserAndPropertySetNotExists(UUID roleId, String userName, UUID propertySetId) {
         roleBetweenUserAndEntityNotExists(PROPERTY_SETS_RESOURCE, roleId, userName, propertySetId);
     }
 
-    public void roleNameExistsBetweenUserAndPropertySet(String roleId, String userId, String propertySetId, Boolean isActive) {
+    public void roleNameExistsBetweenUserAndPropertySet(UUID roleId, UUID userId, UUID propertySetId, Boolean isActive) {
         roleNameExistsBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userId, propertySetId, isActive);
     }
 
-    public void getRolesBetweenUserAndPropertySet(String userId, String propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
+    public void getRolesBetweenUserAndPropertySet(UUID userId, UUID propertySetId, String limit, String cursor, String filter, String sort, String sortDesc) {
         getRolesBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, userId, propertySetId, limit, cursor, filter, sort, sortDesc);
     }
 
-    public void addRoleBetweenNotExistingUserAndPropertySet(String roleId, String userName, String propertySetId, Boolean isActive) {
-        roleExistsBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userName, propertySetId, isActive);
+    public void addRoleBetweenNotExistingUserAndPropertySet(UUID roleId, UUID userId, UUID propertySetId, Boolean isActive) {
+        roleExistsBetweenUserAndEntity(PROPERTY_SETS_RESOURCE, roleId, userId, propertySetId, isActive);
     }
 }
