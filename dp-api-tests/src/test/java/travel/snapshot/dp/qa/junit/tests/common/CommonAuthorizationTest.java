@@ -9,11 +9,10 @@ import org.junit.Before;
 import java.util.Map;
 
 
-/*
+/**
   A generic class for tests that use authorization workflow.
   This class invokes keycloak-specific steps at setUp and cleanUp to prepare keycloak clients
   corresponding to the context application versions.
-
  */
 public abstract class CommonAuthorizationTest extends CommonTest {
 
