@@ -589,9 +589,9 @@ public class CustomerSteps extends BasicSteps {
         return Arrays.asList(customers);
     }
 
-    public void removeAllUsersFromCustomers(List<String> customerIds) {
+    public void removeAllUsersFromCustomers(List<UUID> customerIds) {
         customerIds.forEach(customerId -> {
-            CustomerDto customer = getCustomerById(UUID.fromString(customerId));
+            CustomerDto customer = getCustomerById(customerId);
             if (customer != null) {
                 Response customerUsersResponse = getSecondLevelEntities(customer.getId(), USERS_RESOURCE, LIMIT_TO_ALL, CURSOR_FROM_FIRST, null, null, null, null);
                 CustomerUserRelationshipPartialDto[] customerUsers = customerUsersResponse.as(CustomerUserRelationshipPartialDto[].class);

@@ -154,8 +154,8 @@ public class UserGroupsSteps extends BasicSteps {
         RoleRelationshipDto[] roles = getSessionResponse().as(RoleRelationshipDto[].class);
         int i = 0;
         for (RoleRelationshipDto roleRelationship : roles) {
-            if (!roleRelationship.getRoleId().toString().startsWith(order.get(i))) {
-                fail("Expected ID: " + roleRelationship.getRoleId() + "but was starting with: " + order.get(i));
+            if (!roleRelationship.getId().toString().startsWith(order.get(i))) {
+                fail("Expected ID: " + roleRelationship.getId() + "but was starting with: " + order.get(i));
             }
             i++;
         }
@@ -442,7 +442,7 @@ public class UserGroupsSteps extends BasicSteps {
     @Step
     public void relationshipGroupRoleExist(UUID userGroupId, UUID roleId, Boolean isActive) throws JsonProcessingException {
         RoleRelationshipDto roleObject = new RoleRelationshipDto();
-        roleObject.setRoleId(roleId);
+        roleObject.setId(roleId);
 
         JSONObject roleInJson = retrieveData(roleObject);
 
@@ -461,7 +461,7 @@ public class UserGroupsSteps extends BasicSteps {
     @Step
     public void userGroupPropertySetRoleRelationshipIsCreatedByUserForApp(UUID userId, UUID applicationVersionId, UUID userGroupId, UUID propertySetId, UUID roleId) {
         RoleRelationshipDto roleRelationship = new RoleRelationshipDto();
-        roleRelationship.setRoleId(roleId);
+        roleRelationship.setId(roleId);
 
         Response response = createThirdLevelEntityByUserForApplication(userId, applicationVersionId, userGroupId, PROPERTY_SETS_RESOURCE, propertySetId, ROLES_RESOURCE, roleRelationship);
         setSessionResponse(response);

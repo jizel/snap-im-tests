@@ -274,7 +274,7 @@ public class BasicSteps {
         return response.getBody().jsonPath().get(attributeName).toString();
     }
 
-    private static String getBaseUriForModule(String module) {
+    public static String getBaseUriForModule(String module) {
         module = (module == null) ? "" : module;
         String baseUri = "";
         switch (module) {

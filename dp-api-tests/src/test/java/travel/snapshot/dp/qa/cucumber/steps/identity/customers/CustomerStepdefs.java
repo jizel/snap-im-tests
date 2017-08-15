@@ -86,7 +86,7 @@ public class CustomerStepdefs {
     // ---------------------------- GIVEN ------------------------------
 
     @Given("^All users are removed for customers with ids: (.*)$")
-    public void All_users_are_removed_for_customers_with_ids_default(List<String> customerIds) throws Throwable {
+    public void All_users_are_removed_for_customers_with_ids_default(List<UUID> customerIds) throws Throwable {
         customerSteps.removeAllUsersFromCustomers(customerIds);
     }
 

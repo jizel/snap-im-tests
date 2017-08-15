@@ -2,39 +2,10 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static java.util.Arrays.stream;
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_USER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
 
 import com.jayway.restassured.response.Response;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRoleRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.*;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.time.LocalDate;
@@ -458,8 +429,27 @@ public class RelationshipsHelpers extends BasicSteps {
         return stream(relationshipDtos).findFirst().orElse(null);
     }
 
+    // roles
+
+    public void createUserCustomerRoleRelationWithAuth(UUID userCustomerRelationId, UUID roleId) {
+        // Uses the new endpoint /identity/user_customer_role_relationships
+        UserCustomerRoleRelationshipDto relation = new UserCustomerRoleRelationshipDto();
+        relation.setUserCustomerId(userCustomerRelationId);
+        relation.setRoleId(roleId);
+        authorizationHelpers.createEntity(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, relation);
+    }
+
+    public UUID userCustomerRoleRelationIsCreatedWithAuth(UUID userCustomerRelationId, UUID roleId) {
+        // Uses the new endpoint /identity/user_customer_role_relationships
+        createUserCustomerRoleRelationWithAuth(userCustomerRelationId, roleId);
+        responseCodeIs(SC_CREATED);
+        UUID relationId = getSessionResponse().as(UserCustomerRoleRelationshipDto.class).getId();
+        commonHelpers.updateRegistryOfDeleTables(USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE, relationId);
+        return relationId;
+    }
 
     //    Help methods
+
     private UserCustomerRelationshipDto constructUserCustomerRelationshipDto(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
         UserCustomerRelationshipDto userCustomerRelationship = new UserCustomerRelationshipDto();
         userCustomerRelationship.setCustomerId(customerId);
@@ -537,25 +527,6 @@ public class RelationshipsHelpers extends BasicSteps {
         userGroupPropertySetRelationship.setUserGroupId(userGroupId);
         userGroupPropertySetRelationship.setIsActive(isActive);
         return userGroupPropertySetRelationship;
-    }
-
-    // roles
-
-    public void createUserCustomerRoleRelationWithAuth(UUID userCustomerRelationId, UUID roleId) {
-        // Uses the new endpoint /identity/user_customer_role_relationships
-        UserCustomerRoleRelationshipDto relation = new UserCustomerRoleRelationshipDto();
-        relation.setUserCustomerId(userCustomerRelationId);
-        relation.setRoleId(roleId);
-        authorizationHelpers.createEntity(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, relation);
-    }
-
-    public UUID userCustomerRoleRelationIsCreatedWithAuth(UUID userCustomerRelationId, UUID roleId) {
-        // Uses the new endpoint /identity/user_customer_role_relationships
-        createUserCustomerRoleRelationWithAuth(userCustomerRelationId, roleId);
-        responseCodeIs(SC_CREATED);
-        UUID relationId = getSessionResponse().as(UserCustomerRoleRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE, relationId);
-        return relationId;
     }
 
 }
