@@ -20,7 +20,7 @@ import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
@@ -268,7 +268,7 @@ public class PropertySteps extends BasicSteps {
     }
 
     @Step
-    public void updatePropertyAddress(UUID propertyId, AddressUpdateDto addressUpdate) {
+    public void updatePropertyAddress(UUID propertyId, AddressDto addressUpdate) {
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setAddress(addressUpdate);
         updateProperty(propertyId, propertyUpdate);
