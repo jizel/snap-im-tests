@@ -4,14 +4,18 @@ package travel.snapshot.dp.qa.junit.tests.identity.access_checks;
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import travel.snapshot.dp.api.identity.model.*;
+import qa.tools.ikeeper.annotation.Jira;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
@@ -70,6 +74,7 @@ public class CustomerAccessCheckTests extends CommonTest {
     }
 
     @Test
+    @Jira("DPIM-50")
     public void thereIsActiveCommercialSubscriptionLinkingToTheApplicationVersion() throws Throwable {
         commonHelpers.getEntityByUserForApplication(userId, versionWithSubscriptionId, CUSTOMERS_PATH, customer1Id);
         responseCodeIs(SC_OK);

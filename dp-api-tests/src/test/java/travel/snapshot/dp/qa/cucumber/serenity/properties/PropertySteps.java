@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +20,6 @@ import com.jayway.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
 import net.thucydides.core.annotations.Step;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
@@ -208,7 +208,7 @@ public class PropertySteps extends BasicSteps {
         relation.setUserId(userId);
         relation.setIsActive(isActive);
 
-        createEntityByUserForApplication(performerId, applicationVersionId, relation);
+        createSecondLevelRelationshipByUserForApplication(performerId, applicationVersionId, propertyId, USERS_PATH, relation);
     }
 
     @Step
