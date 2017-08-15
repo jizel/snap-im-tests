@@ -13,7 +13,7 @@ import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserCreateDto;
 import travel.snapshot.dp.qa.cucumber.helpers.DbHelper;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public class DbUtilsSteps {
         dbHelper.identityDb().update(DELETE_USER_PROPERTY_BY_USER_ID_PROPERTY_ID, userId, propertyId);
     }
 
-    public void createDBUser(UserDto user) {
+    public void createDBUser(UserCreateDto user) {
         dbHelper.identityDb().update(CREATE_DB_USER, (user.getId()), user.getType().toString(), user.getUsername(), DEFAULT_ENCRYPTED_PASSWORD, user.getFirstName(), user.getLastName(), user.getEmail(), user.getTimezone(), user.getLanguageCode(), user.getIsActive());
     }
 

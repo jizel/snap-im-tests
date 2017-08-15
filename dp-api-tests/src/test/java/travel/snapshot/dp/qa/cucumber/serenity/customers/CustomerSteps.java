@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
@@ -326,7 +325,7 @@ public class CustomerSteps extends BasicSteps {
     }
 
     @Step
-    public void updateCustomerAddress(UUID customerId, AddressUpdateDto updatedAddress) throws Throwable {
+    public void updateCustomerAddress(UUID customerId, AddressDto updatedAddress) throws Throwable {
         Response temp = getEntity(customerId);
         if (temp.getStatusCode() != HttpStatus.SC_OK) {
             fail("Customer " + customerId + " not found!");

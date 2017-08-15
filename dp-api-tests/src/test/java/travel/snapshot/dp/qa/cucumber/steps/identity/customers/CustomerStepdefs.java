@@ -25,7 +25,7 @@ import net.thucydides.core.annotations.Steps;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
@@ -290,7 +290,7 @@ public class CustomerStepdefs {
     }
 
     @When("^Customer with id \"([^\"]*)\", update address with following data$")
-    public void customerWithIdUpdateAddressWithFollowingData(UUID customerId, List<AddressUpdateDto> addresses) throws Throwable {
+    public void customerWithIdUpdateAddressWithFollowingData(UUID customerId, List<AddressDto> addresses) throws Throwable {
         customerSteps.updateCustomerAddress(customerId, addresses.get(0));
     }
 

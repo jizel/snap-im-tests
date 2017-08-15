@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.notification;
 
 
 import static travel.snapshot.dp.qa.cucumber.helpers.RoleType.CUSTOMER;
+import static travel.snapshot.dp.qa.cucumber.serenity.roles.RoleBaseSteps.getRoleBaseType;
 import static travel.snapshot.dp.qa.junit.helpers.NotificationHelpers.verifyNotification;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.getSingleTestData;
 import static travel.snapshot.dp.qa.junit.loaders.YamlLoader.loadTestData;
@@ -50,7 +51,7 @@ public class RoleNotificationsTests extends CommonTest{
     public void updateRoleNotificationTest() throws Exception {
         Map<String, Object> expectedCreateNotification = getSingleTestData(notificationTestsData, "updateRoleNotificationTest");
         RoleDto createdRole = roleHelpers.roleIsCreated(testCustomerRole1, CUSTOMER);
-        RoleUpdateDto roleUpdate = new RoleUpdateDto();
+        RoleUpdateDto roleUpdate = getRoleBaseType().getDtoClassType().newInstance();
         roleUpdate.setName("Updated Role Name");
         jmsSteps.subscribe(NOTIFICATION_CRUD_TOPIC, JMS_SUBSCRIPTION_NAME);
         roleHelpers.updateRole(createdRole.getId(), roleUpdate, roleHelpers.getEntityEtag(createdRole.getId()));

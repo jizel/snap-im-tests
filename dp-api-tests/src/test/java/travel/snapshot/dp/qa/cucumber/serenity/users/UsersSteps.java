@@ -244,7 +244,7 @@ public class UsersSteps extends BasicSteps {
     private Response addRoleToUserEntity(UUID roleId, UUID userId, UUID entityId, String entityName) {
         String path = buildPathForRoles(entityName, userId, entityId);
         RoleRelationshipDto role = new RoleRelationshipDto();
-        role.setId(roleId);
+        role.setRoleId(roleId);
         JSONObject jsonRole = null;
         try {
             jsonRole = retrieveData(role);

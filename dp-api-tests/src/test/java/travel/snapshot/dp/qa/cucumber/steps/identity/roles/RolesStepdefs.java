@@ -91,7 +91,7 @@ public class RolesStepdefs {
         RoleDto role = roleBaseSteps.getRoleByName(roleName);
         assertThat(role,is(notNullValue()));
         String originalEtag = roleBaseSteps.getEntityEtag(role.getId());
-        RoleUpdateDto firstUpdate = new RoleUpdateDto();
+        RoleUpdateDto firstUpdate = getRoleBaseType().getDtoClassType().newInstance();
         firstUpdate.setDescription("first update");
         roleBaseSteps.updateRole(role.getId(), firstUpdate, originalEtag);
         assertThat("Update was not successfull", roleBaseSteps.getSessionResponse().getStatusCode(), is(HttpStatus.SC_NO_CONTENT));

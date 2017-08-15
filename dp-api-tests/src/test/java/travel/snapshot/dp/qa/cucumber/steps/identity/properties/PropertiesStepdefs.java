@@ -20,7 +20,7 @@ import net.thucydides.core.annotations.Steps;
 import org.apache.http.HttpStatus;
 import org.slf4j.LoggerFactory;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.AddressUpdateDto;
+import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialUpdateDto;
@@ -412,7 +412,7 @@ public class PropertiesStepdefs {
     }
 
     @When("^Property \"([^\"]*)\" is updated with address$")
-    public void propertyIsUpdatedWithAddressForUserAndCustomerWithId(String propertyName, List<AddressUpdateDto> addresses) throws Throwable {
+    public void propertyIsUpdatedWithAddressForUserAndCustomerWithId(String propertyName, List<AddressDto> addresses) throws Throwable {
         UUID propertyId = propertySteps.resolvePropertyId(propertyName);
 
         propertySteps.updatePropertyAddress(propertyId, addresses.get(0));
