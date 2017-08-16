@@ -5,71 +5,19 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.util.TextUtils.isBlank;
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
 
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
-import travel.snapshot.dp.api.identity.model.ApplicationDto;
-import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
-import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
-import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.PartnerDto;
-import travel.snapshot.dp.api.identity.model.PropertyDto;
-import travel.snapshot.dp.api.identity.model.PropertySetDto;
-import travel.snapshot.dp.api.identity.model.RoleDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserCustomerRoleRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserDto;
-import travel.snapshot.dp.api.identity.model.UserGroupDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertyRoleRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRoleRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupRoleRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertyRoleRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
-import travel.snapshot.dp.api.identity.model.UserPropertySetRoleRelationshipDto;
+import travel.snapshot.dp.api.model.VersionedEntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.Assert.fail;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_USER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
 
 public class CommonHelpers extends BasicSteps {
 
@@ -94,99 +42,6 @@ public class CommonHelpers extends BasicSteps {
 
     public ArrayList<UUID> getArrayFromMap(String aKey, Map<String, ArrayList<UUID>> inputMap) {
         return (inputMap.get(aKey) == null) ? new ArrayList<>() : inputMap.get(aKey);
-    }
-
-    private <T> T parseEntity(Class<T> clazz) throws IOException {
-        Response response = getSessionResponse();
-        return createObjectMapper().readValue(response.asString(), TypeFactory.defaultInstance().constructType(clazz));
-    }
-
-    private UUID getResponseEntityId(String basePath) throws IOException {
-        UUID id = null;
-        switch (basePath) {
-            case USERS_PATH:
-                id = parseEntity(UserDto.class).getId();
-                break;
-            case CUSTOMERS_PATH:
-                id = parseEntity(CustomerDto.class).getId();
-                break;
-            case ROLES_PATH:
-                id = parseEntity(RoleDto.class).getId();
-                break;
-            case PROPERTIES_PATH:
-                id = parseEntity(PropertyDto.class).getId();
-                break;
-            case PROPERTY_SETS_PATH:
-                id = parseEntity(PropertySetDto.class).getId();
-                break;
-            case APPLICATIONS_PATH:
-                id = parseEntity(ApplicationDto.class).getId();
-                break;
-            case APPLICATION_VERSIONS_PATH:
-                id = parseEntity(ApplicationVersionDto.class).getId();
-                break;
-            case COMMERCIAL_SUBSCRIPTIONS_PATH:
-                id = parseEntity(CommercialSubscriptionDto.class).getId();
-                break;
-            case PARTNERS_PATH:
-                id = parseEntity(PartnerDto.class).getId();
-                break;
-            case USER_CUSTOMER_RELATIONSHIPS_PATH:
-                id = parseEntity(UserCustomerRelationshipDto.class).getId();
-                break;
-            case USER_PROPERTY_RELATIONSHIPS_PATH:
-                id = parseEntity(UserPropertyRelationshipDto.class).getId();
-                break;
-            case USER_PROPERTY_SET_RELATIONSHIPS_PATH:
-                id = parseEntity(UserPropertySetRelationshipDto.class).getId();
-                break;
-            case USER_PARTNER_RELATIONSHIPS_PATH:
-                id = parseEntity(UserPartnerRelationshipDto.class).getId();
-                break;
-            case USER_GROUP_USER_RELATIONSHIPS_PATH:
-                id = parseEntity(UserGroupUserRelationshipDto.class).getId();
-                break;
-            case CUSTOMER_PROPERTY_RELATIONSHIPS_PATH:
-                id = parseEntity(CustomerPropertyRelationshipDto.class).getId();
-                break;
-            case USER_GROUPS_PATH:
-                id = parseEntity(UserGroupDto.class).getId();
-                break;
-            case USER_CUSTOMER_ROLES_PATH:
-                id = parseEntity(RoleDto.class).getId();
-                break;
-            case USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH:
-                id = parseEntity(UserCustomerRoleRelationshipDto.class).getId();
-                break;
-            case USER_GROUP_PROPERTY_RELATIONSHIPS_PATH:
-                id = parseEntity(UserGroupPropertyRelationshipDto.class).getId();
-                break;
-            case USER_GROUP_PROPERTY_ROLE_RELATIONSHIPS_PATH:
-                id = parseEntity(UserGroupPropertyRoleRelationshipDto.class).getId();
-                break;
-            case USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH:
-                id = parseEntity(UserGroupPropertySetRelationshipDto.class).getId();
-                break;
-            case USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH:
-                id = parseEntity(UserGroupPropertySetRoleRelationshipDto.class).getId();
-                break;
-            case USER_GROUP_ROLE_RELATIONSHIPS_PATH:
-                id = parseEntity(UserGroupRoleRelationshipDto.class).getId();
-                break;
-            case USER_PROPERTY_ROLE_RELATIONSHIPS_PATH:
-                id = parseEntity(UserPropertyRoleRelationshipDto.class).getId();
-                break;
-            case USER_PROPERTY_ROLES_PATH:
-                id = parseEntity(RoleDto.class).getId();
-                break;
-            case USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH:
-                id = parseEntity(UserPropertySetRoleRelationshipDto.class).getId();
-                break;
-            case USER_PROPERTY_SET_ROLES_PATH:
-                id = parseEntity(RoleDto.class).getId();
-                break;
-        }
-        return id;
     }
 
     // Get all
@@ -251,9 +106,9 @@ public class CommonHelpers extends BasicSteps {
     // Create
 
     public UUID entityIsCreated(String basePath, Object entity) throws IOException {
-        createEntity(basePath, entity);
+        Response response = createEntity(basePath, entity);
         responseCodeIs(SC_CREATED);
-        return getResponseEntityId(basePath);
+        return getDtoFromResponse(response, basePath).getId();
     }
 
     public <T> T entityWithTypeIsCreated(String basePath, Class<T> type, T entity) {
@@ -384,4 +239,9 @@ public class CommonHelpers extends BasicSteps {
         setSessionResponse(response);
     }
 
+//    Private help methods
+
+    private VersionedEntityDto getDtoFromResponse(Response response, String basePath){
+        return response.as(endpointEntityMap.get(basePath));
+    }
 }
