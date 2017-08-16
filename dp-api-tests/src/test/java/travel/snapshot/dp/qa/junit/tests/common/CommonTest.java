@@ -113,6 +113,8 @@ public abstract class CommonTest {
     protected static PropertyDto testProperty1;
     protected static PropertyDto testProperty2;
     protected static PropertySetDto testPropertySet1;
+    protected static PropertySetDto testPropertySet2;
+    protected static PropertySetDto testPropertySet3;
     protected static CustomerRoleDto testCustomerRole1;
     protected static PartnerDto testPartner1;
     protected static PartnerDto testPartner2;
@@ -161,6 +163,8 @@ public abstract class CommonTest {
         testProperty1 = propertyDtos.get("property1");
         testProperty2 = propertyDtos.get("property2");
         testPropertySet1 = propertySetDtos.get("propertySet1");
+        testPropertySet2 = propertySetDtos.get("propertySet2");
+        testPropertySet3 = propertySetDtos.get("propertySet3");
         testCustomerRole1 = entitiesLoader.getCustomerRoleDtos().get("customerRole1");
         testPartner1 = partnerDtos.get("partner1");
         testPartner2 = partnerDtos.get("partner2");
