@@ -108,7 +108,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
                 CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
         commonHelpers.deleteEntityWithEtag(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
-        Response deletedResponse = commonHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
-        assertThat(deletedResponse.getStatusCode(), is(SC_NOT_FOUND));
+        commonHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
+        responseCodeIs(SC_NOT_FOUND);
     }
 }
