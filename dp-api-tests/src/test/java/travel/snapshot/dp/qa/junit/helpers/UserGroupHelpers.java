@@ -35,7 +35,7 @@ public class UserGroupHelpers extends UserGroupsSteps{
         createUserGroupWithAuth(userGroup);
         responseCodeIs(SC_CREATED);
         UUID groupId = getSessionResponse().as(UserGroupDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(USER_GROUPS_RESOURCE, groupId);
+        commonHelpers.updateRegistryOfDeletables(USER_GROUPS_RESOURCE, groupId);
         return groupId;
     }
 }

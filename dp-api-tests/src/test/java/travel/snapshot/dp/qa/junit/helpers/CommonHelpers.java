@@ -2,21 +2,19 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.util.TextUtils.isBlank;
+import static org.junit.Assert.*;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.junit.Assert.fail;
 
 public class CommonHelpers extends BasicSteps {
 
@@ -27,7 +25,7 @@ public class CommonHelpers extends BasicSteps {
        spec.baseUri(getBaseUriForModule("identity"));
     }
 
-    public void updateRegistryOfDeleTables(String entityType, UUID id) {
+    public void updateRegistryOfDeletables(String entityType, UUID id) {
         // Retrieve the map from serenity session variable
         Map<String, ArrayList<UUID>> registry = Serenity.sessionVariableCalled(ENTITIES_TO_DELETE);
         // Retrieve the array of ids of the certain enity type
@@ -46,11 +44,7 @@ public class CommonHelpers extends BasicSteps {
     // Get all
 
     public Response getEntities(String basePath, Map<String, String> queryParams) {
-        return getEntitiesByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, queryParams);
-    }
-
-    public Response getEntitiesByUser(UUID userId, String basePath, Map<String, String> queryParams)  {
-        return getEntitiesByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, queryParams);
+        return getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, queryParams);
     }
 
     public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
@@ -71,11 +65,7 @@ public class CommonHelpers extends BasicSteps {
 
 
     public Response getEntity(String basePath, UUID entityId) {
-        return getEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
-    }
-
-    public Response getEntityByUser(UUID userId, String basePath, UUID entityId) {
-        return getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
+        return getEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
     public Response getEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId) {
@@ -90,14 +80,14 @@ public class CommonHelpers extends BasicSteps {
         return response;
     }
 
+    public <T> T getEntityAsType(String basePath, Class<T> type,  UUID entityId){
+        return getEntity(basePath, entityId).as(type);
+    }
+
     // Get etag
 
     public String getEntityEtag(String basePath, UUID entityId) {
-        return getEntityEtagByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
-    }
-
-    public String getEntityEtagByUser(UUID userId, String basePath, UUID entityId) {
-        return getEntityEtagByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
+        return getEntityEtagByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
     public String getEntityEtagByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId) {
@@ -112,17 +102,19 @@ public class CommonHelpers extends BasicSteps {
 
     // Create
 
-    public void entityIsCreated(String basePath, Object entity) throws IOException {
+    public void entityIsCreated(String basePath, Object entity) {
         createEntity(basePath, entity);
         responseCodeIs(SC_CREATED);
     }
 
-    public Response createEntity(String basePath, Object entity) {
-        return createEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entity);
+    public <T> T entityWithTypeIsCreated(String basePath, Class<T> type, T entity) {
+        Response response = createEntity(basePath, entity);
+        responseCodeIs(SC_CREATED);
+        return response.as(type);
     }
 
-    public Response createEntityByUser(UUID userId, String basePath, Object entity) {
-        return createEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
+    public Response createEntity(String basePath, Object entity) {
+        return createEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entity);
     }
 
     public Response createEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, Object entity) {
@@ -135,11 +127,7 @@ public class CommonHelpers extends BasicSteps {
     // Update
 
     public Response updateEntityWithEtag(String basePath, UUID entityId, Object data) {
-        return updateEntityByUserWithEtag(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, data);
-    }
-
-    public Response updateEntityByUserWithEtag(UUID userId, String basePath, UUID entityId, Object data) {
-        return updateEntityByUserForAppWithEtag(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
+        return updateEntityByUserForAppWithEtag(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
     }
 
     public Response updateEntityByUserForAppWithEtag(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data) {
@@ -161,11 +149,7 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public Response updateEntity(String basePath, UUID entityId, Object data, String etag) {
-        return updateEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, data, etag);
-    }
-
-    public Response updateEntityByUser(UUID userId, String basePath, UUID entityId, Object data, String etag) {
-        return updateEntityByUserForApp(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data, etag);
+        return updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data, etag);
     }
 
     public Response updateEntityByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data, String etag) {
@@ -200,11 +184,7 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public void deleteEntity(String basePath, UUID entityId, String etag) {
-        deleteEntityByUser(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId, etag);
-    }
-
-    public void deleteEntityByUser(UUID userId, String basePath, UUID entityId, String etag) {
-        deleteEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, etag);
+        deleteEntityByUserForApplication(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, etag);
     }
 
     public void deleteEntityByUserForApplication(UUID userId, UUID applicationId, String basePath, UUID entityId, String etag) {
@@ -237,11 +217,7 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public void deleteEntityWithEtag(String basePath, UUID entityId) {
-        deleteEntityByUserWithEtag(DEFAULT_SNAPSHOT_USER_ID, basePath, entityId);
-    }
-
-    public void deleteEntityByUserWithEtag(UUID userId, String basePath, UUID entityId) {
-        deleteEntityByUserForAppWithEtag(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
+        deleteEntityByUserForAppWithEtag(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId);
     }
 
     public void deleteEntityByUserForAppWithEtag(UUID userId, UUID applicationId, String basePath, UUID entityId) {
@@ -254,7 +230,7 @@ public class CommonHelpers extends BasicSteps {
                 .basePath(basePath)
                 .header(HEADER_XAUTH_USER_ID, userId)
                 .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
-                .header(HEADER_ETAG, etag);
+                .header(HEADER_IF_MATCH, etag);
         Response response = requestSpecification.when().delete("/{id}", entityId);
         setSessionResponse(response);
     }

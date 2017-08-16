@@ -41,7 +41,7 @@ public class PropertyHelpers extends PropertySteps{
         createPropertyWithAuth(property);
         responseCodeIs(SC_CREATED);
         UUID propertyId = getSessionResponse().as(PropertyDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(PROPERTIES_RESOURCE, propertyId);
+        commonHelpers.updateRegistryOfDeletables(PROPERTIES_RESOURCE, propertyId);
         return propertyId;
 
     }

@@ -42,11 +42,11 @@ public class UserHelpers extends UsersSteps {
         createUserWithAuth(userObject);
         responseCodeIs(SC_CREATED);
         UUID userId = getSessionResponse().as(UserDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(USERS, userId);
+        commonHelpers.updateRegistryOfDeletables(USERS, userId);
 
         // now we need to mark default user_customer relationship for deletion
         UserCustomerRelationshipDto relation = relationshipHelpers.getUserCustomerRelationsForUserWithAuth(userId).get(0);
-        commonHelpers.updateRegistryOfDeleTables(CUSTOMER_USERS, relation.getId());
+        commonHelpers.updateRegistryOfDeletables(CUSTOMER_USERS, relation.getId());
 
         return getSessionResponse().as(UserDto.class).getId();
     }
