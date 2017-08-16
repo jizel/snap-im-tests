@@ -33,7 +33,7 @@ public class RoleHelpers extends RoleBaseSteps {
         authorizationHelpers.createEntity(USER_CUSTOMER_ROLES_PATH, role);
         responseCodeIs(SC_CREATED);
         UUID roleId = getSessionResponse().as(CustomerRoleDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(ROLES_RESOURCE, roleId);
+        commonHelpers.updateRegistryOfDeletables(ROLES_RESOURCE, roleId);
         return roleId;
     }
 
@@ -41,7 +41,7 @@ public class RoleHelpers extends RoleBaseSteps {
         authorizationHelpers.createEntity(USER_PROPERTY_ROLES_PATH, role);
         responseCodeIs(SC_CREATED);
         UUID roleId = getSessionResponse().as(PropertyRoleDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(ROLES_RESOURCE, roleId);
+        commonHelpers.updateRegistryOfDeletables(ROLES_RESOURCE, roleId);
         return roleId;
     }
 }

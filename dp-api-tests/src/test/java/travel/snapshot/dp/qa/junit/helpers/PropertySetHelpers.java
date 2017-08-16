@@ -30,7 +30,7 @@ public class PropertySetHelpers extends PropertySetSteps {
         createPropertySetWithAuth(propertySet);
         responseCodeIs(SC_CREATED);
         UUID propertySetId = getSessionResponse().as(PropertySetDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(PROPERTY_SETS_RESOURCE, propertySetId);
+        commonHelpers.updateRegistryOfDeletables(PROPERTY_SETS_RESOURCE, propertySetId);
         return propertySetId;
     }
 

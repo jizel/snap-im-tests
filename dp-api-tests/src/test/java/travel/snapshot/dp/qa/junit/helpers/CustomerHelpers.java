@@ -65,7 +65,7 @@ public class CustomerHelpers extends CustomerSteps {
         createCustomerWithAuth(customer);
         responseCodeIs(SC_CREATED);
         UUID customerId = getSessionResponse().as(CustomerDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(CUSTOMERS_RESOURCE, customerId);
+        commonHelpers.updateRegistryOfDeletables(CUSTOMERS_RESOURCE, customerId);
         return customerId;
     }
 
@@ -109,15 +109,15 @@ public class CustomerHelpers extends CustomerSteps {
 
     public UUID addPropertyToCustomerWithAuthUsingPartialDto(UUID propertyId, UUID customerId) {
         CustomerPropertyRelationshipPartialDto relation = new CustomerPropertyRelationshipPartialDto();
-        relation.setPropertyId(DEFAULT_PROPERTY_ID);
+        relation.setPropertyId(propertyId);
         relation.setIsActive(true);
         relation.setType(CustomerPropertyRelationshipType.CHAIN);
         relation.setValidFrom(LocalDate.parse("2015-01-01"));
         relation.setValidTo(LocalDate.parse("2019-01-01"));
-        CustomerPropertyRelationshipPartialDto customerProperty = authorizationHelpers.createSecondLevelRelation(CUSTOMERS_PATH, DEFAULT_SNAPSHOT_CUSTOMER_ID, PROPERTIES_RESOURCE, relation)
+        CustomerPropertyRelationshipPartialDto customerProperty = authorizationHelpers.createSecondLevelRelation(CUSTOMERS_PATH, customerId, PROPERTIES_RESOURCE, relation)
                 .as(CustomerPropertyRelationshipPartialDto.class);
         UUID relationId = customerProperty.getId();
-        commonHelpers.updateRegistryOfDeleTables(CUSTOMER_PROPERTIES, relationId);
+        commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
         return relationId;
     }
 

@@ -2,10 +2,40 @@ package travel.snapshot.dp.qa.junit.helpers;
 
 import static java.util.Arrays.stream;
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_USER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 
 import com.jayway.restassured.response.Response;
-import travel.snapshot.dp.api.identity.model.*;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
+import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRoleRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupPropertySetRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserGroupUserRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
+import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import java.time.LocalDate;
@@ -17,6 +47,10 @@ import java.util.UUID;
  * CRUD methods for relationship endpoints
  */
 public class RelationshipsHelpers extends BasicSteps {
+
+    public RelationshipsHelpers() {
+        spec.baseUri(PropertiesHelper.getProperty(IDENTITY_BASE_URI));
+    }
 
     private final CommonHelpers commonHelpers = new CommonHelpers();
     private final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
@@ -33,7 +67,7 @@ public class RelationshipsHelpers extends BasicSteps {
         createUserCustomerRelationshipWithAuth(userId, customerId, isActive, isPrimary);
         responseCodeIs(SC_CREATED);
         UUID relationId = getSessionResponse().as(UserCustomerRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(CUSTOMER_USERS, relationId);
+        commonHelpers.updateRegistryOfDeletables(CUSTOMER_USERS, relationId);
         return relationId;
     }
 
@@ -120,7 +154,7 @@ public class RelationshipsHelpers extends BasicSteps {
         createUserPropertyRelationWithAuth(userId, propertyId, isActive);
         responseCodeIs(SC_CREATED);
         UUID relationId = getSessionResponse().as(UserPropertyRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(USER_PROPERTIES, relationId);
+        commonHelpers.updateRegistryOfDeletables(USER_PROPERTIES, relationId);
         return relationId;
     }
 
@@ -169,7 +203,7 @@ public class RelationshipsHelpers extends BasicSteps {
         createUserPropertySetRelationWithAuth(userId, propertySetId, isActive);
         responseCodeIs(SC_CREATED);
         UUID relationId = getSessionResponse().as(UserPropertySetRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(USER_PROPERTYSETS, relationId);
+        commonHelpers.updateRegistryOfDeletables(USER_PROPERTYSETS, relationId);
         return relationId;
     }
 
@@ -206,15 +240,6 @@ public class RelationshipsHelpers extends BasicSteps {
 
     //    Customer Property Relationships
 
-    public Response createCustomerPropertyRelationship(UUID customerId, UUID propertyId, Boolean isActive,
-                                                       CustomerPropertyRelationshipType type,
-                                                       LocalDate validFrom,
-                                                       LocalDate validTo) {
-        spec.basePath(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH);
-        CustomerPropertyRelationshipDto CustomerPropertyRelationship = constructCustomerPropertyRelationshipDto(customerId, propertyId, isActive, type, validFrom, validTo);
-        return createEntity(CustomerPropertyRelationship);
-    }
-
     public void createCustomerPropertyRelationshipWithAuth(UUID customerId, UUID propertyId, Boolean isActive,
                                                            CustomerPropertyRelationshipType type,
                                                            LocalDate validFrom,
@@ -224,38 +249,14 @@ public class RelationshipsHelpers extends BasicSteps {
     }
 
     public UUID customerPropertyRelationIsCreatedWithAuth(UUID customerId, UUID propertyId, Boolean isActive,
-                                                            CustomerPropertyRelationshipType type,
-                                                            LocalDate validFrom,
-                                                            LocalDate validTo) {
+                                                          CustomerPropertyRelationshipType type,
+                                                          LocalDate validFrom,
+                                                          LocalDate validTo) {
         createCustomerPropertyRelationshipWithAuth(customerId, propertyId, isActive, type, validFrom, validTo);
         responseCodeIs(SC_CREATED);
         UUID relationId = getSessionResponse().as(CustomerPropertyRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(CUSTOMER_PROPERTIES, relationId);
+        commonHelpers.updateRegistryOfDeletables(CUSTOMER_PROPERTIES, relationId);
         return relationId;
-    }
-
-
-    public CustomerPropertyRelationshipDto customerPropertyRelationshipIsCreated(UUID customerId, UUID propertyId,
-                                                                                 Boolean isActive,
-                                                                                 CustomerPropertyRelationshipType type,
-                                                                                 LocalDate validFrom,
-                                                                                 LocalDate validTo) {
-        Response response = createCustomerPropertyRelationship(customerId, propertyId, isActive, type, validFrom, validTo);
-        responseCodeIs(SC_CREATED);
-        return response.as(CustomerPropertyRelationshipDto.class);
-    }
-
-    public Response updateCustomerPropertyRelationship(UUID relationshipId, Boolean isActive, CustomerPropertyRelationshipType type,
-                                                       LocalDate validFrom,
-                                                       LocalDate validTo) {
-        spec.basePath(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH);
-        CustomerPropertyRelationshipUpdateDto customerPropertyRelationshipUpdate = new CustomerPropertyRelationshipUpdateDto();
-        customerPropertyRelationshipUpdate.setIsActive(isActive);
-        customerPropertyRelationshipUpdate.setType(type);
-        customerPropertyRelationshipUpdate.setValidFrom(validFrom);
-        customerPropertyRelationshipUpdate.setValidTo(validTo);
-
-        return updateEntity(relationshipId, customerPropertyRelationshipUpdate, getEntityEtag(relationshipId));
     }
 
     public void updateCustomerPropertyRelationshipWithAuth(UUID relationshipId, Boolean isActive, CustomerPropertyRelationshipType type,
@@ -269,25 +270,13 @@ public class RelationshipsHelpers extends BasicSteps {
         authorizationHelpers.updateEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, relationshipId, customerPropertyRelationshipUpdate);
     }
 
-    public Response deleteCustomerPropertyRelationship(UUID relationshipId) {
-        spec.basePath(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH);
-        return deleteEntityWithEtag(relationshipId);
-    }
-
-    public CustomerPropertyRelationshipDto getCustomerPropertyRelationship(UUID relationshipId) {
-        spec.basePath(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH);
-        String filter = String.format("id==%s", relationshipId);
-        CustomerPropertyRelationshipDto[] relationshipDtos = getEntities(null, null, null, filter, null, null, null).as(CustomerPropertyRelationshipDto[].class);
-        return stream(relationshipDtos).findFirst().orElse(null);
-    }
-
     //    Property Set Property Relationships
 
     public UUID propertySetPropertyIsCreatedWithAuth(UUID propertySetId, UUID propertyId, Boolean isActive) {
         createPropertySetPropertyWithAuth(propertySetId, propertyId, isActive);
         responseCodeIs(SC_CREATED);
         UUID relationId = getSessionResponse().as(PropertySetPropertyRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(PROPERTYSET_PROPERTIES, relationId);
+        commonHelpers.updateRegistryOfDeletables(PROPERTYSET_PROPERTIES, relationId);
         return relationId;
     }
 
@@ -444,13 +433,13 @@ public class RelationshipsHelpers extends BasicSteps {
         createUserCustomerRoleRelationWithAuth(userCustomerRelationId, roleId);
         responseCodeIs(SC_CREATED);
         UUID relationId = getSessionResponse().as(UserCustomerRoleRelationshipDto.class).getId();
-        commonHelpers.updateRegistryOfDeleTables(USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE, relationId);
+        commonHelpers.updateRegistryOfDeletables(USER_CUSTOMER_ROLE_RELATIONSHIPS_RESOURCE, relationId);
         return relationId;
     }
 
     //    Help methods
 
-    private UserCustomerRelationshipDto constructUserCustomerRelationshipDto(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
+    public UserCustomerRelationshipDto constructUserCustomerRelationshipDto(UUID userId, UUID customerId, Boolean isActive, Boolean isPrimary) {
         UserCustomerRelationshipDto userCustomerRelationship = new UserCustomerRelationshipDto();
         userCustomerRelationship.setCustomerId(customerId);
         userCustomerRelationship.setUserId(userId);
@@ -459,7 +448,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return userCustomerRelationship;
     }
 
-    private UserPartnerRelationshipDto constructUserPartnerRelationshipDto(UUID userId, UUID partnerId, Boolean isActive) {
+    public UserPartnerRelationshipDto constructUserPartnerRelationshipDto(UUID userId, UUID partnerId, Boolean isActive) {
         UserPartnerRelationshipDto userPartnerRelationship = new UserPartnerRelationshipDto();
         userPartnerRelationship.setUserId(userId);
         userPartnerRelationship.setPartnerId(partnerId);
@@ -467,7 +456,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return userPartnerRelationship;
     }
 
-    private UserPropertyRelationshipDto constructUserPropertyRelationshipDto(UUID userId, UUID propertyId, Boolean isActive) {
+    public UserPropertyRelationshipDto constructUserPropertyRelationshipDto(UUID userId, UUID propertyId, Boolean isActive) {
         UserPropertyRelationshipDto userPartnerRelationship = new UserPropertyRelationshipDto();
         userPartnerRelationship.setUserId(userId);
         userPartnerRelationship.setPropertyId(propertyId);
@@ -475,7 +464,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return userPartnerRelationship;
     }
 
-    private UserPropertySetRelationshipDto constructUserPropertySetRelationshipDto(UUID userId, UUID propertySetId, Boolean isActive) {
+    public UserPropertySetRelationshipDto constructUserPropertySetRelationshipDto(UUID userId, UUID propertySetId, Boolean isActive) {
         UserPropertySetRelationshipDto userPropertySetRelationship = new UserPropertySetRelationshipDto();
         userPropertySetRelationship.setUserId(userId);
         userPropertySetRelationship.setPropertySetId(propertySetId);
@@ -483,10 +472,10 @@ public class RelationshipsHelpers extends BasicSteps {
         return userPropertySetRelationship;
     }
 
-    private CustomerPropertyRelationshipDto constructCustomerPropertyRelationshipDto(UUID customerId, UUID propertyId, Boolean isActive,
-                                                                                     CustomerPropertyRelationshipType type,
-                                                                                     LocalDate validFrom,
-                                                                                     LocalDate validTo) {
+    public CustomerPropertyRelationshipDto constructCustomerPropertyRelationshipDto(UUID customerId, UUID propertyId, Boolean isActive,
+                                                                                    CustomerPropertyRelationshipType type,
+                                                                                    LocalDate validFrom,
+                                                                                    LocalDate validTo) {
         CustomerPropertyRelationshipDto customerPropertyRelationship = new CustomerPropertyRelationshipDto();
         customerPropertyRelationship.setCustomerId(customerId);
         customerPropertyRelationship.setPropertyId(propertyId);
@@ -497,7 +486,20 @@ public class RelationshipsHelpers extends BasicSteps {
         return customerPropertyRelationship;
     }
 
-    private PropertySetPropertyRelationshipDto constructPropertySetPropertyRelationship(UUID propertySetId, UUID propertyId, Boolean isActive) {
+    public CustomerPropertyRelationshipUpdateDto constructCustomerPropertyRelationshipUpdate(Boolean isActive,
+                                                                                             CustomerPropertyRelationshipType type,
+                                                                                             LocalDate validFrom,
+                                                                                             LocalDate validTo) {
+        CustomerPropertyRelationshipUpdateDto customerPropertyRelationshipUpdate = new CustomerPropertyRelationshipUpdateDto();
+        customerPropertyRelationshipUpdate.setIsActive(isActive);
+        customerPropertyRelationshipUpdate.setType(type);
+        customerPropertyRelationshipUpdate.setValidFrom(validFrom);
+        customerPropertyRelationshipUpdate.setValidTo(validTo);
+
+        return customerPropertyRelationshipUpdate;
+    }
+
+    public PropertySetPropertyRelationshipDto constructPropertySetPropertyRelationship(UUID propertySetId, UUID propertyId, Boolean isActive) {
         PropertySetPropertyRelationshipDto propertySetPropertyRelationship = new PropertySetPropertyRelationshipDto();
         propertySetPropertyRelationship.setPropertyId(propertyId);
         propertySetPropertyRelationship.setPropertySetId(propertySetId);
@@ -505,7 +507,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return propertySetPropertyRelationship;
     }
 
-    private UserGroupUserRelationshipDto constructUserGroupUserRelationship(UUID userGroupId, UUID userId, Boolean isActive) {
+    public UserGroupUserRelationshipDto constructUserGroupUserRelationship(UUID userGroupId, UUID userId, Boolean isActive) {
         UserGroupUserRelationshipDto userGroupUserRelationship = new UserGroupUserRelationshipDto();
         userGroupUserRelationship.setUserGroupId(userGroupId);
         userGroupUserRelationship.setUserId(userId);
@@ -513,7 +515,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return userGroupUserRelationship;
     }
 
-    private UserGroupPropertyRelationshipDto constructUserGroupPropertyRelationship(UUID userGroupId, UUID propertyId, Boolean isActive) {
+    public UserGroupPropertyRelationshipDto constructUserGroupPropertyRelationship(UUID userGroupId, UUID propertyId, Boolean isActive) {
         UserGroupPropertyRelationshipDto userGroupPropertyRelationship = new UserGroupPropertyRelationshipDto();
         userGroupPropertyRelationship.setPropertyId(propertyId);
         userGroupPropertyRelationship.setUserGroupId(userGroupId);
@@ -521,7 +523,7 @@ public class RelationshipsHelpers extends BasicSteps {
         return userGroupPropertyRelationship;
     }
 
-    private UserGroupPropertySetRelationshipDto constructUserGroupPropertySetRelationship(UUID userGroupId, UUID propertySetId, Boolean isActive) {
+    public UserGroupPropertySetRelationshipDto constructUserGroupPropertySetRelationship(UUID userGroupId, UUID propertySetId, Boolean isActive) {
         UserGroupPropertySetRelationshipDto userGroupPropertySetRelationship = new UserGroupPropertySetRelationshipDto();
         userGroupPropertySetRelationship.setPropertySetId(propertySetId);
         userGroupPropertySetRelationship.setUserGroupId(userGroupId);
