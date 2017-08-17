@@ -13,10 +13,12 @@ import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.api.model.VersionedEntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
+import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class CommonHelpers extends BasicSteps {
@@ -242,6 +244,9 @@ public class CommonHelpers extends BasicSteps {
 //    Private help methods
 
     private VersionedEntityDto getDtoFromResponse(Response response, String basePath){
+        if (endpointEntityMap.get(basePath) == null){
+            throw new NoSuchElementException("There is no key " + basePath + " in " + EndpointEntityMap.class.getCanonicalName() +". It should probably be added.");
+        }
         return response.as(endpointEntityMap.get(basePath));
     }
 }
