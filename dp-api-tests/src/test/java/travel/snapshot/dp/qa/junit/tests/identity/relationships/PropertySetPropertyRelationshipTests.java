@@ -10,10 +10,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
@@ -23,7 +21,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 /**
  * Integration tests for /identity/user_property_relationships endpoint
  */
-@RunWith(SerenityRunner.class)
 public class PropertySetPropertyRelationshipTests extends CommonTest {
     private PropertyDto createdProperty1;
     private PropertySetDto createdPropertySet1;
@@ -74,7 +71,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
         PropertySetPropertyRelationshipUpdateDto propertySetPropertyRelationshipUpdate = relationshipsHelpers
                 .constructPropertySetPropertyRelationshipUpdate(false);
 
-        commonHelpers.updateEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate, createdRelationship.getVersion().toString());
+        commonHelpers.updateEntityWithEtag(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate, createdRelationship.getVersion().toString());
         responseCodeIs(SC_NO_CONTENT);
         PropertySetPropertyRelationshipDto returnedRelationship = commonHelpers.getEntityAsType(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
                 PropertySetPropertyRelationshipDto.class, createdRelationship.getId());
@@ -85,7 +82,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
     public void deletePropertySetPropertyRelationship() {
         PropertySetPropertyRelationshipDto createdRelationship = commonHelpers.entityWithTypeIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
                 PropertySetPropertyRelationshipDto.class, testPropertySetPropertyRelationship);
-        commonHelpers.deleteEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), createdRelationship.getVersion().toString());
+        commonHelpers.deleteEntityWithEtag(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), createdRelationship.getVersion().toString());
         responseCodeIs(SC_NO_CONTENT);
         commonHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);
