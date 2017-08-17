@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -137,6 +138,7 @@ public class BasicSteps {
     public static final String PARTNERS_RESOURCE = "partners";
     public static final String USER_PROPERTYSETS = "user_propertysets";
     public static final String ADDRESS_LINE1_PATTERN = "CoreQA";
+    public static final String EXAMPLE_NULL = "/null";
 
     protected RequestSpecification spec = null;
 
@@ -792,21 +794,21 @@ public class BasicSteps {
         return queryParams;
     }
 
-    public Map<String, String> buildQueryParamMapForPaging(String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParameters) {
+    public static Map<String, String> buildQueryParamMapForPaging(String limit, String cursor, String filter, String sort, String sortDesc, Map<String, String> queryParameters) {
         Map<String, String> queryParams = new HashMap<>();
-        if (cursor != null) {
+        if (cursor != null && ! cursor.equals(EXAMPLE_NULL)) {
             queryParams.put("cursor", cursor);
         }
-        if (limit != null) {
+        if (limit != null && ! limit.equals(EXAMPLE_NULL)) {
             queryParams.put("limit", limit);
         }
-        if (filter != null) {
+        if (filter != null && ! filter.equals(EXAMPLE_NULL)) {
             queryParams.put("filter", filter);
         }
-        if (sort != null) {
+        if (sort != null && ! sort.equals(EXAMPLE_NULL)) {
             queryParams.put("sort", sort);
         }
-        if (sortDesc != null) {
+        if (sortDesc != null && ! sortDesc.equals(EXAMPLE_NULL)) {
             queryParams.put("sort_desc", sortDesc);
         }
         if (queryParameters != null) {
@@ -928,9 +930,14 @@ public class BasicSteps {
         assertEquals("There should be " + count + " entities got", count, objects.size());
     }
 
-    public void headerIs(String headerName, String value) {
+    public static void headerIs(String headerName, String value) {
         Response response = getSessionResponse();
         response.then().header(headerName, is(value));
+    }
+
+    public static void headerContains(String headerName, String value) {
+        Response response = getSessionResponse();
+        response.then().header(headerName, containsString(value));
     }
 
     public void responseContainsNoOfAttributes(int count, String attributeName) {
