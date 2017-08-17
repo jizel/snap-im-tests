@@ -91,7 +91,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
                 CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
         CustomerPropertyRelationshipUpdateDto update = relationshipsHelpers.constructCustomerPropertyRelationshipUpdate(false, CHAIN, updatedValidFrom, updatedValidTo);
 
-        commonHelpers.updateEntityWithEtag(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
+        commonHelpers.updateEntityPost(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
 
         CustomerPropertyRelationshipDto returnedRelationship = commonHelpers.getEntityAsType(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
@@ -106,7 +106,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
     public void deleteCustomerPropertyRelationship() {
         CustomerPropertyRelationshipDto createdRelationship = commonHelpers.entityWithTypeIsCreated(
                 CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, CustomerPropertyRelationshipDto.class, testCustomerPropertyRelationship);
-        commonHelpers.deleteEntityWithEtag(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
+        commonHelpers.deleteEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
         commonHelpers.getEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);

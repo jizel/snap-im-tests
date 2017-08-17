@@ -63,7 +63,7 @@ public class UserGroupPropertySetRelationshipTests extends CommonTest {
     public void updateUserGroupPropertySetRelationship() throws Exception {
         UserGroupPropertySetRelationshipDto userGroupPropertySetRelationship = commonHelpers.entityWithTypeIsCreated(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, UserGroupPropertySetRelationshipDto.class, testUserGroupPropertySetRelationship);
         UserGroupPropertySetRelationshipUpdateDto update = relationshipsHelpers.constructUserGroupPropertySetRelationshipUpdate(false);
-        commonHelpers.updateEntityWithEtag(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, userGroupPropertySetRelationship.getId(), update);
+        commonHelpers.updateEntityPost(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, userGroupPropertySetRelationship.getId(), update);
         responseCodeIs(SC_NO_CONTENT);
         UserGroupPropertySetRelationshipDto returnedRelationship = commonHelpers.getEntityAsType(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, UserGroupPropertySetRelationshipDto.class, userGroupPropertySetRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));
@@ -72,7 +72,7 @@ public class UserGroupPropertySetRelationshipTests extends CommonTest {
     @Test
     public void deleteUserGroupPropertySetRelationship(){
         UserGroupPropertySetRelationshipDto userGroupPropertySetRelationship = commonHelpers.entityWithTypeIsCreated(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, UserGroupPropertySetRelationshipDto.class, testUserGroupPropertySetRelationship);
-        commonHelpers.deleteEntityWithEtag(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, userGroupPropertySetRelationship.getId());
+        commonHelpers.deleteEntity(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, userGroupPropertySetRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
         commonHelpers.getEntity(USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH, userGroupPropertySetRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);
