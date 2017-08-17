@@ -40,8 +40,6 @@ public class ParametersCustomer extends CommonTest {
     public void cleanUp() throws Throwable {
         super.cleanUp();
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
-//        Reloading all default entities to to undo changes made on testCustomer1 between tests.
-        loadDefaultTestEntities();
     }
 
 

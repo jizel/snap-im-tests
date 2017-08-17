@@ -31,9 +31,9 @@ public class userPasswordRestrictionTests extends CommonTest {
 //        Invalid cases - other users
         userHelpers.setUserPasswordByUser(customerUser2.getId(), customerUser1.getId(), "otherCustomerUserCannotSetNewPassword");
         responseCodeIs(SC_FORBIDDEN);
-        customCodeIs(INSUFFICIENT_PERMISSIONS_CUSTOM_CODE);
+        customCodeIs(CC_INSUFFICIENT_PERMISSIONS);
         userHelpers.setUserPasswordByUser(partnerUser.getId(), customerUser1.getId(), "otherCustomerUserCannotSetNewPassword");
         responseCodeIs(SC_FORBIDDEN);
-        customCodeIs(INSUFFICIENT_PERMISSIONS_CUSTOM_CODE);
+        customCodeIs(CC_INSUFFICIENT_PERMISSIONS);
     }
 }

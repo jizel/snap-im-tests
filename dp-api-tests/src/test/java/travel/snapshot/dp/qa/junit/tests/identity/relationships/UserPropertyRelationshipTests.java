@@ -59,11 +59,11 @@ public class UserPropertyRelationshipTests extends CommonTest {
         testUserPropertyRelationship = relationshipsHelpers.constructUserPropertyRelationshipDto(NON_EXISTENT_ID, createdProperty1.getId(), true);
         commonHelpers.createEntity(USER_PROPERTY_RELATIONSHIPS_PATH, testUserPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
         testUserPropertyRelationship = relationshipsHelpers.constructUserPropertyRelationshipDto(createdUser1.getId(), NON_EXISTENT_ID, true);
         commonHelpers.createEntity(USER_PROPERTY_RELATIONSHIPS_PATH, testUserPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
     }
 
     @Test

@@ -19,11 +19,6 @@ Feature: Property sets create update delete
     Given Relation between user "5d829079-48f0-4f00-9bec-e2329a8bdaac" and property set "ps1_name" exists
 
 
-  @Bug
-  Scenario: Checking error code for deleting property
-    When Nonexistent property set id is deleted
-    Then Response code is "404"
-
   Scenario Outline: Updating property set
 #  Property sets for customer "49ae92d9-2d80-47d9-994b-77f5f598336a" were deleted in background, so we don't need to clean here.
     When Property set "<name>" is updated with following data
@@ -41,13 +36,6 @@ Feature: Property sets create update delete
       | ps1_name        | ps1_updated2            | ps1_updated_description  | geolocation     |
       | ps1_name        | ps2_updated2            | ps1_updated_description2 | hotel_type      |
 
-
-  Scenario: Property_set_type is mandatory (DP-1332)
-    When The following property set is created for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-      | name            | description            |
-      | ps1_name        | ps1_desc               |
-    Then Response code is "422"
-    And Custom code is 42201
 
   Scenario Outline: Checking error codes for creating property set
     When File "<json_input_file>" is used for "<method>" to "<url>" on "<module>"
@@ -75,33 +63,3 @@ Feature: Property sets create update delete
       | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/users/                                            |
       | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/users/5d829079-48f0-4f00-9bec-e2329a8bdaac        |
       | identity/property_sets/c729e3b0-69bf-4c57-91bd-30230d2c1bd0/properties/                                       |
-
-  Scenario: Parent-child relationship should not contain loops - DP-1395
-    Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a" and user "snaphotUser1"
-      | name            | type            | parentId                             | id                                   |
-      | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | 000111b0-69bf-4c57-91bd-30230d2c1bd0 |
-      | childPS2        | brand           | 000111b0-69bf-4c57-91bd-30230d2c1bd0 | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
-    When Property set "ps1_name" is updated with following data
-      | parentId                             |
-      | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
-    Then Response code is "409"
-    Then Custom code is 40911
-    
-    Scenario: Parent Property Set cannot be deleted until all child Property Sets are deleted
-      Given The following property sets exist for customer with id "49ae92d9-2d80-47d9-994b-77f5f598336a"
-        | name            | type            | parentId                             | id                                   |
-        | childPS1        | brand           | c729e3b0-69bf-4c57-91bd-30230d2c1bd0 | 000111b0-69bf-4c57-91bd-30230d2c1bd0 |
-        | childPS2        | brand           | 000111b0-69bf-4c57-91bd-30230d2c1bd0 | 100111b0-69bf-4c57-91bd-30230d2c1bd0 |
-      Given All users are removed for property_sets with names: ps1_name
-      When Property set "childPS1" is deleted
-      Then Response code is "409"
-      And Custom code is 40915
-      When Property set "ps1_name" is deleted
-      Then Response code is "409"
-      And Custom code is 40915
-      When Property set "childPS2" is deleted
-      Then Response code is "204"
-      When Property set "childPS1" is deleted
-      Then Response code is "204"
-      When Property set "ps1_name" is deleted
-      Then Response code is "204"

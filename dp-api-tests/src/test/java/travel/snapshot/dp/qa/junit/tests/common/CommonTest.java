@@ -88,11 +88,13 @@ public abstract class CommonTest {
 
 
     //    Custom codes
-    protected static final int SEMANTIC_ERRORS_CUSTOM_CODE = 42201;
-    protected static final int NON_EXISTING_REFERENCE_CUSTOM_CODE = 42202;
-    protected static final int NOT_FOUND_CUSTOM_CODE = 40401;
-    protected static final int CONFLICT_CUSTOM_CODE = 40902;
-    protected static final int INSUFFICIENT_PERMISSIONS_CUSTOM_CODE = 40301;
+    protected static final int CC_SEMANTIC_ERRORS = 42201;
+    protected static final int CC_NON_EXISTING_REFERENCE = 42202;
+    protected static final int CC_NOT_FOUND = 40401;
+    protected static final int CC_CONFLICT = 40902;
+    protected static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
+    protected static final int CC_CIRCULAR_DEPENDENCY = 40911;
+    protected static final int CC_ENTITY_REFERENCED = 40915;
 
     //    Basic test entities
     protected static EntityNonNullMap<String, CustomerCreateDto> customerDtos;
@@ -135,12 +137,11 @@ public abstract class CommonTest {
      * JUnit BeforeClass was chosen over overriding default CommonTest constructor to enable using BeforeClass in subclasses
      * without errors (it is performed before super constructor is called)
      *
-     * Execution time of this method is roughly 300ms on standard SnapShot laptop so it's not recommended to run it before
-     * each test method. Tests within one test class should clean after themselves.
-     * Also it might be sometimes wanted to change default attributes for whole class.
+     * Execution time of this method is roughly 300ms on standard SnapShot laptop
      */
-    @BeforeClass
-    public static void loadDefaultTestEntities() {
+
+    @Before
+    public void loadDefaultTestEntities() {
         //   Get EntitiesLoader instance containing all test entity data
         entitiesLoader = EntitiesLoader.getInstance();
 
@@ -210,7 +211,7 @@ public abstract class CommonTest {
 
     protected void responseIsNotFound() {
         responseCodeIs(SC_NOT_FOUND);
-        customCodeIs(NOT_FOUND_CUSTOM_CODE);
+        customCodeIs(CC_NOT_FOUND);
     }
 
 

@@ -68,19 +68,19 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
                 NON_EXISTENT_ID, createdProperty1.getId(), true, ASSET_MANAGEMENT, validFrom, validTo);
         commonHelpers.createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, invalidCustomerPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
 
         invalidCustomerPropertyRelationship = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
                 createdCustomer1.getId(), NON_EXISTENT_ID, true, ASSET_MANAGEMENT, validFrom, validTo);
         commonHelpers.createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, invalidCustomerPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
 
         invalidCustomerPropertyRelationship = relationshipsHelpers.constructCustomerPropertyRelationshipDto(
                 createdCustomer1.getId(), createdProperty1.getId(), true, ASSET_MANAGEMENT, validTo, validFrom);
         commonHelpers.createEntity(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, invalidCustomerPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(SEMANTIC_ERRORS_CUSTOM_CODE);
+        customCodeIs(CC_SEMANTIC_ERRORS);
     }
 
     @Test

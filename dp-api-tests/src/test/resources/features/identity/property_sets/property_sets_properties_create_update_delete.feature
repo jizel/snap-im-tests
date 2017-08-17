@@ -21,11 +21,6 @@ Feature: Property sets properties create update delete
       | salesforceid_2 | p2_name      | p2_code      | http://www.snapshot.travel | p2@tenants.biz | true           | Europe/Prague | 1238fd9a-a05d-42d8-8e84-42e904ace123 |
 
 
-  Scenario: Checking error code for removing property from property set
-    When Nonexistent property is removed from property set "ps1_name"
-    Then Response code is "404"
-
-
   Scenario Outline: Filtering list of properties for property set
     Given The following properties exist with random address and billing address for user "5d829079-48f0-4f00-9bec-e2329a8bdaac"
       | salesforceId   | name                  | code                  | website                    | email                    | isDemo         | timezone      | customerId                           |
