@@ -6,6 +6,35 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.util.TextUtils.isBlank;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIP_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUP_USER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
 
 import com.jayway.restassured.response.Response;
@@ -17,6 +46,8 @@ import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -24,6 +55,38 @@ import java.util.UUID;
 public class CommonHelpers extends BasicSteps {
 
     public static final String ENTITIES_TO_DELETE = "deleteThese";
+
+    public static final List<String> ALL_ENDPOINTS = Arrays.asList(
+        CUSTOMER_PROPERTY_RELATIONSHIP_PATH,
+        APPLICATIONS_PATH,
+        APPLICATION_VERSIONS_PATH,
+        ROLES_PATH,
+        USER_CUSTOMER_ROLES_PATH,
+        USER_PROPERTY_ROLES_PATH,
+        USER_PROPERTY_SET_ROLES_PATH,
+        PROPERTIES_PATH,
+        CUSTOMERS_PATH,
+        USERS_PATH,
+        USER_GROUPS_PATH,
+        PROPERTY_SETS_PATH,
+        COMMERCIAL_SUBSCRIPTIONS_PATH,
+        PARTNERS_PATH,
+        CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
+        PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
+        USER_CUSTOMER_RELATIONSHIPS_PATH,
+        USER_PARTNER_RELATIONSHIPS_PATH,
+        USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH,
+        USER_PROPERTY_RELATIONSHIPS_PATH,
+        USER_PROPERTY_ROLE_RELATIONSHIPS_PATH,
+        USER_PROPERTY_SET_RELATIONSHIPS_PATH,
+        USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH,
+        USER_GROUP_PROPERTY_RELATIONSHIPS_PATH,
+        USER_GROUP_PROPERTY_ROLE_RELATIONSHIPS_PATH,
+        USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
+        USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH,
+        USER_GROUP_ROLE_RELATIONSHIPS_PATH,
+        USER_GROUP_USER_RELATIONSHIPS_PATH
+    );
 
 
     public CommonHelpers() {

@@ -105,18 +105,18 @@ public class ConfigurationTypesTests extends CommonTest {
         invalidConfigurationType.setDescription("identifier is missing");
         configurationHelpers.followingConfigurationTypeIsCreated(invalidConfigurationType);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(SEMANTIC_ERRORS_CUSTOM_CODE);
+        customCodeIs(CC_SEMANTIC_ERRORS);
 //        Empty identifier
         invalidConfigurationType.setIdentifier("");
         configurationHelpers.followingConfigurationTypeIsCreated(invalidConfigurationType);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(SEMANTIC_ERRORS_CUSTOM_CODE);
+        customCodeIs(CC_SEMANTIC_ERRORS);
 //        Duplicate identifier
         configurationHelpers.followingConfigurationTypeIsCreated(testConfigurationType1);
         invalidConfigurationType.setIdentifier(CONF1_IDENTIFIER);
         configurationHelpers.createConfigurationType(invalidConfigurationType);
         responseCodeIs(SC_CONFLICT);
-        customCodeIs(CONFLICT_CUSTOM_CODE);
+        customCodeIs(CC_CONFLICT);
     }
 
     @Test

@@ -58,13 +58,13 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
                 NON_EXISTENT_ID, createdProperty1.getId(), true);
         commonHelpers.createEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, testPropertySetPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
 
         testPropertySetPropertyRelationship = relationshipsHelpers.constructPropertySetPropertyRelationship(
                 createdPropertySet1.getId(), NON_EXISTENT_ID, true);
         commonHelpers.createEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, testPropertySetPropertyRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
     }
 
     @Test

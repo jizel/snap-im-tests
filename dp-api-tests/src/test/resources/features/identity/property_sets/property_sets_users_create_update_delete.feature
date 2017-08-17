@@ -18,21 +18,6 @@ Feature: Property sets users create update delete
       | ps1_name        | ps1_description        | brand           |
       | ps2_name        | ps2_description        | brand           |
 
-
-  Scenario: Updating Property Set-User relationship
-    When User "default0" is added to property set with name "ps1_name"
-    Given Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
-    When Relation between user "default0" and property set "ps1_name" is inactivated
-    Then Response code is "204"
-    And Check is active attribute is "false" for relation between user "default0" and property set "ps1_name"
-    When Relation between user "default0" and property set "ps1_name" is activated
-    Then Response code is "204"
-    And Check is active attribute is "true" for relation between user "default0" and property set "ps1_name"
-
-  Scenario: Removing invalid user from property set
-    When Nonexistent user is removed from property set with name "ps1_name"
-    Then Response code is "404"
-
   Scenario Outline: Filtering list of users for property set
     Given The following users exist for customer "1238fd9a-a05d-42d8-8e84-42e904ace123" as primary "false"
       | type     | username             | firstName         | lastName       | email                            | phone        | timezone          | languageCode |

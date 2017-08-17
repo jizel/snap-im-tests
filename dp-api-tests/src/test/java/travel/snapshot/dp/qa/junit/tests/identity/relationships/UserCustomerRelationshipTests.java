@@ -61,15 +61,15 @@ public class UserCustomerRelationshipTests extends CommonTest{
         testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(NON_EXISTENT_ID, createdCustomer1.getId(), true, false);
         commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
         testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(), NON_EXISTENT_ID, true, false);
         commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
         testUserCustomerRelationship = relationshipsHelpers.constructUserCustomerRelationshipDto(createdUser1.getId(), createdCustomer1.getId(), null, null);
         commonHelpers.createEntity(USER_CUSTOMER_RELATIONSHIPS_PATH, testUserCustomerRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(SEMANTIC_ERRORS_CUSTOM_CODE);
+        customCodeIs(CC_SEMANTIC_ERRORS);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
         update = relationshipsHelpers.constructUserCustomerRelationshipUpdate( null, null);
         commonHelpers.updateEntityWithEtag(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelationship.getId(), update);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(SEMANTIC_ERRORS_CUSTOM_CODE);
+        customCodeIs(CC_SEMANTIC_ERRORS);
     }
 
     @Test

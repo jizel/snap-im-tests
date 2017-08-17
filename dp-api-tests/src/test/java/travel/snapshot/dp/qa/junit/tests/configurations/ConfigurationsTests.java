@@ -137,10 +137,10 @@ public class ConfigurationsTests extends CommonTest {
         ConfigurationRecordDto configurationRecord = configurationHelpers.configurationIsCreated(CONF_TYPE_IDENTIFIER, testConfigurationRecord1);
         configurationHelpers.getConfigurationWithKeyForIdentifier("wrong key", CONF_TYPE_IDENTIFIER);
         responseCodeIs(SC_NOT_FOUND);
-        customCodeIs(NOT_FOUND_CUSTOM_CODE);
+        customCodeIs(CC_NOT_FOUND);
         configurationHelpers.getConfigurationWithKeyForIdentifier(configurationRecord.getKey(), "wrong identifier");
         responseCodeIs(SC_NOT_FOUND);
-        customCodeIs(NOT_FOUND_CUSTOM_CODE);
+        customCodeIs(CC_NOT_FOUND);
     }
 
     @Test
@@ -151,6 +151,6 @@ public class ConfigurationsTests extends CommonTest {
         endpoints.add("configurations/" + CONF_TYPE_IDENTIFIER + "/records");
         endpoints.forEach(url -> sendBlankPost(url, "configurations"));
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(SEMANTIC_ERRORS_CUSTOM_CODE);
+        customCodeIs(CC_SEMANTIC_ERRORS);
     }
 }

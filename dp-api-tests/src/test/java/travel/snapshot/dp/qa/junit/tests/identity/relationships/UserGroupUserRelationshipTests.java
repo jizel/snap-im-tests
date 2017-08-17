@@ -55,11 +55,11 @@ public class UserGroupUserRelationshipTests extends CommonTest {
         testUserGroupUserRelationship = relationshipsHelpers.constructUserGroupUserRelationship(NON_EXISTENT_ID, createdUser1.getId(), true);
         commonHelpers.createEntity(USER_GROUP_USER_RELATIONSHIPS_PATH, testUserGroupUserRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
         testUserGroupUserRelationship = relationshipsHelpers.constructUserGroupUserRelationship(createdUserGroup1.getId(), NON_EXISTENT_ID, true);
         commonHelpers.createEntity(USER_GROUP_USER_RELATIONSHIPS_PATH, testUserGroupUserRelationship);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(NON_EXISTING_REFERENCE_CUSTOM_CODE);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
     }
 
     @Test
