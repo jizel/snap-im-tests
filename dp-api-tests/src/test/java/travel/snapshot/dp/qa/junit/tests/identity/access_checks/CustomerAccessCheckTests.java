@@ -8,6 +8,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICA
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -16,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.UUID;
@@ -70,7 +72,8 @@ public class CustomerAccessCheckTests extends CommonTest {
         testAppVersion3.setIsNonCommercial(true);
         commonHelpers.entityIsCreated(APPLICATION_VERSIONS_PATH, testAppVersion3);
         // Grant the user access to test property
-        relationshipsHelpers.userPropertyRelationshipIsCreated(userId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipDto userPropertyRelationship = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, userPropertyRelationship);
     }
 
     @Test

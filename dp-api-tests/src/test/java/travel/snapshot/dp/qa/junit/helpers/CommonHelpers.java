@@ -202,7 +202,7 @@ public class CommonHelpers extends BasicSteps {
         RequestSpecification requestSpecification = given()
                 .spec(spec)
                 .basePath(basePath)
-                .header(HEADER_ETAG, etag)
+                .header(HEADER_IF_MATCH, etag)
                 .header(HEADER_XAUTH_USER_ID, userId)
                 .header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         Response response = requestSpecification
