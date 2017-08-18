@@ -33,7 +33,7 @@ public class UserNotificationTest extends CommonTest {
     private Map<String, Object> receivedNotification;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         user2 = entitiesLoader.getUserDtos().get("user2");

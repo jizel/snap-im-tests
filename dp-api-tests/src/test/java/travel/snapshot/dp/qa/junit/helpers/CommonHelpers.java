@@ -12,6 +12,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIP_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PLATFORM_OPERATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
@@ -84,7 +85,8 @@ public class CommonHelpers extends BasicSteps {
         USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
         USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH,
         USER_GROUP_ROLE_RELATIONSHIPS_PATH,
-        USER_GROUP_USER_RELATIONSHIPS_PATH
+        USER_GROUP_USER_RELATIONSHIPS_PATH,
+        PLATFORM_OPERATIONS_PATH
     );
 
 
@@ -122,7 +124,7 @@ public class CommonHelpers extends BasicSteps {
         RequestSpecification requestSpecification = given().spec(spec);
         requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
         requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, appId);
-        requestSpecification.parameters(queryParams);
+        if(queryParams != null) requestSpecification.parameters(queryParams);
         Response response = requestSpecification.when().get();
         setSessionResponse(response);
         return response;
@@ -256,11 +258,15 @@ public class CommonHelpers extends BasicSteps {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
         }
+//        If entity does not exist, default etag is used so update method can be used for negative tests as well.
+//        Raw etag is got first, stored into var and then valuated to save api calls.
+        String rawEtag = getEntityEtag(basePath, entityId);
+        String usedEtag = (rawEtag == null) ? DEFAULT_SNAPSHOT_ETAG : rawEtag;
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath(basePath)
                 .header(HEADER_XAUTH_USER_ID, userId)
                 .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
-                .header(HEADER_IF_MATCH, getEntityEtag(basePath, entityId));
+                .header(HEADER_IF_MATCH, usedEtag);
         Response response = requestSpecification
                 .body(data)
                 .when()

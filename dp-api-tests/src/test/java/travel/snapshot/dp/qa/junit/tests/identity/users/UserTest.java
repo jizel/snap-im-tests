@@ -23,7 +23,7 @@ public class UserTest extends CommonTest{
     private UUID createdUserId;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdUserId = commonHelpers.entityIsCreated(USERS_PATH, testUser1);
     }

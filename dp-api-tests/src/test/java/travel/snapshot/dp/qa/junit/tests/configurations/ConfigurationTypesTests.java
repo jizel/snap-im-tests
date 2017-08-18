@@ -38,7 +38,7 @@ public class ConfigurationTypesTests extends CommonTest {
 
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         testConfigurationType1 = new ConfigurationTypeDto();
         testConfigurationType1.setIdentifier(CONF1_IDENTIFIER);
         testConfigurationType1.setDescription(CONF1_DESCRIPTION);
@@ -116,7 +116,7 @@ public class ConfigurationTypesTests extends CommonTest {
         invalidConfigurationType.setIdentifier(CONF1_IDENTIFIER);
         configurationHelpers.createConfigurationType(invalidConfigurationType);
         responseCodeIs(SC_CONFLICT);
-        customCodeIs(CC_CONFLICT);
+        customCodeIs(CC_CONFLICT_ID);
     }
 
     @Test

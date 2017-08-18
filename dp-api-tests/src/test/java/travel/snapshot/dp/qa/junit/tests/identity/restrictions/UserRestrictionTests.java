@@ -35,7 +35,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
 
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
     }

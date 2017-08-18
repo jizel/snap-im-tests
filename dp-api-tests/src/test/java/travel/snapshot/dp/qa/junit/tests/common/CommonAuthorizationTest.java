@@ -21,7 +21,7 @@ public abstract class CommonAuthorizationTest extends CommonTest {
     protected final Map<String, Object> testClient3 = entitiesLoader.getClients().get("client3");
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         keycloakHelpers.createClient(testClient1);
         String clientId = (String) testClient1.get("clientId");

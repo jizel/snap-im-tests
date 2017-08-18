@@ -17,8 +17,6 @@ import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
-import java.util.UUID;
-
 /**
  * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data
  * is reported as separate test but it cannot be used with Serenity Runner. Also it needs data set per test.
@@ -32,7 +30,7 @@ public class ParametersCustomer extends CommonTest {
 
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
     }
 

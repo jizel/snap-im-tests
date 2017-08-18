@@ -21,7 +21,7 @@ public abstract class CommonRestrictionTest extends CommonTest {
 
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         restrictedApp = applicationHelpers.applicationIsCreated(testApplication1);
         createdAppVersion = createTestApplicationVersionForApp(restrictedApp.getId());

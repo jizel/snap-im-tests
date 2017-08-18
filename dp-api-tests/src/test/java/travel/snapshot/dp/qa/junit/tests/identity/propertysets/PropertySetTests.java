@@ -1,7 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.identity.propertysets;
 
 import static org.apache.http.HttpStatus.SC_CONFLICT;
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,7 +30,7 @@ public class PropertySetTests extends CommonTest {
     private PropertySetDto createdPropertySet;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdPropertySet = commonHelpers.entityWithTypeIsCreated(PROPERTY_SETS_PATH, PropertySetDto.class, testPropertySet1);
     }

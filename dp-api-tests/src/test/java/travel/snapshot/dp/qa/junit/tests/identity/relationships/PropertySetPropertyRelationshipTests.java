@@ -27,7 +27,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
     private PropertySetPropertyRelationshipDto testPropertySetPropertyRelationship;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdProperty1 = propertyHelpers.propertyIsCreated(testProperty1);
         createdPropertySet1 = propertySetHelpers.propertySetIsCreated(testPropertySet1);

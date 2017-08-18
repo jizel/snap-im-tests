@@ -33,7 +33,7 @@ public class UserCustomerRelationshipTests extends CommonTest{
     private UserCustomerRelationshipDto testUserCustomerRelationship;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);

@@ -33,7 +33,7 @@ public class PropertyNotificationTests extends CommonTest{
     Map<String, Object> receivedNotification;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
         propertyHelpers.propertyIsCreated(testProperty1);
