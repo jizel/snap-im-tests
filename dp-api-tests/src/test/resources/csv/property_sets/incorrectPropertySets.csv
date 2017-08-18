@@ -1,0 +1,6 @@
+/messages/identity/property_sets/create_property_set-wrong_type1.json,422,42201
+/messages/identity/property_sets/create_property_set-wrong_type2.json,422,42201
+/messages/identity/property_sets/create_property_set-missing_ps_type.json,422,42201
+/messages/identity/property_sets/create_property_set-missing_name.json,422,42201
+/messages/identity/property_sets/create_property_set-missing_customer_id.json,422,42201
+/messages/identity/property_sets/create_property_set-nonexistent_customer.json,422,42202

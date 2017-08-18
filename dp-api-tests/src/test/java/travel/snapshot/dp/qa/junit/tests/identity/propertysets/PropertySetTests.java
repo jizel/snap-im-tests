@@ -6,6 +6,7 @@ import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static travel.snapshot.dp.api.identity.model.PropertySetType.GEOLOCATION;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
@@ -16,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
+import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
@@ -23,6 +25,7 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.io.IOException;
 import java.util.UUID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 
 @RunWith(SerenityRunner.class)
 public class PropertySetTests extends CommonTest {
@@ -32,28 +35,26 @@ public class PropertySetTests extends CommonTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        createdPropertySet = commonHelpers.entityWithTypeIsCreated(PROPERTY_SETS_PATH, PropertySetDto.class, testPropertySet1);
     }
 
     @Test
-    public void updatePropertySet() throws Exception {
-        PropertySetUpdateDto propertySetUpdate = new PropertySetUpdateDto();
-        propertySetUpdate.setName("Updated name");
-        propertySetUpdate.setType(GEOLOCATION);
-        propertySetUpdate.setIsActive(false);
-        Response updateResponse = commonHelpers.updateEntity(PROPERTY_SETS_PATH, createdPropertySet.getId(), propertySetUpdate);
-        responseCodeIs(SC_OK);
-        PropertySetDto updateResponsePropertySet = updateResponse.as(PropertySetDto.class);
-        PropertySetDto requestedPropertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, createdPropertySet.getId());
-        assertThat("Update response body differs from the same property set requested by GET ", updateResponsePropertySet, is(requestedPropertySet));
-    }
-
-    @Test
-    public void propertySetTypeIsMandatory() {
-        testPropertySet1.setType(null);
-        commonHelpers.createEntity(PROPERTY_SETS_PATH, testPropertySet1);
-        responseCodeIs(SC_UNPROCESSABLE_ENTITY);
-        customCodeIs(CC_SEMANTIC_ERRORS);
+    public void propertySetCRUDTest() throws IOException {
+        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer2);
+        UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+        PropertySetDto propertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
+        assert(propertySet.getType().equals(testPropertySet1.getType()));
+        assert(propertySet.getCustomerId().equals(DEFAULT_SNAPSHOT_CUSTOMER_ID));
+        assert(propertySet.getDescription().equals(testPropertySet1.getDescription()));
+        PropertySetUpdateDto update = new PropertySetUpdateDto();
+        update.setType(PropertySetType.GEOLOCATION);
+        update.setDescription("Some new desc");
+        update.setCustomerId(createdCustomerId);
+        commonHelpers.entityIsUpdated(PROPERTY_SETS_PATH, psId, update);
+        PropertySetDto updatedPropertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
+        assert(updatedPropertySet.getType().equals(PropertySetType.GEOLOCATION));
+        assert(updatedPropertySet.getCustomerId().equals(createdCustomerId));
+        assert(updatedPropertySet.getDescription().equals("Some new desc"));
+        commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, psId);
     }
 
     @Test
@@ -108,7 +109,6 @@ public class PropertySetTests extends CommonTest {
         responseCodeIs(SC_OK);
         commonHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         bodyContainsEntityWith("is_active", "true");
+        commonHelpers.entityIsDeleted(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
     }
-
-
 }

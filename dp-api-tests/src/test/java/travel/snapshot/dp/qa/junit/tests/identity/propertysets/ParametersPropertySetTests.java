@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.junit.Assert.fail;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
@@ -53,5 +54,23 @@ public class ParametersPropertySetTests extends CommonTest {
         numberOfEntitiesInResponse(PropertySetDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
         headerContains("Link", linkHeader);
+    }
+
+    @FileParameters(EXAMPLES + "incorrectPropertySets.csv")
+    @Test
+    public void createIncorrectPropertySets(String sourceFile,
+                                String statusCode,
+                                String customCode) throws Exception {
+        commonHelpers.useFileForSendDataTo(sourceFile, "POST", PROPERTY_SETS_PATH, "identity");
+        responseCodeIs(Integer.valueOf(statusCode));
+        customCodeIs(Integer.valueOf(customCode));
+    }
+
+    @FileParameters(EXAMPLES + "sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints.csv")
+    @Test
+    public void sendPOSTRequestWithEmptyBodyToAllPropertySetEndpoints(String endpoint) {
+        commonHelpers.sendBlankPost(PROPERTY_SETS_PATH, "identity");
+        responseCodeIs(SC_UNPROCESSABLE_ENTITY);
+        customCodeIs(CC_SEMANTIC_ERRORS);
     }
 }
