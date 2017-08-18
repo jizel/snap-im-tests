@@ -25,13 +25,13 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     @Test
     public void getPropertyRestrictionTest(){
         propertyHelpers.getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, null,"name==*", null, "name", null);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_PROPERTIES_ENDPOINT, GET_METHOD);
         propertyHelpers.getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), null, null, null, "name==*", null, "name", null);
         responseCodeIs(SC_OK);
 
         propertyHelpers.getPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_PROPERTY_ENDPOINT, GET_METHOD);
         propertyHelpers.getPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID);
         responseCodeIs(SC_OK);
@@ -41,7 +41,7 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     public void crudPropertyRestrictionTest(){
 //        Create
         propertyHelpers.createPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_PROPERTIES_ENDPOINT, POST_METHOD);
         propertyHelpers.createPropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1);
         responseCodeIs(SC_CREATED);
@@ -49,13 +49,13 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
         PropertyUpdateDto propertyUpdate = new PropertyUpdateDto();
         propertyUpdate.setName("Updated Name");
         propertyHelpers.updatePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId(), propertyUpdate);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_PROPERTY_ENDPOINT, POST_METHOD);
         propertyHelpers.updatePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId(), propertyUpdate);
         responseCodeIs(SC_NO_CONTENT);
 //        Delete
         propertyHelpers.deletePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId());
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_PROPERTY_ENDPOINT, DELETE_METHOD);
         propertyHelpers.deletePropertyByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testProperty1.getId());
         responseCodeIs(SC_NO_CONTENT);
@@ -65,21 +65,21 @@ public class PropertyRestrictionTest extends CommonRestrictionTest{
     public void getPropertySecondLevelEntitiesRestrictionTest() throws Throwable {
 //        Customers
         propertyHelpers.listOfCustomersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), PROPERTY_CUSTOMERS_ENDPOINT, GET_METHOD);
         propertyHelpers.listOfCustomersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
         responseCodeIs(SC_OK);
 
 //        Users
         propertyHelpers.listOfPropertyUsersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), PROPERTY_USERS_ENDPOINT, GET_METHOD);
         propertyHelpers.listOfPropertyUsersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
         responseCodeIs(SC_OK);
 
 //        Property Sets
         propertyHelpers.listOfPropertiesPropertySetsIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
-        responseIsNotFound();
+        responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), PROPERTY_PROPERTY_SETS_ENDPOINT, GET_METHOD);
         propertyHelpers.listOfPropertiesPropertySetsIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), DEFAULT_PROPERTY_ID, null, null, null, null, null);
         responseCodeIs(SC_OK);

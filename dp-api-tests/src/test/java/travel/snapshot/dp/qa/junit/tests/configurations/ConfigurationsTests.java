@@ -137,10 +137,10 @@ public class ConfigurationsTests extends CommonTest {
         ConfigurationRecordDto configurationRecord = configurationHelpers.configurationIsCreated(CONF_TYPE_IDENTIFIER, testConfigurationRecord1);
         configurationHelpers.getConfigurationWithKeyForIdentifier("wrong key", CONF_TYPE_IDENTIFIER);
         responseCodeIs(SC_NOT_FOUND);
-        customCodeIs(CC_NOT_FOUND);
+        customCodeIs(CC_ENDPOINT_NOT_FOUND);
         configurationHelpers.getConfigurationWithKeyForIdentifier(configurationRecord.getKey(), "wrong identifier");
         responseCodeIs(SC_NOT_FOUND);
-        customCodeIs(CC_NOT_FOUND);
+        customCodeIs(CC_ENDPOINT_NOT_FOUND);
     }
 
     @Test
