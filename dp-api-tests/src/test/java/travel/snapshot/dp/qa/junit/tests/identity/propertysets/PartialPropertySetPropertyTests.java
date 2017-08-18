@@ -52,9 +52,9 @@ public class PartialPropertySetPropertyTests extends CommonTest {
         responseCodeIs(SC_CONFLICT);
         commonHelpers.entityIsDeleted(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         commonHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
-        responseIsNotFound();
+        responseIsEntityNotFound();
         commonHelpers.entityIsDeleted(PROPERTIES_PATH, propertyId);
         commonHelpers.getEntity(PROPERTIES_PATH, propertyId);
-        responseIsNotFound();
+        responseIsEntityNotFound();
     }
 }

@@ -89,7 +89,8 @@ public abstract class CommonTest {
     //    Custom codes
     protected static final int CC_SEMANTIC_ERRORS = 42201;
     protected static final int CC_NON_EXISTING_REFERENCE = 42202;
-    protected static final int CC_NOT_FOUND = 40401;
+    protected static final int CC_ENDPOINT_NOT_FOUND = 40401;
+    protected static final int CC_ENTITY_NOT_FOUND = 40402;
     protected static final int CC_CONFLICT = 40902;
     protected static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
     protected static final int CC_CIRCULAR_DEPENDENCY = 40911;
@@ -208,11 +209,15 @@ public abstract class CommonTest {
         return value;
     }
 
-    protected void responseIsNotFound() {
+    protected static void responseIsEndpointNotFound() {
         responseCodeIs(SC_NOT_FOUND);
-        customCodeIs(CC_NOT_FOUND);
+        customCodeIs(CC_ENDPOINT_NOT_FOUND);
     }
 
+    protected static void responseIsEntityNotFound() {
+        responseCodeIs(SC_NOT_FOUND);
+        customCodeIs(CC_ENTITY_NOT_FOUND);
+    }
 
     /**
      * Facade help methods for BasicSteps static methods.
