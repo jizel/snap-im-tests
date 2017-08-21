@@ -36,8 +36,10 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
 
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
@@ -111,6 +113,17 @@ public class CommonHelpers extends BasicSteps {
         return getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, queryParams);
     }
 
+    public <T> List<T> getEntitiesAsType(String basePath, Class<T> clazz, Map<String, String> queryParams) {
+        Response response = getEntities(basePath, queryParams);
+        List<T> result = null;
+        try {
+            result = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+        return result;
+    }
+
     public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
@@ -164,10 +177,16 @@ public class CommonHelpers extends BasicSteps {
 
     // Create
 
-    public UUID entityIsCreated(String basePath, Object entity) throws IOException {
+    public UUID entityIsCreated(String basePath, Object entity) {
         Response response = createEntity(basePath, entity);
         responseCodeIs(SC_CREATED);
-        return getDtoFromResponse(response, basePath).getId();
+        UUID result = null;
+        try {
+            result = getDtoFromResponse(response, basePath).getId();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+        return result;
     }
 
     public <T> T entityWithTypeIsCreated(String basePath, Class<T> type, T entity) {

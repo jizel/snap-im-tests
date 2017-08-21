@@ -39,7 +39,7 @@ public class PartialPropertySetPropertyTests extends CommonTest {
     }
 
     @Test
-    public void addRemovePropertyToPropertySet() throws IOException {
+    public void addRemovePropertyToPropertySet() {
         UUID propertySetId = createdPropertySet.getId();
         UUID propertyId = createdProperty.getId();
         PropertySetPropertyRelationshipDto relation = new PropertySetPropertyRelationshipDto();

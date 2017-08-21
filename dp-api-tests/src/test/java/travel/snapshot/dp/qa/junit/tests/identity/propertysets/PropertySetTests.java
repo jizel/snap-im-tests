@@ -38,7 +38,7 @@ public class PropertySetTests extends CommonTest {
     }
 
     @Test
-    public void propertySetCRUDTest() throws IOException {
+    public void propertySetCRUDTest() {
         UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer2);
         UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         PropertySetDto propertySet = commonHelpers.getEntityAsType(PROPERTY_SETS_PATH, PropertySetDto.class, psId);
@@ -58,7 +58,7 @@ public class PropertySetTests extends CommonTest {
     }
 
     @Test
-    public void parentChildLoopTest() throws IOException {
+    public void parentChildLoopTest() {
         UUID ps1Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         testPropertySet2.setParentId(ps1Id);
         UUID ps2Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet2);
@@ -73,7 +73,7 @@ public class PropertySetTests extends CommonTest {
     }
 
     @Test
-    public void parentPropertySetCannotBeDeletedUntilAllChildPropertySetsAreDeleted() throws IOException {
+    public void parentPropertySetCannotBeDeletedUntilAllChildPropertySetsAreDeleted() {
         UUID ps1Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         testPropertySet2.setParentId(ps1Id);
         UUID ps2Id = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet2);
@@ -93,7 +93,7 @@ public class PropertySetTests extends CommonTest {
     // PropertySet-Users
 
     @Test
-    public void updatingPropertySetUserRelationship() throws IOException {
+    public void updatingPropertySetUserRelationship() {
         UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         UUID userId = commonHelpers.entityIsCreated(USERS_PATH, testUser1);
         UserPropertySetRelationshipDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, psId, true);
