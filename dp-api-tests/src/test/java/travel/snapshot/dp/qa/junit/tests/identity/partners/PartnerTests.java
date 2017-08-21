@@ -1,23 +1,43 @@
 package travel.snapshot.dp.qa.junit.tests.identity.partners;
 
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PARTNERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PARTNER_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_COMMERCIAL_SUBSCRIPTION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_PARTNER_ID;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.getSessionResponse;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
+import travel.snapshot.dp.api.identity.model.CommercialSubscriptionUpdateDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PartnerUpdateDto;
 import travel.snapshot.dp.api.identity.model.PartnerUserRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPartnerRelationshipPartialDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+import qa.tools.ikeeper.annotation.Jira;
 
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -60,5 +80,46 @@ public class PartnerTests extends CommonTest{
         userHelpers.getPartnersForUserByUserForApp(requestorId, requestorId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(UserPartnerRelationshipPartialDto.class, 1);
+    }
+
+    @Test
+    @Jira("DPIM-31")
+    public void treatCommercialSubscriptionsAsRelationshipPartnerUser() throws IOException {
+        // make user belong to the correct partner
+        UUID userId = createdUser.getId();
+        UserPartnerRelationshipDto relation = relationshipsHelpers.constructUserPartnerRelationshipDto(userId, DEFAULT_SNAPSHOT_PARTNER_ID, true);
+        commonHelpers.entityIsCreated(USER_PARTNER_RELATIONSHIPS_PATH, relation);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_NOT_FOUND);
+        UserCustomerRelationshipDto userCustomerRelation = relationshipsHelpers.constructUserCustomerRelationshipDto(userId, DEFAULT_SNAPSHOT_CUSTOMER_ID, true, true);
+        commonHelpers.entityIsCreated(USER_CUSTOMER_RELATIONSHIPS_PATH, userCustomerRelation);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_NOT_FOUND);
+        UserPropertyRelationshipDto userPropertyRelation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, userPropertyRelation);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_OK);
+        CommercialSubscriptionUpdateDto update = new CommercialSubscriptionUpdateDto();
+        update.setIsActive(false);
+        commonHelpers.entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_OK);
+    }
+
+    @Test
+    @Jira("DPIM-31")
+    public void treatCommercialSubscriptionsAsRelationshipCustomerUser() throws IOException {
+        UUID userId = commonHelpers.entityIsCreated(USERS_PATH, testUser2);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_NOT_FOUND);
+        UserPropertyRelationshipDto userPropertyRelation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, userPropertyRelation);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_OK);
+        CommercialSubscriptionUpdateDto update = new CommercialSubscriptionUpdateDto();
+        update.setIsActive(false);
+        commonHelpers.entityIsUpdated(COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID, update);
+        commonHelpers.getEntityByUserForApplication(userId, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, COMMERCIAL_SUBSCRIPTIONS_PATH, DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
+        responseCodeIs(SC_OK);
     }
 }
