@@ -1,0 +1,11 @@
+-1, /null, /null, /null, /null
+0, /null, /null, /null, /null
+500, /null, /null, /null, /null
+/null, -1, /null, /null, /null
+/null, /null, -1, /null, /null
+/null, /null, /null, -1, /null
+/null, /null, /null, /null, -1
+/null, /null, is_active==nonBooleanValue, /null, /null
+/null, /null, /null, is_active, is_active
+stringval, /null, /null, /null, /null
+/null, stringval, /null, /null, /null

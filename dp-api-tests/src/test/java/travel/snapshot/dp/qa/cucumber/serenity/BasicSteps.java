@@ -925,7 +925,7 @@ public class BasicSteps {
     }
 
     @Step
-    public static <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws Exception {
+    public static <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws IOException {
         Response response = getSessionResponse();
         List<T> objects = createObjectMapper().readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
         assertEquals("There should be " + count + " entities got", count, objects.size());

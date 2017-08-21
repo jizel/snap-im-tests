@@ -96,6 +96,7 @@ public abstract class CommonTest {
     protected static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
     protected static final int CC_CIRCULAR_DEPENDENCY = 40911;
     protected static final int CC_ENTITY_REFERENCED = 40915;
+    protected static final int CC_BAD_PARAMS = 40002;
 
     //    Basic test entities
     protected static EntityNonNullMap<String, CustomerCreateDto> customerDtos;
