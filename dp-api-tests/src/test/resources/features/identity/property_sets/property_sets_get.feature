@@ -17,12 +17,6 @@ Feature: Property sets get
       | ps3_name        | ps3_description        | brand           |
 
 
-  Scenario: Checking error code for getting property set
-    When Nonexistent property set id is got
-    Then Response code is "404"
-    And Custom code is "40402"
-
-
   Scenario Outline: Checking error codes for getting list of property sets
     When List of property sets is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
     Then Response code is "<response_code>"

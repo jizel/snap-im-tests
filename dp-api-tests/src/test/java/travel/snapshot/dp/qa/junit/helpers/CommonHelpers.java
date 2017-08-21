@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.helpers;
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.util.TextUtils.isBlank;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
@@ -57,10 +58,8 @@ public class CommonHelpers extends BasicSteps {
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
     public static final List<String> ALL_ENDPOINTS = Arrays.asList(
-        CUSTOMER_PROPERTY_RELATIONSHIP_PATH,
         APPLICATIONS_PATH,
         APPLICATION_VERSIONS_PATH,
-        ROLES_PATH,
         USER_CUSTOMER_ROLES_PATH,
         USER_PROPERTY_ROLES_PATH,
         USER_PROPERTY_SET_ROLES_PATH,
@@ -75,13 +74,9 @@ public class CommonHelpers extends BasicSteps {
         PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
         USER_CUSTOMER_RELATIONSHIPS_PATH,
         USER_PARTNER_RELATIONSHIPS_PATH,
-        USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH,
         USER_PROPERTY_RELATIONSHIPS_PATH,
-        USER_PROPERTY_ROLE_RELATIONSHIPS_PATH,
         USER_PROPERTY_SET_RELATIONSHIPS_PATH,
-        USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH,
         USER_GROUP_PROPERTY_RELATIONSHIPS_PATH,
-        USER_GROUP_PROPERTY_ROLE_RELATIONSHIPS_PATH,
         USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
         USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH,
         USER_GROUP_ROLE_RELATIONSHIPS_PATH,
@@ -232,6 +227,18 @@ public class CommonHelpers extends BasicSteps {
                 .post("/{id}", entityId);
         setSessionResponse(response);
         return response;
+    }
+
+
+    /**
+     * Update any IM entity via REST api using PATCH method. Verify that the response code is 200 - OK
+     * @param basePath - endpoint corresponding to the entity
+     * @param entityId
+     * @param data - entity update object, i.e. CustomerUpdateDto
+     */
+    public void entityIsUpdated(String basePath, UUID entityId, Object data) {
+        updateEntity(basePath, entityId, data);
+        responseCodeIs(SC_OK);
     }
 
     /**
