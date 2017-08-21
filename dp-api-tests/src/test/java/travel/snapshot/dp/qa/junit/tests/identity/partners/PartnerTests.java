@@ -28,7 +28,7 @@ public class PartnerTests extends CommonTest{
     private UserDto createdUser = null;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdPartner1 = partnerHelpers.partnerIsCreated(testPartner1);
         testUser1.setType(UserUpdateDto.UserType.PARTNER);

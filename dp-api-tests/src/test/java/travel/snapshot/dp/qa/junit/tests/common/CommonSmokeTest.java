@@ -11,7 +11,6 @@ import org.junit.Before;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by ofayans on 7/27/17.
@@ -20,7 +19,7 @@ public class CommonSmokeTest extends CommonTest {
     protected final Map<String, Object> testClient1 = entitiesLoader.getClients().get("client1");
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         // To clean after normal tests we first remove all test entities
         dbStepDefs.defaultEntitiesAreDeleted();
         dbStepDefs.defaultEntitiesAreCreated();

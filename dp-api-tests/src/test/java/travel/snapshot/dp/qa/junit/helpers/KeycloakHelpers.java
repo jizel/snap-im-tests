@@ -33,7 +33,7 @@ public class KeycloakHelpers {
         spec.relaxedHTTPSValidation();
     }
 
-    public void createClient(Object client) throws Throwable {
+    public void createClient(Object client) throws Exception {
         String jsonClient = new ObjectMapper().writeValueAsString(client);
         getKeyCloakToken();
         Response response = given().spec(spec)

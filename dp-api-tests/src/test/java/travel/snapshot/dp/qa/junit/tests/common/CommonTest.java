@@ -91,7 +91,8 @@ public abstract class CommonTest {
     protected static final int CC_NON_EXISTING_REFERENCE = 42202;
     protected static final int CC_ENDPOINT_NOT_FOUND = 40401;
     protected static final int CC_ENTITY_NOT_FOUND = 40402;
-    protected static final int CC_CONFLICT = 40902;
+    protected static final int CC_CONFLICT_ID = 40902;
+    protected static final int CC_CONFLICT_VALUES = 40907;
     protected static final int CC_INSUFFICIENT_PERMISSIONS = 40301;
     protected static final int CC_CIRCULAR_DEPENDENCY = 40911;
     protected static final int CC_ENTITY_REFERENCED = 40915;
@@ -186,7 +187,7 @@ public abstract class CommonTest {
     );
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception{
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
     }
 
@@ -200,6 +201,11 @@ public abstract class CommonTest {
     protected void verifyResponseAndCustomCode(String responseCode, String customCode) {
         responseCodeIs(Integer.valueOf(responseCode));
         customCodeIs(Integer.valueOf(customCode));
+    }
+
+    protected void verifyResponseAndCustomCode(Integer responseCode, Integer customCode) {
+        responseCodeIs(responseCode);
+        customCodeIs(customCode);
     }
 
     public static String transformNull(String value) {

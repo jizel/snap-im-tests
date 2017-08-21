@@ -36,7 +36,7 @@ public class CustomerPropertyRelationshipTests extends CommonTest {
     private CustomerPropertyRelationshipDto testCustomerPropertyRelationship;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdProperty1 = propertyHelpers.propertyIsCreated(testProperty1);
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);

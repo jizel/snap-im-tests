@@ -29,7 +29,7 @@ public class PartialPropertySetPropertyTests extends CommonTest {
     private static PropertySetDto createdPropertySet = null;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         UserCustomerRelationshipPartialDto relation = new UserCustomerRelationshipPartialDto();
         relation.setCustomerId(DEFAULT_SNAPSHOT_CUSTOMER_ID);

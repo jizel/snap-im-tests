@@ -30,7 +30,7 @@ public class UserPropertySetRelationshipTests extends CommonTest {
     private UserPropertySetRelationshipDto testUserPropertySetRelationship;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdPropertySet1 = propertySetHelpers.propertySetIsCreated(testPropertySet1);
         createdUser1 = userHelpers.userIsCreated(testUser1);

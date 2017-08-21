@@ -22,7 +22,7 @@ public class PropertyTest extends CommonTest {
     private UUID createdPropertyId;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdPropertyId = commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
     }

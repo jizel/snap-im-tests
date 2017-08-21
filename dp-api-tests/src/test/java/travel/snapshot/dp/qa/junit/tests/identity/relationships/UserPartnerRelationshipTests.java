@@ -30,7 +30,7 @@ public class UserPartnerRelationshipTests extends CommonTest{
     private UserPartnerRelationshipDto testUserPartnerRelationship;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdPartner1 = partnerHelpers.partnerIsCreated(testPartner1);
         createdUser1 = userHelpers.userIsCreated(testUser1);

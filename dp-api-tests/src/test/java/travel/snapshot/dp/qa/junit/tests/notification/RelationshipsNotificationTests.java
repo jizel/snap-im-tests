@@ -59,7 +59,7 @@ public class RelationshipsNotificationTests extends CommonTest{
     private UserDto createdUser1;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
     }

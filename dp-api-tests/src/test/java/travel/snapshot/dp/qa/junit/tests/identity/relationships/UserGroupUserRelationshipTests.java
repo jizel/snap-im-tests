@@ -30,7 +30,7 @@ public class UserGroupUserRelationshipTests extends CommonTest {
     private UserGroupUserRelationshipDto testUserGroupUserRelationship;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdUser1 = userHelpers.userIsCreated(testUser1);
         createdUserGroup1 = userGroupHelpers.userGroupIsCreated(testUserGroup1);

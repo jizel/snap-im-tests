@@ -55,13 +55,13 @@ public class DbStepDefs {
     }
 
     @Given("^Database is cleaned and default entities are created$")
-    public void databaseIsCleanedAndEntitiesAreCreated() throws Throwable {
+    public void databaseIsCleanedAndEntitiesAreCreated() {
         dbSteps.cleanDatabase();
         defaultEntitiesAreCreated();
     }
 
     @Given("^Default entities are created$")
-    public void defaultEntitiesAreCreated() throws Throwable {
+    public void defaultEntitiesAreCreated() {
         defaultSnapshotUserIsCreated();
         defaultPartnerIsCreated();
         defaultSnapshotApplicationIsCreated();
@@ -73,7 +73,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default entities are deleted$")
-    public void defaultEntitiesAreDeleted() throws Throwable {
+    public void defaultEntitiesAreDeleted() {
         dbSteps.deleteAppVersion(DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
         dbSteps.revokeAppPermissions(DEFAULT_SNAPSHOT_APPLICATION_ID);
         dbSteps.deleteCommercialSubscription(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
@@ -92,7 +92,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default Snapshot user is created$")
-    public void defaultSnapshotUserIsCreated() throws Throwable {
+    public void defaultSnapshotUserIsCreated() {
         UserCreateDto defaultSnapshotUser = new UserCreateDto();
         defaultSnapshotUser.setId(DEFAULT_SNAPSHOT_USER_ID);
         defaultSnapshotUser.setType(SNAPSHOT);
@@ -108,7 +108,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default partner is created$")
-    public void defaultPartnerIsCreated() throws Throwable {
+    public void defaultPartnerIsCreated() {
         PartnerDto defaultPartner = new PartnerDto();
         defaultPartner.setId(DEFAULT_SNAPSHOT_PARTNER_ID);
         defaultPartner.setName("Somepartner");
@@ -120,7 +120,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default application is created$")
-    public void defaultSnapshotApplicationIsCreated() throws Throwable {
+    public void defaultSnapshotApplicationIsCreated() {
         ApplicationDto defaultApp = new ApplicationDto();
         defaultApp.setName("Test");
         defaultApp.setDescription("Test");
@@ -132,7 +132,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default application version is created$")
-    public void defaultSnapshotApplicationVersionIsCreated() throws Throwable {
+    public void defaultSnapshotApplicationVersionIsCreated() {
         ApplicationVersionDto defaultAppVersion = new ApplicationVersionDto();
         defaultAppVersion.setName("DefaultVersion");
         defaultAppVersion.setDescription("Default test app version");
@@ -146,7 +146,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default customer is created$")
-    public void defaultCustomerIsCreated() throws Throwable {
+    public void defaultCustomerIsCreated() {
         CustomerCreateDto customer = new CustomerCreateDto();
         customer.setId(DEFAULT_SNAPSHOT_CUSTOMER_ID);
         customer.setName("DefaultCustomer");
@@ -164,7 +164,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default property is created$")
-    public void defaultPropertyIsCreated() throws Throwable {
+    public void defaultPropertyIsCreated() {
         PropertyDto property = new PropertyDto();
         property.setId(DEFAULT_PROPERTY_ID);
         property.setEmail("defaultProperty@snapshot.travel");
@@ -181,7 +181,7 @@ public class DbStepDefs {
     }
 
     @Given("^Default commercial subscription is created$")
-    public void defaultCommercialSubscriptionIsCreated() throws Throwable {
+    public void defaultCommercialSubscriptionIsCreated() {
         CommercialSubscriptionDto commercialSubscription = new CommercialSubscriptionDto();
         commercialSubscription.setIsActive(true);
         commercialSubscription.setId(DEFAULT_COMMERCIAL_SUBSCRIPTION_ID);
@@ -199,7 +199,7 @@ public class DbStepDefs {
     }
 
     @And("^Application permission table is populated(?: for application \"([^\"]*)\")?$")
-    public void applicationPermissionPopulated(String applicationName) throws Throwable {
+    public void applicationPermissionPopulated(String applicationName) {
         UUID applicationId = applicationsSteps.resolveApplicationId(applicationName);
         dbSteps.populateApplicationPermissionsTableForApplication(applicationId);
     }

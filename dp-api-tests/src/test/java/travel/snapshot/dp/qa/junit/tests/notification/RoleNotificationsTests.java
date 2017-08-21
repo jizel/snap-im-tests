@@ -27,7 +27,7 @@ public class RoleNotificationsTests extends CommonTest{
     private Map<String, Object> receivedNotification;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         roleHelpers.setRolesPathCustomer();
     }

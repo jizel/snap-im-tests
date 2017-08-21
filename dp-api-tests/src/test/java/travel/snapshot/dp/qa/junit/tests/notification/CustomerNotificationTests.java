@@ -28,7 +28,7 @@ public class CustomerNotificationTests extends CommonTest {
     private CustomerDto createdCustomer1;
 
     @Before
-    public void setUp() throws Throwable {
+    public void setUp() throws Exception {
         super.setUp();
         createdCustomer1 = customerHelpers.customerIsCreated(testCustomer1);
     }
