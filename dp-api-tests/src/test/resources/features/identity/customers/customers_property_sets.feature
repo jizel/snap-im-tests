@@ -92,32 +92,6 @@ Feature: Customers property sets
       | 10    | 0      | 10       | 59    |
       | 5     | 5      | 5        | 59    |
 
-  Scenario Outline: Checking error codes for getting list of property sets
-    When List of property sets for customer "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
-    Then Response code is "<response_code>"
-    And Custom code is "<custom_code>"
-
-    Examples:
-      | limit | cursor | filter         | sort            | sort_desc       | response_code | custom_code |
-      #limit and cursor
-      | /null | -1     | /null          | /null           | /null           | 400           | 40002       |
-      |       | -1     | /null          | /null           | /null           | 400           | 40002       |
-      | /null | text   | /null          | /null           | /null           | 400           | 40002       |
-      |       | text   | /null          | /null           | /null           | 400           | 40002       |
-      | -1    |        | /null          | /null           | /null           | 400           | 40002       |
-      | -1    | /null  | /null          | /null           | /null           | 400           | 40002       |
-      | text  |        | /null          | /null           | /null           | 400           | 40002       |
-      | text  | /null  | /null          | /null           | /null           | 400           | 40002       |
-      | 10    | -1     | /null          | /null           | /null           | 400           | 40002       |
-      | text  | 0      | /null          | /null           | /null           | 400           | 40002       |
-      | 10    | text   | /null          | /null           | /null           | 400           | 40002       |
-      #filtering and sorting
-      | 10    | 0      | /null          | property_set_id | property_set_id | 400           | 40002       |
-      | 10    | 0      | /null          | wrong           | /null           | 400           | 40002       |
-      | 10    | 0      | /null          | /null           | wrong           | 400           | 40002       |
-      | 10    | 0      | customer_id==  | /null           | /null           | 400           | 40002       |
-      | 10    | 0      | parent==blabla | /null           | /null           | 400           | 40002       |
-
   Scenario Outline: Filtering list of property sets
     Given The following property sets exist for customer with id "55e2cf39-ffb6-4bb8-ad3f-66306c2be124" and user "snapshotUser"
       | name                 | description            | type            |

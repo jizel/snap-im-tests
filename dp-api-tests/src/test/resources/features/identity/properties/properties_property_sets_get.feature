@@ -195,30 +195,3 @@ Feature: Properties property sets get
       | 5     | 0      | 5        | 12    | is_active==true  |                 | property_set_id |
       | 5     | 2      | 5        | 12    | is_active==true  | property_set_id |                 |
       | 5     | 2      | 0        | 0     | is_active==false |                 | property_set_id |
-
-  Scenario Outline: Checking error codes for getting list of property property sets
-    When List of property sets is got for property with id "0b202111-cdaf-439a-8bef-3140f56c657e" and limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
-    Then Response code is "<response_code>"
-    And Custom code is "<custom_code>"
-
-    Examples:
-      | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
-      | /null       | -1     | /null  | /null       | /null       | 400           | 40002       |
-      |             | -1     | /null  | /null       | /null       | 400           | 40002       |
-      | /null       | text   | /null  | /null       | /null       | 400           | 40002       |
-      |             | text   | /null  | /null       | /null       | 400           | 40002       |
-      | -1          |        | /null  | /null       | /null       | 400           | 40002       |
-      | -1          | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 201         | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | text        |        | /null  | /null       | /null       | 400           | 40002       |
-      | text        | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | -1     | /null  | /null       | /null       | 400           | 40002       |
-      | text        | 0      | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | text   | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | 0      | /null  | name        | name        | 400           | 40002       |
-      | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
-      | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
-      | 10          | 0      | code == | /null       | /null       | 400           | 40002       |
-      
-      

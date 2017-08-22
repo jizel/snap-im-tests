@@ -1,0 +1,4 @@
+5,0,1,1,customer_id==%s
+5,2,1,0,customer_id==%s
+5,2,4,2,
+/null,/null,1,1,customer_id==%s

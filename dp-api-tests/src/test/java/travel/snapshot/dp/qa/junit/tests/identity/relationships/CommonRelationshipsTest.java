@@ -104,11 +104,7 @@ public class CommonRelationshipsTest extends CommonTest {
         ALL_RELATIONSHIPS_ENDPOINTS.forEach(endpoint -> {
             commonHelpers.getEntities(endpoint, buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
             responseCodeIs(SC_OK);
-            try {
-                numberOfEntitiesInResponse(endpointEntityMap.get(endpoint), Integer.valueOf(returned));
-            } catch (IOException e) {
-                throw new RuntimeException("Exception when trying to get number of entities in response: " + e.getMessage());
-            }
+            numberOfEntitiesInResponse(endpointEntityMap.get(endpoint), Integer.valueOf(returned));
         });
     }
 

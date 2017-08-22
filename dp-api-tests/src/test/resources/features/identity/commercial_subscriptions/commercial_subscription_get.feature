@@ -21,28 +21,3 @@ Feature: Commercial subscription get
     When Nonexistent commercial subscription id is got
     Then Response code is "404"
     And Custom code is "40402"
-
-
-  Scenario Outline: Checking error codes for getting list of commercial subscriptions
-    When List of commercial subscriptions is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
-    Then Response code is "<response_code>"
-    And Custom code is "<custom_code>"
-    Examples:
-      | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
-      | /null       | -1     | /null  | /null       | /null       | 400           | 40002       |
-      |             | -1     | /null  | /null       | /null       | 400           | 40002       |
-      | /null       | text   | /null  | /null       | /null       | 400           | 40002       |
-      |             | text   | /null  | /null       | /null       | 400           | 40002       |
-      | -1          |        | /null  | /null       | /null       | 400           | 40002       |
-      | -1          | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 201         | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | text        |        | /null  | /null       | /null       | 400           | 40002       |
-      | text        | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | -1     | /null  | /null       | /null       | 400           | 40002       |
-      | text        | 0      | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | text   | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | 0      | /null  | property_id | property_id | 400           | 40002       |
-      | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
-      | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
-      | 10          | 0      | code == | /null       | /null       | 400           | 40002       |
