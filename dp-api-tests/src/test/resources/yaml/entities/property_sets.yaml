@@ -1,5 +1,6 @@
 propertySets:
   propertySet1: !propertySet &BASIC_SET {
+    id: 09000000-0000-4444-8888-000000000001,
     name: Test Property Set 1,
     description: Some desc 1,
     type: BRAND,
@@ -9,6 +10,7 @@ propertySets:
 
   propertySet2: !propertySet {
     <<: *BASIC_SET,
+    id: 09000000-0000-4444-8888-000000000002,
     name: Property Set 2,
     description: Some desc 2,
     type: GEOLOCATION
@@ -16,6 +18,7 @@ propertySets:
 
   propertySet3: !propertySet {
     <<: *BASIC_SET,
+    id: 09000000-0000-4444-8888-000000000003,
     name: Property Set 3,
     description: Some desc 3,
     type: HOTEL_TYPE
