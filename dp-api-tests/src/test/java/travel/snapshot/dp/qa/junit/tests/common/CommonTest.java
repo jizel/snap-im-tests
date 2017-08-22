@@ -116,6 +116,7 @@ public abstract class CommonTest {
     protected static CustomerCreateDto testCustomer4;
     protected static PropertyDto testProperty1;
     protected static PropertyDto testProperty2;
+    protected static PropertyDto testProperty3;
     protected static PropertySetDto testPropertySet1;
     protected static PropertySetDto testPropertySet2;
     protected static PropertySetDto testPropertySet3;
@@ -165,6 +166,7 @@ public abstract class CommonTest {
         testCustomer4 = customerDtos.get("customer4");
         testProperty1 = propertyDtos.get("property1");
         testProperty2 = propertyDtos.get("property2");
+        testProperty3 = propertyDtos.get("property3");
         testPropertySet1 = propertySetDtos.get("propertySet1");
         testPropertySet2 = propertySetDtos.get("propertySet2");
         testPropertySet3 = propertySetDtos.get("propertySet3");

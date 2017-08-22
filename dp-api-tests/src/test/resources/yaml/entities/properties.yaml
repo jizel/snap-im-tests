@@ -26,3 +26,12 @@ properties:
       website: "http://www.snapshot.com",
       email: property2@snapshot.travel,
     }
+
+  property3: !property {
+      <<: *BASIC_PROPERTY,
+      id: 08000000-0000-4444-8888-000000000004,
+      name: Property 3,
+      code: property3code,
+      website: "http://www.snapshot.org",
+      email: property3@snapshot.travel,
+    }

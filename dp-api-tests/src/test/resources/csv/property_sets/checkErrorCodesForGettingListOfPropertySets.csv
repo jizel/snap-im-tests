@@ -1,0 +1,16 @@
+/null,-1,/null,/null,/null,400,40002
+,-1,/null,/null,/null,400,40002
+/null,text,/null,/null,/null,400,40002
+,text,/null,/null,/null,400,40002
+-1,,/null,/null,/null,400,40002
+-1,/null,/null,/null,/null,400,40002
+text,,/null,/null,/null,400,40002
+text,/null,/null,/null,/null,400,40002
+10,-1,/null,/null,/null,400,40002
+text,0,/null,/null,/null,400,40002
+10,text,/null,/null,/null,400,40002
+10,0,/null,property_set_id,property_set_id,400,40002
+10,0,/null,wrong,/null,400,40002
+10,0,/null,/null,wrong,400,40002
+10,0,customer_id==,/null,/null,400,40002
+10,0,parent==blabla,/null,/null,400,40002

@@ -1,0 +1,7 @@
+5,0,5,5,name=='list_*',name,
+5,0,5,5,name=='list_*',,name
+5,2,3,5,name=='list_*',name,
+5,2,3,5,name=='list_*',,name
+/null,/null,1,1,name==list_ps4_name,/null,/null
+/null,/null,2,2,name==list_* and property_set_type==geolocation,name,/null
+/null,/null,1,1,description==*desc_6,/null,/null
