@@ -7,15 +7,16 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_USER_ID;
-
 
 import org.junit.Before;
 import org.junit.Test;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.UserDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 
@@ -25,13 +26,15 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 public class UserRestrictionTests extends CommonRestrictionTest{
     private UserDto createdUser1;
 
-    private static final String ALL_USERS_ENDPOINT = "/users";
-    private static final String SINGLE_USER_ENDPOINT = "/users/{user_id}";
-    private static final String USER_CUSTOMER_RELATIONSHIP_ENDPOINT = "/users/{user_id}/customers/{customer_id}";
-    private static final String USER_PROPERTIES_ENDPOINT = "/users/{user_id}/properties";
-    private static final String USER_PROPERTIES_ROLES_ENDPOINT = "/users/{user_id}/properties/{property_id}/roles";
-    private static final String USER_PROPERTY_SETS_ROLES_ENDPOINT = "/users/{user_id}/property_sets/{property_set_id}/roles";
-    private static final String USER_CUSTOMERS_ROLES_ENDPOINT = "/users/{user_id}/customers/{customer_id}/roles";
+    private static final String ALL_USERS_ENDPOINT = "/identity/users";
+    private static final String SINGLE_USER_ENDPOINT = "/identity/users/{user_id}";
+    private static final String USER_CUSTOMER_RELATIONSHIP_ENDPOINT = "/identity/users/{user_id}/customers/{customer_id}";
+    private static final String USER_PROPERTIES_ENDPOINT = "/identity/users/{user_id}/properties";
+    private static final String USER_PROPERTIES_ROLES_ENDPOINT = "/identity/users/{user_id}/properties/{property_id}/roles";
+    private static final String USER_PROPERTY_SETS_ROLES_ENDPOINT = "/identity/users/{user_id}/property_sets/{property_set_id}/roles";
+    private static final String USER_CUSTOMERS_ROLES_ENDPOINT = "/identity/users/{user_id}/customers/{customer_id}/roles";
+
+    private UserPropertyRelationshipDto testUserPropertyRelationship;
 
 
     @Before
@@ -100,10 +103,10 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     }
 
     @Test
-    public void getUserRolesRestrictionTest(){
+    public void getUserRolesRestrictionTest() throws Exception{
 //        Property roles
         PropertyDto createdProperty1 = propertyHelpers.propertyIsCreated(testProperty1);
-        propertyHelpers.relationExistsBetweenUserAndProperty(createdUser1.getId(), createdProperty1.getId(), true);
+        commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relationshipsHelpers.constructUserPropertyRelationshipDto(createdUser1.getId(), testProperty1.getId(), true));
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTIES_RESOURCE, createdProperty1.getId());
         responseIsEndpointNotFound();
         dbSteps.addApplicationPermission(restrictedApp.getId(), USER_PROPERTIES_ROLES_ENDPOINT, GET_METHOD);

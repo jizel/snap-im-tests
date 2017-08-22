@@ -10,19 +10,19 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CU
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.experimental.categories.Category;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipType;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@RunWith(SerenityRunner.class)
+@Category(Categories.Authorization.class)
 public class CustomerSmokeTests extends CommonSmokeTest {
 
     private EntityNonNullMap<String, CustomerCreateDto> customerDtos = entitiesLoader.getCustomerDtos();

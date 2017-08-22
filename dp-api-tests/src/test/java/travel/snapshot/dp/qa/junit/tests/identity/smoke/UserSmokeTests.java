@@ -6,11 +6,14 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_P
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_CUSTOMER_RELATIONSHIPS_PATH;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
+@Category(Categories.Authorization.class)
 public class UserSmokeTests extends CommonSmokeTest {
     protected UUID userId;
     protected UUID userCustomerRelationId;

@@ -7,18 +7,18 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 
 import com.jayway.restassured.specification.RequestSpecification;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.experimental.categories.Category;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
 
-@RunWith(SerenityRunner.class)
+@Category(Categories.Authorization.class)
 public class PropertySmokeTests extends CommonSmokeTest {
 
     protected RequestSpecification spec = null;

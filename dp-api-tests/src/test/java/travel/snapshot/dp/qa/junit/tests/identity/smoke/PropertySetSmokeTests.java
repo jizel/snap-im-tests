@@ -5,17 +5,17 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERT
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 
 import com.jayway.restassured.specification.RequestSpecification;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.experimental.categories.Category;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
-@RunWith(SerenityRunner.class)
+@Category(Categories.Authorization.class)
 public class PropertySetSmokeTests extends CommonSmokeTest {
     protected RequestSpecification spec = null;
 

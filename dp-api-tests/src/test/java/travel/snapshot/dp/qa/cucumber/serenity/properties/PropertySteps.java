@@ -9,10 +9,12 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.*;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -257,7 +259,8 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void listOfPropertyUsersIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
-        getEntitiesByUserForApp(userId, applicationVersionId, USER_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s", propertyId), null, null, null);
+        getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId,
+                USERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
     }
 
     @Step
@@ -340,7 +343,8 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void listOfPropertiesPropertySetsIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
-        getEntitiesByUserForApp(userId, applicationVersionId, PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, null, null, String.format("property_id==%s&%s", propertyId, filter), null, null, null);
+        getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId,
+                PROPERTY_SETS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
     }
 
     @Step
@@ -351,8 +355,8 @@ public class PropertySteps extends BasicSteps {
 
     @Step
     public void listOfCustomersIsGotByUserForApp(UUID userId, UUID applicationVersionId, UUID propertyId, String limit, String cursor, String filter, String sort, String sortDesc) throws Throwable {
-        Map<String, String> queryParameters = buildQueryParamMapForPaging(limit, cursor, String.format("property_id==%s&%s", propertyId, filter), sort, sortDesc, null);
-        getEntitiesByUserForApp(userId, applicationVersionId, CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, null, null, null, null, null, queryParameters);
+        getSecondLevelEntitiesByUserForApp(userId, applicationVersionId, propertyId,
+                CUSTOMERS_RESOURCE, limit, cursor, filter, sort, sortDesc, null);
     }
 
     public CustomerPropertyRelationshipDto[] getPropertyCustomerRelationships(UUID customerId, UUID propertyId) throws Throwable {

@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 // @RunWith(ParallelSuite.class) -- subclass of WildcardPatternSuite
 @RunWith(WildcardPatternSuite.class)
 @SuiteClasses("*/*.class")
-@ExcludeCategories(Categories.SlowTests.class)
+@ExcludeCategories({Categories.SlowTests.class, Categories.Authorization.class})
 public class JUnitTestSuite {
 
     @BeforeClass

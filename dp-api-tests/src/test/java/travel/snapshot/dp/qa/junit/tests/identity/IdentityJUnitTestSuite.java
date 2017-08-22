@@ -13,7 +13,7 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
  */
 @RunWith(WildcardPatternSuite.class)
 @SuiteClasses("*/*.class")
-@ExcludeCategories(Categories.SlowTests.class)
+@ExcludeCategories({Categories.SlowTests.class, Categories.Authorization.class})
 public class IdentityJUnitTestSuite {
 
 }

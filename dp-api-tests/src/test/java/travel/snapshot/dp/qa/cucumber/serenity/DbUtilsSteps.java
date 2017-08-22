@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.cucumber.serenity;
 
+import static java.util.UUID.randomUUID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.ADDRESS_LINE1_PATTERN;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_ADDRESS_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_CUSTOMER_TYPE;
@@ -91,7 +92,7 @@ public class DbUtilsSteps {
     static final String CREATE_CUSTOMER_HIERARCHY_PATH = "INSERT INTO CustomerHierarchyPath (parent_id, child_id) values (?, ?) ;";
     static final String DELETE_APPLICATION_PERMISSION = "DELETE FROM ApplicationPermission;";
     static final String POPULATE_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) SELECT uuid_generate_v4(), ?, id FROM platformoperation;";
-    static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (application_id, platform_operation_id) VALUES (?, ?);";
+    static final String ADD_APPLICATION_PERMISSION = "INSERT INTO ApplicationPermission (id, application_id, platform_operation_id) VALUES (?, ?, ?);";
     static final String SELECT_PERMISSION_ID = "SELECT id FROM platformoperation where uri_template = ? AND http_method = ?;";
 
     static final String TTI_SCHEMA_NAME = "tti";
@@ -260,14 +261,12 @@ public class DbUtilsSteps {
 
 
     public void populateApplicationPermissionsTableForApplication(UUID applicationId) {
-        UUID applicationUuid = (applicationId);
-        dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationUuid);
+        dbHelper.identityDb().update(POPULATE_APPLICATION_PERMISSION, applicationId);
     }
 
     public void addApplicationPermission(UUID applicationId, String endpoint, String method) {
-        UUID applicationUuid = (applicationId);
         UUID permissionId = (UUID) dbHelper.identityDb().queryForList(SELECT_PERMISSION_ID, endpoint, method).get(0).get("id");
-        dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, applicationUuid, permissionId);
+        dbHelper.identityDb().update(ADD_APPLICATION_PERMISSION, randomUUID(), applicationId, permissionId);
     }
 
     public void deleteCustomerProperty(UUID id) {
