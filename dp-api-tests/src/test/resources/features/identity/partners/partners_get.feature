@@ -112,30 +112,6 @@ Feature: Partners get
       | 10    | 0      | 10       | 53    | </identity/partners?limit=10&cursor=10>; rel="next"                                                     |
       | 5     | 10     | 5        | 53    | </identity/partners?limit=5&cursor=5>; rel="prev", </identity/partners?limit=5&cursor=15>; rel="next"   |
 
-  Scenario Outline: Checking error codes for getting list of partners
-    When List of partners is got with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
-    Then Response code is "<response_code>"
-    And Custom code is "<custom_code>"
-
-    Examples:
-      | limit       | cursor | filter | sort        | sort_desc   | response_code | custom_code |
-      | /null       | -1     | /null  | /null       | /null       | 400           | 40002       |
-      |             | -1     | /null  | /null       | /null       | 400           | 40002       |
-      | /null       | text   | /null  | /null       | /null       | 400           | 40002       |
-      |             | text   | /null  | /null       | /null       | 400           | 40002       |
-      | -1          |        | /null  | /null       | /null       | 400           | 40002       |
-      | -1          | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 201         | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 21474836470 | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | text        |        | /null  | /null       | /null       | 400           | 40002       |
-      | text        | /null  | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | -1     | /null  | /null       | /null       | 400           | 40002       |
-      | text        | 0      | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | text   | /null  | /null       | /null       | 400           | 40002       |
-      | 10          | 0      | /null  | notes       | notes       | 400           | 40002       |
-      | 10          | 0      | /null  | /null       | nonexistent | 400           | 40002       |
-      | 10          | 0      | /null  | nonexistent | /null       | 400           | 40002       |
-      | 10          | 0      | code == | /null       | /null       | 400           | 40002       |
 
   Scenario Outline: Filtering list of partners
     Given The following partner exist

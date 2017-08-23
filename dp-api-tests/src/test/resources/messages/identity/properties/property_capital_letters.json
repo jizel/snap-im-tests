@@ -1,0 +1,19 @@
+{
+    "is_active": true,
+    "hospitality_id": "000000B2-3836-4207-A705-42BBEC000000",
+    "name": "Property 1",
+    "website": "http://www.snapshot.travel",
+    "email": "property1@snapshot.travel",
+    "is_demo_property": true,
+    "timezone": "Europe/Prague",
+    "anchor_customer_id": "06000000-0000-4444-8888-000000000001",
+    "address": {
+        "address_line1": "CoreQA",
+        "address_line2": "address line 2",
+        "city": "Brno",
+        "zip_code": "60200",
+        "country": "CZ"
+    },
+    "property_id": "000E833E-50B8-4854-A233-289F00BC4A09",
+    "property_code": "property1code"
+}

@@ -7,7 +7,6 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.isOneOf;
@@ -19,13 +18,12 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_RESOURCE;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
-import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.config.ObjectMapperConfig;
@@ -124,9 +122,12 @@ public class BasicSteps {
     public static final String PROPERTY_CODE = "property_code";
     public static final String IS_ACTIVE = "is_active";
     public static final String PROPERTY_ID = "property_id";
+    public static final String HOSPITALITY_ID = "hospitality_id";
     public static final String RELATIONSHIP_TYPE = "relationship_type";
     public static final String VALID_FROM = "valid_from";
     public static final String VALID_TO = "valid_to";
+    public static final String VALID_FROM_VALUE = "2017-06-01";
+    public static final String VALID_TO_VALUE = "2100-06-01";
     public static final String SNAPSHOT_PHONE = "+420530514301";
     public static final String DEFAULT_PASSWORD = "P@ssw0rd";
     public static final String DEFAULT_ENCRYPTED_PASSWORD = "$2a$10$vNTgpUAsWvhJQmJR2DkuYOTN5EgJQhMOqQ5xd0DmJOHdck4Sa2orq";
@@ -925,10 +926,11 @@ public class BasicSteps {
     }
 
     @Step
-    public static <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) throws IOException {
-        Response response = getSessionResponse();
-        List<T> objects = createObjectMapper().readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
-        assertEquals("There should be " + count + " entities got", count, objects.size());
+    public static <T> void numberOfEntitiesInResponse(Class<T> clazz, int count) {
+        List<T> objects = parseResponseAsListOfObjects(clazz);
+        assertThat(String.format("Response should contain %d entities, but contains %d", count, objects.size()),
+                objects.size(),
+                is(count));
     }
 
     public static void headerIs(String headerName, String value) {

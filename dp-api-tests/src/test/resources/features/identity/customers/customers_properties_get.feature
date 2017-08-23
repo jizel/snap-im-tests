@@ -128,30 +128,6 @@ Feature: Customers properties get
       | 10    | 0      | 10       |
       | 5     | 5      | 5        |
 
-  @Bug
-  Scenario Outline: Checking error codes for getting list of customerProperties
-    When List of customerProperties is got for customer with id "40ebf861-7549-46f1-a99f-249716c83b33" with limit "<limit>" and cursor "<cursor>" and filter "<filter>" and sort "<sort>" and sort_desc "<sort_desc>"
-    Then Response code is "<response_code>"
-    And Custom code is "<custom_code>"
-    Examples:
-      | limit | cursor | filter   | sort              | sort_desc         | response_code | custom_code |
-      #limit and cursor
-      | /null | -1     | /null    | /null             | /null             | 400           | 40002       |
-      |       | -1     | /null    | /null             | /null             | 400           | 40002       |
-      | /null | text   | /null    | /null             | /null             | 400           | 40002       |
-      |       | text   | /null    | /null             | /null             | 400           | 40002       |
-      | -1    |        | /null    | /null             | /null             | 400           | 40002       |
-      | -1    | /null  | /null    | /null             | /null             | 400           | 40002       |
-      | text  |        | /null    | /null             | /null             | 400           | 40002       |
-      | text  | /null  | /null    | /null             | /null             | 400           | 40002       |
-      | 10    | -1     | /null    | /null             | /null             | 400           | 40002       |
-      | text  | 0      | /null    | /null             | /null             | 400           | 40002       |
-      | 10    | text   | /null    | /null             | /null             | 400           | 40002       |
-      #filtering and sorting
-      | 10    | 0      | /null    | relationship_type | relationship_type | 400           | 40002       |
-      | 10    | 0      | type==   | /null             | /null             | 400           | 40002       |
-      | 10    | 0      | vat==CZ* | /null             | /null             | 400           | 40002       |
-
    #TODO: Tests, that you can use right keywords for sort/sort_desc ()
 
   Scenario Outline: Filtering list of customer properties

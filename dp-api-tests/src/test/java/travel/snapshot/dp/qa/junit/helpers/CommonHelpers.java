@@ -39,6 +39,7 @@ import travel.snapshot.dp.api.model.VersionedEntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -96,6 +97,17 @@ public class CommonHelpers extends BasicSteps {
         return (inputMap.get(aKey) == null) ? new ArrayList<>() : inputMap.get(aKey);
     }
 
+    public static <T> List<T> parseResponseAsListOfObjects(Class<T> clazz) {
+        Response response = getSessionResponse();
+        List<T> objects = null;
+        try {
+            objects = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        return objects;
+    }
+
     // Get all
 
     public Response getEntities(String basePath, Map<String, String> queryParams) {
@@ -103,14 +115,8 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public <T> List<T> getEntitiesAsType(String basePath, Class<T> clazz, Map<String, String> queryParams) {
-        Response response = getEntities(basePath, queryParams);
-        List<T> result = null;
-        try {
-            result = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-        return result;
+        setSessionResponse(getEntities(basePath, queryParams));
+        return parseResponseAsListOfObjects(clazz);
     }
 
     public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {

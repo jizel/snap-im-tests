@@ -14,7 +14,7 @@ import static com.jayway.restassured.RestAssured.given;
 import static net.serenitybdd.core.Serenity.sessionVariableCalled;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static travel.snapshot.dp.json.ObjectMappers.createObjectMapper;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.parseResponseAsListOfObjects;
 
 public class AuthorizationHelpers extends AuthorizationSteps {
 
@@ -36,13 +36,14 @@ public class AuthorizationHelpers extends AuthorizationSteps {
         return specification;
     }
 
-    public <T> List<T> getEntities(String basePath, Class<T> clazz, Map<String, String> queryParams) throws Throwable {
+    public <T> List<T> getEntities(String basePath, Class<T> clazz, Map<String, String> queryParams) {
         RequestSpecification specification = constructRequestSpecification(basePath, null);
         specification.parameters(queryParams);
         Response response = specification
                 .when()
                 .get();
-        return createObjectMapper().readValue(response.asString(), TypeFactory.defaultInstance().constructCollectionType(List.class, clazz));
+        setSessionResponse(response);
+        return parseResponseAsListOfObjects(clazz);
     }
 
     public Response createEntity(String basePath, Object entity) {
