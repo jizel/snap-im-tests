@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -46,5 +47,12 @@ public class CustomersCRUDTests extends CommonTest {
         CustomerDto updateResponseCustomer = updateResponse.as(CustomerDto.class);
         CustomerDto requestedCustomer = commonHelpers.getEntityAsType(CUSTOMERS_PATH, CustomerDto.class, testCustomer1.getId());
         assertThat("Update response body differs from the same customer requested by GET ", updateResponseCustomer, is(requestedCustomer));
+    }
+
+    @Test
+    public void deleteCustomer() throws Exception {
+        UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.deleteEntity(CUSTOMERS_PATH, customerId);
+        responseCodeIs(SC_NO_CONTENT);
     }
 }

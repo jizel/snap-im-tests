@@ -8,4 +8,5 @@ package travel.snapshot.dp.qa.junit.tests;
 public interface Categories {
     interface SmokeTests {}
     interface SlowTests {}
+    interface Authorization {}
 }

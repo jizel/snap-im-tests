@@ -29,7 +29,7 @@ public abstract class CommonRestrictionTest extends CommonTest {
 
     //    Help methods
     private ApplicationVersionDto createTestApplicationVersionForApp(UUID applicationId){
-        ApplicationVersionDto testAppVersion = testAppVersion = new ApplicationVersionDto();
+        ApplicationVersionDto testAppVersion = new ApplicationVersionDto();
         testAppVersion.setApplicationId(applicationId);
         testAppVersion.setIsActive(true);
         testAppVersion.setIsNonCommercial(true);

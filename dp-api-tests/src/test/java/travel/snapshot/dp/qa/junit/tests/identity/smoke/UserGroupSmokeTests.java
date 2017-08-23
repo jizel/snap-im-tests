@@ -3,15 +3,15 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_GROUPS_PATH;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.experimental.categories.Category;
 import travel.snapshot.dp.api.identity.model.UserGroupUpdateDto;
+import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
 
 import java.util.UUID;
 
-@RunWith(SerenityRunner.class)
+@Category(Categories.Authorization.class)
 public class UserGroupSmokeTests extends CommonSmokeTest {
 
     @Test

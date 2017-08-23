@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests;
 
+import com.googlecode.junittoolbox.ExcludeCategories;
 import com.googlecode.junittoolbox.SuiteClasses;
 import com.googlecode.junittoolbox.WildcardPatternSuite;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(WildcardPatternSuite.class)
 @SuiteClasses("*/*.class")
+@ExcludeCategories(Categories.Authorization.class)
 public class JUnitSlowTestSuite {
 
 }
