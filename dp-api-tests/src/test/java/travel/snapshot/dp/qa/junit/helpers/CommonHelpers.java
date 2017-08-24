@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
+import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.model.VersionedEntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
@@ -358,5 +359,14 @@ public class CommonHelpers extends BasicSteps {
             throw new NoSuchElementException("There is no key " + basePath + " in " + EndpointEntityMap.class.getCanonicalName() + ". It should probably be added.");
         }
         return response.as(endpointEntityMap.get(basePath));
+    }
+
+    public AddressDto constructAddressDto(String line1, String city, String zipCode, String countryCode){
+        AddressDto address = new AddressDto();
+        address.setLine1(line1);
+        address.setCity(city);
+        address.setZipCode(zipCode);
+        address.setCountryCode(countryCode);
+        return address;
     }
 }
