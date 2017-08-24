@@ -73,11 +73,11 @@ public class PartnerTests extends CommonTest{
     public void invalidUpdatePartner() throws Exception {
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
         commonHelpers.updateEntity(PARTNERS_PATH, createdPartner1.getId(), invalidUpdate);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
 
         invalidUpdate = singletonMap("email", "invalid_value");
         commonHelpers.updateEntity(PARTNERS_PATH, createdPartner1.getId(), invalidUpdate);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
 
         commonHelpers.updateEntity(PARTNERS_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();

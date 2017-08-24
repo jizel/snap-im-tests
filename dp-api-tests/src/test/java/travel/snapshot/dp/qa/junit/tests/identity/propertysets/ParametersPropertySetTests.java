@@ -54,6 +54,7 @@ public class ParametersPropertySetTests extends CommonTest {
         // Create property sets
         IntStream.range(0, 52).forEachOrdered(n -> {
             testPropertySet1.setName(String.format("ps_name_%d", n));
+            testPropertySet1.setId(null);
             commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         });
 
@@ -81,22 +82,6 @@ public class ParametersPropertySetTests extends CommonTest {
         commonHelpers.sendBlankPost(PROPERTY_SETS_PATH, "identity");
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
-    }
-
-    @FileParameters(EXAMPLES + "checkErrorCodesForGettingListOfPropertySets.csv")
-    @Test
-    public void checkErrorCodesForGettingListOfPropertySets(
-        String limit,
-        String cursor,
-        String filter,
-        String sort,
-        String sortDesc,
-        String responseCode,
-        String customCode) {
-        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null);
-        commonHelpers.getEntities(PROPERTY_SETS_PATH, params);
-        responseCodeIs(Integer.valueOf(responseCode));
-        customCodeIs(Integer.valueOf(customCode));
     }
 
     @FileParameters(EXAMPLES + "filteringListOfPropertySets.csv")

@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.common;
 
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 
@@ -230,9 +231,29 @@ public abstract class CommonTest {
         customCodeIs(CC_ENTITY_NOT_FOUND);
     }
 
-    protected static void responseCodeIsUnprocessableEntity() {
+    protected static void responseIsUnprocessableEntity() {
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
+    }
+
+    protected static void responseIsReferenceDoesNotExist() {
+        responseCodeIs(SC_UNPROCESSABLE_ENTITY);
+        customCodeIs(CC_NON_EXISTING_REFERENCE);
+    }
+
+    protected static void responseIsConflictId() {
+        responseCodeIs(SC_CONFLICT);
+        customCodeIs(CC_CONFLICT_ID);
+    }
+
+    protected static void responseIsConflictField() {
+        responseCodeIs(SC_CONFLICT);
+        customCodeIs(CC_CONFLICT_CODE);
+    }
+
+    protected static void responseIsEntityReferenced() {
+        responseCodeIs(SC_CONFLICT);
+        customCodeIs(CC_ENTITY_REFERENCED);
     }
 
     /**
