@@ -38,22 +38,18 @@ public class PlatformOperationsTests extends CommonTest {
     
     private static final String TEST_URI_TEMPLATE = "/test/uri/template";
 
-    private UUID platformOperationId;
-    private PlatformOperationDto testPlatformOperationDto;
-    private PlatformOperationDto createdPlatformOperationDto;
+    private PlatformOperationDto createdPlatformOperation;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        platformOperationId = randomUUID();
-        testPlatformOperationDto = constructPlatformOperation(platformOperationId, HttpMethod.GET, TEST_URI_TEMPLATE);
-        createdPlatformOperationDto = commonHelpers.entityWithTypeIsCreated(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class,
-                constructPlatformOperation(platformOperationId, HttpMethod.GET, TEST_URI_TEMPLATE));
+        createdPlatformOperation = commonHelpers.entityWithTypeIsCreated(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class,
+                constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE));
     }
 
     @After
     public void tearDown() throws Exception {
-        deletePlatformOperationIfExists(platformOperationId);
+        deletePlatformOperationIfExists(createdPlatformOperation.getId());
     }
 
     @Test
@@ -63,9 +59,9 @@ public class PlatformOperationsTests extends CommonTest {
         responseCodeIs(SC_OK);
         stream(response.as(PlatformOperationDto[].class)).forEach(PlatformOperationsTests::platformOperationContainsAllFields);
 //        Get single PO
-        response = commonHelpers.getEntity(PLATFORM_OPERATIONS_PATH, testPlatformOperationDto.getId());
+        response = commonHelpers.getEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId());
         responseCodeIs(SC_OK);
-        assertThat(response.as(PlatformOperationDto.class), is(createdPlatformOperationDto));
+        assertThat(response.as(PlatformOperationDto.class), is(createdPlatformOperation));
     }
 
     @Test
@@ -87,22 +83,20 @@ public class PlatformOperationsTests extends CommonTest {
     @Test
     public void createAndGetPlatformOperationTest() throws Exception {
         asList(HttpMethod.GET, HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE).forEach(method -> {
-            UUID id = randomUUID();
-            PlatformOperationDto platformOperationDto = constructPlatformOperation(id, method, TEST_URI_TEMPLATE + "/{create}");
+            PlatformOperationDto platformOperationDto = constructPlatformOperation(method, TEST_URI_TEMPLATE + "/{create}");
 
             Response createResponse = commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, platformOperationDto);
             responseCodeIs(SC_CREATED);
 
             PlatformOperationDto createdPlatformOperation = createResponse.as(PlatformOperationDto.class);
             platformOperationContainsAllFields(createdPlatformOperation);
-            assertThat(createdPlatformOperation.getId(), is(id));
             assertThat(createdPlatformOperation.getHttpMethod(), is(method));
             assertThat(createdPlatformOperation.getUriTemplate(), is(TEST_URI_TEMPLATE + "/{create}"));
 
-            PlatformOperationDto requestedPlatformOperation = commonHelpers.getEntityAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, id);
+            PlatformOperationDto requestedPlatformOperation = commonHelpers.getEntityAsType(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class, createdPlatformOperation.getId());
             assertThat(requestedPlatformOperation, is(createdPlatformOperation));
 
-            deletePlatformOperationIfExists(id);
+            deletePlatformOperationIfExists(createdPlatformOperation.getId());
         });
     }
 
@@ -112,12 +106,12 @@ public class PlatformOperationsTests extends CommonTest {
         PlatformOperationUpdateDto update = new PlatformOperationUpdateDto();
         update.setHttpMethod(HttpMethod.POST);
         update.setUriTemplate(updatedUriTemplate);
-        Response udpateResponse = commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, platformOperationId, update);
+        Response udpateResponse = commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId(), update);
         responseCodeIs(SC_OK);
 
         PlatformOperationDto updatedPlatformOperation = udpateResponse.as(PlatformOperationDto.class);
         platformOperationContainsAllFields(updatedPlatformOperation);
-        assertThat(updatedPlatformOperation.getId(), is(platformOperationId));
+        assertThat(updatedPlatformOperation.getId(), is(createdPlatformOperation.getId()));
         assertThat(updatedPlatformOperation.getHttpMethod(), is(HttpMethod.POST));
         assertThat(updatedPlatformOperation.getUriTemplate(), is(updatedUriTemplate));
     }
@@ -126,10 +120,9 @@ public class PlatformOperationsTests extends CommonTest {
 
     @Test
     public void checkPlatformOperationsCreateErrorCodes() throws Exception {
-        UUID errorTestId = randomUUID();
-        PlatformOperationDto errorTestPO = testPlatformOperationDto;
-        errorTestPO.setId(errorTestId);
+        PlatformOperationDto errorTestPO = constructPlatformOperation(HttpMethod.GET, TEST_URI_TEMPLATE);
 //        Duplicate values
+        commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
         commonHelpers.createEntity(PLATFORM_OPERATIONS_PATH, errorTestPO);
         verifyResponseAndCustomCode(SC_CONFLICT, CC_CONFLICT_VALUES);
 //        Missing httpMethod
@@ -152,7 +145,7 @@ public class PlatformOperationsTests extends CommonTest {
         responseCodeIs(SC_NOT_FOUND);
 
         invalidUpdate.put("http_method", "definitely not RFC HTTP method");
-        commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, platformOperationId, invalidUpdate);
+        commonHelpers.updateEntity(PLATFORM_OPERATIONS_PATH, createdPlatformOperation.getId(), invalidUpdate);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
         customCodeIs(CC_SEMANTIC_ERRORS);
     }
@@ -165,9 +158,8 @@ public class PlatformOperationsTests extends CommonTest {
         assertNotNull(platformOperation.getUriTemplate());
     }
 
-    private PlatformOperationDto constructPlatformOperation(UUID id, HttpMethod httpMethod, String uriTemplate) {
+    private PlatformOperationDto constructPlatformOperation(HttpMethod httpMethod, String uriTemplate) {
         PlatformOperationDto platformOperation = new PlatformOperationDto();
-        platformOperation.setId(id);
         platformOperation.setHttpMethod(httpMethod);
         platformOperation.setUriTemplate(uriTemplate);
         return platformOperation;
