@@ -119,6 +119,11 @@ public class CommonHelpers extends BasicSteps {
         return parseResponseAsListOfObjects(clazz);
     }
 
+    public <T> List<T> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<T> clazz, Map<String, String> queryParams) {
+        setSessionResponse(getEntitiesByUserForApp(userId, appId, basePath, queryParams));
+        return parseResponseAsListOfObjects(clazz);
+    }
+
     public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
@@ -153,6 +158,10 @@ public class CommonHelpers extends BasicSteps {
 
     public <T> T getEntityAsType(String basePath, Class<T> type, UUID entityId) {
         return getEntity(basePath, entityId).as(type);
+    }
+
+    public <T> T getEntityAsTypeByUserForApp(UUID userId, UUID appVersionId, String basePath, Class<T> type, UUID entityId) {
+        return getEntityByUserForApplication(userId, appVersionId, basePath, entityId).as(type);
     }
 
     // Get etag

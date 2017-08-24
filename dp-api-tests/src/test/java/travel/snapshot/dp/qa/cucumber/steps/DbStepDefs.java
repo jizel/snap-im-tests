@@ -122,8 +122,8 @@ public class DbStepDefs {
     @Given("^Default application is created$")
     public void defaultSnapshotApplicationIsCreated() {
         ApplicationDto defaultApp = new ApplicationDto();
-        defaultApp.setName("Test");
-        defaultApp.setDescription("Test");
+        defaultApp.setName("Default Snapshot Test App");
+        defaultApp.setDescription("Default Snapshot Test App created in test background");
         defaultApp.setPartnerId(DEFAULT_SNAPSHOT_PARTNER_ID);
         defaultApp.setIsInternal(true);
         defaultApp.setId(DEFAULT_SNAPSHOT_APPLICATION_ID);
