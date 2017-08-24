@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.identity.users;
 
+import static java.util.Collections.singletonMap;
+import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -13,6 +15,7 @@ import travel.snapshot.dp.api.identity.model.UserDto;
 import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -41,5 +44,19 @@ public class UserTest extends CommonTest{
         UserDto updateResponseCustomer = updateResponse.as(UserDto.class);
         UserDto requestedCustomer = commonHelpers.getEntityAsType(USERS_PATH, UserDto.class, createdUserId);
         assertThat("Update response body differs from the same user requested by GET ", updateResponseCustomer, is(requestedCustomer));
+    }
+
+    @Test
+    public void invalidUpdateUser() throws Exception {
+        Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
+        commonHelpers.updateEntity(USERS_PATH, createdUserId, invalidUpdate);
+        responseCodeIsUnprocessableEntity();
+
+        invalidUpdate = singletonMap("email", "invalid_value");
+        commonHelpers.updateEntity(USERS_PATH, createdUserId, invalidUpdate);
+        responseCodeIsUnprocessableEntity();
+
+        commonHelpers.updateEntity(USERS_PATH, randomUUID(), invalidUpdate);
+        responseIsEntityNotFound();
     }
 }

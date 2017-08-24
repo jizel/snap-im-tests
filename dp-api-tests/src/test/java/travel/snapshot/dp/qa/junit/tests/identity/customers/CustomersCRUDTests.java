@@ -1,6 +1,8 @@
 package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 
+import static java.util.Collections.singletonMap;
+import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -15,6 +17,7 @@ import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -47,6 +50,21 @@ public class CustomersCRUDTests extends CommonTest {
         CustomerDto updateResponseCustomer = updateResponse.as(CustomerDto.class);
         CustomerDto requestedCustomer = commonHelpers.getEntityAsType(CUSTOMERS_PATH, CustomerDto.class, testCustomer1.getId());
         assertThat("Update response body differs from the same customer requested by GET ", updateResponseCustomer, is(requestedCustomer));
+    }
+
+    @Test
+    public void invalidUpdateCustomer() throws Exception {
+        UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
+        commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
+        responseCodeIsUnprocessableEntity();
+
+        invalidUpdate = singletonMap("email", "invalid_value");
+        commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
+        responseCodeIsUnprocessableEntity();
+
+        commonHelpers.updateEntity(CUSTOMERS_PATH, randomUUID(), invalidUpdate);
+        responseIsEntityNotFound();
     }
 
     @Test
