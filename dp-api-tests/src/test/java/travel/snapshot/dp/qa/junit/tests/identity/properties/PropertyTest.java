@@ -1,5 +1,7 @@
 package travel.snapshot.dp.qa.junit.tests.identity.properties;
 
+import static java.util.Collections.singletonMap;
+import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,6 +19,7 @@ import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -49,6 +52,21 @@ public class PropertyTest extends CommonTest {
         PropertyDto updateResponseProperty = updateResponse.as(PropertyDto.class);
         PropertyDto requestedProperty = commonHelpers.getEntityAsType(PROPERTIES_PATH, PropertyDto.class, createdPropertyId);
         assertThat("Update response body differs from the same user requested by GET ", updateResponseProperty, is(requestedProperty));
+    }
+
+    @Test
+    public void invalidUpdateProperty() throws Exception {
+        createdPropertyId = commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
+        commonHelpers.updateEntity(PROPERTIES_PATH, createdPropertyId, invalidUpdate);
+        responseCodeIsUnprocessableEntity();
+
+        invalidUpdate = singletonMap("email", "invalid_value");
+        commonHelpers.updateEntity(PROPERTIES_PATH, createdPropertyId, invalidUpdate);
+        responseCodeIsUnprocessableEntity();
+
+        commonHelpers.updateEntity(PROPERTIES_PATH, randomUUID(), invalidUpdate);
+        responseIsEntityNotFound();
     }
 
     @Test
