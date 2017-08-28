@@ -26,14 +26,6 @@ import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 public class UserRestrictionTests extends CommonRestrictionTest{
     private UserDto createdUser1;
 
-    private static final String ALL_USERS_ENDPOINT = "/identity/users";
-    private static final String SINGLE_USER_ENDPOINT = "/identity/users/{user_id}";
-    private static final String USER_CUSTOMER_RELATIONSHIP_ENDPOINT = "/identity/users/{user_id}/customers/{customer_id}";
-    private static final String USER_PROPERTIES_ENDPOINT = "/identity/users/{user_id}/properties";
-    private static final String USER_PROPERTIES_ROLES_ENDPOINT = "/identity/users/{user_id}/properties/{property_id}/roles";
-    private static final String USER_PROPERTY_SETS_ROLES_ENDPOINT = "/identity/users/{user_id}/property_sets/{property_set_id}/roles";
-    private static final String USER_CUSTOMERS_ROLES_ENDPOINT = "/identity/users/{user_id}/customers/{customer_id}/roles";
-
     private UserPropertyRelationshipDto testUserPropertyRelationship;
 
 
@@ -47,7 +39,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     public void getUserRestrictionTest(){
         userHelpers.listOfUsersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), "5", "0", "user_name==defaultSnapshotUser", "user_name", null);
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_USERS_ENDPOINT, GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_USERS_ENDPOINT, GET_METHOD);
         userHelpers.listOfUsersIsGotByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), "5", "0", "user_name==defaultSnapshotUser", "user_name", null);
         responseCodeIs(SC_OK);
 
@@ -55,7 +47,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
         responseIsEndpointNotFound();
         userHelpers.getUserByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId());
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_USER_ENDPOINT, GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_USER_ENDPOINT, GET_METHOD);
         userHelpers.getUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), createdUser1.getId());
         responseCodeIs(SC_OK);
         userHelpers.getUserByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId());
@@ -67,7 +59,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
 //        Create
         userHelpers.createUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2);
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), ALL_USERS_ENDPOINT, POST_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_ALL_USERS_ENDPOINT, POST_METHOD);
         userHelpers.createUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2);
         responseCodeIs(SC_CREATED);
 //        Update
@@ -75,13 +67,13 @@ public class UserRestrictionTests extends CommonRestrictionTest{
         userUpdate.setUsername("UpdatedUsername");
         userHelpers.updateUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId(), userUpdate);
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_USER_ENDPOINT, POST_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_USER_ENDPOINT, POST_METHOD);
         userHelpers.updateUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId(), userUpdate);
         responseCodeIs(SC_NO_CONTENT);
 //        Delete
         userHelpers.deleteUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId());
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), SINGLE_USER_ENDPOINT, DELETE_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_SINGLE_USER_ENDPOINT, DELETE_METHOD);
         userHelpers.deleteUserByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), testUser2.getId());
 //        User is referenced so it cannot be removed - correct response
         responseCodeIs(SC_CONFLICT);
@@ -91,13 +83,13 @@ public class UserRestrictionTests extends CommonRestrictionTest{
     public void getUserSecondLevelEntitiesRestrictionTest(){
         userHelpers.getUserCustomerRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, createdUser1.getId());
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), USER_CUSTOMER_RELATIONSHIP_ENDPOINT, GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_CUSTOMER_ENDPOINT, GET_METHOD);
         userHelpers.getUserCustomerRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), DEFAULT_SNAPSHOT_CUSTOMER_ID, createdUser1.getId());
         responseCodeIs(SC_OK);
 
         userHelpers.getAllUserPropertiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), createdUser1.getId());
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), USER_PROPERTIES_ENDPOINT , GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_PROPERTIES_ENDPOINT, GET_METHOD);
         userHelpers.getAllUserPropertiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, createdAppVersion.getId(), createdUser1.getId());
         responseCodeIs(SC_OK);
     }
@@ -109,14 +101,14 @@ public class UserRestrictionTests extends CommonRestrictionTest{
         commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relationshipsHelpers.constructUserPropertyRelationshipDto(createdUser1.getId(), testProperty1.getId(), true));
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTIES_RESOURCE, createdProperty1.getId());
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), USER_PROPERTIES_ROLES_ENDPOINT, GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_PROPERTIES_ROLES_ENDPOINT, GET_METHOD);
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTIES_RESOURCE, testProperty1.getId());
         responseCodeIs(SC_OK);
 
 //        Customer roles
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), CUSTOMERS_RESOURCE, DEFAULT_SNAPSHOT_CUSTOMER_ID);
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), USER_CUSTOMERS_ROLES_ENDPOINT, GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_CUSTOMERS_ROLES_ENDPOINT, GET_METHOD);
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), CUSTOMERS_RESOURCE, DEFAULT_SNAPSHOT_CUSTOMER_ID);
         responseCodeIs(SC_OK);
 
@@ -125,7 +117,7 @@ public class UserRestrictionTests extends CommonRestrictionTest{
         propertySetHelpers.addUserToPropertySet(createdUser1.getId(), createdPropertySet.getId(), true);
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTY_SETS_RESOURCE, createdPropertySet.getId());
         responseIsEndpointNotFound();
-        dbSteps.addApplicationPermission(restrictedApp.getId(), USER_PROPERTY_SETS_ROLES_ENDPOINT, GET_METHOD);
+        dbSteps.addApplicationPermission(restrictedApp.getId(), RESTRICTIONS_USER_PROPERTY_SETS_ROLES_ENDPOINT, GET_METHOD);
         userHelpers.listRolesForRelationByUserForApp(createdUser1.getId(), createdAppVersion.getId(), createdUser1.getId(), PROPERTY_SETS_RESOURCE, createdPropertySet.getId());
         responseCodeIs(SC_OK);
     }
