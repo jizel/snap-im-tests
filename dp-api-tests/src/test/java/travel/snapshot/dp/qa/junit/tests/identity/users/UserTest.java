@@ -50,11 +50,11 @@ public class UserTest extends CommonTest{
     public void invalidUpdateUser() throws Exception {
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
         commonHelpers.updateEntity(USERS_PATH, createdUserId, invalidUpdate);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
 
         invalidUpdate = singletonMap("email", "invalid_value");
         commonHelpers.updateEntity(USERS_PATH, createdUserId, invalidUpdate);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
 
         commonHelpers.updateEntity(USERS_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();

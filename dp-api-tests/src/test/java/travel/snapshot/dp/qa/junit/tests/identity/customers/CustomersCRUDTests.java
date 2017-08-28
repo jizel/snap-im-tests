@@ -57,11 +57,11 @@ public class CustomersCRUDTests extends CommonTest {
         UUID customerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
         Map<String, String> invalidUpdate = singletonMap("invalid_key", "whatever");
         commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
 
         invalidUpdate = singletonMap("email", "invalid_value");
         commonHelpers.updateEntity(CUSTOMERS_PATH, customerId, invalidUpdate);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
 
         commonHelpers.updateEntity(CUSTOMERS_PATH, randomUUID(), invalidUpdate);
         responseIsEntityNotFound();
