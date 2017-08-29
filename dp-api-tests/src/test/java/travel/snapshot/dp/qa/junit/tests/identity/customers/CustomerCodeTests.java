@@ -44,7 +44,7 @@ public class CustomerCodeTests extends CommonTest{
         customerWithCode.setName("customerWithManualCode");
         customerWithCode.setCode("anycode");
         commonHelpers.createEntity(CUSTOMERS_PATH, customerWithCode);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
     }
 
     @Test
@@ -53,7 +53,7 @@ public class CustomerCodeTests extends CommonTest{
         CustomerDto customerWithCode = new CustomerDto();
         customerWithCode.setCode("anycode");
         commonHelpers.updateEntity(CUSTOMERS_PATH, createdCustomerId, customerWithCode);
-        responseCodeIsUnprocessableEntity();
+        responseIsUnprocessableEntity();
     }
 
     @Test

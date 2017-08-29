@@ -8,7 +8,7 @@ import cucumber.api.CucumberOptions;
 
 
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "src/test/resources/features/review/analytics", glue = "travel.snapshot.dp.qa", tags = {"~@skipped"})
+@CucumberOptions(features = "src/test/resources/features/nonPms/review/analytics", glue = "travel.snapshot.dp.qa", tags = {"~@skipped"})
 public class RunReviewTests {
 
 }

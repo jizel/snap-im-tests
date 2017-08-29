@@ -50,7 +50,6 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -216,12 +215,6 @@ public class BasicSteps {
     public void integerPartOfValueIs(String path, int value) {
         Response response = getSessionResponse();
         response.then().body(path, hasItem(value));
-    }
-
-    @Step
-    public void bodyContainsR(String attributeName, BigDecimal item) {
-        Response response = getSessionResponse();
-        response.then().body(attributeName, hasItem(item));
     }
 
     @Step

@@ -8,26 +8,24 @@ Feature: facebook
 
 
   Scenario Outline: Get facebook analytics data from API for a given wrong granularity
-    When Get facebook "<url>" data with "<granularity>" granularity for "<property>" since "<since>" until "<until>"
+    When Get facebook "<url>" data with "<granularity>" granularity for "99000099-9999-4999-a999-999999999999" since "<since>" until "<until>"
     Then Content type is "application/json"
     And Response code is 400
     And Custom code is "40002"
 
     Examples:
-      | url                                 | granularity | property                              | since       | until       |
-      | /analytics/facebook/                | ddd         | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/                | ddd         | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12     |
-      | /analytics/facebook/                | ddd         | 99000099-9999-4999-a999-999999999999  | 2015-12     | 2015-12-03  |
-      | /analytics/facebook/                | ddd         | 99999999-9999-4999-a999-99999999999#  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/number_of_posts | www         | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/engagement      | yyy         | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/likes           | MONTHs      | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/unlikes         | we3EK       | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/reach           | D@YS        | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/followers       | M0nth       | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/reach           | week        | ?99000099-9999-4999-a999-999999999999 | 2015-12-03  | 2015-12-03  |
-      | /analytics/facebook/reach           | week        | 99000099-9999-4999-a999-999999999999  | 2015-12-03  | -2015-12-03 |
-      | /analytics/facebook/reach           | week        | 99000099-9999-4999-a999-999999999999  | -2015-12-03 | 2015-12-03  |
+      | url                                 | granularity | since       | until       |
+      | /analytics/facebook/                | ddd         | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/                | ddd         | 2015-12-03  | 2015-12     |
+      | /analytics/facebook/                | ddd         | 2015-12     | 2015-12-03  |
+      | /analytics/facebook/number_of_posts | www         | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/engagement      | yyy         | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/likes           | MONTHs      | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/unlikes         | we3EK       | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/reach           | D@YS        | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/followers       | M0nth       | 2015-12-03  | 2015-12-03  |
+      | /analytics/facebook/reach           | week        | 2015-12-03  | -2015-12-03 |
+      | /analytics/facebook/reach           | week        | -2015-12-03 | 2015-12-03  |
 
   @Smoke
   Scenario Outline: Validate that metrics have valid value in the db - smoke

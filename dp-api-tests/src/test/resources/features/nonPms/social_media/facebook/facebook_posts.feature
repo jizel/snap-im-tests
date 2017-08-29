@@ -69,4 +69,4 @@ Feature: facebook posts
 
     Examples:
       | url                       | datetime      | engagement | content       | reach | property                             |
-      | /analytics/facebook/posts | today - 1 day | 4168       | Post 10 - 500 | 11553 | 99001099-9999-4999-a999-999999999999 |
+      | /analytics/facebook/posts | 2017-07-17    | 4168       | Post 10 - 500 | 11553 | 99001099-9999-4999-a999-999999999999 |

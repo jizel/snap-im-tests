@@ -50,7 +50,9 @@ public class AnalyticsBaseSteps extends BasicSteps {
      */
     public void getPropertiesWithDate(String url, String granularity, UUID propertyId, String since, String until) {
         Map<String, String> prepareParams = new HashMap<>();
-        prepareParams.put("property", propertyId.toString());
+        if (propertyId != null) {
+            prepareParams.put("property", propertyId.toString());
+        }
 
         Response response = getEntitiesForUrlWihDates(url, null, null, since, until, granularity, prepareParams);
         setSessionResponse(response);
