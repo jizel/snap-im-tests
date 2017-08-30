@@ -53,28 +53,28 @@ public class CommonHelpers extends BasicSteps {
     public static final String ENTITIES_TO_DELETE = "deleteThese";
 
     public static final List<String> ALL_ENDPOINTS = Arrays.asList(
-        APPLICATIONS_PATH,
-        APPLICATION_VERSIONS_PATH,
-        USER_CUSTOMER_ROLES_PATH,
-        USER_PROPERTY_ROLES_PATH,
-        USER_PROPERTY_SET_ROLES_PATH,
-        PROPERTIES_PATH,
-        CUSTOMERS_PATH,
-        USERS_PATH,
-        USER_GROUPS_PATH,
-        PROPERTY_SETS_PATH,
-        COMMERCIAL_SUBSCRIPTIONS_PATH,
-        PARTNERS_PATH,
-        CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
-        PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
-        USER_CUSTOMER_RELATIONSHIPS_PATH,
-        USER_PARTNER_RELATIONSHIPS_PATH,
-        USER_PROPERTY_RELATIONSHIPS_PATH,
-        USER_PROPERTY_SET_RELATIONSHIPS_PATH,
-        USER_GROUP_PROPERTY_RELATIONSHIPS_PATH,
-        USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
-        USER_GROUP_USER_RELATIONSHIPS_PATH,
-        PLATFORM_OPERATIONS_PATH
+            APPLICATIONS_PATH,
+            APPLICATION_VERSIONS_PATH,
+            USER_CUSTOMER_ROLES_PATH,
+            USER_PROPERTY_ROLES_PATH,
+            USER_PROPERTY_SET_ROLES_PATH,
+            PROPERTIES_PATH,
+            CUSTOMERS_PATH,
+            USERS_PATH,
+            USER_GROUPS_PATH,
+            PROPERTY_SETS_PATH,
+            COMMERCIAL_SUBSCRIPTIONS_PATH,
+            PARTNERS_PATH,
+            CUSTOMER_PROPERTY_RELATIONSHIPS_PATH,
+            PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
+            USER_CUSTOMER_RELATIONSHIPS_PATH,
+            USER_PARTNER_RELATIONSHIPS_PATH,
+            USER_PROPERTY_RELATIONSHIPS_PATH,
+            USER_PROPERTY_SET_RELATIONSHIPS_PATH,
+            USER_GROUP_PROPERTY_RELATIONSHIPS_PATH,
+            USER_GROUP_PROPERTY_SET_RELATIONSHIPS_PATH,
+            USER_GROUP_USER_RELATIONSHIPS_PATH,
+            PLATFORM_OPERATIONS_PATH
     );
 
 
@@ -115,6 +115,20 @@ public class CommonHelpers extends BasicSteps {
         return getEntitiesByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, queryParams);
     }
 
+    public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
+        if (userId == null) {
+            fail("User ID to be send in request header is null.");
+        }
+        spec.basePath(basePath);
+        RequestSpecification requestSpecification = given().spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, appId);
+        if (queryParams != null) requestSpecification.parameters(queryParams);
+        Response response = requestSpecification.when().get();
+        setSessionResponse(response);
+        return response;
+    }
+
     public <T> List<T> getEntitiesAsType(String basePath, Class<T> clazz, Map<String, String> queryParams) {
         setSessionResponse(getEntities(basePath, queryParams));
         return parseResponseAsListOfObjects(clazz);
@@ -123,20 +137,6 @@ public class CommonHelpers extends BasicSteps {
     public <T> List<T> getEntitiesAsTypeByUserForApp(UUID userId, UUID appId, String basePath, Class<T> clazz, Map<String, String> queryParams) {
         setSessionResponse(getEntitiesByUserForApp(userId, appId, basePath, queryParams));
         return parseResponseAsListOfObjects(clazz);
-    }
-
-    public Response getEntitiesByUserForApp(UUID userId, UUID appId, String basePath, Map<String, String> queryParams) {
-        if (userId == null) {
-            fail("User ID to be send in request header is null.");
-        }
-        spec.basePath(basePath);
-        RequestSpecification requestSpecification = given().spec(spec);
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_USER_ID, userId);
-        requestSpecification = requestSpecification.header(HEADER_XAUTH_APPLICATION_ID, appId);
-        if(queryParams != null) requestSpecification.parameters(queryParams);
-        Response response = requestSpecification.when().get();
-        setSessionResponse(response);
-        return response;
     }
 
     // Get
@@ -213,7 +213,7 @@ public class CommonHelpers extends BasicSteps {
 
     // Update
 
-//    Deprecated update using POST method. Will be removed completely in the future.
+    //    Deprecated update using POST method. Will be removed completely in the future.
     public Response updateEntityPost(String basePath, UUID entityId, Object data) {
         return updateEntityByUserForAppPost(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
     }
@@ -256,9 +256,9 @@ public class CommonHelpers extends BasicSteps {
 
     /**
      * Update any IM entity via REST api using PATCH method. Verify that the response code is 200 - OK
+     *
      * @param basePath - endpoint corresponding to the entity
-     * @param entityId
-     * @param data - entity update object, i.e. CustomerUpdateDto
+     * @param data     - entity update object, i.e. CustomerUpdateDto
      */
     public void entityIsUpdated(String basePath, UUID entityId, Object data) {
         updateEntity(basePath, entityId, data);
@@ -267,23 +267,20 @@ public class CommonHelpers extends BasicSteps {
 
     /**
      * Update any IM entity via REST api using PATCH method. Default snapshot type user and application version is used.
+     *
      * @param basePath - endpoint corresponding to the entity
-     * @param entityId
-     * @param data - entity update object, i.e. CustomerUpdateDto
+     * @param data     - entity update object, i.e. CustomerUpdateDto
      * @return Restassured Response type. Response should contain the updated object body according to DPIM-28.
      */
-    public Response updateEntity(String basePath, UUID entityId, Object data){
+    public Response updateEntity(String basePath, UUID entityId, Object data) {
         return updateEntityByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
     }
 
     /**
      * Update of any IM entity using defined user and application. Should be used for update access check testing.
-     * @param userId - context user, user performing the update
+     *
+     * @param userId        - context user, user performing the update
      * @param applicationId - context application
-     * @param basePath
-     * @param entityId
-     * @param data
-     * @return
      */
     public Response updateEntityByUserForApp(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data) {
         if (userId == null) {
@@ -352,7 +349,60 @@ public class CommonHelpers extends BasicSteps {
         setSessionResponse(response);
     }
 
-//    Private help methods
+//    Second level entities generic methods - CREATE
+
+    /**
+     * Create relationship (second level entity) between two entities.
+     *
+     * @param basePath        - path of the first level entity
+     * @param secondLevelPath - path of the first level entity (to be created)
+     * @param body            - the relationship object, usually Dto
+     * @return response of the request
+     */
+    public Response createRelationship(String basePath, UUID firstLevelEntityId, String secondLevelPath, Object body) {
+        return createRelationshipByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, firstLevelEntityId, secondLevelPath, body);
+    }
+
+    public Response createRelationshipByUserForApp(UUID userId, UUID applicationId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Object body) {
+        spec.basePath(basePath);
+        RequestSpecification requestSpecification = given().spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
+                .body(body);
+        Response response = requestSpecification.post("{id}/{secondLevelName}", firstLevelEntityId, stripSlash(secondLevelResource));
+        setSessionResponse(response);
+        return response;
+    }
+
+//    Second level entities generic methods - GET
+
+    /**
+     * Get relationships (of second level type) for given entity
+     *
+     * @param basePath        - path of the first level entity
+     * @param secondLevelPath - path of the first level entity (relationship type)
+     * @param queryParams     - request params: filter, sort, cursor, limit etc.
+     */
+    public Response getRelationships(String basePath, UUID firstLevelEntityId, String secondLevelPath, Map<String, String> queryParams) {
+        return getRelationshipsByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, firstLevelEntityId, secondLevelPath, queryParams);
+    }
+
+    public Response getRelationshipsByUserForApp(UUID userId, UUID applicationId, String basePath, UUID firstLevelEntityId, String secondLevelResource, Map<String, String> queryParams) {
+        spec.basePath(basePath);
+        RequestSpecification requestSpecification = given().spec(spec)
+                .header(HEADER_XAUTH_USER_ID, userId)
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationId);
+        if (queryParams != null) {
+            requestSpecification.parameters(queryParams);
+        }
+        Response response = requestSpecification.get("{id}/{secondLevelName}", firstLevelEntityId, stripSlash(secondLevelResource));
+        setSessionResponse(response);
+
+        return response;
+    }
+
+
+//    Help methods
 
     private VersionedEntityDto getDtoFromResponse(Response response, String basePath) {
         if (endpointEntityMap.get(basePath) == null) {
@@ -361,12 +411,23 @@ public class CommonHelpers extends BasicSteps {
         return response.as(endpointEntityMap.get(basePath));
     }
 
-    public AddressDto constructAddressDto(String line1, String city, String zipCode, String countryCode){
+    public AddressDto constructAddressDto(String line1, String city, String zipCode, String countryCode) {
         AddressDto address = new AddressDto();
         address.setLine1(line1);
         address.setCity(city);
         address.setZipCode(zipCode);
         address.setCountryCode(countryCode);
         return address;
+    }
+
+    /**
+     * When requesting relationships, url is concatenated from various pieces. Resources (not paths, see
+     * travel.snapshot.dp.api.identity.resources.IdentityDefaults) should be used for second level path params. When a
+     * path is used instead, '/' character is used twice - once poorly reformatted by restassured and causes troubles.
+     *
+     * THIS METHOD SHOULD BE USED FOR ALL SECOND LEVEL RESOURCES!
+     */
+    private String stripSlash(String string) {
+        return (string.startsWith("/")) ? string.substring(1) : string;
     }
 }
