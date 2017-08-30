@@ -15,7 +15,6 @@ Feature: Instagram
     Examples:
       | url                             | granularity | property                             | since      | until      |
       | /analytics/instagram            | dd          | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
-      | /analytics/instagram            | day         | #9999999-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |
       | /analytics/instagram            | day         | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-   |
       | /analytics/instagram            | day         | 99000099-9999-4999-a999-999999999999 | 2015-12-   | 2015-12-03 |
       | /analytics/instagram/pictures   | yy          | 99000099-9999-4999-a999-999999999999 | 2015-12-03 | 2015-12-03 |

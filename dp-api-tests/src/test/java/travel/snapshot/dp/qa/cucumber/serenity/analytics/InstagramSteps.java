@@ -1,18 +1,22 @@
 package travel.snapshot.dp.qa.cucumber.serenity.analytics;
 
+import static org.junit.Assert.*;
+import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
+
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jayway.restassured.response.Response;
-
 import net.thucydides.core.annotations.Step;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import travel.snapshot.dp.api.analytics.model.GlobalStatsDto;
 import travel.snapshot.dp.api.analytics.model.MetricDto;
+import travel.snapshot.dp.api.analytics.model.MetricName;
 import travel.snapshot.dp.api.analytics.model.RecordDto;
+import travel.snapshot.dp.qa.cucumber.helpers.MetricNameDeserializer;
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 
-import static org.junit.Assert.assertEquals;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sedlacek on 10/5/2015.
@@ -33,10 +37,18 @@ public class InstagramSteps extends AnalyticsBaseSteps {
     @Step
     public void checkListofValuesFromResponse(List<Integer> expected) {
         Response response = getSessionResponse();
-        GlobalStatsDto actual = response.body().as(GlobalStatsDto.class);
+        GlobalStatsDto actualStats = null;
+        try {
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(MetricName.class, new MetricNameDeserializer());
+            OBJECT_MAPPER.registerModule(module);
+            actualStats = OBJECT_MAPPER.readValue(response.asString(), TypeFactory.defaultInstance().constructType(GlobalStatsDto.class));
+        } catch (IOException e){
+            fail("Exception when trying to convert response to GlobalStats object: " + e.getMessage());
+        }
 
         ArrayList<Integer> actualList = new ArrayList<Integer>();
-        for (MetricDto metric : actual.getData()) {
+        for (MetricDto metric : actualStats.getData()) {
             List<RecordDto<? extends Number>> actualValues = metric.getValues();
             actualList.add(Integer.valueOf(actualValues.get(0).getValue().toString()));
         }

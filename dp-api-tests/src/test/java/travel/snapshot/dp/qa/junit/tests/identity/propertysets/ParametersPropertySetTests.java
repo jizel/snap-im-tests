@@ -1,5 +1,16 @@
 package travel.snapshot.dp.qa.junit.tests.identity.propertysets;
 
+import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
+
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
@@ -14,25 +25,11 @@ import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
-
-import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
-import static org.junit.Assert.fail;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
-import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.USERS;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
 
 @RunWith(JUnitParamsRunner.class)
 public class ParametersPropertySetTests extends CommonTest {
@@ -117,6 +114,7 @@ public class ParametersPropertySetTests extends CommonTest {
                 PropertySetType.BRAND
         );
         IntStream.range(0, 7).forEachOrdered(n -> {
+            testPropertySet1.setId(null);
             testPropertySet1.setName(names.get(n));
             testPropertySet1.setDescription(String.format("Some_desc_%d", n));
             testPropertySet1.setType(types.get(n));
