@@ -6,6 +6,7 @@ import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -15,7 +16,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
@@ -28,9 +28,15 @@ import java.util.UUID;
 
 
 @RunWith(JUnitParamsRunner.class)
+@Category(Categories.SlowTests.class)
 public class ParametersCustomer extends CommonTest {
 
-    private static final String EXAMPLES = "src/test/resources/csv/customers/";
+    private static final String CUSTOMER_EXAMPLES = "src/test/resources/csv/customers/";
+    private static final String COMM_SUBSCRIPTIONS_ERROR_EXAMPLES = CUSTOMER_EXAMPLES + "getCustomerCommSubscriptionErrorCodesTestExamples.csv";
+    private static final String CORRECT_REGION_EXAMPLES = CUSTOMER_EXAMPLES + "validateCustomerRegionsBelongToCorrectCountry.csv";
+    private static final String INVALID_REGIONS_EXAMPLES = CUSTOMER_EXAMPLES + "invalidRegions.csv";
+    private static final String INVALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateInvalidVatId.csv";
+    private static final String VALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateValidVatId.csv";
 
 
     @Before
@@ -46,10 +52,8 @@ public class ParametersCustomer extends CommonTest {
 
 
 //    TODO: This test should be rather defined in CustomerCommercialSubscriptionTests class but since it requires JUnit params
-//            Runner which means we lose the serenity reports, it stays here so far until we decide how to solve this.
-    @FileParameters(EXAMPLES + "getCustomerCommSubscriptionErrorCodesTestExamples.csv")
+    @FileParameters(COMM_SUBSCRIPTIONS_ERROR_EXAMPLES)
     @Test
-    @Category(Categories.SlowTests.class)
     public void checkErrorCodesForGettingListOfCustomerCommercialSubscriptionsUsingParams(String limit,
                                                                                           String cursor,
                                                                                           String filter,
@@ -64,13 +68,12 @@ public class ParametersCustomer extends CommonTest {
         customCodeIs(Integer.valueOf(customCode));
     }
 
-    @FileParameters(EXAMPLES + "validateCustomerRegionsBelongToCorrectCountry.csv")
+    @FileParameters(CORRECT_REGION_EXAMPLES)
     @Test
-    @Category(Categories.SlowTests.class)
     public void validateCustomerRegionsBelongToCorrectCountry(String country,
                                                               String region,
                                                               String vatId) {
-        AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, region);
+        AddressDto address = createRandomAddress(5, 5, 6, country, region);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
         customerHelpers.createRandomCustomer(testCustomer1);
@@ -78,26 +81,34 @@ public class ParametersCustomer extends CommonTest {
         bodyContainsEntityWith("vat_id", vatId);
     }
 
-    @FileParameters(EXAMPLES + "validateInvalidVatId.csv")
+    @FileParameters(INVALID_VAT_ID_EXAMPLES)
     @Test
-    @Category(Categories.SlowTests.class)
     public void validateCustomerHasInvalidVatId(String country, String vatId) throws Throwable {
-        AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, null);
+        AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
         customerHelpers.createRandomCustomer(testCustomer1);
         responseCodeIs(SC_UNPROCESSABLE_ENTITY);
     }
 
-    @FileParameters(EXAMPLES + "validateValidVatId.csv")
+    @FileParameters(VALID_VAT_ID_EXAMPLES)
     @Test
-    @Category(Categories.SlowTests.class)
     public void validateCustomerHasValidVatId(String country, String vatId) throws Throwable {
-        AddressDto address = AddressUtils.createRandomAddress(5, 5, 6, country, null);
+        AddressDto address = createRandomAddress(5, 5, 6, country, null);
         testCustomer1.setAddress(address);
         testCustomer1.setVatId(vatId);
         customerHelpers.createRandomCustomer(testCustomer1);
         responseCodeIs(SC_CREATED);
+    }
+
+    @FileParameters(INVALID_REGIONS_EXAMPLES)
+    @Test
+    public void checkErrorCodesForRegions(String country, String region) throws Exception {
+        AddressDto address = createRandomAddress(10, 10, 5,country, region);
+        testCustomer1.setAddress(address);
+        commonHelpers.createEntity(CUSTOMERS_PATH, testCustomer1);
+        responseIsReferenceDoesNotExist();
+        bodyContainsEntityWith("message", String.format("Reference does not exist. The entity Region with ID %s cannot be found.", region));
     }
 }
 

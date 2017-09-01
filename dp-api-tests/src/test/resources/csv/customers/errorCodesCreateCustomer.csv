@@ -1,0 +1,11 @@
+/messages/identity/customers/create_customer_missing_company_name.json
+/messages/identity/customers/create_customer_missing_type.json
+/messages/identity/customers/create_customer_wrong_email_value.json
+/messages/identity/customers/create_customer_wrong_field_email.json
+/messages/identity/customers/create_customer_wrong_vatid_value.json
+/messages/identity/customers/create_customer_wrong_country_value.json
+/messages/identity/customers/create_customer_wrong_phone_value.json
+/messages/identity/customers/create_customer_wrong_website_value.json
+/messages/identity/customers/create_customer_wrong_type.json
+/messages/identity/customers/create_customer_invalid_UUID.json
+/messages/identity/customers/create_customer_wrong_hospitality_id.json

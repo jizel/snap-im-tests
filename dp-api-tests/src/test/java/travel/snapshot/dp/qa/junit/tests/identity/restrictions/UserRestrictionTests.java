@@ -21,7 +21,7 @@ import travel.snapshot.dp.api.identity.model.UserUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest;
 
 /**
- *  Endpoint restrictions for customers
+ *  Endpoint restrictions for users
  */
 public class UserRestrictionTests extends CommonRestrictionTest{
     private UserDto createdUser1;

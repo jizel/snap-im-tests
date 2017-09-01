@@ -5,6 +5,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.util.TextUtils.isBlank;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
@@ -29,6 +30,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLES_PATH;
 import static travel.snapshot.dp.json.ObjectMappers.OBJECT_MAPPER;
+import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 import static travel.snapshot.dp.qa.junit.utils.EndpointEntityMap.endpointEntityMap;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -212,12 +214,14 @@ public class CommonHelpers extends BasicSteps {
     }
 
     // Update
-
+    
     //    Deprecated update using POST method. Will be removed completely in the future.
+    @Deprecated
     public Response updateEntityPost(String basePath, UUID entityId, Object data) {
         return updateEntityByUserForAppPost(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, entityId, data);
     }
 
+    @Deprecated
     public Response updateEntityByUserForAppPost(UUID userId, UUID applicationId, String basePath, UUID entityId, Object data) {
         if (userId == null) {
             fail("User ID to be send in request header is null.");
@@ -237,18 +241,17 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public Response updateEntityWithEtag(String basePath, UUID entityId, Object data, String etag) {
-        if (isBlank(etag)) {
-            fail("Etag to be send in request header is null.");
-        }
         RequestSpecification requestSpecification = given().spec(spec)
                 .basePath(basePath)
                 .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID)
-                .header(HEADER_IF_MATCH, etag);
+                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
+                if(etag != null) {
+                    requestSpecification.header(HEADER_IF_MATCH, etag);
+                }
         Response response = requestSpecification
                 .body(data)
                 .when()
-                .post("/{id}", entityId);
+                .patch("/{id}", entityId);
         setSessionResponse(response);
         return response;
     }
@@ -348,7 +351,7 @@ public class CommonHelpers extends BasicSteps {
         Response response = requestSpecification.when().delete("/{id}", entityId);
         setSessionResponse(response);
     }
-
+    
 //    Second level entities generic methods - CREATE
 
     /**
@@ -429,5 +432,11 @@ public class CommonHelpers extends BasicSteps {
      */
     private String stripSlash(String string) {
         return (string.startsWith("/")) ? string.substring(1) : string;
+    }
+
+    public static <T> void assertIfNotNull(T actual, T expected){
+        if(transformNull(expected) != null){
+            assertThat(actual, is(expected));
+        }
     }
 }

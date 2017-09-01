@@ -21,6 +21,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitie
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -142,9 +143,11 @@ public class ParametersPropertiesTests extends CommonTest {
         responseIsReferenceDoesNotExist();
     }
 
-    @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
+    //        Issue keeper does not work here since file parameters are loaded before issue keeper is called. Un ignore when ATM-49 solved.
+//    @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
     @Test
     @Category(Categories.SlowTests.class)
+    @Ignore
     public void gettingListOfProperties(
         String limit,
         String cursor,
