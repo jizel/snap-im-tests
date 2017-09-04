@@ -35,6 +35,7 @@ import travel.snapshot.dp.qa.junit.helpers.ConfigurationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.CustomerHelpers;
 import travel.snapshot.dp.qa.junit.helpers.KeycloakHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PartnerHelpers;
+import travel.snapshot.dp.qa.junit.helpers.PlatformOperationHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PropertyHelpers;
 import travel.snapshot.dp.qa.junit.helpers.PropertySetHelpers;
 import travel.snapshot.dp.qa.junit.helpers.RelationshipsHelpers;
@@ -90,6 +91,7 @@ public abstract class CommonTest {
     protected static final AuthorizationHelpers authorizationHelpers = new AuthorizationHelpers();
     protected static final KeycloakHelpers keycloakHelpers = new KeycloakHelpers();
     protected static final CommonHelpers commonHelpers = new CommonHelpers();
+    protected static final PlatformOperationHelpers platformOperationHelpers = new PlatformOperationHelpers();
 
 
     //    Custom codes
