@@ -5,8 +5,8 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 import static travel.snapshot.dp.qa.cucumber.helpers.AddressUtils.createRandomAddress;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -37,6 +37,7 @@ public class ParametersCustomer extends CommonTest {
     private static final String INVALID_REGIONS_EXAMPLES = CUSTOMER_EXAMPLES + "invalidRegions.csv";
     private static final String INVALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateInvalidVatId.csv";
     private static final String VALID_VAT_ID_EXAMPLES = CUSTOMER_EXAMPLES + "validateValidVatId.csv";
+    private static final String FILTERING_CUSTOMERS_EXAMPLES = CUSTOMER_EXAMPLES + "filteringCustomers.csv";
 
 
     @Before
