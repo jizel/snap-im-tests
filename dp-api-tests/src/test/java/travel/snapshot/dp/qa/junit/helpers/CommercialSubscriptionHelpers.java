@@ -1,13 +1,9 @@
 package travel.snapshot.dp.qa.junit.helpers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
-import org.json.JSONObject;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.qa.cucumber.serenity.commercial_subscription.CommercialSubscriptionSteps;
 
@@ -31,5 +27,13 @@ public class CommercialSubscriptionHelpers extends CommercialSubscriptionSteps {
         createCommercialSubscription(customerId, propertyId, applicationId);
         responseCodeIs(SC_CREATED);
         return getSessionResponse().as(CommercialSubscriptionDto.class).getId();
+    }
+
+    public CommercialSubscriptionDto constrcutCommercialSubscriptionDto(UUID applicationId, UUID customerId, UUID propertyId){
+        CommercialSubscriptionDto commercialSubscriptionDto = new CommercialSubscriptionDto();
+        commercialSubscriptionDto.setApplicationId(applicationId);
+        commercialSubscriptionDto.setCustomerId(customerId);
+        commercialSubscriptionDto.setPropertyId(propertyId);
+        return commercialSubscriptionDto;
     }
 }

@@ -3,6 +3,9 @@ package travel.snapshot.dp.qa.junit.tests.identity.customers;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_RESOURCE;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
 
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
@@ -12,10 +15,11 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.qa.cucumber.helpers.AddressUtils;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
+
+import java.util.UUID;
 
 /**
  * Example of JUnit tests using Parameters. It can be used for multiline data driven testing where every line of data
@@ -41,7 +45,8 @@ public class ParametersCustomer extends CommonTest {
     }
 
 
-    //    Value of a string given to any annotation must be known at compile time. Hence String.format or concatenation cannot be used here and we must always give a "full path' to the test file.
+//    TODO: This test should be rather defined in CustomerCommercialSubscriptionTests class but since it requires JUnit params
+//            Runner which means we lose the serenity reports, it stays here so far until we decide how to solve this.
     @FileParameters(EXAMPLES + "getCustomerCommSubscriptionErrorCodesTestExamples.csv")
     @Test
     @Category(Categories.SlowTests.class)
@@ -52,8 +57,9 @@ public class ParametersCustomer extends CommonTest {
                                                                                           String sortDesc,
                                                                                           String responseCode,
                                                                                           String customCode) throws Throwable {
-        CustomerDto createdCustomer = customerHelpers.customerIsCreated(testCustomer1);
-        customerHelpers.listOfCustomerCommSubscriptionsIsGotWith(createdCustomer.getId(), limit, cursor, filter, sort, sortDesc);
+        UUID createdCustomerId = commonHelpers.entityIsCreated(CUSTOMERS_PATH, testCustomer1);
+        commonHelpers.getRelationships(CUSTOMERS_PATH, createdCustomerId, COMMERCIAL_SUBSCRIPTIONS_RESOURCE,
+                buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null));
         responseCodeIs(Integer.valueOf(responseCode));
         customCodeIs(Integer.valueOf(customCode));
     }
