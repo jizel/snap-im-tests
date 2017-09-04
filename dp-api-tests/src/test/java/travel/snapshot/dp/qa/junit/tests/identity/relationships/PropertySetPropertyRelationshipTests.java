@@ -3,6 +3,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.relationships;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -72,7 +73,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
                 .constructPropertySetPropertyRelationshipUpdate(false);
 
         commonHelpers.updateEntityWithEtag(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), propertySetPropertyRelationshipUpdate, createdRelationship.getVersion().toString());
-        responseCodeIs(SC_NO_CONTENT);
+        responseCodeIs(SC_OK);
         PropertySetPropertyRelationshipDto returnedRelationship = commonHelpers.getEntityAsType(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
                 PropertySetPropertyRelationshipDto.class, createdRelationship.getId());
         assertThat(returnedRelationship.getIsActive(), is(false));

@@ -100,6 +100,7 @@ public abstract class CommonTest {
     protected static final int CC_BAD_PARAMS = 40002;
     protected static final int CC_SEMANTIC_ERRORS = 42201;
     protected static final int CC_NON_EXISTING_REFERENCE = 42202;
+    protected static final int CC_INVALID_ETAG = 41202;
 
     //    Basic test entities
     protected static EntityNonNullMap<String, CustomerCreateDto> customerDtos;
@@ -214,11 +215,12 @@ public abstract class CommonTest {
         customCodeIs(customCode);
     }
 
-    public static String transformNull(String value) {
-        if ("/null".equals(value)) {
+    public static String transformNull(Object value) {
+        String stringVal = String.valueOf(value);
+        if ("/null".equals(stringVal)) {
             return null;
         }
-        return value;
+        return stringVal;
     }
 
     protected static void responseIsEndpointNotFound() {

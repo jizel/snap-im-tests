@@ -4,17 +4,18 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_RESOURCE;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_RESOURCE;
+import static travel.snapshot.dp.qa.junit.tests.common.CommonTest.transformNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.response.Response;
 import lombok.extern.java.Log;
 import org.json.JSONObject;
-import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerCreateDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipPartialDto;
@@ -124,5 +125,26 @@ public class CustomerHelpers extends CustomerSteps {
 
     public void removeCustomerPropertyWithAuthUsingPartialDto(UUID customerId, UUID propertyId) {
         authorizationHelpers.deleteSecondLevelEntity(CUSTOMERS_PATH, customerId, PROPERTIES_RESOURCE, propertyId);
+    }
+
+    public CustomerUpdateDto constructCustomerUpdate(String name,
+                                                     String email,
+                                                     String vatId,
+                                                     String phone,
+                                                     String website,
+                                                     String notes,
+                                                     String timezone,
+                                                     String hospitalityId){
+        CustomerUpdateDto customerUpdate = new CustomerUpdateDto();
+        customerUpdate.setName(transformNull(name));
+        customerUpdate.setEmail(transformNull(email));
+        customerUpdate.setVatId(transformNull(vatId));
+        customerUpdate.setPhone(transformNull(phone));
+        customerUpdate.setWebsite(transformNull(website));
+        customerUpdate.setNotes(transformNull(notes));
+        customerUpdate.setTimezone(transformNull(timezone));
+        if(transformNull(hospitalityId) != null) customerUpdate.setHospitalityId(UUID.fromString(hospitalityId));
+
+        return customerUpdate;
     }
 }

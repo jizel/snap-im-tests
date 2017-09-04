@@ -19,6 +19,7 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitie
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_APPLICATIONS_ENDPOINT;
 import static travel.snapshot.dp.qa.junit.tests.common.CommonRestrictionTest.RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
@@ -32,12 +33,14 @@ import java.util.UUID;
 /**
  * CRUD tests for /identity/applications endpoint
  */
-public class ApplicationsTests extends CommonTest{
+public class ApplicationsTests extends CommonTest {
 
     private UUID externalAppId;
 
     @Test
     @Jira("DPIM-77")
+    @Ignore
+//    Not merged into master, will be handled diffrently. Skipping test for now.
     public void partnerIdIsReturnedOnlyForInternalAppAllApplications() throws Exception {
         prepareExternalAppPermissionsAndRelations(testApplication3);
         ApplicationVersionDto externalAppVersion = testAppVersion3;
@@ -45,18 +48,18 @@ public class ApplicationsTests extends CommonTest{
         externalAppVersion.setIsNonCommercial(true);
         UUID externalAppVersionId = commonHelpers.entityIsCreated(APPLICATION_VERSIONS_PATH, externalAppVersion);
 //        Get all apps with internal context app
-        List<ApplicationDto> applications =  commonHelpers.getEntitiesAsType(APPLICATIONS_PATH, ApplicationDto.class, null);
+        List<ApplicationDto> applications = commonHelpers.getEntitiesAsType(APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertThat(app.getPartnerId(), not(nullValue())));
 //        Get all apps with external context app
-        applications =  commonHelpers.getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
+        applications = commonHelpers.getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertNull(app.getPartnerId()));
 //        Check external commercial applications too
         externalAppVersion.setIsNonCommercial(false);
-        applications =  commonHelpers.getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
+        applications = commonHelpers.getEntitiesAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, externalAppVersionId, APPLICATIONS_PATH, ApplicationDto.class, null);
         responseCodeIs(SC_OK);
         numberOfEntitiesInResponse(ApplicationDto.class, 2);
         applications.forEach(app -> assertNull(app.getPartnerId()));
@@ -64,6 +67,8 @@ public class ApplicationsTests extends CommonTest{
 
     @Test
     @Jira("DPIM-77")
+    @Ignore
+//    Not merged into master, will be handled diffrently. Skipping test for now.
     public void partnerIdIsReturnedOnlyForInternalAppSingleApplication() throws Exception {
         prepareExternalAppPermissionsAndRelations(testApplication3);
         ApplicationVersionDto externalAppVersion = testAppVersion3;
@@ -94,7 +99,7 @@ public class ApplicationsTests extends CommonTest{
     }
 
     //    Help methods
-    private void prepareExternalAppPermissionsAndRelations(ApplicationDto application){
+    private void prepareExternalAppPermissionsAndRelations(ApplicationDto application) {
         externalAppId = commonHelpers.entityIsCreated(APPLICATIONS_PATH, application);
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_APPLICATIONS_ENDPOINT, HttpMethod.GET.toString());
         dbSteps.addApplicationPermission(externalAppId, RESTRICTIONS_SINGLE_APPLICATION_ENDPOINT, HttpMethod.GET.toString());

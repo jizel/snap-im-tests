@@ -11,10 +11,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_P
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 
-import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import qa.tools.ikeeper.annotation.Jira;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipPartialDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
@@ -25,8 +23,6 @@ import java.util.UUID;
 /**
  * Access check tests for customers
  */
-
-@RunWith(SerenityRunner.class)
 public class CustomerAccessCheckTests extends CommonTest {
 
     //    Load this test class specific test data
