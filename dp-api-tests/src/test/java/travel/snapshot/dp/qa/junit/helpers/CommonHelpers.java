@@ -4,7 +4,6 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.util.TextUtils.isBlank;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
@@ -160,11 +159,15 @@ public class CommonHelpers extends BasicSteps {
     }
 
     public <T> T getEntityAsType(String basePath, Class<T> type, UUID entityId) {
-        return getEntity(basePath, entityId).as(type);
+        return getEntityAsTypeByUserForApp(DEFAULT_SNAPSHOT_USER_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID, basePath, type, entityId);
     }
 
     public <T> T getEntityAsTypeByUserForApp(UUID userId, UUID appVersionId, String basePath, Class<T> type, UUID entityId) {
-        return getEntityByUserForApplication(userId, appVersionId, basePath, entityId).as(type);
+        Response response = getEntityByUserForApplication(userId, appVersionId, basePath, entityId);
+        if (response.getStatusCode() != SC_OK) {
+            throw new RuntimeException(String.format("%s entity with id %s does not exist. Response is: %s", basePath, entityId, response.toString()));
+        }
+        return response.as(type);
     }
 
     // Get etag
@@ -214,7 +217,6 @@ public class CommonHelpers extends BasicSteps {
     }
 
     // Update
-    
     //    Deprecated update using POST method. Will be removed completely in the future.
     @Deprecated
     public Response updateEntityPost(String basePath, UUID entityId, Object data) {
@@ -308,26 +310,6 @@ public class CommonHelpers extends BasicSteps {
 
     // Delete
 
-    // Manual delete method. Expect explicitly passed etag
-
-    public void deleteEntityWithEtag(String basePath, UUID entityId, String etag) {
-        if (isBlank(etag)) {
-            fail("Etag to be send in request header is blank.");
-        }
-        RequestSpecification requestSpecification = given()
-                .spec(spec)
-                .basePath(basePath)
-                .header(HEADER_IF_MATCH, etag)
-                .header(HEADER_XAUTH_USER_ID, DEFAULT_SNAPSHOT_USER_ID)
-                .header(HEADER_XAUTH_APPLICATION_ID, DEFAULT_SNAPSHOT_APPLICATION_VERSION_ID);
-        Response response = requestSpecification
-                .when()
-                .delete("/{id}", entityId);
-        setSessionResponse(response);
-    }
-
-    // Automatic delete methods - do not require explicit etags, get it themselves
-
     public void entityIsDeleted(String basePath, UUID entityId) {
         deleteEntity(basePath, entityId);
         responseCodeIs(SC_NO_CONTENT);
@@ -341,13 +323,11 @@ public class CommonHelpers extends BasicSteps {
         if (userId == null) {
             fail("User ID to be send in request header is blank.");
         }
-        String etag = getEntityEtag(basePath, entityId);
         RequestSpecification requestSpecification = given()
                 .spec(spec)
                 .basePath(basePath)
                 .header(HEADER_XAUTH_USER_ID, userId)
-                .header(HEADER_XAUTH_APPLICATION_ID, applicationId)
-                .header(HEADER_IF_MATCH, etag);
+                .header(HEADER_XAUTH_APPLICATION_ID, applicationId);
         Response response = requestSpecification.when().delete("/{id}", entityId);
         setSessionResponse(response);
     }

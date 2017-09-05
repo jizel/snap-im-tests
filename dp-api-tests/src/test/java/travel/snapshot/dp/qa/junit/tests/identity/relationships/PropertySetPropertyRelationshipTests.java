@@ -83,7 +83,7 @@ public class PropertySetPropertyRelationshipTests extends CommonTest {
     public void deletePropertySetPropertyRelationship() {
         PropertySetPropertyRelationshipDto createdRelationship = commonHelpers.entityWithTypeIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH,
                 PropertySetPropertyRelationshipDto.class, testPropertySetPropertyRelationship);
-        commonHelpers.deleteEntityWithEtag(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId(), createdRelationship.getVersion().toString());
+        commonHelpers.deleteEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
         responseCodeIs(SC_NO_CONTENT);
         commonHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, createdRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);

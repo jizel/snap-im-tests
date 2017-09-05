@@ -3,6 +3,8 @@ package travel.snapshot.dp.qa.junit.tests.common;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import org.junit.After;
@@ -42,6 +44,8 @@ import travel.snapshot.dp.qa.junit.helpers.UserHelpers;
 import travel.snapshot.dp.qa.junit.loaders.EntitiesLoader;
 import travel.snapshot.dp.qa.junit.utils.EntityNonNullMap;
 import travel.snapshot.dp.qa.junit.utils.issueKeeperJiraCredentials.JiraCredentialsClient;
+
+import java.util.UUID;
 
 
 /**
@@ -285,6 +289,10 @@ public abstract class CommonTest {
 
     protected static void contentTypeIs(String contentType) {
         BasicSteps.contentTypeIs(contentType);
+    }
+
+    protected static void entityDoesNotExist(String basePath, UUID entityId){
+        assertThat(commonHelpers.getEntity(basePath, entityId).getStatusCode(), is(SC_NOT_FOUND));
     }
 
 }

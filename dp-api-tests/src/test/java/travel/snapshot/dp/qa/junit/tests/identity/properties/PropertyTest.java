@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.properties;
 
 import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNPROCESSABLE_ENTITY;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,8 +33,8 @@ import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
-import java.util.Map;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -66,6 +67,9 @@ public class PropertyTest extends CommonTest {
         PropertyDto updateResponseProperty = updateResponse.as(PropertyDto.class);
         PropertyDto requestedProperty = commonHelpers.getEntityAsType(PROPERTIES_PATH, PropertyDto.class, createdPropertyId);
         assertThat("Update response body differs from the same user requested by GET ", updateResponseProperty, is(requestedProperty));
+        commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
+        responseCodeIs(SC_NO_CONTENT);
+        entityDoesNotExist(PROPERTIES_PATH, createdPropertyId);
     }
 
     @Test
