@@ -141,14 +141,11 @@ public abstract class CommonTest {
     /**
      * Loading default entities before each test class so any changes made in class do not interfere with other test classes.
      *
-     * JUnit BeforeClass was chosen over overriding default CommonTest constructor to enable using BeforeClass in subclasses
-     * without errors (it is performed before super constructor is called)
-     *
      * Execution time of this method is roughly 300ms on standard SnapShot laptop
      */
 
     @Before
-    public void loadDefaultTestEntities() {
+    protected static void loadDefaultTestEntities() {
         //   Get EntitiesLoader instance containing all test entity data
         entitiesLoader = EntitiesLoader.getInstance();
 

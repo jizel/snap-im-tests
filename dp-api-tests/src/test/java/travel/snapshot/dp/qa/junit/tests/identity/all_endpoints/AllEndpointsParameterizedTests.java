@@ -1,5 +1,9 @@
 package travel.snapshot.dp.qa.junit.tests.identity.all_endpoints;
 
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
+import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
+
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
 import org.junit.Test;
@@ -10,10 +14,6 @@ import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.util.Map;
-
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParamMapForPaging;
-import static travel.snapshot.dp.qa.junit.helpers.CommonHelpers.ALL_ENDPOINTS;
 
 @RunWith(JUnitParamsRunner.class)
 public class AllEndpointsParameterizedTests extends CommonTest {
@@ -35,7 +35,7 @@ public class AllEndpointsParameterizedTests extends CommonTest {
         Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, sort, sortDesc, null);
         String endpoint = ALL_ENDPOINTS.get(Integer.valueOf(endpointIndex));
         commonHelpers.getEntities(endpoint, params);
-        responseCodeIs(Integer.valueOf(SC_BAD_REQUEST));
-        customCodeIs(Integer.valueOf(CC_BAD_PARAMS));
+        responseCodeIs(SC_BAD_REQUEST);
+        customCodeIs(CC_BAD_PARAMS);
     }
 }

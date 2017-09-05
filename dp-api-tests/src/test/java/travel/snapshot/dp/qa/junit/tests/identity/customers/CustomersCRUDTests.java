@@ -14,6 +14,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_CUSTOMER_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_SNAPSHOT_ETAG;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.sendBlankPost;
+import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.NON_EXISTENT_ID;
 
 import com.jayway.restassured.response.Response;
 import org.junit.Test;
@@ -169,5 +170,11 @@ public class CustomersCRUDTests extends CommonTest {
         commonHelpers.entityIsDeleted(CUSTOMERS_PATH, customer2Id);
         commonHelpers.deleteEntity(CUSTOMERS_PATH, customer1Id);
         responseCodeIs(SC_NO_CONTENT);
+    }
+
+    @Test
+    public void getNonExistentCustomer() {
+        commonHelpers.getEntity(CUSTOMERS_PATH, NON_EXISTENT_ID);
+        responseIsEntityNotFound();
     }
 }
