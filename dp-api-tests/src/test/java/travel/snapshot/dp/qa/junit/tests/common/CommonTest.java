@@ -143,8 +143,6 @@ public abstract class CommonTest {
      *
      * Execution time of this method is roughly 300ms on standard SnapShot laptop
      */
-
-    @Before
     protected static void loadDefaultTestEntities() {
         //   Get EntitiesLoader instance containing all test entity data
         entitiesLoader = EntitiesLoader.getInstance();
@@ -193,6 +191,7 @@ public abstract class CommonTest {
     @Before
     public void setUp() throws Exception{
         dbStepDefs.databaseIsCleanedAndEntitiesAreCreated();
+        loadDefaultTestEntities();
     }
 
     @After
