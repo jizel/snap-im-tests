@@ -255,6 +255,11 @@ public abstract class CommonTest {
         customCodeIs(CC_CONFLICT_CODE);
     }
 
+    protected static void responseIsConflictValues() {
+        responseCodeIs(SC_CONFLICT);
+        customCodeIs(CC_CONFLICT_VALUES);
+    }
+
     protected static void responseIsEntityReferenced() {
         responseCodeIs(SC_CONFLICT);
         customCodeIs(CC_ENTITY_REFERENCED);

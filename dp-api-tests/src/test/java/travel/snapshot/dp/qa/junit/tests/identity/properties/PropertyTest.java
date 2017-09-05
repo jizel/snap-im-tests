@@ -179,4 +179,18 @@ public class PropertyTest extends CommonTest {
         commonHelpers.entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
         commonHelpers.entityIsDeleted(PROPERTY_SETS_PATH, psId);
     }
+
+    @Test
+    public void propertyCannotBeDeletedWhenItHasARelationshipWithSomeUser() {
+        createdPropertyId = commonHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
+        UUID userId = commonHelpers.entityIsCreated(USERS_PATH, testUser1);
+        UserPropertyRelationshipDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, createdPropertyId, true);
+        UUID relationId = commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relation);
+        commonHelpers.deleteEntity(PROPERTIES_PATH, createdPropertyId);
+        responseIsEntityReferenced();
+        commonHelpers.deleteEntity(USERS_PATH, userId);
+        responseIsEntityReferenced();
+        commonHelpers.entityIsDeleted(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
+        commonHelpers.entityIsDeleted(PROPERTIES_PATH, createdPropertyId);
+    }
 }
