@@ -143,11 +143,9 @@ public class ParametersPropertiesTests extends CommonTest {
         responseIsReferenceDoesNotExist();
     }
 
-    //        Issue keeper does not work here since file parameters are loaded before issue keeper is called. Un ignore when ATM-49 solved.
-//    @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
+    @FileParameters(EXAMPLES + "gettingListOfProperties.csv")
     @Test
     @Category(Categories.SlowTests.class)
-    @Ignore
     public void gettingListOfProperties(
         String limit,
         String cursor,
