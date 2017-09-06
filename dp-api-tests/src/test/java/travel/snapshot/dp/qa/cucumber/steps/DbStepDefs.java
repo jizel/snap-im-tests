@@ -206,19 +206,40 @@ public class DbStepDefs {
 
     public void removeCreatedEntities(Map<String, ArrayList<UUID>> registry) {
 
-        ArrayList<UUID> roleIds = commonHelpers.getArrayFromMap(ROLES_RESOURCE, registry);
-        ArrayList<UUID> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_RESOURCE, registry);
-        ArrayList<UUID> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTYSETS, registry);
-        ArrayList<UUID> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTIES, registry);
-        ArrayList<UUID> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTYSET_PROPERTIES, registry);
-        ArrayList<UUID> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_RESOURCE, registry);
-        ArrayList<UUID> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_RESOURCE, registry);
-        ArrayList<UUID> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTIES, registry);
-        ArrayList<UUID> customerUserIds = commonHelpers.getArrayFromMap(CUSTOMER_USERS, registry);
-        ArrayList<UUID> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_RESOURCE, registry);
-        ArrayList<UUID> userIds = commonHelpers.getArrayFromMap(USERS_RESOURCE, registry);
-        roleIds.forEach(roleId -> {
+        ArrayList<UUID> commercialSubscriptionIds = commonHelpers.getArrayFromMap(COMMERCIAL_SUBSCRIPTIONS_PATH, registry);
+        ArrayList<UUID> customerRoleIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_ROLES_PATH, registry);
+        ArrayList<UUID> propertyRoleIds = commonHelpers.getArrayFromMap(USER_PROPERTY_ROLES_PATH, registry);
+        ArrayList<UUID> propertySetRoleIds = commonHelpers.getArrayFromMap(USER_PROPERTY_SET_ROLES_PATH, registry);
+        ArrayList<UUID> userGroupIds = commonHelpers.getArrayFromMap(USER_GROUPS_PATH, registry);
+        ArrayList<UUID> userPropertySetIds = commonHelpers.getArrayFromMap(USER_PROPERTY_SET_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> userPropertyIds = commonHelpers.getArrayFromMap(USER_PROPERTY_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> propertySetPropertyIds = commonHelpers.getArrayFromMap(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> propertyIds = commonHelpers.getArrayFromMap(PROPERTIES_PATH, registry);
+        ArrayList<UUID> propertySetIds = commonHelpers.getArrayFromMap(PROPERTY_SETS_PATH, registry);
+        ArrayList<UUID> customerPropertyIds = commonHelpers.getArrayFromMap(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> customerUserIds = commonHelpers.getArrayFromMap(USER_CUSTOMER_RELATIONSHIPS_PATH, registry);
+        ArrayList<UUID> customerIds = commonHelpers.getArrayFromMap(CUSTOMERS_PATH, registry);
+        ArrayList<UUID> userIds = commonHelpers.getArrayFromMap(USERS_PATH, registry);
+        ArrayList<UUID> applicationIds = commonHelpers.getArrayFromMap(APPLICATIONS_PATH, registry);
+        ArrayList<UUID> appVersionIds = commonHelpers.getArrayFromMap(APPLICATION_VERSIONS_PATH, registry);
+
+        customerRoleIds.forEach(roleId -> {
             dbSteps.deleteRole(roleId);
+        });
+        propertyRoleIds.forEach(roleId -> {
+            dbSteps.deleteRole(roleId);
+        });
+        propertySetRoleIds.forEach(roleId -> {
+            dbSteps.deleteRole(roleId);
+        });
+        commercialSubscriptionIds.forEach(commercialSubscriptionId -> {
+            dbSteps.deleteCommercialSubscription(commercialSubscriptionId);
+        });
+        appVersionIds.forEach(appVersionId -> {
+            dbSteps.deleteAppVersion(appVersionId);
+        });
+        applicationIds.forEach(applicationId -> {
+            dbSteps.deleteApplication(applicationId);
         });
         userGroupIds.forEach(userGroupId -> {
             dbSteps.deleteUserPropertySet(userGroupId);
@@ -235,11 +256,11 @@ public class DbStepDefs {
         propertySetIds.forEach(propertySetId -> {
             dbSteps.deletePropertySet(propertySetId);
         });
-        propertyIds.forEach(propertyId -> {
-            dbSteps.deleteProperty(propertyId);
-        });
         customerPropertyIds.forEach(customerPropertyId -> {
             dbSteps.deleteCustomerProperty(customerPropertyId);
+        });
+        propertyIds.forEach(propertyId -> {
+            dbSteps.deleteProperty(propertyId);
         });
         customerUserIds.forEach(customerUserId -> {
             dbSteps.deleteCustomerUser(customerUserId);

@@ -17,7 +17,7 @@ public class UserGroupSmokeTests extends CommonSmokeTest {
     @Test
     public void userGroupCRUD() {
         // create
-        UUID userGroupId = userGroupHelpers.userGroupIsCreatedWithAuth(testUserGroup1);
+        UUID userGroupId = authorizationHelpers.entityIsCreated(USER_GROUPS_PATH, testUserGroup1);
         // request
         authorizationHelpers.getEntity(USER_GROUPS_PATH, userGroupId);
         responseCodeIs(SC_OK);

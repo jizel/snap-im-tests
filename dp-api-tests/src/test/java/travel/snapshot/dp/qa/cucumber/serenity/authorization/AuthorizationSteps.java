@@ -3,13 +3,16 @@ package travel.snapshot.dp.qa.cucumber.serenity.authorization;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 
+import lombok.extern.java.Log;
 import net.serenitybdd.core.Serenity;
 
 import travel.snapshot.dp.qa.cucumber.helpers.PropertiesHelper;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_OK;
 
+@Log
 public class AuthorizationSteps extends BasicSteps {
 
     public AuthorizationSteps() {
@@ -75,10 +78,13 @@ public class AuthorizationSteps extends BasicSteps {
                 .parameter("password", password)
                 .relaxedHTTPSValidation()
                 .log().all();
-
-        String response = requestSpecification.post("/oauth/token")
-                                                .path("access_token");
-        Serenity.setSessionVariable(SESSION_TOKEN).to(response);
+        Response response = requestSpecification.post("/oauth/token");
+        setSessionResponse(response);
+        if (response.getStatusCode() == SC_OK) {
+            String token = response.path("access_token");
+            Serenity.setSessionVariable(SESSION_TOKEN).to(token);
+        } else {
+            log.warning("Failed to receive oauth token");
+        }
     }
-
 }

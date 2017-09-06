@@ -2,6 +2,7 @@ package travel.snapshot.dp.qa.junit.tests.identity.smoke;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
@@ -9,8 +10,10 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERT
 import com.jayway.restassured.specification.RequestSpecification;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.api.identity.model.PropertyUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
@@ -27,7 +30,7 @@ public class PropertySmokeTests extends CommonSmokeTest {
     public void propertyCRUD() {
         // create
         testProperty1.setIsActive(false);
-        UUID propertyId = propertyHelpers.propertyIsCreatedWithAuth(testProperty1);
+        UUID propertyId = authorizationHelpers.entityIsCreated(PROPERTIES_PATH, testProperty1);
         // request
         authorizationHelpers.getEntity(PROPERTIES_PATH, propertyId);
         responseCodeIs(SC_OK);
@@ -52,9 +55,10 @@ public class PropertySmokeTests extends CommonSmokeTest {
     @Test
     public void propertyPropertySetCRUD() {
         // create PS
-        UUID propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
+        UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         // create propertyset-property relation
-        UUID relationId = relationshipsHelpers.propertySetPropertyIsCreatedWithAuth(propertySetId, DEFAULT_PROPERTY_ID, true);
+        PropertySetPropertyRelationshipDto relation = relationshipsHelpers.constructPropertySetPropertyRelationship(propertySetId, DEFAULT_PROPERTY_ID, true);
+        UUID relationId = authorizationHelpers.entityIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
         // request
         authorizationHelpers.getEntity(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);
@@ -74,7 +78,8 @@ public class PropertySmokeTests extends CommonSmokeTest {
         // create user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create property-user relation
-        UUID relationId = relationshipsHelpers.userPropertyRelationIsCreatedWithAuth(userId, DEFAULT_PROPERTY_ID, true);
+        UserPropertyRelationshipDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+        UUID relationId = authorizationHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);

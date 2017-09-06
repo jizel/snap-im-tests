@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import travel.snapshot.dp.api.identity.model.PropertySetType;
 import travel.snapshot.dp.api.identity.model.PropertySetUpdateDto;
+import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipUpdateDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonSmokeTest;
@@ -22,7 +23,7 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
     @Test
     public void propertySetCRUD() {
         // create
-        UUID propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
+        UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         // request
         authorizationHelpers.getEntity(PROPERTY_SETS_PATH, propertySetId);
         responseCodeIs(SC_OK);
@@ -49,9 +50,10 @@ public class PropertySetSmokeTests extends CommonSmokeTest {
         // create user
         UUID userId = userHelpers.userIsCreatedWithAuth(testUser1);
         // create PS
-        UUID propertySetId = propertySetHelpers.propertySetIsCreatedWithAuth(testPropertySet1);
+        UUID propertySetId = authorizationHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
         // create relation
-        UUID relationId = relationshipsHelpers.userPropertySetRelationIsCreatedWithAuth(userId, propertySetId, true);
+        UserPropertySetRelationshipDto relation = relationshipsHelpers.constructUserPropertySetRelationshipDto(userId, propertySetId, true);
+        UUID relationId = authorizationHelpers.entityIsCreated(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relation);
         // request
         authorizationHelpers.getEntity(USER_PROPERTY_SET_RELATIONSHIPS_PATH, relationId);
         responseCodeIs(SC_OK);

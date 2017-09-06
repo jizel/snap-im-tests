@@ -26,16 +26,4 @@ public class UserGroupHelpers extends UserGroupsSteps{
         responseCodeIs(SC_CREATED);
         return response.as(UserGroupDto.class);
     }
-
-    public void createUserGroupWithAuth(UserGroupDto userGroup) {
-        authorizationHelpers.createEntity(USER_GROUPS_PATH, userGroup);
-    }
-
-    public UUID userGroupIsCreatedWithAuth(UserGroupDto userGroup) {
-        createUserGroupWithAuth(userGroup);
-        responseCodeIs(SC_CREATED);
-        UUID groupId = getSessionResponse().as(UserGroupDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(USER_GROUPS_RESOURCE, groupId);
-        return groupId;
-    }
 }

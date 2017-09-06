@@ -63,14 +63,6 @@ public class CustomerHelpers extends CustomerSteps {
         setSessionResponse(createResponse);
     }
 
-    public UUID customerIsCreatedWithAuth(CustomerCreateDto customer) {
-        createCustomerWithAuth(customer);
-        responseCodeIs(SC_CREATED);
-        UUID customerId = getSessionResponse().as(CustomerDto.class).getId();
-        commonHelpers.updateRegistryOfDeletables(CUSTOMERS_RESOURCE, customerId);
-        return customerId;
-    }
-
     public Response createCustomerByUserForApp(UUID userId, UUID applicationId, CustomerCreateDto customer) {
         JSONObject jsonCustomer = null;
         try {

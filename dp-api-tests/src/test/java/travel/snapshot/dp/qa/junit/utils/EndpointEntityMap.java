@@ -35,11 +35,14 @@ import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.CustomerRoleDto;
 import travel.snapshot.dp.api.identity.model.PartnerDto;
 import travel.snapshot.dp.api.identity.model.PlatformOperationDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
+import travel.snapshot.dp.api.identity.model.PropertyRoleDto;
 import travel.snapshot.dp.api.identity.model.PropertySetDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.PropertySetRoleDto;
 import travel.snapshot.dp.api.identity.model.RoleDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserCustomerRoleRelationshipDto;
@@ -89,7 +92,7 @@ public class EndpointEntityMap {
         helpMap.put(USER_GROUP_USER_RELATIONSHIPS_PATH, UserGroupUserRelationshipDto.class);
         helpMap.put(CUSTOMER_PROPERTY_RELATIONSHIPS_PATH, CustomerPropertyRelationshipDto.class);
         helpMap.put(USER_GROUPS_PATH, UserGroupDto.class);
-        helpMap.put(USER_CUSTOMER_ROLES_PATH, RoleDto.class);
+        helpMap.put(USER_CUSTOMER_ROLES_PATH, CustomerRoleDto.class);
         helpMap.put(USER_CUSTOMER_ROLE_RELATIONSHIPS_PATH, UserCustomerRoleRelationshipDto.class);
         helpMap.put(USER_GROUP_PROPERTY_RELATIONSHIPS_PATH, UserGroupPropertyRelationshipDto.class);
         helpMap.put(USER_GROUP_PROPERTY_ROLE_RELATIONSHIPS_PATH, UserGroupPropertyRoleRelationshipDto.class);
@@ -97,9 +100,9 @@ public class EndpointEntityMap {
         helpMap.put(USER_GROUP_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH, UserGroupPropertySetRoleRelationshipDto.class);
         helpMap.put(USER_GROUP_ROLE_RELATIONSHIPS_PATH, UserGroupRoleRelationshipDto.class);
         helpMap.put(USER_PROPERTY_ROLE_RELATIONSHIPS_PATH, UserPropertyRoleRelationshipDto.class);
-        helpMap.put(USER_PROPERTY_ROLES_PATH, RoleDto.class);
+        helpMap.put(USER_PROPERTY_ROLES_PATH, PropertyRoleDto.class);
         helpMap.put(USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH, UserPropertySetRoleRelationshipDto.class);
-        helpMap.put(USER_PROPERTY_SET_ROLES_PATH, RoleDto.class);
+        helpMap.put(USER_PROPERTY_SET_ROLES_PATH, PropertySetRoleDto.class);
         helpMap.put(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, PropertySetPropertyRelationshipDto.class);
         helpMap.put(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class);
 
