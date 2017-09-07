@@ -37,7 +37,7 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import net.serenitybdd.core.Serenity;
 import travel.snapshot.dp.api.identity.model.AddressDto;
-import travel.snapshot.dp.api.model.VersionedEntityDto;
+import travel.snapshot.dp.api.model.EntityDto;
 import travel.snapshot.dp.qa.cucumber.serenity.BasicSteps;
 import travel.snapshot.dp.qa.junit.utils.EndpointEntityMap;
 
@@ -387,7 +387,7 @@ public class CommonHelpers extends BasicSteps {
 
 //    Help methods
 
-    public static VersionedEntityDto getDtoFromResponse(Response response, String basePath) {
+    private EntityDto getDtoFromResponse(Response response, String basePath) {
         if (endpointEntityMap.get(basePath) == null) {
             throw new NoSuchElementException("There is no key " + basePath + " in " + EndpointEntityMap.class.getCanonicalName() + ". It should probably be added.");
         }

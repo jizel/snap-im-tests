@@ -1,6 +1,7 @@
 package travel.snapshot.dp.qa.junit.utils;
 
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATIONS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_PERMISSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.APPLICATION_VERSIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.COMMERCIAL_SUBSCRIPTIONS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOMERS_PATH;
@@ -31,6 +32,7 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PR
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_SET_ROLE_RELATIONSHIPS_PATH;
 
 import travel.snapshot.dp.api.identity.model.ApplicationDto;
+import travel.snapshot.dp.api.identity.model.ApplicationPermissionDto;
 import travel.snapshot.dp.api.identity.model.ApplicationVersionDto;
 import travel.snapshot.dp.api.identity.model.CommercialSubscriptionDto;
 import travel.snapshot.dp.api.identity.model.CustomerDto;
@@ -59,7 +61,7 @@ import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertyRoleRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRelationshipDto;
 import travel.snapshot.dp.api.identity.model.UserPropertySetRoleRelationshipDto;
-import travel.snapshot.dp.api.model.VersionedEntityDto;
+import travel.snapshot.dp.api.model.EntityDto;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,10 +72,10 @@ import java.util.Map;
  */
 public class EndpointEntityMap {
 
-    public static final Map<String, Class<? extends VersionedEntityDto>> endpointEntityMap = getEndpointEntityMap();
+    public static final Map<String, Class<? extends EntityDto>> endpointEntityMap = getEndpointEntityMap();
 
-    private static Map<String, Class<? extends VersionedEntityDto>> getEndpointEntityMap() {
-        Map<String, Class<? extends VersionedEntityDto>> helpMap = new HashMap<>();
+    private static Map<String, Class<? extends EntityDto>> getEndpointEntityMap() {
+        Map<String, Class<? extends EntityDto>> helpMap = new HashMap<>();
         helpMap.put(APPLICATIONS_PATH, ApplicationDto.class);
         helpMap.put(APPLICATION_VERSIONS_PATH, ApplicationVersionDto.class);
         helpMap.put(CUSTOMERS_PATH, CustomerDto.class);
@@ -105,6 +107,7 @@ public class EndpointEntityMap {
         helpMap.put(USER_PROPERTY_SET_ROLES_PATH, PropertySetRoleDto.class);
         helpMap.put(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, PropertySetPropertyRelationshipDto.class);
         helpMap.put(PLATFORM_OPERATIONS_PATH, PlatformOperationDto.class);
+        helpMap.put(APPLICATION_PERMISSIONS_PATH, ApplicationPermissionDto.class);
 
         return Collections.unmodifiableMap(helpMap);
     }
