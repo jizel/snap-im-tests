@@ -1,0 +1,25 @@
+{
+  "name": "Identity API",
+  "providerId": "Identity API",
+  "providerType": "org.keycloak.storage.UserStorageProvider",
+  "config": {
+    "snapshot_user_id": [
+      "0b000000-0000-4444-8888-000000000000"
+    ],
+    "authentication_resource_path": [
+      "/identity/authentication/authenticate"
+    ],
+    "internal_application_version_id": [
+      "04000000-0000-4444-8888-000000000000"
+    ],
+    "cachePolicy": [
+      "DEFAULT"
+    ],
+    "priority": [
+      "0"
+    ],
+    "url": [
+      "http://identity:18080/api"
+    ]
+  }
+}

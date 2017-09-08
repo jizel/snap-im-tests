@@ -1,0 +1,28 @@
+{
+  "name": "java-keystore",
+  "providerId": "java-keystore",
+  "providerType": "org.keycloak.keys.KeyProvider",
+  "config": {
+    "keystorePassword": [
+      "snapshot"
+    ],
+    "keyAlias": [
+      "keycloak"
+    ],
+    "keyPassword": [
+      "keycloak"
+    ],
+    "active": [
+      "true"
+    ],
+    "keystore": [
+      "/opt/keycloak/snapshot.jks"
+    ],
+    "priority": [
+      "101"
+    ],
+    "enabled": [
+      "true"
+    ]
+  }
+}

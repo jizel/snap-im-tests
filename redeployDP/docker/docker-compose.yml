@@ -234,10 +234,11 @@ services:
         networks:
             - main
     keycloak:
-        image: docker.snapshot.travel:5000/snapshot/keycloak:latest
+        image: snapshothub/dp-keycloak
         ports:
             - 8081:8080
             - 9991:9990
+            - 8788:8787
         volumes:
             - $BASE_FOLDER/dataplatformcoreqa/redeployDP/docker_shared/keycloak:/opt/keycloak
         environment:
@@ -253,8 +254,16 @@ services:
             - postgresql
         networks:
             - main
+    redis:
+        image: redis:4
+        ports:
+          - 6380:6379
+        volumes:
+          - ./redis:/data
+        networks:
+          - main
     nginx:
-        image: docker.snapshot.travel:5000/snapshot/nginx:latest
+        image: snapshothub/dp-nginx
         ports:
             - 81:80
         volumes:
@@ -262,6 +271,7 @@ services:
         depends_on:
             - identity
             - keycloak
+            - redis
         networks:
             - main
 networks:
