@@ -1,5 +1,6 @@
 package travel.snapshot.dp.qa.junit.tests.identity.properties;
 
+import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,6 +11,8 @@ import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.CUSTOME
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTIES_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SETS_PATH;
 import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USERS_PATH;
+import static travel.snapshot.dp.api.identity.resources.IdentityDefaults.USER_PROPERTY_RELATIONSHIPS_PATH;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.DEFAULT_PROPERTY_ID;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.PROPERTY_CODE;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.VALID_FROM_VALUE;
@@ -18,10 +21,9 @@ import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.buildQueryParam
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerContains;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.headerIs;
 import static travel.snapshot.dp.qa.cucumber.serenity.BasicSteps.numberOfEntitiesInResponse;
-
+import static  travel.snapshot.dp.api.identity.model.UserUpdateDto.UserType;
 import junitparams.FileParameters;
 import junitparams.JUnitParamsRunner;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -29,16 +31,17 @@ import travel.snapshot.dp.api.identity.model.AddressDto;
 import travel.snapshot.dp.api.identity.model.CustomerPropertyRelationshipDto;
 import travel.snapshot.dp.api.identity.model.PropertyDto;
 import travel.snapshot.dp.api.identity.model.PropertySetPropertyRelationshipDto;
+import travel.snapshot.dp.api.identity.model.UserPropertyRelationshipDto;
 import travel.snapshot.dp.qa.junit.tests.Categories;
 import travel.snapshot.dp.qa.junit.tests.common.CommonTest;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @RunWith(JUnitParamsRunner.class)
 public class ParametersPropertiesTests extends CommonTest {
@@ -102,7 +105,7 @@ public class ParametersPropertiesTests extends CommonTest {
             String returned,
             String filter) {
         List<UUID> customerIds = new ArrayList<>();
-        IntStream.range(0, 4).forEachOrdered(n -> {
+        range(0, 4).forEachOrdered(n -> {
             testCustomer1.setId(null);
             testCustomer1.setName(String.format("Some_customer_%d", n));
             testCustomer1.setEmail(String.format("customer_%d@snapshot.travel", n));
@@ -154,7 +157,7 @@ public class ParametersPropertiesTests extends CommonTest {
         String total,
         String linkHeader
     ) {
-        IntStream.range(0, 59).forEachOrdered(n -> {
+        range(0, 59).forEachOrdered(n -> {
             testProperty1.setName(String.format("prop_name_%d", n));
             testProperty1.setId(null);
             testProperty1.setCode(null);
@@ -172,7 +175,7 @@ public class ParametersPropertiesTests extends CommonTest {
     @Test
     @Category(Categories.SlowTests.class)
     public void gettingListOfPropertiesPropertySets(String limit, String cursor, String returned,  String total) {
-        IntStream.range(0, 30).forEachOrdered(n -> {
+        range(0, 30).forEachOrdered(n -> {
             testPropertySet1.setId(null);
             testPropertySet1.setName(String.format("New_set_%d", n));
             UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
@@ -185,4 +188,72 @@ public class ParametersPropertiesTests extends CommonTest {
         numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.parseInt(returned));
         headerIs("X-Total-Count", total);
     }
+
+    @FileParameters(EXAMPLES + "filteringListOfPropertiesPropertySets.csv")
+    @Category(Categories.SlowTests.class)
+    @Test
+    public void filteringListOfPropertiesPropertySets(
+            String limit,
+            String cursor,
+            String returned,
+            String total,
+            String filter) {
+        range(0, 12).forEachOrdered(n -> {
+            testPropertySet1.setId(null);
+            testPropertySet1.setName(String.format("New_set_%d", n));
+            UUID psId = commonHelpers.entityIsCreated(PROPERTY_SETS_PATH, testPropertySet1);
+            PropertySetPropertyRelationshipDto relation = relationshipsHelpers
+                    .constructPropertySetPropertyRelationship(psId, DEFAULT_PROPERTY_ID, true);
+            commonHelpers.entityIsCreated(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, relation);
+        });
+
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
+        commonHelpers.getEntities(PROPERTY_SET_PROPERTY_RELATIONSHIPS_PATH, params);
+        numberOfEntitiesInResponse(PropertySetPropertyRelationshipDto.class, Integer.parseInt(returned));
+        headerIs("X-Total-Count", total);
+    }
+
+    @FileParameters(EXAMPLES + "filteringListOfUsersForProperty.csv")
+    @Test
+    public void filteringListOfUsersForProperty(
+            String limit,
+            String cursor,
+            String returned,
+            String total,
+            String listPosition
+    ) {
+        List<UserType> types = Arrays.asList(
+                UserType.CUSTOMER,
+                UserType.CUSTOMER,
+                UserType.GUEST,
+                UserType.CUSTOMER,
+                UserType.PARTNER,
+                UserType.CUSTOMER,
+                UserType.CUSTOMER,
+                UserType.CUSTOMER,
+                UserType.SNAPSHOT
+        );
+        ArrayList<UUID> userIds = new ArrayList<UUID>();
+        range(0, 8).forEachOrdered(n -> {
+            testUser1.setId(null);
+            testUser1.setType(types.get(n));
+            testUser1.setFirstName(String.format("FirstName%d", n));
+            testUser1.setLastName(String.format("LastName%d", n));
+            testUser1.setUsername(String.format("UserName%d", n));
+            testUser1.setEmail(String.format("username%d@snapshot.travel", n));
+            UUID userId = commonHelpers.entityIsCreated(USERS_PATH, testUser1);
+            userIds.add(userId);
+            UserPropertyRelationshipDto relation = relationshipsHelpers.constructUserPropertyRelationshipDto(userId, DEFAULT_PROPERTY_ID, true);
+            commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, relation);
+        });
+        String filter = "/null";
+        if (!listPosition.equals("/null")) {
+            filter = String.format("user_id==%s", String.valueOf(userIds.get(Integer.valueOf(listPosition))));
+        }
+        Map<String, String> params = buildQueryParamMapForPaging(limit, cursor, filter, null, null, null);
+        commonHelpers.getEntities(USER_PROPERTY_RELATIONSHIPS_PATH, params);
+        numberOfEntitiesInResponse(UserPropertyRelationshipDto.class, Integer.parseInt(returned));
+        headerIs("X-Total-Count", total);
+    }
+
 }

@@ -84,4 +84,11 @@ public class UserPropertyRelationshipTests extends CommonTest {
         commonHelpers.getEntity(USER_PROPERTY_RELATIONSHIPS_PATH, UserPropertyRelationship.getId());
         responseCodeIs(SC_NOT_FOUND);
     }
+
+    @Test
+    public void addDuplicateUserPropertyRelationship() {
+        commonHelpers.entityIsCreated(USER_PROPERTY_RELATIONSHIPS_PATH, testUserPropertyRelationship);
+        commonHelpers.createEntity(USER_PROPERTY_RELATIONSHIPS_PATH, testUserPropertyRelationship);
+        responseIsConflictValues();
+    }
 }
